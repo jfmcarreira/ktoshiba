@@ -29,6 +29,7 @@
 #include <qcheckbox.h>
 #include <qspinbox.h>
 #include <qtimer.h>
+#include <qcombobox.h>
 
 #include <kparts/genericfactory.h>
 #include <dcopclient.h>
@@ -100,6 +101,8 @@ void KCMToshibaModule::load()
 				( config.readNumEntry("Low_Battery_Trigger", 15) );
 	m_KCMKToshibaGeneral->crybatSpinBox->setValue
 				( config.readNumEntry("Critical_Battery_Trigger", 5) );
+	m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
+				( config.readNumEntry("Audio_Player", 1) );
 }
 
 
@@ -109,6 +112,7 @@ void KCMToshibaModule::defaults()
     m_KCMKToshibaGeneral->batstatSpinBox->setValue( 2 );
     m_KCMKToshibaGeneral->lowbatSpinBox->setValue( 15 );
     m_KCMKToshibaGeneral->crybatSpinBox->setValue( 5 );
+	m_KCMKToshibaGeneral->audioComboBox->setCurrentItem( 1 );
 }
 
 
@@ -130,6 +134,8 @@ void KCMToshibaModule::save()
 					  m_KCMKToshibaGeneral->lowbatSpinBox->value());
 	config.writeEntry("Critical_Battery_Trigger",
 					  m_KCMKToshibaGeneral->crybatSpinBox->value());
+	config.writeEntry("Audio_Player",
+					  m_KCMKToshibaGeneral->audioComboBox->currentItem());
 	config.sync();
 
 	if(mClient.attach()) {
@@ -138,11 +144,11 @@ void KCMToshibaModule::save()
 
 		if (!mClient.call("kded", "kmilod", "reconfigure()",
 						  data, replyType, replyData)) {
-			kdDebug() << "KToshiba::showTextMsg: "
+			kdDebug() << "KCMToshibaModule: "
 					  << "there was some error using DCOP." << endl;
 		}
 	} else {
-		kdDebug() << "KToshibaModule: cannot attach to DCOP server, "
+		kdDebug() << "KCMToshibaModule: cannot attach to DCOP server, "
 				  << "no automatic config update." << endl;
 	}
 }

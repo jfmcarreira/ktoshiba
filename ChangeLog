@@ -1,3 +1,9 @@
+2005-01-02 Azael Avalos <neftali@utep.edu>
+	* Added the whole spanish translation, only KCM
+	  widget was translated before
+	* Added support for amarok as audio player and kaffeine
+	  as video player
+	* Updated KCM widget to set prefered audio application
 
 2004-11-22 Azael Avalos <neftali@utep.edu>
 	* Added the icons for MousePad to the widget

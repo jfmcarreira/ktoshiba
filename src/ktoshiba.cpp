@@ -92,6 +92,11 @@ KToshiba::KToshiba()
 		else battrig = false;
 	}
 
+	if (!mClient.attach())
+	{
+		kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
+	}
+
 	KConfig mConfig("ktoshibarc");
 	mConfig.setGroup("KToshiba");
 	bool started = mConfig.readBoolEntry("AlreadyStarted");
@@ -143,6 +148,10 @@ KToshiba::~KToshiba()
 		mDriver->closeInterface();
 		delete mDriver; mDriver = 0L;
 	}
+	if (mClient.isAttached())
+	{
+		mClient.detach();
+	}
 
 	delete instance;
 	delete mStatusWidget;
@@ -173,6 +182,7 @@ void KToshiba::loadConfiguration(KConfig *k)
 	mLowBat = k->readNumEntry("Low_Battery_Trigger", 15);
 	mCryBat = k->readNumEntry("Critical_Battery_Trigger", 5);
 	mBatSave = k->readNumEntry("Battery_Save_Mode");
+	mAudioPlayer = k->readNumEntry("Audio_Player", 1);
 }
 
 void KToshiba::displayAbout()
@@ -422,6 +432,9 @@ void KToshiba::checkEvent()
 		}
 	}
 
+	KConfig mConfig("ktoshibarc");
+	loadConfiguration(&mConfig);
+
 	switch (key) {
 		case 0x13b:	// Fn-F1 (Screen Lock)
 			lockScreen();
@@ -444,41 +457,68 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb31:	// Previous
 			if (MODE == CD_DVD) {
+				mClient.send("kaffeine", "KaffeineIface", "previous()", "");
 			} else
 			if (MODE == DIGITAL) {
-				proc << "xmms" << "--rew";
-				proc.start(KProcess::DontCare);
-				proc.detach();
+				if (mAudioPlayer == amaroK) {
+					mClient.send("amarok", "player", "prev()", "");
+				} else
+				if (mAudioPlayer == XMMS) {
+					proc << "xmms" << "--rew";
+					proc.start(KProcess::DontCare);
+					proc.detach();
+				}
 			}
 			break;
 		case 0xb32:	// Next
 			if (MODE == CD_DVD) {
+				mClient.send("kaffeine", "KaffeineIface", "next()", "");
 			} else
 			if (MODE == DIGITAL) {
-				proc << "xmms" << "--fwd";
-				proc.start(KProcess::DontCare);
-				proc.detach();
+				if (mAudioPlayer == amaroK) {
+					mClient.send("amarok", "player", "next()", "");
+				} else
+				if (mAudioPlayer == XMMS) {
+					proc << "xmms" << "--fwd";
+					proc.start(KProcess::DontCare);
+					proc.detach();
+				}
 			}
 			break;
 		case 0xb33:	// Play/Pause
 			if (MODE == CD_DVD) {
+				mClient.send("kaffeine", "KaffeineIface", "pause()", "");
 			} else
 			if (MODE == DIGITAL) {
-				proc << "xmms" << "--play-pause";
-				proc.start(KProcess::DontCare);
-				proc.detach();
+				if (mAudioPlayer == amaroK) {
+					mClient.send("amarok", "player", "playPause()", "");
+				} else
+				if (mAudioPlayer == XMMS) {
+					proc << "xmms" << "--play-pause";
+					proc.start(KProcess::DontCare);
+					proc.detach();
+				}
 			}
 			break;
 		case 0xb30:	// Stop/Eject
 			if (MODE == CD_DVD) {
-				proc << "eject" << "--cdrom";
-				proc.start(KProcess::DontCare);
-				proc.detach();
+				if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", ""))
+					mClient.send("kaffeine", "KaffeineIface", "stop()", "");
+				else {
+					proc << "eject" << "--cdrom";
+					proc.start(KProcess::DontCare);
+					proc.detach();
+				}
 			} else
 			if (MODE == DIGITAL) {
-				proc << "xmms" << "--stop";
-				proc.start(KProcess::DontCare);
-				proc.detach();
+				if (mAudioPlayer == amaroK) {
+					mClient.send("amarok", "player", "stop()", "");
+				} else
+				if (mAudioPlayer == XMMS) {
+					proc << "xmms" << "--stop";
+					proc.start(KProcess::DontCare);
+					proc.detach();
+				}
 			}
 			break;
 	}
@@ -662,11 +702,8 @@ void KToshiba::doSuspend()
 
 void KToshiba::lockScreen()
 {
-	DCOPClient *client = kapp->dcopClient();
-	if (client) {
-		client->attach();
-		client->send("kdesktop", "KScreensaverIface", "lock()", "");
-		client->detach();
+	if (mClient.isAttached()) {
+		mClient.send("kdesktop", "KScreensaverIface", "lock()", "");
     }
 }
 

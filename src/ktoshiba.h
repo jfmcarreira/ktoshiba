@@ -31,6 +31,7 @@
 #include <ksystemtray.h>
 #include <kprocess.h>
 #include <kaboutapplication.h>
+#include <dcopclient.h>
 
 extern "C" {
 #include <powersave_daemonlib.h>
@@ -40,6 +41,9 @@ extern "C" {
 
 #define CD_DVD			0x80
 #define DIGITAL			0x40
+
+#define amaroK			0
+#define XMMS			1
 
 class SettingsWidget;
 class StatusWidget;
@@ -76,6 +80,7 @@ protected:
 	KToshibaSMMInterface *mDriver;
 	KAboutApplication *mAboutWidget;
 	KInstance *instance;
+	DCOPClient mClient;
 	bool mFullBat;
 	int mBatStatus;
 	int mOldBatStatus;
@@ -83,6 +88,7 @@ protected:
 	int mCryBat;
 	int mBatSave;
 	int mOldBatSave;
+	int mAudioPlayer;
 private:
 	void brightUp();
 	void brightDown();
