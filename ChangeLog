@@ -1,7 +1,35 @@
+2005-02-08 Azael Avalos <neftali@utep.edu>
+	* Removed strerror(errno) function from 
+	  ktoshibasmminterface.cpp, hopefully it will resolve
+	  compile problems.
+	* Added Hungarian pre-translation thanks to
+	  Charles Barcza kbarcza@blackpanther.hu
+
+2005-02-05 Azael Avalos <neftali@utep.edu>
+	* Finished README.es
+	* Released 0.4
+
+2005-02-04 Azael Avalos <neftali@utep.edu>
+	* Started README.es (sí, en español ;)
+
+2005-02-03 Azael Avalos <neftali@utep.edu>
+	* Fixed ktoshiba.desktop file
+	  (now it _really_ appears under Utilities menu)
+	* Added 22x22 systray icons, hopefully it will
+	  be displayed correctly now
+	* Updated README file and started spanish translation
+
+2005-01-20 Azael Avalos <neftali@utep.edu>
+	* Added support for kscd as cd player on
+	  CD/DVD mode
+
+2005-01-14 Azael Avalos <neftali@utep.edu>
+	* Small cleanups and preparatives for 0.4
+
 2005-01-13 Azael Avalos <neftali@utep.edu>
 	* Added support for JuK and updated KCM widget
 	  (I should have done this sooner... anyway)
-	* 
+	* Small changes to selectBayLock function
 
 2005-01-08 Azael Avalos <neftali@utep.edu>
 	* Updated powersave specific call changes in functions
@@ -9,7 +37,7 @@
 2005-01-05 Azael Avalos <neftali@utep.edu>
 	* Added checkbox on KCM widget for enabling Bluetooth
 	  device at KToshiba start-up (if laptop supports it)
-	* ktosh_helper now activates/deactivates wlan0 device
+	* ktosh_helper now activates/deactivates ath0 device
 	  if not found activates/deactivates wlan0 device
 
 2005-01-04 Azael Avalos <neftali@utep.edu>

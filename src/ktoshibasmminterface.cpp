@@ -42,8 +42,7 @@ bool KToshibaSMMInterface::openInterface()
 
 	if (!(mFd = open(TOSH_DEVICE, O_RDWR))) {
 		kdError() << "KToshibaSMMInterface::openInterface(): "
-				  << "Failed to open " << TOSH_DEVICE
-				  << ": " << strerror(errno) << "." << endl;
+				  << "Failed to open " << TOSH_DEVICE << endl;
 		return false;
 	}
 
@@ -79,14 +78,14 @@ int KToshibaSMMInterface::getBrightness()
 
 void KToshibaSMMInterface::setBrightness(int value)
 {
-	if (value < 0) {
+	if (value < 0)
 		value = 0;
-	} else 
+	else 
 	if (value > HCI_LCD_BRIGHTNESS_LEVELS)
 		value = 7;
 
-	if (getBrightness() != -1 && value >= 0 
-			&& value < HCI_LCD_BRIGHTNESS_LEVELS) {
+	if (getBrightness() != -1 && value >= 0 &&
+	    value < HCI_LCD_BRIGHTNESS_LEVELS) {
 		reg.eax = HCI_SET;
 		reg.ebx = HCI_BRIGHTNESS_LEVEL;
 		value = value << HCI_LCD_BRIGHTNESS_SHIFT;
@@ -126,7 +125,8 @@ int KToshibaSMMInterface::acPowerStatus()
 		status = (reg.ecx & 0xffff);
 		if (status == 4)
 			return 1;
-		else if (status == 3)
+		else
+		if (status == 3)
 			return 0;
 	}
 
@@ -160,7 +160,7 @@ int KToshibaSMMInterface::systemEvent()
 		return (int) (reg.ecx & 0xffff);
 	} else
 	if (HciFunction(&reg) == HCI_FIFO_EMPTY) {
-		kdDebug() << "KToshibaSMMInterface::systemEvent(): "
+		kdError() << "KToshibaSMMInterface::systemEvent(): "
 				  << "FIFO Empty" << endl;
 		return 0;
 	} else
@@ -209,23 +209,17 @@ int KToshibaSMMInterface::machineID()
 
 void KToshibaSMMInterface::pointingDevice(bool status)
 {
-	if (status == false) {
-		reg.ebx = SCI_POINTING_DEVICE;
+	reg.ebx = SCI_POINTING_DEVICE;
+	if (status == false)
 		reg.ecx = SCI_DISABLED;
-		if (SciSet(&reg) == SCI_FAILURE) {
-			kdError() << "KToshibaSMMInterface::pointingDevice(): "
-					  << "Could not disable MousePad" << endl;
-			return;
-		}
-	} else if (status == true) {
-		reg.ebx = SCI_POINTING_DEVICE;
+	else if (status == true)
 		reg.ecx = SCI_ENABLED;
-		if (SciSet(&reg) == SCI_FAILURE) {
-			kdError() << "KToshibaSMMInterface::pointingDevice(): "
-					  << "Could not enable MousePad" << endl;
-			return;
-		}
-	}
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::pointingDevice(): "
+				  << "Successfully enabled/disabled MousePad" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::pointingDevice(): "
+				  << "Could not enable/disable MousePad" << endl;
 }
 
 int KToshibaSMMInterface::getBatterySaveMode()
@@ -251,14 +245,12 @@ void KToshibaSMMInterface::setBatterySaveMode(int mode)
 		reg.ecx = SCI_FULL_POWER;
 	else if (mode == 3)
 		reg.ecx = SCI_FULL_LIFE;
-	if (SciSet(&reg) == SCI_SUCCESS) {
+	if (SciSet(&reg) == SCI_SUCCESS)
 		kdDebug() << "KToshibaSMMInterface::setBatterySaveMode(): "
 				  << "Successfully changed to mode " << mode << endl;
-	}
-	else {
+	else
 		kdError() << "KToshibaSMMInterface::setBatterySaveMode(): "
 				  << "Could not change battery save mode" << endl;
-	}
 }
 
 int KToshibaSMMInterface::getVideo()
@@ -294,17 +286,25 @@ void KToshibaSMMInterface::setVideo(int vid)
 				  << "Could not change display state" << endl;
 }
 
-void KToshibaSMMInterface::selectBayLock(int *lock)
+void KToshibaSMMInterface::selectBayLock(int *lock, int bay)
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_LOCK_STATUS;
-	reg.ecx = HCI_SELECT_INT;
+	if (bay == 0)
+		reg.ecx = HCI_BUILT_IN;
+	else if (bay == 1)
+		reg.ecx = HCI_SELECT_INT;
+	else if (bay == 2)
+		reg.ecx = HCI_SELECT_DOCK;
+	else if (bay == 3)
+		reg.ecx = HCI_5INCH_DOCK;
 	if (HciFunction(&reg) == HCI_SUCCESS) {
 		if ((reg.ecx == HCI_UNLOCKED) && (*lock == HCI_LOCKED)) {
 			kdDebug() << "KToshibaSMMInterface::selectBayLock(): "
 					  << "SelectBay unlocked" << endl;
 			*lock = HCI_UNLOCKED;
-		} else if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED)) {
+		} else
+		if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED)) {
 			kdDebug() << "KToshibaSMMInterface::selectBayLock(): "
 					  << "SelectBay locked" << endl;
 			*lock = HCI_LOCKED;
@@ -327,9 +327,8 @@ int KToshibaSMMInterface::selectBayStatus(int bay)
 		reg.ecx = HCI_SELECT_DOCK;
 	else if (bay == 3)
 		reg.ecx = HCI_5INCH_DOCK;
-	if (HciFunction(&reg) == HCI_SUCCESS) {
+	if (HciFunction(&reg) == HCI_SUCCESS)
 		return reg.ecx;
-	}
 	else
 		kdError() << "KToshibaSMMInterface::selectBayStatus(): "
 				  << "Could not get SelectBay device" << endl;

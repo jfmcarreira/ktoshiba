@@ -1,4 +1,4 @@
-SUBDIRS = . kcmktoshiba
+SUBDIRS = . kcmktoshiba images
 
 # set the include path for X, qt and KDE
 INCLUDES = $(all_includes)
@@ -8,8 +8,6 @@ noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
-
-KDE_ICON = ktoshiba
 
 #########################################################################
 # APPLICATION SECTION
@@ -31,10 +29,6 @@ ktoshiba_LDADD = $(top_builddir)/src/libktoshibasmminterface.la \
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
 shelldesktop_DATA = ktoshiba.desktop
-
-# this is where the shell's XML-GUI resource file goes
-shellrcdir   = $(kde_datadir)/ktoshiba
-shellrc_DATA = ktoshibaui.rc
 
 ktosh_helper_SOURCES = ktosh_helper.cpp
 
