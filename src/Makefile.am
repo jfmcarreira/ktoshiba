@@ -9,9 +9,6 @@ noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/ktoshiba.pot
-
 KDE_ICON = ktoshiba
 
 #########################################################################
@@ -41,3 +38,9 @@ shellrc_DATA = ktoshibaui.rc
 
 ktosh_helper_SOURCES = ktosh_helper.cpp
 
+messages: rc.cpp
+	$(EXTRACTRC) `find . -name "*.rc" -o -name "*.ui"` > rc.cpp
+	LIST=`find . -name \*.h -o -name \*.cpp`; \
+	if test -n "$$LIST"; then \
+		 $(XGETTEXT) $$LIST -o $(podir)/ktoshiba.pot; \
+	fi

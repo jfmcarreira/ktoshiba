@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>564</width>
-            <height>384</height>
+            <width>500</width>
+            <height>382</height>
         </rect>
     </property>
     <property name="caption">
@@ -251,36 +251,55 @@
                     <property name="title">
                         <string>Other Options</string>
                     </property>
-                    <hbox>
+                    <grid>
                         <property name="name">
                             <cstring>unnamed</cstring>
                         </property>
-                        <widget class="QPushButton">
+                        <widget class="QPushButton" row="0" column="0">
                             <property name="name">
                                 <cstring>helperPushButton</cstring>
                             </property>
                             <property name="text">
-                                <string>Setup Helper Application</string>
+                                <string>Setup &amp;Helper Application</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+H</string>
                             </property>
                             <property name="toolTip" stdset="0">
                                 <string>This button can be used to enable the helper application</string>
                             </property>
                         </widget>
-                        <widget class="QLabel">
+                        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                            <property name="name">
+                                <cstring>btstartCheckBox</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Enable Bluetooth device at program start-up</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+E</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="0" column="1">
                             <property name="name">
                                 <cstring>audioAppTextLabel</cstring>
                             </property>
                             <property name="text">
-                                <string>Select Audio Application:</string>
+                                <string>Select &amp;Audio Application:</string>
                             </property>
                             <property name="buddy" stdset="0">
                                 <cstring>audioComboBox</cstring>
                             </property>
                         </widget>
-                        <widget class="QComboBox">
+                        <widget class="QComboBox" row="0" column="2">
                             <item>
                                 <property name="text">
                                     <string>amaroK</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>JuK</string>
                                 </property>
                             </item>
                             <item>
@@ -295,7 +314,7 @@
                                 <string>This can be used to select prefered audio application to use with front panel buttons</string>
                             </property>
                         </widget>
-                    </hbox>
+                    </grid>
                 </widget>
             </vbox>
         </widget>
@@ -336,6 +355,12 @@
         <signal>clicked()</signal>
         <receiver>KCMKToshibaGeneral</receiver>
         <slot>setupHelperSlot()</slot>
+    </connection>
+    <connection>
+        <sender>audioComboBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
     </connection>
 </connections>
 <includes>

@@ -1,3 +1,15 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-01-13 17:15-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 #: _translatorinfo.cpp:1
 msgid ""
 "_: NAME OF TRANSLATORS\n"
@@ -10,131 +22,16 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: ktoshiba.cpp:107
-msgid "&Configure KToshiba..."
-msgstr ""
-
-#: ktoshiba.cpp:110
-msgid "Suspend To &Disk"
-msgstr ""
-
-#: ktoshiba.cpp:112
-msgid "Suspend To &RAM"
-msgstr ""
-
-#: ktoshiba.cpp:115
-msgid "&About KToshiba"
-msgstr ""
-
-#: ktoshiba.cpp:129 ktoshiba.cpp:633 ktoshiba.cpp:640 ktoshiba.cpp:650
-#: ktoshiba.cpp:657
-msgid "WARNING"
-msgstr ""
-
-#: ktoshiba.cpp:130
-msgid ""
-"The powersave daemon is not running or you are not member of the powersave "
-"system group.\n"
-"Starting it will improve performance: /etc/init.d/rcpowersave start"
-msgstr ""
-
-#: ktoshiba.cpp:193
-msgid "Your battery is now fully charged."
-msgstr ""
-
-#: ktoshiba.cpp:193
-msgid "Laptop Battery"
-msgstr ""
-
-#: ktoshiba.cpp:198
-msgid "The battery state has changed to low"
-msgstr ""
-
-#: ktoshiba.cpp:203
-msgid "The battery state has changed to critical"
-msgstr ""
-
-#: ktoshiba.cpp:208
-msgid "I'm Gone..."
-msgstr ""
-
-#: ktoshiba.cpp:346
-msgid "No interface available"
-msgstr ""
-
-#: ktoshiba.cpp:351
-msgid "Plugged in - fully charged"
-msgstr ""
-
-#: ktoshiba.cpp:357
-msgid "Plugged in - %1% charged (%2:%3 time left)"
-msgstr ""
-
-#: ktoshiba.cpp:361
-msgid "Plugged in - no battery"
-msgstr ""
-
-#: ktoshiba.cpp:363
-#, c-format
-msgid "Plugged in - %1% charged"
-msgstr ""
-
-#: ktoshiba.cpp:372
-msgid "Running on batteries - %1% charged (%2:%3 time left)"
-msgstr ""
-
-#: ktoshiba.cpp:375
-#, c-format
-msgid "Running on batteries  - %1% charged"
-msgstr ""
-
-#: ktoshiba.cpp:634
-msgid "Suspend disabled by administrator."
-msgstr ""
-
-#: ktoshiba.cpp:641
-msgid "A save suspend needs the powersave daemon running in the background."
-msgstr ""
-
-#: ktoshiba.cpp:651
-msgid "Standby disabled by administrator."
-msgstr ""
-
-#: ktoshiba.cpp:658
-msgid "A save standby needs the powersave daemon running in the background."
-msgstr ""
-
-#: ktoshiba.cpp:677
-msgid ""
-"Could not change wireless status because ktosh_helper cannot be found.\n"
-"Please make sure that it is installed correctly."
-msgstr ""
-
-#: ktoshiba.cpp:679 ktoshiba.cpp:688 ktoshiba.cpp:697 ktoshiba.cpp:728
-#: main.cpp:40
-msgid "KToshiba"
-msgstr ""
-
-#: ktoshiba.cpp:689
-msgid "Wireless interface up"
-msgstr ""
-
-#: ktoshiba.cpp:690 ktoshiba.cpp:699
-msgid "Info"
-msgstr ""
-
-#: ktoshiba.cpp:698
-msgid "Wireless interface down"
-msgstr ""
-
-#: ktoshiba.cpp:727
-msgid ""
-"Please send the model name and this id %1 to:\n"
-"neftali@utep.edu."
-msgstr ""
-
 #: main.cpp:28
 msgid "Hotkeys & Battery monitoring for Toshiba laptops."
+msgstr ""
+
+#: main.cpp:40 kcmktoshiba/kcmtoshiba_general.ui.h:29
+#: kcmktoshiba/kcmtoshiba_general.ui.h:38
+#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:269 ktoshiba.cpp:272
+#: ktoshiba.cpp:754 ktoshiba.cpp:763 ktoshiba.cpp:772 ktoshiba.cpp:1076
+#: ktoshiba.cpp:1116
+msgid "KToshiba"
 msgstr ""
 
 #: main.cpp:43
@@ -160,10 +57,354 @@ msgstr ""
 
 #: rc.cpp:4
 #, no-c-format
+msgid "KToshiba: Status Widget"
+msgstr ""
+
+#: rc.cpp:6
+#, no-c-format
+msgid "KToshiba: General Options"
+msgstr ""
+
+#: rc.cpp:8
+#, no-c-format
+msgid ""
+"Cannot find the <i>Toshiba System Managment Mode Driver</i>. If this is a "
+"Toshiba Laptop, make sure the <b>toshiba</b> driver module loads without "
+"failures."
+msgstr ""
+
+#: rc.cpp:10
+#, no-c-format
+msgid "System Power"
+msgstr ""
+
+#: rc.cpp:12
+#, no-c-format
+msgid "Remaining battery capacity:"
+msgstr ""
+
+#: rc.cpp:14
+#, no-c-format
+msgid "AC"
+msgstr ""
+
+#: rc.cpp:16
+#, no-c-format
+msgid "Bat"
+msgstr ""
+
+#: rc.cpp:18
+#, no-c-format
+msgid "Battery Options"
+msgstr ""
+
+#: rc.cpp:20
+#, no-c-format
+msgid "Check &battery status every:"
+msgstr ""
+
+#: rc.cpp:22
+#, no-c-format
+msgid " sec"
+msgstr ""
+
+#: rc.cpp:24
+#, no-c-format
+msgid ""
+"This is used to determine how often the program will check the battery status"
+msgstr ""
+
+#: rc.cpp:26
+#, no-c-format
+msgid "&Low battery trigger:"
+msgstr ""
+
+#: rc.cpp:28 rc.cpp:32
+#, no-c-format
+msgid " min"
+msgstr ""
+
+#: rc.cpp:30
+#, no-c-format
+msgid "This is used to enable the low battery information"
+msgstr ""
+
+#: rc.cpp:34
+#, no-c-format
+msgid "This is used to enable the critical battery information"
+msgstr ""
+
+#: rc.cpp:36
+#, no-c-format
+msgid "C&ritical battery trigger:"
+msgstr ""
+
+#: rc.cpp:38
+#, no-c-format
+msgid "&Notify when battery becomes fully charged"
+msgstr ""
+
+#: rc.cpp:40
+#, no-c-format
+msgid "Alt+N"
+msgstr ""
+
+#: rc.cpp:42
+#, no-c-format
+msgid "Other Options"
+msgstr ""
+
+#: rc.cpp:44
+#, no-c-format
+msgid "Setup &Helper Application"
+msgstr ""
+
+#: rc.cpp:46
+#, no-c-format
+msgid "Alt+H"
+msgstr ""
+
+#: rc.cpp:48
+#, no-c-format
+msgid "This button can be used to enable the helper application"
+msgstr ""
+
+#: rc.cpp:50
+#, no-c-format
+msgid "&Enable Bluetooth device at program start-up"
+msgstr ""
+
+#: rc.cpp:52
+#, no-c-format
+msgid "Alt+E"
+msgstr ""
+
+#: rc.cpp:54
+#, no-c-format
+msgid "Select &Audio Application:"
+msgstr ""
+
+#: rc.cpp:56
+#, no-c-format
+msgid "amaroK"
+msgstr ""
+
+#: rc.cpp:58
+#, no-c-format
+msgid "JuK"
+msgstr ""
+
+#: rc.cpp:60
+#, no-c-format
+msgid "XMMS"
+msgstr ""
+
+#: rc.cpp:62
+#, no-c-format
+msgid ""
+"This can be used to select prefered audio application to use with front "
+"panel buttons"
+msgstr ""
+
+#: rc.cpp:64
+#, no-c-format
 msgid "KToshiba: Video and Power Status"
 msgstr ""
 
-#: rc.cpp:7
-#, no-c-format
-msgid "KToshiba: Status Widget"
+#: kcmktoshiba/kcmtoshiba_general.ui.h:27
+msgid ""
+"The helper cannot be found.\n"
+"Please make sure that it is installed corectly"
+msgstr ""
+
+#: kcmktoshiba/kcmtoshiba_general.ui.h:36
+msgid ""
+"You will need to supply a root password to allow the privileges of "
+"ktosh_helper to change."
+msgstr ""
+
+#: kcmktoshiba/kcmtoshiba_general.ui.h:48
+msgid ""
+"The helper cannot be enabled because kdesu cannot be found.\n"
+"Please make sure that it is installed correctly."
+msgstr ""
+
+#: kcmktoshiba/main.cpp:54
+msgid "kcmktoshiba"
+msgstr ""
+
+#: kcmktoshiba/main.cpp:55
+msgid "KDE Control Module for Toshiba Laptops"
+msgstr ""
+
+#: kcmktoshiba/main.cpp:59
+msgid "Original author"
+msgstr ""
+
+#: kcmktoshiba/main.cpp:153
+msgid "Helpful information about the KToshiba module."
+msgstr ""
+
+#: ktoshiba.cpp:114
+msgid "&Configure KToshiba..."
+msgstr ""
+
+#: ktoshiba.cpp:117
+msgid "Suspend To &Disk"
+msgstr ""
+
+#: ktoshiba.cpp:119
+msgid "Suspend To &RAM"
+msgstr ""
+
+#: ktoshiba.cpp:122
+msgid "Enable &Bluetooth"
+msgstr ""
+
+#: ktoshiba.cpp:125
+msgid "&About KToshiba"
+msgstr ""
+
+#: ktoshiba.cpp:139 ktoshiba.cpp:710 ktoshiba.cpp:716 ktoshiba.cpp:729
+#: ktoshiba.cpp:735
+msgid "WARNING"
+msgstr ""
+
+#: ktoshiba.cpp:140
+msgid ""
+"The powersave daemon is not running or you are not member of the powersave "
+"system group.\n"
+"Starting it will improve performance: /etc/init.d/rcpowersave start"
+msgstr ""
+
+#: ktoshiba.cpp:212
+msgid "Your battery is now fully charged."
+msgstr ""
+
+#: ktoshiba.cpp:212
+msgid "Laptop Battery"
+msgstr ""
+
+#: ktoshiba.cpp:217
+msgid "The battery state has changed to low"
+msgstr ""
+
+#: ktoshiba.cpp:222
+msgid "The battery state has changed to critical"
+msgstr ""
+
+#: ktoshiba.cpp:227
+msgid "I'm Gone..."
+msgstr ""
+
+#: ktoshiba.cpp:269
+msgid "Wireless antenna turned on"
+msgstr ""
+
+#: ktoshiba.cpp:270 ktoshiba.cpp:273
+msgid "Wireless"
+msgstr ""
+
+#: ktoshiba.cpp:272
+msgid "Wireless antenna turned off"
+msgstr ""
+
+#: ktoshiba.cpp:375
+msgid "No interface available"
+msgstr ""
+
+#: ktoshiba.cpp:380
+msgid "Plugged in - fully charged"
+msgstr ""
+
+#: ktoshiba.cpp:386
+msgid "Plugged in - %1% charged (%2:%3 time left)"
+msgstr ""
+
+#: ktoshiba.cpp:390
+msgid "Plugged in - no battery"
+msgstr ""
+
+#: ktoshiba.cpp:392
+#, c-format
+msgid "Plugged in - %1% charged"
+msgstr ""
+
+#: ktoshiba.cpp:401
+msgid "Running on batteries - %1% charged (%2:%3 time left)"
+msgstr ""
+
+#: ktoshiba.cpp:404
+#, c-format
+msgid "Running on batteries  - %1% charged"
+msgstr ""
+
+#: ktoshiba.cpp:586
+msgid "User Settings"
+msgstr ""
+
+#: ktoshiba.cpp:592
+msgid "Low Power"
+msgstr ""
+
+#: ktoshiba.cpp:598
+msgid "Full Power"
+msgstr ""
+
+#: ktoshiba.cpp:604
+msgid "Full Life"
+msgstr ""
+
+#: ktoshiba.cpp:711
+msgid "Suspend disabled by administrator."
+msgstr ""
+
+#: ktoshiba.cpp:717
+msgid "A save suspend needs the powersave daemon running in the background."
+msgstr ""
+
+#: ktoshiba.cpp:730
+msgid "Standby disabled by administrator."
+msgstr ""
+
+#: ktoshiba.cpp:736
+msgid "A save standby needs the powersave daemon running in the background."
+msgstr ""
+
+#: ktoshiba.cpp:752
+msgid ""
+"Could not change wireless status because ktosh_helper cannot be found.\n"
+"Please make sure that it is installed correctly."
+msgstr ""
+
+#: ktoshiba.cpp:764
+msgid "Wireless interface up"
+msgstr ""
+
+#: ktoshiba.cpp:765 ktoshiba.cpp:774
+msgid "Info"
+msgstr ""
+
+#: ktoshiba.cpp:773
+msgid "Wireless interface down"
+msgstr ""
+
+#: ktoshiba.cpp:1070
+msgid ""
+"Could not get model id.\n"
+"Weird"
+msgstr ""
+
+#: ktoshiba.cpp:1075
+msgid ""
+"Please send the model name and this id %1 to:\n"
+"neftali@utep.edu"
+msgstr ""
+
+#: ktoshiba.cpp:1116
+msgid "Bluetooth device activated"
+msgstr ""
+
+#: ktoshiba.cpp:1117
+msgid "Bluetooth"
 msgstr ""

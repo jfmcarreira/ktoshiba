@@ -39,7 +39,7 @@ extern "C" {
 
 /**
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.3
+ * @version 0.4
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -124,9 +124,20 @@ public:
 	void selectBayLock(int *lock);
 	/**
 	 * Gets the device attached to the selectbay.
+	 * @param bay the int holding the desired select bay
 	 * @return @p the int holding the current device
 	 */
-	int selectBayStatus();
+	int selectBayStatus(int bay);
+	/**
+	 * Verifies the wireless antenna switch.
+	 * @return @p the int holding the status
+	 */
+	int getWirelessSwitch();
+	/**
+	 * Enables the Bluetooth device.
+	 * @return @p the int holding the device status
+	 */
+	int setBluetooth();
 private:
 	SMMRegisters reg;
 	FILE *str;
