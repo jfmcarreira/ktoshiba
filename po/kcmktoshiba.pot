@@ -1,0 +1,143 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-11-23 22:21-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr ""
+
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr ""
+
+#: main.cpp:55
+msgid "kcmktoshiba"
+msgstr ""
+
+#: main.cpp:56
+msgid "KDE Control Module for Toshiba Laptops"
+msgstr ""
+
+#: main.cpp:60
+msgid "Original author"
+msgstr ""
+
+#: main.cpp:159
+msgid "Helpful information about the KToshiba module."
+msgstr ""
+
+#: rc.cpp:2
+#, no-c-format
+msgid "KToshiba: General Options"
+msgstr ""
+
+#: rc.cpp:4
+#, no-c-format
+msgid ""
+"Cannot find the <i>Toshiba System Managment Mode Driver</i>. If this is a "
+"Toshiba Laptop, make sure the <b>toshiba</b> driver module loads without "
+"failures."
+msgstr ""
+
+#: rc.cpp:6
+#, no-c-format
+msgid "System Power"
+msgstr ""
+
+#: rc.cpp:8
+#, no-c-format
+msgid "Remaining battery capacity:"
+msgstr ""
+
+#: rc.cpp:10
+#, no-c-format
+msgid "AC"
+msgstr ""
+
+#: rc.cpp:12
+#, no-c-format
+msgid "Bat"
+msgstr ""
+
+#: rc.cpp:14
+#, no-c-format
+msgid "Battery Options"
+msgstr ""
+
+#: rc.cpp:16
+#, no-c-format
+msgid "Check &battery status every:"
+msgstr ""
+
+#: rc.cpp:18
+#, no-c-format
+msgid " sec"
+msgstr ""
+
+#: rc.cpp:20
+#, no-c-format
+msgid ""
+"This is used to determine how often the program will check the battery status"
+msgstr ""
+
+#: rc.cpp:22
+#, no-c-format
+msgid "&Low battery trigger:"
+msgstr ""
+
+#: rc.cpp:24 rc.cpp:28
+#, no-c-format
+msgid " min"
+msgstr ""
+
+#: rc.cpp:26
+#, no-c-format
+msgid "This is used to enable the low battery information"
+msgstr ""
+
+#: rc.cpp:30
+#, no-c-format
+msgid "This is used to enable the critical battery information"
+msgstr ""
+
+#: rc.cpp:32
+#, no-c-format
+msgid "C&ritical battery trigger:"
+msgstr ""
+
+#: rc.cpp:34
+#, no-c-format
+msgid "&Notify when battery becomes fully charged"
+msgstr ""
+
+#: rc.cpp:36
+#, no-c-format
+msgid "Alt+N"
+msgstr ""
+
+#: rc.cpp:38
+#, no-c-format
+msgid "Other Options"
+msgstr ""
+
+#: rc.cpp:40
+#, no-c-format
+msgid "Setup Helper Application"
+msgstr ""
+
+#: rc.cpp:42
+#, no-c-format
+msgid "This button can be used to enable the helper application"
+msgstr ""

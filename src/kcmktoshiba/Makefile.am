@@ -5,7 +5,7 @@ INCLUDES = -I$(top_builddir)/src/ $(all_includes)
 kcm_ktoshiba_la_METASOURCES = AUTO
 
 messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/ktoshiba.pot
+	$(XGETTEXT) *.cpp -o $(podir)/kcmktoshiba.pot
 
 # the application source, library search path, and link libraries
 kde_module_LTLIBRARIES = kcm_ktoshiba.la
