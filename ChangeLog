@@ -1,0 +1,75 @@
+
+2004-11-22 Azael Avalos <neftali@utep.edu>
+	* Added the icons for MousePad to the widget
+	* Removed code for HotSwapping since the Toshiba
+	  I got to test had a Phoenix BIOS, therefore
+	  unsupported by toshiba kernel module
+
+2004-11-21 Azael Avalos <neftali@utep.edu>
+	* Added a new widget showing MousePad, Speakers
+	  and Brightness status
+	* Removed the speakers status from the settings widget
+	* Updated settings widget
+
+2004-11-04 Azael Avalos <neftali@utep.edu>
+	* Small checks
+	* Helper application now checks for wlan device
+	  and disables/enables eth0 device
+	* Small code cleanup
+
+2004-10-31 Azael Avalos <neftali@utep.edu>
+	* Added new functions to KToshibaSMMInterface
+	* First steps to get HotSwapping working
+
+2004-10-29 Azael Avalos <neftali@utep.edu>
+	* Got brightness working with Battery Save Mode
+	  so it reflects changes made to BSM
+	* Small code cleanup
+	* Added tooltips to KCM widget
+
+2004-10-25 Azael Avalos <neftali@utep.edu>
+	* Started Battery Save Mode options
+
+2004-10-20 Azael Avalos <neftali@utep.edu>
+	* Code cleanup
+	* Added a button to set helper application set suid
+
+2004-10-17 Azael Avalos <neftali@utep.edu>
+	* Update to version 0.3
+	* Added widget showing video status
+	* Added more functions to KToshibaSMMInterface
+	* Borrowed icons from crystal set
+	* Small fixes here and there
+	* Many things I don't remember
+
+2004-10-16 Azael Avalos <neftali@utep.edu>
+	* Added widget showing powersave status
+	* Borrowed icons from toshutils
+	* Added more functions to KToshibaSMMInterface
+	* Small fixes here and there
+	* Asked my friend to let me use his Toshiba laptop ;)
+
+2004-10-15 Azael Avalos <neftali@utep.edu>
+	* Updated to KDE 3.3.1, KDevelop 3.1.1
+	* KDevelop is not creating packages correctly ;(
+
+2004-10-10 Azael Avalos <neftali@utep.edu>
+	* Converted KToshibaSMMInterface into a library
+	* Finally got the KControl Center Module working
+
+2004-10-09 Azael Avalos <neftali@utep.edu>
+	* Config widget not working... it causes a crash
+
+2004-10-08 Azael Avalos <neftali@utep.edu>
+	* Converted config Widget into Kcontrol Center Module
+
+2004-10-01 Azael Avalos <neftali@utep.edu>
+	* Updated to version 0.2
+	* Small fixes here and there
+	* Many things I don't remember
+
+2004-09-06 Azael Avalos <neftali@utep.edu>
+	* Small fixes here and there
+
+2004-09-06 Azael Avalos <neftali@utep.edu>
+	* Initial Release 0.1

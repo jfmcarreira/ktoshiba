@@ -1,0 +1,36 @@
+KToshiba
+=====
+KToshiba is currently covered under the GPL version 2.  A copy of this
+license can be found in a file named COPYING, in the toplevel directory.
+
+What it is
+=====
+KToshiba is a KDE monitor for the special keys found on Toshiba laptops
+such Fn-Key combos and the Multimedia keys found on the front panel.
+
+This program have been tested on a Satellite(R) A25-S279 model,
+newer Satellite(R) models may work also with this program since
+the Fn-Keys are the same as I have seen, but I haven't tested them.
+
+Requirements
+=====
+- A Toshiba laptop (this is a must)
+- Compiler and utilities (autoconf, automake, etc.)
+- KDE 3.1.x and development libraries
+- The Powersave daemon and Libraries (for STR and STD)
+- A lot of courage
+
+Support
+=====
+I have plans to add more support to other Toshiba models in the
+future, if you liked this program and wish to have support for your
+Toshiba laptop send an e-mail to neftali@utep.edu and include the
+Fn-Key combos available on your laptop and what they do (eg: Fn-F1
+LockScreen or Fn-F7 Brightness Up).
+
+Contact
+=====
+You can reach me by mail at 
+neftali@utep.edu
+or
+nonoxinol900@hotmail.com
