@@ -1,97 +1,169 @@
-"Content-Type: text/plain; charset=UTF-8\n"
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr ""
 
-[Header]
-Author-Email=azael@Shakuras.scurra.org
-Author-Name=Azael Avalos
-AutoSaveDelay=0
-AutoSyntaxCheck=true
-AutoUpdate=true
-CheckPluralArgument=true
-CustomDateFormat=%Y-%m-%d %H:%M%z
-DateFormat=1
-DescriptionString=translation of @PACKAGE@.po to @LANGUAGE@
-Encoding=1
-FSFCopyright=1
-Language=
-LanguageCode=en_US
-Local-Author-Name=Azael Avalos
-Mailinglist=en@li.org
-PluralForms=2
-PluralFormsHeader=
-ProjectString=@PACKAGE@
-SaveObsolete=false
-Timezone=GMT
-Update-Charset=true
-Update-Encoding=true
-Update-Language-Team=true
-Update-Last-Translator=true
-Update-Project=true
-Update-Revision-Date=true
-UpdateDescription=true
-UpdateTranslatorCopyright=true
-UseOldEncoding=true
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr ""
 
-[KBabelDict]
-ActiveModule=poauxiliary
-ResultSplitter=50,196
+#: ktoshiba.cpp:107
+msgid "&Configure KToshiba..."
+msgstr ""
 
-[KDBSearchEngine]
-AutoAuthor=
-AutoUp=true
-CaseSensitive=false
-CommonThrs=300
-Filename=$HOME/.kde/share/apps/kbabeldict/dbsearchengine
-Language=en_US
-Limit1=20
-Limit2=8
-ListMax=500
-Mode=2
-Normalize=true
-RegExp=
-RemoveCharacter=&.:
-RemoveContext=true
-ReturnNothing=false
-Rules=1
-Substitution1=true
-Substitution2=false
-Threshold1=50
-Threshold2=50
+#: ktoshiba.cpp:110
+msgid "Suspend To &Disk"
+msgstr ""
 
-[Misc]
-AccelMarker=&
-BZipCompression=true
-CompressSingleFile=true
-ContextInfo=^_:((?!\\\\n\\n).)+\\\\n\\n
-SingularPlural=_n:\\s
+#: ktoshiba.cpp:112
+msgid "Suspend To &RAM"
+msgstr ""
 
-[Project]
-Name=
+#: ktoshiba.cpp:115
+msgid "&About KToshiba"
+msgstr ""
 
-[Tags]
-ArgExpressions=%[ndioxXucsfeEgGp],%([0-9]+(\\\\$))?[-+'#0]?[0-9]*(.[0-9]+)?[hlL]?[dioxXucsfeEgGp],%[0-9]+
-TagExpressions=</[A-Za-z0-9\\\\n]+>,<[A-Za-z0-9\\\\n]+[^>]*/?>,http:\\\\/\\\\/[a-zA-Z0-9\\\\.\\\\-_/~]+,mailto:[a-z0-9\\\\.\\\\-_]+@[a-z0-9\\\\.\\\\-_]+,<?[a-z0-9\\\\.\\\\-_]+@[a-z0-9\\\\.\\\\-_]+>?,&[a-z\\,A-Z\\,\\\\-\\,0-9\\,#\\\\.]*;
+#: ktoshiba.cpp:129 ktoshiba.cpp:633 ktoshiba.cpp:640 ktoshiba.cpp:650
+#: ktoshiba.cpp:657
+msgid "WARNING"
+msgstr ""
 
-[poauxiliary]
-Auxiliary=../../../de/messages/@DIR1@/@PACKAGE@.po
-IgnoreFuzzy=true
+#: ktoshiba.cpp:130
+msgid ""
+"The powersave daemon is not running or you are not member of the powersave "
+"system group.\n"
+"Starting it will improve performance: /etc/init.d/rcpowersave start"
+msgstr ""
 
-[pocompendium]
-CaseSensitive=false
-Compendium=http://i18n.kde.org/po_overview/@LANG@.messages
-IgnoreFuzzy=true
-MatchContains=true
-MatchEqual=true
-MatchIsContained=false
-MatchNGram=true
-MatchWords=true
-WholeWords=true
+#: ktoshiba.cpp:193
+msgid "Your battery is now fully charged."
+msgstr ""
 
-[tmxcompendium]
-CaseSensitive=false
-Compendium=http://i18n.kde.org/po_overview/@LANG@.messages
-MatchContains=true
-MatchEqual=true
-MatchIsContained=false
-MatchNGram=true
-MatchWords=true
-WholeWords=true
+#: ktoshiba.cpp:193
+msgid "Laptop Battery"
+msgstr ""
+
+#: ktoshiba.cpp:198
+msgid "The battery state has changed to low"
+msgstr ""
+
+#: ktoshiba.cpp:203
+msgid "The battery state has changed to critical"
+msgstr ""
+
+#: ktoshiba.cpp:208
+msgid "I'm Gone..."
+msgstr ""
+
+#: ktoshiba.cpp:346
+msgid "No interface available"
+msgstr ""
+
+#: ktoshiba.cpp:351
+msgid "Plugged in - fully charged"
+msgstr ""
+
+#: ktoshiba.cpp:357
+msgid "Plugged in - %1% charged (%2:%3 time left)"
+msgstr ""
+
+#: ktoshiba.cpp:361
+msgid "Plugged in - no battery"
+msgstr ""
+
+#: ktoshiba.cpp:363
+#, c-format
+msgid "Plugged in - %1% charged"
+msgstr ""
+
+#: ktoshiba.cpp:372
+msgid "Running on batteries - %1% charged (%2:%3 time left)"
+msgstr ""
+
+#: ktoshiba.cpp:375
+#, c-format
+msgid "Running on batteries  - %1% charged"
+msgstr ""
+
+#: ktoshiba.cpp:634
+msgid "Suspend disabled by administrator."
+msgstr ""
+
+#: ktoshiba.cpp:641
+msgid "A save suspend needs the powersave daemon running in the background."
+msgstr ""
+
+#: ktoshiba.cpp:651
+msgid "Standby disabled by administrator."
+msgstr ""
+
+#: ktoshiba.cpp:658
+msgid "A save standby needs the powersave daemon running in the background."
+msgstr ""
+
+#: ktoshiba.cpp:677
+msgid ""
+"Could not change wireless status because ktosh_helper cannot be found.\n"
+"Please make sure that it is installed correctly."
+msgstr ""
+
+#: ktoshiba.cpp:679 ktoshiba.cpp:688 ktoshiba.cpp:697 ktoshiba.cpp:728
+#: main.cpp:40
+msgid "KToshiba"
+msgstr ""
+
+#: ktoshiba.cpp:689
+msgid "Wireless interface up"
+msgstr ""
+
+#: ktoshiba.cpp:690 ktoshiba.cpp:699
+msgid "Info"
+msgstr ""
+
+#: ktoshiba.cpp:698
+msgid "Wireless interface down"
+msgstr ""
+
+#: ktoshiba.cpp:727
+msgid ""
+"Please send the model name and this id %1 to:\n"
+"neftali@utep.edu."
+msgstr ""
+
+#: main.cpp:28
+msgid "Hotkeys & Battery monitoring for Toshiba laptops."
+msgstr ""
+
+#: main.cpp:43
+msgid "toshutils and HCI-SCI stuff"
+msgstr ""
+
+#: main.cpp:45
+msgid "Toshiba Laptop ACPI Extras driver"
+msgstr ""
+
+#: main.cpp:47
+msgid "Powersave Daemon & KPowersave"
+msgstr ""
+
+#: main.cpp:48
+msgid "Some ideas and pieces of code"
+msgstr ""
+
+#: rc.cpp:2
+#, no-c-format
+msgid "C&ustom"
+msgstr ""
+
+#: rc.cpp:4
+#, no-c-format
+msgid "KToshiba: Video and Power Status"
+msgstr ""
+
+#: rc.cpp:7
+#, no-c-format
+msgid "KToshiba: Status Widget"
+msgstr ""
