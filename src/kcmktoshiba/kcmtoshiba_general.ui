@@ -251,25 +251,51 @@
                     <property name="title">
                         <string>Other Options</string>
                     </property>
-                    <widget class="QPushButton">
+                    <hbox>
                         <property name="name">
-                            <cstring>helperPushButton</cstring>
+                            <cstring>unnamed</cstring>
                         </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>30</y>
-                                <width>160</width>
-                                <height>25</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Setup Helper Application</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>This button can be used to enable the helper application</string>
-                        </property>
-                    </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>helperPushButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Setup Helper Application</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>This button can be used to enable the helper application</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>audioAppTextLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Select Audio Application:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>audioComboBox</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>amaroK</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>XMMS</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>audioComboBox</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>This can be used to select prefered audio application to use with front panel buttons</string>
+                            </property>
+                        </widget>
+                    </hbox>
                 </widget>
             </vbox>
         </widget>
