@@ -120,8 +120,9 @@ public:
 	/**
 	 * Gets the status of the selectbay lock.
 	 * @param lock the int holding the current lock status
+	 * @param bay the int holding the desired select bay
 	 */
-	void selectBayLock(int *lock);
+	void selectBayLock(int *lock, int bay);
 	/**
 	 * Gets the device attached to the selectbay.
 	 * @param bay the int holding the desired select bay

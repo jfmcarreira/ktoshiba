@@ -55,7 +55,7 @@ KToshiba::KToshiba()
 	  mModeTimer( new QTimer(this) )
 {
 	mDriver = new KToshibaSMMInterface(this);
-	mAboutWidget = new KAboutApplication(this);
+	mAboutWidget = new KAboutApplication(this, "About Widget", false);
 	mSettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
 	mSettingsWidget->setFocusPolicy(QWidget::NoFocus);
 	mStatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
@@ -65,8 +65,8 @@ KToshiba::KToshiba()
 	// check whether toshiba module is loaded
 	mInterfaceAvailable = mDriver->openInterface();
 	if (!mInterfaceAvailable) {
-		kdDebug() << "KToshiba: Could not open interface."
-				  << " Please check that the toshiba module loads without failures"
+		kdDebug() << "KToshiba: Could not open interface. "
+				  << "Please check that the toshiba module loads without failures"
 				  << endl;
 		exit(-1);
 	} else {
@@ -92,6 +92,7 @@ KToshiba::KToshiba()
 		else battrig = false;
 		mWirelessSwitch = mDriver->getWirelessSwitch();
 		mOldWirelessSwitch = mWirelessSwitch;
+		bluetooth = 0;
 	}
 
 	if (!mClient.attach())
@@ -144,7 +145,7 @@ KToshiba::KToshiba()
 
 	displayPixmap();
 	setModel();
-	if (bluetooth)
+	if (btstart)
 		doBluetooth();
 }
 
@@ -160,15 +161,15 @@ KToshiba::~KToshiba()
 		mClient.detach();
 	}
 
-	delete instance;
-	delete mStatusWidget;
-	delete mSettingsWidget;
-	delete mAboutWidget;
-
 	// Stop timers 
 	mPowTimer->stop();
 	mSysEvTimer->stop();
 	mModeTimer->stop();
+
+	delete instance;
+	delete mStatusWidget;
+	delete mSettingsWidget;
+	delete mAboutWidget;
 }
 
 void KToshiba::doConfig()
@@ -190,7 +191,7 @@ void KToshiba::loadConfiguration(KConfig *k)
 	mCryBat = k->readNumEntry("Critical_Battery_Trigger", 5);
 	mBatSave = k->readNumEntry("Battery_Save_Mode");
 	mAudioPlayer = k->readNumEntry("Audio_Player", 1);
-	bluetooth = k->readBoolEntry("Bluetooth_Startup", true);
+	btstart = k->readBoolEntry("Bluetooth_Startup", true);
 }
 
 void KToshiba::displayAbout()
@@ -240,6 +241,8 @@ void KToshiba::powerStatus()
 	if (mBatSave != mOldBatSave || pow != oldpow) {
 		switch (mBatSave) {
 			// TODO: Save user settings to file and make configurable
+			// TODO: Add support for more battery save options for
+			// older models depending on type
 			case 0:			// USER SETTINGS
 				bright = 0;		// Semi-Bright
 				break;
@@ -264,6 +267,10 @@ void KToshiba::powerStatus()
 		mPowTimer->start(mBatStatus * 1000);
 	}
 
+	//
+	// TODO: This doesn't belong here and should be moved by 0.5
+	// since this function only has to do with power and battery
+	// options
 	if (mWirelessSwitch != mOldWirelessSwitch) {
 		if (mWirelessSwitch == 1)
 			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned on"),
@@ -476,7 +483,10 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb31:	// Previous
 			if (MODE == CD_DVD) {
-				mClient.send("kaffeine", "KaffeineIface", "previous()", "");
+				if (mClient.send("kscd", "", "", "") == true)
+					mClient.send("kscd", "CDPlayer", "previous()", "");
+				else
+					mClient.send("kaffeine", "KaffeineIface", "previous()", "");
 			} else
 			if (MODE == DIGITAL) {
 				if (mAudioPlayer == amaroK) {
@@ -494,7 +504,10 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb32:	// Next
 			if (MODE == CD_DVD) {
-				mClient.send("kaffeine", "KaffeineIface", "next()", "");
+				if (mClient.send("kscd", "", "", "") == true)
+					mClient.send("kscd", "CDPlayer", "next()", "");
+				else
+					mClient.send("kaffeine", "KaffeineIface", "next()", "");
 			} else
 			if (MODE == DIGITAL) {
 				if (mAudioPlayer == amaroK) {
@@ -512,10 +525,14 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb33:	// Play/Pause
 			if (MODE == CD_DVD) {
-				if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", ""))
-					mClient.send("kaffeine", "KaffeineIface", "pause()", "");
-				else
-					mClient.send("kaffeine", "KaffeineIface", "play()", "");
+				if (mClient.send("kscd", "", "", "") == true)
+					mClient.send("kscd", "CDPlayer", "play()", "");
+				else if (mClient.send("kaffeine", "", "", "") == true) {
+					if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", "") == true)
+						mClient.send("kaffeine", "KaffeineIface", "pause()", "");
+					else
+						mClient.send("kaffeine", "KaffeineIface", "play()", "");
+				}
 			} else
 			if (MODE == DIGITAL) {
 				if (mAudioPlayer == amaroK) {
@@ -533,7 +550,9 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb30:	// Stop/Eject
 			if (MODE == CD_DVD) {
-				if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", ""))
+				if (mClient.send("kscd", "", "", "") == true)
+					mClient.send("kscd", "CDPlayer", "stop()", "");
+				else if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", "") == true)
 					mClient.send("kaffeine", "KaffeineIface", "stop()", "");
 				else {
 					proc << "eject" << "--cdrom";
@@ -757,7 +776,7 @@ void KToshiba::toggleWireless(bool status)
 
 	KProcess proc;
 	if (status) {
-		proc << "ktosh_helper" << "--enable" << "ath0";
+		proc << "ktosh_helper" << "--enable";
 		proc.start(KProcess::DontCare);
 		proc.detach();
 		KPassivePopup::message(i18n("KToshiba"), 
@@ -766,7 +785,7 @@ void KToshiba::toggleWireless(bool status)
 		return;
 	} else
 	if (!status) {
-		proc << "ktosh_helper" << "--disable" << "ath0";
+		proc << "ktosh_helper" << "--disable";
 		proc.start(KProcess::DontCare);
 		proc.detach();
 		KPassivePopup::message(i18n("KToshiba"), 
@@ -1070,7 +1089,7 @@ void KToshiba::setModel()
 							i18n("Could not get model id.\nWeird"));
 			break;
 		default:
-			mod = "- UNKNOWN -";
+			mod = "UNKNOWN";
 			KMessageBox::queuedMessageBox(0, KMessageBox::Information,
 									  i18n("Please send the model name and this id %1 to:\n"
 									       "neftali@utep.edu").arg(id), i18n("KToshiba"));
@@ -1107,22 +1126,24 @@ void KToshiba::doBluetooth()
 {
 	int bt = mDriver->setBluetooth();
 
-	if (bt == -1) {
+	if ((bt == -1) && btstart) {
 		this->contextMenu()->setItemEnabled(6, FALSE);
-		bluetooth = false;
 		return;
 	} else
-	if (bt && bluetooth) {
+	if (bt && btstart && !bluetooth) {
 		KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
 		this->contextMenu()->setItemEnabled(6, FALSE);
-		bluetooth = true;
-		return;
+		bluetooth = 1;
+	} else
+	if (bt && !btstart && !bluetooth) {
+		KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
+							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
+		this->contextMenu()->setItemEnabled(6, FALSE);
+		bluetooth = 1;
 	}
-	else {
+	else
 		this->contextMenu()->setItemEnabled(6, TRUE);
-		bluetooth = false;
-	}
 }
 
 

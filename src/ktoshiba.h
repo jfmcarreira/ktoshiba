@@ -43,7 +43,7 @@ extern "C" {
 #define DIGITAL			0x40
 
 #define amaroK			0
-#define JuK				1
+#define JuK			1
 #define XMMS			2
 
 class SettingsWidget;
@@ -118,7 +118,7 @@ private:
 	bool lowtrig;
 	bool crytrig;
 	bool battrig;
-	bool bluetooth;
+	bool btstart;
 	int snd;
 	int oldsnd;
 	int pow;
@@ -138,6 +138,7 @@ private:
 	int current_code;
 	int MODE;
 	int popup;
+	int bluetooth;
 };
 
 #endif // KTOSHIBA_H

@@ -1,7 +1,6 @@
 KToshiba TODO list
 - Find another way to disable MousePad since the SCI call
-	does not work with my toshiba model
+  does not work with my toshiba model
 - Finish the User-Settings Power saving mode
-- Make the audio and video programs configurable and their
-	options (currently only XMMS is supported as audio :( )
+- Make the audio and video programs configurable (partly done)
 - Add support for more laptops
