@@ -1,0 +1,331 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>KCMKToshibaGeneral</class>
+<author>Azael Avalos</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>KCMKToshibaGeneral</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>564</width>
+            <height>384</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KToshiba: General Options</string>
+    </property>
+    <property name="icon">
+        <pixmap>image0</pixmap>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>tlOff</cstring>
+            </property>
+            <property name="text">
+                <string>Cannot find the &lt;i&gt;Toshiba System Managment Mode Driver&lt;/i&gt;. If this is a Toshiba Laptop, make sure the &lt;b&gt;toshiba&lt;/b&gt; driver module loads without failures.</string>
+            </property>
+        </widget>
+        <widget class="QFrame">
+            <property name="name">
+                <cstring>frameMain</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>bgBattery</cstring>
+                    </property>
+                    <property name="title">
+                        <string>System Power</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignTop</set>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>tlBattery</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Remaining battery capacity:</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignRight</set>
+                            </property>
+                        </widget>
+                        <widget class="KProgress">
+                            <property name="name">
+                                <cstring>mKPBattery</cstring>
+                            </property>
+                        </widget>
+                        <widget class="KLed">
+                            <property name="name">
+                                <cstring>kledAC</cstring>
+                            </property>
+                            <property name="state">
+                                <enum>Off</enum>
+                            </property>
+                            <property name="shape">
+                                <enum>Rectangular</enum>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>tlAC</cstring>
+                            </property>
+                            <property name="text">
+                                <string>AC</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                        </widget>
+                        <widget class="KLed">
+                            <property name="name">
+                                <cstring>kledBat</cstring>
+                            </property>
+                            <property name="state">
+                                <enum>Off</enum>
+                            </property>
+                            <property name="shape">
+                                <enum>Rectangular</enum>
+                            </property>
+                            <property name="color">
+                                <color>
+                                    <red>255</red>
+                                    <green>255</green>
+                                    <blue>0</blue>
+                                </color>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>tlBat</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Bat</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>bgBatteryOptions</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Battery Options</string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>batstatTextLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Check &amp;battery status every:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>batstatSpinBox</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox" row="0" column="1">
+                            <property name="name">
+                                <cstring>batstatSpinBox</cstring>
+                            </property>
+                            <property name="suffix">
+                                <string> sec</string>
+                            </property>
+                            <property name="minValue">
+                                <number>1</number>
+                            </property>
+                            <property name="value">
+                                <number>2</number>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>This is used to determine how often the program will check the battery status</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>lowbatTextLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Low battery trigger:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>lowbatSpinBox</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox" row="1" column="1">
+                            <property name="name">
+                                <cstring>lowbatSpinBox</cstring>
+                            </property>
+                            <property name="suffix">
+                                <string> min</string>
+                            </property>
+                            <property name="minValue">
+                                <number>1</number>
+                            </property>
+                            <property name="value">
+                                <number>15</number>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>This is used to enable the low battery information</string>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox" row="2" column="1">
+                            <property name="name">
+                                <cstring>crybatSpinBox</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>4</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="suffix">
+                                <string> min</string>
+                            </property>
+                            <property name="minValue">
+                                <number>1</number>
+                            </property>
+                            <property name="value">
+                                <number>5</number>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>This is used to enable the critical battery information</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>crybatTextLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>C&amp;ritical battery trigger:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>crybatSpinBox</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox" row="3" column="0">
+                            <property name="name">
+                                <cstring>batfullCheckBox</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Notify when battery becomes fully charged</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+N</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>bgOtherOptions</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Other Options</string>
+                    </property>
+                    <widget class="QPushButton">
+                        <property name="name">
+                            <cstring>helperPushButton</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>30</y>
+                                <width>160</width>
+                                <height>25</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>Setup Helper Application</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>This button can be used to enable the helper application</string>
+                        </property>
+                    </widget>
+                </widget>
+            </vbox>
+        </widget>
+    </vbox>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="242">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000000b949444154789cc553c10dc3200c74aa7e324a07e8bb99c113b10a91f97a06fa4d066013f3bc7ea08a482ba2e65124749cb18ded1303003ab32ea7a2b709f29a11e680065d2fc1b51e342931f153934626ae3c764b004000c816837871951fddef16ca8bbfcf806f4c4aba73c86b9ec21cdc06ddc716c40bccdbae05f1e2cc1bca7dc558efdb19a041678bb9c2a7e217c50b6a5c57054d3a31318df73116bfc8c48fc32ad40abef1ae0aadbde55d155a7bcb4f5730fcfd37be009a5923fc0e9918950000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>batfullCheckBox</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>batstatSpinBox</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>crybatSpinBox</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>lowbatSpinBox</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>helperPushButton</sender>
+        <signal>clicked()</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>setupHelperSlot()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">kcmtoshiba_general.ui.h</include>
+</includes>
+<signals>
+    <signal>changed();</signal>
+</signals>
+<slots>
+    <slot>changedSlot()</slot>
+    <slot>setupHelperSlot()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kprogress.h</includehint>
+    <includehint>kled.h</includehint>
+    <includehint>kled.h</includehint>
+</includehints>
+</UI>
