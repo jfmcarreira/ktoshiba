@@ -43,7 +43,8 @@ extern "C" {
 #define DIGITAL			0x40
 
 #define amaroK			0
-#define XMMS			1
+#define JuK				1
+#define XMMS			2
 
 class SettingsWidget;
 class StatusWidget;
@@ -73,9 +74,10 @@ protected slots:
 	void displayAbout();
 	void powerStatus();
 	void checkEvent();
-	void doStandBy();
-	void doSuspend();
+	void doSuspendToDisk();
+	void doSuspendToRAM();
 	void mode();
+	void doBluetooth();
 protected:
 	KToshibaSMMInterface *mDriver;
 	KAboutApplication *mAboutWidget;
@@ -88,6 +90,8 @@ protected:
 	int mCryBat;
 	int mBatSave;
 	int mOldBatSave;
+	int mWirelessSwitch;
+	int mOldWirelessSwitch;
 	int mAudioPlayer;
 private:
 	void brightUp();
@@ -114,6 +118,7 @@ private:
 	bool lowtrig;
 	bool crytrig;
 	bool battrig;
+	bool bluetooth;
 	int snd;
 	int oldsnd;
 	int pow;

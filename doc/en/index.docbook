@@ -1,149 +1,79 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY ktoshiba "<application>KToshiba 0&#46;1</application>">
-  <!ENTITY kappname "&ktoshiba;"><!-- Do *not* replace kappname-->
-  <!ENTITY package "kde-module"><!-- kdebase, kdeadmin, etc -->
+  <!ENTITY ktoshiba "KToshiba">
+  <!ENTITY kappname "&ktoshiba;">
+  <!ENTITY package "kde-module">
   <!ENTITY % addindex "IGNORE">
-  <!ENTITY % English "INCLUDE"><!-- change language only here -->
-  
-  
-  <!-- Do not define any other entities; instead, use the entities
-       from kde-genent.entities and $LANG/user.entities. -->
+  <!ENTITY % English "INCLUDE">
 ]>
-<!-- kdoctemplate v0.8 October 1 1999 
-     Minor update to "Credits and Licenses" section on August 24, 2000
-     Removed "Revision history" section on 22 January 2001
-     Changed to Installation/Help menu entities 18 October 2001
-     Other minor cleanup and changes 18 October 2001 -->
-
-
-<!--
-This template was designed by: David Rugge davidrugge@mindspring.com
-with lots of help from: Eric Bischoff ebisch@cybercable.tm.fr
-and Frederik Fouvry fouvry@sfs.nphil.uni-tuebingen.de
-of the KDE DocBook team.
-
-You may freely use this template for writing any sort of KDE documentation.
-If you have any changes or improvements, please let us know.
-
-Remember:
-- in XML, the case of the <tags> and attributes is relevant ;
-- also, quote all attributes.
-
-Please don't forget to remove all these comments in your final documentation,
-thanks ;-).
--->
-
-<!-- ................................................................ -->
-
-<!-- The language must NOT be changed here. -->
 
 <book lang="&language;">
-
-<!-- This header contains all of the meta-information for the document such
-as Authors, publish date, the abstract, and Keywords -->
 
 <bookinfo>
 <title>The &ktoshiba; Handbook</title>
 
 <authorgroup>
 <author>
-<firstname></firstname>
-<othername></othername>
-<surname>Azael Avalos</surname>
+<firstname>Neftalí</firstname>
+<othername>Azael</othername>
+<surname>Avalos</surname>
 <affiliation>
-<address><email>azael&#64;Shakuras&#46;scurra&#46;org</email></address>
+<address><email>neftali@utep.edu</email></address>
 </affiliation>
 </author>
 </authorgroup>
 
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
-
 <copyright>
-<year>1999</year>
 <year>2004</year>
 <holder>Azael Avalos</holder>
 </copyright>
-<!-- Translators: put here the copyright notice of the translation -->
-<!-- Put here the FDL notice.  Read the explanation in fdl-notice.docbook
-     and in the FDL itself on how to use it. -->
+
 <legalnotice>&FDLNotice;</legalnotice>
 
-<!-- Date and version information of the documentation
-Don't forget to include this last date and this last revision number, we
-need them for translation coordination !
-Please respect the format of the date (YYYY-MM-DD) and of the version
-(V.MM.LL), it could be used by automation scripts.
-Do NOT change these in the translation. -->
-
-<date>2001-10-18</date>
-<releaseinfo>0&#46;1</releaseinfo>
+<date>2005-01-18</date>
+<releaseinfo>1&#46;0</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
 <abstract>
 <para>
-&ktoshiba; is an application specially designed to do nothing you would
-ever want.
+&ktoshiba; Battery Monitor and Fn-Key support for Toshiba laptops.
 </para>
 </abstract>
 
-<!-- This is a set of Keywords for indexing by search engines.
-Please at least include KDE, the KDE package it is in, the name
- of your application, and a few relevant keywords. -->
-
 <keywordset>
 <keyword>KDE</keyword>
-<keyword>KToshiba</keyword>
-<keyword>nothing</keyword>
-<keyword>nothing else</keyword>
+<keyword>toshiba</keyword>
+<keyword>battery</keyword>
+<keyword>fn</keyword>
 </keywordset>
 
 </bookinfo>
 
-<!-- The contents of the documentation begin here.  Label
-each chapter so with the id attribute. This is necessary for two reasons: it
-allows you to easily reference the chapter from other chapters of your
-document, and if there is no ID, the name of the generated HTML files will vary
-from time to time making it hard to manage for maintainers and for the CVS
-system. Any chapter labelled (OPTIONAL) may be left out at the author's
-discretion. Other chapters should not be left out in order to maintain a
-consistent documentation style across all KDE apps. -->
-
 <chapter id="introduction">
 <title>Introduction</title>
 
-<!-- The introduction chapter contains a brief introduction for the
-application that explains what it does and where to report
-problems. Basically a long version of the abstract.  Don't include a
-revision history. (see installation appendix comment) -->
-
 <para>
-&ktoshiba; is a program that lets you do absolutely nothing. Please report
-any problems or feature requests to the &kde; mailing lists.
+&ktoshiba; is a program that monitors special keys found on Toshiba laptops.
+</para>
+<para>
+
 </para>
 </chapter>
 
 <chapter id="using-ktoshiba">
 <title>Using &ktoshiba;</title>
 
-<!-- This chapter should tell the user how to use your app. You should use as
-many sections (Chapter, Sect1, Sect3, etc...) as is necessary to fully document
-your application. -->
-
 <para>
-
-<!-- Note that all graphics should be in .png format. Use no gifs because of
-patent issues. -->
 
 <screenshot>
 <screeninfo>Here's a screenshot of &ktoshiba;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="screenshot.png" format="PNG"/>
+	    <imagedata fileref="ktoshiba_taskbar.png" format="PNG"/>
 	  </imageobject>
 	  <imageobject>
-	    <imagedata fileref="screenshot.eps" format="EPS"/>
+	    <imagedata fileref="ktoshiba_config.png" format="PNG"/>
 	  </imageobject>
 	  <textobject>
 	    <phrase>Screenshot</phrase>

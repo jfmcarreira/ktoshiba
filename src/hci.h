@@ -3,8 +3,11 @@
  * Copyright (c) 1998,1999  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
  * $Log$
- * Revision 1.1  2004/12/06 19:43:33  coproscefalo
- * Initial revision
+ * Revision 1.2  2005/01/14 03:51:48  coproscefalo
+ * Support for audio applications
+ *
+ * Revision 1.1.1.1  2004/12/06 19:43:33  coproscefalo
+ * Initial import.
  *
  * Revision 1.4  2002/01/27 13:23:25  jab
  * added some more HCI function calls to the list
@@ -70,7 +73,9 @@ enum {
 	HCI_BRIGHTNESS_LEVEL = 0x002a,
 	HCI_HIBERNATION_INFO = 0x002d,
 	HCI_HIBERNATION_LBA  = 0x002e,
-	HCI_CPU_SPEED        = 0x0032
+	HCI_CPU_SPEED        = 0x0032,
+	HCI_WIRELESS_SWITCH  = 0x0056,
+	HCI_BLUETOOTH        = 0x0056
 };
 
 

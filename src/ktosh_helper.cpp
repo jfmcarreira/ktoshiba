@@ -38,21 +38,19 @@ int main(int argc, char **argv)
 	if (strcmp(argv[i], "--enable") == 0 || strcmp(argv[i], "-enable") == 0 || strcmp(argv[i], "-e") == 0) {
 		sync();
 		sync();
-		if (strcmp(argv[i + 1], "ath0") == 0) {
-			::setuid(::geteuid());
-			::execl("/bin/sh", "-c", "/sbin/ifup", "ath0", 0);
-			::execl("/bin/sh", "-c", "/sbin/ifdown", "eth0", 0);
-		}
+		::setuid(::geteuid());
+		::execl("/bin/sh", "-c", "/sbin/ifdown", "eth0", 0);
+		::execl("/bin/sh", "-c", "/sbin/ifup", "ath0", 0);
+		::execl("/bin/sh", "-c", "/sbin/ifup", "wlan0", 0);
 		exit(0);
 	} else 
 	if (strcmp(argv[i], "--disable") == 0 || strcmp(argv[i], "-disable") == 0 || strcmp(argv[i], "-d") == 0) {
 		sync();
 		sync();
-		if (strcmp(argv[i + 1], "ath0") == 0) {
-			::setuid(::geteuid());
-			::execl("/bin/sh", "-c", "/sbin/ifdown", "ath0", 0);
-			::execl("/bin/sh", "-c", "/sbin/ifup", "eth0", 0);
-		}
+		::setuid(::geteuid());
+		::execl("/bin/sh", "-c", "/sbin/ifdown", "ath0", 0);
+		::execl("/bin/sh", "-c", "/sbin/ifdown", "wlan0", 0);
+		::execl("/bin/sh", "-c", "/sbin/ifup", "eth0", 0);
 		exit(0);
 	}
 	else {

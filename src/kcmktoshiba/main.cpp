@@ -32,11 +32,9 @@
 #include <qcombobox.h>
 
 #include <kparts/genericfactory.h>
-#include <dcopclient.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 #include <kconfig.h>
-#include <dcopclient.h>
 #include <kled.h>
 #include <kprogress.h>
 
@@ -103,23 +101,25 @@ void KCMToshibaModule::load()
 				( config.readNumEntry("Critical_Battery_Trigger", 5) );
 	m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
 				( config.readNumEntry("Audio_Player", 1) );
+	m_KCMKToshibaGeneral->btstartCheckBox->setChecked
+				( config.readBoolEntry("Bluetooth_Startup", true) );
 }
 
 
 void KCMToshibaModule::defaults()
 {
 	m_KCMKToshibaGeneral->batfullCheckBox->setChecked( false );
-    m_KCMKToshibaGeneral->batstatSpinBox->setValue( 2 );
-    m_KCMKToshibaGeneral->lowbatSpinBox->setValue( 15 );
-    m_KCMKToshibaGeneral->crybatSpinBox->setValue( 5 );
+	m_KCMKToshibaGeneral->batstatSpinBox->setValue( 2 );
+	m_KCMKToshibaGeneral->lowbatSpinBox->setValue( 15 );
+	m_KCMKToshibaGeneral->crybatSpinBox->setValue( 5 );
 	m_KCMKToshibaGeneral->audioComboBox->setCurrentItem( 1 );
+	m_KCMKToshibaGeneral->btstartCheckBox->setChecked( true );
 }
 
 
 void KCMToshibaModule::save()
 {
 	if (!m_InterfaceAvailable) return;
-	DCOPClient mClient;
 
 	kdDebug() << "KCMToshibaModule: saving." << endl;
     KConfig config(CONFIG_FILE);
@@ -136,21 +136,9 @@ void KCMToshibaModule::save()
 					  m_KCMKToshibaGeneral->crybatSpinBox->value());
 	config.writeEntry("Audio_Player",
 					  m_KCMKToshibaGeneral->audioComboBox->currentItem());
+	config.writeEntry("Bluetooth_Startup",
+					  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
 	config.sync();
-
-	if(mClient.attach()) {
-		QByteArray data, replyData;
-		QCString replyType;
-
-		if (!mClient.call("kded", "kmilod", "reconfigure()",
-						  data, replyType, replyData)) {
-			kdDebug() << "KCMToshibaModule: "
-					  << "there was some error using DCOP." << endl;
-		}
-	} else {
-		kdDebug() << "KCMToshibaModule: cannot attach to DCOP server, "
-				  << "no automatic config update." << endl;
-	}
 }
 
 

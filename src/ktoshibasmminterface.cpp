@@ -79,7 +79,6 @@ int KToshibaSMMInterface::getBrightness()
 
 void KToshibaSMMInterface::setBrightness(int value)
 {
-	// Check value and set the desired brightness level
 	if (value < 0) {
 		value = 0;
 	} else 
@@ -286,7 +285,7 @@ void KToshibaSMMInterface::setVideo(int vid)
 	else if (vid == 3)
 		reg.ecx = 0x0003;	// LCD/CRT
 	else if (vid == 4)
-		reg.ecx = 0x0004;	// TV
+		reg.ecx = 0x0004;	// S-Video
 	if (HciFunction(&reg) == HCI_SUCCESS)
 		kdDebug() << "KToshibaSMMInterface::setVideo(): "
 				  << "Display state changed successfuly" << endl;
@@ -316,16 +315,78 @@ void KToshibaSMMInterface::selectBayLock(int *lock)
 				  << "Could not get SelectBay lock status" << endl;
 }
 
-int KToshibaSMMInterface::selectBayStatus()
+int KToshibaSMMInterface::selectBayStatus(int bay)
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_SELECT_STATUS;
+	if (bay == 0)
+		reg.ecx = HCI_BUILT_IN;
+	else if (bay == 1)
+		reg.ecx = HCI_SELECT_INT;
+	else if (bay == 2)
+		reg.ecx = HCI_SELECT_DOCK;
+	else if (bay == 3)
+		reg.ecx = HCI_5INCH_DOCK;
 	if (HciFunction(&reg) == HCI_SUCCESS) {
 		return reg.ecx;
 	}
 	else
 		kdError() << "KToshibaSMMInterface::selectBayStatus(): "
 				  << "Could not get SelectBay device" << endl;
+
+	return -1;
+}
+
+int KToshibaSMMInterface::getWirelessSwitch()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_WIRELESS_SWITCH;
+	reg.edx = 0x0001;
+	if (HciFunction(&reg) == HCI_SUCCESS)
+		return (reg.ecx & 0xff);
+	else
+		kdError() << "KToshibaSMMInterface::getWirelessSwitch(): "
+				  << "Could not check wireless switch" << endl;
+
+	return -1;
+}
+
+int KToshibaSMMInterface::setBluetooth()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_BLUETOOTH;
+	if (HciFunction(&reg) == HCI_FAILURE) {
+		kdError() << "KToshibaSMMInterface::setBluetooth(): "
+				  << "Bluetooth device not found" << endl;
+		return -1;
+	}
+
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_BLUETOOTH;
+	reg.ecx = HCI_ENABLE;
+	reg.edx = 0x0080;
+	if (HciFunction(&reg) == HCI_SUCCESS) {
+		kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
+				  << "Bluetooth enabled succesfully\n"
+				  << "Attaching bluetooth device..." << endl;
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_BLUETOOTH;
+		reg.ecx = HCI_ENABLE;
+		reg.edx = 0x0040;
+		if (HciFunction(&reg) == HCI_SUCCESS) {
+			kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
+					  << "Bluetooth device attached succesfully" << endl;
+			return 1;
+		}
+		else {
+			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+					  << "Could not attach bluetooth device" << endl;
+			return -1;
+		}
+	}
+	else
+		kdError() << "KToshibaSMMInterface::setBluetooth(): "
+				  << "Could not enable bluetooth device" << endl;
 
 	return -1;
 }

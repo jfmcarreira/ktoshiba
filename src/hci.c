@@ -3,8 +3,11 @@
  * Copyright (c) 1998-2000  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *   
  * $Log$
- * Revision 1.1  2004/12/06 19:43:32  coproscefalo
- * Initial revision
+ * Revision 1.2  2005/01/14 03:51:48  coproscefalo
+ * Support for audio applications
+ *
+ * Revision 1.1.1.1  2004/12/06 19:43:32  coproscefalo
+ * Initial import.
  *
  * Revision 1.5  2002/01/27 13:22:57  jab
  * updated list of machine ID's
@@ -200,6 +203,7 @@ int HciGetBiosVersion(void)
  *     0xfcec:  Satellite 320x/330x, Satellite 2500CDS 
  *     0xfced:  Tecra 520x/530x 
  *     0xfcef:  Satellite 220x, Satellite Pro 440x/460x 
+ *     0xfcf8:  Satellite A25-S279
  */
 int HciGetMachineID(int *id)
 {
