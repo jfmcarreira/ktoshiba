@@ -43,7 +43,7 @@ extern "C" {
 #define DIGITAL			0x40
 
 #define amaroK			0
-#define JuK			1
+#define JuK				1
 #define XMMS			2
 
 class SettingsWidget;
@@ -52,7 +52,7 @@ class StatusWidget;
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.4
+ * @version 0.5
  */
 class KToshiba : public KSystemTray
 {
@@ -78,6 +78,7 @@ protected slots:
 	void doSuspendToRAM();
 	void mode();
 	void doBluetooth();
+	void checkSystem();
 protected:
 	KToshibaSMMInterface *mDriver;
 	KAboutApplication *mAboutWidget;
@@ -100,14 +101,16 @@ private:
 	void mousePad();
 	void setModel();
 	void mute();
-	void toggleWireless(bool);
+	void toggleWireless();
 	void updateWidgetStatus(int);
+	void performFnAction(int, int);
+	void bsmUserSettings(KConfig *);
 	SettingsWidget *mSettingsWidget;
 	StatusWidget *mStatusWidget;
 	QTimer *mPowTimer;
 	QTimer *mSysEvTimer;
 	QTimer *mModeTimer;
-	QTimer *mSelectBayTimer;
+	QTimer *mSystemTimer;
 	QPixmap pm;
 	QString noBatteryIcon;
 	QString noChargeIcon;
@@ -139,6 +142,7 @@ private:
 	int MODE;
 	int popup;
 	int bluetooth;
+	int wireless;
 };
 
 #endif // KTOSHIBA_H

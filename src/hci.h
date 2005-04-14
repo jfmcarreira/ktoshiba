@@ -3,6 +3,9 @@
  * Copyright (c) 1998,1999  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
  * $Log$
+ * Revision 1.3  2005/04/14 19:07:26  coproscefalo
+ * Finished Battery Savings - User Settings Mode
+ *
  * Revision 1.2  2005/01/14 03:51:48  coproscefalo
  * Support for audio applications
  *
@@ -74,8 +77,7 @@ enum {
 	HCI_HIBERNATION_INFO = 0x002d,
 	HCI_HIBERNATION_LBA  = 0x002e,
 	HCI_CPU_SPEED        = 0x0032,
-	HCI_WIRELESS_SWITCH  = 0x0056,
-	HCI_BLUETOOTH        = 0x0056
+	HCI_RF_CONTROL       = 0x0056
 };
 
 
@@ -135,6 +137,13 @@ enum {
 	HCI_ATAPI           = 0x0002,
 	HCI_IDE             = 0x0003,
 	HCI_BATTERY         = 0x0004
+};
+
+enum {
+	HCI_BLUETOOTH_CHECK = 0x0000,
+	HCI_WIRELESS_SWITCH = 0x0001,
+	HCI_BLUETOOTH_CTRL  = 0x0040,
+	HCI_BLUETOOTH_POWER = 0x0080
 };
 
 

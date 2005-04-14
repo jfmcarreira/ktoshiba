@@ -1,3 +1,23 @@
+2005-04-11 Azael Avalos <neftali@utep.edu>
+	* Some cleans on KCM Widget
+	* Updated es.po, README and README.es files
+
+2005-04-10 Azael Avalos <neftali@utep.edu>
+	* Added the User Settings Power Saving Mode
+	  to KCM widget
+	* Finished the BSM User Settings Mode (yay!)
+
+2005-04-09 Azael Avalos <neftali@utep.edu>
+	* Cleaned up Fn-Key configuration changes
+	* Some small clean-ups
+
+2005-03-14 Azael Avalos <neftali@utep.edu>
+	* Some check on KCM code when theres no battery present
+
+2005-02-19 Azael Avalos <neftali@utep.edu>
+	* Made Fn-Keys combos configurable, now more laptops
+	  will be supported (hopefully)
+
 2005-02-08 Azael Avalos <neftali@utep.edu>
 	* Removed strerror(errno) function from 
 	  ktoshibasmminterface.cpp, hopefully it will resolve
