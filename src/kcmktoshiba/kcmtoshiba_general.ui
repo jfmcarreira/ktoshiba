@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>500</width>
-            <height>382</height>
+            <width>531</width>
+            <height>451</height>
         </rect>
     </property>
     <property name="caption">
@@ -19,19 +19,11 @@
     <property name="icon">
         <pixmap>image0</pixmap>
     </property>
-    <vbox>
+    <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>tlOff</cstring>
-            </property>
-            <property name="text">
-                <string>Cannot find the &lt;i&gt;Toshiba System Managment Mode Driver&lt;/i&gt;. If this is a Toshiba Laptop, make sure the &lt;b&gt;toshiba&lt;/b&gt; driver module loads without failures.</string>
-            </property>
-        </widget>
-        <widget class="QFrame">
+        <widget class="QFrame" row="1" column="0">
             <property name="name">
                 <cstring>frameMain</cstring>
             </property>
@@ -41,288 +33,1677 @@
             <property name="frameShadow">
                 <enum>Plain</enum>
             </property>
-            <vbox>
+            <hbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QButtonGroup">
+                <widget class="QTabWidget">
                     <property name="name">
-                        <cstring>bgBattery</cstring>
+                        <cstring>configTabWidget</cstring>
                     </property>
-                    <property name="title">
-                        <string>System Power</string>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignTop</set>
-                    </property>
-                    <hbox>
+                    <widget class="QWidget">
                         <property name="name">
-                            <cstring>unnamed</cstring>
+                            <cstring>tab</cstring>
                         </property>
-                        <widget class="QLabel">
+                        <attribute name="title">
+                            <string>&amp;General Options</string>
+                        </attribute>
+                        <vbox>
                             <property name="name">
-                                <cstring>tlBattery</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="text">
-                                <string>Remaining battery capacity:</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignRight</set>
-                            </property>
-                        </widget>
-                        <widget class="KProgress">
-                            <property name="name">
-                                <cstring>mKPBattery</cstring>
-                            </property>
-                        </widget>
-                        <widget class="KLed">
-                            <property name="name">
-                                <cstring>kledAC</cstring>
-                            </property>
-                            <property name="state">
-                                <enum>Off</enum>
-                            </property>
-                            <property name="shape">
-                                <enum>Rectangular</enum>
-                            </property>
-                        </widget>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>tlAC</cstring>
-                            </property>
-                            <property name="text">
-                                <string>AC</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                        </widget>
-                        <widget class="KLed">
-                            <property name="name">
-                                <cstring>kledBat</cstring>
-                            </property>
-                            <property name="state">
-                                <enum>Off</enum>
-                            </property>
-                            <property name="shape">
-                                <enum>Rectangular</enum>
-                            </property>
-                            <property name="color">
-                                <color>
-                                    <red>255</red>
-                                    <green>255</green>
-                                    <blue>0</blue>
-                                </color>
-                            </property>
-                        </widget>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>tlBat</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Bat</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                        </widget>
-                    </hbox>
-                </widget>
-                <widget class="QButtonGroup">
-                    <property name="name">
-                        <cstring>bgBatteryOptions</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Battery Options</string>
-                    </property>
-                    <grid>
+                            <widget class="QButtonGroup">
+                                <property name="name">
+                                    <cstring>bgBattery</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>System Power</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignTop</set>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>tlBattery</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Remaining battery capacity:</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignRight</set>
+                                        </property>
+                                    </widget>
+                                    <widget class="KProgress">
+                                        <property name="name">
+                                            <cstring>mKPBattery</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KLed">
+                                        <property name="name">
+                                            <cstring>kledAC</cstring>
+                                        </property>
+                                        <property name="state">
+                                            <enum>Off</enum>
+                                        </property>
+                                        <property name="shape">
+                                            <enum>Rectangular</enum>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>tlAC</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>AC</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignLeft</set>
+                                        </property>
+                                    </widget>
+                                    <widget class="KLed">
+                                        <property name="name">
+                                            <cstring>kledBat</cstring>
+                                        </property>
+                                        <property name="state">
+                                            <enum>Off</enum>
+                                        </property>
+                                        <property name="shape">
+                                            <enum>Rectangular</enum>
+                                        </property>
+                                        <property name="color">
+                                            <color>
+                                                <red>255</red>
+                                                <green>255</green>
+                                                <blue>0</blue>
+                                            </color>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>tlBat</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Bat</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignLeft</set>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                            <widget class="QButtonGroup">
+                                <property name="name">
+                                    <cstring>bgBatteryOptions</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Battery Options</string>
+                                </property>
+                                <grid>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel" row="0" column="0">
+                                        <property name="name">
+                                            <cstring>batstatTextLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Check &amp;battery status every:</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>batstatSpinBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QSpinBox" row="0" column="1">
+                                        <property name="name">
+                                            <cstring>batstatSpinBox</cstring>
+                                        </property>
+                                        <property name="suffix">
+                                            <string> sec</string>
+                                        </property>
+                                        <property name="minValue">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>2</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This is used to determine how often the program will check the battery status</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="1" column="0">
+                                        <property name="name">
+                                            <cstring>lowbatTextLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Low battery trigger:</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>lowbatSpinBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QSpinBox" row="1" column="1">
+                                        <property name="name">
+                                            <cstring>lowbatSpinBox</cstring>
+                                        </property>
+                                        <property name="suffix">
+                                            <string> min</string>
+                                        </property>
+                                        <property name="minValue">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>15</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This is used to enable the low battery information</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QSpinBox" row="2" column="1">
+                                        <property name="name">
+                                            <cstring>crybatSpinBox</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>4</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="suffix">
+                                            <string> min</string>
+                                        </property>
+                                        <property name="minValue">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>5</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This is used to enable the critical battery information</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="2" column="0">
+                                        <property name="name">
+                                            <cstring>crybatTextLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>C&amp;ritical battery trigger:</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>crybatSpinBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox" row="3" column="0">
+                                        <property name="name">
+                                            <cstring>batfullCheckBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Notify when battery becomes fully charged</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+N</string>
+                                        </property>
+                                    </widget>
+                                </grid>
+                            </widget>
+                            <widget class="QButtonGroup">
+                                <property name="name">
+                                    <cstring>bgOtherOptions</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Other Options</string>
+                                </property>
+                                <grid>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QPushButton" row="0" column="0">
+                                        <property name="name">
+                                            <cstring>helperPushButton</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Setup &amp;Helper Application</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+H</string>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This button can be used to enable the helper application</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                                        <property name="name">
+                                            <cstring>btstartCheckBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Enable Bluetooth device at program start-up</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+E</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="0" column="1">
+                                        <property name="name">
+                                            <cstring>audioAppTextLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Select &amp;Audio Application:</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>audioComboBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox" row="0" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>amaroK</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>JuK</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>XMMS</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>audioComboBox</cstring>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This can be used to select prefered audio application to use with front panel buttons</string>
+                                        </property>
+                                    </widget>
+                                </grid>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QWidget">
                         <property name="name">
-                            <cstring>unnamed</cstring>
+                            <cstring>tab</cstring>
                         </property>
-                        <widget class="QLabel" row="0" column="0">
+                        <attribute name="title">
+                            <string>Fn-Ke&amp;y</string>
+                        </attribute>
+                        <grid>
                             <property name="name">
-                                <cstring>batstatTextLabel</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="text">
-                                <string>Check &amp;battery status every:</string>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>batstatSpinBox</cstring>
-                            </property>
-                        </widget>
-                        <widget class="QSpinBox" row="0" column="1">
-                            <property name="name">
-                                <cstring>batstatSpinBox</cstring>
-                            </property>
-                            <property name="suffix">
-                                <string> sec</string>
-                            </property>
-                            <property name="minValue">
-                                <number>1</number>
-                            </property>
-                            <property name="value">
-                                <number>2</number>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>This is used to determine how often the program will check the battery status</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="1" column="0">
-                            <property name="name">
-                                <cstring>lowbatTextLabel</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Low battery trigger:</string>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>lowbatSpinBox</cstring>
-                            </property>
-                        </widget>
-                        <widget class="QSpinBox" row="1" column="1">
-                            <property name="name">
-                                <cstring>lowbatSpinBox</cstring>
-                            </property>
-                            <property name="suffix">
-                                <string> min</string>
-                            </property>
-                            <property name="minValue">
-                                <number>1</number>
-                            </property>
-                            <property name="value">
-                                <number>15</number>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>This is used to enable the low battery information</string>
-                            </property>
-                        </widget>
-                        <widget class="QSpinBox" row="2" column="1">
-                            <property name="name">
-                                <cstring>crybatSpinBox</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>4</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="suffix">
-                                <string> min</string>
-                            </property>
-                            <property name="minValue">
-                                <number>1</number>
-                            </property>
-                            <property name="value">
-                                <number>5</number>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>This is used to enable the critical battery information</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="2" column="0">
-                            <property name="name">
-                                <cstring>crybatTextLabel</cstring>
-                            </property>
-                            <property name="text">
-                                <string>C&amp;ritical battery trigger:</string>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>crybatSpinBox</cstring>
-                            </property>
-                        </widget>
-                        <widget class="QCheckBox" row="3" column="0">
-                            <property name="name">
-                                <cstring>batfullCheckBox</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Notify when battery becomes fully charged</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+N</string>
-                            </property>
-                        </widget>
-                    </grid>
-                </widget>
-                <widget class="QButtonGroup">
-                    <property name="name">
-                        <cstring>bgOtherOptions</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Other Options</string>
-                    </property>
-                    <grid>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>fnescTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-Esc:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>fnf3TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F3:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_3</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="4" column="0">
+                                <property name="name">
+                                    <cstring>fnf4TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F4:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_4</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="7" column="0">
+                                <property name="name">
+                                    <cstring>fnf7TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F7:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_7</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="8" column="0">
+                                <property name="name">
+                                    <cstring>fnf8TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F8:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_8</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="9" column="0">
+                                <property name="name">
+                                    <cstring>fnf9TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F9:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_9</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="5" column="0">
+                                <property name="name">
+                                    <cstring>fnf5TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F5:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_5</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fnf1TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F1:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_1</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>fnf2TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F2:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_2</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="6" column="0">
+                                <property name="name">
+                                    <cstring>fnf6TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F6:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_6</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="2" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_2</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>3</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="4" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_4</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>5</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="8" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_8</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>9</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="0" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>1</number>
+                                </property>
+                                <property name="duplicatesEnabled">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="3" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_3</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>4</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="6" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_6</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>7</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="1" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_1</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>2</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="9" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_9</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>10</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="5" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_5</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>6</number>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="7" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image1</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image2</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image3</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Enable/Disable MousePad</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_7</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>8</number>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QWidget">
                         <property name="name">
-                            <cstring>unnamed</cstring>
+                            <cstring>TabPage</cstring>
                         </property>
-                        <widget class="QPushButton" row="0" column="0">
+                        <attribute name="title">
+                            <string>Battery &amp;Savings</string>
+                        </attribute>
+                        <grid>
                             <property name="name">
-                                <cstring>helperPushButton</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="text">
-                                <string>Setup &amp;Helper Application</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+H</string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>This button can be used to enable the helper application</string>
-                            </property>
-                        </widget>
-                        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-                            <property name="name">
-                                <cstring>btstartCheckBox</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Enable Bluetooth device at program start-up</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+E</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="0" column="1">
-                            <property name="name">
-                                <cstring>audioAppTextLabel</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Select &amp;Audio Application:</string>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>audioComboBox</cstring>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="0" column="2">
-                            <item>
-                                <property name="text">
-                                    <string>amaroK</string>
+                            <widget class="QComboBox" row="1" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Enabled</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>cpuComboBox</cstring>
                                 </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>JuK</string>
+                            </widget>
+                            <widget class="QComboBox" row="3" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>30 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>20 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>15 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>10 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>05 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>03 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>01 min</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>hddComboBox</cstring>
                                 </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>XMMS</string>
+                                <property name="currentItem">
+                                    <number>5</number>
                                 </property>
-                            </item>
-                            <property name="name">
-                                <cstring>audioComboBox</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>This can be used to select prefered audio application to use with front panel buttons</string>
-                            </property>
-                        </widget>
-                    </grid>
+                            </widget>
+                            <widget class="QComboBox" row="0" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>High</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Low</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>processorComboBox</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>1</number>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>hddTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>HDD Auto Off:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>hddComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>cpuTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>CPU Sleep Mode:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>cpuComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>processorTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Processing Speed:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>processorComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="5" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Max Performance</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Optimized</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Performance</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>coolingComboBox</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>2</number>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="5" column="0">
+                                <property name="name">
+                                    <cstring>coolingTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Cooling Method:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>coolingComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>displayTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Display Auto Off:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>displayComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="2" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>30 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>20 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>15 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>10 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>05 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>03 min</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>01 min</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>displayComboBox</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>5</number>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="4" column="0">
+                                <property name="name">
+                                    <cstring>lcdTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>LCD Brightness:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>brightComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="4" column="1">
+                                <item>
+                                    <property name="text">
+                                        <string>Super Bright</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Semi Bright</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>lcdComboBox</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>2</number>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
                 </widget>
-            </vbox>
+            </hbox>
         </widget>
-    </vbox>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>tlOff</cstring>
+            </property>
+            <property name="text">
+                <string>Cannot find the &lt;i&gt;Toshiba System Managment Mode Driver&lt;/i&gt;. If this is a Toshiba Laptop, make sure the &lt;b&gt;toshiba&lt;/b&gt; driver module loads without failures.</string>
+            </property>
+        </widget>
+    </grid>
 </widget>
 <images>
     <image name="image0">
-        <data format="PNG" length="242">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000000b949444154789cc553c10dc3200c74aa7e324a07e8bb99c113b10a91f97a06fa4d066013f3bc7ea08a482ba2e65124749cb18ded1303003ab32ea7a2b709f29a11e680065d2fc1b51e342931f153934626ae3c764b004000c816837871951fddef16ca8bbfcf806f4c4aba73c86b9ec21cdc06ddc716c40bccdbae05f1e2cc1bca7dc558efdb19a041678bb9c2a7e217c50b6a5c57054d3a31318df73116bfc8c48fc32ad40abef1ae0aadbde55d155a7bcb4f5730fcfd37be009a5923fc0e9918950000000049454e44ae426082</data>
+        <data format="PNG" length="242">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000000b9494441541895c553c10dc3200c74aa7e324a07e8bb99c113b10a91f97a06fa4d066013f3bc7ea08a482ba2e65124749cb18ded1303003ab32ea7a2b709f29a11e680065d2fc1b51e342931f153934626ae3c764b004000c816837871951fddef16ca8bbfcf806f4c4aba73c86b9ec21cdc06ddc716c40bccdbae05f1e2cc1bca7dc558efdb19a041678bb9c2a7e217c50b6a5c57054d3a31318df73116bfc8c48fc32ad40abef1ae0aadbde55d155a7bcb4f5730fcfd37be009a5923fcba52b9f50000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="792">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000002df494441541895a5935b48d37114c7cffff7fb6fce29733a77fbcf5d10873aef0f2a2c5213992fad24ada7255ae01e22e9212f047b88148c5e7a498354444d8d8c5850f4902e157dca10856cbe1843d9dc664d64e2a6fb9f1e62e6ada70e9c97c3f99c1bdfc32022fc8fb1e705fb84c2c274a9b42e352dad0001a83714faeedede7ecf74742c7475759de8c81c9f60482452e854aae7b9d5d575491209b3150a018f08e92929108944607e6a6aeea3c7631f8846578f2044044484619148be9897b7b6d3d484835aedc615427a8c945a8c9456341062ef57ab17a3adade82a2a0a34b06c719c3b5ac1909cdc67d4eb8d0f2726667b63317bbbc3e16e53ab012805a7dd7e682e28d0f1bbbb68d26ad3ad3edf98422a2df5874261404418a5346f2b3f9f1f954a371205829c787544843642ccdf2c96c07e73333fa2d70f0d4a246f7d25255847c86d440402002023a44ebcbbcbbcdbd919bbdfd9e98e4fd54ea9b9b9a6c699a9d1c85e4f4f0f7f8e44ec4be170cf613008252c7bbdb2b292100080549e37fdf2fb61956166affd0376ededd9fbbddec85e46c6576f20b0af8ac53297979713080000320c459e070ab0b7323949ce8307fcfe0800c08fc3430288c8330c1b8bc5080b00f09365d7f2542a28f3787257dceefdf360bd5e9f60369ba3853e5fae92e3123782c180582c3e004484678494f98b8bf18d42b174fc60b7e4f2044404994c268a1f75442eef0f9496e225421ecfccccfcd181c3e160a674ba4fbccd86a76144048ee30488084f92926e6ed6d6f22f0c86a088654d88f857480f0402e397f2f2ad704b0b3a73723e74537af12ec725b66565091fb16cc92ba37170d366e35d1515910286b967b55a09229e94f21da130df6232bdbc505555082c0b5b3edf0122a24ca1100a2905e7f474f0e9d252772823a3d7e3f144cffc02008052a94cbcbcbddd906f30dc48e738630c80f578bd81f9f575d71c212357ebebdde3e3e3fc995f38ed8d8d8d44a3d188944aa5383b3b5bb8b0b0706ede6f4bb998b3d83a947c0000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="1173">89504e470d0a1a0a0000000d494844520000002000000010080600000077007d590000045c4944415418959d955d485b6718c7ffe7cd3927e7e4d34432a60bc6e0476c339d75f56b179be0c50c2abdf26a1b8c966dd26dd09b0e445b944e64578351751b5eccdd0c37b696ae7eac432b456ac07e981a98eb8698a036d1e16762763ce7bc6717c610348aecb97a78dee7fdbd7f78ffcffb0287a2baba5a686d6d150fd7f9cb7c11e9249fea3bf4aec36bc9d08ea99f18cc41d2d0d04042a1507b6565e565b3d9ccc9b27c7b7965f9cae4f949c1c13ab6734772d519c7ccab72adfc2d51c80dda41ef6610c0a4171a1a1ad85028d496ce5c5959b9929797b7dbd7d747014077d02c49d2673e9faf5bd334932ccb068ee32a2c664bc1cc8b993fd6cdebddcb25cb3b6abffa902fe1279522e507ae90fb9d4ed3b5b4f33a0174a50b9024e9aecfe7fb309d69369b0bfc7effad48244201800080dbed7ea9a6a6e69aa228a0941e6c8660105a2e4817cc9679cbc7d44e3bd836b662efe6dedf8c8ef9462e976f545555e9704cb8ddeeb3353535bec34c51145b0a0a0ade3ce8234d4d4d7a93c9d4e5f1788c8aa240100410420000bbf15de2743adf6fe41a634423d715afd2edf57a597e87ff0eb9a89b75cf66f44392f993c7e3c111e6ee3e33254055d5cff3f3f35bad562b161717118d46515252024dd320cb320441a81d1b1b132bb62aa6900be7f3f2e7eefeb2fe28ccf853ae97eb33094832cf9ec40480f6f67686300cf36e565616b6b6b6b0b3b3039d4e87f2f272180c0600802008390cc3581eb53f5261c3acfa867afee25b17358663e690878a4c024ec30480eeee6e8db02cfbb2dd6ec7dede1e545585aaaa9024094ea7138220806559d6e572590180e19925cda9e50300384460c691710580d33053bd0e8743361a8d9c5eaf0721049452504a218a226c361b4c26132449da9f710d0c92c6850682632c781a66ca03369beda1d16884c7e3812008301a8d30180ce0791e168b052693495a5858d806002daebdc23c63c2c9dc89081299049c869912b0baba7a3d1a8dae979595a1b4b41476bb1ddbdbdbb05aadb0d96c0010e2793e7ee6da191d5ee0753242027d0ffa18c4f01a1e6336938024533b8979d0ab0b0402a1c2c2c2a0d7eb7da7aeae0ec5c5c5e0380e841088a28870387c2b168bdd7e5af2b45edbd1ce597eb6f4deb1dec9a50e7a95fb9aeba4abf49f24ab13c98728c984d7ebad3b8e393e3e3e5c5b5bbb3f9ca228de0b0683b3a228223b3b1b56ab15595959d0ebf5bb232323df3f39f7c44429ed22bf909ecdcdcdb892a37c822026b3d7b21732bb001045f18b603098388e0900d3d3d39400c0c0c080e2f7fb3f989b9bdb64180649f3d0a9a9a99bd385d35a2c11fb8adc235f96c5cb26745775955a4c6b617f647b229188749c808181817ffd7eff479998e170f871ea0a0e924020b09248247e258468ebebeb7f8d8e8ef60e0e0ef6f21bfc1a3fc3ff76a9f1d2ec70feb08feed11e729fb435e7353f989f9f4fff01535790c67c168fc747082174636323c574b95cf2d2d212cda87c626282191a1a620ed7b9f7b822f23669164d624e4747c79175fccfeff83f3ad914a0d4d0f0e80000000049454e44ae426082</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="751">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000002b649444154189565924f685c5514c67fe7dc73ef9bf7663a434da61d218254db8a34b6d62a48979285e052d0850b179d11172274a3507157c18d04a4041271e34aba571715a18da0f1dfc63414225143a54dd3184d4c9c99f7ee75f15cf8e75b9fefe39cdf770480fe5c9f14e7a7efeb321c974420a548098c2ba14a15092863c4a972677307821f30375810fa73fd23bdcefc1b33a7b9f8cd4f146608b00fdc93848e424b94cc121ec701271ced045e5f5ce6cf513910ce5d4aefbdf014e72e7f0d07023803111eec7678bcdba670c2ea2f5b94c3118509993372114e1d6e71e1ca77d8c3535d16566e422b40c840e0d5b30f313b738c7feafc874bacddfa9d5c2173c2ce3012da395a9625bb63c00c044e4cb6999d39c6dd0adefc6899b73ebe0ec03bcf3d41b7e9094ec8bce025311a2734024e00119a229c3f7b1c8097debfc6e2f2cf7c7e639dd92b370038f3c0bd042f34d59324418c584a917d4045e9a9b0f4c32d7215b6b677c9bd12c4b1b4b2cea753130ccb31b9384c4b9ce6206025d04bc21f2af4da0dde7df6510c78fee4d3fc57a78f4c72f183cfc843862810c1c6555dd5af263c363581015fdddc65637b0f2fe054710a27ef9fe46080860f0413700e628555a9a2254ae1845c05804fbe5d63e5c7db0427042fe4e2c8e4044f1e9dc079a1158cbb51a1024b406689a60a99ab0332e15f662f11e71480c20c33c525850456c648c0519860520fbdf2cc347b435081bf0ba2e36b0ee68586190d1452853a55bc441ace58bfbdc5da76f93fb308ec56b0bab14f6646d13020810876677387e93305bfed8d198f4adebe7c95a67a4c4bf29011acbed94c699871b0f03c72a8c3ecb55520a2043f786df17b4e1d6ed16be61cca328a20e4214754c1d5c03693b29184a17a5ebcbaca975f5c874618d4d45e9eef332ae7433b6734ae3f0ca97b265650d51b93aa1a842468840197fa0b7f01ba6ce2e8018ea68a0000000049454e44ae426082</data>
+    </image>
+    <image name="image4">
+        <data format="PNG" length="314">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff6100000101494441541895ad933b4ec43014458f110b710d2dd58b94cf22a69e50b08e785640c30250eaecc1a6889be95d87953caa44e399040d0a5772615beff8be8f4d8c913d7ad8150d3cae1d8a88765db7ec534a0cc3c0388ee6574051145a9625aa7a030d2120221a63cc20590a6559124258b55ad735de7b4424a32f0e4444d75ebe865ca69639b8bed892732e73b1bb0bff074829dd151042e0b006188661b3039772cef104bccf7588312e0b50efbd6ea9aa2aad4101ed400fa0590d628ca6691a9c7337b69dab695be82cb4c00938b332caf3a4196396563d031f16acafa0ae38365f30c12760eefd8d6f22ba4080f0facd69fa036086bc58b0c78a69b2f47dcf0fcfe68872a1156ad80000000049454e44ae426082</data>
+    </image>
+    <image name="image5">
+        <data format="PNG" length="657">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff6100000258494441541895c5925b48937118879fefdbc4a991cd03dad44c28086a81484eb4ad90c2082b835021edae42848420511032eaa6a020826eac0c5a298811945e241d4cb6340fade5099782b6691e37276e3ab7fdbb488a44d2bb1e786f5ef83df0befce07f23ad5d58ad238c8d7d2f0c0f0fd77b9682a5b9c7759b33d96c0e4c26cb2d8763d2295619eaed16e67b874b360ccfccb86bc53a2cf984f0f884b87afe449d78f58f139c1e61dd1686d6e95a40040592049224110c06191e9922293991feeeb72c34e64a790fd608442f8ac5f98bfe3e7b1c69f9d718f966271808a05028181dfd81cfe7074926264ec3e8c06bbe985ad437eed7bbfe08de938efe6b07eca0a1e631478b2f61ebb7b1e07661b74fa3542a50abb7e25df21108c8444785e019ac69f3b43d3214d4834c8045e47db456448a23bb7b68bd7b92e8780da12a1533332edcee452c96219a9b3eb2bcb488fe500662e719bd4fc50b302093a2eb65b981f109c6d5d9659caa34f2b0ea1c52680c9ac4ed0c0e8ea1d3ed25222294ac2c2d210af0afb8888d97f747d1838cbde300a60bd826a88654baaf47529aeb10a1d61256822a0a0a73309bad949717333bbb0040f3d32716ad3639294e49915232d005a992e81d14ac18999c663aed4a65ac46b58bc69c4cbc058dcccf7b696fef232525469c2d2a7bf9ecb9b3a2eb83cf31e04f77ff6ea278472c72dc943e6f32a36db6b5dddb944fedf0edc096688d426699ce4e538bd1d8523d37376f8628c0bc5e2db2119f9536116c16aeba30613876b9b4aaeae6a78404c341d823c3266a2dda40bc8914774efffa0968d954f06f325767637e0234ff1dab816072d80000000049454e44ae426082</data>
+    </image>
+    <image name="image6">
+        <data format="PNG" length="709">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff610000028c494441541895a593cd8a1c5518869f3a757eead47fcda87122a81310370ac164260645612ec00b100437de806baf4470a1db90852e0421183082780fe2423493d8333dddd35d5d5d3fe71c1733b417906ff3ed1edef781175ef0a2ebaf3efdeccb87efdebefd6196dbde260922822816e01cce7b948a69572dabcd98fcf4e30f0f1f3f7af00510e435e0e0839393933c4fb2d9e95fc878422989148a1b07071cdeba45e43de7e7e798b4603bf49f3c7ef4e02be09904502aab136bd5727eca939fbf27310989b5481973f7fd8f79ede6eb8c4347ef46b238461b93011980043046553256f2eef17dee1c1d330c3dc17b94940811d3762d5a4ac6c1e1dd4496e50aa52ac6110190a645638c11b3f3157ffcf90f8b6587f78a4defe8078f0082f70ce3c8e43c45592823740d5c014c9ad4b18a59ad57344d4d62134e67cfe9365b96ab158bf59a48c464d6e2dd84b5292a31f5ae429696a5948a3c3328a368db0dfb4d435515b8c9b1d96e0802eabac24d0e63143649abf5727e05c8f3624f1b4d53a74471406b496135420a4424c8474b049499a5ed066c9692a679b3ab50efbdb41f0998cd1758add92f3322114108043ca95554a565d30f6cba0e6334795e543b40d9342fbb71a0df6e395b6e58f7234a6a6c62b12601622edb8171722c2e2e80405ed6cdce4153d637b40af45dcffcdfa79c074f0044240088458488054a6a542c1138ca32ff5fe2e442f5edd7df309f9d51d535d65a84109c9d3d436b45df0fbcf2ea01efbc778fe7ed536eeebd81f7a2d801c238fc7defe8f84ed7b61c1ebe45519468adb8bcbc4029cd340d94554d5254fcd29df276fa267e1817bb31154571ffe8e8a3cf43703e84101057d1a588f0d7a2bc876972081145a373f1efbf3df96e9ab6bfbed89681ff005b5ff9c64a8092260000000049454e44ae426082</data>
+    </image>
+    <image name="image7">
+        <data format="PNG" length="1369">89504e470d0a1a0a0000000d494844520000002000000010080600000077007d5900000520494441541895a595dd6b9d5915c67f7beff7fbbce79ce974a62691ced8898404ab63d5c294a81d24370e8512b420942a426ee29517f542108a17d33fa09716eadd744628cc4d51c176aca0b5755a416b25937118938664d29c9e939393b3df8ffde1453ea68822320bf6c5deacf5ac67edf5ecb585f79e4f62172e5c78f5f4e9d36f4929dbffcbf7e95c5aeb8d2b57ae7c2b3877ee5cf3f8f1e3dfcbf33cff4f8eff0e108621004b4b4b8fae5ebdfae6a54b977e38393975e8f77f5926cb5394922829504a22a5c07b70ce61adc35887350e5bd57cfd95973fbdb0b0703e3873e6cc9ba74e9d7a4d4af97f555e962552cacf0821a227dd3ef33f7bc4e1974669b6125aad84461e134501d639f4b062ab5fd0ef0f19f40bb61ef778f70b2f02c4c1c8c8c82b6beb1d7e72f91e232f8e912421691a91a421611460ada5d4355a570c8735c5b0a4610b7e3a3fcdc8c8c8b494d22ba5c8b2085bd7d4a5446f0bbcb3044ae1bca72a0d95ae30a5c1d686348be8f6ba586b7d20a5f44569f9c34ac6188a563ba6d94c88d388a9e7048b1b35010a532ade5ff10cb60c0754847306e79c504a792105eb1ff5899218ef3cd6380aad504ae2bda73696521b86c30a3dacd8ee6e51551500819412a924c24355d6145a1107509515478f3ecbdffed9e53b5f1de5ed3fae5296355559231ad0ed7470ce21a5444945677d13eb059f1a69535686309448b143c058475d19b6360bd6d67aa438ac3108210894524821585bed92e52908419e08da9964f171c5f4d4417efbb0c7ddc501756928744dbfaa31a646088194122125511263ada3b331a0d035511cec8bd0188b1e560cb60a4c6d2192d4bb04a494122925fdee90f7df5ba3df1f22e288f796b7e959c9879d82fcf99caf1c3dc8604bf368b9831d564f0320a5a4d54a69b7329e3990d1dc1561a311933522b22c266f26b4da29cd664a984618633e6e819012150638e7595de971f040421649daad909b7f5e61e66b2f20a5e0d1d213b4ae4124d85d002104424096c764794a9645648d90300c504a609da7ae766e60e7694a026f3f6ec15e157933216d242469c8d8a1065f3efa1cb1377ce9f38758eb56fcea37ffa0d5ce5041094a62760100a4147cf1b30748f3982c8d48b288380a904ae2aca3aa0c5ad76c6f970cb74ba4b3186bf0de8b7d0d34f284bc999266111fae6cf3c1ca90ef7ef330bffbd33aba30a48d142fd40eeb34a2ded580d6fa71234b78e3479fc3d435d618aabac2188b313bfbda588c3138e7b146618cc71ac36030e8074208bcf7246944da8869e409591611c701d7dfed91363364641041094260ad278a03acb1009c3f7ffec77373734608d1164218adf5c4c993278fed4c3fbbbf7abd9ebb7ffffeed3ccf97adb581d67afbf2e5cbaf8b858585f5c3875f787e79a3003c1e0fdee1bcc7ed061b6b31f54e15756d903842b7c583070f7e393737f71ac0cccc4c7ef1e2c59f8f8f8fcf0e060395e7394110e0bda7280aaaaa224dd3f2eeddbb6fcccfcfff606969a90090376fdebcb4befe91c9c480d8f509eb1eb2ec2274077407513c41e80eaa7a425077896c0f59f7180c06c5ad5bb7dede1bcd939393278f1d3bf6ed344d55bbdd66381cd2ebf5d8d8d8a0d3e9e0bd27cff3786666e6fb131313afeec505abababaf4f4d4dbd052480df1195dc17d87f3161add5b3b3b31fec1d5cbb76ed9df1f1f15f4c4f4fcf8e8d8d8541102084208e63f23cc718c3bd7bf7aaebd7affffaf6eddb77f6813ee977fcb49d3d7b56deb87163e2c48913df3872e4c8cb8d46e359ef3d9b9b9bbdc5c5c5bfdeb973e79dd1d1d1bf3f7cf8d0ecc5fc0ba65aadcd96e6be170000000049454e44ae426082</data>
+    </image>
+    <image name="image8">
+        <data format="PNG" length="1216">89504e470d0a1a0a0000000d494844520000002000000010080600000077007d5900000487494441541895b5556d6c5355187eee47ef2ae56eed5dbf962e96d01817610801212e5bc134b3cbb2641a09d1440c519c5f3159221a1308c6841f46834a107f4c62c87086611008584a6003db911087765862a86c631bf40bd7f6b6736dd77b4f8f3fd62d5b6524467d929b7bcef33ef77ddef3de7bce05fe47b85cae0e97cbd5f1200dfb5f99b5b5b559cb399ee71b789e6f78909679e4e5fe37678adc278450962a2a8a8a82624105292820051574feae82282a8a4a01445141e4a92264f95de0d32f5b5b5bad1a8d6628954aedf0f97c5e00686c6c5c4e29dd47296573b9dcde40202003405353538b5eaf3f420859ebf178628c7de740ece10d6b2c0ebb8862b1ac54a66ccacc723c0f0407c318fce8eb384defb50280d3e96c311a8dc7c2e1709b20085bf57afd4b0cc31800801032954aa54ee472b96376bbbd3791483ceff7fbbd00c02b6c85b1798d887607909ef99be72270ccecb54c004eeb6d18fcca68447a36e6f3f9bc9b366d6ad3e9749ff13cbf3a140a9dcc6432a70164aaababeb6c36dbfb1a8da6696464647b3018f4cebf26469e0c9e1988aed57235d0710029ef42a9113c0bdccb02a919a052077c7ffc06686422b850c7b2ec730056070281d7ebebeb7bfafbfb550088c562e7d2e9749fc3e1f0721cf786dbedf69c3f7f9e0000af51f3bb6ffbae9df856e3d43a57570104a0656d2745e0fa1fc0cd4920c7029ac904e4aeeff2c84fef9ed3353434e80441d83e313171b2aeae6ede7c0e77efdefdb5b2b2f24349920e060281c7000401801ffbfe598feda9a3fb6ffb7fde4db49bb142e2404a45d0d2ea6fc9c070aa94495581de934036b11f38e471b95c1d3ccf3764b3d97b8aa2544f4f4f9ff1fbfd8bcc17c0abaa2a2b4952c7ba75eb444248920580f0a5ed7b843b23dd1397ae2210a7b82903a124104a0083d1923907802d023f9c026e5def060eed59989952ca0200c771f9c3870f2ff5299192563347f00b829dec6f43f649ae62b3faf8065015a045ccee0c06b32746ff65e0a72b3f027ce7dc437d7d7d5d00bad6af5f2f8aa2b8b3aaaaeac9952b579eba9f3bc7715b789e67e2f1786f2814ba84d2ba0000d9c899bc567afa0aee8cb9996586ea8a1a233802082ca05d06e0da1088e7c4efa07801f83c5c9e3c1a8d166a6a6a1c9224bdd8d3d3732e9148c417c657ad5a6535994cdda9542a4229dd97c9640a8b0a0080fca437a97968f3554c8cb49becb5cb2d2baa601001f6d628d2bddfc4e94c6e2b70e0c612ed85c562c96bb5da2d2693e95583c190339bcd09abd52ad6d6d6b65badd66e45514ca3a3a3bb62b15860be2be54994a9fe08c813b795b1b1767bbd83d766ffc448d7d199829c7805f8a26f2973a7d3d962b3d98e472291d70821568bc5f29624499d0683a153a7d3b5c7e3f1f0f0f0f0aec6c6c60fcc66f3e8f8f8f830f0807387e1de79bba252fc18458a7c5a7e0f387070296d6b6bab551084a16432b9c3e7f379b76ddbc60d0c0c3c2a495207a5548846a3bda228fe323e3e3ee5743a5bcc66f33159969fb978f1e2e5a572fe63dcef67e476bb8fb8ddee23e57c7373f3968d1b376a81c5bbe05fe1ecd9b3b1728e1092bc9ff6c2850b97e7c67f0139c2f6f5ff8092860000000049454e44ae426082</data>
+    </image>
+    <image name="image9">
+        <data format="PNG" length="1199">89504e470d0a1a0a0000000d494844520000002000000010080600000077007d5900000476494441541895b5555d485b67187ece399fb1310bd124c674da3a7fdbb5762ccb66314d535b9584e0c5c0520499ab5b9175ac83d15df4aee07a3118ccd2dd75c24a41d00de94a1d4d6b5cab712b8c6d2975e9a61bb68da8313f47cdc9fff9db45962e95e8c57e5e38f09ee73cdffb3ce7bcdff71ee07f8cb6b6b6feb6b6b6feed38f47f25d6d9d969dc8c11422c8410cb76dc2d0dd4f6b8ce3cdff36dd278dc95ac747c75663b71a7d3696418e6becd6673e430abd5fa5c2c165be7382e6a32994a73f8e1c3871d1445dd773a9d4600a00a15aceb7175a58872d8e63017439230313a9da623a19ee0777d635b99b0d96c0ebd5e3fb2b4b4d4a950288e979696f65214550600a228726b6b6b63c96472a4baba7a341289747b3c1e5741030d6fdc7a352a90714bbba9e2b3ee325014f0eed520dc5727567724b9ce88f7f48f5b993878f0a055a5520d12429a1e3f7e7c2d1a8d5e0710d5e9747b2b2b2bcfa5d3698e65d90f6667676fe4d63cd382863e774352a4876bccfb2a4eb696c1cf024f22c0db7603f676b45424790c97360e366c6580a6e92e004d5eaff79daaaaaade4020301a08046efa7cbec1870f1f7600286118e6b4dd6e67726b9e268d7dee3241908677d4d49bbb8eee829a069638209400200115d565f835085dec8f472f295447aff3dc642a5fdc62b1a88a8b8bbf585c5cfca6a6a666606a6a4ac87f1e8d4657552a554ca3d1bce7f3f9aec5e3f12000901c4114a48ba2beeac86be6172049c08320c0cb0064a0880694c5c0a1ce57e00ab04792f7ee5d04f026903d6a84104b229108f23caf8bc7e3373c1ecf33e279e1120481d66ab5fd2693492d8a224b0340e3c9db1712eaf25edd8b7b40c9146603c03c0b2cac01bfb3d9fca725603d454379ec1884ddf5bd458a0f2fe457966599060086615243434305373700f12f6e510e208d7d13ce34146713c64624241a0f56f38a02a06420c503c138104f032822a0ac1d909e3c3a0bf6fdef27272f5d0670d96c36abd56af5298d46d3525b5bfb75217586615a0921d4eaeaeae8dcdcdc1d00a0eadfbae3dda8d8f772a6d40099020409906480a1b2172d03693e5b80cebd571120cdfe82d4d8f07d39f9b12927d0d2d2f2b94aa5eaf2fbfdadf3f3f30ff2c5f7efdf6f34180c33e17038b1bebe7e6871719103004229d507f4bb0c9045409200019b0c00a0367f501aa08f34e1d10fbb0f24e6ff863399cc97252525b6bababadb1a8de6239ee76f02100821ad3a9dee7c2a95d2afacac9c0a87c3dcd31620b611d60b1b156a8306900050d9e120e70b6e32401320f4db32c470389cc36c369ba3bcbc7c646161a147a954f6efdcb9f35386612e01802008f2f2f2b2cfeff79fb35aade75996e5a6a7a75d004032516e6069daf30905d0625a84cc67206604481901122f40caf010337cf63e2340e2b3fdc8c492523a1a1b00b2a358a1505c098542dd5eafd775e2c409d7cccccc1ead56db2fcbb26265656554ad56ff1c0a853896653983c130d2dedefebadbedbe5b68affca328f433b2dbed57ec76fb95cd784747476b7373f30e206f0efcdb181f1f0f6cc64451640b71272626eee6f23f01e555e765643d11ad0000000049454e44ae426082</data>
+    </image>
+    <image name="image10">
+        <data format="PNG" length="899">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff610000034a49444154189575933f6864551487cf3df7bef7eecbbbf3929917c29022cae2aa09310141249b22b2d8c81401170bd16c9a2924853653a49b4d3a19082cc1562c047140b710ac522cacae101636986623d9445d364c3233997933efdf9d77e75d0b77c25af83587f33bf035871fb9b8b88011bbbbbbacd7ebcd4551f47e9aa6f300c0b5d69a52da304df381ebbaf72b954a175e828c04b55aadd0e9743e4b92e426a5b46959d611a5b4adb5b60683c12b699a5e47445f0871b75aad3efc8fa056ab155aadd6d670387c3597cbfde0baee23c7717288686bad759aa64ddff7f3fd7e7f354992c55c2ef7e5d6d6d61e0000e59cb366b3f98552eaad7c3eff55b158fcdb719c5b9cf30f2dcb5a310ce38661188bb66d5f9aa6f9f3603070a328fa687f7fffb79595950eebf57a734992dc1c1f1fff766a6aea9273be61db765108f1cc300c3fcb329624c9741004b70921134aa91f1b8dc6b5300c6f03c01dbab0b0f089d67a627272f27bc7716e398ef37aa15038300ce338cbb24b446cdbb6dd42449ea6e902a5f47192249d388e3f383838f809d3349db72cebc8719c9c6118f342886788f83c8ee37142c80da5d49c94321a1b1b3be19c33c6d83b9cf3a700005114bd8600c029a56d44b411911b86e12ba586a669beb9bcbcfceeccccccdb4aa93c2124608c45849029c330fa88d8534a79a8ffc57a31b32ccb1821049452ddd3d3d366a7d3b944c4180098d69a69ad659665a6d6da44c40029a58d177f6e0e87c38b2449a619638210f2646d6d6d6967670739e7b1526a4a4a696bad8fa494852ccb1cd3349fa2699a0fd234bdeefb7e3e4dd3bd200826c2307c0311ff989d9d85300c9f2ba5a4effb7352ca1329e5e3388e9710f1afc3c3c373e6baeefd388e3feef7fbab8ee37c4d08e188f8bb10e24fcff3208a225f4a792f0cc3b694b2d96ab5aec571bc6459d676bd5e07ac542a5d21c4dd244916cfcfcfdf0b82e01b21c42300e87a9e079ee7c500e0afaeaede6bb7db4fbaddeea794d2bde3e3e35f00001000a05aad3e1442dc09c3f0bbf5f575552a95b252a934f03c0f8ac5e2b0542a29d775616363a3c518fbbc5028ecd4eb75b81200006c6f6fff7a7676d62997cb574df33c0fa6a7a7aff672b90c2727278dcdcd4d35cad8cbd51c5947e4f379b06dfb7fef0000ff00f7bbae56e84ab7a40000000049454e44ae426082</data>
+    </image>
+    <image name="image11">
+        <data format="PNG" length="1182">89504e470d0a1a0a0000000d494844520000002000000010080600000077007d5900000465494441541895a594db6f545514c6bfbdcfa5654e9d42cb74868e4d29b51d109080319228a35c057c0113d24a02b1694d30f80f203131e1a23c498c2686e0438ba0261062d098401083583135a82dd50ebd4c4b6de9990e75707a4ecf655f7c6819675ae085f576f659df5ebfb5f65a0b783c938fa9879affd1d4d4540f60c1a304beef5bd5d5d5dd478e1c9913fcbefea92b578c3acb7a714159d94a09287732999e2e217e1cdfbe7d82735ea0cf0134363644f7ef7fbb5bd78b55cefcff6f2579b4aa06dff7644b4bf3560017f383373636445b1a1abbd5d3a7d5aaf5eb6104833033190829b1a6b4149b5cf740572a05bcbe5bbe73ec839c3e073035e5941a46897ae2c4a7300ca330b5995c6ddbc6beb7f613cff3aa6667bfe8af9e88fafe5175694d0dce5ebf8edfa35190ea6a505545b16962496f2fde58b70ed78e7f48f4e1e16573005cd781ef331886817045c503cb3f3e9e02630c9cb339ff768e8c1c58168de2687b3bb45dbb509777879b4ce279db06cf66b1bcbc1cfb0606f6f597969e1cbf77cfa2f79d1cc785eff30706ceaf84ef733056e8f7b9a22c8f4522af7dd7d7877f376e4445380c42080821700707b1a5af0ff5a1104e2607f08ba2616b65e5d217b2d94600c801b8ae0bdf67807c54634b30c6c0586105ca29dd11c86689f9d206949595e5ce9d64125b7a7b511f0ae18c69c25cbb16a5bbf780a5d358adaabbe2f138cd03987e82474d9694129e37176081104fff934a21b86a752e81d9c127376d02511468d12a0ca7d38870bea4b3b3b328d7038ee382318e49cb0252a90702d89605c6f81c004988228580a268989ccc42bd99c6ced151d48742f82491c0443c0e3a3101dbb2e0793e742921085139e73407400801633ef6ec6981941c9412504a20e574e6424810a2209b9d04e75ccf079850d55bcb2311d0e121bcb2ea593cf9f539d48542b8aa1763c3471f035481e3b8d0f522dced49604928846fd3e9f14020e0e755c0c1f9f35fc2304a40a90a4a292ccb020018860121048460b06d1b524a910f30e879df3c377ffebbce176da888c550b76811cea452f86d712d48db29cc9b370f00200443d9a58b581389a07d64e407d334bd1c4026934173f39b58bcb83a77f1cd9b5d0080152b56e6ce8686fec6a9536d056f3076f06047576bebe5a6787ca3a76968370cbc7af233d4de4a14e87bcf9d4555e71f389f48dcfd99d2560881bc3174208498191f8ae915480a8682100240cce98143870ec9e36363efb50f0d816b1a747b0ae91b37c01c17ccf391eeeac29f870fa3eaea55241c07c76edf3ebd79dbb61e206f1171ce33adad6d5e6d6dbd1e0804a0eb1a4cf30ea40492c961789e0fdbb6914cf64bdff72dccb24b940e94044abc0d1d1dfa8e781cf8fe32846942007862e142942b0abeeaeec6197b4a0e517abdffc20501146c7a40d3b46738e7750002aaaa16298aa2cdc071c69807600a4026180cfe94c96426313db364963eb60da87bb9a6665db8b2b28603dae0e868fa4a3279a31df8550023c160f0da8cfeb1eda14b63efdebd341a8d1687c3e1402c16d31fe6f71f82f11e2caf0e79fd0000000049454e44ae426082</data>
     </image>
 </images>
 <connections>
@@ -358,6 +1739,66 @@
     </connection>
     <connection>
         <sender>audioComboBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_1</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_2</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_3</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_4</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_5</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_6</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_7</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_8</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>fnComboBox_9</sender>
         <signal>activated(int)</signal>
         <receiver>KCMKToshibaGeneral</receiver>
         <slot>changedSlot()</slot>

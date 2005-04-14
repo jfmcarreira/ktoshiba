@@ -11,8 +11,11 @@
  *   not to make any modifications and use it as it stands.
  *
  * $Log$
- * Revision 1.1  2004/12/06 19:43:35  coproscefalo
- * Initial revision
+ * Revision 1.2  2005/04/14 19:05:04  coproscefalo
+ * Finished Battery Savings - User Settings Mode
+ *
+ * Revision 1.1.1.1  2004/12/06 19:43:35  coproscefalo
+ * Initial import.
  *
  * Revision 1.11  2001/10/05 13:08:37  jab
  * checked in changes for kernel module
@@ -207,7 +210,10 @@ enum {
 
 enum {
 	SCI_PERFORMANCE     = 0x0000,
-	SCI_QUIET           = 0x0001
+	SCI_QUIET           = 0x0001,
+	SCI_MAX_PERFORMANCE = 0x0000,
+	SCI_BAT_OPTIMIZED   = 0x0001,
+	SCI_PERFORMANCE_2   = 0x0002
 };
 
 enum {

@@ -47,12 +47,15 @@
 #include "settingswidget.h"
 #include "statuswidget.h"
 
+#define CONFIG_FILE "ktoshibarc"
+
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
 	  mDriver( 0 ),
 	  mPowTimer( new QTimer(this) ),
 	  mSysEvTimer( new QTimer(this) ),
-	  mModeTimer( new QTimer(this) )
+	  mModeTimer( new QTimer(this) ),
+	  mSystemTimer( new QTimer(this) )
 {
 	mDriver = new KToshibaSMMInterface(this);
 	mAboutWidget = new KAboutApplication(this, "About Widget", false);
@@ -93,6 +96,7 @@ KToshiba::KToshiba()
 		mWirelessSwitch = mDriver->getWirelessSwitch();
 		mOldWirelessSwitch = mWirelessSwitch;
 		bluetooth = 0;
+		wireless = 1;
 	}
 
 	if (!mClient.attach())
@@ -100,7 +104,7 @@ KToshiba::KToshiba()
 		kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
 	}
 
-	KConfig mConfig("ktoshibarc");
+	KConfig mConfig(CONFIG_FILE);
 	mConfig.setGroup("KToshiba");
 	bool started = mConfig.readBoolEntry("AlreadyStarted");
 	if (started != true) {
@@ -115,7 +119,7 @@ KToshiba::KToshiba()
 	this->contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
 									 SLOT( doConfig() ), 0, 1, 1 );
 	this->contextMenu()->insertSeparator( 2 );
-	this->contextMenu()->insertItem( SmallIcon("harddrive"), i18n("Suspend To &Disk"), this,
+	this->contextMenu()->insertItem( SmallIcon("hdd_umount"), i18n("Suspend To &Disk"), this,
 									 SLOT( doSuspendToDisk() ), 0, 3, 3 );
 	this->contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
 									 SLOT( doSuspendToRAM() ), 0, 4, 4 );
@@ -134,6 +138,8 @@ KToshiba::KToshiba()
 	mSysEvTimer->start(100);		// Check system events every 1/10 seconds
 	connect( mModeTimer, SIGNAL( timeout() ), SLOT( mode() ) );
 	mModeTimer->start(500);		// Check proc entry every 1/2 seconds
+	connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
+	mSystemTimer->start(1000);
 
 	int res = send_Action(POWERSAVED_ACTION_PING);
 	if (res != POWERSAVED_ERROR_NOERROR) {
@@ -204,8 +210,7 @@ void KToshiba::powerStatus()
 	mDriver->batteryStatus(&time, &perc);
 	pow = mDriver->acPowerStatus();
 	bright = mDriver->getBrightness();
-	mWirelessSwitch = mDriver->getWirelessSwitch();
-	KConfig mConfig("ktoshibarc");
+	KConfig mConfig(CONFIG_FILE);
 	loadConfiguration(&mConfig);
 
 	if (mFullBat && perc == 100 && !battrig) {
@@ -240,21 +245,20 @@ void KToshiba::powerStatus()
 
 	if (mBatSave != mOldBatSave || pow != oldpow) {
 		switch (mBatSave) {
-			// TODO: Save user settings to file and make configurable
 			// TODO: Add support for more battery save options for
 			// older models depending on type
 			case 0:			// USER SETTINGS
-				bright = 0;		// Semi-Bright
+				bsmUserSettings(&mConfig);
 				break;
 			case 1:			// LOW POWER
 				if (!pow)
-					bright = 0;
+					bright = 0;	// Semi-Bright
 				else if (pow)
 					bright = 3;	// Bright
 				break;
 			case 2:			// FULL POWER
 				if (!pow)
-					bright = 3;
+					bright = 3;	// Bright
 				else if (pow)
 					bright = 7;	// Super-Bright
 				break;
@@ -267,28 +271,38 @@ void KToshiba::powerStatus()
 		mPowTimer->start(mBatStatus * 1000);
 	}
 
-	//
-	// TODO: This doesn't belong here and should be moved by 0.5
-	// since this function only has to do with power and battery
-	// options
-	if (mWirelessSwitch != mOldWirelessSwitch) {
-		if (mWirelessSwitch == 1)
-			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned on"),
-							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 5000);
-		else if (mWirelessSwitch == 0)
-			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned off"),
-							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 5000);
-	}
-
 	changed = oldpow != pow||oldperc != perc||oldtime != time;
 	oldperc = perc;
 	oldpow = pow;
 	oldtime = time;
 	mOldBatStatus = mBatStatus;
 	mOldBatSave = mBatSave;
-	mOldWirelessSwitch = mWirelessSwitch;
 	if (changed)
 		displayPixmap();
+}
+
+void KToshiba::bsmUserSettings(KConfig *k)
+{
+	int processor, cpu, display, hdd, lcd, cooling;
+	int tmp;
+
+	processor = k->readNumEntry("Processing_Speed", 1);
+	cpu = k->readNumEntry("CPU_Sleep_Mode", 0);
+	display = k->readNumEntry("Display_Auto_Off", 5);
+	hdd = k->readNumEntry("HDD_Auto_Off", 5);
+	lcd = k->readNumEntry("LCD_Brightness", 2);
+	cooling = k->readNumEntry("Cooling_Method", 2);
+
+	(processor == 0)? tmp = 1 : tmp = 0;
+	mDriver->setProcessingSpeed(tmp);
+	(cpu == 0)? tmp = 1 : tmp = 0;
+	mDriver->setCPUSleepMode(tmp);
+	if (lcd == 0) mDriver->setBrightness(7); // Super-Bright
+	else if (lcd == 1) mDriver->setBrightness(3); // Bright
+	else if (lcd == 2) mDriver->setBrightness(0); // Semi-Bright
+	mDriver->setCoolingMethod(cooling);
+	mDriver->setDisplayAutoOff(display);
+	mDriver->setHDDAutoOff(hdd);
 }
 
 void KToshiba::displayPixmap()
@@ -417,7 +431,9 @@ quit:
 void KToshiba::checkEvent()
 {
 	KProcess proc;
+	KConfig mConfig(CONFIG_FILE);
 
+	int tmp = 0;
 	int key = mDriver->systemEvent();
 
 	if ((key == 0x100) && (popup != 0)) {
@@ -426,61 +442,48 @@ void KToshiba::checkEvent()
 		popup = 0;
 	}
 
-	// Fn-Esc (Mute/Unmute) & Fn-F9 (Enable/Disable Mousepad)
-	// & Fn-F6 (Brightness Down) & Fn-F7 (Brightness Up)
-	if ((key == 0x101) || (key == 0x181) ||
-		(key == 0x143) || (key == 0x1c3) ||
-		(key == 0x140) || (key == 0x1c0) ||
-		(key == 0x141) || (key == 0x1c1)) {
-		if (popup == 0) {
-			QRect r = QApplication::desktop()->geometry();
-			mStatusWidget->move(r.center() - 
-					QPoint(mStatusWidget->width()/2, mStatusWidget->height()/2));
-			mStatusWidget->show();
-			popup = key & 0x17f;
-		}
-		if ((key & 0x17f) == popup) {
-			updateWidgetStatus(key);
-		}
-	}
-	// Fn-F2 (BatterySave Mode) & Fn-F5 (Display Out)
-	if ((key == 0x13c) || (key == 0x1bc) ||
-		(key == 0x13f) || (key == 0x1bf)) {
-		if (popup == 0) {
-			QRect r = QApplication::desktop()->geometry();
-			mSettingsWidget->move(r.center() - 
-					QPoint(mSettingsWidget->width()/2, mSettingsWidget->height()/2));
-			mSettingsWidget->show();
-			popup = key & 0x17f;
-		}
-		if ((key & 0x17f) == popup) {
-			updateWidgetStatus(key);
-		}
-	}
-
-	KConfig mConfig("ktoshibarc");
-	loadConfiguration(&mConfig);
-
 	switch (key) {
-		case 0x13b:	// Fn-F1 (Screen Lock)
-			lockScreen();
+		case 0x101: // Fn-Esc
+			tmp = mConfig.readNumEntry("Fn_Esc", 1);
+			performFnAction(tmp, key);
 			break;
-		case 0x13d:	// Fn-F3 (STR - Suspend To RAM)
-			doSuspendToRAM();
+		case 0x13b: // Fn-F1
+			tmp = mConfig.readNumEntry("Fn_F1", 2);
+			performFnAction(tmp, key);
 			break;
-		case 0x13e:	// Fn-F4 (STD - Suspend To Disk)
-			doSuspendToDisk();
+		case 0x13c: // Fn-F2
+			tmp = mConfig.readNumEntry("Fn_F2", 3);
+			performFnAction(tmp, key);
 			break;
-		case 0x142:	// Fn-F8 (Wireless On/Off)
-			if (mWire == true) {
-				mWire = false;
-				toggleWireless(mWire);
-			}
-			else {
-				mWire = true;
-				toggleWireless(mWire);
-			}
+		case 0x13d: // Fn-F3
+			tmp = mConfig.readNumEntry("Fn_F3", 4);
+			performFnAction(tmp, key);
 			break;
+		case 0x13e: // Fn-F4
+			tmp = mConfig.readNumEntry("Fn_F4", 5);
+			performFnAction(tmp, key);
+			break;
+		case 0x13f: // Fn-F5
+			tmp = mConfig.readNumEntry("Fn_F5", 6);
+			performFnAction(tmp, key);
+			break;
+		case 0x140: // Fn-F6
+			tmp = mConfig.readNumEntry("Fn_F6", 7);
+			performFnAction(tmp, key);
+			break;
+		case 0x141: // Fn-F7
+			tmp = mConfig.readNumEntry("Fn_F7", 8);
+			performFnAction(tmp, key);
+			break;
+		case 0x142: // Fn-F8
+			tmp = mConfig.readNumEntry("Fn_F8", 9);
+			performFnAction(tmp, key);
+			break;
+		case 0x143: // Fn-F9
+			tmp = mConfig.readNumEntry("Fn_F9", 10);
+			performFnAction(tmp, key);
+			break;
+		/** Front panel Buttons */
 		case 0xb31:	// Previous
 			if (MODE == CD_DVD) {
 				if (mClient.send("kscd", "", "", "") == true)
@@ -577,24 +580,61 @@ void KToshiba::checkEvent()
 	}
 }
 
-void KToshiba::updateWidgetStatus(int key)
+void KToshiba::performFnAction(int action, int key)
 {
-	KConfig mConfig("ktoshibarc");
+	switch(action) {
+		case 0: // Disabled (Do Nothing)
+			break;
+		case 2: // LockScreen
+			lockScreen();
+			break;
+		case 4: // Suspend To RAM (STR)
+			doSuspendToRAM();
+			break;
+		case 5: // Suspend To Disk (STD)
+			doSuspendToDisk();
+			break;
+		case 9: // Wireless On/Off
+			wireless--;
+			if (wireless < 0) wireless = 1;
+			toggleWireless();
+			break;
+		case 1: // Mute/Unmute
+		case 7: // Brightness Down
+		case 8: // Brightness Up
+		case 10: // Enable/Disable MousePad
+			if (popup == 0) {
+				QRect r = QApplication::desktop()->geometry();
+				mStatusWidget->move(r.center() - 
+					QPoint(mStatusWidget->width()/2, mStatusWidget->height()/2));
+				mStatusWidget->show();
+				popup = key & 0x17f;
+			}
+			if ((key & 0x17f) == popup) {
+				updateWidgetStatus(action);
+			}
+			break;
+		case 3: // Battery Save Mode
+		case 6: // Toggle Video
+			if (popup == 0) {
+				QRect r = QApplication::desktop()->geometry();
+				mSettingsWidget->move(r.center() - 
+					QPoint(mSettingsWidget->width()/2, mSettingsWidget->height()/2));
+				mSettingsWidget->show();
+				popup = key & 0x17f;
+			}
+			if ((key & 0x17f) == popup)
+				updateWidgetStatus(action);
+			break;
+	}
+}
+
+void KToshiba::updateWidgetStatus(int action)
+{
+	KConfig mConfig(CONFIG_FILE);
 	mConfig.setGroup("KToshiba");
 
-	if ((bright == oldbright) && ((key == 0x1c0) || (key == 0x1c1)))
-		return;
-	if ((mousepad == oldmousepad) && (key == 0x1c3))
-		return;
-	if ((battery == oldbattery) && (key == 0x1bc))
-		return;
-	if ((video == oldvideo) && (key == 0x1bf))
-		return;
-	if ((snd == oldsnd) && (key == 0x181))
-		return;
-
-	key &= 0x17f;
-	if (key == 0x13c) {
+	if (action == 3) {
 		battery--;
 		if (battery < 0) battery = 2;
 		mDriver->setBatterySaveMode(battery);
@@ -627,10 +667,11 @@ void KToshiba::updateWidgetStatus(int key)
 				break;
 		}
 	}
-	if (key == 0x13f) {
+	if (action == 6) {
 		video += 2;
 		if (video == 0x105) video = 0x102;
 		else if (video > 0x104) video = 0x101;
+		//if (mDriver->machineID() < 0xfcf8) mDriver->setVideo(video - 0x100);
 		mSettingsWidget->wsSettings->raiseWidget(1);
 		switch (video) {
 			case 0x101:
@@ -663,7 +704,7 @@ void KToshiba::updateWidgetStatus(int key)
 				break;
 		}
 	}
-	if (key == 0x101) {
+	if (action == 1) {
 		snd--;
 		if (snd < 0) snd = 1;
 		mute();
@@ -672,7 +713,7 @@ void KToshiba::updateWidgetStatus(int key)
 		else if (snd == 1)
 			mStatusWidget->wsStatus->raiseWidget(1);
 	}
-	if (key == 0x143) {
+	if (action == 10) {
 		mousepad--;
 		if (mousepad < 0) mousepad = 1;
 		mousePad();
@@ -681,13 +722,8 @@ void KToshiba::updateWidgetStatus(int key)
 		else if (mousepad == 1)
 			mStatusWidget->wsStatus->raiseWidget(2);
 	}
-	if (key == 0x140) {
-		brightDown();
-		if (bright <= 7 && bright >= 0)
-			mStatusWidget->wsStatus->raiseWidget(bright + 4);
-	}
-	if (key == 0x141) {
-		brightUp();
+	if ((action == 7) || (action == 8)) {
+		(action == 7)? brightDown() : brightUp();
 		if (bright <= 7 && bright >= 0)
 			mStatusWidget->wsStatus->raiseWidget(bright + 4);
 	}
@@ -764,7 +800,7 @@ void KToshiba::lockScreen()
     }
 }
 
-void KToshiba::toggleWireless(bool status)
+void KToshiba::toggleWireless()
 {
 	QString helper = KStandardDirs::findExe("ktosh_helper");
 	if (helper.isEmpty()) {
@@ -775,7 +811,7 @@ void KToshiba::toggleWireless(bool status)
 	}
 
 	KProcess proc;
-	if (status) {
+	if (wireless) {
 		proc << "ktosh_helper" << "--enable";
 		proc.start(KProcess::DontCare);
 		proc.detach();
@@ -784,7 +820,7 @@ void KToshiba::toggleWireless(bool status)
 							   SmallIcon("messagebox_info", 20), this, i18n("Info"), 5000);
 		return;
 	} else
-	if (!status) {
+	if (!wireless) {
 		proc << "ktosh_helper" << "--disable";
 		proc.start(KProcess::DontCare);
 		proc.detach();
@@ -1124,19 +1160,21 @@ void KToshiba::mode()
 
 void KToshiba::doBluetooth()
 {
-	int bt = mDriver->setBluetooth();
+	int bt = mDriver->getBluetooth();
 
-	if ((bt == -1) && btstart) {
+	if (!bt) {
 		this->contextMenu()->setItemEnabled(6, FALSE);
 		return;
 	} else
-	if (bt && btstart && !bluetooth) {
+	if (bt && (btstart && !bluetooth)) {
+		mDriver->setBluetooth();
 		KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
 		this->contextMenu()->setItemEnabled(6, FALSE);
 		bluetooth = 1;
 	} else
-	if (bt && !btstart && !bluetooth) {
+	if (bt && !bluetooth) {
+		mDriver->setBluetooth();
 		KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
 		this->contextMenu()->setItemEnabled(6, FALSE);
@@ -1144,6 +1182,23 @@ void KToshiba::doBluetooth()
 	}
 	else
 		this->contextMenu()->setItemEnabled(6, TRUE);
+}
+
+void KToshiba::checkSystem()
+{
+	// TODO: Add SelectBay stuff here
+	mWirelessSwitch = mDriver->getWirelessSwitch();
+
+	if (mWirelessSwitch != mOldWirelessSwitch) {
+		if (mWirelessSwitch == 1)
+			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned on"),
+							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
+		else if (mWirelessSwitch == 0)
+			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned off"),
+							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
+	}
+
+	mOldWirelessSwitch = mWirelessSwitch;
 }
 
 

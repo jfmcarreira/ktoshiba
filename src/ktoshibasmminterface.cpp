@@ -247,10 +247,10 @@ void KToshibaSMMInterface::setBatterySaveMode(int mode)
 		reg.ecx = SCI_FULL_LIFE;
 	if (SciSet(&reg) == SCI_SUCCESS)
 		kdDebug() << "KToshibaSMMInterface::setBatterySaveMode(): "
-				  << "Successfully changed to mode " << mode << endl;
+				  << "Successfully changed Battery Save Mode" << endl;
 	else
 		kdError() << "KToshibaSMMInterface::setBatterySaveMode(): "
-				  << "Could not change battery save mode" << endl;
+				  << "Could not change Battery Save Mode" << endl;
 }
 
 int KToshibaSMMInterface::getVideo()
@@ -339,8 +339,8 @@ int KToshibaSMMInterface::selectBayStatus(int bay)
 int KToshibaSMMInterface::getWirelessSwitch()
 {
 	reg.eax = HCI_GET;
-	reg.ebx = HCI_WIRELESS_SWITCH;
-	reg.edx = 0x0001;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.edx = HCI_WIRELESS_SWITCH;
 	if (HciFunction(&reg) == HCI_SUCCESS)
 		return (reg.ecx & 0xff);
 	else
@@ -350,44 +350,143 @@ int KToshibaSMMInterface::getWirelessSwitch()
 	return -1;
 }
 
-int KToshibaSMMInterface::setBluetooth()
+int KToshibaSMMInterface::getBluetooth()
 {
 	reg.eax = HCI_GET;
-	reg.ebx = HCI_BLUETOOTH;
-	if (HciFunction(&reg) == HCI_FAILURE) {
-		kdError() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Bluetooth device not found" << endl;
-		return -1;
-	}
+	reg.ebx = HCI_RF_CONTROL;
+	reg.edx = HCI_BLUETOOTH_CHECK;
+	if (HciFunction(&reg) == HCI_SUCCESS)
+		return 1;
+	else
+		kdDebug() << "KToshibaSMMInterface::getBluetooth(): "
+				  << "No Bluetooth device found" << endl;
 
+	return 0;
+}
+
+void KToshibaSMMInterface::setBluetooth()
+{
 	reg.eax = HCI_SET;
-	reg.ebx = HCI_BLUETOOTH;
+	reg.ebx = HCI_RF_CONTROL;
 	reg.ecx = HCI_ENABLE;
-	reg.edx = 0x0080;
+	reg.edx = HCI_BLUETOOTH_POWER;
 	if (HciFunction(&reg) == HCI_SUCCESS) {
 		kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Bluetooth enabled succesfully\n"
-				  << "Attaching bluetooth device..." << endl;
+				  << "Bluetooth device enabled successfully\n"
+				  << "Attaching Bluetooth device..." << endl;
 		reg.eax = HCI_SET;
-		reg.ebx = HCI_BLUETOOTH;
+		reg.ebx = HCI_RF_CONTROL;
 		reg.ecx = HCI_ENABLE;
-		reg.edx = 0x0040;
-		if (HciFunction(&reg) == HCI_SUCCESS) {
-			kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
-					  << "Bluetooth device attached succesfully" << endl;
-			return 1;
-		}
-		else {
+		reg.edx = HCI_BLUETOOTH_CTRL;
+		if (HciFunction(&reg) == HCI_SUCCESS)
+			kdDebug() << "Bluetooth device attached successfully" << endl;
+		else
 			kdError() << "KToshibaSMMInterface::setBluetooth(): "
-					  << "Could not attach bluetooth device" << endl;
-			return -1;
-		}
+					  << "Could not attach Bluetooth device" << endl;
 	}
 	else
 		kdError() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Could not enable bluetooth device" << endl;
+				  << "Could not enable Bluetooth device" << endl;
+}
 
-	return -1;
+void KToshibaSMMInterface::setProcessingSpeed(int speed)
+{
+	reg.ebx = SCI_PROCESSING;
+	if (speed == 0)
+		reg.ecx = SCI_LOW;
+	else if (speed == 1)
+		reg.ecx = SCI_HIGH;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setProcessingSpeed(): "
+				  << "Successfully changed processor to "
+				  << ((speed == 0)? "LOW" : "HIGH") << " speed"<< endl;
+	else
+		kdError() << "KToshibaSMMInterface::setProcessingSpeed(): "
+				  << "Could not change processor speed" << endl;
+}
+
+void KToshibaSMMInterface::setCPUSleepMode(int mode)
+{
+	reg.ebx = SCI_SLEEP_MODE;
+	if (mode == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (mode == 1)
+		reg.ecx = SCI_ENABLED;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setCPUSleepMode(): "
+				  << "Successfully "
+				  << ((mode == 0)? "DISABLED" : "ENABLED")
+				  << " CPU Sleep Mode" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::setCPUSleepMode(): "
+				  << "Could not change CPU Sleep Mode" << endl;
+}
+
+void KToshibaSMMInterface::setCoolingMethod(int method)
+{
+	reg.ebx = SCI_COOLING_METHOD;
+	if (method == 0)
+		reg.ecx = SCI_MAX_PERFORMANCE;
+	else if (method == 1)
+		reg.ecx = SCI_BAT_OPTIMIZED;
+	else if (method == 2)
+		reg.ecx = SCI_PERFORMANCE_2;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setCoolingMethod(): "
+				  << "Successfully changed cooling method" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::setCoolingMethod(): "
+				  << "Could not change Cooling Method" << endl;
+}
+
+void KToshibaSMMInterface::setHDDAutoOff(int time)
+{
+	reg.ebx = SCI_HDD_AUTO_OFF;
+	if (time == 0)
+		reg.ecx = SCI_TIME_30;
+	else if (time == 1)
+		reg.ecx = SCI_TIME_20;
+	else if (time == 2)
+		reg.ecx = SCI_TIME_15;
+	else if (time == 3)
+		reg.ecx = SCI_TIME_10;
+	else if (time == 4)
+		reg.ecx = SCI_TIME_05;
+	else if (time == 5)
+		reg.ecx = SCI_TIME_03;
+	else if (time == 6)
+		reg.ecx = SCI_TIME_01;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setHDDAutoOff(): "
+				  << "Successfully changed HDD Auto Off time" << endl;
+	else
+		kdError() << "ToshibaSMMInterface::setHDDAutoOff(): "
+				  << "Could not change HDD Auto Off time" << endl;
+}
+
+void KToshibaSMMInterface::setDisplayAutoOff(int time)
+{
+	reg.ebx = SCI_DISPLAY_AUTO;
+	if (time == 0)
+		reg.ecx = SCI_TIME_30;
+	else if (time == 1)
+		reg.ecx = SCI_TIME_20;
+	else if (time == 2)
+		reg.ecx = SCI_TIME_15;
+	else if (time == 3)
+		reg.ecx = SCI_TIME_10;
+	else if (time == 4)
+		reg.ecx = SCI_TIME_05;
+	else if (time == 5)
+		reg.ecx = SCI_TIME_03;
+	else if (time == 6)
+		reg.ecx = SCI_TIME_01;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setDisplayAutoOff(): "
+				  << "Successfully changed Display Auto Off time" << endl;
+	else
+		kdError() << "ToshibaSMMInterface::setDisplayAutoOff(): "
+				  << "Could not change Display Auto Off time" << endl;
 }
 
 

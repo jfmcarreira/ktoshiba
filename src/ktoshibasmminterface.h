@@ -39,7 +39,7 @@ extern "C" {
 
 /**
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.4
+ * @version 0.5
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -135,10 +135,39 @@ public:
 	 */
 	int getWirelessSwitch();
 	/**
-	 * Enables the Bluetooth device.
+	 * Verifies the Bluetooth device availability.
 	 * @return @p the int holding the device status
 	 */
-	int setBluetooth();
+	int getBluetooth();
+	/**
+	 * Enables the Bluetooth device.
+	 */
+	void setBluetooth();
+	/**
+	 * Sets the Processor to the desired speed (high/low).
+	 * @param speed the int holding the desired speed
+	 */
+	void setProcessingSpeed(int speed);
+	/**
+	 * Sets the CPU Sleep Mode to the desired status (on/off).
+	 * @param mode the int holding the desired status
+	 */
+	void setCPUSleepMode(int mode);
+	/**
+	 * Sets the fan to the desired Cooling Method.
+	 * @param method the int holding the desired cooling method
+	 */
+	void setCoolingMethod(int method);
+	/**
+	 * Sets the HardDrive Auto Off feature to the desired time.
+	 * @param time the int holding the desired time
+	 */
+	void setHDDAutoOff(int time);
+	/**
+	 * Sets the Display Auto Off feature to the desired time.
+	 * @param time the int holding the desired time
+	 */
+	void setDisplayAutoOff(int time);
 private:
 	SMMRegisters reg;
 	FILE *str;
