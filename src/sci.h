@@ -11,6 +11,9 @@
  *   not to make any modifications and use it as it stands.
  *
  * $Log$
+ * Revision 1.3  2005/04/14 23:15:51  coproscefalo
+ * Some SCI updates
+ *
  * Revision 1.2  2005/04/14 19:05:04  coproscefalo
  * Finished Battery Savings - User Settings Mode
  *
@@ -110,6 +113,8 @@ enum {
 	SCI_COOLING_METHOD  = 0x0122,
 	SCI_STANDBY_TIME    = 0x0125,
 	SCI_HIBERNATION     = 0x012d,
+	SCI_INTEL_SPEEDSTEP = 0x0132,
+	SCI_HYPER_THREADING = 0x013b,
 	SCI_LCD_BACKLIGHT   = 0x0305,
 	SCI_DISPLAY_STRETCH = 0x0308,
 	SCI_PARALLEL_PORT   = 0x0501,
@@ -184,8 +189,12 @@ enum {
 };
 	
 enum {
-	SCI_FD_HD           = 0x0000,
-	SCI_HD_FD           = 0x0001
+	SCI_FD_HD_CDROM     = 0x0000,
+	SCI_HD_FD_CDROM     = 0x0001,
+	SCI_FD_CDROM_HD     = 0x0002,
+	SCI_HD_CDROM_FD     = 0x0003,
+	SCI_CDROM_FD_HD     = 0x0004,
+	SCI_CDROM_HD_FD     = 0x0005
 };
 
 enum {
