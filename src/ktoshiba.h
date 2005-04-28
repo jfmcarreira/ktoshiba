@@ -39,11 +39,11 @@ extern "C" {
 
 #include "ktoshibasmminterface.h"
 
-#define CD_DVD			0x80
-#define DIGITAL			0x40
+#define CD_DVD  		0x80
+#define DIGITAL 		0x40
 
-#define amaroK			0
-#define JuK				1
+#define amaroK  		0
+#define JuK 			1
 #define XMMS			2
 
 class SettingsWidget;

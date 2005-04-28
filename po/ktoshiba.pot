@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-05 12:02-0700\n"
+"POT-Creation-Date: 2005-04-28 08:04-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,9 +34,9 @@ msgstr ""
 
 #: main.cpp:40 kcmktoshiba/kcmtoshiba_general.ui.h:29
 #: kcmktoshiba/kcmtoshiba_general.ui.h:38
-#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:276 ktoshiba.cpp:279
-#: ktoshiba.cpp:773 ktoshiba.cpp:782 ktoshiba.cpp:791 ktoshiba.cpp:1095
-#: ktoshiba.cpp:1134 ktoshiba.cpp:1140
+#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:799 ktoshiba.cpp:808
+#: ktoshiba.cpp:817 ktoshiba.cpp:1121 ktoshiba.cpp:1161 ktoshiba.cpp:1168
+#: ktoshiba.cpp:1184 ktoshiba.cpp:1187
 msgid "KToshiba"
 msgstr ""
 
@@ -56,22 +56,404 @@ msgstr ""
 msgid "Some ideas and pieces of code"
 msgstr ""
 
-#: rc.cpp:2
+#: rc.cpp:3
 #, no-c-format
 msgid "C&ustom"
 msgstr ""
 
-#: rc.cpp:4
+#: rc.cpp:6
 #, no-c-format
 msgid "KToshiba: Status Widget"
 msgstr ""
 
-#: rc.cpp:6
+#: rc.cpp:9
 #, no-c-format
 msgid "KToshiba: General Options"
 msgstr ""
 
-#: rc.cpp:8
+#: rc.cpp:12
+#, no-c-format
+msgid "&General Options"
+msgstr ""
+
+#: rc.cpp:15
+#, no-c-format
+msgid "System Power"
+msgstr ""
+
+#: rc.cpp:18
+#, no-c-format
+msgid "Remaining battery capacity:"
+msgstr ""
+
+#: rc.cpp:21
+#, no-c-format
+msgid "AC"
+msgstr ""
+
+#: rc.cpp:24
+#, no-c-format
+msgid "Bat"
+msgstr ""
+
+#: rc.cpp:27
+#, no-c-format
+msgid "Battery Options"
+msgstr ""
+
+#: rc.cpp:30
+#, no-c-format
+msgid "Check &battery status every:"
+msgstr ""
+
+#: rc.cpp:33
+#, no-c-format
+msgid " sec"
+msgstr ""
+
+#: rc.cpp:36
+#, no-c-format
+msgid ""
+"This is used to determine how often the program will check the battery status"
+msgstr ""
+
+#: rc.cpp:39
+#, no-c-format
+msgid "&Low battery trigger:"
+msgstr ""
+
+#: rc.cpp:42 rc.cpp:48
+#, no-c-format
+msgid " min"
+msgstr ""
+
+#: rc.cpp:45
+#, no-c-format
+msgid "This is used to enable the low battery information"
+msgstr ""
+
+#: rc.cpp:51
+#, no-c-format
+msgid "This is used to enable the critical battery information"
+msgstr ""
+
+#: rc.cpp:54
+#, no-c-format
+msgid "C&ritical battery trigger:"
+msgstr ""
+
+#: rc.cpp:57
+#, no-c-format
+msgid "&Notify when battery becomes fully charged"
+msgstr ""
+
+#: rc.cpp:60
+#, no-c-format
+msgid "Alt+N"
+msgstr ""
+
+#: rc.cpp:63
+#, no-c-format
+msgid "Other Options"
+msgstr ""
+
+#: rc.cpp:66
+#, no-c-format
+msgid "Setup &Helper Application"
+msgstr ""
+
+#: rc.cpp:69
+#, no-c-format
+msgid "Alt+H"
+msgstr ""
+
+#: rc.cpp:72
+#, no-c-format
+msgid "This button can be used to enable the helper application"
+msgstr ""
+
+#: rc.cpp:75
+#, no-c-format
+msgid "&Enable Bluetooth device at program start-up"
+msgstr ""
+
+#: rc.cpp:78
+#, no-c-format
+msgid "Alt+E"
+msgstr ""
+
+#: rc.cpp:81
+#, no-c-format
+msgid "Select &Audio Application:"
+msgstr ""
+
+#: rc.cpp:84
+#, no-c-format
+msgid "amaroK"
+msgstr ""
+
+#: rc.cpp:87
+#, no-c-format
+msgid "JuK"
+msgstr ""
+
+#: rc.cpp:90
+#, no-c-format
+msgid "XMMS"
+msgstr ""
+
+#: rc.cpp:93
+#, no-c-format
+msgid ""
+"This can be used to select prefered audio application to use with front "
+"panel buttons"
+msgstr ""
+
+#: rc.cpp:96
+#, no-c-format
+msgid "Fn-Ke&y"
+msgstr ""
+
+#: rc.cpp:99
+#, no-c-format
+msgid "Fn-&Esc:"
+msgstr ""
+
+#: rc.cpp:102
+#, no-c-format
+msgid "Fn-F&3:"
+msgstr ""
+
+#: rc.cpp:105
+#, no-c-format
+msgid "Fn-F&4:"
+msgstr ""
+
+#: rc.cpp:108
+#, no-c-format
+msgid "Fn-F&7:"
+msgstr ""
+
+#: rc.cpp:111
+#, no-c-format
+msgid "Fn-F&8:"
+msgstr ""
+
+#: rc.cpp:114
+#, no-c-format
+msgid "Fn-F&9:"
+msgstr ""
+
+#: rc.cpp:117
+#, no-c-format
+msgid "Fn-F&5:"
+msgstr ""
+
+#: rc.cpp:120
+#, no-c-format
+msgid "Fn-F&1:"
+msgstr ""
+
+#: rc.cpp:123
+#, no-c-format
+msgid "Fn-F&2:"
+msgstr ""
+
+#: rc.cpp:126
+#, no-c-format
+msgid "Fn-F&6:"
+msgstr ""
+
+#: rc.cpp:129 rc.cpp:162 rc.cpp:195 rc.cpp:228 rc.cpp:261 rc.cpp:294
+#: rc.cpp:327 rc.cpp:360 rc.cpp:393 rc.cpp:426 rc.cpp:465
+#, no-c-format
+msgid "Disabled"
+msgstr ""
+
+#: rc.cpp:132 rc.cpp:165 rc.cpp:198 rc.cpp:231 rc.cpp:264 rc.cpp:297
+#: rc.cpp:330 rc.cpp:363 rc.cpp:396 rc.cpp:429
+#, no-c-format
+msgid "Unmute/Mute"
+msgstr ""
+
+#: rc.cpp:135 rc.cpp:168 rc.cpp:201 rc.cpp:234 rc.cpp:267 rc.cpp:300
+#: rc.cpp:333 rc.cpp:366 rc.cpp:399 rc.cpp:432
+#, no-c-format
+msgid "Lock Screen"
+msgstr ""
+
+#: rc.cpp:138 rc.cpp:171 rc.cpp:204 rc.cpp:237 rc.cpp:270 rc.cpp:303
+#: rc.cpp:336 rc.cpp:369 rc.cpp:402 rc.cpp:435
+#, no-c-format
+msgid "Battery Save Mode"
+msgstr ""
+
+#: rc.cpp:141 rc.cpp:174 rc.cpp:207 rc.cpp:240 rc.cpp:273 rc.cpp:306
+#: rc.cpp:339 rc.cpp:372 rc.cpp:405 rc.cpp:438
+#, no-c-format
+msgid "Suspend To RAM"
+msgstr ""
+
+#: rc.cpp:144 rc.cpp:177 rc.cpp:210 rc.cpp:243 rc.cpp:276 rc.cpp:309
+#: rc.cpp:342 rc.cpp:375 rc.cpp:408 rc.cpp:441
+#, no-c-format
+msgid "Suspend To Disk"
+msgstr ""
+
+#: rc.cpp:147 rc.cpp:180 rc.cpp:213 rc.cpp:246 rc.cpp:279 rc.cpp:312
+#: rc.cpp:345 rc.cpp:378 rc.cpp:411 rc.cpp:444
+#, no-c-format
+msgid "Video Out"
+msgstr ""
+
+#: rc.cpp:150 rc.cpp:183 rc.cpp:216 rc.cpp:249 rc.cpp:282 rc.cpp:315
+#: rc.cpp:348 rc.cpp:381 rc.cpp:414 rc.cpp:447
+#, no-c-format
+msgid "Bright Down"
+msgstr ""
+
+#: rc.cpp:153 rc.cpp:186 rc.cpp:219 rc.cpp:252 rc.cpp:285 rc.cpp:318
+#: rc.cpp:351 rc.cpp:384 rc.cpp:417 rc.cpp:450
+#, no-c-format
+msgid "Bright Up"
+msgstr ""
+
+#: rc.cpp:156 rc.cpp:189 rc.cpp:222 rc.cpp:255 rc.cpp:288 rc.cpp:321
+#: rc.cpp:354 rc.cpp:387 rc.cpp:420 rc.cpp:453 ktoshiba.cpp:1185
+#: ktoshiba.cpp:1188
+#, no-c-format
+msgid "Wireless"
+msgstr ""
+
+#: rc.cpp:159 rc.cpp:192 rc.cpp:225 rc.cpp:258 rc.cpp:291 rc.cpp:324
+#: rc.cpp:357 rc.cpp:390 rc.cpp:423 rc.cpp:456
+#, no-c-format
+msgid "Enable/Disable MousePad"
+msgstr ""
+
+#: rc.cpp:459
+#, no-c-format
+msgid "Battery &Save Mode"
+msgstr ""
+
+#: rc.cpp:462
+#, no-c-format
+msgid "Enabled"
+msgstr ""
+
+#: rc.cpp:468 rc.cpp:510
+#, no-c-format
+msgid "30 min"
+msgstr ""
+
+#: rc.cpp:471 rc.cpp:513
+#, no-c-format
+msgid "20 min"
+msgstr ""
+
+#: rc.cpp:474 rc.cpp:516
+#, no-c-format
+msgid "15 min"
+msgstr ""
+
+#: rc.cpp:477 rc.cpp:519
+#, no-c-format
+msgid "10 min"
+msgstr ""
+
+#: rc.cpp:480 rc.cpp:522
+#, no-c-format
+msgid "05 min"
+msgstr ""
+
+#: rc.cpp:483 rc.cpp:525
+#, no-c-format
+msgid "03 min"
+msgstr ""
+
+#: rc.cpp:486 rc.cpp:528
+#, no-c-format
+msgid "01 min"
+msgstr ""
+
+#: rc.cpp:489
+#, no-c-format
+msgid "High"
+msgstr ""
+
+#: rc.cpp:492
+#, no-c-format
+msgid "Low"
+msgstr ""
+
+#: rc.cpp:495
+#, no-c-format
+msgid "&HDD Auto Off:"
+msgstr ""
+
+#: rc.cpp:498
+#, no-c-format
+msgid "&CPU Sleep Mode:"
+msgstr ""
+
+#: rc.cpp:501
+#, no-c-format
+msgid "&Processing Speed:"
+msgstr ""
+
+#: rc.cpp:504
+#, no-c-format
+msgid "C&ooling Method:"
+msgstr ""
+
+#: rc.cpp:507
+#, no-c-format
+msgid "&Display Auto Off:"
+msgstr ""
+
+#: rc.cpp:531
+#, no-c-format
+msgid "LCD Brightness:"
+msgstr ""
+
+#: rc.cpp:534
+#, no-c-format
+msgid "Super Bright"
+msgstr ""
+
+#: rc.cpp:537
+#, no-c-format
+msgid "Bright"
+msgstr ""
+
+#: rc.cpp:540
+#, no-c-format
+msgid "Semi Bright"
+msgstr ""
+
+#: rc.cpp:543
+#, no-c-format
+msgid "Max Performance"
+msgstr ""
+
+#: rc.cpp:546
+#, no-c-format
+msgid "Battery Optimized"
+msgstr ""
+
+#: rc.cpp:549
+#, no-c-format
+msgid "Performance"
+msgstr ""
+
+#: rc.cpp:552
+#, no-c-format
+msgid ""
+"The options shown here are only aplicable when the <b>Battery Save Mode</b> "
+"is set to <i>User Setttings</i>."
+msgstr ""
+
+#: rc.cpp:555
 #, no-c-format
 msgid ""
 "Cannot find the <i>Toshiba System Managment Mode Driver</i>. If this is a "
@@ -79,140 +461,7 @@ msgid ""
 "failures."
 msgstr ""
 
-#: rc.cpp:10
-#, no-c-format
-msgid "System Power"
-msgstr ""
-
-#: rc.cpp:12
-#, no-c-format
-msgid "Remaining battery capacity:"
-msgstr ""
-
-#: rc.cpp:14
-#, no-c-format
-msgid "AC"
-msgstr ""
-
-#: rc.cpp:16
-#, no-c-format
-msgid "Bat"
-msgstr ""
-
-#: rc.cpp:18
-#, no-c-format
-msgid "Battery Options"
-msgstr ""
-
-#: rc.cpp:20
-#, no-c-format
-msgid "Check &battery status every:"
-msgstr ""
-
-#: rc.cpp:22
-#, no-c-format
-msgid " sec"
-msgstr ""
-
-#: rc.cpp:24
-#, no-c-format
-msgid ""
-"This is used to determine how often the program will check the battery status"
-msgstr ""
-
-#: rc.cpp:26
-#, no-c-format
-msgid "&Low battery trigger:"
-msgstr ""
-
-#: rc.cpp:28 rc.cpp:32
-#, no-c-format
-msgid " min"
-msgstr ""
-
-#: rc.cpp:30
-#, no-c-format
-msgid "This is used to enable the low battery information"
-msgstr ""
-
-#: rc.cpp:34
-#, no-c-format
-msgid "This is used to enable the critical battery information"
-msgstr ""
-
-#: rc.cpp:36
-#, no-c-format
-msgid "C&ritical battery trigger:"
-msgstr ""
-
-#: rc.cpp:38
-#, no-c-format
-msgid "&Notify when battery becomes fully charged"
-msgstr ""
-
-#: rc.cpp:40
-#, no-c-format
-msgid "Alt+N"
-msgstr ""
-
-#: rc.cpp:42
-#, no-c-format
-msgid "Other Options"
-msgstr ""
-
-#: rc.cpp:44
-#, no-c-format
-msgid "Setup &Helper Application"
-msgstr ""
-
-#: rc.cpp:46
-#, no-c-format
-msgid "Alt+H"
-msgstr ""
-
-#: rc.cpp:48
-#, no-c-format
-msgid "This button can be used to enable the helper application"
-msgstr ""
-
-#: rc.cpp:50
-#, no-c-format
-msgid "&Enable Bluetooth device at program start-up"
-msgstr ""
-
-#: rc.cpp:52
-#, no-c-format
-msgid "Alt+E"
-msgstr ""
-
-#: rc.cpp:54
-#, no-c-format
-msgid "Select &Audio Application:"
-msgstr ""
-
-#: rc.cpp:56
-#, no-c-format
-msgid "amaroK"
-msgstr ""
-
-#: rc.cpp:58
-#, no-c-format
-msgid "JuK"
-msgstr ""
-
-#: rc.cpp:60
-#, no-c-format
-msgid "XMMS"
-msgstr ""
-
-#: rc.cpp:62
-#, no-c-format
-msgid ""
-"This can be used to select prefered audio application to use with front "
-"panel buttons"
-msgstr ""
-
-#: rc.cpp:64
+#: rc.cpp:558
 #, no-c-format
 msgid "KToshiba: Video and Power Status"
 msgstr ""
@@ -247,170 +496,166 @@ msgstr ""
 msgid "Original author"
 msgstr ""
 
-#: kcmktoshiba/main.cpp:153
+#: kcmktoshiba/main.cpp:234
 msgid "Helpful information about the KToshiba module."
 msgstr ""
 
-#: ktoshiba.cpp:115
+#: ktoshiba.cpp:119
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:118
+#: ktoshiba.cpp:122
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:120
+#: ktoshiba.cpp:124
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:123
+#: ktoshiba.cpp:127
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:126
+#: ktoshiba.cpp:130
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:140 ktoshiba.cpp:729 ktoshiba.cpp:735 ktoshiba.cpp:748
-#: ktoshiba.cpp:754
+#: ktoshiba.cpp:146 ktoshiba.cpp:755 ktoshiba.cpp:761 ktoshiba.cpp:774
+#: ktoshiba.cpp:780
 msgid "WARNING"
 msgstr ""
 
-#: ktoshiba.cpp:141
+#: ktoshiba.cpp:147
 msgid ""
 "The powersave daemon is not running or you are not member of the powersave "
 "system group.\n"
 "Starting it will improve performance: /etc/init.d/rcpowersave start"
 msgstr ""
 
-#: ktoshiba.cpp:213
+#: ktoshiba.cpp:219
 msgid "Your battery is now fully charged."
 msgstr ""
 
-#: ktoshiba.cpp:213
+#: ktoshiba.cpp:219
 msgid "Laptop Battery"
 msgstr ""
 
-#: ktoshiba.cpp:218
+#: ktoshiba.cpp:224
 msgid "The battery state has changed to low"
 msgstr ""
 
-#: ktoshiba.cpp:223
+#: ktoshiba.cpp:229
 msgid "The battery state has changed to critical"
 msgstr ""
 
-#: ktoshiba.cpp:228
+#: ktoshiba.cpp:234
 msgid "I'm Gone..."
 msgstr ""
 
-#: ktoshiba.cpp:276
-msgid "Wireless antenna turned on"
-msgstr ""
-
-#: ktoshiba.cpp:277 ktoshiba.cpp:280
-msgid "Wireless"
-msgstr ""
-
-#: ktoshiba.cpp:279
-msgid "Wireless antenna turned off"
-msgstr ""
-
-#: ktoshiba.cpp:382
+#: ktoshiba.cpp:398
 msgid "No interface available"
 msgstr ""
 
-#: ktoshiba.cpp:387
+#: ktoshiba.cpp:403
 msgid "Plugged in - fully charged"
 msgstr ""
 
-#: ktoshiba.cpp:393
+#: ktoshiba.cpp:409
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:397
+#: ktoshiba.cpp:413
 msgid "Plugged in - no battery"
 msgstr ""
 
-#: ktoshiba.cpp:399
+#: ktoshiba.cpp:415
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:408
+#: ktoshiba.cpp:424
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:411
+#: ktoshiba.cpp:427
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:605
+#: ktoshiba.cpp:651
 msgid "User Settings"
 msgstr ""
 
-#: ktoshiba.cpp:611
+#: ktoshiba.cpp:655
 msgid "Low Power"
 msgstr ""
 
-#: ktoshiba.cpp:617
+#: ktoshiba.cpp:659
 msgid "Full Power"
 msgstr ""
 
-#: ktoshiba.cpp:623
+#: ktoshiba.cpp:663
 msgid "Full Life"
 msgstr ""
 
-#: ktoshiba.cpp:730
+#: ktoshiba.cpp:756
 msgid "Suspend disabled by administrator."
 msgstr ""
 
-#: ktoshiba.cpp:736
+#: ktoshiba.cpp:762
 msgid "A save suspend needs the powersave daemon running in the background."
 msgstr ""
 
-#: ktoshiba.cpp:749
+#: ktoshiba.cpp:775
 msgid "Standby disabled by administrator."
 msgstr ""
 
-#: ktoshiba.cpp:755
+#: ktoshiba.cpp:781
 msgid "A save standby needs the powersave daemon running in the background."
 msgstr ""
 
-#: ktoshiba.cpp:771
+#: ktoshiba.cpp:797
 msgid ""
 "Could not change wireless status because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:783
+#: ktoshiba.cpp:809
 msgid "Wireless interface up"
 msgstr ""
 
-#: ktoshiba.cpp:784 ktoshiba.cpp:793
+#: ktoshiba.cpp:810 ktoshiba.cpp:819
 msgid "Info"
 msgstr ""
 
-#: ktoshiba.cpp:792
+#: ktoshiba.cpp:818
 msgid "Wireless interface down"
 msgstr ""
 
-#: ktoshiba.cpp:1089
+#: ktoshiba.cpp:1115
 msgid ""
 "Could not get model id.\n"
 "Weird"
 msgstr ""
 
-#: ktoshiba.cpp:1094
+#: ktoshiba.cpp:1120
 msgid ""
 "Please send the model name and this id %1 to:\n"
 "neftali@utep.edu"
 msgstr ""
 
-#: ktoshiba.cpp:1134 ktoshiba.cpp:1140
+#: ktoshiba.cpp:1161 ktoshiba.cpp:1168
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:1135 ktoshiba.cpp:1141
+#: ktoshiba.cpp:1162 ktoshiba.cpp:1169
 msgid "Bluetooth"
+msgstr ""
+
+#: ktoshiba.cpp:1184
+msgid "Wireless antenna turned on"
+msgstr ""
+
+#: ktoshiba.cpp:1187
+msgid "Wireless antenna turned off"
 msgstr ""

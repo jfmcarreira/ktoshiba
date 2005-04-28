@@ -1,3 +1,16 @@
+2005-04-27 Azael Avalos <neftali@utep.edu>
+	* Small fix on custom Fn-Key actions, the config
+	  file was not being readed correctly
+
+2005-04-26 Azael Avalos <neftali@utep.edu>
+	* Fixed the application calls, tho it needs some rework
+	  in some areas
+	* Small fix to User Settings Battery Save Mode
+
+2005-04-25 Azael Avalos <neftali@utep.edu>
+	* Finally found why Kaffeine and KsCD were not
+	  being called when in CD/DVD Mode
+
 2005-04-11 Azael Avalos <neftali@utep.edu>
 	* Some cleans on KCM Widget
 	* Updated es.po, README and README.es files
