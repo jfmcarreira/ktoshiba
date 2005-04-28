@@ -17,8 +17,8 @@ Requirements
 - A Toshiba laptop (this is a must)
 - Compiler and utilities (autoconf, automake, etc.)
 - KDE 3.2.x and development libraries
-- The Powersave daemon and Libraries (for STR and STD)
-- A lot of courage (just kidding)
+- The Powersave daemon and Libraries (for STR and STD) (recomended)
+- alsa-utils package (for muting/unmuting)
 
 Preparatives
 =====
@@ -56,9 +56,9 @@ If you have everything that is needed then installation is very
 simple, extract the downloaded archive and then type the following: 
 
 	cd ktoshiba-0.X 		(where X is the current version number)
-	./configure --prefix=/path/to/kde3/directory
+	./configure --prefix=/path/to/kde3/directory (on SuSE /opt/kde3)
 	make
-	su -c "make install"		(this step will need the root password)
+	su -c "make install"	(this step will need the root password)
 
 or if you downloaded an rpm then do the following:
 
@@ -88,7 +88,7 @@ project page and report the bug or wish there.
 Contact
 =====
 You can reach me by mail at 
-neftali@utep.edu or nonoxinol900@hotmail.com
+neftali@utep.edu or coproscefalo@gmail.com
 
 The project homepage is hosted at SourceForge.net
 http://sourceforge.net/projects/ktoshiba

@@ -119,7 +119,7 @@ KToshiba::KToshiba()
 	this->contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
 									 SLOT( doConfig() ), 0, 1, 1 );
 	this->contextMenu()->insertSeparator( 2 );
-	this->contextMenu()->insertItem( SmallIcon("hdd_umount"), i18n("Suspend To &Disk"), this,
+	this->contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
 									 SLOT( doSuspendToDisk() ), 0, 3, 3 );
 	this->contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
 									 SLOT( doSuspendToRAM() ), 0, 4, 4 );
@@ -211,6 +211,7 @@ void KToshiba::powerStatus()
 	pow = mDriver->acPowerStatus();
 	bright = mDriver->getBrightness();
 	KConfig mConfig(CONFIG_FILE);
+	mConfig.setGroup("KToshiba");
 	loadConfiguration(&mConfig);
 
 	if (mFullBat && perc == 100 && !battrig) {
@@ -293,13 +294,14 @@ void KToshiba::bsmUserSettings(KConfig *k)
 	lcd = k->readNumEntry("LCD_Brightness", 2);
 	cooling = k->readNumEntry("Cooling_Method", 2);
 
+	kdDebug() << "Enabling User Settings..." << endl;
 	(processor == 0)? tmp = 1 : tmp = 0;
 	mDriver->setProcessingSpeed(tmp);
 	(cpu == 0)? tmp = 1 : tmp = 0;
 	mDriver->setCPUSleepMode(tmp);
-	if (lcd == 0) mDriver->setBrightness(7); // Super-Bright
-	else if (lcd == 1) mDriver->setBrightness(3); // Bright
-	else if (lcd == 2) mDriver->setBrightness(0); // Semi-Bright
+	if (lcd == 0) bright = 7; // Super-Bright
+	else if (lcd == 1) bright = 3; // Bright
+	else if (lcd == 2) bright = 0; // Semi-Bright
 	mDriver->setCoolingMethod(cooling);
 	mDriver->setDisplayAutoOff(display);
 	mDriver->setHDDAutoOff(hdd);
@@ -432,6 +434,7 @@ void KToshiba::checkEvent()
 {
 	KProcess proc;
 	KConfig mConfig(CONFIG_FILE);
+	mConfig.setGroup("KToshiba");
 
 	int tmp = 0;
 	int key = mDriver->systemEvent();
@@ -442,53 +445,54 @@ void KToshiba::checkEvent()
 		popup = 0;
 	}
 
+	QByteArray data, replyData;
+	QCString replyType;
+
 	switch (key) {
 		case 0x101: // Fn-Esc
-			tmp = mConfig.readNumEntry("Fn_Esc", 1);
+			tmp = mConfig.readNumEntry("Fn_Esc");
 			performFnAction(tmp, key);
 			break;
 		case 0x13b: // Fn-F1
-			tmp = mConfig.readNumEntry("Fn_F1", 2);
+			tmp = mConfig.readNumEntry("Fn_F1");
 			performFnAction(tmp, key);
 			break;
 		case 0x13c: // Fn-F2
-			tmp = mConfig.readNumEntry("Fn_F2", 3);
+			tmp = mConfig.readNumEntry("Fn_F2");
 			performFnAction(tmp, key);
 			break;
 		case 0x13d: // Fn-F3
-			tmp = mConfig.readNumEntry("Fn_F3", 4);
+			tmp = mConfig.readNumEntry("Fn_F3");
 			performFnAction(tmp, key);
 			break;
 		case 0x13e: // Fn-F4
-			tmp = mConfig.readNumEntry("Fn_F4", 5);
+			tmp = mConfig.readNumEntry("Fn_F4");
 			performFnAction(tmp, key);
 			break;
 		case 0x13f: // Fn-F5
-			tmp = mConfig.readNumEntry("Fn_F5", 6);
+			tmp = mConfig.readNumEntry("Fn_F5");
 			performFnAction(tmp, key);
 			break;
 		case 0x140: // Fn-F6
-			tmp = mConfig.readNumEntry("Fn_F6", 7);
+			tmp = mConfig.readNumEntry("Fn_F6");
 			performFnAction(tmp, key);
 			break;
 		case 0x141: // Fn-F7
-			tmp = mConfig.readNumEntry("Fn_F7", 8);
+			tmp = mConfig.readNumEntry("Fn_F7");
 			performFnAction(tmp, key);
 			break;
 		case 0x142: // Fn-F8
-			tmp = mConfig.readNumEntry("Fn_F8", 9);
+			tmp = mConfig.readNumEntry("Fn_F8");
 			performFnAction(tmp, key);
 			break;
 		case 0x143: // Fn-F9
-			tmp = mConfig.readNumEntry("Fn_F9", 10);
+			tmp = mConfig.readNumEntry("Fn_F9");
 			performFnAction(tmp, key);
 			break;
-		/** Front panel Buttons */
+		/** Front Panel Multimedia Buttons */
 		case 0xb31:	// Previous
 			if (MODE == CD_DVD) {
-				if (mClient.send("kscd", "", "", "") == true)
-					mClient.send("kscd", "CDPlayer", "previous()", "");
-				else
+				if (!mClient.call("kscd", "CDPlayer", "previous()", data, replyType, replyData))
 					mClient.send("kaffeine", "KaffeineIface", "previous()", "");
 			} else
 			if (MODE == DIGITAL) {
@@ -507,9 +511,7 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb32:	// Next
 			if (MODE == CD_DVD) {
-				if (mClient.send("kscd", "", "", "") == true)
-					mClient.send("kscd", "CDPlayer", "next()", "");
-				else
+				if (!mClient.call("kscd", "CDPlayer", "next()", data, replyType, replyData))
 					mClient.send("kaffeine", "KaffeineIface", "next()", "");
 			} else
 			if (MODE == DIGITAL) {
@@ -528,14 +530,17 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb33:	// Play/Pause
 			if (MODE == CD_DVD) {
-				if (mClient.send("kscd", "", "", "") == true)
-					mClient.send("kscd", "CDPlayer", "play()", "");
-				else if (mClient.send("kaffeine", "", "", "") == true) {
-					if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", "") == true)
-						mClient.send("kaffeine", "KaffeineIface", "pause()", "");
-					else
-						mClient.send("kaffeine", "KaffeineIface", "play()", "");
+				if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData)) {
+					kdDebug() << "KsCD not running... trying Kaffeine" << endl;
+					mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData);
+					// TODO: Find out how replyData works so the program know what to do
+					//if (replyData == true)
+					//	mClient.send("kaffeine", "KaffeineIface", "pause()", "");
+					//else if (replyData == false)
+					//	mClient.send("kaffeine", "KaffeineIface", "play()", "");
 				}
+				else
+					kdDebug() << "Kaffeine not running either" << endl;
 			} else
 			if (MODE == DIGITAL) {
 				if (mAudioPlayer == amaroK) {
@@ -553,14 +558,12 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb30:	// Stop/Eject
 			if (MODE == CD_DVD) {
-				if (mClient.send("kscd", "", "", "") == true)
-					mClient.send("kscd", "CDPlayer", "stop()", "");
-				else if (mClient.send("kaffeine", "KaffeineIface", "isPlaying()", "") == true)
-					mClient.send("kaffeine", "KaffeineIface", "stop()", "");
-				else {
-					proc << "eject" << "--cdrom";
-					proc.start(KProcess::DontCare);
-					proc.detach();
+				if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData)) {
+					if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData)) {
+						proc << "eject" << "--cdrom";
+						proc.start(KProcess::DontCare);
+						proc.detach();
+					}
 				}
 			} else
 			if (MODE == DIGITAL) {
@@ -640,30 +643,25 @@ void KToshiba::updateWidgetStatus(int action)
 		mDriver->setBatterySaveMode(battery);
 		mConfig.writeEntry("Battery_Save_Mode", battery);
 		mSettingsWidget->wsSettings->raiseWidget(0);
+		mSettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
 		switch (battery) {
 			case 0:
 				mSettingsWidget->tlStatus->setText(i18n("User Settings"));
 				mSettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
 				break;
 			case 1:
 				mSettingsWidget->tlStatus->setText(i18n("Low Power"));
 				mSettingsWidget->plMedium->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
 				break;
 			case 2:
 				mSettingsWidget->tlStatus->setText(i18n("Full Power"));
 				mSettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
 				break;
 			case 3:
 				mSettingsWidget->tlStatus->setText(i18n("Full Life"));
 				mSettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
 				break;
 		}
 	}
@@ -673,34 +671,26 @@ void KToshiba::updateWidgetStatus(int action)
 		else if (video > 0x104) video = 0x101;
 		//if (mDriver->machineID() < 0xfcf8) mDriver->setVideo(video - 0x100);
 		mSettingsWidget->wsSettings->raiseWidget(1);
+		mSettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
 		switch (video) {
 			case 0x101:
 				mSettingsWidget->tlStatus->setText("LCD");
 				mSettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
 				break;
 			case 0x102:
 				mSettingsWidget->tlStatus->setText("CRT");
 				mSettingsWidget->plCRT->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
 				break;
 			case 0x103:
 				mSettingsWidget->tlStatus->setText("LCD/CRT");
 				mSettingsWidget->plLCDCRT->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
 				break;
 			case 0x104:
 				mSettingsWidget->tlStatus->setText("S-Video");
 				mSettingsWidget->plTV->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
-				mSettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
 				break;
 		}
 	}

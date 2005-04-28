@@ -19,8 +19,8 @@ Requisitos
 =====
 - Un portatil Toshiba (indispensable)
 - Compilador y utilerias (autoconf, automake, etc.)
-- El monitor powersave y librerias (para STR y STD)
-- Mucho valor (solo una broma)
+- El monitor powersave y librerias (para STR y STD) (recomendado)
+- alsa-utils (para silenciar/desilenciar)
 
 
 Preparativos
@@ -54,13 +54,13 @@ Si tu usas SuSE entonces tu querras editar modules.conf.local o
 modprobe.conf.local (dependiendo del kernel) entonces.
 
 
-Instalacion
+Instalación
 =====
 Si todo salio bien hasta este punto entonces la instalacion es muy
 sencilla, descomprime el archivo descargado y haz lo siguiente:
 
-	cd ktoshiba-0.X 	(donde X es la version actual)
-	./configure --prefix=/lugar/donde/esta/instalado/kde
+	cd ktoshiba-0.X 		(donde X es la version actual)
+	./configure --prefix=/lugar/donde/esta/instalado/kde (en SuSE /opt/kde3)
 	make
 	su -c "make install"	(este paso va arequerir de la contraseña del administrador)
 
@@ -95,7 +95,7 @@ a la pagina en SourceForge.net y reportalo ahi.
 Contacto
 =====
 Me puedes contactar por correo electronico en
-neftali@utep.edu or nonoxinol900@hotmail.com
+neftali@utep.edu or coproscefalo@gmail.com
 
 La pagina del proyecto esta en SourceForge.net
 http://sourceforge.net/projects/ktoshiba
