@@ -23,8 +23,7 @@ libktoshibasmminterface_la_SOURCES = hci.c sci.c ktoshibasmminterface.cpp
 
 ktoshiba_SOURCES = main.cpp ktoshiba.cpp settingswidget.ui statuswidget.ui
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-ktoshiba_LDADD = $(top_builddir)/src/libktoshibasmminterface.la \
-	-lpowersave_daemon -lpowersave $(LIB_KDEUI)
+ktoshiba_LDADD = $(top_builddir)/src/libktoshibasmminterface.la $(LIB_KDEUI)
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities

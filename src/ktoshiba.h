@@ -33,10 +33,6 @@
 #include <kaboutapplication.h>
 #include <dcopclient.h>
 
-extern "C" {
-#include <powersave_daemonlib.h>
-}
-
 #include "ktoshibasmminterface.h"
 
 #define CD_DVD  		0x80

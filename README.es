@@ -18,8 +18,8 @@ la tecla Fn es la misma en todos ellos hasta donde he visto.
 Requisitos
 =====
 - Un portatil Toshiba (indispensable)
-- Compilador y utilerias (autoconf, automake, etc.)
-- El monitor powersave y librerias (para STR y STD) (recomendado)
+- Compilador y utilerias (gcc, autoconf, automake, etc.)
+- KDE 3.2.x y librerias de desarrollo (-devel)
 - alsa-utils (para silenciar/desilenciar)
 
 
@@ -99,4 +99,4 @@ neftali@utep.edu or coproscefalo@gmail.com
 
 La pagina del proyecto esta en SourceForge.net
 http://sourceforge.net/projects/ktoshiba
-http://ktoshiba.sourceforge.net/
+http://ktoshiba.sourceforge.net/ (Necesito un webmaster...)

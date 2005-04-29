@@ -1,14 +1,8 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-28 08:04-0600\n"
+"POT-Creation-Date: 2005-04-29 10:17-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,9 +28,9 @@ msgstr ""
 
 #: main.cpp:40 kcmktoshiba/kcmtoshiba_general.ui.h:29
 #: kcmktoshiba/kcmtoshiba_general.ui.h:38
-#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:799 ktoshiba.cpp:808
-#: ktoshiba.cpp:817 ktoshiba.cpp:1121 ktoshiba.cpp:1161 ktoshiba.cpp:1168
-#: ktoshiba.cpp:1184 ktoshiba.cpp:1187
+#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:725 ktoshiba.cpp:750
+#: ktoshiba.cpp:781 ktoshiba.cpp:790 ktoshiba.cpp:799 ktoshiba.cpp:1100
+#: ktoshiba.cpp:1140 ktoshiba.cpp:1147 ktoshiba.cpp:1163 ktoshiba.cpp:1166
 msgid "KToshiba"
 msgstr ""
 
@@ -319,8 +313,8 @@ msgid "Bright Up"
 msgstr ""
 
 #: rc.cpp:156 rc.cpp:189 rc.cpp:222 rc.cpp:255 rc.cpp:288 rc.cpp:321
-#: rc.cpp:354 rc.cpp:387 rc.cpp:420 rc.cpp:453 ktoshiba.cpp:1185
-#: ktoshiba.cpp:1188
+#: rc.cpp:354 rc.cpp:387 rc.cpp:420 rc.cpp:453 ktoshiba.cpp:1164
+#: ktoshiba.cpp:1167
 #, no-c-format
 msgid "Wireless"
 msgstr ""
@@ -520,142 +514,137 @@ msgstr ""
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:146 ktoshiba.cpp:755 ktoshiba.cpp:761 ktoshiba.cpp:774
-#: ktoshiba.cpp:780
-msgid "WARNING"
-msgstr ""
-
-#: ktoshiba.cpp:147
-msgid ""
-"The powersave daemon is not running or you are not member of the powersave "
-"system group.\n"
-"Starting it will improve performance: /etc/init.d/rcpowersave start"
-msgstr ""
-
-#: ktoshiba.cpp:219
+#: ktoshiba.cpp:211
 msgid "Your battery is now fully charged."
 msgstr ""
 
-#: ktoshiba.cpp:219
+#: ktoshiba.cpp:211
 msgid "Laptop Battery"
 msgstr ""
 
-#: ktoshiba.cpp:224
+#: ktoshiba.cpp:216
 msgid "The battery state has changed to low"
 msgstr ""
 
-#: ktoshiba.cpp:229
+#: ktoshiba.cpp:221
 msgid "The battery state has changed to critical"
 msgstr ""
 
-#: ktoshiba.cpp:234
+#: ktoshiba.cpp:226
 msgid "I'm Gone..."
 msgstr ""
 
-#: ktoshiba.cpp:398
+#: ktoshiba.cpp:390
 msgid "No interface available"
 msgstr ""
 
-#: ktoshiba.cpp:403
+#: ktoshiba.cpp:395
 msgid "Plugged in - fully charged"
 msgstr ""
 
-#: ktoshiba.cpp:409
+#: ktoshiba.cpp:401
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:413
+#: ktoshiba.cpp:405
 msgid "Plugged in - no battery"
 msgstr ""
 
-#: ktoshiba.cpp:415
+#: ktoshiba.cpp:407
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:424
+#: ktoshiba.cpp:416
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:427
+#: ktoshiba.cpp:419
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:651
+#: ktoshiba.cpp:625
 msgid "User Settings"
 msgstr ""
 
-#: ktoshiba.cpp:655
+#: ktoshiba.cpp:629
 msgid "Low Power"
 msgstr ""
 
-#: ktoshiba.cpp:659
+#: ktoshiba.cpp:633
 msgid "Full Power"
 msgstr ""
 
-#: ktoshiba.cpp:663
+#: ktoshiba.cpp:637
 msgid "Full Life"
 msgstr ""
 
-#: ktoshiba.cpp:756
-msgid "Suspend disabled by administrator."
+#: ktoshiba.cpp:723
+msgid ""
+"Could not Suspend To Disk because ktosh_helper cannot be found.\n"
+"Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:762
-msgid "A save suspend needs the powersave daemon running in the background."
+#: ktoshiba.cpp:731 ktoshiba.cpp:756
+msgid ""
+"Before continuing, be aware that ACPI Sleep States\n"
+"are a work in progress and may or may not work on your computer.\n"
+"Also make sure to unload problematic modules"
 msgstr ""
 
-#: ktoshiba.cpp:775
-msgid "Standby disabled by administrator."
+#: ktoshiba.cpp:733 ktoshiba.cpp:758
+msgid "WARNING"
 msgstr ""
 
-#: ktoshiba.cpp:781
-msgid "A save standby needs the powersave daemon running in the background."
+#: ktoshiba.cpp:748
+msgid ""
+"Could not Suspend To RAM because ktosh_helper cannot be found.\n"
+"Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:797
+#: ktoshiba.cpp:779
 msgid ""
 "Could not change wireless status because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:809
+#: ktoshiba.cpp:791
 msgid "Wireless interface up"
 msgstr ""
 
-#: ktoshiba.cpp:810 ktoshiba.cpp:819
+#: ktoshiba.cpp:792 ktoshiba.cpp:801
 msgid "Info"
 msgstr ""
 
-#: ktoshiba.cpp:818
+#: ktoshiba.cpp:800
 msgid "Wireless interface down"
 msgstr ""
 
-#: ktoshiba.cpp:1115
+#: ktoshiba.cpp:1094
 msgid ""
 "Could not get model id.\n"
 "Weird"
 msgstr ""
 
-#: ktoshiba.cpp:1120
+#: ktoshiba.cpp:1099
 msgid ""
 "Please send the model name and this id %1 to:\n"
 "neftali@utep.edu"
 msgstr ""
 
-#: ktoshiba.cpp:1161 ktoshiba.cpp:1168
+#: ktoshiba.cpp:1140 ktoshiba.cpp:1147
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:1162 ktoshiba.cpp:1169
+#: ktoshiba.cpp:1141 ktoshiba.cpp:1148
 msgid "Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:1184
+#: ktoshiba.cpp:1163
 msgid "Wireless antenna turned on"
 msgstr ""
 
-#: ktoshiba.cpp:1187
+#: ktoshiba.cpp:1166
 msgid "Wireless antenna turned off"
 msgstr ""
