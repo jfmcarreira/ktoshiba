@@ -94,9 +94,9 @@ public:
 	int machineID();
 	/**
 	 * Enables/Disables MousePad.
-	 * @param status the bool to activate/deactivate the mousepad
+	 * @param status the int to activate/deactivate the mousepad
 	 */
-	void pointingDevice(bool status);
+	void pointingDevice(int status);
 	/**
 	 * Gets the current battery save mode.
 	 * @return @p value holding the current save mode

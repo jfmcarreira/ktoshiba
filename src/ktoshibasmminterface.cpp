@@ -207,13 +207,13 @@ int KToshibaSMMInterface::machineID()
 	return -1;
 }
 
-void KToshibaSMMInterface::pointingDevice(bool status)
+void KToshibaSMMInterface::pointingDevice(int status)
 {
 	reg.ebx = SCI_POINTING_DEVICE;
-	if (status == false)
-		reg.ecx = SCI_DISABLED;
-	else if (status == true)
+	if (status)
 		reg.ecx = SCI_ENABLED;
+	else if (!status)
+		reg.ecx = SCI_DISABLED;
 	if (SciSet(&reg) == SCI_SUCCESS)
 		kdDebug() << "KToshibaSMMInterface::pointingDevice(): "
 				  << "Successfully enabled/disabled MousePad" << endl;

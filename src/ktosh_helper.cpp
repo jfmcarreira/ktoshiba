@@ -26,12 +26,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-//#include <sys/stat.h>
+
+#define USAGE \
+"Usage: ktosh_helper [option]\n\n\
+Where options are:\n\
+\t--enable    Enables the wireless device.\n\
+\t--disable   Disables the wireless device.\n\
+\t--std       Activates Suspend To Disk.\n\
+\t--str       Activates Suspend To RAM.\n\
+"
 
 int main(int argc, char **argv)
 {
+	int fd;
 	int i;
-	int err;
 
 	::close(0);	// we're setuid - this is just in case
 	for (i = 1; i < argc; i++)
@@ -52,11 +60,31 @@ int main(int argc, char **argv)
 		::execl("/bin/sh", "-c", "/sbin/ifdown", "wlan0", 0);
 		::execl("/bin/sh", "-c", "/sbin/ifup", "eth0", 0);
 		exit(0);
+	} else
+	if (strcmp(argv[i], "--std") == 0 || strcmp(argv[i], "--suspend-to-disk") == 0) {
+		sync();
+		sync();
+		fd = open("/proc/acpi/sleep", O_RDWR);
+		if (fd < 0) exit(1);
+		write(fd, "4", 1);
+		close(fd);
+        	setuid(getuid());	// drop all priority asap
+		exit(0);
+	} else
+	if (strcmp(argv[i], "--str") == 0 || strcmp(argv[i], "--suspend-to-ram") == 0) {
+		sync();
+		sync();
+		fd = open("/proc/acpi/sleep", O_RDWR);
+		if (fd < 0) exit(1);
+		write(fd, "3", 1);
+		close(fd);
+        	setuid(getuid());	// drop all priority asap
+		exit(0);
 	}
 	else {
 usage:
 		setuid(getuid());	// drop all priority asap
-		fprintf(stderr, "Usage: %s [--enable] [--disable] [device]\n", argv[0]);
+		fprintf(stderr, USAGE, argv[0]);
 		exit(1);
 	}
 	goto usage;

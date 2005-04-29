@@ -17,7 +17,6 @@ Requirements
 - A Toshiba laptop (this is a must)
 - Compiler and utilities (autoconf, automake, etc.)
 - KDE 3.2.x and development libraries
-- The Powersave daemon and Libraries (for STR and STD) (recomended)
 - alsa-utils package (for muting/unmuting)
 
 Preparatives
@@ -92,4 +91,4 @@ neftali@utep.edu or coproscefalo@gmail.com
 
 The project homepage is hosted at SourceForge.net
 http://sourceforge.net/projects/ktoshiba
-http://ktoshiba.sourceforge.net/
+http://ktoshiba.sourceforge.net/ (I need a webmaster...)

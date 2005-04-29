@@ -141,14 +141,6 @@ KToshiba::KToshiba()
 	connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
 	mSystemTimer->start(1000);
 
-	int res = send_Action(POWERSAVED_ACTION_PING);
-	if (res != POWERSAVED_ERROR_NOERROR) {
-		KPassivePopup::message(i18n("WARNING"),
-						i18n("The powersave daemon is not running or you are not member of the powersave system group.\n"
-							 "Starting it will improve performance: /etc/init.d/rcpowersave start"),
-						SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-	}
-
 	displayPixmap();
 	setModel();
 	if (btstart)
@@ -433,6 +425,8 @@ quit:
 void KToshiba::checkEvent()
 {
 	KProcess proc;
+	QByteArray data, replyData;
+	QCString replyType;
 	KConfig mConfig(CONFIG_FILE);
 	mConfig.setGroup("KToshiba");
 
@@ -445,49 +439,36 @@ void KToshiba::checkEvent()
 		popup = 0;
 	}
 
-	QByteArray data, replyData;
-	QCString replyType;
-
 	switch (key) {
 		case 0x101: // Fn-Esc
 			tmp = mConfig.readNumEntry("Fn_Esc");
-			performFnAction(tmp, key);
 			break;
 		case 0x13b: // Fn-F1
 			tmp = mConfig.readNumEntry("Fn_F1");
-			performFnAction(tmp, key);
 			break;
 		case 0x13c: // Fn-F2
 			tmp = mConfig.readNumEntry("Fn_F2");
-			performFnAction(tmp, key);
 			break;
 		case 0x13d: // Fn-F3
 			tmp = mConfig.readNumEntry("Fn_F3");
-			performFnAction(tmp, key);
 			break;
 		case 0x13e: // Fn-F4
 			tmp = mConfig.readNumEntry("Fn_F4");
-			performFnAction(tmp, key);
 			break;
 		case 0x13f: // Fn-F5
 			tmp = mConfig.readNumEntry("Fn_F5");
-			performFnAction(tmp, key);
 			break;
 		case 0x140: // Fn-F6
 			tmp = mConfig.readNumEntry("Fn_F6");
-			performFnAction(tmp, key);
 			break;
 		case 0x141: // Fn-F7
 			tmp = mConfig.readNumEntry("Fn_F7");
-			performFnAction(tmp, key);
 			break;
 		case 0x142: // Fn-F8
 			tmp = mConfig.readNumEntry("Fn_F8");
-			performFnAction(tmp, key);
 			break;
 		case 0x143: // Fn-F9
 			tmp = mConfig.readNumEntry("Fn_F9");
-			performFnAction(tmp, key);
 			break;
 		/** Front Panel Multimedia Buttons */
 		case 0xb31:	// Previous
@@ -496,13 +477,11 @@ void KToshiba::checkEvent()
 					mClient.send("kaffeine", "KaffeineIface", "previous()", "");
 			} else
 			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK) {
+				if (mAudioPlayer == amaroK)
 					mClient.send("amarok", "player", "prev()", "");
-				} else
-				if (mAudioPlayer == JuK) {
+				else if (mAudioPlayer == JuK)
 					mClient.send("juk", "Player", "back()", "");
-				} else
-				if (mAudioPlayer == XMMS) {
+				else if (mAudioPlayer == XMMS) {
 					proc << "xmms" << "--rew";
 					proc.start(KProcess::DontCare);
 					proc.detach();
@@ -515,13 +494,11 @@ void KToshiba::checkEvent()
 					mClient.send("kaffeine", "KaffeineIface", "next()", "");
 			} else
 			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK) {
+				if (mAudioPlayer == amaroK)
 					mClient.send("amarok", "player", "next()", "");
-				} else
-				if (mAudioPlayer == JuK) {
+				else if (mAudioPlayer == JuK)
 					mClient.send("juk", "Player", "forward()", "");
-				} else
-				if (mAudioPlayer == XMMS) {
+				else if (mAudioPlayer == XMMS) {
 					proc << "xmms" << "--fwd";
 					proc.start(KProcess::DontCare);
 					proc.detach();
@@ -530,26 +507,25 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb33:	// Play/Pause
 			if (MODE == CD_DVD) {
-				if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData)) {
-					kdDebug() << "KsCD not running... trying Kaffeine" << endl;
-					mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData);
-					// TODO: Find out how replyData works so the program know what to do
-					//if (replyData == true)
-					//	mClient.send("kaffeine", "KaffeineIface", "pause()", "");
-					//else if (replyData == false)
-					//	mClient.send("kaffeine", "KaffeineIface", "play()", "");
-				}
-				else
-					kdDebug() << "Kaffeine not running either" << endl;
+				if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
+					if (!mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData))
+						kdDebug() << "KsCD and Kaffeine are not running" << endl;
+					else {
+						QDataStream reply(replyData, IO_ReadOnly);
+						bool res;
+						reply >> res;
+						if (res)
+							mClient.send("kaffeine", "KaffeineIface", "pause()", "");
+						else
+							mClient.send("kaffeine", "KaffeineIface", "play()", "");
+					}
 			} else
 			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK) {
+				if (mAudioPlayer == amaroK)
 					mClient.send("amarok", "player", "playPause()", "");
-				} else
-				if (mAudioPlayer == JuK) {
+				else if (mAudioPlayer == JuK)
 					mClient.send("juk", "Player", "playPause()", "");
-				} else
-				if (mAudioPlayer == XMMS) {
+				else if (mAudioPlayer == XMMS) {
 					proc << "xmms" << "--play-pause";
 					proc.start(KProcess::DontCare);
 					proc.detach();
@@ -558,22 +534,19 @@ void KToshiba::checkEvent()
 			break;
 		case 0xb30:	// Stop/Eject
 			if (MODE == CD_DVD) {
-				if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData)) {
+				if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
 					if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData)) {
 						proc << "eject" << "--cdrom";
 						proc.start(KProcess::DontCare);
 						proc.detach();
 					}
-				}
 			} else
 			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK) {
+				if (mAudioPlayer == amaroK)
 					mClient.send("amarok", "player", "stop()", "");
-				} else
-				if (mAudioPlayer == JuK) {
+				else if (mAudioPlayer == JuK)
 					mClient.send("juk", "Player", "stop()", "");
-				} else
-				if (mAudioPlayer == XMMS) {
+				else if (mAudioPlayer == XMMS) {
 					proc << "xmms" << "--stop";
 					proc.start(KProcess::DontCare);
 					proc.detach();
@@ -581,6 +554,7 @@ void KToshiba::checkEvent()
 			}
 			break;
 	}
+	performFnAction(tmp, key);
 }
 
 void KToshiba::performFnAction(int action, int key)
@@ -698,10 +672,7 @@ void KToshiba::updateWidgetStatus(int action)
 		snd--;
 		if (snd < 0) snd = 1;
 		mute();
-		if (snd == 0)
-			mStatusWidget->wsStatus->raiseWidget(0);
-		else if (snd == 1)
-			mStatusWidget->wsStatus->raiseWidget(1);
+		mStatusWidget->wsStatus->raiseWidget(snd);
 	}
 	if (action == 10) {
 		mousepad--;
@@ -747,47 +718,58 @@ void KToshiba::brightDown()
 
 void KToshiba::doSuspendToDisk()
 {
-	int res = send_Action(POWERSAVED_REQUEST_SUSPEND_TO_DISK_ALLOWED);
-	if (res == POWERSAVED_ERROR_NOERROR) {
-		send_Action(POWERSAVED_ACTION_SUSPEND_TO_DISK);
-	} else
-	if (res == POWERSAVED_ERROR_SUSPEND_TO_DISK_DISABLED) {
-		KPassivePopup::message(i18n("WARNING"), 
-							   i18n("Suspend disabled by administrator."),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+	QString helper = KStandardDirs::findExe("ktosh_helper");
+	if (helper.isEmpty()) {
+		KMessageBox::sorry(0, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
+						   "Please make sure that it is installed correctly."),
+						   i18n("KToshiba"));
 		this->contextMenu()->setItemEnabled(4, FALSE);
-	} else
-	if (res == POWERSAVED_ERROR_SOCKET_ERROR) {
-		KPassivePopup::message(i18n("WARNING"), 
-							   i18n("A save suspend needs the powersave daemon running in the background."),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+		return;
+	}
+
+	static int res = KMessageBox::warningContinueCancel(this,
+						i18n("Before continuing, be aware that ACPI Sleep States\n"
+							 "are a work in progress and may or may not work on your computer.\n"
+							 "Also make sure to unload problematic modules"), i18n("WARNING"));
+
+	KProcess proc;
+	if (res == KMessageBox::Continue) {
+		proc << "ktosh_helper" << "--std";
+		proc.start(KProcess::DontCare);
+		proc.detach();
+		return;
 	}
 }
 
 void KToshiba::doSuspendToRAM()
 {
-	int res = send_Action(POWERSAVED_REQUEST_SUSPEND_TO_RAM_ALLOWED);
-	if (res == POWERSAVED_ERROR_NOERROR) {
-		send_Action(POWERSAVED_ACTION_SUSPEND_TO_RAM);
-	} else
-	if (res == POWERSAVED_ERROR_SUSPEND_TO_RAM_DISABLED) {
-		KPassivePopup::message(i18n("WARNING"),
-							   i18n("Standby disabled by administrator."),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+	QString helper = KStandardDirs::findExe("ktosh_helper");
+	if (helper.isEmpty()) {
+		KMessageBox::sorry(0, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
+						   "Please make sure that it is installed correctly."),
+						   i18n("KToshiba"));
 		this->contextMenu()->setItemEnabled(3, FALSE);
-	} else
-	if (res == POWERSAVED_ERROR_SOCKET_ERROR) {
-		KPassivePopup::message(i18n("WARNING"),
-							   i18n("A save standby needs the powersave daemon running in the background."),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+		return;
+	}
+
+	static int res = KMessageBox::warningContinueCancel(this,
+						i18n("Before continuing, be aware that ACPI Sleep States\n"
+							 "are a work in progress and may or may not work on your computer.\n"
+							 "Also make sure to unload problematic modules"), i18n("WARNING"));
+
+	KProcess proc;
+	if (res == KMessageBox::Continue) {
+		proc << "ktosh_helper" << "--str";
+		proc.start(KProcess::DontCare);
+		proc.detach();
+		return;
 	}
 }
 
 void KToshiba::lockScreen()
 {
-	if (mClient.isAttached()) {
+	if (mClient.isAttached())
 		mClient.send("kdesktop", "KScreensaverIface", "lock()", "");
-    }
 }
 
 void KToshiba::toggleWireless()
@@ -823,11 +805,8 @@ void KToshiba::toggleWireless()
 
 void KToshiba::mousePad()
 {
-	// TODO: Look for another way of doing this since the SCI call doesn't work
-	if (mousepad)
-		mousepad = true;
-	else if (!mousepad)
-		mousepad = false;
+	// TODO: Look for another way of doing this
+	// since the SCI call doesn't work
 	mDriver->pointingDevice(mousepad);
 }
 
