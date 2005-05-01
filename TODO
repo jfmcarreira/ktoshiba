@@ -1,6 +1,4 @@
 KToshiba TODO list
-- Find another way to disable MousePad since the SCI call
-  does not work with my toshiba model (help?)
 - Make the audio and video programs configurable (partly done)
 - Add support for more laptops (partly done)
 - Add more options for the Fn-Key (volume, etc.)

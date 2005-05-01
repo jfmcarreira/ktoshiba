@@ -4,7 +4,7 @@ SUBDIRS = . kcmktoshiba images
 INCLUDES = $(all_includes)
 
 # these are the headers for your project
-noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h
+noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h synshm.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
