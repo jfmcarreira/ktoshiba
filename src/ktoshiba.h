@@ -34,6 +34,7 @@
 #include <dcopclient.h>
 
 #include "ktoshibasmminterface.h"
+#include "synshm.h" 	// ksynaptics file
 
 #define CD_DVD  		0x80
 #define DIGITAL 		0x40
@@ -80,6 +81,7 @@ protected:
 	KAboutApplication *mAboutWidget;
 	KInstance *instance;
 	DCOPClient mClient;
+	SynapticsSHM *m_synShm;
 	bool mFullBat;
 	int mBatStatus;
 	int mOldBatStatus;

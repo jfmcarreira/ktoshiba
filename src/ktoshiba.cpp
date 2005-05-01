@@ -44,6 +44,8 @@
 #include <kstandarddirs.h>
 #include <kwin.h>
 
+#include <sys/shm.h>
+
 #include "settingswidget.h"
 #include "statuswidget.h"
 
@@ -52,6 +54,7 @@
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
 	  mDriver( 0 ),
+	  m_synShm( 0 ),
 	  mPowTimer( new QTimer(this) ),
 	  mSysEvTimer( new QTimer(this) ),
 	  mModeTimer( new QTimer(this) ),
@@ -80,7 +83,7 @@ KToshiba::KToshiba()
 		battrig = false;
 		snd = 1;
 		popup = 0;
-		mousepad = 1;
+		mousepad = 0;
 		// FIXME: This is not correct since it always return 2
 		// and we need to relay on saved info in config file
 		// so this needs to be moved out of here.
@@ -98,6 +101,20 @@ KToshiba::KToshiba()
 		bluetooth = 0;
 		wireless = 1;
 	}
+
+	// Code below taken from ksynaptics
+	int shmid;
+    if ((shmid = shmget(SHM_SYNAPTICS, sizeof(SynapticsSHM), 0)) == -1) {
+		if ((shmid = shmget(SHM_SYNAPTICS, 0, 0)) == -1) 
+			kdError() << "KToshiba: Access denied to driver shared memory" << endl;
+		else
+			kdError() << "KToshiba: Shared memory segment size mismatch" << endl;
+		m_synShm = NULL;
+    }
+	else {
+		if ((m_synShm = (SynapticsSHM*) shmat(shmid, NULL, 0)) == NULL)
+          kdError() << "KToshiba: Error attaching to shared memory segment" << endl;
+    }
 
 	if (!mClient.attach())
 	{
@@ -158,6 +175,9 @@ KToshiba::~KToshiba()
 	{
 		mClient.detach();
 	}
+
+	delete m_synShm;
+	m_synShm = NULL;
 
 	// Stop timers 
 	mPowTimer->stop();
@@ -679,9 +699,9 @@ void KToshiba::updateWidgetStatus(int action)
 		if (mousepad < 0) mousepad = 1;
 		mousePad();
 		if (mousepad == 0)
-			mStatusWidget->wsStatus->raiseWidget(3);
-		else if (mousepad == 1)
 			mStatusWidget->wsStatus->raiseWidget(2);
+		else if (mousepad == 1)
+			mStatusWidget->wsStatus->raiseWidget(3);
 	}
 	if ((action == 7) || (action == 8)) {
 		(action == 7)? brightDown() : brightUp();
@@ -805,9 +825,12 @@ void KToshiba::toggleWireless()
 
 void KToshiba::mousePad()
 {
-	// TODO: Look for another way of doing this
-	// since the SCI call doesn't work
-	mDriver->pointingDevice(mousepad);
+	bool enabled = (m_synShm != 0);
+
+	if (!enabled)
+		return;
+
+	m_synShm->touchpad_off = mousepad;
 }
 
 void KToshiba::setModel()
@@ -1086,8 +1109,14 @@ void KToshiba::setModel()
 		case 0xfcef:
 			mod = "Satellite 220x, Satellite Pro 440x/460x";
 			break;
-		case 0xfcf8:
-			mod = "Satellite A25-S279";
+		case 0xfcf7:
+			mod = "Satellite Pro A10";
+			break;
+		//case 0xfcf8:
+		//	mod = "Satellite A25-S279";
+		//	break;
+		case 0xfcff:
+			mod = "Tecra M2";
 			break;
 		case -1:
 			KMessageBox::queuedMessageBox(0, KMessageBox::Information,
@@ -1095,9 +1124,9 @@ void KToshiba::setModel()
 			break;
 		default:
 			mod = "UNKNOWN";
-			KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-									  i18n("Please send the model name and this id %1 to:\n"
-									       "neftali@utep.edu").arg(id), i18n("KToshiba"));
+			KMessageBox::messageBox(0, KMessageBox::Information,
+									i18n("Please send the model name and this id %1 to:\n"
+									     "neftali@utep.edu").arg(id), i18n("Model Name"));
 	}
 	this->contextMenu()->insertTitle( mod, 0, 0 );
 }

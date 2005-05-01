@@ -1,3 +1,10 @@
+2005-04-30 Azael Avalos <neftali@utep.edu>
+	* Added 2 more models thanks to Stefan Walkner
+	  and Patrick Boutilier
+	* Small correction on ktoshiba.desktop
+	* Finally found a way to disable touchpad thanks to
+	  ksynaptics and synaptics driver
+
 2005-04-29 Azael Avalos <neftali@utep.edu>
 	* Finished application calls (Kaffeine and KsCD)
 	  now the multimedia buttons work as expected
