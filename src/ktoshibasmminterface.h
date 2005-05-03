@@ -39,7 +39,7 @@ extern "C" {
 
 /**
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.5
+ * @version 0.6
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -168,6 +168,26 @@ public:
 	 * @param time the int holding the desired time
 	 */
 	void setDisplayAutoOff(int time);
+	/**
+	 * Checks the availability of SpeedStep Technology
+	 * @return @p the int holding the current mode
+	 */
+	int getSpeedStep();
+	/**
+	 * Sets the SpeedStep mode of operation
+	 * @param mode the int holding the desired mode
+	 */
+	void setSpeedStep(int mode);
+	/**
+	 * Checks the availability of Hyper-Threading Thechnology
+	 * @return @p the int holding the current status
+	 */
+	int getHyperThreading();
+	/**
+	 * Enables/Disables the Hyper-Threading operation
+	 * @param status the int holding the current status
+	 */
+	void setHyperThreading(int status);
 private:
 	SMMRegisters reg;
 	FILE *str;

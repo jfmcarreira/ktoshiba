@@ -460,7 +460,7 @@ void KToshibaSMMInterface::setHDDAutoOff(int time)
 		kdDebug() << "KToshibaSMMInterface::setHDDAutoOff(): "
 				  << "Successfully changed HDD Auto Off time" << endl;
 	else
-		kdError() << "ToshibaSMMInterface::setHDDAutoOff(): "
+		kdError() << "KToshibaSMMInterface::setHDDAutoOff(): "
 				  << "Could not change HDD Auto Off time" << endl;
 }
 
@@ -485,8 +485,67 @@ void KToshibaSMMInterface::setDisplayAutoOff(int time)
 		kdDebug() << "KToshibaSMMInterface::setDisplayAutoOff(): "
 				  << "Successfully changed Display Auto Off time" << endl;
 	else
-		kdError() << "ToshibaSMMInterface::setDisplayAutoOff(): "
+		kdError() << "KToshibaSMMInterface::setDisplayAutoOff(): "
 				  << "Could not change Display Auto Off time" << endl;
+}
+
+int KToshibaSMMInterface::getSpeedStep()
+{
+	reg.ebx = SCI_INTEL_SPEEDSTEP;
+	if (SciGet(&reg) == SCI_SUCCESS)
+		return (int) (reg.ecx & 0xffff);
+	else
+		kdError() << "KToshibaSMMInterface::getSpeedStep(): "
+				  << "Could not get SpeedStep mode "
+				  << "or system doesn't support it" << endl;
+
+	return -1;
+}
+
+void KToshibaSMMInterface::setSpeedStep(int mode)
+{
+	reg.ebx = SCI_INTEL_SPEEDSTEP;
+	if (mode == 0)
+		reg.ecx = SCI_SS_DYNAMICALLY;
+	else if (mode == 1)
+		reg.ecx = SCI_SS_ALWAYS_HIGH;
+	else if (mode == 2)
+		reg.ecx = SCI_SS_ALWAYS_LOW;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setSpeedStep(): "
+				  << "Successfully changed SpeedStep mode" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::setSpeedStep(): "
+				  << "Could not change SpeedStep mode" << endl;
+}
+
+int KToshibaSMMInterface::getHyperThreading()
+{
+	reg.ebx = SCI_HYPER_THREADING;
+	if (SciGet(&reg) == SCI_SUCCESS)
+		return (int) (reg.ecx & 0xffff);
+	else
+		kdError() << "KToshibaSMMInterface::getHyperThreading(): "
+				  << "Could not get Hyper-Threading mode "
+				  << "or system doesn't support it" << endl;
+
+	return -1;
+}
+
+void KToshibaSMMInterface::setHyperThreading(int status)
+{
+	if (status == 0)
+		reg.ecx = SCI_HT_DISABLED;
+	else if (status == 1)
+		reg.ecx = SCI_HT_ENABLED_PM;
+	else if (status == 2)
+		reg.ecx = SCI_HT_NO_PM;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setHyperThreading(): "
+				  << "Successfully changed Hyper-Threading mode" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::setHyperThreading(): "
+				  << "Could not change Hyper-Threading mode" << endl;
 }
 
 

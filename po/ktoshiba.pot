@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-29 10:17-0600\n"
+"POT-Creation-Date: 2005-05-02 10:38-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,9 +28,9 @@ msgstr ""
 
 #: main.cpp:40 kcmktoshiba/kcmtoshiba_general.ui.h:29
 #: kcmktoshiba/kcmtoshiba_general.ui.h:38
-#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:725 ktoshiba.cpp:750
-#: ktoshiba.cpp:781 ktoshiba.cpp:790 ktoshiba.cpp:799 ktoshiba.cpp:1100
-#: ktoshiba.cpp:1140 ktoshiba.cpp:1147 ktoshiba.cpp:1163 ktoshiba.cpp:1166
+#: kcmktoshiba/kcmtoshiba_general.ui.h:50 ktoshiba.cpp:745 ktoshiba.cpp:770
+#: ktoshiba.cpp:801 ktoshiba.cpp:810 ktoshiba.cpp:819 ktoshiba.cpp:1169
+#: ktoshiba.cpp:1176 ktoshiba.cpp:1192 ktoshiba.cpp:1195
 msgid "KToshiba"
 msgstr ""
 
@@ -48,6 +48,10 @@ msgstr ""
 
 #: main.cpp:48
 msgid "Some ideas and pieces of code"
+msgstr ""
+
+#: main.cpp:49
+msgid "Code for enabling/disablig TouchPad"
 msgstr ""
 
 #: rc.cpp:3
@@ -313,8 +317,8 @@ msgid "Bright Up"
 msgstr ""
 
 #: rc.cpp:156 rc.cpp:189 rc.cpp:222 rc.cpp:255 rc.cpp:288 rc.cpp:321
-#: rc.cpp:354 rc.cpp:387 rc.cpp:420 rc.cpp:453 ktoshiba.cpp:1164
-#: ktoshiba.cpp:1167
+#: rc.cpp:354 rc.cpp:387 rc.cpp:420 rc.cpp:453 ktoshiba.cpp:1193
+#: ktoshiba.cpp:1196
 #, no-c-format
 msgid "Wireless"
 msgstr ""
@@ -444,7 +448,7 @@ msgstr ""
 #, no-c-format
 msgid ""
 "The options shown here are only aplicable when the <b>Battery Save Mode</b> "
-"is set to <i>User Setttings</i>."
+"is set to <i>User Settings</i>."
 msgstr ""
 
 #: rc.cpp:555
@@ -494,157 +498,161 @@ msgstr ""
 msgid "Helpful information about the KToshiba module."
 msgstr ""
 
-#: ktoshiba.cpp:119
+#: ktoshiba.cpp:136
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:122
+#: ktoshiba.cpp:139
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:124
+#: ktoshiba.cpp:141
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:127
+#: ktoshiba.cpp:144
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:130
+#: ktoshiba.cpp:147
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:211
+#: ktoshiba.cpp:231
 msgid "Your battery is now fully charged."
 msgstr ""
 
-#: ktoshiba.cpp:211
+#: ktoshiba.cpp:231
 msgid "Laptop Battery"
 msgstr ""
 
-#: ktoshiba.cpp:216
+#: ktoshiba.cpp:236
 msgid "The battery state has changed to low"
 msgstr ""
 
-#: ktoshiba.cpp:221
+#: ktoshiba.cpp:241
 msgid "The battery state has changed to critical"
 msgstr ""
 
-#: ktoshiba.cpp:226
+#: ktoshiba.cpp:246
 msgid "I'm Gone..."
 msgstr ""
 
-#: ktoshiba.cpp:390
+#: ktoshiba.cpp:410
 msgid "No interface available"
 msgstr ""
 
-#: ktoshiba.cpp:395
+#: ktoshiba.cpp:415
 msgid "Plugged in - fully charged"
 msgstr ""
 
-#: ktoshiba.cpp:401
+#: ktoshiba.cpp:421
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:405
+#: ktoshiba.cpp:425
 msgid "Plugged in - no battery"
 msgstr ""
 
-#: ktoshiba.cpp:407
+#: ktoshiba.cpp:427
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:416
+#: ktoshiba.cpp:436
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:419
+#: ktoshiba.cpp:439
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:625
+#: ktoshiba.cpp:645
 msgid "User Settings"
 msgstr ""
 
-#: ktoshiba.cpp:629
+#: ktoshiba.cpp:649
 msgid "Low Power"
 msgstr ""
 
-#: ktoshiba.cpp:633
+#: ktoshiba.cpp:653
 msgid "Full Power"
 msgstr ""
 
-#: ktoshiba.cpp:637
+#: ktoshiba.cpp:657
 msgid "Full Life"
 msgstr ""
 
-#: ktoshiba.cpp:723
+#: ktoshiba.cpp:743
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:731 ktoshiba.cpp:756
+#: ktoshiba.cpp:751 ktoshiba.cpp:776
 msgid ""
 "Before continuing, be aware that ACPI Sleep States\n"
 "are a work in progress and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
 
-#: ktoshiba.cpp:733 ktoshiba.cpp:758
+#: ktoshiba.cpp:753 ktoshiba.cpp:778
 msgid "WARNING"
 msgstr ""
 
-#: ktoshiba.cpp:748
+#: ktoshiba.cpp:768
 msgid ""
 "Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:779
+#: ktoshiba.cpp:799
 msgid ""
 "Could not change wireless status because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:791
+#: ktoshiba.cpp:811
 msgid "Wireless interface up"
 msgstr ""
 
-#: ktoshiba.cpp:792 ktoshiba.cpp:801
+#: ktoshiba.cpp:812 ktoshiba.cpp:821
 msgid "Info"
 msgstr ""
 
-#: ktoshiba.cpp:800
+#: ktoshiba.cpp:820
 msgid "Wireless interface down"
 msgstr ""
 
-#: ktoshiba.cpp:1094
+#: ktoshiba.cpp:1123
 msgid ""
 "Could not get model id.\n"
 "Weird"
 msgstr ""
 
-#: ktoshiba.cpp:1099
+#: ktoshiba.cpp:1128
 msgid ""
 "Please send the model name and this id %1 to:\n"
 "neftali@utep.edu"
 msgstr ""
 
-#: ktoshiba.cpp:1140 ktoshiba.cpp:1147
+#: ktoshiba.cpp:1129
+msgid "Model Name"
+msgstr ""
+
+#: ktoshiba.cpp:1169 ktoshiba.cpp:1176
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:1141 ktoshiba.cpp:1148
+#: ktoshiba.cpp:1170 ktoshiba.cpp:1177
 msgid "Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:1163
+#: ktoshiba.cpp:1192
 msgid "Wireless antenna turned on"
 msgstr ""
 
-#: ktoshiba.cpp:1166
+#: ktoshiba.cpp:1195
 msgid "Wireless antenna turned off"
 msgstr ""

@@ -1,3 +1,15 @@
+2005-05-02 Azael Avalos <neftali@utep.edu>
+	* Small makefile.in cleanups
+	* Added a missing break
+	* Changed mute() function, we now use kmix to
+	  mute/unmute the soundcard
+	* Small cleanups on BlueTooth activation code
+	* Added more functions to KToshibaSMMInterface
+	  (Hyper-Threading and SpeedStep)
+
+2005-05-01 Azael Avalos <neftali@utep.edu>
+	* Small updates of desktop files
+
 2005-04-30 Azael Avalos <neftali@utep.edu>
 	* Added 2 more models thanks to Stefan Walkner
 	  and Patrick Boutilier
