@@ -43,6 +43,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kwin.h>
+#include <dcopref.h>
 
 #include <sys/shm.h>
 
@@ -1085,6 +1086,7 @@ void KToshiba::setModel()
 			break;
 		case 0xfce6:
 			mod = "Libretto 70CT";
+			break;
 		case 0xfce7:
 			mod = "Tecra 540x/550x";
 			break;
@@ -1112,9 +1114,9 @@ void KToshiba::setModel()
 		case 0xfcf7:
 			mod = "Satellite Pro A10";
 			break;
-		//case 0xfcf8:
-		//	mod = "Satellite A25-S279";
-		//	break;
+		case 0xfcf8:
+			mod = "Satellite A25";
+			break;
 		case 0xfcff:
 			mod = "Tecra M2";
 			break;
@@ -1133,17 +1135,8 @@ void KToshiba::setModel()
 
 void KToshiba::mute()
 {
-	KProcess proc;
-	if (snd) {
-		proc << "amixer" << "-q" << "sset" << "Master" << "unmute";
-		proc.start(KProcess::DontCare);
-		proc.detach();
-	} else
-	if (!snd) {
-		proc << "amixer" << "-q" << "sset" << "Master" << "mute";
-		proc.start(KProcess::DontCare);
-		proc.detach();
-	}
+	DCOPRef kmixClient("kmix", "Mixer0");
+	kmixClient.send("toggleMute", 0);
 }
 
 void KToshiba::mode()
@@ -1164,14 +1157,7 @@ void KToshiba::doBluetooth()
 		this->contextMenu()->setItemEnabled(6, FALSE);
 		return;
 	} else
-	if (bt && (btstart && !bluetooth)) {
-		mDriver->setBluetooth();
-		KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
-							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
-		this->contextMenu()->setItemEnabled(6, FALSE);
-		bluetooth = 1;
-	} else
-	if (bt && !bluetooth) {
+	if (!bluetooth || (btstart && !bluetooth)) {
 		mDriver->setBluetooth();
 		KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);

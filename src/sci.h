@@ -11,6 +11,9 @@
  *   not to make any modifications and use it as it stands.
  *
  * $Log$
+ * Revision 1.4  2005/05/03 02:19:25  coproscefalo
+ * HyperThreading and SpeedStep support plus misc cleans and fixes
+ *
  * Revision 1.3  2005/04/14 23:15:51  coproscefalo
  * Some SCI updates
  *
@@ -132,7 +135,7 @@ enum {
  * the different states the various modes can be set to
  */
 
-enum {	
+enum {
 	SCI_BOOT            = 0x0000,
 	SCI_RESUME          = 0x0001,
 	SCI_HIBERNATE       = 0x0002,
@@ -252,8 +255,20 @@ enum {
 };
 
 enum {
-	SCI_BATTERY = 0x0003,
-	SCI_MAINS   = 0x0004
+	SCI_BATTERY         = 0x0003,
+	SCI_MAINS           = 0x0004
+};
+
+enum {
+	SCI_SS_DYNAMICALLY  = 0x0000,
+	SCI_SS_ALWAYS_HIGH  = 0x0001,
+	SCI_SS_ALWAYS_LOW   = 0x0002
+};
+
+enum {
+	SCI_HT_DISABLED     = 0x0000,
+	SCI_HT_ENABLED_PM   = 0x0001,
+	SCI_HT_NO_PM        = 0x0002
 };
 
 

@@ -49,7 +49,7 @@ class StatusWidget;
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.5
+ * @version 0.6
  */
 class KToshiba : public KSystemTray
 {
