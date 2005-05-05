@@ -188,6 +188,31 @@ public:
 	 * @param status the int holding the current status
 	 */
 	void setHyperThreading(int status);
+	/**
+	 * Gets the Battery Save Mode type
+	 * @return @p the int holding the BSM type
+	 */
+	int getBatterySaveModeType();
+	/**
+	 * Gets the current speaker volume
+	 * @return @p the int holding the current volume
+	 */
+	int getSpeakerVolume();
+	/**
+	 * Sets the speaker to the desired value
+	 * @param vol the int holding the desired volume
+	 */
+	void setSpeakerVolume(int vol);
+	/**
+	 * Gets the current fan status
+	 * @return @p the int holdint the current fan state
+	 */
+	int getFan();
+	/**
+	 * Sets the fan On/Off
+	 * @param state the int holding the desired state
+	 */
+	void setFan(int state);
 private:
 	SMMRegisters reg;
 	FILE *str;

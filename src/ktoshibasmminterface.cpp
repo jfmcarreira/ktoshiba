@@ -240,9 +240,9 @@ void KToshibaSMMInterface::setBatterySaveMode(int mode)
 	if (mode == 0)
 		reg.ecx = SCI_USER_SETTINGS;
 	else if (mode == 1)
-		reg.ecx = SCI_LOW_POWER;
+		reg.ecx = SCI_LOW_POWER;	// SCI_LONG_LIFE
 	else if (mode == 2)
-		reg.ecx = SCI_FULL_POWER;
+		reg.ecx = SCI_FULL_POWER;	// SCI_NORMAL_LIFE
 	else if (mode == 3)
 		reg.ecx = SCI_FULL_LIFE;
 	if (SciSet(&reg) == SCI_SUCCESS)
@@ -345,7 +345,8 @@ int KToshibaSMMInterface::getWirelessSwitch()
 		return (reg.ecx & 0xff);
 	else
 		kdError() << "KToshibaSMMInterface::getWirelessSwitch(): "
-				  << "Could not check wireless switch" << endl;
+				  << "Could not check wireless switch "
+				  << "or system doesn't have one" << endl;
 
 	return -1;
 }
@@ -506,11 +507,11 @@ void KToshibaSMMInterface::setSpeedStep(int mode)
 {
 	reg.ebx = SCI_INTEL_SPEEDSTEP;
 	if (mode == 0)
-		reg.ecx = SCI_SS_DYNAMICALLY;
+		reg.ecx = SCI_DYNAMICALLY;
 	else if (mode == 1)
-		reg.ecx = SCI_SS_ALWAYS_HIGH;
+		reg.ecx = SCI_ALWAYS_HIGH;
 	else if (mode == 2)
-		reg.ecx = SCI_SS_ALWAYS_LOW;
+		reg.ecx = SCI_ALWAYS_LOW;
 	if (SciSet(&reg) == SCI_SUCCESS)
 		kdDebug() << "KToshibaSMMInterface::setSpeedStep(): "
 				  << "Successfully changed SpeedStep mode" << endl;
@@ -534,18 +535,91 @@ int KToshibaSMMInterface::getHyperThreading()
 
 void KToshibaSMMInterface::setHyperThreading(int status)
 {
+	reg.ebx = SCI_HYPER_THREADING;
 	if (status == 0)
-		reg.ecx = SCI_HT_DISABLED;
+		reg.ecx = SCI_DISABLED;
 	else if (status == 1)
-		reg.ecx = SCI_HT_ENABLED_PM;
+		reg.ecx = SCI_ENABLED_PM;
 	else if (status == 2)
-		reg.ecx = SCI_HT_NO_PM;
+		reg.ecx = SCI_ENABLED_NO_PM;
 	if (SciSet(&reg) == SCI_SUCCESS)
 		kdDebug() << "KToshibaSMMInterface::setHyperThreading(): "
 				  << "Successfully changed Hyper-Threading mode" << endl;
 	else
 		kdError() << "KToshibaSMMInterface::setHyperThreading(): "
 				  << "Could not change Hyper-Threading mode" << endl;
+}
+
+int KToshibaSMMInterface::getBatterySaveModeType()
+{
+	reg.ebx = SCI_BATTERY_SAVE;
+	if (SciGet(&reg) == SCI_SUCCESS)
+		return (int) (reg.edx & 0xffff);
+	else
+		kdError() << "KToshibaSMMInterface::getBatterySaveModeType(): "
+				  << "Could not get Battery Save Mode type" << endl;
+
+	return -1;
+}
+
+int KToshibaSMMInterface::getSpeakerVolume()
+{
+	reg.ebx = SCI_SPEAKER_VOLUME;
+	if (SciGet(&reg) == SCI_SUCCESS)
+		return (int) (reg.ecx & 0xffff);
+	else
+		kdError() << "KToshibaSMMInterface::getSpeakerVolume(): "
+				  << "Could not get speaker volume" << endl;
+
+	return -1;
+}
+
+void KToshibaSMMInterface::setSpeakerVolume(int vol)
+{
+	reg.ebx = SCI_SPEAKER_VOLUME;
+	if (vol == 0)
+		reg.ecx = SCI_VOLUME_OFF;
+	else if (vol == 1)
+		reg.ecx = SCI_VOLUME_LOW;
+	else if (vol == 2)
+		reg.ecx = SCI_VOLUME_MEDIUM;
+	else if (vol == 3)
+		reg.ecx = SCI_VOLUME_HIGH;
+	if (SciSet(&reg) == SCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setSpeakerVolume(): "
+				  << "Successfully changed volume" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::setSpeakerVolume(): "
+				  << "Could not change volume" << endl;
+}
+
+int KToshibaSMMInterface::getFan()
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_FAN;
+	if (HciFunction(&reg) == HCI_SUCCESS)
+		return (int) (reg.ecx & 0xff);
+	else
+		kdError() << "KToshibaSMMInterface::getFan(): "
+				  << "Could not get fan status" << endl;
+
+	return -1;
+}
+
+void KToshibaSMMInterface::setFan(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_FAN;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	if (HciFunction(&reg) == HCI_SUCCESS)
+		kdDebug() << "KToshibaSMMInterface::setFan(): "
+				  << "Fan successfully turned On/Off" << endl;
+	else
+		kdError() << "KToshibaSMMInterface::setFan(): "
+				  << "Fan could not be turned On/Off" << endl;
 }
 
 
