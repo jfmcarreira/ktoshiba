@@ -57,7 +57,7 @@ KToshiba::KToshiba()
 	  mDriver( 0 ),
 	  m_synShm( 0 ),
 	  mPowTimer( new QTimer(this) ),
-	  mSysEvTimer( new QTimer(this) ),
+	  mHotKeysTimer( new QTimer(this) ),
 	  mModeTimer( new QTimer(this) ),
 	  mSystemTimer( new QTimer(this) )
 {
@@ -78,29 +78,27 @@ KToshiba::KToshiba()
 		exit(-1);
 	} else {
 		kdDebug() << "KToshiba: Interface opened successfully." << endl;
+		mBatType = mDriver->getBatterySaveModeType();
+		battery = mDriver->getBatterySaveMode();
+		video = mDriver->getVideo();
+		bright = mDriver->getBrightness();
+		mDriver->batteryStatus(&time, &perc);
+		mWirelessSwitch = mDriver->getWirelessSwitch();
+		mOldWirelessSwitch = mWirelessSwitch;
+		if (perc == 100) battrig = true;
+		else battrig = false;
 		mWire = true;
 		crytrig = false;
 		lowtrig = false;
 		battrig = false;
+		wstrig = false;
 		snd = 1;
 		popup = 0;
 		mousepad = 0;
-		// FIXME: This is not correct since it always return 2
-		// and we need to relay on saved info in config file
-		// so this needs to be moved out of here.
-		battery = mDriver->getBatterySaveMode();
-		oldbattery = -1;
-		video = mDriver->getVideo();
-		oldvideo = 2;
-		bright = mDriver->getBrightness();
-		oldbright = bright;
-		mDriver->batteryStatus(&time, &perc);
-		if (perc == 100) battrig = true;
-		else battrig = false;
-		mWirelessSwitch = mDriver->getWirelessSwitch();
-		mOldWirelessSwitch = mWirelessSwitch;
 		bluetooth = 0;
 		wireless = 1;
+		fan = -1;
+		vol = -1;
 	}
 
 	// Code below taken from ksynaptics
@@ -114,20 +112,17 @@ KToshiba::KToshiba()
     }
 	else {
 		if ((m_synShm = (SynapticsSHM*) shmat(shmid, NULL, 0)) == NULL)
-          kdError() << "KToshiba: Error attaching to shared memory segment" << endl;
+			kdError() << "KToshiba: Error attaching to shared memory segment" << endl;
     }
 
 	if (!mClient.attach())
-	{
 		kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
-	}
 
 	KConfig mConfig(CONFIG_FILE);
 	mConfig.setGroup("KToshiba");
 	bool started = mConfig.readBoolEntry("AlreadyStarted");
-	if (started != true) {
+	if (started != true)
 		mConfig.writeEntry("AlreadyStarted", true);
-	}
 	mConfig.sync();
 
 	noBatteryIcon = QString("laptop_nobattery");
@@ -152,12 +147,12 @@ KToshiba::KToshiba()
 
 	connect( mPowTimer, SIGNAL( timeout() ), SLOT( powerStatus() ) );
 	mPowTimer->start(mBatStatus * 1000);
-	connect( mSysEvTimer, SIGNAL( timeout() ), SLOT( checkEvent() ) );
-	mSysEvTimer->start(100);		// Check system events every 1/10 seconds
+	connect( mHotKeysTimer, SIGNAL( timeout() ), SLOT( checkHotKeys() ) );
+	mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
 	connect( mModeTimer, SIGNAL( timeout() ), SLOT( mode() ) );
 	mModeTimer->start(500);		// Check proc entry every 1/2 seconds
 	connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
-	mSystemTimer->start(1000);
+	mSystemTimer->start(1000);		// Check system events every 1 second
 
 	displayPixmap();
 	setModel();
@@ -167,28 +162,25 @@ KToshiba::KToshiba()
 
 KToshiba::~KToshiba()
 {
+	// Stop timers 
+	mPowTimer->stop();
+	mHotKeysTimer->stop();
+	mModeTimer->stop();
+	mSystemTimer->stop();
+
+	if (mClient.isAttached())
+		mClient.detach();
 	if (mInterfaceAvailable) {
 		kdDebug() << "KToshiba: Closing interface." << endl;
 		mDriver->closeInterface();
-		delete mDriver; mDriver = 0L;
-	}
-	if (mClient.isAttached())
-	{
-		mClient.detach();
+		delete mDriver; mDriver = NULL;
 	}
 
-	delete m_synShm;
-	m_synShm = NULL;
-
-	// Stop timers 
-	mPowTimer->stop();
-	mSysEvTimer->stop();
-	mModeTimer->stop();
-
-	delete instance;
-	delete mStatusWidget;
-	delete mSettingsWidget;
-	delete mAboutWidget;
+	delete m_synShm; m_synShm = NULL;
+	delete instance; instance = NULL;
+	delete mStatusWidget; mStatusWidget = NULL;
+	delete mSettingsWidget; mSettingsWidget = NULL;
+	delete mAboutWidget; mAboutWidget = NULL;
 }
 
 void KToshiba::doConfig()
@@ -243,10 +235,9 @@ void KToshiba::powerStatus()
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
 		crytrig = true;
 	} else
-	if (SCI_MINUTE(time) == 0 && SCI_HOUR(time) == 0 && pow == 0) {
+	if (SCI_MINUTE(time) == 0 && SCI_HOUR(time) == 0 && pow == 0)
 		KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-	}
 
 	if (SCI_MINUTE(time) > lowtrig && pow == 1) {
 		if (battrig && (perc < 100))
@@ -259,18 +250,19 @@ void KToshiba::powerStatus()
 
 	if (mBatSave != mOldBatSave || pow != oldpow) {
 		switch (mBatSave) {
-			// TODO: Add support for more battery save options for
-			// older models depending on type
-			case 0:			// USER SETTINGS
-				bsmUserSettings(&mConfig);
+			case 0:			// USER SETTINGS or LONG LIFE
+				if (mBatType == 3)
+					bright = 0;	// Semi-Bright
+				else if (mBatType == 2)
+					bsmUserSettings(&mConfig);
 				break;
-			case 1:			// LOW POWER
+			case 1:			// LOW POWER or NORMAL LIFE
 				if (!pow)
 					bright = 0;	// Semi-Bright
 				else if (pow)
 					bright = 3;	// Bright
 				break;
-			case 2:			// FULL POWER
+			case 2:			// FULL POWER or FULL LIFE
 				if (!pow)
 					bright = 3;	// Bright
 				else if (pow)
@@ -285,7 +277,7 @@ void KToshiba::powerStatus()
 		mPowTimer->start(mBatStatus * 1000);
 	}
 
-	changed = oldpow != pow||oldperc != perc||oldtime != time;
+	changed = oldpow != pow || oldperc != perc || oldtime != time;
 	oldperc = perc;
 	oldpow = pow;
 	oldtime = time;
@@ -366,9 +358,9 @@ void KToshiba::displayPixmap()
 			count++;
 	}
 	int c = (count*perc)/100;
-	if (c == 100) {
+	if (c == 100)
 		c = count;
-	} else
+	else
 	if (perc != 100 && c == count)
 		c = count-1;
 
@@ -381,9 +373,8 @@ void KToshiba::displayPixmap()
 			ui = image.numColors();		// this fix thanks to Sven Krumpke
 			image.setNumColors(ui+1);
 			image.setColor(ui, blue);
-		} else {
+		} else
 			ui = 0xff000000|blue;
-		}
 
 		for (y = h-1; y >= 0; y--)
 		for (x = 0; x < w; x++)
@@ -407,14 +398,14 @@ quit:
 	adjustSize();
 
 	QString tmp;
-	if (!mInterfaceAvailable) {
+	if (!mInterfaceAvailable)
 		tmp = i18n("No interface available");
-	} else
+	else
 	if (mDriver->acPowerStatus()) {
 		mDriver->batteryStatus(&time, &perc);
-		if (perc == 100) {
-			tmp = i18n("Plugged in - fully charged");;
-		} else {
+		if (perc == 100)
+			tmp = i18n("Plugged in - fully charged");
+		else {
 			if (perc >= 0) {
 				QString num3;
 				num3.setNum(SCI_MINUTE(time));
@@ -422,11 +413,10 @@ quit:
 				tmp = i18n("Plugged in - %1% charged (%2:%3 time left)")
 					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
 			} else
-			if (perc == -1) {
+			if (perc == -1)
 				tmp = i18n("Plugged in - no battery");
-			} else {
+			else
 				tmp = i18n("Plugged in - %1% charged").arg(perc);
-			}
 		}
 	} else {
 		mDriver->batteryStatus(&time, &perc);
@@ -436,14 +426,13 @@ quit:
 			num3 = num3.rightJustify(2, '0');
 			tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
 					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
-		} else {
+		} else
 			tmp = i18n("Running on batteries  - %1% charged").arg(perc);
-		}
 	}
 	QToolTip::add(this, tmp);
 }
 
-void KToshiba::checkEvent()
+void KToshiba::checkHotKeys()
 {
 	KProcess proc;
 	QByteArray data, replyData;
@@ -601,6 +590,8 @@ void KToshiba::performFnAction(int action, int key)
 		case 7: // Brightness Down
 		case 8: // Brightness Up
 		case 10: // Enable/Disable MousePad
+		case 11: // Speaker Volume
+		case 12: // Fan On/Off
 			if (popup == 0) {
 				QRect r = QApplication::desktop()->geometry();
 				mStatusWidget->move(r.center() - 
@@ -608,9 +599,8 @@ void KToshiba::performFnAction(int action, int key)
 				mStatusWidget->show();
 				popup = key & 0x17f;
 			}
-			if ((key & 0x17f) == popup) {
+			if ((key & 0x17f) == popup)
 				updateWidgetStatus(action);
-			}
 			break;
 		case 3: // Battery Save Mode
 		case 6: // Toggle Video
@@ -635,7 +625,8 @@ void KToshiba::updateWidgetStatus(int action)
 	if (action == 3) {
 		battery--;
 		if (battery < 0) battery = 2;
-		mDriver->setBatterySaveMode(battery);
+		if (mBatType == 3) mDriver->setBatterySaveMode(battery + 1);
+		else mDriver->setBatterySaveMode(battery);
 		mConfig.writeEntry("Battery_Save_Mode", battery);
 		mSettingsWidget->wsSettings->raiseWidget(0);
 		mSettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
@@ -643,19 +634,18 @@ void KToshiba::updateWidgetStatus(int action)
 		mSettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
 		switch (battery) {
 			case 0:
-				mSettingsWidget->tlStatus->setText(i18n("User Settings"));
+				(mBatType == 3)? mSettingsWidget->tlStatus->setText(i18n("Long Life"))
+				: mSettingsWidget->tlStatus->setText(i18n("User Settings"));
 				mSettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
 				break;
 			case 1:
-				mSettingsWidget->tlStatus->setText(i18n("Low Power"));
+				(mBatType == 3)? mSettingsWidget->tlStatus->setText(i18n("Normal Life"))
+				: mSettingsWidget->tlStatus->setText(i18n("Low Power"));
 				mSettingsWidget->plMedium->setFrameShape(QLabel::PopupPanel);
 				break;
 			case 2:
-				mSettingsWidget->tlStatus->setText(i18n("Full Power"));
-				mSettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 3:
-				mSettingsWidget->tlStatus->setText(i18n("Full Life"));
+				(mBatType == 3)? mSettingsWidget->tlStatus->setText(i18n("Full Life"))
+				: mSettingsWidget->tlStatus->setText(i18n("Full Power"));
 				mSettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
 				break;
 		}
@@ -664,6 +654,7 @@ void KToshiba::updateWidgetStatus(int action)
 		video += 2;
 		if (video == 0x105) video = 0x102;
 		else if (video > 0x104) video = 0x101;
+		// TODO: Find out wich models do video out change automatically
 		//if (mDriver->machineID() < 0xfcf8) mDriver->setVideo(video - 0x100);
 		mSettingsWidget->wsSettings->raiseWidget(1);
 		mSettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
@@ -695,46 +686,50 @@ void KToshiba::updateWidgetStatus(int action)
 		mute();
 		mStatusWidget->wsStatus->raiseWidget(snd);
 	}
-	if (action == 10) {
-		mousepad--;
-		if (mousepad < 0) mousepad = 1;
-		mousePad();
-		if (mousepad == 0)
-			mStatusWidget->wsStatus->raiseWidget(2);
-		else if (mousepad == 1)
-			mStatusWidget->wsStatus->raiseWidget(3);
-	}
 	if ((action == 7) || (action == 8)) {
 		(action == 7)? brightDown() : brightUp();
 		if (bright <= 7 && bright >= 0)
 			mStatusWidget->wsStatus->raiseWidget(bright + 4);
 	}
-
-	oldmousepad = mousepad;
-	oldbattery = battery;
-	oldbright = bright;
-	oldvideo = video;
-	oldsnd = snd;
+	if (action == 10) {
+		mousepad--;
+		if (mousepad < 0) mousepad = 1;
+		mousePad();
+		if (!mousepad)
+			mStatusWidget->wsStatus->raiseWidget(2);
+		else if (mousepad)
+			mStatusWidget->wsStatus->raiseWidget(3);
+	}
+	if (action == 11) {
+		speakerVolume();
+		if (!vol)
+			mStatusWidget->wsStatus->raiseWidget(vol);
+		else
+			mStatusWidget->wsStatus->raiseWidget(vol + 13);
+	}
+	if (action == 12) {
+		toggleFan();
+		if (!fan)
+			mStatusWidget->wsStatus->raiseWidget(12);
+		else if (fan)
+			mStatusWidget->wsStatus->raiseWidget(13);
+	}
 }
 
 void KToshiba::brightUp()
 {
-	if (bright == mDriver->getBrightness())
-		mDriver->setBrightness(++bright);
-	else {
+	if (bright != mDriver->getBrightness())
 		bright = mDriver->getBrightness();
-		mDriver->setBrightness(++bright);
-	}
+
+	mDriver->setBrightness(++bright);
 }
 
 void KToshiba::brightDown()
 {
-	if (bright == mDriver->getBrightness())
-		mDriver->setBrightness(--bright);
-	else {
+	if (bright != mDriver->getBrightness())
 		bright = mDriver->getBrightness();
-		mDriver->setBrightness(--bright);
-	}
+
+	mDriver->setBrightness(--bright);
 }
 
 void KToshiba::doSuspendToDisk()
@@ -743,7 +738,7 @@ void KToshiba::doSuspendToDisk()
 	if (helper.isEmpty()) {
 		KMessageBox::sorry(0, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 						   "Please make sure that it is installed correctly."),
-						   i18n("KToshiba"));
+						   i18n("STD"));
 		this->contextMenu()->setItemEnabled(4, FALSE);
 		return;
 	}
@@ -758,7 +753,6 @@ void KToshiba::doSuspendToDisk()
 		proc << "ktosh_helper" << "--std";
 		proc.start(KProcess::DontCare);
 		proc.detach();
-		return;
 	}
 }
 
@@ -768,7 +762,7 @@ void KToshiba::doSuspendToRAM()
 	if (helper.isEmpty()) {
 		KMessageBox::sorry(0, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 						   "Please make sure that it is installed correctly."),
-						   i18n("KToshiba"));
+						   i18n("STR"));
 		this->contextMenu()->setItemEnabled(3, FALSE);
 		return;
 	}
@@ -783,7 +777,6 @@ void KToshiba::doSuspendToRAM()
 		proc << "ktosh_helper" << "--str";
 		proc.start(KProcess::DontCare);
 		proc.detach();
-		return;
 	}
 }
 
@@ -811,7 +804,6 @@ void KToshiba::toggleWireless()
 		KPassivePopup::message(i18n("KToshiba"), 
 							   i18n("Wireless interface up"),
 							   SmallIcon("messagebox_info", 20), this, i18n("Info"), 5000);
-		return;
 	} else
 	if (!wireless) {
 		proc << "ktosh_helper" << "--disable";
@@ -820,7 +812,6 @@ void KToshiba::toggleWireless()
 		KPassivePopup::message(i18n("KToshiba"), 
 							   i18n("Wireless interface down"),
 							   SmallIcon("messagebox_info", 20), this, i18n("Info"), 5000);
-		return;
 	}
 }
 
@@ -1171,18 +1162,41 @@ void KToshiba::doBluetooth()
 void KToshiba::checkSystem()
 {
 	// TODO: Add SelectBay stuff here
-	mWirelessSwitch = mDriver->getWirelessSwitch();
+	if (wstrig == false)
+		mWirelessSwitch = mDriver->getWirelessSwitch();
 
 	if (mWirelessSwitch != mOldWirelessSwitch) {
-		if (mWirelessSwitch == 1)
+		if (mWirelessSwitch == -1) {
+			wstrig = true;
+			return;
+		} else
+		if (mWirelessSwitch)
 			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned on"),
 							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
-		else if (mWirelessSwitch == 0)
+		else if (!mWirelessSwitch)
 			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned off"),
 							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
 	}
 
 	mOldWirelessSwitch = mWirelessSwitch;
+}
+
+void KToshiba::speakerVolume()
+{
+	vol = mDriver->getSpeakerVolume();
+	vol++;
+	if (vol > 3) vol = 0;
+	mDriver->setSpeakerVolume(vol);
+}
+
+void KToshiba::toggleFan()
+{
+	fan = mDriver->getFan();
+
+	if (fan)
+		mDriver->setFan(0);
+	else if (!fan)
+		mDriver->setFan(1);
 }
 
 
