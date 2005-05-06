@@ -70,7 +70,7 @@ protected slots:
 	void doConfig();
 	void displayAbout();
 	void powerStatus();
-	void checkEvent();
+	void checkHotKeys();
 	void doSuspendToDisk();
 	void doSuspendToRAM();
 	void mode();
@@ -92,6 +92,7 @@ protected:
 	int mWirelessSwitch;
 	int mOldWirelessSwitch;
 	int mAudioPlayer;
+	int mBatType;
 private:
 	void brightUp();
 	void brightDown();
@@ -103,10 +104,12 @@ private:
 	void updateWidgetStatus(int);
 	void performFnAction(int, int);
 	void bsmUserSettings(KConfig *);
+	void speakerVolume();
+	void toggleFan();
 	SettingsWidget *mSettingsWidget;
 	StatusWidget *mStatusWidget;
 	QTimer *mPowTimer;
-	QTimer *mSysEvTimer;
+	QTimer *mHotKeysTimer;
 	QTimer *mModeTimer;
 	QTimer *mSystemTimer;
 	QPixmap pm;
@@ -119,28 +122,26 @@ private:
 	bool lowtrig;
 	bool crytrig;
 	bool battrig;
+	bool wstrig;
 	bool btstart;
-	int snd;
-	int oldsnd;
 	int pow;
 	int oldpow;
 	int time;
 	int oldtime;
 	int perc;
 	int oldperc;
+	int snd;
 	int battery;
-	int oldbattery;
 	int video;
-	int oldvideo;
 	int mousepad;
-	int oldmousepad;
 	int bright;
-	int oldbright;
 	int current_code;
 	int MODE;
 	int popup;
 	int bluetooth;
 	int wireless;
+	int fan;
+	int vol;
 };
 
 #endif // KTOSHIBA_H
