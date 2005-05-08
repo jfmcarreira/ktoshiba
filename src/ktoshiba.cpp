@@ -119,10 +119,9 @@ KToshiba::KToshiba()
 		kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
 
 	KConfig mConfig(CONFIG_FILE);
-	mConfig.setGroup("KToshiba");
-	bool started = mConfig.readBoolEntry("AlreadyStarted");
-	if (started != true)
-		mConfig.writeEntry("AlreadyStarted", true);
+	mConfig.setGroup("General");
+	if (mInterfaceAvailable)
+		mConfig.writeEntry("Autostart", true);
 	mConfig.sync();
 
 	noBatteryIcon = QString("laptop_nobattery");
@@ -152,7 +151,7 @@ KToshiba::KToshiba()
 	connect( mModeTimer, SIGNAL( timeout() ), SLOT( mode() ) );
 	mModeTimer->start(500);		// Check proc entry every 1/2 seconds
 	connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
-	mSystemTimer->start(1000);		// Check system events every 1 second
+	mSystemTimer->start(500);		// Check system events every 1/2 seconds
 
 	displayPixmap();
 	setModel();
@@ -652,8 +651,8 @@ void KToshiba::updateWidgetStatus(int action)
 	}
 	if (action == 6) {
 		video += 2;
-		if (video == 0x105) video = 0x102;
-		else if (video > 0x104) video = 0x101;
+		if (video == 5) video = 2;
+		else if (video > 4) video = 1;
 		// TODO: Find out wich models do video out change automatically
 		//if (mDriver->machineID() < 0xfcf8) mDriver->setVideo(video - 0x100);
 		mSettingsWidget->wsSettings->raiseWidget(1);
@@ -662,19 +661,19 @@ void KToshiba::updateWidgetStatus(int action)
 		mSettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
 		mSettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
 		switch (video) {
-			case 0x101:
+			case 1:
 				mSettingsWidget->tlStatus->setText("LCD");
 				mSettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
 				break;
-			case 0x102:
+			case 2:
 				mSettingsWidget->tlStatus->setText("CRT");
 				mSettingsWidget->plCRT->setFrameShape(QLabel::PopupPanel);
 				break;
-			case 0x103:
+			case 3:
 				mSettingsWidget->tlStatus->setText("LCD/CRT");
 				mSettingsWidget->plLCDCRT->setFrameShape(QLabel::PopupPanel);
 				break;
-			case 0x104:
+			case 4:
 				mSettingsWidget->tlStatus->setText("S-Video");
 				mSettingsWidget->plTV->setFrameShape(QLabel::PopupPanel);
 				break;
@@ -704,6 +703,8 @@ void KToshiba::updateWidgetStatus(int action)
 		speakerVolume();
 		if (!vol)
 			mStatusWidget->wsStatus->raiseWidget(vol);
+		else if (vol == 3)
+			mStatusWidget->wsStatus->raiseWidget(vol - 2);
 		else
 			mStatusWidget->wsStatus->raiseWidget(vol + 13);
 	}
@@ -1117,9 +1118,9 @@ void KToshiba::setModel()
 			break;
 		default:
 			mod = "UNKNOWN";
-			KMessageBox::messageBox(0, KMessageBox::Information,
-									i18n("Please send the model name and this id %1 to:\n"
-									     "neftali@utep.edu").arg(id), i18n("Model Name"));
+			QString modelID = "Model_ID";
+			KMessageBox::information(0, i18n("Please send the model name and this id %1 to:\n"
+									 "neftali@utep.edu").arg(id), i18n("Model Name"), modelID);
 	}
 	this->contextMenu()->insertTitle( mod, 0, 0 );
 }
@@ -1191,12 +1192,16 @@ void KToshiba::speakerVolume()
 
 void KToshiba::toggleFan()
 {
-	fan = mDriver->getFan();
+	int res = mDriver->getFan();
 
-	if (fan)
-		mDriver->setFan(0);
-	else if (!fan)
-		mDriver->setFan(1);
+	if (res == 0x00) {
+		fan = 1;
+		mDriver->setFan(fan);
+	}
+	else {
+		fan = 0;
+		mDriver->setFan(fan);
+	}
 }
 
 
