@@ -11,6 +11,9 @@
  *   not to make any modifications and use it as it stands.
  *
  * $Log$
+ * Revision 1.5  2005/05/12 15:42:34  coproscefalo
+ * Released 0.6
+ *
  * Revision 1.4  2005/05/03 02:19:25  coproscefalo
  * HyperThreading and SpeedStep support plus misc cleans and fixes
  *
@@ -260,15 +263,14 @@ enum {
 };
 
 enum {
-	SCI_SS_DYNAMICALLY  = 0x0000,
-	SCI_SS_ALWAYS_HIGH  = 0x0001,
-	SCI_SS_ALWAYS_LOW   = 0x0002
+	SCI_DYNAMICALLY     = 0x0000,
+	SCI_ALWAYS_HIGH     = 0x0001,
+	SCI_ALWAYS_LOW      = 0x0002
 };
 
 enum {
-	SCI_HT_DISABLED     = 0x0000,
-	SCI_HT_ENABLED_PM   = 0x0001,
-	SCI_HT_NO_PM        = 0x0002
+	SCI_ENABLED_PM      = 0x0001,
+	SCI_ENABLED_NO_PM   = 0x0002
 };
 
 

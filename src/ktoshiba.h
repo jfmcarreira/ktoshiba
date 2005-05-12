@@ -106,6 +106,9 @@ private:
 	void bsmUserSettings(KConfig *);
 	void speakerVolume();
 	void toggleFan();
+	void checkSelectBay();
+	int bayUnregister();
+	int bayRescan();
 	SettingsWidget *mSettingsWidget;
 	StatusWidget *mStatusWidget;
 	QTimer *mPowTimer;
@@ -142,6 +145,8 @@ private:
 	int wireless;
 	int fan;
 	int vol;
+	int sblock;
+	int removed;
 };
 
 #endif // KTOSHIBA_H

@@ -1,0 +1,22 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kcmshell ktoshibam
+Icon=pda_black
+Type=Application
+
+X-KDE-Library=ktoshibam
+X-KDE-ParentApp=kcontrol
+
+[Desktop Entry]
+Encoding=UTF-8
+Comment=Configure the KDE Interface to the Toshiba System Managment Mode Driver
+Comment[de]=KDE Schnittstelle zum 'Toshiba System Managment Mode Driver' Treiber einstellen
+Comment[es]=Configurar el interfaz de KDE para el sistema de operaciones de tipo de Toshiba
+Keywords=Toshiba, Fn
+Keywords[de]=Toshiba, Fn
+Keywords[es]=Toshiba, Fn
+Name=Toshiba Laptop
+Name[de]=Toshiba Notebook
+Name[es]=Portátil Toshiba
+
+Categories=Qt;KDE;X-KDE-settings-system

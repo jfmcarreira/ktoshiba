@@ -17,7 +17,6 @@ Requirements
 - A Toshiba laptop (this is a must)
 - Compiler and utilities (autoconf, automake, etc.)
 - KDE 3.2.x and development libraries
-- alsa-utils package (for muting/unmuting)
 
 Preparatives
 =====
@@ -55,13 +54,14 @@ If you have everything that is needed then installation is very
 simple, extract the downloaded archive and then type the following: 
 
 	cd ktoshiba-0.X 		(where X is the current version number)
-	./configure --prefix=/path/to/kde3/directory (on SuSE /opt/kde3)
+	./configure --prefix=`kde-config --prefix`
 	make
 	su -c "make install"	(this step will need the root password)
 
 or if you downloaded an rpm then do the following:
 
-	rpm -ivh ktoshiba-0.X.i386.rpm 	(this has to be done as root)
+	rpm -ivh ktoshiba-0.X-Y.i586.rpm 	(this has to be done as root)
+	(where 'X' is the current version number and 'Y' is the current rpm release)
 
 Usage
 =====
@@ -75,7 +75,7 @@ Support, Bugs & Requests
 =====
 I have plans to add more support to other Toshiba models in the
 future, if you liked this program and wish to have support for your
-Toshiba laptop send an e-mail to neftali@utep.edu and include the
+Toshiba laptop send an e-mail to coproscefalo@gmail.com and include the
 Fn-Key combos available on your laptop and what they do (eg: Fn-F1
 LockScreen or Fn-F7 Brightness Up).
 
@@ -87,7 +87,7 @@ project page and report the bug or wish there.
 Contact
 =====
 You can reach me by mail at 
-neftali@utep.edu or coproscefalo@gmail.com
+coproscefalo@gmail.com
 
 The project homepage is hosted at SourceForge.net
 http://sourceforge.net/projects/ktoshiba

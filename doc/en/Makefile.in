@@ -468,7 +468,7 @@ uninstall-am: uninstall-info-am
 KDE_DIST=Makefile.in ktoshiba_config.png index.docbook ktoshiba_taskbar.png Makefile.am 
 
 #>+ 24
-index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) ktoshiba_taskbar.png index.docbook ktoshiba_config.png 
+index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) index.docbook ktoshiba_config.png ktoshiba_taskbar.png 
 	@if test -n "$(MEINPROC)"; then echo $(MEINPROC) --check --cache index.cache.bz2 $(srcdir)/index.docbook; $(MEINPROC) --check --cache index.cache.bz2 $(srcdir)/index.docbook; fi
 
 docs-am: index.cache.bz2
@@ -495,20 +495,20 @@ clean-docs:
 #>+ 13
 install-nls:
 	$(mkinstalldirs) $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ktoshiba
-	@for base in ktoshiba_taskbar.png index.docbook ktoshiba_config.png ; do \
+	@for base in index.docbook ktoshiba_config.png ktoshiba_taskbar.png ; do \
 	  echo $(INSTALL_DATA) $$base $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ktoshiba/$$base ;\
 	  $(INSTALL_DATA) $(srcdir)/$$base $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ktoshiba/$$base ;\
 	done
 
 uninstall-nls:
-	for base in ktoshiba_taskbar.png index.docbook ktoshiba_config.png ; do \
+	for base in index.docbook ktoshiba_config.png ktoshiba_taskbar.png ; do \
 	  rm -f $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ktoshiba/$$base ;\
 	done
 
 
 #>+ 5
 distdir-nls:
-	for file in ktoshiba_taskbar.png index.docbook ktoshiba_config.png ; do \
+	for file in index.docbook ktoshiba_config.png ktoshiba_taskbar.png ; do \
 	  cp $(srcdir)/$$file $(distdir); \
 	done
 

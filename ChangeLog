@@ -1,3 +1,39 @@
+2005-05-12 Azael Avalos <neftali@utep.edu>
+	* Renamed KCModule to hopefully fix some issues
+	* Released 0.6
+
+2005-05-11 Azael Avalos <neftali@utep.edu>
+	* Updated es.po file
+
+2005-05-10 Azael Avalos <neftali@utep.edu>
+	* Finished hotswap functions
+
+2005-05-09 Azael Avalos <neftali@utep.edu>
+	* Some changes to getFan() function
+	* Started working on hotswap (again)
+
+2005-05-05 Azael Avalos <neftali@utep.edu>
+	* Some changes to KToshibaSMMInterface
+	* Added a checkbox so it only ask the user
+	  to send the model id once
+	* Updated README files
+
+2005-05-05 Azael Avalos <neftali@utep.edu>
+	* Added Fan and Speaker volume actions and
+	  updated KToshiba KCM
+	* Corrections on fan functions
+
+2005-05-04 Azael Avalos <neftali@utep.edu>
+	* Different Battery Save Mode settings finished
+	  (depending on battery save mode type)
+	* Deleted some unused variables
+	* Added speaker volume and fan functions to
+	  KToshibaSMMInterface
+
+2005-05-03 Azael Avalos <neftali@utep.edu>
+	* Small check on wireless anthena switch
+	* Misc corrections and cleanups
+
 2005-05-02 Azael Avalos <neftali@utep.edu>
 	* Small makefile.in cleanups
 	* Added a missing break
