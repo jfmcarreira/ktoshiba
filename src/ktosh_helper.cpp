@@ -26,20 +26,107 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <linux/major.h>
+#include <linux/hdreg.h>
 
 #define USAGE \
 "Usage: ktosh_helper [option]\n\n\
 Where options are:\n\
-\t--enable    Enables the wireless device.\n\
-\t--disable   Disables the wireless device.\n\
-\t--std       Activates Suspend To Disk.\n\
-\t--str       Activates Suspend To RAM.\n\
+\t--enable        Enables the wireless device.\n\
+\t--disable       Disables the wireless device.\n\
+\t--std           Activates Suspend To Disk.\n\
+\t--str           Activates Suspend To RAM.\n\
+\t--unregister    Try to unregister the device from the IDE driver.\n\
+\t--rescan        Try to rescan the IDE bus to find devices.\n\
+\t--help          Displays this text.\n\
 "
+
+int selectBayUnregister()
+{
+	struct stat buf;
+
+	/* check the device exists */
+
+	if (stat("/dev/hda", &buf))
+		return -1;
+
+	/* make sure this is IDE channel 0 */
+
+	if (major(buf.st_rdev) != IDE0_MAJOR)
+		return -1;
+
+	/* open the device for sending commands */
+
+	int fd = open("/dev/hda", O_RDONLY);
+	if (fd < 0)
+		return -1;
+
+	/* request a device in the SelectBay is unregistered */
+
+	int err = -1;
+	for (int loop = 0; loop < 2; loop++) {
+		err = ioctl(fd, HDIO_UNREGISTER_HWIF, 1);
+		if (err == 0)
+			break;
+		sleep(1);
+	}
+
+	if (err == -1)
+		return -1;
+
+	//	KMessageBox::queuedMessageBox(0, KMessageBox::Error,
+	//								  i18n("Unable to unregister the device in\n"
+	//									   "the SelectBay, please re-lock."), i18n("SelectBay"));
+
+	close(fd);
+
+	return err;
+};
+
+int selectBayRescan()
+{
+	int args[] = {0x170, 0, 15};
+	struct stat buf;
+
+	if (stat("/dev/hda", &buf))
+		return -1;
+
+	if (major(buf.st_rdev) != IDE0_MAJOR)
+		return -1;
+
+	int fd = open("/dev/hda", O_RDONLY);
+	if (fd < 0)
+		return -1;
+
+	/* loop as sometimes it fails for no apparent reason */
+
+	int err = -1;
+	for (int loop = 0; loop < 2; loop++) {
+		err = ioctl(fd, HDIO_SCAN_HWIF, args);
+		if (err == 0)
+			break;
+		sleep(1);
+	}
+
+	if (err == -1)
+		return -1;
+	//	KMessageBox::queuedMessageBox(0, KMessageBox::Error,
+	//								  i18n("Error rescanning the IDE bus."), i18n("SelectBay"));
+
+	//KMessageBox::queuedMessageBox(0, KMessageBox::Information,
+	//							  i18n("Device succesfully inserted into SelectBay."), i18n("SelectBay"));
+	close(fd);
+
+	return err;
+};
 
 int main(int argc, char **argv)
 {
 	int fd;
 	int i;
+	int err;
 
 	::close(0);	// we're setuid - this is just in case
 	for (i = 1; i < argc; i++)
@@ -80,7 +167,17 @@ int main(int argc, char **argv)
 		close(fd);
         	setuid(getuid());	// drop all priority asap
 		exit(0);
-	}
+	} else
+	if (strcmp(argv[i], "--unregister") == 0 || strcmp(argv[i], "-unregister") == 0 || strcmp(argv[i], "-u") == 0) {
+		err = selectBayUnregister();
+		exit(err);
+	} else
+	if (strcmp(argv[i], "--rescan") == 0 || strcmp(argv[i], "-rescan") == 0 || strcmp(argv[i], "-r") == 0) {
+		err = selectBayRescan();
+		exit(err);
+	} else
+	if (strcmp(argv[i], "--help") == 0)
+		goto usage;
 	else {
 usage:
 		setuid(getuid());	// drop all priority asap

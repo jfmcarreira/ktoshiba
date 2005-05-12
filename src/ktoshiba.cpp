@@ -99,6 +99,8 @@ KToshiba::KToshiba()
 		wireless = 1;
 		fan = -1;
 		vol = -1;
+		sblock = HCI_LOCKED;
+		removed = 0;
 	}
 
 	// Code below taken from ksynaptics
@@ -186,7 +188,7 @@ void KToshiba::doConfig()
 {
 	KProcess proc;
 	proc << KStandardDirs::findExe("kcmshell");
-	proc << "ktoshiba";
+	proc << "ktoshibam";
 	proc.start(KProcess::DontCare);
 	proc.detach();
 }
@@ -710,9 +712,11 @@ void KToshiba::updateWidgetStatus(int action)
 	}
 	if (action == 12) {
 		toggleFan();
-		if (!fan)
+		if (fan == -1)
+			return;
+		else if (fan == 1)
 			mStatusWidget->wsStatus->raiseWidget(12);
-		else if (fan)
+		else if (fan == 0)
 			mStatusWidget->wsStatus->raiseWidget(13);
 	}
 }
@@ -1120,7 +1124,7 @@ void KToshiba::setModel()
 			mod = "UNKNOWN";
 			QString modelID = "Model_ID";
 			KMessageBox::information(0, i18n("Please send the model name and this id %1 to:\n"
-									 "neftali@utep.edu").arg(id), i18n("Model Name"), modelID);
+									 "coproscefalo@gmail.com").arg(id), i18n("Model Name"), modelID);
 	}
 	this->contextMenu()->insertTitle( mod, 0, 0 );
 }
@@ -1185,6 +1189,9 @@ void KToshiba::checkSystem()
 void KToshiba::speakerVolume()
 {
 	vol = mDriver->getSpeakerVolume();
+	if (vol == -1)
+		return;
+
 	vol++;
 	if (vol > 3) vol = 0;
 	mDriver->setSpeakerVolume(vol);
@@ -1194,14 +1201,95 @@ void KToshiba::toggleFan()
 {
 	int res = mDriver->getFan();
 
+	if (res < 0x00) {
+		fan = -1;
+		return;
+	}
 	if (res == 0x00) {
 		fan = 1;
 		mDriver->setFan(fan);
-	}
-	else {
+	} else {
 		fan = 0;
 		mDriver->setFan(fan);
 	}
+}
+
+void KToshiba::checkSelectBay()
+{
+	mDriver->systemLocks(&sblock, 1);
+
+	if (sblock == HCI_LOCKED) {
+		if (removed == 0)
+			return;
+		if (bayRescan() < 0)
+			return;
+		removed = 0;
+		return;
+	} else
+	if (sblock == HCI_UNLOCKED) {
+		if (removed == 1)
+			return;
+
+		int device = mDriver->bayStatus(1);
+		if ((device == HCI_ATAPI) || (device == HCI_IDE)) {
+			int res = KMessageBox::warningContinueCancel(0, i18n("Please umount all filesystems on the "
+											   "SelectBay device, if any."), i18n("SelectBay"));
+			if (res == KMessageBox::Continue) {
+				if (bayUnregister() < 0) {
+					KMessageBox::queuedMessageBox(0, KMessageBox::Error,
+											  i18n("Unable to remove device in\n"
+												   "the SelectBay. Please re-lock."), i18n("SelectBay"));
+					return;
+				}
+
+				KMessageBox::queuedMessageBox(0, KMessageBox::Information,
+											  i18n("Device in the SelectBay sucessfully removed."), i18n("SelectBay"));
+				removed = 1;
+			}
+		}
+	}
+}
+
+int KToshiba::bayUnregister()
+{
+	QString helper = KStandardDirs::findExe("ktosh_helper");
+	if (helper.isEmpty()) {
+		KMessageBox::sorry(0, i18n("Could not unregister device because ktosh_helper cannot be found.\n"
+						   "Please make sure that it is installed correctly."),
+						   i18n("KToshiba"));
+		return -1;
+	}
+
+	KProcess proc;
+	proc << helper << "--unregister";
+	proc.start(KProcess::NotifyOnExit);
+	int res = proc.exitStatus();
+	proc.detach();
+	if (res != 0)
+		return -1;
+
+	return 0;
+}
+
+int KToshiba::bayRescan()
+{
+	QString helper = KStandardDirs::findExe("ktosh_helper");
+	if (helper.isEmpty()) {
+		KMessageBox::sorry(0, i18n("Could not register device because ktosh_helper cannot be found.\n"
+						   "Please make sure that it is installed correctly."),
+						   i18n("KToshiba"));
+		return -1;
+	}
+
+	KProcess proc;
+	proc << helper << "--rescan";
+	proc.start(KProcess::NotifyOnExit);
+	int res = proc.exitStatus();
+	proc.detach();
+	if (res != 0)
+		return -1;
+
+	return 0;
 }
 
 

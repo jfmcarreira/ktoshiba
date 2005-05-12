@@ -46,7 +46,7 @@
 #define CONFIG_FILE "ktoshibarc"
 
 typedef KGenericFactory<KCMToshibaModule, QWidget> KCMToshibaModuleFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_ktoshiba, KCMToshibaModuleFactory("kcmktoshiba"))
+K_EXPORT_COMPONENT_FACTORY( kcm_ktoshibam, KCMToshibaModuleFactory("kcmktoshiba"))
 
 KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStringList&)
     : KCModule(KCMToshibaModuleFactory::instance(), parent, name)

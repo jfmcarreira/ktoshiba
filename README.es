@@ -20,7 +20,6 @@ Requisitos
 - Un portatil Toshiba (indispensable)
 - Compilador y utilerias (gcc, autoconf, automake, etc.)
 - KDE 3.2.x y librerias de desarrollo (-devel)
-- alsa-utils (para silenciar/desilenciar)
 
 
 Preparativos
@@ -60,13 +59,14 @@ Si todo salio bien hasta este punto entonces la instalacion es muy
 sencilla, descomprime el archivo descargado y haz lo siguiente:
 
 	cd ktoshiba-0.X 		(donde X es la version actual)
-	./configure --prefix=/lugar/donde/esta/instalado/kde (en SuSE /opt/kde3)
+	./configure --prefix=`kde-config --prefix`
 	make
-	su -c "make install"	(este paso va arequerir de la contraseña del administrador)
+	su -c "make install"	(este paso va a requerir de la contraseña del administrador)
 
-o si descargaste el rpm en tonces haz lo siguiente:
+o si descargaste el rpm entonces haz lo siguiente:
 
-	rpm -ivh ktoshiba-0.X.i386.rpm 	(esto se tiene que realizar como administrador)
+	rpm -ivh ktoshiba-0.X-Y.i586.rpm 	(esto se tiene que realizar como administrador)
+	(donde 'X' es la version actual y 'Y' la version del rpm)
 
 
 Modo de uso
@@ -75,27 +75,27 @@ Si la instalacion se llevo acabo sin problemas tu podras encontrar KToshiba
 en el menu de Utilidades, da click en el y un icono aparecera en la barra
 de tareas, da click con el boton derecho del raton y selecciona configurar,
 una nueva ventana aparecera en la cual tu podras configurar algunos valores
-de monitoreo de bateria asi como seleccionar la aplicacion de audio para
-usarse con los botones del panel frontal.
+de monitoreo de bateria, asi como seleccionar la aplicacion de audio para
+usarse con los botones del panel frontal, etc..
 
 
 Soporte, Bichos y/o Pedidos
 =====
 Tengo planes de dar mas soporte a otros portatiles de Toshiba en futuras
 versiones, si te gusto el programa y deseas obtener soporte para tu portatil
-manda un correo electronico a neftali@utep.edu e incluye las combinaciones
-Fn-F[1,2,3,4,5,6,7,8,9] y que hacen (ej: Fn-F1 Bloquea pantalla o 
+manda un correo electronico a coproscefalo@gmail.com e incluye las combinaciones
+Fn-F{1,2,3,4,5,6,7,8,9} y que hacen (ej: Fn-F1 Bloquea pantalla o
 Fn-F7 Aumenta el brillo de pantalla).
 
 Si encontraste algun error o solamente quieres soporte para algo en futuras
-versiones manda un correo electronico a la direccion dada con la descripcion 
+versiones manda un correo electronico a la direccion dada con la descripcion
 del problema o la caracteristica de soporte deseada, o simplemente accesa
 a la pagina en SourceForge.net y reportalo ahi.
 
 Contacto
 =====
 Me puedes contactar por correo electronico en
-neftali@utep.edu or coproscefalo@gmail.com
+coproscefalo@gmail.com
 
 La pagina del proyecto esta en SourceForge.net
 http://sourceforge.net/projects/ktoshiba

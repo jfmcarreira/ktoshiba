@@ -3,6 +3,9 @@
  * Copyright (c) 1998,1999  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
  * $Log$
+ * Revision 1.4  2005/05/12 15:42:34  coproscefalo
+ * Released 0.6
+ *
  * Revision 1.3  2005/04/14 19:07:26  coproscefalo
  * Finished Battery Savings - User Settings Mode
  *
@@ -110,7 +113,11 @@ enum {
 enum {
 	HCI_INTERNAL        = 0x0000,
 	HCI_EXTERNAL        = 0x0001,
-	HCI_SIMULTANEOUS    = 0x0002
+	HCI_SIMULTANEOUS    = 0x0002,
+	HCI_LCD             = 0x0001,
+	HCI_CRT             = 0x0002,
+	HCI_LCD_CRT         = 0x0003,
+	HCI_S_VIDEO         = 0x0004
 };
 
 enum {

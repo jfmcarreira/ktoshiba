@@ -256,14 +256,16 @@ void KToshibaSMMInterface::setVideo(int vid)
 {
 	reg.eax = HCI_SET;
 	reg.ebx = HCI_VIDEO_OUT;
-	if (vid == 1)
-		reg.ecx = 0x0001;	// LCD
+	if (vid == 0)
+		reg.ecx = HCI_INTERNAL;
+	else if (vid == 1)
+		reg.ecx = HCI_LCD;	// HCI_EXTERNAL
 	else if (vid == 2)
-		reg.ecx = 0x0002;	// CRT
+		reg.ecx = HCI_CRT;	// HCI_SIMULTANEOUS
 	else if (vid == 3)
-		reg.ecx = 0x0003;	// LCD/CRT
+		reg.ecx = HCI_LCD_CRT;
 	else if (vid == 4)
-		reg.ecx = 0x0004;	// S-Video
+		reg.ecx = HCI_S_VIDEO;
 	if (HciFunction(&reg) != HCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setVideo(): "
 				  << "Could not change display state" << endl;
@@ -272,7 +274,7 @@ void KToshibaSMMInterface::setVideo(int vid)
 				  << "Display state changed successfuly" << endl;
 }
 
-void KToshibaSMMInterface::selectBayLock(int *lock, int bay)
+void KToshibaSMMInterface::systemLocks(int *lock, int bay)
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_LOCK_STATUS;
@@ -301,10 +303,11 @@ void KToshibaSMMInterface::selectBayLock(int *lock, int bay)
 	}
 }
 
-int KToshibaSMMInterface::selectBayStatus(int bay)
+int KToshibaSMMInterface::bayStatus(int bay)
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_SELECT_STATUS;
+	reg.ecx = 0x0000;
 	if (bay == 0)
 		reg.ecx = HCI_BUILT_IN;
 	else if (bay == 1)
@@ -581,17 +584,19 @@ void KToshibaSMMInterface::setSpeakerVolume(int vol)
 
 int KToshibaSMMInterface::getFan()
 {
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_FAN;
-	HciFunction(&reg);
-	if (reg.eax != HCI_SUCCESS) {
+	SMMRegisters r;
+
+	r.eax = HCI_GET;
+	r.ebx = HCI_FAN;
+	HciFunction(&r);
+	if ((r.eax & 0xff00) != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getFan(): "
 				  << "Could not get fan status or laptop"
-				  << "doesn't have one" << endl;
+				  << " doesn't have one" << endl;
 		return -1;
 	}
 
-	return (int) (reg.ecx & 0xff);
+	return (int) (r.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setFan(int state)
@@ -604,10 +609,12 @@ void KToshibaSMMInterface::setFan(int state)
 		reg.ecx = HCI_ENABLE;
 	if (HciFunction(&reg) != HCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setFan(): "
-				  << "Fan could not be turned On/Off" << endl;
+				  << "Fan could not be turned "
+				  << ((state == 1)? "On" : "Off") << endl;
 	else
 		kdDebug() << "KToshibaSMMInterface::setFan(): "
-				  << "Fan successfully turned On/Off" << endl;
+				  << "Fan successfully turned "
+				  << ((state == 1)? "On" : "Off") << endl;
 }
 
 

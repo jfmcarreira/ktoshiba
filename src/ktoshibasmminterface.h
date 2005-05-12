@@ -122,13 +122,13 @@ public:
 	 * @param lock the int holding the current lock status
 	 * @param bay the int holding the desired select bay
 	 */
-	void selectBayLock(int *lock, int bay);
+	void systemLocks(int *lock, int bay);
 	/**
 	 * Gets the device attached to the selectbay.
 	 * @param bay the int holding the desired select bay
 	 * @return @p the int holding the current device
 	 */
-	int selectBayStatus(int bay);
+	int bayStatus(int bay);
 	/**
 	 * Verifies the wireless antenna switch.
 	 * @return @p the int holding the status
