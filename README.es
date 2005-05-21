@@ -52,6 +52,21 @@ sin las comillas y se vera algo asi:
 Si tu usas SuSE entonces tu querras editar modules.conf.local o
 modprobe.conf.local (dependiendo del kernel) entonces.
 
+Una vez terminado con los preparativos anteriores y el modulo del kernel
+fue cargado exitosamente ('insmod toshiba tosh_fn=0x6X', donde 6X es el
+puerto que acabas de encontrar), verifica que tienes acceso de lectura y
+escritura al dispositivo /dev/toshiba se vera algo como esto si ejecutas
+el siguiente comando 'ls -la /dev/toshiba' :
+
+	crw-------  1 azael root 10, 181 2005-03-19 12:36 /dev/toshiba
+
+En el dado caso de que no tengas acceso de lectura y/o escritura deberas
+cambiar los permisos con el siguiente comando (como administrador):
+
+	chmod o+rw /dev/toshiba
+
+Ahora si ya esta todo listo.
+
 
 Instalación
 =====
@@ -76,7 +91,8 @@ en el menu de Utilidades, da click en el y un icono aparecera en la barra
 de tareas, da click con el boton derecho del raton y selecciona configurar,
 una nueva ventana aparecera en la cual tu podras configurar algunos valores
 de monitoreo de bateria, asi como seleccionar la aplicacion de audio para
-usarse con los botones del panel frontal, etc..
+usarse con los botones del panel frontal, etc.. Cambia los valores a tus gustos
+y recuerda guardar los cambios asi KToshiba los usara de inmediato.
 
 
 Soporte, Bichos y/o Pedidos
@@ -89,8 +105,7 @@ Fn-F7 Aumenta el brillo de pantalla).
 
 Si encontraste algun error o solamente quieres soporte para algo en futuras
 versiones manda un correo electronico a la direccion dada con la descripcion
-del problema o la caracteristica de soporte deseada, o simplemente accesa
-a la pagina en SourceForge.net y reportalo ahi.
+del problema o la caracteristica de soporte deseada.
 
 Contacto
 =====

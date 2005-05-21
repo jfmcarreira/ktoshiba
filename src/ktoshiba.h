@@ -49,7 +49,7 @@ class StatusWidget;
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.6
+ * @version 0.7
  */
 class KToshiba : public KSystemTray
 {
@@ -93,6 +93,7 @@ protected:
 	int mOldWirelessSwitch;
 	int mAudioPlayer;
 	int mBatType;
+	int mBootType;
 private:
 	void brightUp();
 	void brightDown();
@@ -101,7 +102,6 @@ private:
 	void setModel();
 	void mute();
 	void toggleWireless();
-	void updateWidgetStatus(int);
 	void performFnAction(int, int);
 	void bsmUserSettings(KConfig *);
 	void speakerVolume();
@@ -127,6 +127,7 @@ private:
 	bool battrig;
 	bool wstrig;
 	bool btstart;
+	bool baytrig;
 	int pow;
 	int oldpow;
 	int time;
@@ -147,6 +148,8 @@ private:
 	int vol;
 	int sblock;
 	int removed;
+	int bay;
+	int boot;
 };
 
 #endif // KTOSHIBA_H

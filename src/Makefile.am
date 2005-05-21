@@ -4,7 +4,8 @@ SUBDIRS = . kcmktoshiba images
 INCLUDES = $(all_includes)
 
 # these are the headers for your project
-noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h synshm.h
+noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h synshm.h \
+	modelid.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -21,7 +22,8 @@ kde_module_LTLIBRARIES = libktoshibasmminterface.la
 libktoshibasmminterface_la_LDFLAGS = $(all_libraries)
 libktoshibasmminterface_la_SOURCES = hci.c sci.c ktoshibasmminterface.cpp
 
-ktoshiba_SOURCES = main.cpp ktoshiba.cpp settingswidget.ui statuswidget.ui
+ktoshiba_SOURCES = main.cpp ktoshiba.cpp settingswidget.ui statuswidget.ui \
+	modelid.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = $(top_builddir)/src/libktoshibasmminterface.la $(LIB_KDEUI)
 

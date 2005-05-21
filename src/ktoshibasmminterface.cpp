@@ -24,8 +24,8 @@
 
 KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 	: QObject( parent ),
-	  mFd( 0 ),
-	  hotkeys( false )
+	  hotkeys( false ),
+	  mFd( 0 )
 {
 }
 
@@ -47,6 +47,11 @@ bool KToshibaSMMInterface::openInterface()
 	}
 
 	SciOpenInterface();
+	//if (SciOpenInterface() == SCI_FAILURE) {
+	//	kdError() << "KToshibaSMMInterface::openInterface(): "
+	//			  << "Failed to open SCI interface" << endl;
+	//	return false;
+	//}
 
 	return true;
 }
@@ -55,7 +60,9 @@ void KToshibaSMMInterface::closeInterface()
 {
 	if (mFd)
 		close(mFd);
-	SciCloseInterface();
+	if (SciCloseInterface() == SCI_FAILURE)
+		kdError() << "KToshibaSMMInterface::closeInterface(): "
+				  << "Failed to close SCI interface" << endl;
 }
 
 int KToshibaSMMInterface::getBrightness()
@@ -130,8 +137,8 @@ int KToshibaSMMInterface::acPowerStatus()
 	status = (reg.ecx & 0xffff);
 	if (status == 4)
 		return 1;
-	else if (status == 3)
-		return 0;
+
+	return 0;
 }
 
 int KToshibaSMMInterface::procStatus()
@@ -150,13 +157,13 @@ int KToshibaSMMInterface::procStatus()
 	return key;
 }
 
-int KToshibaSMMInterface::systemEvent()
+int KToshibaSMMInterface::getSystemEvent()
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_SYSTEM_EVENT;
 	int ev = HciFunction(&reg);
 	if (ev == HCI_FIFO_EMPTY) {
-		kdError() << "KToshibaSMMInterface::systemEvent(): "
+		kdError() << "KToshibaSMMInterface::getSystemEvent(): "
 				  << "FIFO Empty" << endl;
 		return 0;
 	} else
@@ -165,15 +172,19 @@ int KToshibaSMMInterface::systemEvent()
 		 *	ISSUE: After enabling the hotkeys again, we receice
 		 *	HCI_FAILURE when 'no' events are present in the
 		 *	system. However, when events are entered into
-		 *	the system we receive HCI_SUCCESS. In the meanwhile
-		 *	this is a workaround for this problem
+		 *	the system we receive HCI_SUCCESS.
 		 */
 		if (hotkeys == false) {
+			kdError() << "KToshibaSMMInterface::getSystemEvent(): "
+					  << "Failed accessing System Events" << endl;
 			reg.eax = HCI_SET;
 			reg.ebx = HCI_SYSTEM_EVENT;
 			reg.ecx = HCI_ENABLE;
-			HciFunction(&reg);
-			kdDebug() << "KToshibaSMMInterface::systemEvent(): "
+			if (HciFunction(&reg) != HCI_SUCCESS)
+				kdError() << "ToshibaSMMInterface::getSystemEvent(): "
+						  << "Could no enable Hotkeys" << endl;
+
+			kdDebug() << "KToshibaSMMInterface::getSystemEvent(): "
 					  << "Re-enabled Hotkeys" << endl;
 			hotkeys = true;
 		}
@@ -181,6 +192,19 @@ int KToshibaSMMInterface::systemEvent()
 	}
 
 	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::enableSystemEvent()
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_SYSTEM_EVENT;
+	reg.ecx = HCI_ENABLE;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "ToshibaSMMInterface::enableSystemEvent(): "
+				  << "Could no enable Hotkeys" << endl;
+
+	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
+			  << "Re-enabled Hotkeys" << endl;
 }
 
 int KToshibaSMMInterface::machineID()
@@ -202,10 +226,8 @@ void KToshibaSMMInterface::pointingDevice(int status)
 		reg.ecx = SCI_DISABLED;
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::pointingDevice(): "
-				  << "Could not enable/disable MousePad" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::pointingDevice(): "
-				  << "Successfully enabled/disabled MousePad" << endl;
+				  << "Could not " << ((status == 1)? "enable"
+					 : "disable") << " MousePad" << endl;
 }
 
 int KToshibaSMMInterface::getBatterySaveMode()
@@ -234,9 +256,6 @@ void KToshibaSMMInterface::setBatterySaveMode(int mode)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setBatterySaveMode(): "
 				  << "Could not change Battery Save Mode" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setBatterySaveMode(): "
-				  << "Successfully changed Battery Save Mode" << endl;
 }
 
 int KToshibaSMMInterface::getVideo()
@@ -269,9 +288,6 @@ void KToshibaSMMInterface::setVideo(int vid)
 	if (HciFunction(&reg) != HCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setVideo(): "
 				  << "Could not change display state" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setVideo(): "
-				  << "Display state changed successfuly" << endl;
 }
 
 void KToshibaSMMInterface::systemLocks(int *lock, int bay)
@@ -287,23 +303,20 @@ void KToshibaSMMInterface::systemLocks(int *lock, int bay)
 	else if (bay == 3)
 		reg.ecx = HCI_5INCH_DOCK;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::selectBayLock(): "
-				  << "Could not get SelectBay lock status" << endl;
+		kdError() << "KToshibaSMMInterface::systemLocks(): "
+				  << "Could not get Bay lock status" << endl;
 		return;
 	}
-	if ((reg.ecx == HCI_UNLOCKED) && (*lock == HCI_LOCKED)) {
-		kdDebug() << "KToshibaSMMInterface::selectBayLock(): "
-				  << "SelectBay unlocked" << endl;
+	if ((reg.ecx == HCI_UNLOCKED) && (*lock == HCI_LOCKED))
 		*lock = HCI_UNLOCKED;
-	} else
-	if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED)) {
-		kdDebug() << "KToshibaSMMInterface::selectBayLock(): "
-				  << "SelectBay locked" << endl;
+	else if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED))
 		*lock = HCI_LOCKED;
-	}
+	kdDebug() << "KToshibaSMMInterface::systemLocks(): "
+			  << "Bay " << ((*lock == HCI_LOCKED)?
+				 "locked": "unlocked") << endl;
 }
 
-int KToshibaSMMInterface::bayStatus(int bay)
+int KToshibaSMMInterface::getBayDevice(int bay)
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_SELECT_STATUS;
@@ -317,8 +330,8 @@ int KToshibaSMMInterface::bayStatus(int bay)
 	else if (bay == 3)
 		reg.ecx = HCI_5INCH_DOCK;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::selectBayStatus(): "
-				  << "Could not get SelectBay device" << endl;
+		kdError() << "KToshibaSMMInterface::getBayDevice(): "
+				  << "Could not get Bay device" << endl;
 		return -1;
 	}
 
@@ -329,7 +342,7 @@ int KToshibaSMMInterface::getWirelessSwitch()
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_RF_CONTROL;
-	reg.edx = HCI_WIRELESS_SWITCH;
+	reg.edx = HCI_WIRELESS_CHECK;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getWirelessSwitch(): "
 				  << "Could not check wireless switch "
@@ -347,11 +360,12 @@ int KToshibaSMMInterface::getBluetooth()
 	reg.edx = HCI_BLUETOOTH_CHECK;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
 		kdDebug() << "KToshibaSMMInterface::getBluetooth(): "
-				  << "No Bluetooth device found" << endl;
-		return 0;
+				  << "Could not check Bluetooth device "
+				  << "or system doesn't have one" << endl;
+		return -1;
 	}
 
-	return 1;
+	return (reg.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setBluetooth()
@@ -375,8 +389,8 @@ void KToshibaSMMInterface::setBluetooth()
 	if (HciFunction(&reg) != HCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setBluetooth(): "
 				  << "Could not attach Bluetooth device" << endl;
-	else
-		kdDebug() << "Bluetooth device attached successfully" << endl;
+	
+	kdDebug() << "Bluetooth device attached successfully" << endl;
 }
 
 void KToshibaSMMInterface::setProcessingSpeed(int speed)
@@ -389,10 +403,10 @@ void KToshibaSMMInterface::setProcessingSpeed(int speed)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setProcessingSpeed(): "
 				  << "Could not change processor speed" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setProcessingSpeed(): "
-				  << "Successfully changed processor to "
-				  << ((speed == 0)? "LOW" : "HIGH") << " speed"<< endl;
+	
+	kdDebug() << "KToshibaSMMInterface::setProcessingSpeed(): "
+			  << "Successfully changed processor to "
+			  << ((speed == 0)? "LOW" : "HIGH") << " speed"<< endl;
 }
 
 void KToshibaSMMInterface::setCPUSleepMode(int mode)
@@ -405,11 +419,10 @@ void KToshibaSMMInterface::setCPUSleepMode(int mode)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setCPUSleepMode(): "
 				  << "Could not change CPU Sleep Mode" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setCPUSleepMode(): "
-				  << "Successfully "
-				  << ((mode == 0)? "DISABLED" : "ENABLED")
-				  << " CPU Sleep Mode" << endl;
+	
+	kdDebug() << "KToshibaSMMInterface::setCPUSleepMode(): "
+			  << "Successfully " << ((mode == 0)?
+				 "DISABLED" : "ENABLED") << " CPU Sleep Mode" << endl;
 }
 
 void KToshibaSMMInterface::setCoolingMethod(int method)
@@ -424,9 +437,6 @@ void KToshibaSMMInterface::setCoolingMethod(int method)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setCoolingMethod(): "
 				  << "Could not change Cooling Method" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setCoolingMethod(): "
-				  << "Successfully changed cooling method" << endl;
 }
 
 void KToshibaSMMInterface::setHDDAutoOff(int time)
@@ -449,9 +459,6 @@ void KToshibaSMMInterface::setHDDAutoOff(int time)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setHDDAutoOff(): "
 				  << "Could not change HDD Auto Off time" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setHDDAutoOff(): "
-				  << "Successfully changed HDD Auto Off time" << endl;
 }
 
 void KToshibaSMMInterface::setDisplayAutoOff(int time)
@@ -474,9 +481,6 @@ void KToshibaSMMInterface::setDisplayAutoOff(int time)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setDisplayAutoOff(): "
 				  << "Could not change Display Auto Off time" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setDisplayAutoOff(): "
-				  << "Successfully changed Display Auto Off time" << endl;
 }
 
 int KToshibaSMMInterface::getSpeedStep()
@@ -504,9 +508,6 @@ void KToshibaSMMInterface::setSpeedStep(int mode)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setSpeedStep(): "
 				  << "Could not change SpeedStep mode" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setSpeedStep(): "
-				  << "Successfully changed SpeedStep mode" << endl;
 }
 
 int KToshibaSMMInterface::getHyperThreading()
@@ -534,9 +535,6 @@ void KToshibaSMMInterface::setHyperThreading(int status)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setHyperThreading(): "
 				  << "Could not change Hyper-Threading mode" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setHyperThreading(): "
-				  << "Successfully changed Hyper-Threading mode" << endl;
 }
 
 int KToshibaSMMInterface::getBatterySaveModeType()
@@ -577,9 +575,6 @@ void KToshibaSMMInterface::setSpeakerVolume(int vol)
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setSpeakerVolume(): "
 				  << "Could not change volume" << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setSpeakerVolume(): "
-				  << "Successfully changed volume" << endl;
 }
 
 int KToshibaSMMInterface::getFan()
@@ -611,10 +606,83 @@ void KToshibaSMMInterface::setFan(int state)
 		kdError() << "KToshibaSMMInterface::setFan(): "
 				  << "Fan could not be turned "
 				  << ((state == 1)? "On" : "Off") << endl;
-	else
-		kdDebug() << "KToshibaSMMInterface::setFan(): "
-				  << "Fan successfully turned "
-				  << ((state == 1)? "On" : "Off") << endl;
+
+	kdDebug() << "KToshibaSMMInterface::setFan(): "
+			  << "Fan successfully turned "
+			  << ((state == 1)? "On" : "Off") << endl;
+}
+
+int KToshibaSMMInterface::getBootType()
+{
+	reg.ebx = SCI_BOOT_METHOD;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBootType(): "
+				  << "Could not get supported boot method" << endl;
+		return -1;	
+	}
+
+	return (int) (reg.edx & 0xffff);
+}
+
+int KToshibaSMMInterface::getBootMethod()
+{
+	reg.ebx = SCI_BOOT_METHOD;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBootMethod(): "
+				  << "Could not get current boot method" << endl;
+		return -1;	
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setBootMethod(int method)
+{
+	reg.ebx = SCI_BOOT_METHOD;
+	if (method == 0)
+		reg.ecx = SCI_FD_HD_CDROM;
+	else if (method == 1)
+		reg.ecx = SCI_HD_FD_CDROM;
+	else if (method == 2)
+		reg.ecx = SCI_FD_CDROM_HD;
+	else if (method == 3)
+		reg.ecx = SCI_HD_CDROM_FD;
+	else if (method == 4)
+		reg.ecx = SCI_CDROM_FD_HD;
+	else if (method == 5)
+		reg.ecx = SCI_CDROM_HD_FD;
+	if (SciSet(&reg) != SCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setBootMethod(): "
+				  << "Could not set boot method" << endl;
+}
+
+int KToshibaSMMInterface::getWirelessPower()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.edx = HCI_WIRELESS_CHECK;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getWirelessPower(): "
+				  << "Could not get wireless power state" << endl;
+		return -1;
+	}
+
+	return (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setWirelessPower(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_RF_CONTROL;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	reg.edx = HCI_WIRELESS_POWER;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setWirelessPower(): "
+				  << "Could not set wireless power "
+				  << ((state == 1)? "on" : "off") << endl;
 }
 
 

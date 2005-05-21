@@ -27,11 +27,10 @@
 static const char description[] =
     I18N_NOOP("Hotkeys & Battery monitoring for Toshiba laptops.");
 
-static const char version[] = "0.6";
+static const char version[] = "0.7Alpha";
 
 static KCmdLineOptions options[] =
 {
-//    { "+[URL]", I18N_NOOP( "Document to open." ), 0 },
     KCmdLineLastOption
 };
 
@@ -39,34 +38,30 @@ int main(int argc, char **argv)
 {
     KAboutData about("ktoshiba", I18N_NOOP("KToshiba"), version, description,
                      KAboutData::License_GPL, "(C) 2004 Azael Avalos", 0, 0,
-					 "coproscefalo@gmail.com" );
+                     "coproscefalo@gmail.com" );
     about.addAuthor( "Azael Avalos", 0, "neftali@utep.edu" );
-	about.addCredit( "Jonathan A. Buzzard", I18N_NOOP("toshutils and HCI-SCI stuff"),
-					"jonathan@buzzard.org.uk", "http://www.buzzard.org.uk/toshiba/" );
-	about.addCredit( "John Belmonte", I18N_NOOP("Toshiba Laptop ACPI Extras driver"),
-					"john@neggie.net", "http://memebeam.org/toys/ToshibaAcpiDriver/" );
-	about.addCredit( "Thomas Renninger", I18N_NOOP("Powersave Daemon & KPowersave"),
-					"trenn@suse.de", 0 );
-	about.addCredit( "KDE Team", I18N_NOOP("Some ideas and pieces of code"), 0,
-					"http://www.kde.org/" );
-	about.addCredit( "ksynaptics Team", I18N_NOOP("Code for enabling/disablig TouchPad"),
-					0, "http://qsynaptics.sourceforge.net/" );
+    about.addCredit( "Jonathan A. Buzzard", I18N_NOOP("toshutils and HCI-SCI stuff"),
+                    "jonathan@buzzard.org.uk", "http://www.buzzard.org.uk/toshiba/" );
+    about.addCredit( "John Belmonte", I18N_NOOP("Toshiba Laptop ACPI Extras driver"),
+                    "john@neggie.net", "http://memebeam.org/toys/ToshibaAcpiDriver/" );
+    about.addCredit( "Thomas Renninger", I18N_NOOP("Powersave Daemon & KPowersave"),
+                    "trenn@suse.de", 0 );
+    about.addCredit( "KDE Team", I18N_NOOP("Some ideas and pieces of code"), 0,
+                    "http://www.kde.org/" );
+    about.addCredit( "ksynaptics Team", I18N_NOOP("Code for enabling/disablig TouchPad"),
+                    0, "http://qsynaptics.sourceforge.net/" );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KToshiba *mainWin = 0;
 
-        // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-        /// @todo do something with the command line args here
+    mainWin = new KToshiba();
+    app.setMainWidget( mainWin );
+    mainWin->show();
 
-        mainWin = new KToshiba();
-        app.setMainWidget( mainWin );
-        mainWin->show();
+    args->clear();
 
-        args->clear();
-
-    // mainWin has WDestructiveClose flag by default, so it will delete itself.
     return app.exec();
 }

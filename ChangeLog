@@ -1,3 +1,26 @@
+2005-05-20 Azael Avalos <neftali@utep.edu>
+	* Finished Boot Method code and updated KCM
+	* Updated wireless disabling/enabling code and
+	  removed code from ktosh_helper
+	* Updated Bluetooth code
+
+2005-05-19 Azael Avalos <neftali@utep.edu>
+	* Updated hci.h file
+	* Added new functions to change boot method
+
+2005-05-18 Azael Avalos <neftali@utep.edu>
+	* SelectBay check is now _really_ being checked
+	* Cleaned up a bit wireless antenna code and some
+	  other areas
+	* Moved Model ID code to separate files
+	* Updated README files
+
+2005-05-13 Azael Avalos <neftali@utep.edu>
+	* Added extra check to closeInterface()
+
+2005-05-12 Azael Avalos <neftali@utep.edu>
+	* Another model added thanks to Weaselweb
+
 2005-05-12 Azael Avalos <neftali@utep.edu>
 	* Renamed KCModule to hopefully fix some issues
 	* Released 0.6

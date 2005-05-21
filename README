@@ -3,6 +3,7 @@ KToshiba
 KToshiba is currently covered under the GPL version 2 or later. A copy of this
 license can be found in a file named COPYING, in the toplevel directory.
 
+
 What it is
 =====
 KToshiba is a KDE monitor for the special keys found on Toshiba laptops
@@ -12,11 +13,13 @@ This program have been tested on a Satellite(R) A25-S279 model,
 newer Satellite(R) models may work also with this program since
 the Fn-Keys are the same as I have seen, but I haven't tested them.
 
+
 Requirements
 =====
 - A Toshiba laptop (this is a must)
-- Compiler and utilities (autoconf, automake, etc.)
+- Compiler and utilities (gcc, autoconf, automake, etc.)
 - KDE 3.2.x and development libraries
+
 
 Preparatives
 =====
@@ -48,6 +51,21 @@ without the cuotes and it should look something like this:
 If you are using SuSE you might want to add this to modules.conf.local or
 modprobe.conf.local (again depending on running kernel) instead.
 
+Once finished with the above procedures and the kernel module is loaded
+('insmod toshiba tosh_fn=0x6X', where 6X is the port you just found),
+verify that you have read and write access to /dev/toshiba it should
+look something like this if you do 'ls -la /dev/toshiba' :
+
+	crw-------  1 azael root 10, 181 2005-03-19 12:36 /dev/toshiba
+
+In case you don't have read and/or write access change the device access
+with the following command (as root):
+
+	chmod o+rw /dev/toshiba
+
+And now you're all set.
+
+
 Installation
 =====
 If you have everything that is needed then installation is very
@@ -63,13 +81,16 @@ or if you downloaded an rpm then do the following:
 	rpm -ivh ktoshiba-0.X-Y.i586.rpm 	(this has to be done as root)
 	(where 'X' is the current version number and 'Y' is the current rpm release)
 
+
 Usage
 =====
 If installation went right you can find KToshiba under the Utilities menu
 click on it and then an icon should appear on the taskbar, right-click on it
 and select configure, a new window should appear where you can set some values
 such as battery poll time, select audio application to use with front panel
-buttons etc. 
+buttons etc.. Change the values to your likes and save changes for KToshiba
+to start using the new values.
+
 
 Support, Bugs & Requests
 =====
@@ -81,8 +102,8 @@ LockScreen or Fn-F7 Brightness Up).
 
 If you have found a bug or want some features on a future release
 please send an email to the below e-mail address with the description
-of the problem or the feature request, or simply go to the sourceforge.net
-project page and report the bug or wish there.
+of the problem or the feature request.
+
 
 Contact
 =====
