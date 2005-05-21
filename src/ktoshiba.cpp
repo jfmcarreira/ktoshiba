@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ktoshiba.h"
+#include "modelid.h"
 
 #include <qlabel.h>
 #include <qlayout.h>
@@ -82,16 +83,18 @@ KToshiba::KToshiba()
 		battery = mDriver->getBatterySaveMode();
 		video = mDriver->getVideo();
 		bright = mDriver->getBrightness();
+		mBootType = mDriver->getBootType();
+		boot = mDriver->getBootMethod();
 		mDriver->batteryStatus(&time, &perc);
 		mWirelessSwitch = mDriver->getWirelessSwitch();
 		mOldWirelessSwitch = mWirelessSwitch;
-		if (perc == 100) battrig = true;
-		else battrig = false;
+		(perc == 100)? battrig = true : battrig = false;
 		mWire = true;
 		crytrig = false;
 		lowtrig = false;
 		battrig = false;
 		wstrig = false;
+		baytrig = false;
 		snd = 1;
 		popup = 0;
 		mousepad = 0;
@@ -442,7 +445,7 @@ void KToshiba::checkHotKeys()
 	mConfig.setGroup("KToshiba");
 
 	int tmp = 0;
-	int key = mDriver->systemEvent();
+	int key = mDriver->getSystemEvent();
 
 	if ((key == 0x100) && (popup != 0)) {
 		mSettingsWidget->hide();
@@ -564,12 +567,19 @@ void KToshiba::checkHotKeys()
 				}
 			}
 			break;
+		case 1:
+			if (mDriver->hotkeys == false)
+				mDriver->enableSystemEvent();
+			break;
 	}
 	performFnAction(tmp, key);
 }
 
 void KToshiba::performFnAction(int action, int key)
 {
+	KConfig mConfig(CONFIG_FILE);
+	mConfig.setGroup("KToshiba");
+
 	switch(action) {
 		case 0: // Disabled (Do Nothing)
 			break;
@@ -601,10 +611,11 @@ void KToshiba::performFnAction(int action, int key)
 				popup = key & 0x17f;
 			}
 			if ((key & 0x17f) == popup)
-				updateWidgetStatus(action);
+				goto update_widget;
 			break;
-		case 3: // Battery Save Mode
+		case 3: // Toggle Battery Save Mode
 		case 6: // Toggle Video
+		case 13: // Toggle Boot Method
 			if (popup == 0) {
 				QRect r = QApplication::desktop()->geometry();
 				mSettingsWidget->move(r.center() - 
@@ -613,15 +624,11 @@ void KToshiba::performFnAction(int action, int key)
 				popup = key & 0x17f;
 			}
 			if ((key & 0x17f) == popup)
-				updateWidgetStatus(action);
+				goto update_widget;
 			break;
 	}
-}
 
-void KToshiba::updateWidgetStatus(int action)
-{
-	KConfig mConfig(CONFIG_FILE);
-	mConfig.setGroup("KToshiba");
+update_widget:
 
 	if (action == 3) {
 		battery--;
@@ -681,6 +688,54 @@ void KToshiba::updateWidgetStatus(int action)
 				break;
 		}
 	}
+	if (action == 13) {
+		boot++;
+		if (boot > mBootType) boot = 0;
+		mDriver->setBootMethod(boot);
+		mSettingsWidget->wsSettings->raiseWidget(2);
+		mSettingsWidget->plFD->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plHD->setFrameShape(QLabel::NoFrame);
+		mSettingsWidget->plCD->setFrameShape(QLabel::NoFrame);
+		switch (mBootType) {
+			case 1:
+				if (!boot)
+					mSettingsWidget->tlStatus->setText("FDD -> HDD");
+				else
+					mSettingsWidget->tlStatus->setText("HDD -> FDD");
+				mSettingsWidget->plFD->setFrameShape(QLabel::PopupPanel);
+				mSettingsWidget->plHD->setFrameShape(QLabel::PopupPanel);
+				break;
+			case 3:
+				if (!boot)
+					mSettingsWidget->tlStatus->setText("FDD -> Built-in HDD");
+				else if (boot == 1)
+					mSettingsWidget->tlStatus->setText("Built-in HDD -> FDD");
+				else if (boot == 2)
+					mSettingsWidget->tlStatus->setText("FDD -> Second HDD");
+				else
+					mSettingsWidget->tlStatus->setText("Second HDD -> FDD");
+				mSettingsWidget->plFD->setFrameShape(QLabel::PopupPanel);
+				mSettingsWidget->plHD->setFrameShape(QLabel::PopupPanel);
+				break;
+			case 5:
+				if (!boot)
+					mSettingsWidget->tlStatus->setText("FDD -> HDD -> CD-ROM");
+				else if (boot == 1)
+					mSettingsWidget->tlStatus->setText("HDD -> FDD -> CD-ROM");
+				else if (boot == 2)
+					mSettingsWidget->tlStatus->setText("FDD -> CD-ROM -> HDD");
+				else if (boot == 3)
+					mSettingsWidget->tlStatus->setText("HDD -> CD-ROM -> FDD");
+				else if (boot == 4)
+					mSettingsWidget->tlStatus->setText("CD-ROM -> FDD -> HDD");
+				else
+					mSettingsWidget->tlStatus->setText("CD-ROM -> HDD -> FDD");
+				mSettingsWidget->plFD->setFrameShape(QLabel::PopupPanel);
+				mSettingsWidget->plHD->setFrameShape(QLabel::PopupPanel);
+				mSettingsWidget->plCD->setFrameShape(QLabel::PopupPanel);
+				break;
+		}
+	}
 	if (action == 1) {
 		snd--;
 		if (snd < 0) snd = 1;
@@ -696,10 +751,8 @@ void KToshiba::updateWidgetStatus(int action)
 		mousepad--;
 		if (mousepad < 0) mousepad = 1;
 		mousePad();
-		if (!mousepad)
-			mStatusWidget->wsStatus->raiseWidget(2);
-		else if (mousepad)
-			mStatusWidget->wsStatus->raiseWidget(3);
+		int mpad = ((mousepad == 0)? 2 : 3);
+		mStatusWidget->wsStatus->raiseWidget(mpad);
 	}
 	if (action == 11) {
 		speakerVolume();
@@ -739,6 +792,8 @@ void KToshiba::brightDown()
 
 void KToshiba::doSuspendToDisk()
 {
+	// TODO: When suspending to Disk the interface gets closed,
+	// I need to find a way when we're back from Suspend State
 	QString helper = KStandardDirs::findExe("ktosh_helper");
 	if (helper.isEmpty()) {
 		KMessageBox::sorry(0, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
@@ -793,31 +848,19 @@ void KToshiba::lockScreen()
 
 void KToshiba::toggleWireless()
 {
-	QString helper = KStandardDirs::findExe("ktosh_helper");
-	if (helper.isEmpty()) {
-		KMessageBox::sorry(0, i18n("Could not change wireless status because ktosh_helper cannot be found.\n"
-						   "Please make sure that it is installed correctly."),
-						   i18n("KToshiba"));
+	int swtch = mDriver->getWirelessSwitch();
+	if (!swtch) {
+		KMessageBox::sorry(0, i18n("In order to deactivate the wireless interface"
+						   " the wireless antenna switch must be turned on"), i18n("Wireless"));
 		return;
-	}
-
-	KProcess proc;
-	if (wireless) {
-		proc << "ktosh_helper" << "--enable";
-		proc.start(KProcess::DontCare);
-		proc.detach();
-		KPassivePopup::message(i18n("KToshiba"), 
-							   i18n("Wireless interface up"),
-							   SmallIcon("messagebox_info", 20), this, i18n("Info"), 5000);
 	} else
-	if (!wireless) {
-		proc << "ktosh_helper" << "--disable";
-		proc.start(KProcess::DontCare);
-		proc.detach();
-		KPassivePopup::message(i18n("KToshiba"), 
-							   i18n("Wireless interface down"),
-							   SmallIcon("messagebox_info", 20), this, i18n("Info"), 5000);
-	}
+	if (swtch == 1)
+		mDriver->setWirelessPower(wireless);
+
+	QString w = ((wireless == 1)? i18n("up") : i18n("down"));
+	KPassivePopup::message(i18n("KToshiba"),
+						   i18n("Wireless interface %1").arg(w),
+						   SmallIcon("messagebox_info", 20), this, i18n("Wireless"), 5000);
 }
 
 void KToshiba::mousePad()
@@ -832,300 +875,8 @@ void KToshiba::mousePad()
 
 void KToshiba::setModel()
 {
-	QString mod;
+	QString mod = modelID(mDriver->machineID());
 
-	int id = mDriver->machineID();
-
-	switch (id) {
-		case 0xfc00:
-			mod = "Satellite 2140CDS/2180CDT/2675DVD";
-			break;
-		case 0xfc01:
-			mod = "Satellite 2710xDVD";
-			break;
-		case 0xfc02:
-			mod = "Satellite Pro 4270CDT/4280CDT/4300CDT/4340CDT";
-			break;
-		case 0xfc04:
-			mod = "Portege 3410CT/3440CT";
-			break;
-		case 0xfc08:
-			mod = "Satellite 2100CDS/CDT 1550CDS";
-			break;
-		case 0xfc09:
-			mod = "Satellite 2610CDT, 2650XDVD";
-			break;
-		case 0xfc0a:
-			mod = "Portage 7140";
-			break;
-		case 0xfc0b:
-			mod = "Satellite Pro 4200";
-			break;
-		case 0xfc0c:
-			mod = "Tecra 8100x";
-			break;
-		case 0xfc0f:
-			mod = "Satellite 2060CDS/CDT";
-			break;
-		case 0xfc10:
-			mod = "Satellite 2550/2590";
-			break;
-		case 0xfc11:
-			mod = "Portage 3110CT";
-			break;
-		case 0xfc12:
-			mod = "Portage 3300CT";
-			break;
-		case 0xfc13:
-			mod = "Portage 7020CT";
-			break;
-		case 0xfc15:
-			mod = "Satellite 4030/4030X/4050/4060/4070/4080/4090/4100X CDS/CDT";
-			break;
-		case 0xfc17:
-			mod = "Satellite 2520/2540 CDS/CDT";
-			break;
-		case 0xfc18:
-			mod = "Satellite 4000/4010 XCDT";
-			break;
-		case 0xfc19:
-			mod = "Satellite 4000/4010/4020 CDS/CDT";
-			break;
-		case 0xfc1a:
-			mod = "Tecra 8000x";
-			break;
-		case 0xfc1c:
-			mod = "Satellite 2510CDS/CDT";
-			break;
-		case 0xfc1d:
-			mod = "Portage 3020x";
-			break;
-		case 0xfc1f:
-			mod = "Portage 7000CT/7010CT";
-			break;
-		case 0xfc39:
-			mod = "T2200SX";
-			break;
-		case 0xfc40:
-			mod = "T4500C";
-			break;
-		case 0xfc41:
-			mod = "T4500";
-			break;
-		case 0xfc45:
-			mod = "T4400SX/SXC";
-			break;
-		case 0xfc51:
-			mod = "Satellite 2210CDT/2770XDVD";
-			break;
-		case 0xfc52:
-			mod = "Satellite 2775DVD/Dynabook Satellite DB60P/4DA";
-			break;
-		case 0xfc53:
-			mod = "Portage 7200CT/7220CT/Satellite 4000CDT";
-			break;
-		case 0xfc54:
-			mod = "Satellite 2800DVD";
-			break;
-		case 0xfc56:
-			mod = "Portage 3480CT";
-			break;
-		case 0xfc57:
-			mod = "Satellite 2250CDT";
-			break;
-		case 0xfc5a:
-			mod = "Satellite Pro 4600";
-			break;
-		case 0xfc5d:
-			mod = "Satellite 2805";
-			break;
-		case 0xfc5f:
-			mod = "T3300SL";
-			break;
-		case 0xfc61:
-			mod = "Tecra 8200";
-			break;
-		case 0xfc64:
-			mod = "Satellite 1800";
-			break;
-		case 0xfc69:
-			mod = "T1900C";
-			break;
-		case 0xfc6a:
-			mod = "T1900";
-			break;
-		case 0xfc6d:
-			mod = "T1850C";
-			break;
-		case 0xfc6e:
-			mod = "T1850";
-			break;
-		case 0xfc6f:
-			mod = "T1800";
-			break;
-		case 0xfc72:
-			mod = "Satellite 1800";
-			break;
-		case 0xfc7e:
-			mod = "T4600C";
-			break;
-		case 0xfc7f:
-			mod = "T4600";
-			break;
-		case 0xfc8a:
-			mod = "T6600C";
-			break;
-		case 0xfc91:
-			mod = "T2400CT";
-			break;
-		case 0xfc97:
-			mod = "T4800CT";
-			break;
-		case 0xfc99:
-			mod = "T4700CS";
-			break;
-		case 0xfc9b:
-			mod = "T4700CT";
-			break;
-		case 0xfc9d:
-			mod = "T1950";
-			break;
-		case 0xfc9e:
-			mod = "T3400/T3400CT";
-			break;
-		case 0xfcb2:
-			mod = "Libretto 30CT";
-			break;
-		case 0xfcba:
-			mod = "T2150";
-			break;
-		case 0xfcbe:
-			mod = "T4850CT";
-			break;
-		case 0xfcc0:
-			mod = "Satellite Pro 420x";
-			break;
-		case 0xfcc1:
-			mod = "Satellite 100x";
-			break;
-		case 0xfcc3:
-			mod = "Tecra 710x/720x";
-			break;
-		case 0xfcc6:
-			mod = "Satellite Pro 410x";
-			break;
-		case 0xfcca:
-			mod = "Satellite Pro 400x";
-			break;
-		case 0xfccb:
-			mod = "Portage 610CT";
-			break;
-		case 0xfccc:
-			mod = "Tecra 700x";
-			break;
-		case 0xfccf:
-			mod = "T4900CT";
-			break;
-		case 0xfcd0:
-			mod = "Satellite 300x";
-			break;
-		case 0xfcd1:
-			mod = "Tecra 750CDT";
-			break;
-		case 0xfcd3:
-			mod = "Tecra 730XCDT";
-			break;
-		case 0xfcd4:
-			mod = "Tecra 510x";
-			break;
-		case 0xfcd5:
-			mod = "Satellite 200x";
-			break;
-		case 0xfcd7:
-			mod = "Satellite Pro 430x";
-			break;
-		case 0xfcd8:
-			mod = "Tecra 740x";
-			break;
-		case 0xfcd9:
-			mod = "Portage 660CDT";
-			break;
-		case 0xfcda:
-			mod = "Tecra 730CDT";
-			break;
-		case 0xfcdb:
-			mod = "Portage 620CT";
-			break;
-		case 0xfcdc:
-			mod = "Portage 650CT";
-			break;
-		case 0xfcdd:
-			mod = "Satellite 110x";
-			break;
-		case 0xfcdf:
-			mod = "Tecra 500x";
-			break;
-		case 0xfce0:
-			mod = "Tecra 780DVD";
-			break;
-		case 0xfce2:
-			mod = "Satellite 300x";
-			break;
-		case 0xfce3:
-			mod = "Satellite 310x";
-			break;
-		case 0xfce4:
-			mod = "Satellite Pro 490x";
-			break;
-		case 0xfce5:
-			mod = "Libretto 100CT";
-			break;
-		case 0xfce6:
-			mod = "Libretto 70CT";
-			break;
-		case 0xfce7:
-			mod = "Tecra 540x/550x";
-			break;
-		case 0xfce8:
-			mod = "Satellite Pro 470x/480x";
-			break;
-		case 0xfce9:
-			mod = "Tecra 750DVD";
-			break;
-		case 0xfcea:
-			mod = "Libretto 60";
-			break;
-		case 0xfceb:
-			mod = "Libretto 50CT";
-			break;
-		case 0xfcec:
-			mod = "Satellite 320x/330x/Satellite 2500CDS";
-			break;
-		case 0xfced:
-			mod = "Tecra 520x/530x";
-			break;
-		case 0xfcef:
-			mod = "Satellite 220x, Satellite Pro 440x/460x";
-			break;
-		case 0xfcf7:
-			mod = "Satellite Pro A10";
-			break;
-		case 0xfcf8:
-			mod = "Satellite A25";
-			break;
-		case 0xfcff:
-			mod = "Tecra M2";
-			break;
-		case -1:
-			KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-							i18n("Could not get model id.\nWeird"));
-			break;
-		default:
-			mod = "UNKNOWN";
-			QString modelID = "Model_ID";
-			KMessageBox::information(0, i18n("Please send the model name and this id %1 to:\n"
-									 "coproscefalo@gmail.com").arg(id), i18n("Model Name"), modelID);
-	}
 	this->contextMenu()->insertTitle( mod, 0, 0 );
 }
 
@@ -1147,10 +898,10 @@ void KToshiba::mode()
 
 void KToshiba::doBluetooth()
 {
-	int bt = mDriver->getBluetooth();
-
-	if (!bt) {
+	if (!mDriver->getBluetooth()) {
 		this->contextMenu()->setItemEnabled(6, FALSE);
+		kdDebug() << "KToshiba::doBluetooth(): "
+				  << "No Bluetooth device found" << endl;
 		return;
 	} else
 	if (!bluetooth || (btstart && !bluetooth)) {
@@ -1166,21 +917,31 @@ void KToshiba::doBluetooth()
 
 void KToshiba::checkSystem()
 {
-	// TODO: Add SelectBay stuff here
+
 	if (wstrig == false)
 		mWirelessSwitch = mDriver->getWirelessSwitch();
+	if (baytrig == false)
+		bay = mDriver->getBayDevice(1);
 
 	if (mWirelessSwitch != mOldWirelessSwitch) {
-		if (mWirelessSwitch == -1) {
+		if (mWirelessSwitch < 0)
 			wstrig = true;
-			return;
-		} else
-		if (mWirelessSwitch)
-			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned on"),
+		else if (wstrig == false) {
+			QString s = ((mWirelessSwitch == 1)? i18n("on") : i18n("off"));
+			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
 							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
-		else if (!mWirelessSwitch)
-			KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned off"),
-							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
+		}
+	}
+
+	if (bay < 0)
+		baytrig = true;
+	else if (baytrig == false)
+		checkSelectBay();
+
+	if ((wstrig == true) && (baytrig == true)) {
+		mSystemTimer->stop();
+		disconnect( mSystemTimer );
+		return;
 	}
 
 	mOldWirelessSwitch = mWirelessSwitch;
@@ -1230,7 +991,7 @@ void KToshiba::checkSelectBay()
 		if (removed == 1)
 			return;
 
-		int device = mDriver->bayStatus(1);
+		int device = mDriver->getBayDevice(1);
 		if ((device == HCI_ATAPI) || (device == HCI_IDE)) {
 			int res = KMessageBox::warningContinueCancel(0, i18n("Please umount all filesystems on the "
 											   "SelectBay device, if any."), i18n("SelectBay"));

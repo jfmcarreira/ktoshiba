@@ -3,6 +3,9 @@
  * Copyright (c) 1998,1999  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
  * $Log$
+ * Revision 1.5  2005/05/21 15:56:14  coproscefalo
+ * added boot priority code and misc changes
+ *
  * Revision 1.4  2005/05/12 15:42:34  coproscefalo
  * Released 0.6
  *
@@ -98,7 +101,10 @@ enum {
 	HCI_800_600         = 0x01,
 	HCI_1024_768        = 0x02,
 	HCI_1024_600        = 0x03,
-	HCI_800_480         = 0x04
+	HCI_800_480         = 0x04,
+	HCI_1400_1050       = 0x06,
+	HCI_1600_1200       = 0x07,
+	HCI_1280_600        = 0x08
 };
 
 enum {
@@ -148,9 +154,10 @@ enum {
 
 enum {
 	HCI_BLUETOOTH_CHECK = 0x0000,
-	HCI_WIRELESS_SWITCH = 0x0001,
+	HCI_WIRELESS_CHECK  = 0x0001,
 	HCI_BLUETOOTH_CTRL  = 0x0040,
-	HCI_BLUETOOTH_POWER = 0x0080
+	HCI_BLUETOOTH_POWER = 0x0080,
+	HCI_WIRELESS_POWER  = 0x0200
 };
 
 

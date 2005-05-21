@@ -34,8 +34,6 @@
 #define USAGE \
 "Usage: ktosh_helper [option]\n\n\
 Where options are:\n\
-\t--enable        Enables the wireless device.\n\
-\t--disable       Disables the wireless device.\n\
 \t--std           Activates Suspend To Disk.\n\
 \t--str           Activates Suspend To RAM.\n\
 \t--unregister    Try to unregister the device from the IDE driver.\n\
@@ -76,10 +74,6 @@ int selectBayUnregister()
 	if (err == -1)
 		return -1;
 
-	//	KMessageBox::queuedMessageBox(0, KMessageBox::Error,
-	//								  i18n("Unable to unregister the device in\n"
-	//									   "the SelectBay, please re-lock."), i18n("SelectBay"));
-
 	close(fd);
 
 	return err;
@@ -112,11 +106,7 @@ int selectBayRescan()
 
 	if (err == -1)
 		return -1;
-	//	KMessageBox::queuedMessageBox(0, KMessageBox::Error,
-	//								  i18n("Error rescanning the IDE bus."), i18n("SelectBay"));
 
-	//KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-	//							  i18n("Device succesfully inserted into SelectBay."), i18n("SelectBay"));
 	close(fd);
 
 	return err;
@@ -130,24 +120,6 @@ int main(int argc, char **argv)
 
 	::close(0);	// we're setuid - this is just in case
 	for (i = 1; i < argc; i++)
-	if (strcmp(argv[i], "--enable") == 0 || strcmp(argv[i], "-enable") == 0 || strcmp(argv[i], "-e") == 0) {
-		sync();
-		sync();
-		::setuid(::geteuid());
-		::execl("/bin/sh", "-c", "/sbin/ifdown", "eth0", 0);
-		::execl("/bin/sh", "-c", "/sbin/ifup", "ath0", 0);
-		::execl("/bin/sh", "-c", "/sbin/ifup", "wlan0", 0);
-		exit(0);
-	} else 
-	if (strcmp(argv[i], "--disable") == 0 || strcmp(argv[i], "-disable") == 0 || strcmp(argv[i], "-d") == 0) {
-		sync();
-		sync();
-		::setuid(::geteuid());
-		::execl("/bin/sh", "-c", "/sbin/ifdown", "ath0", 0);
-		::execl("/bin/sh", "-c", "/sbin/ifdown", "wlan0", 0);
-		::execl("/bin/sh", "-c", "/sbin/ifup", "eth0", 0);
-		exit(0);
-	} else
 	if (strcmp(argv[i], "--std") == 0 || strcmp(argv[i], "--suspend-to-disk") == 0) {
 		sync();
 		sync();
@@ -155,7 +127,7 @@ int main(int argc, char **argv)
 		if (fd < 0) exit(1);
 		write(fd, "4", 1);
 		close(fd);
-        	setuid(getuid());	// drop all priority asap
+		setuid(getuid());	// drop all priority asap
 		exit(0);
 	} else
 	if (strcmp(argv[i], "--str") == 0 || strcmp(argv[i], "--suspend-to-ram") == 0) {
@@ -165,7 +137,7 @@ int main(int argc, char **argv)
 		if (fd < 0) exit(1);
 		write(fd, "3", 1);
 		close(fd);
-        	setuid(getuid());	// drop all priority asap
+		setuid(getuid());	// drop all priority asap
 		exit(0);
 	} else
 	if (strcmp(argv[i], "--unregister") == 0 || strcmp(argv[i], "-unregister") == 0 || strcmp(argv[i], "-u") == 0) {

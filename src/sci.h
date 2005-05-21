@@ -11,6 +11,9 @@
  *   not to make any modifications and use it as it stands.
  *
  * $Log$
+ * Revision 1.6  2005/05/21 15:56:14  coproscefalo
+ * added boot priority code and misc changes
+ *
  * Revision 1.5  2005/05/12 15:42:34  coproscefalo
  * Released 0.6
  *
@@ -193,7 +196,7 @@ enum {
 	SCI_TIME_55         = 0x4000,
 	SCI_TIME_60         = 0x8000
 };
-	
+
 enum {
 	SCI_FD_HD_CDROM     = 0x0000,
 	SCI_HD_FD_CDROM     = 0x0001,

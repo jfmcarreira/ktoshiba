@@ -17,3 +17,12 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+#ifndef MODEL_ID_H
+#define MODEL_ID_H
+
+#include <qstring.h>
+
+QString modelID(int);
+
+#endif // MODEL_ID_H

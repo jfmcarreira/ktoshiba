@@ -34,12 +34,12 @@ extern "C" {
 
 // Taken from toshiba_acpi
 #define HCI_LCD_BRIGHTNESS_BITS		3
-#define HCI_LCD_BRIGHTNESS_SHIFT	(16-HCI_LCD_BRIGHTNESS_BITS)
+#define HCI_LCD_BRIGHTNESS_SHIFT	(16 - HCI_LCD_BRIGHTNESS_BITS)
 #define HCI_LCD_BRIGHTNESS_LEVELS	(1 << HCI_LCD_BRIGHTNESS_BITS)
 
 /**
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.6
+ * @version 0.7
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -86,7 +86,11 @@ public:
 	 * Checks System Event FIFO for hotkeys.
 	 * @return @p value holding the hotkey id
 	 */
-	int systemEvent();
+	int getSystemEvent();
+	/**
+	 * Enables the System Event
+	 */
+	void enableSystemEvent();
 	/**
 	 * Gets the machine ID number.
 	 * @return @p value holding the machine id
@@ -124,16 +128,26 @@ public:
 	 */
 	void systemLocks(int *lock, int bay);
 	/**
-	 * Gets the device attached to the selectbay.
-	 * @param bay the int holding the desired select bay
+	 * Gets the device attached to the desired bay.
+	 * @param bay the int holding the desired bay
 	 * @return @p the int holding the current device
 	 */
-	int bayStatus(int bay);
+	int getBayDevice(int bay);
 	/**
 	 * Verifies the wireless antenna switch.
 	 * @return @p the int holding the status
 	 */
 	int getWirelessSwitch();
+	/**
+	 * Gets the current wireless power state.
+	 * @return @p the int holding the current state
+	 */
+	int getWirelessPower();
+	/**
+	 * Sets the wireless device to on/off.
+	 * @param state the int holding the desired state
+	 */
+	void setWirelessPower(int state);
 	/**
 	 * Verifies the Bluetooth device availability.
 	 * @return @p the int holding the device status
@@ -169,55 +183,71 @@ public:
 	 */
 	void setDisplayAutoOff(int time);
 	/**
-	 * Checks the availability of SpeedStep Technology
+	 * Checks the availability of SpeedStep Technology.
 	 * @return @p the int holding the current mode
 	 */
 	int getSpeedStep();
 	/**
-	 * Sets the SpeedStep mode of operation
+	 * Sets the SpeedStep mode of operation.
 	 * @param mode the int holding the desired mode
 	 */
 	void setSpeedStep(int mode);
 	/**
-	 * Checks the availability of Hyper-Threading Thechnology
+	 * Checks the availability of Hyper-Threading Thechnology.
 	 * @return @p the int holding the current status
 	 */
 	int getHyperThreading();
 	/**
-	 * Enables/Disables the Hyper-Threading operation
+	 * Enables/Disables the Hyper-Threading operation.
 	 * @param status the int holding the current status
 	 */
 	void setHyperThreading(int status);
 	/**
-	 * Gets the Battery Save Mode type
+	 * Gets the Battery Save Mode type.
 	 * @return @p the int holding the BSM type
 	 */
 	int getBatterySaveModeType();
 	/**
-	 * Gets the current speaker volume
+	 * Gets the current speaker volume.
 	 * @return @p the int holding the current volume
 	 */
 	int getSpeakerVolume();
 	/**
-	 * Sets the speaker to the desired value
+	 * Sets the speaker to the desired value.
 	 * @param vol the int holding the desired volume
 	 */
 	void setSpeakerVolume(int vol);
 	/**
-	 * Gets the current fan status
+	 * Gets the current fan status.
 	 * @return @p the int holdint the current fan state
 	 */
 	int getFan();
 	/**
-	 * Sets the fan On/Off
+	 * Sets the fan On/Off.
 	 * @param state the int holding the desired state
 	 */
 	void setFan(int state);
+	/**
+	 * Gets the system boot method supported.
+	 * @return @p the int holding the method supported
+	 */
+	int getBootType();
+	/**
+	 * Gets the current system boot method.
+	 * @return @p the int holdint the current boot method
+	 */
+	int getBootMethod();
+	/**
+	 * Sets the system to the desired boot method.
+	 * @param method the int holding the current boot method
+	 */
+	void setBootMethod(int method);
+public:
+	bool hotkeys;
 private:
 	SMMRegisters reg;
 	FILE *str;
 	int mFd;
-	bool hotkeys;
 };
 
 #endif // KTOSHIBA_SMMINTERFACE_H
