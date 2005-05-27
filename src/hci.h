@@ -3,6 +3,9 @@
  * Copyright (c) 1998,1999  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
  * $Log$
+ * Revision 1.6  2005/05/27 03:13:24  coproscefalo
+ * Added SpeedStep frequencies plus some other changes
+ *
  * Revision 1.5  2005/05/21 15:56:14  coproscefalo
  * added boot priority code and misc changes
  *
@@ -72,6 +75,7 @@ enum {
 	HCI_FLAT_PANEL       = 0x0011,
 	HCI_SELECT_STATUS    = 0x0014,
 	HCI_SYSTEM_EVENT     = 0x0016,
+	HCI_PANEL_STATUS     = 0x0019,
 	HCI_FIR_STATUS       = 0x001b,
 	HCI_VIDEO_OUT        = 0x001c,
 	HCI_HOTKEY_EVENT     = 0x001e,

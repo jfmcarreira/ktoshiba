@@ -52,16 +52,11 @@ int main(int argc, char **argv)
                     0, "http://qsynaptics.sourceforge.net/" );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
+
     KApplication app;
-    KToshiba *mainWin = 0;
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-    mainWin = new KToshiba();
+    KToshiba *mainWin = new KToshiba();
     app.setMainWidget( mainWin );
     mainWin->show();
-
-    args->clear();
 
     return app.exec();
 }

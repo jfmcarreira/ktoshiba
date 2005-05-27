@@ -244,7 +244,7 @@ void KCMToshibaModule::timeout()
         init = true;
 	}
 
-	int time = 0, perc = 0, acConnected = 0;
+	int time = 0, perc = -1, acConnected = -1;
 
 	m_Driver->batteryStatus(&time, &perc);
 	acConnected = m_Driver->acPowerStatus();
@@ -254,6 +254,6 @@ void KCMToshibaModule::timeout()
 	else
 		m_KCMKToshibaGeneral->mKPBattery->setValue(perc);
 	m_KCMKToshibaGeneral->kledBat->setState((perc == -1)? KLed::Off : KLed::On);
-    m_KCMKToshibaGeneral->kledAC->setState((acConnected == 1)? KLed::On : KLed::Off);
+    m_KCMKToshibaGeneral->kledAC->setState((acConnected == 4)? KLed::On : KLed::Off);
 }
 

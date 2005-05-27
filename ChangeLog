@@ -1,3 +1,35 @@
+2005-05-26 Azael Avalos <neftali@utep.edu>
+	* New model id thanks to Nicolas Ternisien
+	* Removed some global variables and made them local
+	* Added two new fuctions to KToshibaSMMInterface,
+	  set/getBackLight() to turn on/off the LCD backlight
+	* Added function to toggle backlight and updated KCM
+	* Added new popup menu to activate SpeedStep frequencies
+	  and moved menu code to own function
+
+2005-05-25 Azael Avalos <neftali@utep.edu>
+	* New model id added thanks to Mihai
+	* Removed error issued when no events are present
+	* Added return instead of break on parts that don't
+	  need to call the performFnAction() function
+	* Removed unused variable and updated displayPixmap()
+	  function
+
+2005-05-23 Azael Avalos <neftali@utep.edu>
+	* Small check on displayPixmap() function
+	  regarding AC power
+	* Changed AC code and added a check
+	* Some small check for MousePad
+
+2005-05-22 Azael Avalos <neftali@utep.edu>
+	* Removed some unused lines from main.cpp file
+	* Added three more hotkey codes
+	  (S-Video Out, I-Button, E-Button)
+	* Updated MousePad code
+
+2005-05-21 Azael Avalos <neftali@utep.edu>
+	* Small update to hci.h file
+
 2005-05-20 Azael Avalos <neftali@utep.edu>
 	* Finished Boot Method code and updated KCM
 	* Updated wireless disabling/enabling code and
