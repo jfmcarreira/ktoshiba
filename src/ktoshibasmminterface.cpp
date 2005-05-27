@@ -47,11 +47,12 @@ bool KToshibaSMMInterface::openInterface()
 	}
 
 	SciOpenInterface();
-	//if (SciOpenInterface() == SCI_FAILURE) {
-	//	kdError() << "KToshibaSMMInterface::openInterface(): "
-	//			  << "Failed to open SCI interface" << endl;
-	//	return false;
-	//}
+	SciCloseInterface();
+	if (SciOpenInterface() == SCI_FAILURE) {
+		kdError() << "KToshibaSMMInterface::openInterface(): "
+				  << "Failed to open SCI interface" << endl;
+		return false;
+	}
 
 	return true;
 }
@@ -125,8 +126,6 @@ void KToshibaSMMInterface::batteryStatus(int *time, int *percent)
 
 int KToshibaSMMInterface::acPowerStatus()
 {
-	int status = 0;
-
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_AC_ADAPTOR;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
@@ -134,11 +133,8 @@ int KToshibaSMMInterface::acPowerStatus()
 				  << "Could not get AC Power status" << endl;
 		return -1;
 	}
-	status = (reg.ecx & 0xffff);
-	if (status == 4)
-		return 1;
 
-	return 0;
+	return (reg.ecx & 0xffff);
 }
 
 int KToshibaSMMInterface::procStatus()
@@ -162,11 +158,6 @@ int KToshibaSMMInterface::getSystemEvent()
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_SYSTEM_EVENT;
 	int ev = HciFunction(&reg);
-	if (ev == HCI_FIFO_EMPTY) {
-		kdError() << "KToshibaSMMInterface::getSystemEvent(): "
-				  << "FIFO Empty" << endl;
-		return 0;
-	} else
 	if ((ev == HCI_FAILURE) || (ev == HCI_NOT_SUPPORTED)) {
 		/**
 		 *	ISSUE: After enabling the hotkeys again, we receice
@@ -182,14 +173,16 @@ int KToshibaSMMInterface::getSystemEvent()
 			reg.ecx = HCI_ENABLE;
 			if (HciFunction(&reg) != HCI_SUCCESS)
 				kdError() << "ToshibaSMMInterface::getSystemEvent(): "
-						  << "Could no enable Hotkeys" << endl;
+						  << "Could not enable Hotkeys" << endl;
 
 			kdDebug() << "KToshibaSMMInterface::getSystemEvent(): "
 					  << "Re-enabled Hotkeys" << endl;
 			hotkeys = true;
 		}
 		return 1;
-	}
+	} else
+	if (ev == HCI_FIFO_EMPTY)
+		return 0;
 
 	return (int) (reg.ecx & 0xffff);
 }
@@ -201,10 +194,10 @@ void KToshibaSMMInterface::enableSystemEvent()
 	reg.ecx = HCI_ENABLE;
 	if (HciFunction(&reg) != HCI_SUCCESS)
 		kdError() << "ToshibaSMMInterface::enableSystemEvent(): "
-				  << "Could no enable Hotkeys" << endl;
+				  << "Could not enable Hotkeys" << endl;
 
 	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
-			  << "Re-enabled Hotkeys" << endl;
+			  << "Enabled Hotkeys" << endl;
 }
 
 int KToshibaSMMInterface::machineID()
@@ -217,7 +210,19 @@ int KToshibaSMMInterface::machineID()
 	return id;
 }
 
-void KToshibaSMMInterface::pointingDevice(int status)
+int KToshibaSMMInterface::getPointingDevice()
+{
+	reg.ebx = SCI_POINTING_DEVICE;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getPointingDevice(): "
+				  << "Could not get pointing device status" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setPointingDevice(int status)
 {
 	reg.ebx = SCI_POINTING_DEVICE;
 	if (status)
@@ -331,7 +336,8 @@ int KToshibaSMMInterface::getBayDevice(int bay)
 		reg.ecx = HCI_5INCH_DOCK;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getBayDevice(): "
-				  << "Could not get Bay device" << endl;
+				  << "Could not get Bay device or "
+				  << "laptop doesn't have one" << endl;
 		return -1;
 	}
 
@@ -350,7 +356,7 @@ int KToshibaSMMInterface::getWirelessSwitch()
 		return -1;
 	}
 
-	return (reg.ecx & 0xff);
+	return (int) (reg.ecx & 0xff);
 }
 
 int KToshibaSMMInterface::getBluetooth()
@@ -682,7 +688,34 @@ void KToshibaSMMInterface::setWirelessPower(int state)
 	if (HciFunction(&reg) != HCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setWirelessPower(): "
 				  << "Could not set wireless power "
-				  << ((state == 1)? "on" : "off") << endl;
+				  << ((state == 1)? "On" : "Off") << endl;
+}
+
+int KToshibaSMMInterface::getBackLight()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_BACKLIGHT;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBackLight(): "
+				  << "Could not get LCD backlight status" << endl;
+		return -1;
+	}
+
+	return (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setBackLight(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_BACKLIGHT;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setBackLight(): "
+				  << "Could not turn LCD backlight " 
+				  << ((state == 1)? "On" : "Off") << endl;
 }
 
 

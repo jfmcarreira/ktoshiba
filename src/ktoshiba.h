@@ -27,6 +27,7 @@
 
 #include <qtimer.h>
 #include <qpixmap.h>
+#include <qpopupmenu.h>
 
 #include <ksystemtray.h>
 #include <kprocess.h>
@@ -76,11 +77,13 @@ protected slots:
 	void mode();
 	void doBluetooth();
 	void checkSystem();
+	void setFreq(int);
 protected:
 	KToshibaSMMInterface *mDriver;
 	KAboutApplication *mAboutWidget;
 	KInstance *instance;
 	DCOPClient mClient;
+	QPopupMenu *mSpeed;
 	SynapticsSHM *m_synShm;
 	bool mFullBat;
 	int mBatStatus;
@@ -89,12 +92,17 @@ protected:
 	int mCryBat;
 	int mBatSave;
 	int mOldBatSave;
+	int mBatType;
 	int mWirelessSwitch;
 	int mOldWirelessSwitch;
 	int mAudioPlayer;
-	int mBatType;
 	int mBootType;
+	int mPad;
+	int mHT;
+	int mSS;
+	int mAC;
 private:
+	void doMenu();
 	void brightUp();
 	void brightDown();
 	void lockScreen();
@@ -107,6 +115,7 @@ private:
 	void speakerVolume();
 	void toggleFan();
 	void checkSelectBay();
+	void toogleBackLight();
 	int bayUnregister();
 	int bayRescan();
 	SettingsWidget *mSettingsWidget;
@@ -120,8 +129,6 @@ private:
 	QString noChargeIcon;
 	QString chargeIcon;
 	bool mInterfaceAvailable;
-	bool mWire;
-	bool changed;
 	bool lowtrig;
 	bool crytrig;
 	bool battrig;
@@ -135,7 +142,6 @@ private:
 	int perc;
 	int oldperc;
 	int snd;
-	int battery;
 	int video;
 	int mousepad;
 	int bright;
@@ -148,8 +154,8 @@ private:
 	int vol;
 	int sblock;
 	int removed;
-	int bay;
 	int boot;
+	int svideo;
 };
 
 #endif // KTOSHIBA_H

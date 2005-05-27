@@ -74,7 +74,7 @@ public:
 	void batteryStatus(int *time, int *percent);
 	/**
 	 * Get the AC status.
-	 * @return @p one when connected, zero disconnected
+	 * @return @p four when connected, three disconnected
 	 */
 	int acPowerStatus();
 	/**
@@ -97,10 +97,15 @@ public:
 	 */
 	int machineID();
 	/**
-	 * Enables/Disables MousePad.
-	 * @param status the int to activate/deactivate the mousepad
+	 * Gets the status of the mouse pad.
+	 * @return @p the int holding the status of the mouse pad
 	 */
-	void pointingDevice(int status);
+	int getPointingDevice();
+	/**
+	 * Enables/Disables mouse pad.
+	 * @param status the int to activate/deactivate the mouse pad
+	 */
+	void setPointingDevice(int status);
 	/**
 	 * Gets the current battery save mode.
 	 * @return @p value holding the current save mode
@@ -242,6 +247,16 @@ public:
 	 * @param method the int holding the current boot method
 	 */
 	void setBootMethod(int method);
+	/**
+	 * Gets the current state of the LCD backlight.
+	 * @return @p the int holding the current state
+	 */
+	int getBackLight();
+	/**
+	 * Sets the LCD backlight On/Off.
+	 * @param state the int holding the desired state
+	 */
+	void setBackLight(int state);
 public:
 	bool hotkeys;
 private:
