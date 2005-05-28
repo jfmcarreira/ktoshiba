@@ -48,7 +48,7 @@ int main(int argc, char **argv)
                     "trenn@suse.de", 0 );
     about.addCredit( "KDE Team", I18N_NOOP("Some ideas and pieces of code"), 0,
                     "http://www.kde.org/" );
-    about.addCredit( "ksynaptics Team", I18N_NOOP("Code for enabling/disablig TouchPad"),
+    about.addCredit( "ksynaptics Team", I18N_NOOP("Code for enabling/disabling TouchPad"),
                     0, "http://qsynaptics.sourceforge.net/" );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );

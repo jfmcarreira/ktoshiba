@@ -123,7 +123,6 @@ void KCMToshibaModule::load()
 				( config.readNumEntry("Fn_F8", 9) );
 	m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem
 				( config.readNumEntry("Fn_F9", 10) );
-	bsm = config.readNumEntry("Battery_Save_Mode", 2);
 	m_KCMKToshibaGeneral->processorComboBox->setCurrentItem
 				( config.readNumEntry("Processing_Speed", 1) );
 	m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem
@@ -248,6 +247,8 @@ void KCMToshibaModule::timeout()
 
 	m_Driver->batteryStatus(&time, &perc);
 	acConnected = m_Driver->acPowerStatus();
+
+	acConnected = ((acConnected == -1)? SciACPower() : m_Driver->acPowerStatus());
 
 	if (perc == -1)
 		m_KCMKToshibaGeneral->mKPBattery->setValue(0);

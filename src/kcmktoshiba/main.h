@@ -57,7 +57,6 @@ private:
 	KToshibaSMMInterface *m_Driver;
 	QTimer *mTimer;
 	bool m_InterfaceAvailable;
-	int bsm;
 };
 
 #endif // KCMTOSHIBA_MAIN_H
