@@ -129,10 +129,6 @@ KToshiba::KToshiba()
         kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
 
     KConfig mConfig(CONFIG_FILE);
-    //mConfig.setGroup("General");
-    //if (mInterfaceAvailable)
-    //    mConfig.writeEntry("Autostart", true);
-    //mConfig.sync();
     loadConfiguration(&mConfig);
 
     doMenu();
@@ -238,78 +234,78 @@ void KToshiba::displayAbout()
 
 void KToshiba::powerStatus()
 {
-	KConfig mConfig(CONFIG_FILE);
-	mConfig.setGroup("KToshiba");
-	loadConfiguration(&mConfig);
-	mDriver->batteryStatus(&time, &perc);
-	pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("KToshiba");
+    loadConfiguration(&mConfig);
+    mDriver->batteryStatus(&time, &perc);
+    pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
 
-	if (mFullBat && perc == 100 && !battrig) {
-		KMessageBox::queuedMessageBox(0, KMessageBox::Information,
+    if (mFullBat && perc == 100 && !battrig) {
+        KMessageBox::queuedMessageBox(0, KMessageBox::Information,
 									  i18n("Your battery is now fully charged."), i18n("Laptop Battery"));
-		battrig = true;
-	}
+        battrig = true;
+    }
 
-	if (SCI_MINUTE(time) == mLowBat && SCI_HOUR(time) == 0 && pow == 3 && !lowtrig) {
-		KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
+    if (SCI_MINUTE(time) == mLowBat && SCI_HOUR(time) == 0 && pow == 3 && !lowtrig) {
+        KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-		lowtrig = true;
-	} else
-	if (SCI_MINUTE(time) == mCryBat && SCI_HOUR(time) == 0 && pow == 3 && !crytrig) {
-		KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
+        lowtrig = true;
+    } else
+    if (SCI_MINUTE(time) == mCryBat && SCI_HOUR(time) == 0 && pow == 3 && !crytrig) {
+        KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-		crytrig = true;
-	} else
-	if (SCI_MINUTE(time) == 0 && SCI_HOUR(time) == 0 && pow == 3)
-		KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
+        crytrig = true;
+    } else
+    if (SCI_MINUTE(time) == 0 && SCI_HOUR(time) == 0 && pow == 3)
+        KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
 
-	if (SCI_MINUTE(time) > lowtrig && pow == 4) {
-		if (battrig && (perc < 100))
-			battrig = false;
-		if (lowtrig)
-			lowtrig = false;
-		if (crytrig)
-			crytrig = false;
-	}
+    if (SCI_MINUTE(time) > lowtrig && pow == 4) {
+        if (battrig && (perc < 100))
+            battrig = false;
+        if (lowtrig)
+            lowtrig = false;
+        if (crytrig)
+            crytrig = false;
+    }
 
-	if (mBatSave != mOldBatSave || pow != oldpow) {
-		switch (mBatSave) {
-			case 0:			// USER SETTINGS or LONG LIFE
-				if (mBatType == 3)
-					bright = 0;	// Semi-Bright
-				else if (mBatType == 2)
-					bsmUserSettings(&mConfig);
-				break;
-			case 1:			// LOW POWER or NORMAL LIFE
-				if (pow == 3)
-					bright = 0;	// Semi-Bright
-				else if (pow == 4)
-					bright = 3;	// Bright
-				break;
-			case 2:			// FULL POWER or FULL LIFE
-				if (pow == 3)
-					bright = 3;	// Bright
-				else if (pow == 4)
-					bright = 7;	// Super-Bright
-				break;
-		}
-		mDriver->setBrightness(bright);
-	}
+    if (mBatSave != mOldBatSave || pow != oldpow) {
+        switch (mBatSave) {
+            case 0:			// USER SETTINGS or LONG LIFE
+                if (mBatType == 3)
+                    bright = 0;	// Semi-Bright
+                else if (mBatType == 2)
+                    bsmUserSettings(&mConfig);
+                break;
+            case 1:			// LOW POWER or NORMAL LIFE
+                if (pow == 3)
+                    bright = 0;	// Semi-Bright
+                else if (pow == 4)
+                    bright = 3;	// Bright
+                break;
+            case 2:			// FULL POWER or FULL LIFE
+                if (pow == 3)
+                    bright = 3;	// Bright
+                else if (pow == 4)
+                    bright = 7;	// Super-Bright
+                break;
+        }
+        mDriver->setBrightness(bright);
+    }
 
-	if (mOldBatStatus != mBatStatus) {
-		mPowTimer->stop();
-		mPowTimer->start(mBatStatus * 1000);
-	}
+    if (mOldBatStatus != mBatStatus) {
+        mPowTimer->stop();
+        mPowTimer->start(mBatStatus * 1000);
+    }
 
-	bool changed = oldpow != pow || oldperc != perc || oldtime != time;
-	oldperc = perc;
-	oldpow = pow;
-	oldtime = time;
-	mOldBatStatus = mBatStatus;
-	mOldBatSave = mBatSave;
-	if (changed)
-		displayPixmap();
+    bool changed = oldpow != pow || oldperc != perc || oldtime != time;
+    oldperc = perc;
+    oldpow = pow;
+    oldtime = time;
+    mOldBatStatus = mBatStatus;
+    mOldBatSave = mBatSave;
+    if (changed)
+        displayPixmap();
 }
 
 void KToshiba::bsmUserSettings(KConfig *k)
@@ -340,12 +336,10 @@ void KToshiba::bsmUserSettings(KConfig *k)
 void KToshiba::displayPixmap()
 {
 	int new_code = 0;
-	int ac = mDriver->acPowerStatus();
+	// if we got a fail from HCI, try SCI function
+	int ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
 	mDriver->batteryStatus(&time, &perc);
 
-	// if we got a fail from HCI, try SCI function
-	if (ac == -1)
-		ac = SciACPower();
 
 	if (!mInterfaceAvailable)
 		new_code = 1;
@@ -1042,38 +1036,38 @@ void KToshiba::toggleFan()
 
 void KToshiba::checkSelectBay()
 {
-	mDriver->systemLocks(&sblock, 1);
+    mDriver->systemLocks(&sblock, 1);
 
-	if (sblock == HCI_LOCKED) {
-		if (removed == 0)
-			return;
-		if (bayRescan() < 0)
-			return;
-		removed = 0;
-		return;
-	} else
-	if (sblock == HCI_UNLOCKED) {
-		if (removed == 1)
-			return;
+    if (sblock == HCI_LOCKED) {
+        if (removed == 0)
+            return;
+        if (bayRescan() < 0)
+            return;
+        removed = 0;
+        return;
+    } else
+    if (sblock == HCI_UNLOCKED) {
+        if (removed == 1)
+            return;
 
-		int device = mDriver->getBayDevice(1);
-		if ((device == HCI_ATAPI) || (device == HCI_IDE)) {
-			int res = KMessageBox::warningContinueCancel(0, i18n("Please umount all filesystems on the "
+        int device = mDriver->getBayDevice(1);
+        if ((device == HCI_ATAPI) || (device == HCI_IDE)) {
+            int res = KMessageBox::warningContinueCancel(0, i18n("Please umount all filesystems on the "
 											   "SelectBay device, if any."), i18n("SelectBay"));
-			if (res == KMessageBox::Continue) {
-				if (bayUnregister() < 0) {
-					KMessageBox::queuedMessageBox(0, KMessageBox::Error,
+            if (res == KMessageBox::Continue) {
+                if (bayUnregister() < 0) {
+                    KMessageBox::queuedMessageBox(0, KMessageBox::Error,
 											  i18n("Unable to remove device in\n"
 												   "the SelectBay. Please re-lock."), i18n("SelectBay"));
-					return;
-				}
+                    return;
+                }
 
-				KMessageBox::queuedMessageBox(0, KMessageBox::Information,
+                KMessageBox::queuedMessageBox(0, KMessageBox::Information,
 											  i18n("Device in the SelectBay sucessfully removed."), i18n("SelectBay"));
-				removed = 1;
-			}
-		}
-	}
+                removed = 1;
+            }
+        }
+    }
 }
 
 int KToshiba::bayUnregister()
@@ -1132,7 +1126,7 @@ void KToshiba::toogleBackLight()
 
 void KToshiba::setFreq(int state)
 {
-	mDriver->setSpeedStep(state);
+    mDriver->setSpeedStep(state);
 }
 
 
