@@ -1,0 +1,471 @@
+# translation of KToshiba.po to Hungarian
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Károly Barcza <kbarcza@blackpanther.hu>, 2004.
+msgid ""
+msgstr ""
+"Project-Id-Version: Ktoshiba\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-05-30 22:59-0600\n"
+"PO-Revision-Date: 2005-02-08 14:03+0100\n"
+"Last-Translator: Károly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
+"Language-Team: Hungarian <translator@vgroup.hu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr ""
+"Charles Barcza \n"
+"www.blackpanther.hu"
+
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr "kbarcza@blackpanther.hu"
+
+#: main.cpp:54
+msgid "kcmktoshiba"
+msgstr "kcmktoshiba"
+
+#: main.cpp:55
+msgid "KDE Control Module for Toshiba Laptops"
+msgstr "KDE beállítómodul Toshiba noteszgépekhez"
+
+#: main.cpp:59
+msgid "Original author"
+msgstr "Eredeti szerző"
+
+#: main.cpp:235
+msgid "Helpful information about the KToshiba module."
+msgstr "Információ a(z) KToshiba modulról."
+
+#: rc.cpp:3
+#, no-c-format
+msgid "KToshiba: General Options"
+msgstr "KToshiba: általános beállítások"
+
+#: rc.cpp:6
+#, fuzzy, no-c-format
+msgid "&General Options"
+msgstr "KToshiba: általános beállítások"
+
+#: rc.cpp:9
+#, no-c-format
+msgid "System Power"
+msgstr "Rendszer tápellátás"
+
+#: rc.cpp:12
+#, no-c-format
+msgid "Remaining battery capacity:"
+msgstr "Az akkumulátor tartalékai:"
+
+#: rc.cpp:15
+#, no-c-format
+msgid "AC"
+msgstr "AC"
+
+#: rc.cpp:18
+#, no-c-format
+msgid "Bat"
+msgstr "Bat"
+
+#: rc.cpp:21
+#, no-c-format
+msgid "Battery Options"
+msgstr "Akkumlátor Opciók:"
+
+#: rc.cpp:24
+#, no-c-format
+msgid "Check &battery status every:"
+msgstr "Akkumulátor állapot ellenőrzés:"
+
+#: rc.cpp:27
+#, no-c-format
+msgid " sec"
+msgstr " perc"
+
+#: rc.cpp:30
+#, no-c-format
+msgid ""
+"This is used to determine how often the program will check the battery status"
+msgstr ""
+"This is used to determine how often the program will check the battery status"
+
+#: rc.cpp:33
+#, no-c-format
+msgid "&Low battery trigger:"
+msgstr "Alalcsony akkumlátor szint:"
+
+#: rc.cpp:36 rc.cpp:42
+#, no-c-format
+msgid " min"
+msgstr " mp"
+
+#: rc.cpp:39
+#, no-c-format
+msgid "This is used to enable the low battery information"
+msgstr "A lemerült akku információ bekapcsolához ezt használd"
+
+#: rc.cpp:45
+#, no-c-format
+msgid "This is used to enable the critical battery information"
+msgstr "Kritikus akku szint információhoz ezt használd "
+
+#: rc.cpp:48
+#, no-c-format
+msgid "C&ritical battery trigger:"
+msgstr "Kritikus akku feszültség:"
+
+#: rc.cpp:51
+#, no-c-format
+msgid "&Notify when battery becomes fully charged"
+msgstr "&Értesítsen ha az akummlátor teljesen feltöltődött"
+
+#: rc.cpp:54
+#, no-c-format
+msgid "Alt+N"
+msgstr "Alt+N"
+
+#: rc.cpp:57
+#, no-c-format
+msgid "Other Options"
+msgstr "Egyéb beállítások"
+
+#: rc.cpp:60
+#, fuzzy, no-c-format
+msgid "Setup &Helper Application"
+msgstr "A segédprogram beállítása"
+
+#: rc.cpp:63
+#, fuzzy, no-c-format
+msgid "Alt+H"
+msgstr "Alt+N"
+
+#: rc.cpp:66
+#, no-c-format
+msgid "This button can be used to enable the helper application"
+msgstr "Ezzel lehet bekapcsolni az beállítások segédprogramját"
+
+#: rc.cpp:69
+#, no-c-format
+msgid "&Enable Bluetooth device at program start-up"
+msgstr ""
+
+#: rc.cpp:72
+#, fuzzy, no-c-format
+msgid "Alt+E"
+msgstr "Alt+N"
+
+#: rc.cpp:75
+#, fuzzy, no-c-format
+msgid "Select &Audio Application:"
+msgstr "A segédprogram beállítása"
+
+#: rc.cpp:78
+#, no-c-format
+msgid "amaroK"
+msgstr ""
+
+#: rc.cpp:81
+#, no-c-format
+msgid "JuK"
+msgstr ""
+
+#: rc.cpp:84
+#, no-c-format
+msgid "XMMS"
+msgstr ""
+
+#: rc.cpp:87
+#, no-c-format
+msgid ""
+"This can be used to select prefered audio application to use with front "
+"panel buttons"
+msgstr ""
+
+#: rc.cpp:90
+#, no-c-format
+msgid "Fn-Ke&y"
+msgstr ""
+
+#: rc.cpp:93
+#, no-c-format
+msgid "Fn-&Esc:"
+msgstr ""
+
+#: rc.cpp:96
+#, no-c-format
+msgid "Fn-F&3:"
+msgstr ""
+
+#: rc.cpp:99
+#, no-c-format
+msgid "Fn-F&4:"
+msgstr ""
+
+#: rc.cpp:102
+#, no-c-format
+msgid "Fn-F&7:"
+msgstr ""
+
+#: rc.cpp:105
+#, no-c-format
+msgid "Fn-F&8:"
+msgstr ""
+
+#: rc.cpp:108
+#, no-c-format
+msgid "Fn-F&9:"
+msgstr ""
+
+#: rc.cpp:111
+#, no-c-format
+msgid "Fn-F&5:"
+msgstr ""
+
+#: rc.cpp:114
+#, no-c-format
+msgid "Fn-F&1:"
+msgstr ""
+
+#: rc.cpp:117
+#, no-c-format
+msgid "Fn-F&2:"
+msgstr ""
+
+#: rc.cpp:120
+#, no-c-format
+msgid "Fn-F&6:"
+msgstr ""
+
+#: rc.cpp:123 rc.cpp:168 rc.cpp:213 rc.cpp:258 rc.cpp:303 rc.cpp:348
+#: rc.cpp:393 rc.cpp:438 rc.cpp:483 rc.cpp:528 rc.cpp:588
+#, no-c-format
+msgid "Disabled"
+msgstr ""
+
+#: rc.cpp:126 rc.cpp:171 rc.cpp:216 rc.cpp:261 rc.cpp:306 rc.cpp:351
+#: rc.cpp:396 rc.cpp:441 rc.cpp:486 rc.cpp:531
+#, no-c-format
+msgid "Unmute/Mute"
+msgstr ""
+
+#: rc.cpp:129 rc.cpp:174 rc.cpp:219 rc.cpp:264 rc.cpp:309 rc.cpp:354
+#: rc.cpp:399 rc.cpp:444 rc.cpp:489 rc.cpp:534
+#, no-c-format
+msgid "Lock Screen"
+msgstr ""
+
+#: rc.cpp:132 rc.cpp:177 rc.cpp:222 rc.cpp:267 rc.cpp:312 rc.cpp:357
+#: rc.cpp:402 rc.cpp:447 rc.cpp:492 rc.cpp:537
+#, no-c-format
+msgid "Battery Save Mode"
+msgstr ""
+
+#: rc.cpp:135 rc.cpp:180 rc.cpp:225 rc.cpp:270 rc.cpp:315 rc.cpp:360
+#: rc.cpp:405 rc.cpp:450 rc.cpp:495 rc.cpp:540
+#, no-c-format
+msgid "Suspend To RAM"
+msgstr ""
+
+#: rc.cpp:138 rc.cpp:183 rc.cpp:228 rc.cpp:273 rc.cpp:318 rc.cpp:363
+#: rc.cpp:408 rc.cpp:453 rc.cpp:498 rc.cpp:543
+#, no-c-format
+msgid "Suspend To Disk"
+msgstr ""
+
+#: rc.cpp:141 rc.cpp:186 rc.cpp:231 rc.cpp:276 rc.cpp:321 rc.cpp:366
+#: rc.cpp:411 rc.cpp:456 rc.cpp:501 rc.cpp:546
+#, no-c-format
+msgid "Video Out"
+msgstr ""
+
+#: rc.cpp:144 rc.cpp:189 rc.cpp:234 rc.cpp:279 rc.cpp:324 rc.cpp:369
+#: rc.cpp:414 rc.cpp:459 rc.cpp:504 rc.cpp:549
+#, no-c-format
+msgid "Bright Down"
+msgstr ""
+
+#: rc.cpp:147 rc.cpp:192 rc.cpp:237 rc.cpp:282 rc.cpp:327 rc.cpp:372
+#: rc.cpp:417 rc.cpp:462 rc.cpp:507 rc.cpp:552
+#, no-c-format
+msgid "Bright Up"
+msgstr ""
+
+#: rc.cpp:150 rc.cpp:195 rc.cpp:240 rc.cpp:285 rc.cpp:330 rc.cpp:375
+#: rc.cpp:420 rc.cpp:465 rc.cpp:510 rc.cpp:555
+#, no-c-format
+msgid "Wireless"
+msgstr ""
+
+#: rc.cpp:153 rc.cpp:198 rc.cpp:243 rc.cpp:288 rc.cpp:333 rc.cpp:378
+#: rc.cpp:423 rc.cpp:468 rc.cpp:513 rc.cpp:558
+#, no-c-format
+msgid "Enable/Disable MousePad"
+msgstr ""
+
+#: rc.cpp:156 rc.cpp:201 rc.cpp:246 rc.cpp:291 rc.cpp:336 rc.cpp:381
+#: rc.cpp:426 rc.cpp:471 rc.cpp:516 rc.cpp:561
+#, no-c-format
+msgid "Speaker Volume"
+msgstr ""
+
+#: rc.cpp:159 rc.cpp:204 rc.cpp:249 rc.cpp:294 rc.cpp:339 rc.cpp:384
+#: rc.cpp:429 rc.cpp:474 rc.cpp:519 rc.cpp:564
+#, no-c-format
+msgid "Fan On/Off"
+msgstr ""
+
+#: rc.cpp:162 rc.cpp:207 rc.cpp:252 rc.cpp:297 rc.cpp:342 rc.cpp:387
+#: rc.cpp:432 rc.cpp:477 rc.cpp:522 rc.cpp:567
+#, no-c-format
+msgid "Boot Method"
+msgstr ""
+
+#: rc.cpp:165 rc.cpp:210 rc.cpp:255 rc.cpp:300 rc.cpp:345 rc.cpp:390
+#: rc.cpp:435 rc.cpp:480 rc.cpp:525 rc.cpp:570
+#, no-c-format
+msgid "Backlight On/Off"
+msgstr ""
+
+#: rc.cpp:573
+#, fuzzy, no-c-format
+msgid "Battery &Save Mode"
+msgstr "Akkumlátor Opciók:"
+
+#: rc.cpp:576
+#, no-c-format
+msgid ""
+"The options shown here are only aplicable when the <b>Battery Save Mode</b> "
+"is set to <i>User Settings</i>."
+msgstr ""
+
+#: rc.cpp:579
+#, no-c-format
+msgid "&Display Auto Off:"
+msgstr ""
+
+#: rc.cpp:582
+#, no-c-format
+msgid "C&ooling Method:"
+msgstr ""
+
+#: rc.cpp:585
+#, no-c-format
+msgid "Enabled"
+msgstr ""
+
+#: rc.cpp:591
+#, no-c-format
+msgid "&HDD Auto Off:"
+msgstr ""
+
+#: rc.cpp:594 rc.cpp:633
+#, fuzzy, no-c-format
+msgid "30 min"
+msgstr " mp"
+
+#: rc.cpp:597 rc.cpp:636
+#, fuzzy, no-c-format
+msgid "20 min"
+msgstr " mp"
+
+#: rc.cpp:600 rc.cpp:639
+#, fuzzy, no-c-format
+msgid "15 min"
+msgstr " mp"
+
+#: rc.cpp:603 rc.cpp:642
+#, fuzzy, no-c-format
+msgid "10 min"
+msgstr " mp"
+
+#: rc.cpp:606 rc.cpp:645
+#, fuzzy, no-c-format
+msgid "05 min"
+msgstr " mp"
+
+#: rc.cpp:609 rc.cpp:648
+#, fuzzy, no-c-format
+msgid "03 min"
+msgstr " mp"
+
+#: rc.cpp:612 rc.cpp:651
+#, fuzzy, no-c-format
+msgid "01 min"
+msgstr " mp"
+
+#: rc.cpp:615
+#, no-c-format
+msgid "Max Performance"
+msgstr ""
+
+#: rc.cpp:618
+#, fuzzy, no-c-format
+msgid "Battery Optimized"
+msgstr "Akkumlátor Opciók:"
+
+#: rc.cpp:621
+#, no-c-format
+msgid "Performance"
+msgstr ""
+
+#: rc.cpp:624
+#, no-c-format
+msgid "Super Bright"
+msgstr ""
+
+#: rc.cpp:627
+#, no-c-format
+msgid "Bright"
+msgstr ""
+
+#: rc.cpp:630
+#, no-c-format
+msgid "Semi Bright"
+msgstr ""
+
+#: rc.cpp:654
+#, no-c-format
+msgid "&CPU Sleep Mode:"
+msgstr ""
+
+#: rc.cpp:657
+#, no-c-format
+msgid "High"
+msgstr ""
+
+#: rc.cpp:660
+#, no-c-format
+msgid "Low"
+msgstr ""
+
+#: rc.cpp:663
+#, no-c-format
+msgid "&Processing Speed:"
+msgstr ""
+
+#: rc.cpp:666
+#, no-c-format
+msgid "LCD Brightn&ess:"
+msgstr ""
+
+#: rc.cpp:669
+#, no-c-format
+msgid ""
+"Cannot find the <i>Toshiba System Managment Mode Driver</i>. If this is a "
+"Toshiba Laptop, make sure the <b>toshiba</b> driver module loads without "
+"failures."
+msgstr ""
+"Nem található a <i>Toshiba Rendszerkezelő Meghajtó</i>. Ha ez egy Toshiba "
+"laptop, próbálja meg betuölteni a <b>toshiba</b> modult, enélkül nem fog "
+"működni."
+
+#, fuzzy
+#~ msgid "KToshiba"
+#~ msgstr "kcmktoshiba"
