@@ -190,18 +190,29 @@ void KToshiba::doMenu()
                                      SLOT( doBluetooth() ), 0, 6, 6 );
     this->contextMenu()->insertSeparator( 7 );
 
+    mHyper = new QPopupMenu( this, i18n("HyperThreading") );
+    mHyper->insertItem( SmallIcon("disabled"), i18n("Disabled"), 0 );
+    mHyper->insertItem( SmallIcon(""), i18n("Enabled - PM aware"), 1 );
+    mHyper->insertItem( SmallIcon(""), i18n("Enabled - No PM aware"), 2 );
+    this->contextMenu()->insertItem( SmallIcon(""), i18n("Hyper-Threading"), mHyper, 8, 8 );
+    if (mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
+    else if (mHT >= 0)
+        connect( mHyper, SIGNAL( activated(int) ), this, SLOT( setHyper(int) ) );
+
+    this->contextMenu()->insertSeparator( 9 );
+
     mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
     mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
     mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
     mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
-    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 8, 8 );
-    if (mSS < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
-    else if (mSS <= 1)
+    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 10, 10 );
+    if (mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
+    else if (mSS >= 0)
         connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( setFreq(int) ) );
 
-    this->contextMenu()->insertSeparator( 9 );
+    this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( i18n("&About KToshiba"), this,
-                                     SLOT( displayAbout() ), 0, 10, 10 );
+                                     SLOT( displayAbout() ), 0, 12, 12 );
 }
 
 void KToshiba::doConfig()
@@ -1122,9 +1133,14 @@ void KToshiba::toogleBackLight()
         mDriver->setBackLight(1);
 }
 
-void KToshiba::setFreq(int state)
+void KToshiba::setFreq(int freq)
 {
-    mDriver->setSpeedStep(state);
+    mDriver->setSpeedStep(freq);
+}
+
+void KToshiba::setHyper(int state)
+{
+    mDriver->setHyperThreading(state);
 }
 
 
