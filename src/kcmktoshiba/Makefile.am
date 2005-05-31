@@ -13,3 +13,6 @@ kcm_ktoshibam_la_LIBADD = ../libktoshibasmminterface.la $(LIB_KDEUI)
 # this is where the desktop file will go
 
 xdg_apps_DATA = ktoshibam.desktop
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kcmktoshiba.pot

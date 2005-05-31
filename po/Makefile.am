@@ -1,1 +1,1 @@
-POFILES = AUTO
+SUBDIRS = es fr hu

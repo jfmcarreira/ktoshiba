@@ -1,3 +1,6 @@
+2005-05-28 Azael Avalos <neftali@utep.edu>
+	* Added an AC check to KCM (again...)
+
 2005-05-27 Azael Avalos <neftali@utep.edu>
 	* Added French translation, thanks to Nicolas Ternisien
 	* Again a small AC update to displayPixmap() function and
