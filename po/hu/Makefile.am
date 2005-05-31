@@ -1,0 +1,5 @@
+
+KDE_LANG = hu
+SUBDIRS = $(AUTODIRS)
+
+POFILES = AUTO

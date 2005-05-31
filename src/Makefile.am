@@ -34,8 +34,4 @@ shelldesktop_DATA = ktoshiba.desktop
 ktosh_helper_SOURCES = ktosh_helper.cpp
 
 messages: rc.cpp
-	$(EXTRACTRC) `find . -name "*.rc" -o -name "*.ui"` > rc.cpp
-	LIST=`find . -name \*.h -o -name \*.cpp`; \
-	if test -n "$$LIST"; then \
-		 $(XGETTEXT) $$LIST -o $(podir)/ktoshiba.pot; \
-	fi
+	$(XGETTEXT) *.cpp -o $(podir)/ktoshiba.pot

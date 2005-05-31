@@ -50,6 +50,8 @@ int main(int argc, char **argv)
                     "http://www.kde.org/" );
     about.addCredit( "ksynaptics Team", I18N_NOOP("Code for enabling/disabling TouchPad"),
                     0, "http://qsynaptics.sourceforge.net/" );
+    about.addCredit( "Nicolas Ternisien", I18N_NOOP("French translation"),
+                    "nicolas.ternisien@gmail.com", 0 );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
 

@@ -1,0 +1,593 @@
+# translation of kcmktoshiba.po to español
+# Azael Avalos <coproscefalo@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmktoshiba\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-05-30 22:59-0600\n"
+"PO-Revision-Date: 2005-05-31 00:20-0600\n"
+"Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
+"Language-Team: español\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr "Neftalí Azael Avalos"
+
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr "neftali@utep.edu"
+
+#: kcmktoshiba/main.cpp:54
+msgid "kcmktoshiba"
+msgstr "kcmktoshiba"
+
+#: kcmktoshiba/main.cpp:55
+msgid "KDE Control Module for Toshiba Laptops"
+msgstr "Módulo de Control de KDE para el soporte del portátil Toshiba"
+
+#: kcmktoshiba/main.cpp:59
+msgid "Original author"
+msgstr "Autor Original"
+
+#: kcmktoshiba/main.cpp:235
+msgid "Helpful information about the KToshiba module."
+msgstr "Información acerca del modulo KToshiba"
+
+#: kcmktoshiba/kcmtoshiba_general.ui.h:27
+msgid ""
+"The helper cannot be found.\n"
+"Please make sure that it is installed corectly"
+msgstr ""
+"El programa auxiliar no pudo ser encontrado.\n"
+"Porfavor verifique que este ha sido instalado correctamente"
+
+#: kcmktoshiba/kcmtoshiba_general.ui.h:29
+#: kcmktoshiba/kcmtoshiba_general.ui.h:38
+#: kcmktoshiba/kcmtoshiba_general.ui.h:50
+msgid "KToshiba"
+msgstr "KToshiba"
+
+#: kcmktoshiba/kcmtoshiba_general.ui.h:36
+msgid ""
+"You will need to supply a root password to allow the privileges of "
+"ktosh_helper to change."
+msgstr ""
+"Se necesitara proveer la contraseña del administrador para cambiar los "
+"privilegios de ktosh_helper."
+
+#: kcmktoshiba/kcmtoshiba_general.ui.h:48
+msgid ""
+"The helper cannot be enabled because kdesu cannot be found.\n"
+"Please make sure that it is installed correctly."
+msgstr ""
+"El programa auxiliar no pudo ser habilitado porque kdesu no pudo ser "
+"encontrado.\n"
+"Porfavor verifique que este ha sido instalado correctamente."
+
+#: kcmktoshiba/kcmtoshiba_general.ui:17
+#, no-c-format
+msgid "KToshiba: General Options"
+msgstr "KToshiba: Opciones Generales"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:49
+#, no-c-format
+msgid "&General Options"
+msgstr "Opciones &Generales"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:60
+#, no-c-format
+msgid "System Power"
+msgstr "Batería del Sistema"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:74
+#, no-c-format
+msgid "Remaining battery capacity:"
+msgstr "Capacidad de batería restante:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:101
+#, no-c-format
+msgid "AC"
+msgstr "CA"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:130
+#, no-c-format
+msgid "Bat"
+msgstr "Bate"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:143
+#, no-c-format
+msgid "Battery Options"
+msgstr "Opciones de Batería"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:154
+#, no-c-format
+msgid "Check &battery status every:"
+msgstr "Verifica el estado de la &batería cada:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:165
+#, no-c-format
+msgid " sec"
+msgstr " seg"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:174
+#, no-c-format
+msgid ""
+"This is used to determine how often the program will check the battery "
+"status"
+msgstr ""
+"Esto es usado para determinar cada cuanto tiempo el programa verificara "
+"el estado de la batería"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:182
+#, no-c-format
+msgid "&Low battery trigger:"
+msgstr "Indicador de batería ba&ja:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:193
+#: kcmktoshiba/kcmtoshiba_general.ui:218
+#, no-c-format
+msgid " min"
+msgstr " min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:202
+#, no-c-format
+msgid "This is used to enable the low battery information"
+msgstr "Esto es usado para habilitar el indicador de batería baja"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:227
+#, no-c-format
+msgid "This is used to enable the critical battery information"
+msgstr "Esto es usado para habilitar el indicador de batería en estado critico"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:235
+#, no-c-format
+msgid "C&ritical battery trigger:"
+msgstr "Indicador de batería en estado c&ritico:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:246
+#, no-c-format
+msgid "&Notify when battery becomes fully charged"
+msgstr "&Notifica cuando la batería este completamente cargada"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:249
+#, no-c-format
+msgid "Alt+N"
+msgstr "Alt+N"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:259
+#, no-c-format
+msgid "Other Options"
+msgstr "Otras Opciones"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:270
+#, no-c-format
+msgid "Setup &Helper Application"
+msgstr "&Habilitar Programa Auxiliar"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:273
+#, no-c-format
+msgid "Alt+H"
+msgstr "Alt+H"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:276
+#, no-c-format
+msgid "This button can be used to enable the helper application"
+msgstr "Este botón puede ser utilizado para habilitar el programa auxiliar"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:284
+#, no-c-format
+msgid "&Enable Bluetooth device at program start-up"
+msgstr "Habilitar &Bluetooth al comienzo del programa"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:287
+#, no-c-format
+msgid "Alt+E"
+msgstr "Alt+E"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:295
+#, no-c-format
+msgid "Select &Audio Application:"
+msgstr "Selecciona la aplicación de &sonido:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:304
+#, no-c-format
+msgid "amaroK"
+msgstr "amaroK"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:309
+#, no-c-format
+msgid "JuK"
+msgstr "JuK"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:314
+#, no-c-format
+msgid "XMMS"
+msgstr "XMMS"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:321
+#, no-c-format
+msgid ""
+"This can be used to select prefered audio application to use with front "
+"panel buttons"
+msgstr ""
+"Esto puede ser usado para seleccionar el programa de sonido preferido "
+"para usarse con los botones del panel frontal"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:333
+#, no-c-format
+msgid "Fn-Ke&y"
+msgstr "Tecla-Fn"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:344
+#, no-c-format
+msgid "Fn-&Esc:"
+msgstr "Fn-&Esc"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:355
+#, no-c-format
+msgid "Fn-F&3:"
+msgstr "Fn-F&3:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:366
+#, no-c-format
+msgid "Fn-F&4:"
+msgstr "Fn-F&4:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:377
+#, no-c-format
+msgid "Fn-F&7:"
+msgstr "Fn-F&7:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:388
+#, no-c-format
+msgid "Fn-F&8:"
+msgstr "Fn-F&8:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:399
+#, no-c-format
+msgid "Fn-F&9:"
+msgstr "Fn-F&9:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:410
+#, no-c-format
+msgid "Fn-F&5:"
+msgstr "Fn-F&5:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:421
+#, no-c-format
+msgid "Fn-F&1:"
+msgstr "Fn-F&1:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:432
+#, no-c-format
+msgid "Fn-F&2:"
+msgstr "Fn-F&2:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:443
+#, no-c-format
+msgid "Fn-F&6:"
+msgstr "Fn-F&6:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:452
+#: kcmktoshiba/kcmtoshiba_general.ui:564
+#: kcmktoshiba/kcmtoshiba_general.ui:676
+#: kcmktoshiba/kcmtoshiba_general.ui:788
+#: kcmktoshiba/kcmtoshiba_general.ui:903
+#: kcmktoshiba/kcmtoshiba_general.ui:1015
+#: kcmktoshiba/kcmtoshiba_general.ui:1127
+#: kcmktoshiba/kcmtoshiba_general.ui:1239
+#: kcmktoshiba/kcmtoshiba_general.ui:1351
+#: kcmktoshiba/kcmtoshiba_general.ui:1463
+#: kcmktoshiba/kcmtoshiba_general.ui:1643
+#, no-c-format
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:460
+#: kcmktoshiba/kcmtoshiba_general.ui:572
+#: kcmktoshiba/kcmtoshiba_general.ui:684
+#: kcmktoshiba/kcmtoshiba_general.ui:796
+#: kcmktoshiba/kcmtoshiba_general.ui:911
+#: kcmktoshiba/kcmtoshiba_general.ui:1023
+#: kcmktoshiba/kcmtoshiba_general.ui:1135
+#: kcmktoshiba/kcmtoshiba_general.ui:1247
+#: kcmktoshiba/kcmtoshiba_general.ui:1359
+#: kcmktoshiba/kcmtoshiba_general.ui:1471
+#, no-c-format
+msgid "Unmute/Mute"
+msgstr "Desilenciador/Silenciador"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:468
+#: kcmktoshiba/kcmtoshiba_general.ui:580
+#: kcmktoshiba/kcmtoshiba_general.ui:692
+#: kcmktoshiba/kcmtoshiba_general.ui:804
+#: kcmktoshiba/kcmtoshiba_general.ui:919
+#: kcmktoshiba/kcmtoshiba_general.ui:1031
+#: kcmktoshiba/kcmtoshiba_general.ui:1143
+#: kcmktoshiba/kcmtoshiba_general.ui:1255
+#: kcmktoshiba/kcmtoshiba_general.ui:1367
+#: kcmktoshiba/kcmtoshiba_general.ui:1479
+#, no-c-format
+msgid "Lock Screen"
+msgstr "Bloquear Pantalla"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:476
+#: kcmktoshiba/kcmtoshiba_general.ui:588
+#: kcmktoshiba/kcmtoshiba_general.ui:700
+#: kcmktoshiba/kcmtoshiba_general.ui:812
+#: kcmktoshiba/kcmtoshiba_general.ui:927
+#: kcmktoshiba/kcmtoshiba_general.ui:1039
+#: kcmktoshiba/kcmtoshiba_general.ui:1151
+#: kcmktoshiba/kcmtoshiba_general.ui:1263
+#: kcmktoshiba/kcmtoshiba_general.ui:1375
+#: kcmktoshiba/kcmtoshiba_general.ui:1487
+#, no-c-format
+msgid "Battery Save Mode"
+msgstr "Modo de Ahorro de Batería"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:484
+#: kcmktoshiba/kcmtoshiba_general.ui:596
+#: kcmktoshiba/kcmtoshiba_general.ui:708
+#: kcmktoshiba/kcmtoshiba_general.ui:820
+#: kcmktoshiba/kcmtoshiba_general.ui:935
+#: kcmktoshiba/kcmtoshiba_general.ui:1047
+#: kcmktoshiba/kcmtoshiba_general.ui:1159
+#: kcmktoshiba/kcmtoshiba_general.ui:1271
+#: kcmktoshiba/kcmtoshiba_general.ui:1383
+#: kcmktoshiba/kcmtoshiba_general.ui:1495
+#, no-c-format
+msgid "Suspend To RAM"
+msgstr "Suspender a RAM"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:492
+#: kcmktoshiba/kcmtoshiba_general.ui:604
+#: kcmktoshiba/kcmtoshiba_general.ui:716
+#: kcmktoshiba/kcmtoshiba_general.ui:828
+#: kcmktoshiba/kcmtoshiba_general.ui:943
+#: kcmktoshiba/kcmtoshiba_general.ui:1055
+#: kcmktoshiba/kcmtoshiba_general.ui:1167
+#: kcmktoshiba/kcmtoshiba_general.ui:1279
+#: kcmktoshiba/kcmtoshiba_general.ui:1391
+#: kcmktoshiba/kcmtoshiba_general.ui:1503
+#, no-c-format
+msgid "Suspend To Disk"
+msgstr "Suspender a Disco"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:500
+#: kcmktoshiba/kcmtoshiba_general.ui:612
+#: kcmktoshiba/kcmtoshiba_general.ui:724
+#: kcmktoshiba/kcmtoshiba_general.ui:836
+#: kcmktoshiba/kcmtoshiba_general.ui:951
+#: kcmktoshiba/kcmtoshiba_general.ui:1063
+#: kcmktoshiba/kcmtoshiba_general.ui:1175
+#: kcmktoshiba/kcmtoshiba_general.ui:1287
+#: kcmktoshiba/kcmtoshiba_general.ui:1399
+#: kcmktoshiba/kcmtoshiba_general.ui:1511
+#, no-c-format
+msgid "Video Out"
+msgstr "Salida de Video"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:508
+#: kcmktoshiba/kcmtoshiba_general.ui:620
+#: kcmktoshiba/kcmtoshiba_general.ui:732
+#: kcmktoshiba/kcmtoshiba_general.ui:844
+#: kcmktoshiba/kcmtoshiba_general.ui:959
+#: kcmktoshiba/kcmtoshiba_general.ui:1071
+#: kcmktoshiba/kcmtoshiba_general.ui:1183
+#: kcmktoshiba/kcmtoshiba_general.ui:1295
+#: kcmktoshiba/kcmtoshiba_general.ui:1407
+#: kcmktoshiba/kcmtoshiba_general.ui:1519
+#, no-c-format
+msgid "Bright Down"
+msgstr "Bajar Brillo"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:516
+#: kcmktoshiba/kcmtoshiba_general.ui:628
+#: kcmktoshiba/kcmtoshiba_general.ui:740
+#: kcmktoshiba/kcmtoshiba_general.ui:852
+#: kcmktoshiba/kcmtoshiba_general.ui:967
+#: kcmktoshiba/kcmtoshiba_general.ui:1079
+#: kcmktoshiba/kcmtoshiba_general.ui:1191
+#: kcmktoshiba/kcmtoshiba_general.ui:1303
+#: kcmktoshiba/kcmtoshiba_general.ui:1415
+#: kcmktoshiba/kcmtoshiba_general.ui:1527
+#, no-c-format
+msgid "Bright Up"
+msgstr "Subir Brillo"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:532
+#: kcmktoshiba/kcmtoshiba_general.ui:644
+#: kcmktoshiba/kcmtoshiba_general.ui:756
+#: kcmktoshiba/kcmtoshiba_general.ui:868
+#: kcmktoshiba/kcmtoshiba_general.ui:983
+#: kcmktoshiba/kcmtoshiba_general.ui:1095
+#: kcmktoshiba/kcmtoshiba_general.ui:1207
+#: kcmktoshiba/kcmtoshiba_general.ui:1319
+#: kcmktoshiba/kcmtoshiba_general.ui:1431
+#: kcmktoshiba/kcmtoshiba_general.ui:1543
+#, no-c-format
+msgid "Enable/Disable MousePad"
+msgstr "Habilitar/Deshabilitar MousePad"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:540
+#: kcmktoshiba/kcmtoshiba_general.ui:652
+#: kcmktoshiba/kcmtoshiba_general.ui:764
+#: kcmktoshiba/kcmtoshiba_general.ui:876
+#: kcmktoshiba/kcmtoshiba_general.ui:991
+#: kcmktoshiba/kcmtoshiba_general.ui:1103
+#: kcmktoshiba/kcmtoshiba_general.ui:1215
+#: kcmktoshiba/kcmtoshiba_general.ui:1327
+#: kcmktoshiba/kcmtoshiba_general.ui:1439
+#: kcmktoshiba/kcmtoshiba_general.ui:1551
+#, no-c-format
+msgid "Speaker Volume"
+msgstr "Volumen de la bocina"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:548
+#: kcmktoshiba/kcmtoshiba_general.ui:660
+#: kcmktoshiba/kcmtoshiba_general.ui:772
+#: kcmktoshiba/kcmtoshiba_general.ui:884
+#: kcmktoshiba/kcmtoshiba_general.ui:999
+#: kcmktoshiba/kcmtoshiba_general.ui:1111
+#: kcmktoshiba/kcmtoshiba_general.ui:1223
+#: kcmktoshiba/kcmtoshiba_general.ui:1335
+#: kcmktoshiba/kcmtoshiba_general.ui:1447
+#: kcmktoshiba/kcmtoshiba_general.ui:1559
+#, no-c-format
+msgid "Fan On/Off"
+msgstr "Encendido/Apagado del abanico"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1579
+#, no-c-format
+msgid "Battery &Save Mode"
+msgstr "Modo de Ahorro de Batería"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1594
+#, no-c-format
+msgid ""
+"The options shown here are only aplicable when the <b>Battery Save Mode</"
+"b> is set to <i>User Settings</i>."
+msgstr ""
+"Las opciones que aquí se muestran tomaran efecto solamente si están "
+"activadas las <i>Opciones del Usuario</i> del <b>Modo de Ahorro de "
+"Batería</b>."
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1618
+#, no-c-format
+msgid "&Display Auto Off:"
+msgstr "Auto Apagado de la Pantalla:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1629
+#, no-c-format
+msgid "C&ooling Method:"
+msgstr "Metodo de Enfriamiento:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1638
+#, no-c-format
+msgid "Enabled"
+msgstr "Habilitado"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1655
+#, no-c-format
+msgid "&HDD Auto Off:"
+msgstr "Auto Apagado del Disco Duro:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1664
+#: kcmktoshiba/kcmtoshiba_general.ui:1753
+#, no-c-format
+msgid "30 min"
+msgstr "30 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1669
+#: kcmktoshiba/kcmtoshiba_general.ui:1758
+#, no-c-format
+msgid "20 min"
+msgstr "20 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1674
+#: kcmktoshiba/kcmtoshiba_general.ui:1763
+#, no-c-format
+msgid "15 min"
+msgstr "15 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1679
+#: kcmktoshiba/kcmtoshiba_general.ui:1768
+#, no-c-format
+msgid "10 min"
+msgstr "10 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1684
+#: kcmktoshiba/kcmtoshiba_general.ui:1773
+#, no-c-format
+msgid "05 min"
+msgstr "05 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1689
+#: kcmktoshiba/kcmtoshiba_general.ui:1778
+#, no-c-format
+msgid "03 min"
+msgstr "03 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1694
+#: kcmktoshiba/kcmtoshiba_general.ui:1783
+#, no-c-format
+msgid "01 min"
+msgstr "01 min"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1707
+#, no-c-format
+msgid "Max Performance"
+msgstr "Maximo Rendimiento"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1712
+#, no-c-format
+msgid "Battery Optimized"
+msgstr "Optimizado para Batería"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1717
+#, no-c-format
+msgid "Performance"
+msgstr "Rendimiento"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1730
+#, no-c-format
+msgid "Super Bright"
+msgstr "Super Brilloso"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1735
+#, no-c-format
+msgid "Bright"
+msgstr "Brilloso"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1740
+#, no-c-format
+msgid "Semi Bright"
+msgstr "Semi Brilloso"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1798
+#, no-c-format
+#, fuzzy
+msgid "&CPU Sleep Mode:"
+msgstr "Modo de Espera del CPU:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1807
+#, no-c-format
+msgid "High"
+msgstr "Alta"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1812
+#, no-c-format
+msgid "Low"
+msgstr "Baja"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1827
+#, no-c-format
+msgid "&Processing Speed:"
+msgstr "Velocidad de &Procesamiento:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1838
+#, no-c-format
+msgid "LCD Brightn&ess:"
+msgstr "Brillo del LCD:"
+
+#: kcmktoshiba/kcmtoshiba_general.ui:1855
+#, no-c-format
+msgid ""
+"Cannot find the <i>Toshiba System Managment Mode Driver</i>. If this is a "
+"Toshiba Laptop, make sure the <b>toshiba</b> driver module loads without "
+"failures."
+msgstr ""
+"No se pudo encontrar el <i>Controlador de Modo de Manejo del Sistema de "
+"Toshiba</i>. Sí esta es un portátil Toshiba verifique que el controlador "
+"<b>toshiba</b> sea cargado sin problemas."
+

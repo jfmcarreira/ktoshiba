@@ -67,7 +67,6 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 	m_Driver = new KToshibaSMMInterface(this);
 	m_InterfaceAvailable = m_Driver->openInterface();
 	mTimer = new QTimer(this);
-	mTimer->start(210);
 
 	load();
 
@@ -78,7 +77,10 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 	} else {
 		m_KCMKToshibaGeneral->tlOff->hide();
 		m_KCMKToshibaGeneral->frameMain->setEnabled(true);
+		m_AC = m_Driver->acPowerStatus();
 	}
+
+	mTimer->start(210);
 
 	connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
 	connect( mTimer, SIGNAL( timeout() ), SLOT( timeout() ) );
@@ -246,9 +248,8 @@ void KCMToshibaModule::timeout()
 	int time = 0, perc = -1, acConnected = -1;
 
 	m_Driver->batteryStatus(&time, &perc);
-	acConnected = m_Driver->acPowerStatus();
 
-	acConnected = ((acConnected == -1)? SciACPower() : m_Driver->acPowerStatus());
+	acConnected = ((m_AC == -1)? SciACPower() : m_Driver->acPowerStatus());
 
 	if (perc == -1)
 		m_KCMKToshibaGeneral->mKPBattery->setValue(0);
