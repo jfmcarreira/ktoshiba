@@ -78,12 +78,14 @@ protected slots:
 	void doBluetooth();
 	void checkSystem();
 	void setFreq(int);
+	void setHyper(int);
 protected:
 	KToshibaSMMInterface *mDriver;
 	KAboutApplication *mAboutWidget;
 	KInstance *instance;
 	DCOPClient mClient;
 	QPopupMenu *mSpeed;
+	QPopupMenu *mHyper;
 	SynapticsSHM *m_synShm;
 	bool mFullBat;
 	int mBatStatus;

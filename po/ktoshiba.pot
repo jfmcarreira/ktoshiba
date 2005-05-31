@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-30 22:59-0600\n"
+"POT-Creation-Date: 2005-05-31 13:20-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,223 +22,243 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: ktoshiba.cpp:182
+#: ktoshiba.cpp:181
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:185
+#: ktoshiba.cpp:184
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:187
+#: ktoshiba.cpp:186
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:190
+#: ktoshiba.cpp:189
 msgid "Enable &Bluetooth"
 msgstr ""
 
+#: ktoshiba.cpp:193
+msgid "HyperThreading"
+msgstr ""
+
 #: ktoshiba.cpp:194
-msgid "SpeedStep"
+msgid "Disabled"
 msgstr ""
 
 #: ktoshiba.cpp:195
-msgid "Dynamic"
+msgid "Enabled - PM aware"
 msgstr ""
 
 #: ktoshiba.cpp:196
-msgid "Always High"
+msgid "Enabled - No PM aware"
 msgstr ""
 
 #: ktoshiba.cpp:197
-msgid "Always Low"
-msgstr ""
-
-#: ktoshiba.cpp:198
-msgid "CPU Frequency"
+msgid "Hyper-Threading"
 msgstr ""
 
 #: ktoshiba.cpp:204
+msgid "SpeedStep"
+msgstr ""
+
+#: ktoshiba.cpp:205
+msgid "Dynamic"
+msgstr ""
+
+#: ktoshiba.cpp:206
+msgid "Always High"
+msgstr ""
+
+#: ktoshiba.cpp:207
+msgid "Always Low"
+msgstr ""
+
+#: ktoshiba.cpp:208
+msgid "CPU Frequency"
+msgstr ""
+
+#: ktoshiba.cpp:214
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:245
+#: ktoshiba.cpp:255
 msgid "Your battery is now fully charged."
 msgstr ""
 
-#: ktoshiba.cpp:245
+#: ktoshiba.cpp:255
 msgid "Laptop Battery"
 msgstr ""
 
-#: ktoshiba.cpp:250
+#: ktoshiba.cpp:260
 msgid "The battery state has changed to low"
 msgstr ""
 
-#: ktoshiba.cpp:255
+#: ktoshiba.cpp:265
 msgid "The battery state has changed to critical"
 msgstr ""
 
-#: ktoshiba.cpp:260
+#: ktoshiba.cpp:270
 msgid "I'm Gone..."
 msgstr ""
 
-#: ktoshiba.cpp:427
+#: ktoshiba.cpp:437
 msgid "No interface available"
 msgstr ""
 
-#: ktoshiba.cpp:431
+#: ktoshiba.cpp:441
 msgid "Plugged in - fully charged"
 msgstr ""
 
-#: ktoshiba.cpp:437
+#: ktoshiba.cpp:447
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:441
+#: ktoshiba.cpp:451
 msgid "Plugged in - no battery"
-msgstr ""
-
-#: ktoshiba.cpp:443
-#, c-format
-msgid "Plugged in - %1% charged"
-msgstr ""
-
-#: ktoshiba.cpp:450
-msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr ""
 
 #: ktoshiba.cpp:453
 #, c-format
+msgid "Plugged in - %1% charged"
+msgstr ""
+
+#: ktoshiba.cpp:460
+msgid "Running on batteries - %1% charged (%2:%3 time left)"
+msgstr ""
+
+#: ktoshiba.cpp:463
+#, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:689
+#: ktoshiba.cpp:699
 msgid "Long Life"
 msgstr ""
 
-#: ktoshiba.cpp:690
+#: ktoshiba.cpp:700
 msgid "User Settings"
 msgstr ""
 
-#: ktoshiba.cpp:694
+#: ktoshiba.cpp:704
 msgid "Normal Life"
 msgstr ""
 
-#: ktoshiba.cpp:695
+#: ktoshiba.cpp:705
 msgid "Low Power"
 msgstr ""
 
-#: ktoshiba.cpp:699
+#: ktoshiba.cpp:709
 msgid "Full Life"
 msgstr ""
 
-#: ktoshiba.cpp:700
+#: ktoshiba.cpp:710
 msgid "Full Power"
 msgstr ""
 
-#: ktoshiba.cpp:853
+#: ktoshiba.cpp:863
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:855
+#: ktoshiba.cpp:865
 msgid "STD"
 msgstr ""
 
-#: ktoshiba.cpp:861 ktoshiba.cpp:885
+#: ktoshiba.cpp:871 ktoshiba.cpp:895
 msgid ""
 "Before continuing, be aware that ACPI Sleep States\n"
 "are a work in progress and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
 
-#: ktoshiba.cpp:863 ktoshiba.cpp:887
+#: ktoshiba.cpp:873 ktoshiba.cpp:897
 msgid "WARNING"
 msgstr ""
 
-#: ktoshiba.cpp:877
+#: ktoshiba.cpp:887
 msgid ""
 "Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:879
+#: ktoshiba.cpp:889
 msgid "STR"
 msgstr ""
 
-#: ktoshiba.cpp:907
+#: ktoshiba.cpp:917
 msgid ""
 "In order to deactivate the wireless interface the wireless antenna switch "
 "must be turned on"
 msgstr ""
 
-#: ktoshiba.cpp:908 ktoshiba.cpp:917 ktoshiba.cpp:991
+#: ktoshiba.cpp:918 ktoshiba.cpp:927 ktoshiba.cpp:1001
 msgid "Wireless"
 msgstr ""
 
-#: ktoshiba.cpp:914
+#: ktoshiba.cpp:924
 msgid "up"
 msgstr ""
 
-#: ktoshiba.cpp:914
+#: ktoshiba.cpp:924
 msgid "down"
 msgstr ""
 
-#: ktoshiba.cpp:915 ktoshiba.cpp:967 ktoshiba.cpp:990 ktoshiba.cpp:1079
-#: ktoshiba.cpp:1100 main.cpp:39
+#: ktoshiba.cpp:925 ktoshiba.cpp:977 ktoshiba.cpp:1000 ktoshiba.cpp:1088
+#: ktoshiba.cpp:1109 main.cpp:39
 msgid "KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:916
+#: ktoshiba.cpp:926
 msgid "Wireless interface %1"
 msgstr ""
 
-#: ktoshiba.cpp:967
+#: ktoshiba.cpp:977
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:968
+#: ktoshiba.cpp:978
 msgid "Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:989
+#: ktoshiba.cpp:999
 msgid "on"
 msgstr ""
 
-#: ktoshiba.cpp:989
+#: ktoshiba.cpp:999
 msgid "off"
 msgstr ""
 
-#: ktoshiba.cpp:990
+#: ktoshiba.cpp:1000
 msgid "Wireless antenna turned %1"
 msgstr ""
 
-#: ktoshiba.cpp:1055
+#: ktoshiba.cpp:1064
 msgid "Please umount all filesystems on the SelectBay device, if any."
 msgstr ""
 
-#: ktoshiba.cpp:1056 ktoshiba.cpp:1061 ktoshiba.cpp:1066
+#: ktoshiba.cpp:1065 ktoshiba.cpp:1070 ktoshiba.cpp:1075
 msgid "SelectBay"
 msgstr ""
 
-#: ktoshiba.cpp:1060
+#: ktoshiba.cpp:1069
 msgid ""
 "Unable to remove device in\n"
 "the SelectBay. Please re-lock."
 msgstr ""
 
-#: ktoshiba.cpp:1066
+#: ktoshiba.cpp:1075
 msgid "Device in the SelectBay sucessfully removed."
 msgstr ""
 
-#: ktoshiba.cpp:1077
+#: ktoshiba.cpp:1086
 msgid ""
 "Could not unregister device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:1098
+#: ktoshiba.cpp:1107
 msgid ""
 "Could not register device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."

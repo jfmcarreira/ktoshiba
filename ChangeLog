@@ -3,6 +3,10 @@
 	  be displaying current language correctly
 	* Started CVS cleanup
 	* Small updates to ktoshiba and ktoshibam desktop files
+	* Small update to Makefile.am and added new file to handle
+	  translation messages
+	* Updated Spanish translation
+	* Added Hyper-Threading popup menu
 
 2005-05-28 Azael Avalos <neftali@utep.edu>
 	* Added an AC check to KCM (again...)
