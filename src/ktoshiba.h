@@ -94,7 +94,6 @@ protected:
 	int mOldBatSave;
 	int mBatType;
 	int mWirelessSwitch;
-	int mOldWirelessSwitch;
 	int mAudioPlayer;
 	int mBootType;
 	int mPad;

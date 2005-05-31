@@ -1,3 +1,9 @@
+2005-05-31 Azael Avalos <neftali@utep.edu>
+	* Fixed displaying of current language, KCM will now
+	  be displaying current language correctly
+	* Started CVS cleanup
+	* Small updates to ktoshiba and ktoshibam desktop files
+
 2005-05-28 Azael Avalos <neftali@utep.edu>
 	* Added an AC check to KCM (again...)
 

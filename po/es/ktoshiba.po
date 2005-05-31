@@ -1,3 +1,4 @@
+# translation of ktoshiba.po to Español
 # translation of ktoshiba.po to español
 # Azael Avalos <coproscefalo@gmail.com>, 2005.
 #
@@ -6,9 +7,9 @@ msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-05-30 22:59-0600\n"
-"PO-Revision-Date: 2005-05-31 00:11-0600\n"
+"PO-Revision-Date: 2005-05-31 01:18-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
-"Language-Team: español\n"
+"Language-Team: Español\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -287,7 +288,6 @@ msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y algo de codigo"
 
 #: main.cpp:51
-#, fuzzy
 msgid "Code for enabling/disabling TouchPad"
 msgstr "Código para activar/desactivar el TouchPad"
 
@@ -321,9 +321,9 @@ msgid "C&ustom"
 msgstr "C&ustom"
 
 #: rc.cpp:6
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "KToshiba: Video, Power and Boot Status"
-msgstr "KToshiba: Estado de Vidéo y Batería"
+msgstr "KToshiba: Estado de Vidéo, Batería y Método de Inicio"
 
 #: rc.cpp:10
 #, no-c-format

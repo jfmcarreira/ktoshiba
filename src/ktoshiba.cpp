@@ -82,8 +82,6 @@ KToshiba::KToshiba()
         mBatType = mDriver->getBatterySaveModeType();
         mBootType = mDriver->getBootType();
         mDriver->batteryStatus(&time, &perc);
-        mWirelessSwitch = mDriver->getWirelessSwitch();
-        mOldWirelessSwitch = mWirelessSwitch;
         mPad = mDriver->getPointingDevice();
         mHT = mDriver->getHyperThreading();
         mSS = mDriver->getSpeedStep();
@@ -91,6 +89,7 @@ KToshiba::KToshiba()
         video = mDriver->getVideo();
         bright = mDriver->getBrightness();
         boot = mDriver->getBootMethod();
+        mWirelessSwitch = 1;
         (perc == 100)? battrig = true : battrig = false;
         crytrig = false;
         lowtrig = false;
@@ -975,21 +974,22 @@ void KToshiba::doBluetooth()
 
 void KToshiba::checkSystem()
 {
-    int bay;
+    int bay, ws;
 
     if (wstrig == false)
-        mWirelessSwitch = mDriver->getWirelessSwitch();
+        ws = mDriver->getWirelessSwitch();
     if (baytrig == false)
         bay = mDriver->getBayDevice(1);
 
-    if (mWirelessSwitch != mOldWirelessSwitch) {
-        if (mWirelessSwitch < 0)
-            wstrig = true;
-        else if (wstrig == false) {
-            QString s = ((mWirelessSwitch == 1)? i18n("on") : i18n("off"));
+    if (ws < 0)
+        wstrig = true;
+    else if (wstrig == false) {
+        if (mWirelessSwitch != ws) {
+            QString s = ((ws == 1)? i18n("on") : i18n("off"));
             KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
 							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
         }
+        mWirelessSwitch = ws;
     }
 
     if (bay < 0)
@@ -1002,8 +1002,6 @@ void KToshiba::checkSystem()
         disconnect( mSystemTimer );
         return;
     }
-
-    mOldWirelessSwitch = mWirelessSwitch;
 }
 
 void KToshiba::speakerVolume()
