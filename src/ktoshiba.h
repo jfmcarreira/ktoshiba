@@ -37,12 +37,12 @@
 #include "ktoshibasmminterface.h"
 #include "synshm.h" 	// ksynaptics file
 
-#define CD_DVD  		0x80
-#define DIGITAL 		0x40
+#define CD_DVD  	0x80
+#define DIGITAL 	0x40
 
-#define amaroK  		0
-#define JuK 			1
-#define XMMS			2
+#define amaroK  	0
+#define JuK 		1
+#define XMMS		2
 
 class SettingsWidget;
 class StatusWidget;
@@ -60,103 +60,103 @@ public:
      * Default Constructor
      */
     KToshiba();
-	void displayPixmap();
-	void loadConfiguration(KConfig *);
+    void displayPixmap();
+    void loadConfiguration(KConfig *);
 
     /**
      * Default Destructor
      */
     virtual ~KToshiba();
 protected slots:
-	void doConfig();
-	void displayAbout();
-	void powerStatus();
-	void checkHotKeys();
-	void doSuspendToDisk();
-	void doSuspendToRAM();
-	void mode();
-	void doBluetooth();
-	void checkSystem();
-	void setFreq(int);
-	void setHyper(int);
+    void doConfig();
+    void displayAbout();
+    void powerStatus();
+    void checkHotKeys();
+    void doSuspendToDisk();
+    void doSuspendToRAM();
+    void mode();
+    void doBluetooth();
+    void checkSystem();
+    void setFreq(int);
+    void setHyper(int);
 protected:
-	KToshibaSMMInterface *mDriver;
-	KAboutApplication *mAboutWidget;
-	KInstance *instance;
-	DCOPClient mClient;
-	QPopupMenu *mSpeed;
-	QPopupMenu *mHyper;
-	SynapticsSHM *m_synShm;
-	bool mFullBat;
-	int mBatStatus;
-	int mOldBatStatus;
-	int mLowBat;
-	int mCryBat;
-	int mBatSave;
-	int mOldBatSave;
-	int mBatType;
-	int mWirelessSwitch;
-	int mAudioPlayer;
-	int mBootType;
-	int mPad;
-	int mHT;
-	int mSS;
-	int mAC;
+    KToshibaSMMInterface *mDriver;
+    KAboutApplication *mAboutWidget;
+    KInstance *instance;
+    DCOPClient mClient;
+    QPopupMenu *mSpeed;
+    QPopupMenu *mHyper;
+    SynapticsSHM *m_synShm;
+    bool mFullBat;
+    int mBatStatus;
+    int mOldBatStatus;
+    int mLowBat;
+    int mCryBat;
+    int mBatSave;
+    int mOldBatSave;
+    int mBatType;
+    int mWirelessSwitch;
+    int mAudioPlayer;
+    int mBootType;
+    int mPad;
+    int mHT;
+    int mSS;
+    int mAC;
 private:
-	void doMenu();
-	void brightUp();
-	void brightDown();
-	void lockScreen();
-	void mousePad();
-	void setModel();
-	void mute();
-	void toggleWireless();
-	void performFnAction(int, int);
-	void bsmUserSettings(KConfig *);
-	void speakerVolume();
-	void toggleFan();
-	void checkSelectBay();
-	void toogleBackLight();
-	int bayUnregister();
-	int bayRescan();
-	SettingsWidget *mSettingsWidget;
-	StatusWidget *mStatusWidget;
-	QTimer *mPowTimer;
-	QTimer *mHotKeysTimer;
-	QTimer *mModeTimer;
-	QTimer *mSystemTimer;
-	QPixmap pm;
-	QString noBatteryIcon;
-	QString noChargeIcon;
-	QString chargeIcon;
-	bool mInterfaceAvailable;
-	bool lowtrig;
-	bool crytrig;
-	bool battrig;
-	bool wstrig;
-	bool btstart;
-	bool baytrig;
-	int pow;
-	int oldpow;
-	int time;
-	int oldtime;
-	int perc;
-	int oldperc;
-	int snd;
-	int video;
-	int mousepad;
-	int bright;
-	int current_code;
-	int MODE;
-	int popup;
-	int bluetooth;
-	int wireless;
-	int fan;
-	int vol;
-	int sblock;
-	int removed;
-	int boot;
-	int svideo;
+    void doMenu();
+    void brightUp();
+    void brightDown();
+    void lockScreen();
+    void mousePad();
+    void setModel();
+    void mute();
+    void toggleWireless();
+    void performFnAction(int, int);
+    void bsmUserSettings(KConfig *);
+    void speakerVolume();
+    void toggleFan();
+    void checkSelectBay();
+    void toogleBackLight();
+    int bayUnregister();
+    int bayRescan();
+    SettingsWidget *mSettingsWidget;
+    StatusWidget *mStatusWidget;
+    QTimer *mPowTimer;
+    QTimer *mHotKeysTimer;
+    QTimer *mModeTimer;
+    QTimer *mSystemTimer;
+    QPixmap pm;
+    QString noBatteryIcon;
+    QString noChargeIcon;
+    QString chargeIcon;
+    bool mInterfaceAvailable;
+    bool lowtrig;
+    bool crytrig;
+    bool battrig;
+    bool wstrig;
+    bool btstart;
+    bool baytrig;
+    int pow;
+    int oldpow;
+    int time;
+    int oldtime;
+    int perc;
+    int oldperc;
+    int snd;
+    int video;
+    int mousepad;
+    int bright;
+    int current_code;
+    int MODE;
+    int popup;
+    int bluetooth;
+    int wireless;
+    int fan;
+    int vol;
+    int sblock;
+    int removed;
+    int boot;
+    int svideo;
 };
 
 #endif // KTOSHIBA_H
