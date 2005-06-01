@@ -330,7 +330,7 @@ msgstr ""
 #: rc.cpp:165 rc.cpp:210 rc.cpp:255 rc.cpp:300 rc.cpp:345 rc.cpp:390
 #: rc.cpp:435 rc.cpp:480 rc.cpp:525 rc.cpp:570
 #, no-c-format
-msgid "Backlight On/Off"
+msgid "LCD Backlight On/Off"
 msgstr ""
 
 #: rc.cpp:573
