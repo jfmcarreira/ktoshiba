@@ -191,10 +191,10 @@ void KToshiba::doMenu()
     this->contextMenu()->insertSeparator( 7 );
 
     mHyper = new QPopupMenu( this, i18n("HyperThreading") );
-    mHyper->insertItem( SmallIcon("disabled"), i18n("Disabled"), 0 );
-    mHyper->insertItem( SmallIcon(""), i18n("Enabled - PM aware"), 1 );
-    mHyper->insertItem( SmallIcon(""), i18n("Enabled - No PM aware"), 2 );
-    this->contextMenu()->insertItem( SmallIcon(""), i18n("Hyper-Threading"), mHyper, 8, 8 );
+    mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
+    mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
+    mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
+    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
     if (mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
     else if (mHT >= 0)
         connect( mHyper, SIGNAL( activated(int) ), this, SLOT( setHyper(int) ) );

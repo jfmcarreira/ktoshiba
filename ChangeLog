@@ -7,6 +7,8 @@
 	  translation messages
 	* Updated Spanish translation
 	* Added Hyper-Threading popup menu
+	* Added French comment to ktoshibam.desktop, thanks to
+	  Nicolas Ternisien, and fixed a typo
 
 2005-05-28 Azael Avalos <neftali@utep.edu>
 	* Added an AC check to KCM (again...)

@@ -9,10 +9,10 @@ X-KDE-ParentApp=kcontrol
 
 [Desktop Entry]
 Encoding=UTF-8
-Comment=Configure the KDE Interface to the Toshiba System Managment Mode Driver
-Comment[de]=KDE Schnittstelle zum 'Toshiba System Managment Mode Driver' Treiber einstellen
+Comment=Configure the KDE Interface to the Toshiba System Management Mode Driver
+Comment[de]=KDE Schnittstelle zum 'Toshiba System Management Mode Driver' Treiber einstellen
 Comment[es]=Configurar el interfaz de KDE para el sistema de operaciones de tipo de Toshiba
-Comment[fr]=
+Comment[fr]=Configurer l'interface KDE du pilote de gestion du système Toshiba
 Keywords=Toshiba, Fn
 Keywords[de]=Toshiba, Fn
 Keywords[es]=Toshiba, Fn
