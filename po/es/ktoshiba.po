@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-31 13:20-0600\n"
+"POT-Creation-Date: 2005-06-02 13:49-0600\n"
 "PO-Revision-Date: 2005-05-31 23:33-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
@@ -27,141 +27,141 @@ msgid ""
 "Your emails"
 msgstr "neftali@utep.edu"
 
-#: ktoshiba.cpp:181
+#: ktoshiba.cpp:182
 msgid "&Configure KToshiba..."
 msgstr "&Configurar KToshiba..."
 
-#: ktoshiba.cpp:184
+#: ktoshiba.cpp:185
 msgid "Suspend To &Disk"
 msgstr "Suspender a &Disco"
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:187
 msgid "Suspend To &RAM"
 msgstr "Suspender a &RAM"
 
-#: ktoshiba.cpp:189
+#: ktoshiba.cpp:194
 msgid "Enable &Bluetooth"
 msgstr "Habilitar &Bluetooth"
 
-#: ktoshiba.cpp:193
+#: ktoshiba.cpp:197
 msgid "HyperThreading"
 msgstr "HyperThreading"
 
-#: ktoshiba.cpp:194
+#: ktoshiba.cpp:198
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: ktoshiba.cpp:195
+#: ktoshiba.cpp:199
 msgid "Enabled - PM aware"
 msgstr "Habilitado - con MP"
 
-#: ktoshiba.cpp:196
+#: ktoshiba.cpp:200
 msgid "Enabled - No PM aware"
 msgstr "Habilitado - sin MP"
 
-#: ktoshiba.cpp:197
+#: ktoshiba.cpp:201
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:204
+#: ktoshiba.cpp:206
 msgid "SpeedStep"
 msgstr "SpeedStep"
 
-#: ktoshiba.cpp:205
+#: ktoshiba.cpp:207
 msgid "Dynamic"
 msgstr "Dinámico"
 
-#: ktoshiba.cpp:206
+#: ktoshiba.cpp:208
 msgid "Always High"
 msgstr "Siempre Alto"
 
-#: ktoshiba.cpp:207
+#: ktoshiba.cpp:209
 msgid "Always Low"
 msgstr "Siempre Bajo"
 
-#: ktoshiba.cpp:208
+#: ktoshiba.cpp:210
 msgid "CPU Frequency"
 msgstr "Frecuencia del CPU"
 
-#: ktoshiba.cpp:214
+#: ktoshiba.cpp:215
 msgid "&About KToshiba"
 msgstr "&Acerca de KToshiba"
 
-#: ktoshiba.cpp:255
+#: ktoshiba.cpp:256
 msgid "Your battery is now fully charged."
 msgstr "La batería esta completamente cargada."
 
-#: ktoshiba.cpp:255
+#: ktoshiba.cpp:256
 msgid "Laptop Battery"
 msgstr "Batería del Portátil"
 
-#: ktoshiba.cpp:260
+#: ktoshiba.cpp:261
 msgid "The battery state has changed to low"
 msgstr "El estado de la batería ha cambiado a baja."
 
-#: ktoshiba.cpp:265
+#: ktoshiba.cpp:266
 msgid "The battery state has changed to critical"
 msgstr "El estado de la batería ha cambiado a critico"
 
-#: ktoshiba.cpp:270
+#: ktoshiba.cpp:271
 msgid "I'm Gone..."
 msgstr "Me Voy..."
 
-#: ktoshiba.cpp:437
+#: ktoshiba.cpp:438
 msgid "No interface available"
 msgstr "Interfaz no disponible"
 
-#: ktoshiba.cpp:441
+#: ktoshiba.cpp:442
 msgid "Plugged in - fully charged"
 msgstr "Conectada - completamente cargada"
 
-#: ktoshiba.cpp:447
+#: ktoshiba.cpp:448
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr "Conectada - %1% cargada (%2:%3 tiempo restante)"
 
-#: ktoshiba.cpp:451
+#: ktoshiba.cpp:452
 msgid "Plugged in - no battery"
 msgstr "Conectada - sin batería"
 
-#: ktoshiba.cpp:453
+#: ktoshiba.cpp:454
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr "Conectada - %1% cargada"
 
-#: ktoshiba.cpp:460
+#: ktoshiba.cpp:461
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr "Utilizando batería - %1% cargada (%2:%3 tiempo restante)"
 
-#: ktoshiba.cpp:463
+#: ktoshiba.cpp:464
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr "Utilizando batería - %1% cargada"
 
-#: ktoshiba.cpp:699
+#: ktoshiba.cpp:700
 msgid "Long Life"
 msgstr "Vida Alargada"
 
-#: ktoshiba.cpp:700
+#: ktoshiba.cpp:701
 msgid "User Settings"
 msgstr "Opciones del Usuario"
 
-#: ktoshiba.cpp:704
+#: ktoshiba.cpp:705
 msgid "Normal Life"
 msgstr "Vida Normal"
 
-#: ktoshiba.cpp:705
+#: ktoshiba.cpp:706
 msgid "Low Power"
 msgstr "Bajo Consumo"
 
-#: ktoshiba.cpp:709
+#: ktoshiba.cpp:710
 msgid "Full Life"
 msgstr "Vida Alargada"
 
-#: ktoshiba.cpp:710
+#: ktoshiba.cpp:711
 msgid "Full Power"
 msgstr "Alto Consumo"
 
-#: ktoshiba.cpp:863
+#: ktoshiba.cpp:864
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
@@ -169,11 +169,11 @@ msgstr ""
 "No se pudo Suspender a Disco porque ktosh_helper no fue encontrado.\n"
 "Porfavor verifique que este ha sido instalado correctamente."
 
-#: ktoshiba.cpp:865
+#: ktoshiba.cpp:866
 msgid "STD"
 msgstr "SAD"
 
-#: ktoshiba.cpp:871 ktoshiba.cpp:895
+#: ktoshiba.cpp:872 ktoshiba.cpp:896
 msgid ""
 "Before continuing, be aware that ACPI Sleep States\n"
 "are a work in progress and may or may not work on your computer.\n"
@@ -183,11 +183,11 @@ msgstr ""
 "aun están en progreso por lo cual puede o no que funcionen.\n"
 "Además asegurate de que los módulos problemáticos sean descargados"
 
-#: ktoshiba.cpp:873 ktoshiba.cpp:897
+#: ktoshiba.cpp:874 ktoshiba.cpp:898
 msgid "WARNING"
 msgstr "ADVERTENCIA"
 
-#: ktoshiba.cpp:887
+#: ktoshiba.cpp:888
 msgid ""
 "Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
@@ -195,11 +195,11 @@ msgstr ""
 "No se pudo Suspender a RAM porque ktosh_helper no fue encontrado.\n"
 "Porfavor verifique que este ha sido instalado correctamente."
 
-#: ktoshiba.cpp:889
+#: ktoshiba.cpp:890
 msgid "STR"
 msgstr "SAR"
 
-#: ktoshiba.cpp:917
+#: ktoshiba.cpp:918
 msgid ""
 "In order to deactivate the wireless interface the wireless antenna switch "
 "must be turned on"
@@ -207,58 +207,58 @@ msgstr ""
 "Para poder desactivar el interfaz inalámbrico, el botón de control de la "
 "antena debe estar encendido"
 
-#: ktoshiba.cpp:918 ktoshiba.cpp:927 ktoshiba.cpp:1001
+#: ktoshiba.cpp:919 ktoshiba.cpp:928 ktoshiba.cpp:1002
 msgid "Wireless"
 msgstr "Inalámbrico"
 
-#: ktoshiba.cpp:924
+#: ktoshiba.cpp:925
 msgid "up"
 msgstr "activada"
 
-#: ktoshiba.cpp:924
+#: ktoshiba.cpp:925
 msgid "down"
 msgstr "desactivada"
 
-#: ktoshiba.cpp:925 ktoshiba.cpp:977 ktoshiba.cpp:1000 ktoshiba.cpp:1088
-#: ktoshiba.cpp:1109 main.cpp:39
+#: ktoshiba.cpp:926 ktoshiba.cpp:978 ktoshiba.cpp:1001 ktoshiba.cpp:1089
+#: ktoshiba.cpp:1110 main.cpp:39
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: ktoshiba.cpp:926
+#: ktoshiba.cpp:927
 msgid "Wireless interface %1"
 msgstr "Interfaz inalámbrica %1"
 
-#: ktoshiba.cpp:977
+#: ktoshiba.cpp:978
 msgid "Bluetooth device activated"
 msgstr "Dispositivo Bluetooth activado"
 
-#: ktoshiba.cpp:978
+#: ktoshiba.cpp:979
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: ktoshiba.cpp:999
+#: ktoshiba.cpp:1000
 msgid "on"
 msgstr "activada"
 
-#: ktoshiba.cpp:999
+#: ktoshiba.cpp:1000
 msgid "off"
 msgstr "desactivada"
 
-#: ktoshiba.cpp:1000
+#: ktoshiba.cpp:1001
 msgid "Wireless antenna turned %1"
 msgstr "Antena inalámbrica %1"
 
-#: ktoshiba.cpp:1064
+#: ktoshiba.cpp:1065
 msgid "Please umount all filesystems on the SelectBay device, if any."
 msgstr ""
 "Por favor desmonta todos los sistemas de ficheros localizados en la Bahía de "
 "Selección, sí alguno existe."
 
-#: ktoshiba.cpp:1065 ktoshiba.cpp:1070 ktoshiba.cpp:1075
+#: ktoshiba.cpp:1066 ktoshiba.cpp:1071 ktoshiba.cpp:1076
 msgid "SelectBay"
 msgstr "Bahía de Selección"
 
-#: ktoshiba.cpp:1069
+#: ktoshiba.cpp:1070
 msgid ""
 "Unable to remove device in\n"
 "the SelectBay. Please re-lock."
@@ -266,11 +266,11 @@ msgstr ""
 "Imposible de remover dispositivo en la Bahía de Selección. Por favor vuelve "
 "a bloquear."
 
-#: ktoshiba.cpp:1075
+#: ktoshiba.cpp:1076
 msgid "Device in the SelectBay sucessfully removed."
 msgstr "Dispositivo en la Bahía de Selección removido exitosamente."
 
-#: ktoshiba.cpp:1086
+#: ktoshiba.cpp:1087
 msgid ""
 "Could not unregister device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
@@ -279,7 +279,7 @@ msgstr ""
 "encontrado.\n"
 "Por favor verifique que este ha sido instalado correctamente."
 
-#: ktoshiba.cpp:1107
+#: ktoshiba.cpp:1108
 msgid ""
 "Could not register device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."

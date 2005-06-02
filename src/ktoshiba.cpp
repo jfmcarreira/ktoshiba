@@ -47,6 +47,7 @@
 #include <dcopref.h>
 
 #include <sys/shm.h>
+#include <unistd.h>
 
 #include "settingswidget.h"
 #include "statuswidget.h"
@@ -185,11 +186,14 @@ void KToshiba::doMenu()
                                      SLOT( doSuspendToDisk() ), 0, 3, 3 );
     this->contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
                                      SLOT( doSuspendToRAM() ), 0, 4, 4 );
+    if (::access("/proc/acpi/sleep", F_OK) == -1) {
+        this->contextMenu()->setItemEnabled( 3, FALSE );
+        this->contextMenu()->setItemEnabled( 4, FALSE );
+    }
     this->contextMenu()->insertSeparator( 5 );
     this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
                                      SLOT( doBluetooth() ), 0, 6, 6 );
     this->contextMenu()->insertSeparator( 7 );
-
     mHyper = new QPopupMenu( this, i18n("HyperThreading") );
     mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
     mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
@@ -198,9 +202,7 @@ void KToshiba::doMenu()
     if (mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
     else if (mHT >= 0)
         connect( mHyper, SIGNAL( activated(int) ), this, SLOT( setHyper(int) ) );
-
     this->contextMenu()->insertSeparator( 9 );
-
     mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
     mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
     mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
@@ -209,9 +211,8 @@ void KToshiba::doMenu()
     if (mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
     else if (mSS >= 0)
         connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( setFreq(int) ) );
-
     this->contextMenu()->insertSeparator( 11 );
-    this->contextMenu()->insertItem( i18n("&About KToshiba"), this,
+    this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
                                      SLOT( displayAbout() ), 0, 12, 12 );
 }
 
@@ -1030,17 +1031,12 @@ void KToshiba::toggleFan()
 {
     int res = mDriver->getFan();
 
-    if (res < 0x00) {
+    if (res < 0) {
         fan = -1;
         return;
     }
-    if (res == 0x00) {
-        fan = 1;
-        mDriver->setFan(fan);
-    } else {
-        fan = 0;
-        mDriver->setFan(fan);
-    }
+    fan = (res > 0)? 1 : 0;
+    mDriver->setFan(fan);
 }
 
 void KToshiba::checkSelectBay()
@@ -1062,17 +1058,17 @@ void KToshiba::checkSelectBay()
         int device = mDriver->getBayDevice(1);
         if ((device == HCI_ATAPI) || (device == HCI_IDE)) {
             int res = KMessageBox::warningContinueCancel(0, i18n("Please umount all filesystems on the "
-											   "SelectBay device, if any."), i18n("SelectBay"));
+				   "SelectBay device, if any."), i18n("SelectBay"));
             if (res == KMessageBox::Continue) {
                 if (bayUnregister() < 0) {
                     KMessageBox::queuedMessageBox(0, KMessageBox::Error,
-											  i18n("Unable to remove device in\n"
-												   "the SelectBay. Please re-lock."), i18n("SelectBay"));
+				        i18n("Unable to remove device in\n"
+				        "the SelectBay. Please re-lock."), i18n("SelectBay"));
                     return;
                 }
 
                 KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-											  i18n("Device in the SelectBay sucessfully removed."), i18n("SelectBay"));
+				    i18n("Device in the SelectBay sucessfully removed."), i18n("SelectBay"));
                 removed = 1;
             }
         }

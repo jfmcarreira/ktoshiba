@@ -1,3 +1,14 @@
+2005-06-02 Azael Avalos <neftali@utep.edu>
+	* Added a check for /proc/acpi/sleep file, if it doesn't
+	  exist STD and STR menu items are disabled
+	* Some changes to KToshibaSMMInterface
+	* Some changes on toggleFan() function
+
+2005-06-01 Azael Avalos <neftali@utep.edu>
+	* Updated Makefile.am (again)
+	* More cleans to CVS
+	* Made new icons for ktoshiba
+
 2005-05-31 Azael Avalos <neftali@utep.edu>
 	* Fixed displaying of current language, KCM will now
 	  be displaying current language correctly
