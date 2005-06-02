@@ -6,9 +6,6 @@ PACKAGE=ktoshiba
 PACKAGE2=kcmktoshiba
 catalogs="es fr hu"
 
-# make sure we have current messages
-bash ../admin/cvs.sh package-messages
-
 echo "Starting $PACKAGE ..."
 for cat in $catalogs; do
   echo "Merging $cat translation"
