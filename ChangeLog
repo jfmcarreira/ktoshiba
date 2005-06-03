@@ -3,6 +3,10 @@
 	  exist STD and STR menu items are disabled
 	* Some changes to KToshibaSMMInterface
 	* Some changes on toggleFan() function
+	* Added a new function to retreive AC status from ACPI
+	  in case HCI and SCI calls fail
+	* Small check to Battery Save Mode Type, it now defaultss to
+	  mode 2 if we got a failure
 
 2005-06-01 Azael Avalos <neftali@utep.edu>
 	* Updated Makefile.am (again)
