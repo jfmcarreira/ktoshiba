@@ -119,6 +119,7 @@ private:
     void toogleBackLight();
     int bayUnregister();
     int bayRescan();
+    int acpiAC();
     SettingsWidget *mSettingsWidget;
     StatusWidget *mStatusWidget;
     QTimer *mPowTimer;

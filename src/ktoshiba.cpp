@@ -91,6 +91,7 @@ KToshiba::KToshiba()
         bright = mDriver->getBrightness();
         boot = mDriver->getBootMethod();
         mWirelessSwitch = 1;
+        mBatSave = 2;
         (perc == 100)? battrig = true : battrig = false;
         crytrig = false;
         lowtrig = false;
