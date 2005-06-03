@@ -109,6 +109,10 @@ KToshiba::KToshiba()
         svideo = 0;
     }
 
+    // Default to mode 2 if we got a failure
+    if (mBatType == -1)
+        mBatType = 2;
+
     if (mPad == -1) {
         // Code below taken from ksynaptics
         int shmid;
@@ -250,6 +254,8 @@ void KToshiba::powerStatus()
     loadConfiguration(&mConfig);
     mDriver->batteryStatus(&time, &perc);
     pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+    if ((pow == -1) || (pow == SCI_FAILURE))
+        pow = acpiAC();
 
     if (mFullBat && perc == 100 && !battrig) {
         KMessageBox::queuedMessageBox(0, KMessageBox::Information,
@@ -346,11 +352,13 @@ void KToshiba::bsmUserSettings(KConfig *k)
 
 void KToshiba::displayPixmap()
 {
-	int new_code = 0;
-	// if we got a fail from HCI, try SCI function
-	int ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
-	mDriver->batteryStatus(&time, &perc);
+    int new_code = 0;
+    int ac = 0;
+    mDriver->batteryStatus(&time, &perc);
 
+    ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+    if ((ac == -1) || (ac == SCI_FAILURE))
+        ac = acpiAC();
 
 	if (!mInterfaceAvailable)
 		new_code = 1;
@@ -1137,6 +1145,31 @@ void KToshiba::setFreq(int freq)
 void KToshiba::setHyper(int state)
 {
     mDriver->setHyperThreading(state);
+}
+
+int KToshiba::acpiAC()
+{
+    // Code taken from klaptopdaemon
+    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
+
+    if (::access(r, F_OK) != -1) {
+        FILE *f = NULL;
+        char s[1024];
+        f = fopen(r, "r");
+        if (f) {
+            if (fgets(s, sizeof(r), f) == NULL)
+                return -1;
+            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
+                if (strstr(s, "on-line") != NULL) {
+                    fclose(f);
+                    return 4;
+                }
+            fclose(f);
+            return 3;
+        }
+    }
+
+    return -1;
 }
 
 
