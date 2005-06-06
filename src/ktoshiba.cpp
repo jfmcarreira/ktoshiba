@@ -152,7 +152,6 @@ KToshiba::KToshiba()
     mSystemTimer->start(500);		// Check system events every 1/2 seconds
 
     displayPixmap();
-    setModel();
     if (btstart)
         doBluetooth();
 }
@@ -219,6 +218,7 @@ void KToshiba::doMenu()
     this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
                                      SLOT( displayAbout() ), 0, 12, 12 );
+    this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
 }
 
 void KToshiba::doConfig()
@@ -949,13 +949,6 @@ void KToshiba::mousePad()
     } else
     if (mPad >= 0)
         mDriver->setPointingDevice(mousepad);
-}
-
-void KToshiba::setModel()
-{
-    QString mod = modelID(mDriver->machineID());
-
-    this->contextMenu()->insertTitle( mod, 0, 0 );
 }
 
 void KToshiba::mute()

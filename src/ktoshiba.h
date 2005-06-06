@@ -108,7 +108,6 @@ private:
     void brightDown();
     void lockScreen();
     void mousePad();
-    void setModel();
     void mute();
     void toggleWireless();
     void performFnAction(int, int);
