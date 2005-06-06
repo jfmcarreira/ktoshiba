@@ -1,13 +1,14 @@
+# translation of kcmktoshiba.po to
 # translation of ktoshiba.po to Français
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005.
 msgid ""
 msgstr ""
-"Project-Id-Version: ktoshiba\n"
+"Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-05-30 22:59-0600\n"
-"PO-Revision-Date: 2005-05-28 02:05+0200\n"
+"PO-Revision-Date: 2005-06-03 17:45+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
-"Language-Team: Français <kde-francophone@kde.org>\n"
+"Language-Team:  <kde-francophone@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -88,8 +89,7 @@ msgstr " sec"
 
 #: rc.cpp:30
 #, no-c-format
-msgid ""
-"This is used to determine how often the program will check the battery status"
+msgid "This is used to determine how often the program will check the battery status"
 msgstr ""
 "Cette option est utilisée afin de déterminer la période de vérification de "
 "l'état de la batterie"
@@ -107,14 +107,12 @@ msgstr " min"
 #: rc.cpp:39
 #, no-c-format
 msgid "This is used to enable the low battery information"
-msgstr ""
-"Cette option est utilisée pour activer la notification de batterie faible"
+msgstr "Cette option est utilisée pour activer la notification de batterie faible"
 
 #: rc.cpp:45
 #, no-c-format
 msgid "This is used to enable the critical battery information"
-msgstr ""
-"Cette option est utilisée pour activer la notification de batterie critique"
+msgstr "Cette option est utilisée pour activer la notification de batterie critique"
 
 #: rc.cpp:48
 #, no-c-format
@@ -325,15 +323,15 @@ msgstr "Ventilateur actif / inactif"
 
 #: rc.cpp:162 rc.cpp:207 rc.cpp:252 rc.cpp:297 rc.cpp:342 rc.cpp:387
 #: rc.cpp:432 rc.cpp:477 rc.cpp:522 rc.cpp:567
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Boot Method"
-msgstr "Méthode de refr&oidissement :"
+msgstr "Méthode de démarrage"
 
 #: rc.cpp:165 rc.cpp:210 rc.cpp:255 rc.cpp:300 rc.cpp:345 rc.cpp:390
 #: rc.cpp:435 rc.cpp:480 rc.cpp:525 rc.cpp:570
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "LCD Backlight On/Off"
-msgstr "Ventilateur actif / inactif"
+msgstr "Écran rétro-éclairé actif / inactif"
 
 #: rc.cpp:573
 #, no-c-format
@@ -471,27 +469,4 @@ msgstr ""
 "portable est un Toshiba, veuillez vous assurer que le module <b>toshiba</b> "
 "se charge sans problème."
 
-#~ msgid ""
-#~ "The helper cannot be found.\n"
-#~ "Please make sure that it is installed corectly"
-#~ msgstr ""
-#~ "Impossible de trouver la commande assistante.\n"
-#~ "Veuillez vous assurer qu'elle est installée correctement."
 
-#~ msgid "KToshiba"
-#~ msgstr "KToshiba"
-
-#~ msgid ""
-#~ "You will need to supply a root password to allow the privileges of "
-#~ "ktosh_helper to change."
-#~ msgstr ""
-#~ "Vous devez fournir le mot de passe du superutilisateur afin de modifier "
-#~ "les privilèges de la commande « ktosh_helper »."
-
-#~ msgid ""
-#~ "The helper cannot be enabled because kdesu cannot be found.\n"
-#~ "Please make sure that it is installed correctly."
-#~ msgstr ""
-#~ "La commande assistante ne peut pas être activée car il est impossible de "
-#~ "trouver « kdesu ».\n"
-#~ "Veuillez vous assurer qu'elle est installée convenablement."
