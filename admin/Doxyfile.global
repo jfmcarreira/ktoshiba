@@ -436,7 +436,8 @@ EXCLUDE_PATTERNS       = *.moc.* \
                          *.all_cpp.* \
                          *unload.* \
                          */test/* \
-                         */tests/*
+                         */tests/* \
+                         *_p.h 
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
