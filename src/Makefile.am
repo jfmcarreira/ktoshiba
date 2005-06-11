@@ -18,14 +18,14 @@ METASOURCES = AUTO
 bin_PROGRAMS = ktoshiba ktosh_helper
 
 # the application source, library search path, and link libraries
-kde_module_LTLIBRARIES = libktoshibasmminterface.la
+lib_LTLIBRARIES = libktoshibasmminterface.la
 libktoshibasmminterface_la_LDFLAGS = $(all_libraries)
 libktoshibasmminterface_la_SOURCES = hci.c sci.c ktoshibasmminterface.cpp
 
 ktoshiba_SOURCES = main.cpp ktoshiba.cpp settingswidget.ui statuswidget.ui \
 	modelid.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-ktoshiba_LDADD = $(top_builddir)/src/libktoshibasmminterface.la $(LIB_KDEUI)
+ktoshiba_LDADD = libktoshibasmminterface.la $(LIB_KDEUI)
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
