@@ -25,17 +25,22 @@
 #include <config.h>
 #endif
 
-#include <qtimer.h>
 #include <qpixmap.h>
-#include <qpopupmenu.h>
 
 #include <ksystemtray.h>
-#include <kprocess.h>
-#include <kaboutapplication.h>
 #include <dcopclient.h>
 
-#include "ktoshibasmminterface.h"
 #include "synshm.h" 	// ksynaptics file
+
+class QTimer;
+class QPopupMenu;
+
+class KInstance;
+class KAboutApplication;
+
+class KToshibaSMMInterface;
+class SettingsWidget;
+class StatusWidget;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -43,9 +48,6 @@
 #define amaroK  	0
 #define JuK 		1
 #define XMMS		2
-
-class SettingsWidget;
-class StatusWidget;
 
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
@@ -126,9 +128,6 @@ private:
     QTimer *mModeTimer;
     QTimer *mSystemTimer;
     QPixmap pm;
-    QString noBatteryIcon;
-    QString noChargeIcon;
-    QString chargeIcon;
     bool mInterfaceAvailable;
     bool lowtrig;
     bool crytrig;

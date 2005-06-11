@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ktoshiba.h"
+#include "ktoshibasmminterface.h"
 #include "modelid.h"
 
 #include <qlabel.h>
@@ -26,13 +27,16 @@
 #include <qprogressbar.h>
 #include <qslider.h>
 #include <qbitmap.h>
+#include <qpixmap.h>
 #include <qimage.h>
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qwidget.h>
 #include <qwidgetstack.h>
+#include <qtimer.h>
 
 #include <kapplication.h>
+#include <kaboutapplication.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kconfig.h>
@@ -137,10 +141,6 @@ KToshiba::KToshiba()
     loadConfiguration(&mConfig);
 
     doMenu();
-
-    noBatteryIcon = QString("laptop_nobattery");
-    noChargeIcon = QString("laptop_nocharge");
-    chargeIcon = QString("laptop_charge");
 
     connect( mPowTimer, SIGNAL( timeout() ), SLOT( powerStatus() ) );
     mPowTimer->start(mBatStatus * 1000);
@@ -361,281 +361,279 @@ void KToshiba::displayPixmap()
     if ((ac == -1) || (ac == SCI_FAILURE))
         ac = acpiAC();
 
-	if (!mInterfaceAvailable)
-		new_code = 1;
-	else if (ac == 3)
-		new_code = 2;
-	else
-		new_code = 3;
+    if (!mInterfaceAvailable)
+        new_code = 1;
+    else if (ac == 3)
+        new_code = 2;
+    else
+        new_code = 3;
 
-	if (current_code != new_code) {
-		current_code = new_code;
-		// we will try to deduce the pixmap (or gif) name now.  it will
-		// vary depending on the dock and power
-		QString pixmap_name;
+    if (current_code != new_code) {
+        current_code = new_code;
+        // we will try to deduce the pixmap (or gif) name now.  it will
+        // vary depending on the dock and power
+        QString pixmap_name;
 
-		if (!mInterfaceAvailable)
-			pixmap_name = noBatteryIcon;
-		else if (ac == 3)
-			pixmap_name = noChargeIcon;
-		else
-			pixmap_name = chargeIcon;
+        if (!mInterfaceAvailable)
+            pixmap_name = QString("laptop_nobattery");
+        else if (ac == 3)
+            pixmap_name = QString("laptop_nocharge");
+        else
+            pixmap_name = QString("laptop_charge");
 
-		pm = loadIcon( pixmap_name, instance );
-	}
+        pm = loadIcon( pixmap_name, instance );
+    }
 
-	// at this point, we have the file to display.  so display it
+    // at this point, we have the file to display.  so display it
 
-	QImage image = pm.convertToImage();
+    QImage image = pm.convertToImage();
 
-	int w = image.width();
-	int h = image.height();
-	int count = 0;
-	QRgb rgb;
-	int x, y;
-	for (x = 0; x < w; x++)
-	for (y = 0; y < h; y++)
-	{
-		rgb = image.pixel(x, y);
-		if (qRed(rgb) == 0xff &&
-		    qGreen(rgb) == 0xff &&
-		    qBlue(rgb) == 0xff)
-			count++;
-	}
-	int c = (count*perc)/100;
-	if (c == 100)
-		c = count;
-	else
-	if (perc != 100 && c == count)
-		c = count-1;
+    int w = image.width();
+    int h = image.height();
+    int count = 0;
+    QRgb rgb;
+    int x, y;
+    for (x = 0; x < w; x++)
+        for (y = 0; y < h; y++) {
+            rgb = image.pixel(x, y);
+            if (qRed(rgb) == 0xff &&
+                qGreen(rgb) == 0xff &&
+                qBlue(rgb) == 0xff)
+                count++;
+        }
+    int c = (count*perc)/100;
+    if (c == 100)
+        c = count;
+    else
+    if (perc != 100 && c == count)
+        c = count-1;
 
 
-	if (c) {
-		uint ui;
-		QRgb blue = qRgb(0x00,0x00,0xff);
+    if (c) {
+        uint ui;
+        QRgb blue = qRgb(0x00,0x00,0xff);
 
-		if (image.depth() <= 8) {
-			ui = image.numColors();		// this fix thanks to Sven Krumpke
-			image.setNumColors(ui+1);
-			image.setColor(ui, blue);
-		} else
-			ui = 0xff000000|blue;
+        if (image.depth() <= 8) {
+            ui = image.numColors();		// this fix thanks to Sven Krumpke
+            image.setNumColors(ui+1);
+            image.setColor(ui, blue);
+        } else
+            ui = 0xff000000|blue;
 
-		for (y = h-1; y >= 0; y--)
-		for (x = 0; x < w; x++)
-		{
-			rgb = image.pixel(x, y);
-			if (qRed(rgb) == 0xff &&
-		    	    qGreen(rgb) == 0xff &&
-		    	    qBlue(rgb) == 0xff) {
-				image.setPixel(x, y, ui);
-				c--;
-				if (c <= 0)
-					goto quit;
-			}
-		}
-	}
+        for (y = h-1; y >= 0; y--)
+            for (x = 0; x < w; x++) {
+                rgb = image.pixel(x, y);
+                if (qRed(rgb) == 0xff &&
+                    qGreen(rgb) == 0xff &&
+                    qBlue(rgb) == 0xff) {
+                    image.setPixel(x, y, ui);
+                    c--;
+                    if (c <= 0)
+                    goto quit;
+                }
+            }
+    }
 quit:
 
-	QPixmap q;
-	q.convertFromImage(image);
-	setPixmap(q);
-	adjustSize();
+    QPixmap q;
+    q.convertFromImage(image);
+    setPixmap(q);
+    adjustSize();
 
-	QString tmp;
-	if (!mInterfaceAvailable)
-		tmp = i18n("No interface available");
-	else
-	if (ac == 4) {
-		if (perc == 100)
-			tmp = i18n("Plugged in - fully charged");
-		else {
-			if (perc >= 0) {
-				QString num3;
-				num3.setNum(SCI_MINUTE(time));
-				num3 = num3.rightJustify(2, '0');
-				tmp = i18n("Plugged in - %1% charged (%2:%3 time left)")
+    QString tmp;
+    if (!mInterfaceAvailable)
+        tmp = i18n("No interface available");
+    else
+    if (ac == 4) {
+        if (perc == 100)
+            tmp = i18n("Plugged in - fully charged");
+        else {
+            if (perc >= 0) {
+                QString num3;
+                num3.setNum(SCI_MINUTE(time));
+                num3 = num3.rightJustify(2, '0');
+                tmp = i18n("Plugged in - %1% charged (%2:%3 time left)")
 					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
-			} else
-			if (perc == -1)
-				tmp = i18n("Plugged in - no battery");
-			else
-				tmp = i18n("Plugged in - %1% charged").arg(perc);
-		}
-	} else {
-		if (perc >= 0) {
-			QString num3;
-			num3.setNum(SCI_MINUTE(time));
-			num3 = num3.rightJustify(2, '0');
-			tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
+            } else
+            if (perc == -1)
+                tmp = i18n("Plugged in - no battery");
+            else
+                tmp = i18n("Plugged in - %1% charged").arg(perc);
+        }
+    } else {
+        if (perc >= 0) {
+            QString num3;
+            num3.setNum(SCI_MINUTE(time));
+            num3 = num3.rightJustify(2, '0');
+            tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
 					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
-		} else
-			tmp = i18n("Running on batteries  - %1% charged").arg(perc);
-	}
-	QToolTip::add(this, tmp);
+        } else
+            tmp = i18n("Running on batteries  - %1% charged").arg(perc);
+    }
+    QToolTip::add(this, tmp);
 }
 
 void KToshiba::checkHotKeys()
 {
-	KProcess proc;
-	QByteArray data, replyData;
-	QCString replyType;
-	KConfig mConfig(CONFIG_FILE);
-	mConfig.setGroup("KToshiba");
+    KProcess proc;
+    QByteArray data, replyData;
+    QCString replyType;
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("KToshiba");
 
-	int tmp = 0;
-	int key = mDriver->getSystemEvent();
+    int tmp = 0;
+    int key = mDriver->getSystemEvent();
 
-	if ((key == 0x100) && (popup != 0)) {
-		mSettingsWidget->hide();
-		mStatusWidget->hide();
-		popup = 0;
-	}
+    if ((key == 0x100) && (popup != 0)) {
+        mSettingsWidget->hide();
+        mStatusWidget->hide();
+        popup = 0;
+    }
 
-	switch (key) {
-		case 0x101: // Fn-Esc
-			tmp = mConfig.readNumEntry("Fn_Esc");
-			break;
-		case 0x13b: // Fn-F1
-			tmp = mConfig.readNumEntry("Fn_F1");
-			break;
-		case 0x13c: // Fn-F2
-			tmp = mConfig.readNumEntry("Fn_F2");
-			break;
-		case 0x13d: // Fn-F3
-			tmp = mConfig.readNumEntry("Fn_F3");
-			break;
-		case 0x13e: // Fn-F4
-			tmp = mConfig.readNumEntry("Fn_F4");
-			break;
-		case 0x13f: // Fn-F5
-			tmp = mConfig.readNumEntry("Fn_F5");
-			break;
-		case 0x140: // Fn-F6
-			tmp = mConfig.readNumEntry("Fn_F6");
-			break;
-		case 0x141: // Fn-F7
-			tmp = mConfig.readNumEntry("Fn_F7");
-			break;
-		case 0x142: // Fn-F8
-			tmp = mConfig.readNumEntry("Fn_F8");
-			break;
-		case 0x143: // Fn-F9
-			tmp = mConfig.readNumEntry("Fn_F9");
-			break;
-		/** Front Panel Multimedia Buttons */
-		case 0xb31:	// Previous
-			if (MODE == CD_DVD) {
-				if (!mClient.call("kscd", "CDPlayer", "previous()", data, replyType, replyData))
-					mClient.send("kaffeine", "KaffeineIface", "previous()", "");
-			} else
-			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK)
-					mClient.send("amarok", "player", "prev()", "");
-				else if (mAudioPlayer == JuK)
-					mClient.send("juk", "Player", "back()", "");
-				else if (mAudioPlayer == XMMS) {
-					proc << "xmms" << "--rew";
-					proc.start(KProcess::DontCare);
-					proc.detach();
-				}
-			}
-			return;
-		case 0xb32:	// Next
-			if (MODE == CD_DVD) {
-				if (!mClient.call("kscd", "CDPlayer", "next()", data, replyType, replyData))
-					mClient.send("kaffeine", "KaffeineIface", "next()", "");
-			} else
-			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK)
-					mClient.send("amarok", "player", "next()", "");
-				else if (mAudioPlayer == JuK)
-					mClient.send("juk", "Player", "forward()", "");
-				else if (mAudioPlayer == XMMS) {
-					proc << "xmms" << "--fwd";
-					proc.start(KProcess::DontCare);
-					proc.detach();
-				}
-			}
-			return;
-		case 0xb33:	// Play/Pause
-			if (MODE == CD_DVD) {
-				if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
-					if (!mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData))
-						kdDebug() << "KsCD and Kaffeine are not running" << endl;
-					else {
-						QDataStream reply(replyData, IO_ReadOnly);
-						bool res;
-						reply >> res;
-						if (res)
-							mClient.send("kaffeine", "KaffeineIface", "pause()", "");
-						else
-							mClient.send("kaffeine", "KaffeineIface", "play()", "");
-					}
-			} else
-			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK)
-					mClient.send("amarok", "player", "playPause()", "");
-				else if (mAudioPlayer == JuK)
-					mClient.send("juk", "Player", "playPause()", "");
-				else if (mAudioPlayer == XMMS) {
-					proc << "xmms" << "--play-pause";
-					proc.start(KProcess::DontCare);
-					proc.detach();
-				}
-			}
-			return;
-		case 0xb30:	// Stop/Eject
-			if (MODE == CD_DVD) {
-				if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
-					if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData)) {
-						proc << "eject" << "--cdrom";
-						proc.start(KProcess::DontCare);
-						proc.detach();
-					}
-			} else
-			if (MODE == DIGITAL) {
-				if (mAudioPlayer == amaroK)
-					mClient.send("amarok", "player", "stop()", "");
-				else if (mAudioPlayer == JuK)
-					mClient.send("juk", "Player", "stop()", "");
-				else if (mAudioPlayer == XMMS) {
-					proc << "xmms" << "--stop";
-					proc.start(KProcess::DontCare);
-					proc.detach();
-				}
-			}
-			return;
-		case 0xb85:	// Toggle S-Video Out
-			if (!svideo) {
-				mDriver->setVideo(4);	// S-Video
-				svideo = 1;
-			}
-			else if (svideo) {
-				mDriver->setVideo(1);	// LCD
-				svideo = 0;
-			}
-			return;
-		case 0xb86:	// E-Button
-			proc << "kfmclient" << "openProfile" << "webbrowsing";
-			proc.start(KProcess::DontCare);
-			proc.detach();
-			return;
-		case 0xb87:	// I-Button
-			proc << "konsole";
-			proc.start(KProcess::DontCare);
-			proc.detach();
-			return;
-		case 1:
-			if (mDriver->hotkeys == false) {
-				mDriver->enableSystemEvent();
-				mDriver->hotkeys = true;
-			}
-			return;
-		case 0:	// FIFO empty
-			return;
-	}
-	performFnAction(tmp, key);
+    switch (key) {
+        case 0:	// FIFO empty
+            return;
+        case 1:
+            if (mDriver->hotkeys == false) {
+                mDriver->enableSystemEvent();
+                mDriver->hotkeys = true;
+            }
+            return;
+        case 0x101: // Fn-Esc
+            tmp = mConfig.readNumEntry("Fn_Esc");
+            break;
+        case 0x13b: // Fn-F1
+            tmp = mConfig.readNumEntry("Fn_F1");
+            break;
+        case 0x13c: // Fn-F2
+            tmp = mConfig.readNumEntry("Fn_F2");
+            break;
+        case 0x13d: // Fn-F3
+            tmp = mConfig.readNumEntry("Fn_F3");
+            break;
+        case 0x13e: // Fn-F4
+            tmp = mConfig.readNumEntry("Fn_F4");
+            break;
+        case 0x13f: // Fn-F5
+            tmp = mConfig.readNumEntry("Fn_F5");
+            break;
+        case 0x140: // Fn-F6
+            tmp = mConfig.readNumEntry("Fn_F6");
+            break;
+        case 0x141: // Fn-F7
+            tmp = mConfig.readNumEntry("Fn_F7");
+            break;
+        case 0x142: // Fn-F8
+            tmp = mConfig.readNumEntry("Fn_F8");
+            break;
+        case 0x143: // Fn-F9
+            tmp = mConfig.readNumEntry("Fn_F9");
+            break;
+        /** Front Panel Multimedia Buttons */
+        case 0xb31:	// Previous
+            if (MODE == CD_DVD) {
+                if (!mClient.call("kscd", "CDPlayer", "previous()", data, replyType, replyData))
+                    mClient.send("kaffeine", "KaffeineIface", "previous()", "");
+            } else
+            if (MODE == DIGITAL) {
+            if (mAudioPlayer == amaroK)
+                mClient.send("amarok", "player", "prev()", "");
+                else if (mAudioPlayer == JuK)
+                    mClient.send("juk", "Player", "back()", "");
+                else if (mAudioPlayer == XMMS) {
+                    proc << "xmms" << "--rew";
+                    proc.start(KProcess::DontCare);
+                    proc.detach();
+                }
+            }
+            return;
+        case 0xb32:	// Next
+            if (MODE == CD_DVD) {
+                if (!mClient.call("kscd", "CDPlayer", "next()", data, replyType, replyData))
+                    mClient.send("kaffeine", "KaffeineIface", "next()", "");
+            } else
+            if (MODE == DIGITAL) {
+                if (mAudioPlayer == amaroK)
+                    mClient.send("amarok", "player", "next()", "");
+                else if (mAudioPlayer == JuK)
+                    mClient.send("juk", "Player", "forward()", "");
+                else if (mAudioPlayer == XMMS) {
+                    proc << "xmms" << "--fwd";
+                    proc.start(KProcess::DontCare);
+                    proc.detach();
+                }
+            }
+            return;
+        case 0xb33:	// Play/Pause
+            if (MODE == CD_DVD) {
+                if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
+                    if (!mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData))
+                        kdDebug() << "KsCD and Kaffeine are not running" << endl;
+                    else {
+                        QDataStream reply(replyData, IO_ReadOnly);
+                        bool res;
+                        reply >> res;
+                        if (res)
+                            mClient.send("kaffeine", "KaffeineIface", "pause()", "");
+                        else
+                            mClient.send("kaffeine", "KaffeineIface", "play()", "");
+                    }
+            } else
+            if (MODE == DIGITAL) {
+                if (mAudioPlayer == amaroK)
+                    mClient.send("amarok", "player", "playPause()", "");
+                else if (mAudioPlayer == JuK)
+                    mClient.send("juk", "Player", "playPause()", "");
+                else if (mAudioPlayer == XMMS) {
+                    proc << "xmms" << "--play-pause";
+                    proc.start(KProcess::DontCare);
+                    proc.detach();
+                }
+            }
+            return;
+        case 0xb30:	// Stop/Eject
+            if (MODE == CD_DVD) {
+                if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
+                    if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData)) {
+                        proc << "eject" << "--cdrom";
+                        proc.start(KProcess::DontCare);
+                        proc.detach();
+                    }
+            } else
+            if (MODE == DIGITAL) {
+                if (mAudioPlayer == amaroK)
+                    mClient.send("amarok", "player", "stop()", "");
+                else if (mAudioPlayer == JuK)
+                    mClient.send("juk", "Player", "stop()", "");
+                else if (mAudioPlayer == XMMS) {
+                    proc << "xmms" << "--stop";
+                    proc.start(KProcess::DontCare);
+                    proc.detach();
+                }
+            }
+            break;
+        case 0xb85:	// Toggle S-Video Out
+            if (!svideo) {
+                mDriver->setVideo(4);	// S-Video
+                svideo = 1;
+            }
+            else if (svideo) {
+                mDriver->setVideo(1);	// LCD
+                svideo = 0;
+            }
+            return;
+        case 0xb86:	// E-Button
+            proc << "kfmclient" << "openProfile" << "webbrowsing";
+            proc.start(KProcess::DontCare);
+            proc.detach();
+            return;
+        case 0xb87:	// I-Button
+            proc << "konsole";
+            proc.start(KProcess::DontCare);
+            proc.detach();
+            return;
+    }
+    performFnAction(tmp, key);
 }
 
 void KToshiba::performFnAction(int action, int key)

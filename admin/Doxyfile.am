@@ -83,8 +83,12 @@ install-apidox:
 				$(INSTALL_DATA) $(top_builddir)/apidocs/$(subdir)/html/$$file $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/$(subdir)/html; \
 		done; \
 		fi; \
-		rm -f $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/common; \
-		$(LN_S) $(kde_libs_htmldir)/en/common $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/common; \
+		symlink="$(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/common"; \
+		if test ! -L "$symlink" -o `readlink "$symlink" 2>/dev/null` != "$(kde_libs_htmldir)/en/common"; then \
+			echo "Creating symlink $(kde_htmldir)/en/$(PACKAGE)-apidocs/common"; \
+			rm -f $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/common; \
+			$(LN_S) $(kde_libs_htmldir)/en/common $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs/common; \
+		fi; \
 	else\
 		if test -d $(top_builddir)/apidocs; then \
 		$(mkinstalldirs) $(DESTDIR)$(kde_htmldir)/en/$(PACKAGE)-apidocs ;\

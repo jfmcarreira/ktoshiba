@@ -96,7 +96,7 @@ void KToshibaSMMInterface::setBrightness(int value)
 		value = 7;
 
 	if (getBrightness() != -1 && value >= 0 &&
-	    value < HCI_LCD_BRIGHTNESS_LEVELS) {
+		    value < HCI_LCD_BRIGHTNESS_LEVELS) {
 		reg.eax = HCI_SET;
 		reg.ebx = HCI_BRIGHTNESS_LEVEL;
 		value = value << HCI_LCD_BRIGHTNESS_SHIFT;

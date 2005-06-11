@@ -89,7 +89,8 @@ msgstr " sec"
 
 #: rc.cpp:30
 #, no-c-format
-msgid "This is used to determine how often the program will check the battery status"
+msgid ""
+"This is used to determine how often the program will check the battery status"
 msgstr ""
 "Cette option est utilisée afin de déterminer la période de vérification de "
 "l'état de la batterie"
@@ -107,12 +108,14 @@ msgstr " min"
 #: rc.cpp:39
 #, no-c-format
 msgid "This is used to enable the low battery information"
-msgstr "Cette option est utilisée pour activer la notification de batterie faible"
+msgstr ""
+"Cette option est utilisée pour activer la notification de batterie faible"
 
 #: rc.cpp:45
 #, no-c-format
 msgid "This is used to enable the critical battery information"
-msgstr "Cette option est utilisée pour activer la notification de batterie critique"
+msgstr ""
+"Cette option est utilisée pour activer la notification de batterie critique"
 
 #: rc.cpp:48
 #, no-c-format
@@ -468,5 +471,3 @@ msgstr ""
 "Impossible de trouver le <i>pilote Toshiba de gestion du système</i>. Si ce "
 "portable est un Toshiba, veuillez vous assurer que le module <b>toshiba</b> "
 "se charge sans problème."
-
-

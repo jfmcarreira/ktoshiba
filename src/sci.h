@@ -11,6 +11,9 @@
  *   not to make any modifications and use it as it stands.
  *
  * $Log$
+ * Revision 1.7  2005/06/11 19:13:55  coproscefalo
+ * Updates to some files
+ *
  * Revision 1.6  2005/05/21 15:56:14  coproscefalo
  * added boot priority code and misc changes
  *
@@ -129,11 +132,14 @@ enum {
 	SCI_PARALLEL_PORT   = 0x0501,
 	SCI_POINTING_DEVICE = 0x0505,
 	SCI_INFRARED_PORT   = 0x0508,
+	SCI_USB_LEGACY_MODE = 0x050c,
+	SCI_USB_FLOPPY_EMUL = 0x050d,
 	SCI_PASSWORD_MODE   = 0x0600,
 	SCI_PASSWORD_CHECK  = 0x0601,
 	SCI_PASSWORD        = 0x0602,
 	SCI_PASSWORD_VERIFY = 0x0603,
-	SCI_PASSWORD_LEVEL  = 0x0604
+	SCI_PASSWORD_LEVEL  = 0x0604,
+	SCI_WOL_MODE        = 0x0700
 };
 
 

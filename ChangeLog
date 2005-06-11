@@ -1,3 +1,14 @@
+2005-06-10 Azael Avalos <neftali@utep.edu>
+	* Used classes instead of includes where possible
+	* Removed uneeded variables
+
+2005-06-06 Azael Avalos <neftali@utep.edu>
+	* Removed a function since was not needed anymore
+
+2005-06-04 Azael Avalos <neftali@utep.edu>
+	* New model id added thanks to Jan Karjalainen
+	* French translations updated, thanks to Nicolas Ternisien
+
 2005-06-02 Azael Avalos <neftali@utep.edu>
 	* Added a check for /proc/acpi/sleep file, if it doesn't
 	  exist STD and STR menu items are disabled
