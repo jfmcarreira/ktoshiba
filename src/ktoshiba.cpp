@@ -920,14 +920,7 @@ void KToshiba::lockScreen()
 
 void KToshiba::toggleWireless()
 {
-    int swtch = mDriver->getWirelessSwitch();
-    if (!swtch) {
-        KMessageBox::sorry(0, i18n("In order to deactivate the wireless interface "
-						   "the wireless antenna switch must be turned on"), i18n("Wireless"));
-        return;
-    } else
-    if (swtch == 1)
-        mDriver->setWirelessPower(wireless);
+    mDriver->setWirelessPower(wireless);
 
     QString w = ((wireless == 1)? i18n("up") : i18n("down"));
     KPassivePopup::message(i18n("KToshiba"),
