@@ -986,7 +986,7 @@ void KToshiba::doBluetooth()
 
 void KToshiba::checkSystem()
 {
-    int bay, ws;
+    int bay = -1, ws = -1;
 
     if (wstrig == false)
         ws = mDriver->getWirelessSwitch();
