@@ -27,7 +27,7 @@
 static const char description[] =
     I18N_NOOP("Hotkeys & Battery monitoring for Toshiba laptops.");
 
-static const char version[] = "0.7Alpha";
+static const char version[] = "0.7";
 
 static KCmdLineOptions options[] =
 {
