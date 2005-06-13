@@ -1,3 +1,8 @@
+2005-06-13 Azael Avalos <neftali@utep.edu>
+	* Some changes to checkHotKeys() function
+	  (some lines where reduced)
+	* Released 0.7
+
 2005-06-11 Azael Avalos <neftali@utep.edu>
 	* Updated admin directory and src/Makefile.am
 	* initialized some variables to avoid compiler warnings

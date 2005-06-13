@@ -530,6 +530,20 @@ void KToshiba::checkHotKeys()
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
         /** Front Panel Multimedia Buttons */
+        case 0xb30:	// Stop/Eject
+            if (MODE == CD_DVD)
+                if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
+                    if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData))
+                        proc << "eject" << "--cdrom";
+            if (MODE == DIGITAL) {
+                if (mAudioPlayer == amaroK)
+                    mClient.send("amarok", "player", "stop()", "");
+                else if (mAudioPlayer == JuK)
+                    mClient.send("juk", "Player", "stop()", "");
+                else if (mAudioPlayer == XMMS)
+                    proc << "xmms" << "--stop";
+            }
+            break;
         case 0xb31:	// Previous
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "previous()", data, replyType, replyData))
@@ -540,13 +554,10 @@ void KToshiba::checkHotKeys()
                 mClient.send("amarok", "player", "prev()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "back()", "");
-                else if (mAudioPlayer == XMMS) {
+                else if (mAudioPlayer == XMMS)
                     proc << "xmms" << "--rew";
-                    proc.start(KProcess::DontCare);
-                    proc.detach();
-                }
             }
-            return;
+            break;
         case 0xb32:	// Next
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "next()", data, replyType, replyData))
@@ -557,13 +568,10 @@ void KToshiba::checkHotKeys()
                     mClient.send("amarok", "player", "next()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "forward()", "");
-                else if (mAudioPlayer == XMMS) {
+                else if (mAudioPlayer == XMMS)
                     proc << "xmms" << "--fwd";
-                    proc.start(KProcess::DontCare);
-                    proc.detach();
-                }
             }
-            return;
+            break;
         case 0xb33:	// Play/Pause
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
@@ -584,32 +592,8 @@ void KToshiba::checkHotKeys()
                     mClient.send("amarok", "player", "playPause()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "playPause()", "");
-                else if (mAudioPlayer == XMMS) {
+                else if (mAudioPlayer == XMMS)
                     proc << "xmms" << "--play-pause";
-                    proc.start(KProcess::DontCare);
-                    proc.detach();
-                }
-            }
-            return;
-        case 0xb30:	// Stop/Eject
-            if (MODE == CD_DVD) {
-                if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
-                    if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData)) {
-                        proc << "eject" << "--cdrom";
-                        proc.start(KProcess::DontCare);
-                        proc.detach();
-                    }
-            } else
-            if (MODE == DIGITAL) {
-                if (mAudioPlayer == amaroK)
-                    mClient.send("amarok", "player", "stop()", "");
-                else if (mAudioPlayer == JuK)
-                    mClient.send("juk", "Player", "stop()", "");
-                else if (mAudioPlayer == XMMS) {
-                    proc << "xmms" << "--stop";
-                    proc.start(KProcess::DontCare);
-                    proc.detach();
-                }
             }
             break;
         case 0xb85:	// Toggle S-Video Out
@@ -624,14 +608,15 @@ void KToshiba::checkHotKeys()
             return;
         case 0xb86:	// E-Button
             proc << "kfmclient" << "openProfile" << "webbrowsing";
-            proc.start(KProcess::DontCare);
-            proc.detach();
-            return;
+            break;
         case 0xb87:	// I-Button
             proc << "konsole";
-            proc.start(KProcess::DontCare);
-            proc.detach();
-            return;
+            break;
+    }
+    if ((key >= 0xb30) && (key != 0xb85)) {
+        proc.start(KProcess::DontCare);
+        proc.detach();
+        return;
     }
     performFnAction(tmp, key);
 }
