@@ -20,59 +20,40 @@
 
 #include "ktoshiba.h"
 #include "ktoshibasmminterface.h"
+#include "fnactions.h"
 #include "modelid.h"
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qprogressbar.h>
-#include <qslider.h>
-#include <qbitmap.h>
 #include <qpixmap.h>
 #include <qimage.h>
 #include <qtooltip.h>
-#include <qapplication.h>
-#include <qwidget.h>
-#include <qwidgetstack.h>
 #include <qtimer.h>
+#include <qwidget.h>
 
-#include <kapplication.h>
 #include <kaboutapplication.h>
-#include <klocale.h>
 #include <kdebug.h>
 #include <kconfig.h>
-#include <kpassivepopup.h>
 #include <kiconloader.h>
-#include <kprocess.h>
+#include <klocale.h>
 #include <kpopupmenu.h>
-#include <dcopclient.h>
+#include <kprocess.h>
 #include <kmessagebox.h>
+#include <kpassivepopup.h>
 #include <kstandarddirs.h>
-#include <kwin.h>
-#include <dcopref.h>
-
-#include <sys/shm.h>
-#include <unistd.h>
-
-#include "settingswidget.h"
-#include "statuswidget.h"
 
 #define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
       mDriver( 0 ),
-      m_synShm( 0 ),
+      mFn( 0 ),
       mPowTimer( new QTimer(this) ),
       mHotKeysTimer( new QTimer(this) ),
       mModeTimer( new QTimer(this) ),
       mSystemTimer( new QTimer(this) )
 {
     mDriver = new KToshibaSMMInterface(this);
+    mFn = new FnActions(this);
     mAboutWidget = new KAboutApplication(this, "About Widget", false);
-    mSettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
-    mSettingsWidget->setFocusPolicy(QWidget::NoFocus);
-    mStatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
-    mStatusWidget->setFocusPolicy(QWidget::NoFocus);
     instance = new KInstance("ktoshiba");
 
     // check whether toshiba module is loaded
@@ -85,15 +66,10 @@ KToshiba::KToshiba()
     } else {
         kdDebug() << "KToshiba: Interface opened successfully." << endl;
         mBatType = mDriver->getBatterySaveModeType();
-        mBootType = mDriver->getBootType();
         mDriver->batteryStatus(&time, &perc);
-        mPad = mDriver->getPointingDevice();
         mHT = mDriver->getHyperThreading();
         mSS = mDriver->getSpeedStep();
         mAC = mDriver->acPowerStatus();
-        video = mDriver->getVideo();
-        bright = mDriver->getBrightness();
-        boot = mDriver->getBootMethod();
         mWirelessSwitch = 1;
         mBatSave = 2;
         (perc == 100)? battrig = true : battrig = false;
@@ -102,13 +78,7 @@ KToshiba::KToshiba()
         battrig = false;
         wstrig = false;
         baytrig = false;
-        snd = 1;
-        popup = 0;
-        mousepad = 0;
         bluetooth = 0;
-        wireless = 1;
-        fan = -1;
-        vol = -1;
         sblock = HCI_LOCKED;
         removed = 0;
         svideo = 0;
@@ -117,22 +87,7 @@ KToshiba::KToshiba()
     // Default to mode 2 if we got a failure
     if (mBatType == -1)
         mBatType = 2;
-
-    if (mPad == -1) {
-        // Code below taken from ksynaptics
-        int shmid;
-        if ((shmid = shmget(SHM_SYNAPTICS, sizeof(SynapticsSHM), 0)) == -1) {
-            if ((shmid = shmget(SHM_SYNAPTICS, 0, 0)) == -1) 
-                kdError() << "KToshiba: Access denied to driver shared memory" << endl;
-            else
-                kdError() << "KToshiba: Shared memory segment size mismatch" << endl;
-            m_synShm = NULL;
-        }
-        else {
-            if ((m_synShm = (SynapticsSHM*) shmat(shmid, NULL, 0)) == NULL)
-                kdError() << "KToshiba: Error attaching to shared memory segment" << endl;
-        }
-    }
+    mFn->m_BatType = mBatType;
 
     if (!mClient.attach())
         kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
@@ -142,11 +97,11 @@ KToshiba::KToshiba()
 
     doMenu();
 
-    connect( mPowTimer, SIGNAL( timeout() ), SLOT( powerStatus() ) );
+    connect( mPowTimer, SIGNAL( timeout() ), SLOT( checkPowerStatus() ) );
     mPowTimer->start(mBatStatus * 1000);
     connect( mHotKeysTimer, SIGNAL( timeout() ), SLOT( checkHotKeys() ) );
     mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
-    connect( mModeTimer, SIGNAL( timeout() ), SLOT( mode() ) );
+    connect( mModeTimer, SIGNAL( timeout() ), SLOT( checkMode() ) );
     mModeTimer->start(500);		// Check proc entry every 1/2 seconds
     connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
     mSystemTimer->start(500);		// Check system events every 1/2 seconds
@@ -171,13 +126,8 @@ KToshiba::~KToshiba()
         mDriver->closeInterface();
         delete mDriver; mDriver = NULL;
     }
-    if (m_synShm != 0) {
-        delete m_synShm; m_synShm = NULL;
-    }
 
     delete instance; instance = NULL;
-    delete mStatusWidget; mStatusWidget = NULL;
-    delete mSettingsWidget; mSettingsWidget = NULL;
     delete mAboutWidget; mAboutWidget = NULL;
 }
 
@@ -186,10 +136,10 @@ void KToshiba::doMenu()
     this->contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
                                      SLOT( doConfig() ), 0, 1, 1 );
     this->contextMenu()->insertSeparator( 2 );
-    this->contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
-                                     SLOT( doSuspendToDisk() ), 0, 3, 3 );
     this->contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
-                                     SLOT( doSuspendToRAM() ), 0, 4, 4 );
+                                     SLOT( doSuspendToRAM() ), 0, 3, 3 );
+    this->contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
+                                     SLOT( doSuspendToDisk() ), 0, 4, 4 );
     if (::access("/proc/acpi/sleep", F_OK) == -1) {
         this->contextMenu()->setItemEnabled( 3, FALSE );
         this->contextMenu()->setItemEnabled( 4, FALSE );
@@ -230,6 +180,35 @@ void KToshiba::doConfig()
     proc.detach();
 }
 
+void KToshiba::doSuspendToRAM()
+{
+    mFn->SuspendToRAM();
+}
+
+void KToshiba::doSuspendToDisk()
+{
+    mFn->SuspendToDisk();
+}
+
+void KToshiba::doBluetooth()
+{
+    if (!mDriver->getBluetooth()) {
+        this->contextMenu()->setItemEnabled(6, FALSE);
+        kdDebug() << "KToshiba::doBluetooth(): "
+				  << "No Bluetooth device found" << endl;
+        return;
+    } else
+    if (!bluetooth || (btstart && !bluetooth)) {
+        mDriver->setBluetoothPower(1);
+        KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
+							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
+        this->contextMenu()->setItemEnabled(6, FALSE);
+        bluetooth = 1;
+    }
+    else
+        this->contextMenu()->setItemEnabled(6, TRUE);
+}
+
 void KToshiba::loadConfiguration(KConfig *k)
 {
     k->setGroup("KToshiba");
@@ -248,7 +227,7 @@ void KToshiba::displayAbout()
     mAboutWidget->show();
 }
 
-void KToshiba::powerStatus()
+void KToshiba::checkPowerStatus()
 {
     KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("KToshiba");
@@ -288,12 +267,13 @@ void KToshiba::powerStatus()
     }
 
     if (mBatSave != mOldBatSave || pow != oldpow) {
+        int bright;
         switch (mBatSave) {
             case 0:			// USER SETTINGS or LONG LIFE
                 if (mBatType == 3)
                     bright = 0;	// Semi-Bright
                 else if (mBatType == 2)
-                    bsmUserSettings(&mConfig);
+                    bsmUserSettings(&mConfig, &bright);
                 break;
             case 1:			// LOW POWER or NORMAL LIFE
                 if (pow == 3)
@@ -326,7 +306,32 @@ void KToshiba::powerStatus()
         displayPixmap();
 }
 
-void KToshiba::bsmUserSettings(KConfig *k)
+int KToshiba::acpiAC()
+{
+    // Code taken from klaptopdaemon
+    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
+
+    if (::access(r, F_OK) != -1) {
+        FILE *f = NULL;
+        char s[1024];
+        f = fopen(r, "r");
+        if (f) {
+            if (fgets(s, sizeof(r), f) == NULL)
+                return -1;
+            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
+                if (strstr(s, "on-line") != NULL) {
+                    fclose(f);
+                    return 4;
+                }
+            fclose(f);
+            return 3;
+        }
+    }
+
+    return -1;
+}
+
+void KToshiba::bsmUserSettings(KConfig *k, int *bright)
 {
     int processor, cpu, display, hdd, lcd, cooling;
     int tmp;
@@ -343,9 +348,9 @@ void KToshiba::bsmUserSettings(KConfig *k)
     mDriver->setProcessingSpeed(tmp);
     (cpu == 0)? tmp = 1 : tmp = 0;
     mDriver->setCPUSleepMode(tmp);
-    if (lcd == 0) bright = 7;		// Super-Bright
-    else if (lcd == 1) bright = 3;	// Bright
-    else if (lcd == 2) bright = 0;	// Semi-Bright
+    if (lcd == 0) *bright = 7;		// Super-Bright
+    else if (lcd == 1) *bright = 3;	// Bright
+    else if (lcd == 2) *bright = 0;	// Semi-Bright
     mDriver->setCoolingMethod(cooling);
     mDriver->setDisplayAutoOff(display);
     mDriver->setHDDAutoOff(hdd);
@@ -484,11 +489,8 @@ void KToshiba::checkHotKeys()
     int tmp = 0;
     int key = mDriver->getSystemEvent();
 
-    if ((key == 0x100) && (popup != 0)) {
-        mSettingsWidget->hide();
-        mStatusWidget->hide();
-        popup = 0;
-    }
+    if ((key == 0x100) && (mFn->m_Popup != 0))
+        mFn->hideWidgets();
 
     switch (key) {
         case 0:	// FIFO empty
@@ -618,322 +620,10 @@ void KToshiba::checkHotKeys()
         proc.detach();
         return;
     }
-    performFnAction(tmp, key);
+    mFn->performFnAction(tmp, key);
 }
 
-void KToshiba::performFnAction(int action, int key)
-{
-	switch(action) {
-		case 0: // Disabled (Do Nothing)
-			return;
-		case 2: // LockScreen
-			lockScreen();
-			return;
-		case 4: // Suspend To RAM (STR)
-			doSuspendToRAM();
-			return;
-		case 5: // Suspend To Disk (STD)
-			doSuspendToDisk();
-			return;
-		case 9: // Wireless On/Off
-			wireless--;
-			if (wireless < 0) wireless = 1;
-			toggleWireless();
-			return;
-		case 14: // LCD Backlight On/Off
-			toogleBackLight();
-			return;
-		case 1: // Mute/Unmute
-		case 7: // Brightness Down
-		case 8: // Brightness Up
-		case 10: // Enable/Disable MousePad
-		case 11: // Speaker Volume
-		case 12: // Fan On/Off
-			if (popup == 0) {
-				QRect r = QApplication::desktop()->geometry();
-				mStatusWidget->move(r.center() - 
-					QPoint(mStatusWidget->width()/2, mStatusWidget->height()/2));
-				mStatusWidget->show();
-				popup = key & 0x17f;
-			}
-			if ((key & 0x17f) == popup)
-				goto update_widget;
-			break;
-		case 3: // Toggle Battery Save Mode
-		case 6: // Toggle Video
-		case 13: // Toggle Boot Method
-			if (popup == 0) {
-				QRect r = QApplication::desktop()->geometry();
-				mSettingsWidget->move(r.center() - 
-					QPoint(mSettingsWidget->width()/2, mSettingsWidget->height()/2));
-				mSettingsWidget->show();
-				popup = key & 0x17f;
-			}
-			if ((key & 0x17f) == popup)
-				goto update_widget;
-			break;
-	}
-update_widget:
-
-	if (action == 3) {
-		mBatSave--;
-		if (mBatSave < 0) mBatSave = 2;
-		if (mBatType == 3) mDriver->setBatterySaveMode(mBatSave + 1);
-		else mDriver->setBatterySaveMode(mBatSave);
-		KConfig cfg(CONFIG_FILE);
-		cfg.setGroup("KToshiba");
-		cfg.writeEntry("Battery_Save_Mode", mBatSave);
-		mSettingsWidget->wsSettings->raiseWidget(0);
-		mSettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
-		switch (mBatSave) {
-			case 0:
-				(mBatType == 3)? mSettingsWidget->tlStatus->setText(i18n("Long Life"))
-				: mSettingsWidget->tlStatus->setText(i18n("User Settings"));
-				mSettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 1:
-				(mBatType == 3)? mSettingsWidget->tlStatus->setText(i18n("Normal Life"))
-				: mSettingsWidget->tlStatus->setText(i18n("Low Power"));
-				mSettingsWidget->plMedium->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 2:
-				(mBatType == 3)? mSettingsWidget->tlStatus->setText(i18n("Full Life"))
-				: mSettingsWidget->tlStatus->setText(i18n("Full Power"));
-				mSettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
-				break;
-		}
-	}
-	if (action == 6) {
-		video += 2;
-		if (video == 5) video = 2;
-		else if (video > 4) video = 1;
-		// TODO: Find out wich models do video out change automatically
-		//if (mDriver->machineID() < 0xfcf8) mDriver->setVideo(video - 0x100);
-		//if (video == 6) mDriver->setVideo(4); mDriver->setBackLight(1);
-		mSettingsWidget->wsSettings->raiseWidget(1);
-		mSettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
-		//mSettingsWidget->plLCDTV->setFrameShape(QLabel::NoFrame);
-		switch (video) {
-			case 1:
-				mSettingsWidget->tlStatus->setText("LCD");
-				mSettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 2:
-				mSettingsWidget->tlStatus->setText("CRT");
-				mSettingsWidget->plCRT->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 3:
-				mSettingsWidget->tlStatus->setText("LCD/CRT");
-				mSettingsWidget->plLCDCRT->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 4:
-				mSettingsWidget->tlStatus->setText("S-Video");
-				mSettingsWidget->plTV->setFrameShape(QLabel::PopupPanel);
-				break;
-			//case 6:
-			//	mSettingsWidget->tlStatus->setText("LCD/S-Video");
-			//	mSettingsWidget->plLCDTV->setFrameShape(QLabel::PopupPanel);
-			//	break;
-		}
-	}
-	if (action == 13) {
-		boot++;
-		if (boot > mBootType) boot = 0;
-		mDriver->setBootMethod(boot);
-		mSettingsWidget->wsSettings->raiseWidget(2);
-		mSettingsWidget->plFD->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plHD->setFrameShape(QLabel::NoFrame);
-		mSettingsWidget->plCD->setFrameShape(QLabel::NoFrame);
-		switch (mBootType) {
-			case 1:
-				if (!boot)
-					mSettingsWidget->tlStatus->setText("FDD -> HDD");
-				else
-					mSettingsWidget->tlStatus->setText("HDD -> FDD");
-				mSettingsWidget->plFD->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plHD->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 3:
-				if (!boot)
-					mSettingsWidget->tlStatus->setText("FDD -> Built-in HDD");
-				else if (boot == 1)
-					mSettingsWidget->tlStatus->setText("Built-in HDD -> FDD");
-				else if (boot == 2)
-					mSettingsWidget->tlStatus->setText("FDD -> Second HDD");
-				else
-					mSettingsWidget->tlStatus->setText("Second HDD -> FDD");
-				mSettingsWidget->plFD->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plHD->setFrameShape(QLabel::PopupPanel);
-				break;
-			case 5:
-				if (!boot)
-					mSettingsWidget->tlStatus->setText("FDD -> HDD -> CD-ROM");
-				else if (boot == 1)
-					mSettingsWidget->tlStatus->setText("HDD -> FDD -> CD-ROM");
-				else if (boot == 2)
-					mSettingsWidget->tlStatus->setText("FDD -> CD-ROM -> HDD");
-				else if (boot == 3)
-					mSettingsWidget->tlStatus->setText("HDD -> CD-ROM -> FDD");
-				else if (boot == 4)
-					mSettingsWidget->tlStatus->setText("CD-ROM -> FDD -> HDD");
-				else
-					mSettingsWidget->tlStatus->setText("CD-ROM -> HDD -> FDD");
-				mSettingsWidget->plFD->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plHD->setFrameShape(QLabel::PopupPanel);
-				mSettingsWidget->plCD->setFrameShape(QLabel::PopupPanel);
-				break;
-		}
-	}
-	if (action == 1) {
-		snd--;
-		if (snd < 0) snd = 1;
-		mute();
-		mStatusWidget->wsStatus->raiseWidget(snd);
-	}
-	if ((action == 7) || (action == 8)) {
-		(action == 7)? brightDown() : brightUp();
-		if (bright <= 7 && bright >= 0)
-			mStatusWidget->wsStatus->raiseWidget(bright + 4);
-	}
-	if (action == 10) {
-		if ((mPad != -1) || (m_synShm != 0)) {
-			mousepad--;
-			if (mousepad < 0) mousepad = 1;
-			mousePad();
-			int mpad = ((mousepad == 0)? 2 : 3);
-			mStatusWidget->wsStatus->raiseWidget(mpad);
-		}
-		else
-			mStatusWidget->wsStatus->raiseWidget(2);
-	}
-	if (action == 11) {
-		speakerVolume();
-		if (!vol)
-			mStatusWidget->wsStatus->raiseWidget(vol);
-		else if (vol == 3)
-			mStatusWidget->wsStatus->raiseWidget(vol - 2);
-		else
-			mStatusWidget->wsStatus->raiseWidget(vol + 13);
-	}
-	if (action == 12) {
-		toggleFan();
-		if (fan == -1)
-			return;
-		else if (fan == 1)
-			mStatusWidget->wsStatus->raiseWidget(12);
-		else if (fan == 0)
-			mStatusWidget->wsStatus->raiseWidget(13);
-	}
-}
-
-void KToshiba::brightUp()
-{
-    if (bright != mDriver->getBrightness())
-        bright = mDriver->getBrightness();
-
-    mDriver->setBrightness(++bright);
-}
-
-void KToshiba::brightDown()
-{
-    if (bright != mDriver->getBrightness())
-        bright = mDriver->getBrightness();
-
-    mDriver->setBrightness(--bright);
-}
-
-void KToshiba::doSuspendToDisk()
-{
-    // TODO: When suspending to Disk the interface gets closed,
-    // I need to find a way when we're back from Suspend State
-    QString helper = KStandardDirs::findExe("ktosh_helper");
-    if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
-						   "Please make sure that it is installed correctly."),
-						   i18n("STD"));
-        this->contextMenu()->setItemEnabled(4, FALSE);
-        return;
-    }
-
-    static int res = KMessageBox::warningContinueCancel(this,
-						i18n("Before continuing, be aware that ACPI Sleep States\n"
-							 "are a work in progress and may or may not work on your computer.\n"
-							 "Also make sure to unload problematic modules"), i18n("WARNING"));
-
-    if (res == KMessageBox::Continue) {
-        KProcess proc;
-        proc << "ktosh_helper" << "--std";
-        proc.start(KProcess::DontCare);
-        proc.detach();
-    }
-}
-
-void KToshiba::doSuspendToRAM()
-{
-    QString helper = KStandardDirs::findExe("ktosh_helper");
-    if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
-						   "Please make sure that it is installed correctly."),
-						   i18n("STR"));
-        this->contextMenu()->setItemEnabled(3, FALSE);
-        return;
-    }
-
-    static int res = KMessageBox::warningContinueCancel(this,
-						i18n("Before continuing, be aware that ACPI Sleep States\n"
-							 "are a work in progress and may or may not work on your computer.\n"
-							 "Also make sure to unload problematic modules"), i18n("WARNING"));
-
-    if (res == KMessageBox::Continue) {
-        KProcess proc;
-        proc << "ktosh_helper" << "--str";
-        proc.start(KProcess::DontCare);
-        proc.detach();
-    }
-}
-
-void KToshiba::lockScreen()
-{
-    if (mClient.isAttached())
-        mClient.send("kdesktop", "KScreensaverIface", "lock()", "");
-}
-
-void KToshiba::toggleWireless()
-{
-    mDriver->setWirelessPower(wireless);
-
-    QString w = ((wireless == 1)? i18n("up") : i18n("down"));
-    KPassivePopup::message(i18n("KToshiba"),
-						   i18n("Wireless interface %1").arg(w),
-						   SmallIcon("messagebox_info", 20), this, i18n("Wireless"), 5000);
-}
-
-void KToshiba::mousePad()
-{
-    if (mPad == -1) {
-        bool enabled = (m_synShm != 0);
-
-        if (!enabled)
-            return;
-
-        m_synShm->touchpad_off = mousepad;
-    } else
-    if (mPad >= 0)
-        mDriver->setPointingDevice(mousepad);
-}
-
-void KToshiba::mute()
-{
-    DCOPRef kmixClient("kmix", "Mixer0");
-    kmixClient.send("toggleMute", 0);
-}
-
-void KToshiba::mode()
+void KToshiba::checkMode()
 {
     int temp = mDriver->procStatus();
 
@@ -941,25 +631,6 @@ void KToshiba::mode()
         MODE = CD_DVD;
     else if (temp == DIGITAL)
         MODE = DIGITAL;
-}
-
-void KToshiba::doBluetooth()
-{
-    if (!mDriver->getBluetooth()) {
-        this->contextMenu()->setItemEnabled(6, FALSE);
-        kdDebug() << "KToshiba::doBluetooth(): "
-				  << "No Bluetooth device found" << endl;
-        return;
-    } else
-    if (!bluetooth || (btstart && !bluetooth)) {
-        mDriver->setBluetooth();
-        KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
-							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
-        this->contextMenu()->setItemEnabled(6, FALSE);
-        bluetooth = 1;
-    }
-    else
-        this->contextMenu()->setItemEnabled(6, TRUE);
 }
 
 void KToshiba::checkSystem()
@@ -992,29 +663,6 @@ void KToshiba::checkSystem()
         disconnect( mSystemTimer );
         return;
     }
-}
-
-void KToshiba::speakerVolume()
-{
-    vol = mDriver->getSpeakerVolume();
-    if (vol == -1)
-        return;
-
-    vol++;
-    if (vol > 3) vol = 0;
-    mDriver->setSpeakerVolume(vol);
-}
-
-void KToshiba::toggleFan()
-{
-    int res = mDriver->getFan();
-
-    if (res < 0) {
-        fan = -1;
-        return;
-    }
-    fan = (res > 0)? 1 : 0;
-    mDriver->setFan(fan);
 }
 
 void KToshiba::checkSelectBay()
@@ -1095,18 +743,6 @@ int KToshiba::bayRescan()
     return 0;
 }
 
-void KToshiba::toogleBackLight()
-{
-    int bl = mDriver->getBackLight();
-
-    if (bl == -1)
-        return;
-    else if (bl == 1)
-        mDriver->setBackLight(0);
-    else if (bl == 0)
-        mDriver->setBackLight(1);
-}
-
 void KToshiba::setFreq(int freq)
 {
     mDriver->setSpeedStep(freq);
@@ -1115,31 +751,6 @@ void KToshiba::setFreq(int freq)
 void KToshiba::setHyper(int state)
 {
     mDriver->setHyperThreading(state);
-}
-
-int KToshiba::acpiAC()
-{
-    // Code taken from klaptopdaemon
-    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
-
-    if (::access(r, F_OK) != -1) {
-        FILE *f = NULL;
-        char s[1024];
-        f = fopen(r, "r");
-        if (f) {
-            if (fgets(s, sizeof(r), f) == NULL)
-                return -1;
-            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
-                if (strstr(s, "on-line") != NULL) {
-                    fclose(f);
-                    return 4;
-                }
-            fclose(f);
-            return 3;
-        }
-    }
-
-    return -1;
 }
 
 

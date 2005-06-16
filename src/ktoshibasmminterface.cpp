@@ -401,31 +401,36 @@ int KToshibaSMMInterface::getBluetooth()
 	return (reg.ecx & 0xff);
 }
 
-void KToshibaSMMInterface::setBluetooth()
+void KToshibaSMMInterface::setBluetoothPower(int state)
 {
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = HCI_ENABLE;
-	reg.edx = HCI_BLUETOOTH_POWER;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Could not enable Bluetooth device" << endl;
-		return;
+	if (state == 0) {
+		setBluetoothControl(state);
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_RF_CONTROL;
+		reg.ecx = HCI_DISABLE;
+		reg.edx = HCI_BLUETOOTH_POWER;
+		if (HciFunction(&reg) != HCI_SUCCESS) {
+			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+					  << "Could not disable Bluetooth device" << endl;
+			return;
+		}
+	}
+	else if (state == 1) {
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_RF_CONTROL;
+		reg.ecx = HCI_ENABLE;
+		reg.edx = HCI_BLUETOOTH_POWER;
+		if (HciFunction(&reg) != HCI_SUCCESS) {
+			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+					  << "Could not enable Bluetooth device" << endl;
+			return;
+		}
+		setBluetoothControl(state);
 	}
 	kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
-			  << "Bluetooth device enabled successfully\n"
-			  << "Attaching Bluetooth device..." << endl;
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = HCI_ENABLE;
-	reg.edx = HCI_BLUETOOTH_CTRL;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Could not attach Bluetooth device" << endl;
-		return;
-	}
-	
-	kdDebug() << "Bluetooth device attached successfully" << endl;
+			  << "Bluetooth device "
+			  << ((state == 1)? "enabled" : "disabled")
+			  << " successfully" << endl;
 }
 
 void KToshibaSMMInterface::setProcessingSpeed(int speed)
@@ -444,7 +449,7 @@ void KToshibaSMMInterface::setProcessingSpeed(int speed)
 
 	kdDebug() << "KToshibaSMMInterface::setProcessingSpeed(): "
 			  << "Successfully changed processor to "
-			  << ((speed == 0)? "LOW" : "HIGH") << " speed"<< endl;
+			  << ((speed == 0)? "LOW" : "HIGH") << " speed" << endl;
 }
 
 void KToshibaSMMInterface::setCPUSleepMode(int mode)
@@ -772,6 +777,41 @@ void KToshibaSMMInterface::setBackLight(int state)
 		kdError() << "KToshibaSMMInterface::setBackLight(): "
 				  << "Could not turn LCD backlight " 
 				  << ((state == 1)? "On" : "Off") << endl;
+}
+
+int KToshibaSMMInterface::getBluetoothPower()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0001;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBluetoothPower(): "
+				  << "Could not get Bluetooth power state" << endl;
+		return -1;
+	}
+
+	return (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setBluetoothControl(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_RF_CONTROL;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	reg.edx = HCI_BLUETOOTH_CTRL;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setBluetoothControl(): "
+				  << "Could not attach/detach Bluetooth device" << endl;
+		return;
+	}
+	
+	kdDebug() << "Bluetooth device "
+			  << ((state == 1)? "attached" : "detached")
+			  << " successfully" << endl;
 }
 
 
