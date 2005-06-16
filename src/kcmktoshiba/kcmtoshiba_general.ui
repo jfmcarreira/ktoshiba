@@ -567,6 +567,14 @@
                                         <pixmap>image15</pixmap>
                                     </property>
                                 </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
                                 <property name="name">
                                     <cstring>fnComboBox_2</cstring>
                                 </property>
@@ -693,6 +701,14 @@
                                     </property>
                                     <property name="pixmap">
                                         <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -823,6 +839,14 @@
                                         <pixmap>image15</pixmap>
                                     </property>
                                 </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
                                 <property name="name">
                                     <cstring>fnComboBox_8</cstring>
                                 </property>
@@ -949,6 +973,14 @@
                                     </property>
                                     <property name="pixmap">
                                         <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -1082,6 +1114,14 @@
                                         <pixmap>image15</pixmap>
                                     </property>
                                 </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
                                 <property name="name">
                                     <cstring>fnComboBox_3</cstring>
                                 </property>
@@ -1208,6 +1248,14 @@
                                     </property>
                                     <property name="pixmap">
                                         <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -1338,6 +1386,14 @@
                                         <pixmap>image15</pixmap>
                                     </property>
                                 </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
                                 <property name="name">
                                     <cstring>fnComboBox_1</cstring>
                                 </property>
@@ -1464,6 +1520,14 @@
                                     </property>
                                     <property name="pixmap">
                                         <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -1594,6 +1658,14 @@
                                         <pixmap>image15</pixmap>
                                     </property>
                                 </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
                                 <property name="name">
                                     <cstring>fnComboBox_5</cstring>
                                 </property>
@@ -1720,6 +1792,14 @@
                                     </property>
                                     <property name="pixmap">
                                         <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -2065,6 +2145,9 @@
     </image>
     <image name="image15">
         <data format="PNG" length="829">89504e470d0a1a0a0000000d494844520000002000000010080600000077007d5900000304494441544889a595416b5d4514c77f798e78066e60ae18793764d127cd22c14d42166d852e0a6e02fd029552a83bf123745702ba135cf901ac76dbd62c846edb85e0135d44a8788306e7428333d421734ca7b92e6ed382d0425ecee6309cf99f33e7770e0c9cdefad388cd95ab57e62f6d5cba4645e5704422aff282800141d8d9ddd9bbf5cdad6f777edde1fad5ebf3eb1bebd7c6d5b87a9ddee18825e2c4a128ed6eebb9fffdfdeffa19ede6d6cd1b407fefcebdd9721cf6bd71ce9dcb21f3e9970f999c9980cd886bb028ae72448d48117c8a9021a6802b70e3937556c62b1f004c9626e7bc0f2c2ebe7db2d9f53da696bad7040ff71d2d9966dcc03f4253d78c4da68b8e5cc03e75fcb8aba035960c402c71ee38972033edc028940002a8a2c5126304555adf7261c91242c7c71b965c221425a6004078ec392e6a8d25163d71f11c32a35a6a28e01f2b9a3259418b32a91cd3bdcce6da84ed9f02bbbb1053468b106244ccb0480099cc58ea93b7afca28970c6289fb9ef65147b7ef11111efce6c158a67b1e59aa397356d0a4b48f5a4810538798e704c4124b38797d784940a4414b26ec83ef224d6541a06dc102f5bca36d3da80518081c632fe06625104a40044432aeae1181e61de1fc798733b0b22ce494f9faee748857198c10937f41408c104b9e89803926e0161aac8038a1dd0bf87dcb471f0ad35f141f3d8d6b8804b234208a98e6c50e0038b1b311d0a26086f748258881dad5d80ab67f50d428b5ab413252c9704f1c21791c6e486440f5e404008c1377640d3cf8fcc2c04400cd602c4133b519a3aa641a6252c4d4a00a0522f10880c251bd60f9eb8f1e9121fc320f681a9a0c09e4f959047cf2bcb17c76f9adc96472b11cc69198423ae830a34278f227357384e4799367a4034fc510af4686eeef4eb7ef6c7f31fd797a79edfdb5cf16de5db8285246aa11a1905287a10cfad133c2134f3d9a231d78c414e24147392c4f4d88616bf1bdc5db6244b4683f8c63f870147d959f13246f5edefc1df8aadd6bb75657576f6b51c1d05386c57c8d1e41e6807f679adbffec54dff17f56260b1fca58823a0000000049454e44ae426082</data>
+    </image>
+    <image name="image16">
+        <data format="PNG" length="588">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff610000021349444154388da5914f4814511cc73f6f66677776d5dd687313c1a8b0c453b04610164a94145444e52122ab8b8941109d8390e8141206065d3a14624450a0195650527a88f6d01f09446ab1d2c434376777dc9937af4305ced2d6c1eff1bdefe7c3fbfd1e2c33e26f8701b3f38076765fb3b6c1a801f026c5a8d731d0eb2eb63df8afd1a8bf773538e4a840bfab8c3ea9cc414f85863c1578ec28b1e7d9c5c2beee83d75d6ed08e34757b5f22cc9f08f061d4e1ed84c41c7778b73fc85434befdfd90ea53d6f3c93f8ce67fbb734aa515ead577160099ce628ecc913a69e0665d06faf342848d561fe213945424dd2777c0db8a24813efa89d4a58dc8ac43ddd171720bc368b1aacd45054a842a8f1daae5f8de0aac9c4357670d335319ea76f4928b58080184abd62c657c23083d5076bfe725e5ab4aa80e1b4c7c9c21d9d045ae3487d034101a68819545050af0a48be7e601985e58c47255c15f0b1fe317b8ae75e1fc6ef2b6cd5856b2655315238fda91b399252567b6a84013cef4b98e87ec6abe8619d139dd7683f26884e1c176e4b7df12697f2e2ac0cda4f415a564ac5f17529a24b75d21110df362b01d39f70325edd7c505ba790b11022d4e09a0871358896a928d3d54c6cb68da5907c1f875df462848b0fee95dcf9e3de8cd642116438f99284fe27d9d474457df94a9c6967f0acc566578e9376708870e6386d60360e7c7c8bbb7b5b5b5dd76b79085ccb2f21339ebcf95ada1540d0000000049454e44ae426082</data>
     </image>
 </images>
 <connections>

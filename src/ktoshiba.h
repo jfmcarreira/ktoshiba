@@ -30,8 +30,6 @@
 #include <ksystemtray.h>
 #include <dcopclient.h>
 
-#include "synshm.h" 	// ksynaptics file
-
 class QTimer;
 class QPopupMenu;
 
@@ -39,8 +37,7 @@ class KInstance;
 class KAboutApplication;
 
 class KToshibaSMMInterface;
-class SettingsWidget;
-class StatusWidget;
+class FnActions;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -52,7 +49,7 @@ class StatusWidget;
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.7
+ * @version 0.8
  */
 class KToshiba : public KSystemTray
 {
@@ -71,24 +68,25 @@ public:
     virtual ~KToshiba();
 protected slots:
     void doConfig();
-    void displayAbout();
-    void powerStatus();
-    void checkHotKeys();
-    void doSuspendToDisk();
     void doSuspendToRAM();
-    void mode();
+    void doSuspendToDisk();
     void doBluetooth();
+    void displayAbout();
+    void checkPowerStatus();
+    void checkHotKeys();
     void checkSystem();
+    void checkMode();
     void setFreq(int);
     void setHyper(int);
 protected:
     KToshibaSMMInterface *mDriver;
+    FnActions *mFn;
     KAboutApplication *mAboutWidget;
     KInstance *instance;
     DCOPClient mClient;
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
-    SynapticsSHM *m_synShm;
+    bool mInterfaceAvailable;
     bool mFullBat;
     int mBatStatus;
     int mOldBatStatus;
@@ -99,62 +97,38 @@ protected:
     int mBatType;
     int mWirelessSwitch;
     int mAudioPlayer;
-    int mBootType;
-    int mPad;
     int mHT;
     int mSS;
     int mAC;
 private:
     void doMenu();
-    void brightUp();
-    void brightDown();
-    void lockScreen();
-    void mousePad();
-    void mute();
-    void toggleWireless();
-    void performFnAction(int, int);
-    void bsmUserSettings(KConfig *);
-    void speakerVolume();
-    void toggleFan();
+    int acpiAC();
+    void bsmUserSettings(KConfig *, int *);
     void checkSelectBay();
-    void toogleBackLight();
     int bayUnregister();
     int bayRescan();
-    int acpiAC();
-    SettingsWidget *mSettingsWidget;
-    StatusWidget *mStatusWidget;
     QTimer *mPowTimer;
     QTimer *mHotKeysTimer;
     QTimer *mModeTimer;
     QTimer *mSystemTimer;
     QPixmap pm;
-    bool mInterfaceAvailable;
     bool lowtrig;
     bool crytrig;
     bool battrig;
     bool wstrig;
-    bool btstart;
     bool baytrig;
+    bool btstart;
     int pow;
     int oldpow;
     int time;
     int oldtime;
     int perc;
     int oldperc;
-    int snd;
-    int video;
-    int mousepad;
-    int bright;
     int current_code;
     int MODE;
-    int popup;
     int bluetooth;
-    int wireless;
-    int fan;
-    int vol;
     int sblock;
     int removed;
-    int boot;
     int svideo;
 };
 

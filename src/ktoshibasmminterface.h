@@ -38,8 +38,9 @@ extern "C" {
 #define HCI_LCD_BRIGHTNESS_LEVELS	(1 << HCI_LCD_BRIGHTNESS_BITS)
 
 /**
+ * @short Provides access to the SMM functions
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.7
+ * @version 0.8
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -154,14 +155,20 @@ public:
 	 */
 	void setWirelessPower(int state);
 	/**
-	 * Verifies the Bluetooth device availability.
+	 * Verifies the Bluetooth device existence.
 	 * @return @p the int holding the device status
 	 */
 	int getBluetooth();
 	/**
-	 * Enables the Bluetooth device.
+	 * Gets the current Bluetooth power state.
+	 * @return @p the int holding the current state
 	 */
-	void setBluetooth();
+	int getBluetoothPower();
+	/**
+	 * Sets the Bluetooth device on/off.
+	 * @param state the int holding the desired state
+	 */
+	void setBluetoothPower(int state);
 	/**
 	 * Sets the Processor to the desired speed (high/low).
 	 * @param speed the int holding the desired speed
@@ -259,6 +266,12 @@ public:
 	void setBackLight(int state);
 public:
 	bool hotkeys;
+private:
+	/**
+	 * Attach/detach the Bluetooth device control.
+	 * @param state the int holding the desired state
+	 */
+	void setBluetoothControl(int state);
 private:
 	SMMRegisters reg;
 	FILE *str;
