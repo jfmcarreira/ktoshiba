@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-06-16 13:28-0600\n"
-"PO-Revision-Date: 2005-02-08 14:03+0100\n"
-"Last-Translator: Károly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
+"PO-Revision-Date: 2005-06-15 21:15+0100\n"
+"Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,27 +30,27 @@ msgstr "kbarcza@blackpanther.hu"
 
 #: fnactions.cpp:176
 msgid "Long Life"
-msgstr ""
+msgstr "Hosszú élettartam"
 
 #: fnactions.cpp:177
 msgid "User Settings"
-msgstr ""
+msgstr "Felhasználói beállítások"
 
 #: fnactions.cpp:181
 msgid "Normal Life"
-msgstr ""
+msgstr "Normal élettartam"
 
 #: fnactions.cpp:182
 msgid "Low Power"
-msgstr ""
+msgstr "Alacsony töltöttség"
 
 #: fnactions.cpp:186
 msgid "Full Life"
-msgstr ""
+msgstr "Teljes élettartam"
 
 #: fnactions.cpp:187
 msgid "Full Power"
-msgstr ""
+msgstr "Feltöltve"
 
 #: fnactions.cpp:334
 msgid ""
@@ -60,7 +60,7 @@ msgstr ""
 
 #: fnactions.cpp:336
 msgid "STR"
-msgstr ""
+msgstr "STR"
 
 #: fnactions.cpp:341 fnactions.cpp:366
 msgid ""
@@ -71,7 +71,7 @@ msgstr ""
 
 #: fnactions.cpp:343 fnactions.cpp:368
 msgid "WARNING"
-msgstr ""
+msgstr "FIGYELEM"
 
 #: fnactions.cpp:359
 msgid ""
@@ -81,29 +81,28 @@ msgstr ""
 
 #: fnactions.cpp:361
 msgid "STD"
-msgstr ""
+msgstr "STD"
 
 #: fnactions.cpp:403
 msgid "up"
-msgstr ""
+msgstr "fel"
 
 #: fnactions.cpp:403
 msgid "down"
-msgstr ""
+msgstr "le"
 
 #: fnactions.cpp:404 fnactions.cpp:474 ktoshiba.cpp:203 ktoshiba.cpp:650
 #: ktoshiba.cpp:710 ktoshiba.cpp:731 main.cpp:39
-#, fuzzy
 msgid "KToshiba"
-msgstr "kcmktoshiba"
+msgstr "KToshiba"
 
 #: fnactions.cpp:405
 msgid "Wireless interface %1"
-msgstr ""
+msgstr "Wireless csatoló %1"
 
 #: fnactions.cpp:406 ktoshiba.cpp:651
 msgid "Wireless"
-msgstr ""
+msgstr "Wireless"
 
 #: fnactions.cpp:473
 msgid "activated"
@@ -114,139 +113,141 @@ msgid "deactivated"
 msgstr ""
 
 #: fnactions.cpp:475
+#, fuzzy
 msgid "Bluetooth device %1"
-msgstr ""
+msgstr "Bluetooth eszköz aktiválva"
 
 #: fnactions.cpp:476 ktoshiba.cpp:204
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: ktoshiba.cpp:136
 msgid "&Configure KToshiba..."
-msgstr ""
+msgstr "KToshiba &beállításai"
 
 #: ktoshiba.cpp:139
 msgid "Suspend To &RAM"
-msgstr ""
+msgstr "Felfüggesztés RAM-ba"
 
 #: ktoshiba.cpp:141
 msgid "Suspend To &Disk"
-msgstr ""
+msgstr "Felfüggesztés lemezre"
 
 #: ktoshiba.cpp:148
 msgid "Enable &Bluetooth"
-msgstr ""
+msgstr "&Bluetooth bekapcsolása"
 
 #: ktoshiba.cpp:151
 msgid "HyperThreading"
-msgstr ""
+msgstr "HyperThreading"
 
 #: ktoshiba.cpp:152
 msgid "Disabled"
-msgstr ""
+msgstr "Kikapcsolva"
 
 #: ktoshiba.cpp:153
 msgid "Enabled - PM aware"
-msgstr ""
+msgstr "Bekapcsolva - PM aware"
 
 #: ktoshiba.cpp:154
 msgid "Enabled - No PM aware"
-msgstr ""
+msgstr "Bekapcsolva - No PM aware"
 
 #: ktoshiba.cpp:155
 msgid "Hyper-Threading"
-msgstr ""
+msgstr "Hyper-Threading"
 
 #: ktoshiba.cpp:160
 msgid "SpeedStep"
-msgstr ""
+msgstr "SpeedStep"
 
 #: ktoshiba.cpp:161
 msgid "Dynamic"
-msgstr ""
+msgstr "Dinamikus"
 
 #: ktoshiba.cpp:162
 msgid "Always High"
-msgstr ""
+msgstr "Mindig magas"
 
 #: ktoshiba.cpp:163
 msgid "Always Low"
-msgstr ""
+msgstr "Mindig alacsony"
 
 #: ktoshiba.cpp:164
 msgid "CPU Frequency"
-msgstr ""
+msgstr "CPU Frekvencia"
 
 #: ktoshiba.cpp:169
 msgid "&About KToshiba"
-msgstr ""
+msgstr "KToshiba &névjegye"
 
 #: ktoshiba.cpp:203
 msgid "Bluetooth device activated"
-msgstr ""
+msgstr "Bluetooth eszköz aktiválva"
 
 #: ktoshiba.cpp:242
-#, fuzzy
 msgid "Your battery is now fully charged."
-msgstr "&Értesítsen ha az akummlátor teljesen feltöltődött"
+msgstr "A telepek feltöltöttsége 100%-os"
 
 #: ktoshiba.cpp:242
 msgid "Laptop Battery"
-msgstr ""
+msgstr "Laptop akkumlátor"
 
 #: ktoshiba.cpp:247
 msgid "The battery state has changed to low"
-msgstr ""
+msgstr "Alacson töltöttségű akkumlátor állapot"
 
 #: ktoshiba.cpp:252
 msgid "The battery state has changed to critical"
-msgstr ""
+msgstr "Kritikus töltöttségű akkumlátor állapot"
 
 #: ktoshiba.cpp:257
 msgid "I'm Gone..."
-msgstr ""
+msgstr "Elvesztem..."
 
 #: ktoshiba.cpp:450
 msgid "No interface available"
-msgstr ""
+msgstr "Adapter nem elérhető"
 
 #: ktoshiba.cpp:454
 msgid "Plugged in - fully charged"
-msgstr ""
+msgstr "Külső áramellátással való működés - a feltöltöttség 100%-os"
 
 #: ktoshiba.cpp:460
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
+"Külső áramellátással való működés - %1%-os feltöltöttség (%2.%3 a hátralevő "
+"idő)"
 
 #: ktoshiba.cpp:464
 msgid "Plugged in - no battery"
-msgstr ""
+msgstr "Külső áramellátással való működés - nincs telep"
 
 #: ktoshiba.cpp:466
 #, c-format
 msgid "Plugged in - %1% charged"
-msgstr ""
+msgstr "Külső áramellátással való működés - %1%-os feltöltöttség"
 
 #: ktoshiba.cpp:473
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
-msgstr ""
+msgstr "Telepről való működés - %1%-os feltöltöttség (%2.%3 a hátralevő idő)"
 
 #: ktoshiba.cpp:476
 #, c-format
 msgid "Running on batteries  - %1% charged"
-msgstr ""
+msgstr "Telepről való működés - %1%-os feltöltöttség"
 
 #: ktoshiba.cpp:649
 msgid "on"
-msgstr ""
+msgstr "be"
 
 #: ktoshiba.cpp:649
 msgid "off"
-msgstr ""
+msgstr "ki"
 
 #: ktoshiba.cpp:650
 msgid "Wireless antenna turned %1"
-msgstr ""
+msgstr "Wireless antenna turned %1"
 
 #: ktoshiba.cpp:686
 msgid "Please umount all filesystems on the SelectBay device, if any."
@@ -280,7 +281,7 @@ msgstr ""
 
 #: main.cpp:28
 msgid "Hotkeys & Battery monitoring for Toshiba laptops."
-msgstr ""
+msgstr "Funkcióbillentyű & Akkumlátor monitorozás Toshiba laptopokhoz"
 
 #: main.cpp:43
 msgid "toshutils and HCI-SCI stuff"
@@ -288,11 +289,11 @@ msgstr ""
 
 #: main.cpp:45
 msgid "Toshiba Laptop ACPI Extras driver"
-msgstr ""
+msgstr "Toshiba Laptop ACPI Extra meghajtó"
 
 #: main.cpp:47
 msgid "Powersave Daemon & KPowersave"
-msgstr ""
+msgstr "Powersave Démon & KPowersave"
 
 #: main.cpp:49
 msgid "Some ideas and pieces of code"
@@ -300,42 +301,46 @@ msgstr ""
 
 #: main.cpp:51
 msgid "Code for enabling/disabling TouchPad"
-msgstr ""
+msgstr "Kód a TouchPad be/kikapcsoláshoz"
 
 #: main.cpp:53
 msgid "French translation"
-msgstr ""
+msgstr "Francia fordítás"
 
 #: modelid.cpp:324
 msgid ""
 "Could not get model id.\n"
 "Weird"
 msgstr ""
+"Model azonosító ismeretlen.\n"
+"Furcsa."
 
 #: modelid.cpp:329
 msgid ""
 "Please send the model name and this id %1 to:\n"
 "coproscefalo@gmail.com"
 msgstr ""
+"Kérem küldje el a model nevét és ezt az azonosítót (%1) a következő címre:\n"
+"coproscefalo@gmail.com"
 
 #: modelid.cpp:330
 msgid "Model Name"
-msgstr ""
+msgstr "Modellnév"
 
 #. i18n: file ktoshibaui.rc line 4
 #: rc.cpp:3
 #, no-c-format
 msgid "C&ustom"
-msgstr ""
+msgstr "&Egyéni"
 
 #. i18n: file settingswidget.ui line 16
 #: rc.cpp:6
 #, no-c-format
 msgid "KToshiba: Video, Power and Boot Status"
-msgstr ""
+msgstr "KToshiba: Videó, Energia és Boot állapot"
 
 #. i18n: file statuswidget.ui line 16
 #: rc.cpp:10
 #, no-c-format
 msgid "KToshiba: Status Widget"
-msgstr ""
+msgstr "KToshiba: Status Widget"
