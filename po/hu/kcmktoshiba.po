@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-06-16 13:28-0600\n"
-"PO-Revision-Date: 2005-02-08 14:03+0100\n"
-"Last-Translator: Károly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
+"PO-Revision-Date: 2005-06-15 20:45+0100\n"
+"Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,9 +52,9 @@ msgstr "KToshiba: általános beállítások"
 
 #. i18n: file kcmtoshiba_general.ui line 49
 #: rc.cpp:6
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "&General Options"
-msgstr "KToshiba: általános beállítások"
+msgstr "Általá&nos beállítások"
 
 #. i18n: file kcmtoshiba_general.ui line 60
 #: rc.cpp:9
@@ -157,15 +157,15 @@ msgstr "Egyéb beállítások"
 
 #. i18n: file kcmtoshiba_general.ui line 270
 #: rc.cpp:60
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Setup &Helper Application"
 msgstr "A segédprogram beállítása"
 
 #. i18n: file kcmtoshiba_general.ui line 273
 #: rc.cpp:63
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Alt+H"
-msgstr "Alt+N"
+msgstr "Alt+H"
 
 #. i18n: file kcmtoshiba_general.ui line 276
 #: rc.cpp:66
@@ -177,37 +177,37 @@ msgstr "Ezzel lehet bekapcsolni az beállítások segédprogramját"
 #: rc.cpp:69
 #, no-c-format
 msgid "&Enable Bluetooth device at program start-up"
-msgstr ""
+msgstr "&Bluetooth eszköz bekapcsolása a program indításakor"
 
 #. i18n: file kcmtoshiba_general.ui line 287
 #: rc.cpp:72
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Alt+E"
-msgstr "Alt+N"
+msgstr "Alt+E"
 
 #. i18n: file kcmtoshiba_general.ui line 295
 #: rc.cpp:75
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Select &Audio Application:"
-msgstr "A segédprogram beállítása"
+msgstr "Válassza ki a hangkezelő alkalmazást:"
 
 #. i18n: file kcmtoshiba_general.ui line 304
 #: rc.cpp:78
 #, no-c-format
 msgid "amaroK"
-msgstr ""
+msgstr "amaroK"
 
 #. i18n: file kcmtoshiba_general.ui line 309
 #: rc.cpp:81
 #, no-c-format
 msgid "JuK"
-msgstr ""
+msgstr "JuK"
 
 #. i18n: file kcmtoshiba_general.ui line 314
 #: rc.cpp:84
 #, no-c-format
 msgid "XMMS"
-msgstr ""
+msgstr "XMMS"
 
 #. i18n: file kcmtoshiba_general.ui line 321
 #: rc.cpp:87
@@ -221,67 +221,67 @@ msgstr ""
 #: rc.cpp:90
 #, no-c-format
 msgid "Fn-Ke&y"
-msgstr ""
+msgstr "Fn-Ke&y"
 
 #. i18n: file kcmtoshiba_general.ui line 344
 #: rc.cpp:93
 #, no-c-format
 msgid "Fn-&Esc:"
-msgstr ""
+msgstr "Fn-&Esc:"
 
 #. i18n: file kcmtoshiba_general.ui line 355
 #: rc.cpp:96
 #, no-c-format
 msgid "Fn-F&3:"
-msgstr ""
+msgstr "Fn-F&3:"
 
 #. i18n: file kcmtoshiba_general.ui line 366
 #: rc.cpp:99
 #, no-c-format
 msgid "Fn-F&4:"
-msgstr ""
+msgstr "Fn-F&4:"
 
 #. i18n: file kcmtoshiba_general.ui line 377
 #: rc.cpp:102
 #, no-c-format
 msgid "Fn-F&7:"
-msgstr ""
+msgstr "Fn-F&7:"
 
 #. i18n: file kcmtoshiba_general.ui line 388
 #: rc.cpp:105
 #, no-c-format
 msgid "Fn-F&8:"
-msgstr ""
+msgstr "Fn-F&8:"
 
 #. i18n: file kcmtoshiba_general.ui line 399
 #: rc.cpp:108
 #, no-c-format
 msgid "Fn-F&9:"
-msgstr ""
+msgstr "Fn-F&9:"
 
 #. i18n: file kcmtoshiba_general.ui line 410
 #: rc.cpp:111
 #, no-c-format
 msgid "Fn-F&5:"
-msgstr ""
+msgstr "Fn-F&5:"
 
 #. i18n: file kcmtoshiba_general.ui line 421
 #: rc.cpp:114
 #, no-c-format
 msgid "Fn-F&1:"
-msgstr ""
+msgstr "Fn-F&1:"
 
 #. i18n: file kcmtoshiba_general.ui line 432
 #: rc.cpp:117
 #, no-c-format
 msgid "Fn-F&2:"
-msgstr ""
+msgstr "Fn-F&2:"
 
 #. i18n: file kcmtoshiba_general.ui line 443
 #: rc.cpp:120
 #, no-c-format
 msgid "Fn-F&6:"
-msgstr ""
+msgstr "Fn-F&6:"
 
 #. i18n: file kcmtoshiba_general.ui line 452
 #. i18n: file kcmtoshiba_general.ui line 588
@@ -298,7 +298,7 @@ msgstr ""
 #: rc.cpp:411 rc.cpp:459 rc.cpp:507 rc.cpp:555 rc.cpp:618
 #, no-c-format
 msgid "Disabled"
-msgstr ""
+msgstr "Kikapcsolva"
 
 #. i18n: file kcmtoshiba_general.ui line 460
 #. i18n: file kcmtoshiba_general.ui line 596
@@ -314,7 +314,7 @@ msgstr ""
 #: rc.cpp:414 rc.cpp:462 rc.cpp:510 rc.cpp:558
 #, no-c-format
 msgid "Unmute/Mute"
-msgstr ""
+msgstr "Elnémítás ki-be"
 
 #. i18n: file kcmtoshiba_general.ui line 468
 #. i18n: file kcmtoshiba_general.ui line 604
@@ -330,7 +330,7 @@ msgstr ""
 #: rc.cpp:417 rc.cpp:465 rc.cpp:513 rc.cpp:561
 #, no-c-format
 msgid "Lock Screen"
-msgstr ""
+msgstr "A képernyő zárolása"
 
 #. i18n: file kcmtoshiba_general.ui line 476
 #. i18n: file kcmtoshiba_general.ui line 612
@@ -346,7 +346,7 @@ msgstr ""
 #: rc.cpp:420 rc.cpp:468 rc.cpp:516 rc.cpp:564
 #, no-c-format
 msgid "Battery Save Mode"
-msgstr ""
+msgstr "Akku kimélő mód"
 
 #. i18n: file kcmtoshiba_general.ui line 484
 #. i18n: file kcmtoshiba_general.ui line 620
@@ -362,7 +362,7 @@ msgstr ""
 #: rc.cpp:423 rc.cpp:471 rc.cpp:519 rc.cpp:567
 #, no-c-format
 msgid "Suspend To RAM"
-msgstr ""
+msgstr "Felfüggesztés RAM-ba"
 
 #. i18n: file kcmtoshiba_general.ui line 492
 #. i18n: file kcmtoshiba_general.ui line 628
@@ -378,7 +378,7 @@ msgstr ""
 #: rc.cpp:426 rc.cpp:474 rc.cpp:522 rc.cpp:570
 #, no-c-format
 msgid "Suspend To Disk"
-msgstr ""
+msgstr "Felfüggesztés lemezre"
 
 #. i18n: file kcmtoshiba_general.ui line 500
 #. i18n: file kcmtoshiba_general.ui line 636
@@ -394,7 +394,7 @@ msgstr ""
 #: rc.cpp:429 rc.cpp:477 rc.cpp:525 rc.cpp:573
 #, no-c-format
 msgid "Video Out"
-msgstr ""
+msgstr "Videó kimenet"
 
 #. i18n: file kcmtoshiba_general.ui line 508
 #. i18n: file kcmtoshiba_general.ui line 644
@@ -410,7 +410,7 @@ msgstr ""
 #: rc.cpp:432 rc.cpp:480 rc.cpp:528 rc.cpp:576
 #, no-c-format
 msgid "Bright Down"
-msgstr ""
+msgstr "Görgetés lefelé"
 
 #. i18n: file kcmtoshiba_general.ui line 516
 #. i18n: file kcmtoshiba_general.ui line 652
@@ -426,7 +426,7 @@ msgstr ""
 #: rc.cpp:435 rc.cpp:483 rc.cpp:531 rc.cpp:579
 #, no-c-format
 msgid "Bright Up"
-msgstr ""
+msgstr "Görgetés felfelé"
 
 #. i18n: file kcmtoshiba_general.ui line 524
 #. i18n: file kcmtoshiba_general.ui line 660
@@ -442,7 +442,7 @@ msgstr ""
 #: rc.cpp:438 rc.cpp:486 rc.cpp:534 rc.cpp:582
 #, no-c-format
 msgid "Wireless"
-msgstr ""
+msgstr "Wireless"
 
 #. i18n: file kcmtoshiba_general.ui line 532
 #. i18n: file kcmtoshiba_general.ui line 668
@@ -458,7 +458,7 @@ msgstr ""
 #: rc.cpp:441 rc.cpp:489 rc.cpp:537 rc.cpp:585
 #, no-c-format
 msgid "Enable/Disable MousePad"
-msgstr ""
+msgstr "Egérpad be/kikapcsolása"
 
 #. i18n: file kcmtoshiba_general.ui line 540
 #. i18n: file kcmtoshiba_general.ui line 676
@@ -474,7 +474,7 @@ msgstr ""
 #: rc.cpp:444 rc.cpp:492 rc.cpp:540 rc.cpp:588
 #, no-c-format
 msgid "Speaker Volume"
-msgstr ""
+msgstr "A hangerő beállítása..."
 
 #. i18n: file kcmtoshiba_general.ui line 548
 #. i18n: file kcmtoshiba_general.ui line 684
@@ -490,7 +490,7 @@ msgstr ""
 #: rc.cpp:447 rc.cpp:495 rc.cpp:543 rc.cpp:591
 #, no-c-format
 msgid "Fan On/Off"
-msgstr ""
+msgstr "Ventillátor Be/Ki"
 
 #. i18n: file kcmtoshiba_general.ui line 556
 #. i18n: file kcmtoshiba_general.ui line 692
@@ -506,7 +506,7 @@ msgstr ""
 #: rc.cpp:450 rc.cpp:498 rc.cpp:546 rc.cpp:594
 #, no-c-format
 msgid "Boot Method"
-msgstr ""
+msgstr "Boot  "
 
 #. i18n: file kcmtoshiba_general.ui line 564
 #. i18n: file kcmtoshiba_general.ui line 700
@@ -522,7 +522,7 @@ msgstr ""
 #: rc.cpp:453 rc.cpp:501 rc.cpp:549 rc.cpp:597
 #, no-c-format
 msgid "LCD Backlight On/Off"
-msgstr ""
+msgstr "LCD altatás Be/Ki"
 
 #. i18n: file kcmtoshiba_general.ui line 572
 #. i18n: file kcmtoshiba_general.ui line 708
@@ -542,9 +542,9 @@ msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 1819
 #: rc.cpp:603
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Battery &Save Mode"
-msgstr "Akkumlátor Opciók:"
+msgstr "Akku &kimélő mód"
 
 #. i18n: file kcmtoshiba_general.ui line 1834
 #: rc.cpp:606
@@ -558,140 +558,140 @@ msgstr ""
 #: rc.cpp:609
 #, no-c-format
 msgid "&Display Auto Off:"
-msgstr ""
+msgstr "Kijelző auto lekapcsolás:"
 
 #. i18n: file kcmtoshiba_general.ui line 1869
 #: rc.cpp:612
 #, no-c-format
 msgid "C&ooling Method:"
-msgstr ""
+msgstr "Hűtési &mód:"
 
 #. i18n: file kcmtoshiba_general.ui line 1878
 #: rc.cpp:615
 #, no-c-format
 msgid "Enabled"
-msgstr ""
+msgstr "Bekapcsolva"
 
 #. i18n: file kcmtoshiba_general.ui line 1895
 #: rc.cpp:621
 #, no-c-format
 msgid "&HDD Auto Off:"
-msgstr ""
+msgstr "&HDD Auto lekapcsolás"
 
 #. i18n: file kcmtoshiba_general.ui line 1904
 #. i18n: file kcmtoshiba_general.ui line 1993
 #: rc.cpp:624 rc.cpp:663
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "30 min"
-msgstr " mp"
+msgstr "30 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1909
 #. i18n: file kcmtoshiba_general.ui line 1998
 #: rc.cpp:627 rc.cpp:666
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "20 min"
-msgstr " mp"
+msgstr "20 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1914
 #. i18n: file kcmtoshiba_general.ui line 2003
 #: rc.cpp:630 rc.cpp:669
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "15 min"
-msgstr " mp"
+msgstr "15 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1919
 #. i18n: file kcmtoshiba_general.ui line 2008
 #: rc.cpp:633 rc.cpp:672
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "10 min"
-msgstr " mp"
+msgstr "10 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1924
 #. i18n: file kcmtoshiba_general.ui line 2013
 #: rc.cpp:636 rc.cpp:675
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "05 min"
-msgstr " mp"
+msgstr "05 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1929
 #. i18n: file kcmtoshiba_general.ui line 2018
 #: rc.cpp:639 rc.cpp:678
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "03 min"
-msgstr " mp"
+msgstr "03 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1934
 #. i18n: file kcmtoshiba_general.ui line 2023
 #: rc.cpp:642 rc.cpp:681
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "01 min"
-msgstr " mp"
+msgstr "1 perc"
 
 #. i18n: file kcmtoshiba_general.ui line 1947
 #: rc.cpp:645
 #, no-c-format
 msgid "Max Performance"
-msgstr ""
+msgstr "Maximális Teljesítmény"
 
 #. i18n: file kcmtoshiba_general.ui line 1952
 #: rc.cpp:648
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Battery Optimized"
-msgstr "Akkumlátor Opciók:"
+msgstr "Akkumlátor optimalizált"
 
 #. i18n: file kcmtoshiba_general.ui line 1957
 #: rc.cpp:651
 #, no-c-format
 msgid "Performance"
-msgstr ""
+msgstr "Teljesítmény"
 
 #. i18n: file kcmtoshiba_general.ui line 1970
 #: rc.cpp:654
 #, no-c-format
 msgid "Super Bright"
-msgstr ""
+msgstr "Szuper világos"
 
 #. i18n: file kcmtoshiba_general.ui line 1975
 #: rc.cpp:657
 #, no-c-format
 msgid "Bright"
-msgstr ""
+msgstr "Világos"
 
 #. i18n: file kcmtoshiba_general.ui line 1980
 #: rc.cpp:660
 #, no-c-format
 msgid "Semi Bright"
-msgstr ""
+msgstr "Halvány"
 
 #. i18n: file kcmtoshiba_general.ui line 2038
 #: rc.cpp:684
 #, no-c-format
 msgid "&CPU Sleep Mode:"
-msgstr ""
+msgstr "&CPU altatási mód"
 
 #. i18n: file kcmtoshiba_general.ui line 2047
 #: rc.cpp:687
 #, no-c-format
 msgid "High"
-msgstr ""
+msgstr "Magas"
 
 #. i18n: file kcmtoshiba_general.ui line 2052
 #: rc.cpp:690
 #, no-c-format
 msgid "Low"
-msgstr ""
+msgstr "Alacsony"
 
 #. i18n: file kcmtoshiba_general.ui line 2067
 #: rc.cpp:693
 #, no-c-format
 msgid "&Processing Speed:"
-msgstr ""
+msgstr "Sebesség &vezérlés:"
 
 #. i18n: file kcmtoshiba_general.ui line 2078
 #: rc.cpp:696
 #, no-c-format
 msgid "LCD Brightn&ess:"
-msgstr ""
+msgstr "LCD fényerő:"
 
 #. i18n: file kcmtoshiba_general.ui line 2095
 #: rc.cpp:699
