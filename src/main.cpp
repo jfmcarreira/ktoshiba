@@ -37,9 +37,9 @@ static KCmdLineOptions options[] =
 int main(int argc, char **argv)
 {
     KAboutData about("ktoshiba", I18N_NOOP("KToshiba"), version, description,
-                     KAboutData::License_GPL, "(C) 2004 Azael Avalos", 0, 0,
-                     "coproscefalo@gmail.com" );
-    about.addAuthor( "Azael Avalos", 0, "neftali@utep.edu" );
+                     KAboutData::License_GPL, "(C) 2004 Azael Avalos", 0,
+                     "http://ktoshiba.sourceforge.net/", "coproscefalo@gmail.com" );
+    about.addAuthor( "Azael Avalos", 0, "neftali@utep.edu", 0 );
     about.addCredit( "Jonathan A. Buzzard", I18N_NOOP("toshutils and HCI-SCI stuff"),
                     "jonathan@buzzard.org.uk", "http://www.buzzard.org.uk/toshiba/" );
     about.addCredit( "John Belmonte", I18N_NOOP("Toshiba Laptop ACPI Extras driver"),
