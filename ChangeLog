@@ -1,5 +1,28 @@
-2005-06-14 Azael Avalos <neftali@utep.edu>
-	* Chnaged KToshibaSMMInterface Bluetooth code and
+2005-08-12 Azael Avalos <neftali@utep.edu>
+	* Added new functions to check configuration file
+	  (it will be created with default values if not found)
+
+2005-08-11 Azael Avalos <neftali@utep.edu>
+	* Some small changes on displayPixmap() function
+	* Removed CVS comments from hci and sci headers
+	* Corrected typo on ChangeLog
+
+2005-08-09 Azael Avalos <neftali@utep.edu>
+	* Re-arranged Video-Out icons to avoid some confusion
+	* Boot Method icons now loads current icon set
+	* Changed some icons on Video-Out widget
+	  (taken from black and white icon set)
+
+2005-06-20 Azael Avalos <neftali@utep.edu>
+	* More hotkeys ID added
+
+2005-06-17 Azael Avalos <neftali@utep.edu>
+	* Hungarian translations updated, thanks to Charles Barcza
+	* Heh, corrected date on Changelog's last entry...
+	* New model ID added, thanks to Charles Barcza
+
+2005-06-16 Azael Avalos <neftali@utep.edu>
+	* Changed KToshibaSMMInterface Bluetooth code and
 	  added new Fn function to toggle Bluetooth power
 	* Updated KCM options
 

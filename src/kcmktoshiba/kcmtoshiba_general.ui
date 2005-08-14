@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>524</width>
-            <height>436</height>
+            <width>581</width>
+            <height>462</height>
         </rect>
     </property>
     <property name="caption">
@@ -1826,7 +1826,7 @@
                                 <rect>
                                     <x>16</x>
                                     <y>17</y>
-                                    <width>450</width>
+                                    <width>510</width>
                                     <height>40</height>
                                 </rect>
                             </property>
@@ -1842,7 +1842,7 @@
                                 <rect>
                                     <x>10</x>
                                     <y>60</y>
-                                    <width>460</width>
+                                    <width>520</width>
                                     <height>250</height>
                                 </rect>
                             </property>
@@ -1855,7 +1855,7 @@
                                         <cstring>displayTextLabel</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>&amp;Display Auto Off:</string>
+                                        <string>D&amp;isplay Auto Off:</string>
                                     </property>
                                     <property name="buddy" stdset="0">
                                         <cstring>displayComboBox</cstring>
@@ -1866,7 +1866,7 @@
                                         <cstring>coolingTextLabel</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>C&amp;ooling Method:</string>
+                                        <string>Cooling &amp;Method:</string>
                                     </property>
                                     <property name="buddy" stdset="0">
                                         <cstring>coolingComboBox</cstring>
@@ -1892,7 +1892,7 @@
                                         <cstring>hddTextLabel</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>&amp;HDD Auto Off:</string>
+                                        <string>HDD Au&amp;to Off:</string>
                                     </property>
                                     <property name="buddy" stdset="0">
                                         <cstring>hddComboBox</cstring>
@@ -2035,7 +2035,7 @@
                                         <cstring>cpuTextLabel</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>&amp;CPU Sleep Mode:</string>
+                                        <string>CP&amp;U Sleep Mode:</string>
                                     </property>
                                     <property name="buddy" stdset="0">
                                         <cstring>cpuComboBox</cstring>
@@ -2075,10 +2075,10 @@
                                         <cstring>lcdTextLabel</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>LCD Brightn&amp;ess:</string>
+                                        <string>LCD &amp;Brightness:</string>
                                     </property>
                                     <property name="buddy" stdset="0">
-                                        <cstring>brightComboBox</cstring>
+                                        <cstring>lcdComboBox</cstring>
                                     </property>
                                 </widget>
                             </grid>

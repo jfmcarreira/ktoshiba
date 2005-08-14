@@ -52,6 +52,8 @@ int main(int argc, char **argv)
                     0, "http://qsynaptics.sourceforge.net/" );
     about.addCredit( "Nicolas Ternisien", I18N_NOOP("French translation"),
                     "nicolas.ternisien@gmail.com", 0 );
+    about.addCredit( "Charles Barcza", I18N_NOOP("Hungarian translation"),
+                    "kbarcza@blackpanther.hu", "http://www.blackpanther.hu" );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
 

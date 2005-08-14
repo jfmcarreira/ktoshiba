@@ -89,8 +89,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 void KCMToshibaModule::load()
 {
 	kdDebug() << "KCMToshibaModule: loading." << endl;
-    KConfig config(CONFIG_FILE);
-
+	KConfig config(CONFIG_FILE);
 	config.setGroup("KToshiba");
 
 	m_KCMKToshibaGeneral->batfullCheckBox->setChecked
@@ -172,8 +171,8 @@ void KCMToshibaModule::save()
 	if (!m_InterfaceAvailable) return;
 
 	kdDebug() << "KCMToshibaModule: saving." << endl;
-    KConfig config(CONFIG_FILE);
 
+	KConfig config(CONFIG_FILE);
 	config.setGroup("KToshiba");
 
 	config.writeEntry("Notify_On_Full_Battery",
