@@ -82,6 +82,7 @@ KToshiba::KToshiba()
         sblock = HCI_LOCKED;
         removed = 0;
         svideo = 0;
+        MODE = CD_DVD;
     }
 
     // Default to mode 2 if we got a failure
@@ -90,10 +91,13 @@ KToshiba::KToshiba()
     mFn->m_BatType = mBatType;
 
     if (!mClient.attach())
-        kdDebug() << "KToshiba: cannot attach to DCOP server." << endl;
+        kdDebug() << "KToshiba: Cannot attach to DCOP server." << endl;
 
-    KConfig mConfig(CONFIG_FILE);
-    loadConfiguration(&mConfig);
+    if (checkConfiguration()) {
+        KConfig mConfig(CONFIG_FILE);
+        loadConfiguration(&mConfig);
+    } else
+        createConfiguration();
 
     doMenu();
 
@@ -105,6 +109,7 @@ KToshiba::KToshiba()
     mModeTimer->start(500);		// Check proc entry every 1/2 seconds
     connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
     mSystemTimer->start(500);		// Check system events every 1/2 seconds
+    connect( mFn, SIGNAL( stdActivated() ), this, SLOT( shutdownEvent() ) );
 
     displayPixmap();
     if (btstart)
@@ -129,6 +134,7 @@ KToshiba::~KToshiba()
 
     delete instance; instance = NULL;
     delete mAboutWidget; mAboutWidget = NULL;
+    delete mFn; mFn = NULL;
 }
 
 void KToshiba::doMenu()
@@ -182,12 +188,12 @@ void KToshiba::doConfig()
 
 void KToshiba::doSuspendToRAM()
 {
-    mFn->SuspendToRAM();
+    mFn->performFnAction(4, 0);
 }
 
 void KToshiba::doSuspendToDisk()
 {
-    mFn->SuspendToDisk();
+    mFn->performFnAction(5, 0);
 }
 
 void KToshiba::doBluetooth()
@@ -195,7 +201,7 @@ void KToshiba::doBluetooth()
     if (!mDriver->getBluetooth()) {
         this->contextMenu()->setItemEnabled(6, FALSE);
         kdDebug() << "KToshiba::doBluetooth(): "
-				  << "No Bluetooth device found" << endl;
+                  << "No Bluetooth device found" << endl;
         return;
     } else
     if (!bluetooth || (btstart && !bluetooth)) {
@@ -207,6 +213,16 @@ void KToshiba::doBluetooth()
     }
     else
         this->contextMenu()->setItemEnabled(6, TRUE);
+}
+
+void KToshiba::doSetFreq(int freq)
+{
+    mDriver->setSpeedStep(freq);
+}
+
+void KToshiba::doSetHyper(int state)
+{
+    mDriver->setHyperThreading(state);
 }
 
 void KToshiba::loadConfiguration(KConfig *k)
@@ -237,27 +253,31 @@ void KToshiba::checkPowerStatus()
     if ((pow == -1) || (pow == SCI_FAILURE))
         pow = acpiAC();
 
+    if (perc < 0 && !mInterfaceAvailable)
+        wakeupEvent();
+
     if (mFullBat && perc == 100 && !battrig) {
         KMessageBox::queuedMessageBox(0, KMessageBox::Information,
 									  i18n("Your battery is now fully charged."), i18n("Laptop Battery"));
         battrig = true;
     }
 
-    if (SCI_MINUTE(time) == mLowBat && SCI_HOUR(time) == 0 && pow == 3 && !lowtrig) {
+    int th = SCI_HOUR(time), tm = SCI_MINUTE(time);
+    if (tm == mLowBat && th == 0 && pow == 3 && !lowtrig) {
         KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
         lowtrig = true;
     } else
-    if (SCI_MINUTE(time) == mCryBat && SCI_HOUR(time) == 0 && pow == 3 && !crytrig) {
+    if (tm == mCryBat && th == 0 && pow == 3 && !crytrig) {
         KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
         crytrig = true;
     } else
-    if (SCI_MINUTE(time) == 0 && SCI_HOUR(time) == 0 && pow == 3)
+    if (tm == 0 && th == 0 && pow == 3)
         KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
 
-    if (SCI_MINUTE(time) > lowtrig && pow == 4) {
+    if (tm > lowtrig && pow == 4) {
         if (battrig && (perc < 100))
             battrig = false;
         if (lowtrig)
@@ -381,12 +401,16 @@ void KToshiba::displayPixmap()
 
         if (!mInterfaceAvailable)
             pixmap_name = QString("laptop_nobattery");
+        else if (ac == -1 && perc == -1)
+            pixmap_name = QString("laptop_nobattery");
+        else if (ac == 4 && perc == -1)
+            pixmap_name = QString("laptop_power");
         else if (ac == 3)
             pixmap_name = QString("laptop_nocharge");
         else
             pixmap_name = QString("laptop_charge");
 
-        pm = loadIcon( pixmap_name, instance );
+        pm = loadIcon(pixmap_name, instance);
     }
 
     // at this point, we have the file to display.  so display it
@@ -434,7 +458,7 @@ void KToshiba::displayPixmap()
                     image.setPixel(x, y, ui);
                     c--;
                     if (c <= 0)
-                    goto quit;
+                        goto quit;
                 }
             }
     }
@@ -473,6 +497,9 @@ quit:
             tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
 					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
         } else
+        if (perc == -1)
+            tmp = i18n("No battery and adaptor found");
+        else
             tmp = i18n("Running on batteries  - %1% charged").arg(perc);
     }
     QToolTip::add(this, tmp);
@@ -531,8 +558,16 @@ void KToshiba::checkHotKeys()
         case 0x143: // Fn-F9
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
-        /** Front Panel Multimedia Buttons */
+        /** Multimedia Buttons */
+        case 0xb25: // CD/DVD Mode
+            MODE = CD_DVD;
+            return;
+        case 0xb27: // Digital Mode
+            MODE = DIGITAL;
+            return;
         case 0xb30:	// Stop/Eject
+        case 0xd4f:
+        case 0x9b3:
             if (MODE == CD_DVD)
                 if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
                     if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData))
@@ -547,6 +582,8 @@ void KToshiba::checkHotKeys()
             }
             break;
         case 0xb31:	// Previous
+        case 0xd50:
+        case 0x9b1:
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "previous()", data, replyType, replyData))
                     mClient.send("kaffeine", "KaffeineIface", "previous()", "");
@@ -561,6 +598,8 @@ void KToshiba::checkHotKeys()
             }
             break;
         case 0xb32:	// Next
+        case 0xd53:
+        case 0x9b4:
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "next()", data, replyType, replyData))
                     mClient.send("kaffeine", "KaffeineIface", "next()", "");
@@ -575,6 +614,8 @@ void KToshiba::checkHotKeys()
             }
             break;
         case 0xb33:	// Play/Pause
+        case 0xd4e:
+        case 0x9b2:
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
                     if (!mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData))
@@ -599,6 +640,7 @@ void KToshiba::checkHotKeys()
             }
             break;
         case 0xb85:	// Toggle S-Video Out
+        case 0xd55:
             if (!svideo) {
                 mDriver->setVideo(4);	// S-Video
                 svideo = 1;
@@ -614,8 +656,27 @@ void KToshiba::checkHotKeys()
         case 0xb87:	// I-Button
             proc << "konsole";
             break;
+        case 0xd42: // Maximize
+            return;
+        case 0xd43: // Switch
+            return;
+        case 0xd51: // Rewind
+            return;
+        case 0xd52: // Fast Forward
+            return;
+        case 0xd54: // Mute
+            mFn->performFnAction(1, key);
+            return;
+        case 0xd4c: // Menu
+            return;
+        case 0xd4d: // Mode
+            if (MODE == CD_DVD)
+                MODE = DIGITAL;
+            else if (MODE == DIGITAL)
+                MODE = CD_DVD;
+            return;
     }
-    if ((key >= 0xb30) && (key != 0xb85)) {
+    if (key >= 0xb30) {
         proc.start(KProcess::DontCare);
         proc.detach();
         return;
@@ -743,14 +804,64 @@ int KToshiba::bayRescan()
     return 0;
 }
 
-void KToshiba::setFreq(int freq)
+void KToshiba::shutdownEvent()
 {
-    mDriver->setSpeedStep(freq);
+    kdDebug() << "KToshiba: Shutting down..." << endl;
+    mDriver->closeInterface();
+    mInterfaceAvailable = false;
 }
 
-void KToshiba::setHyper(int state)
+void KToshiba::wakeupEvent()
 {
-    mDriver->setHyperThreading(state);
+    kdDebug() << "KToshiba: Starting up..." << endl;
+    mInterfaceAvailable = mDriver->openInterface();
+    if (!mInterfaceAvailable)
+        kdDebug() << "KToshiba: Interface could not be opened again "
+                  << "please re-start application" << endl;
+}
+
+void KToshiba::createConfiguration()
+{
+    kdDebug() << "Creating configuration file..." << endl;
+    KConfig config(CONFIG_FILE);
+    config.setGroup("KToshiba");
+
+    config.writeEntry("Notify_On_Full_Battery", false);
+    config.writeEntry("Battery_Status_Time", 2);
+    config.writeEntry("Low_Battery_Trigger", 15);
+    config.writeEntry("Critical_Battery_Trigger", 5);
+    config.writeEntry("Audio_Player", 1);
+    config.writeEntry("Bluetooth_Startup", true);
+    config.writeEntry("Fn_Esc", 1);
+    config.writeEntry("Fn_F1", 2);
+    config.writeEntry("Fn_F2", 3);
+    config.writeEntry("Fn_F3", 4);
+    config.writeEntry("Fn_F4", 5);
+    config.writeEntry("Fn_F5", 6);
+    config.writeEntry("Fn_F6", 7);
+    config.writeEntry("Fn_F7", 8);
+    config.writeEntry("Fn_F8", 9);
+    config.writeEntry("Fn_F9", 10);
+    config.writeEntry("Processing_Speed", 1);
+    config.writeEntry("CPU_Sleep_Mode", 0);
+    config.writeEntry("Display_Auto_Off", 5);
+    config.writeEntry("HDD_Auto_Off", 5);
+    config.writeEntry("LCD_Brightness", 2);
+    config.writeEntry("Cooling_Method", 2);
+    config.sync();
+}
+
+bool KToshiba::checkConfiguration()
+{
+    KStandardDirs kstd;
+    QString config = kstd.findResource("config", "ktoshibarc");
+
+    if (config.isEmpty()) {
+        kdDebug() << "Configuration file not found" << endl;
+        return false;
+    }
+
+    return true;
 }
 
 

@@ -61,6 +61,8 @@ public:
     KToshiba();
     void displayPixmap();
     void loadConfiguration(KConfig *);
+    void createConfiguration();
+    bool checkConfiguration();
 
     /**
      * Default Destructor
@@ -71,13 +73,15 @@ protected slots:
     void doSuspendToRAM();
     void doSuspendToDisk();
     void doBluetooth();
+    void doSetFreq(int);
+    void doSetHyper(int);
     void displayAbout();
     void checkPowerStatus();
     void checkHotKeys();
     void checkSystem();
     void checkMode();
-    void setFreq(int);
-    void setHyper(int);
+    void shutdownEvent();
+    void wakeupEvent();
 protected:
     KToshibaSMMInterface *mDriver;
     FnActions *mFn;
@@ -102,9 +106,9 @@ protected:
     int mAC;
 private:
     void doMenu();
-    int acpiAC();
     void bsmUserSettings(KConfig *, int *);
     void checkSelectBay();
+    int acpiAC();
     int bayUnregister();
     int bayRescan();
     QTimer *mPowTimer;

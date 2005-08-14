@@ -31,9 +31,7 @@ KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 
 bool KToshibaSMMInterface::openInterface()
 {
-	int version;
-
-	if (SciSupportCheck(&version) == SCI_FAILURE) {
+	if (SciSupportCheck(&sciversion) == SCI_FAILURE) {
 		kdError() << "KToshibaSMMInterface::openInterface(): "
 				  << "This computer is not supported "
 				  << "or the kernel module is not installed." << endl;

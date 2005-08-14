@@ -266,6 +266,7 @@ public:
 	void setBackLight(int state);
 public:
 	bool hotkeys;
+	int sciversion;
 private:
 	/**
 	 * Attach/detach the Bluetooth device control.

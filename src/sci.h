@@ -10,66 +10,6 @@
  *   unuseable. Unless you truely understand what is going on, I urge you
  *   not to make any modifications and use it as it stands.
  *
- * $Log$
- * Revision 1.7  2005/06/11 19:13:55  coproscefalo
- * Updates to some files
- *
- * Revision 1.6  2005/05/21 15:56:14  coproscefalo
- * added boot priority code and misc changes
- *
- * Revision 1.5  2005/05/12 15:42:34  coproscefalo
- * Released 0.6
- *
- * Revision 1.4  2005/05/03 02:19:25  coproscefalo
- * HyperThreading and SpeedStep support plus misc cleans and fixes
- *
- * Revision 1.3  2005/04/14 23:15:51  coproscefalo
- * Some SCI updates
- *
- * Revision 1.2  2005/04/14 19:05:04  coproscefalo
- * Finished Battery Savings - User Settings Mode
- *
- * Revision 1.1.1.1  2004/12/06 19:43:35  coproscefalo
- * Initial import.
- *
- * Revision 1.11  2001/10/05 13:08:37  jab
- * checked in changes for kernel module
- *
- * Revision 1.10  1999/12/18 14:33:44  jab
- * removed prototype for SciGetModel
- *
- * Revision 1.9  1999/12/04 13:41:23  jab
- * modified SCI_DATE macro to exclude the year and added SCI_FULLDATE macro
- *
- * Revision 1.8  1999/03/11 20:23:18  jab
- * added macros to manipulate date type
- * updated some of the enumerations and added a few more
- *
- * Revision 1.7  1999/03/06 16:47:12  jab
- * removed declarations for BiosVersion and MachineID functions
- *
- * Revision 1.6  1998/09/07 18:15:50  jab
- * added prototype for new model fuction
- * added a structure for the system configuration interface registers
- *
- * Revision 1.5  1998/08/23 12:17:36  jab
- * added the SCI_BATTERY/SCI_MAINS values
- *
- * Revision 1.4  1998/08/19 08:42:29  jab
- * added extern "C" declaration in case anyone uses this with C++
- * fixed the declaration of SCI_SUCSSES/SCI_FAILURE
- * other miscellaneous tidy ups
- *
- * Revision 1.3  1998/08/06 08:25:36  jab
- * changed defines to enums and prepended everything with sci_
- *
- * Revision 1.2  1998/08/04 08:07:46  jab
- * added some extra information from Japanesse Libretto effort
- *
- * Revision 1.1  1998/05/23 08:08:17  jab
- * Initial revision
- *
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or

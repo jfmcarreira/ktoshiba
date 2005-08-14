@@ -41,6 +41,7 @@ Where options are:\n\
 \t--help          Displays this text.\n\
 "
 
+// Code below taken from toshutils
 int selectBayUnregister()
 {
 	struct stat buf;
@@ -120,7 +121,7 @@ int main(int argc, char **argv)
 
 	::close(0);	// we're setuid - this is just in case
 	for (i = 1; i < argc; i++)
-	if (strcmp(argv[i], "--std") == 0 || strcmp(argv[i], "--suspend-to-disk") == 0) {
+	if (strcmp(argv[i], "--std") == 0 || strcmp(argv[i], "--suspend-to-disk") == 0 || strcmp(argv[i], "--hibernate") == 0) {
 		sync();
 		sync();
 		fd = open("/proc/acpi/sleep", O_RDWR);
@@ -130,7 +131,7 @@ int main(int argc, char **argv)
 		setuid(getuid());	// drop all priority asap
 		exit(0);
 	} else
-	if (strcmp(argv[i], "--str") == 0 || strcmp(argv[i], "--suspend-to-ram") == 0) {
+	if (strcmp(argv[i], "--str") == 0 || strcmp(argv[i], "--suspend-to-ram") == 0 || strcmp(argv[i], "--suspend") == 0) {
 		sync();
 		sync();
 		fd = open("/proc/acpi/sleep", O_RDWR);

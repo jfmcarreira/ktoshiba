@@ -2,39 +2,6 @@
  *
  * Copyright (c) 1998,1999  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
- * $Log$
- * Revision 1.6  2005/05/27 03:13:24  coproscefalo
- * Added SpeedStep frequencies plus some other changes
- *
- * Revision 1.5  2005/05/21 15:56:14  coproscefalo
- * added boot priority code and misc changes
- *
- * Revision 1.4  2005/05/12 15:42:34  coproscefalo
- * Released 0.6
- *
- * Revision 1.3  2005/04/14 19:07:26  coproscefalo
- * Finished Battery Savings - User Settings Mode
- *
- * Revision 1.2  2005/01/14 03:51:48  coproscefalo
- * Support for audio applications
- *
- * Revision 1.1.1.1  2004/12/06 19:43:33  coproscefalo
- * Initial import.
- *
- * Revision 1.4  2002/01/27 13:23:25  jab
- * added some more HCI function calls to the list
- *
- * Revision 1.3  2001/10/05 13:06:26  jab
- * updates for kernel module checked in
- *
- * Revision 1.2  1999/12/17 12:19:46  jab
- * added function prototypes for HciFunction and HciFnStatus
- * added lots of enum types for various settings
- *
- * Revision 1.1  1999/03/11 20:29:11  jab
- * Initial revision
- *
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
