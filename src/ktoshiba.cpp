@@ -28,6 +28,8 @@
 #include <qtooltip.h>
 #include <qtimer.h>
 #include <qwidget.h>
+#include <qfile.h>
+#include <qregexp.h>
 
 #include <kaboutapplication.h>
 #include <kdebug.h>
@@ -83,6 +85,7 @@ KToshiba::KToshiba()
         removed = 0;
         svideo = 0;
         MODE = CD_DVD;
+        acpiBatCap = 0;
     }
 
     // Default to mode 2 if we got a failure
@@ -225,6 +228,19 @@ void KToshiba::doSetHyper(int state)
     mDriver->setHyperThreading(state);
 }
 
+bool KToshiba::checkConfiguration()
+{
+    KStandardDirs kstd;
+    QString config = kstd.findResource("config", "ktoshibarc");
+
+    if (config.isEmpty()) {
+        kdDebug() << "Configuration file not found" << endl;
+        return false;
+    }
+
+    return true;
+}
+
 void KToshiba::loadConfiguration(KConfig *k)
 {
     k->setGroup("KToshiba");
@@ -236,6 +252,37 @@ void KToshiba::loadConfiguration(KConfig *k)
     mBatSave = k->readNumEntry("Battery_Save_Mode", 2);
     mAudioPlayer = k->readNumEntry("Audio_Player", 1);
     btstart = k->readBoolEntry("Bluetooth_Startup", true);
+}
+
+void KToshiba::createConfiguration()
+{
+    kdDebug() << "Creating configuration file..." << endl;
+    KConfig config(CONFIG_FILE);
+    config.setGroup("KToshiba");
+
+    config.writeEntry("Notify_On_Full_Battery", false);
+    config.writeEntry("Battery_Status_Time", 2);
+    config.writeEntry("Low_Battery_Trigger", 15);
+    config.writeEntry("Critical_Battery_Trigger", 5);
+    config.writeEntry("Audio_Player", 1);
+    config.writeEntry("Bluetooth_Startup", true);
+    config.writeEntry("Fn_Esc", 1);
+    config.writeEntry("Fn_F1", 2);
+    config.writeEntry("Fn_F2", 3);
+    config.writeEntry("Fn_F3", 4);
+    config.writeEntry("Fn_F4", 5);
+    config.writeEntry("Fn_F5", 6);
+    config.writeEntry("Fn_F6", 7);
+    config.writeEntry("Fn_F7", 8);
+    config.writeEntry("Fn_F8", 9);
+    config.writeEntry("Fn_F9", 10);
+    config.writeEntry("Processing_Speed", 1);
+    config.writeEntry("CPU_Sleep_Mode", 0);
+    config.writeEntry("Display_Auto_Off", 5);
+    config.writeEntry("HDD_Auto_Off", 5);
+    config.writeEntry("LCD_Brightness", 2);
+    config.writeEntry("Cooling_Method", 2);
+    config.sync();
 }
 
 void KToshiba::displayAbout()
@@ -252,6 +299,8 @@ void KToshiba::checkPowerStatus()
     pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
     if ((pow == -1) || (pow == SCI_FAILURE))
         pow = acpiAC();
+    if ((time == -1) && (perc == -1))
+        acpiBatteryStatus(&time, &perc);
 
     if (perc < 0 && !mInterfaceAvailable)
         wakeupEvent();
@@ -324,6 +373,52 @@ void KToshiba::checkPowerStatus()
     mOldBatSave = mBatSave;
     if (changed)
         displayPixmap();
+}
+
+void KToshiba::acpiBatteryStatus(int *time, int *percent)
+{
+    // Code taken from klaptopdaemon
+    QString buff;
+    QFile *f;
+    int remaining, rate;
+
+    if (acpiBatCap == 0)
+        if (::access("/proc/acpi/battery/BAT1/info", F_OK) != -1) {
+            f = new QFile("/proc/acpi/battery/BAT1/info");
+            if (f && f->open(IO_ReadOnly)) {
+                while(f->readLine(buff,1024) > 0) {
+                    if (buff.contains("last full capacity:", false)) {
+                        QRegExp rx("(\\d*)\\D*$");
+                        rx.search(buff);
+                        acpiBatCap = rx.cap(1).toInt();
+                    }
+                }
+            }
+        }
+    if (::access("/proc/acpi/battery/BAT1/state", F_OK) != -1) {
+        f = new QFile("/proc/acpi/battery/BAT1/state");
+        if (f && f->open(IO_ReadOnly)) {
+            while(f->readLine(buff,1024) > 0) {
+                if (buff.contains("present rate:", false)) {
+                    QRegExp rx("(\\d*)\\D*$");
+                    rx.search(buff);
+                    rate = rx.cap(1).toInt();
+                    continue;
+                }
+                if (buff.contains("remaining capacity:", false)) {
+                    QRegExp rx("(\\d*)\\D*$");
+                    rx.search(buff);
+                    remaining = rx.cap(1).toInt();
+                    continue;
+                }
+            }
+            f->close();
+        }
+        *percent = (remaining * 100) / acpiBatCap;
+    } else
+        *percent = -1;
+
+    *time = ((rate == 0)? -1 : ((60 * remaining) / acpiBatCap));
 }
 
 int KToshiba::acpiAC()
@@ -818,50 +913,6 @@ void KToshiba::wakeupEvent()
     if (!mInterfaceAvailable)
         kdDebug() << "KToshiba: Interface could not be opened again "
                   << "please re-start application" << endl;
-}
-
-void KToshiba::createConfiguration()
-{
-    kdDebug() << "Creating configuration file..." << endl;
-    KConfig config(CONFIG_FILE);
-    config.setGroup("KToshiba");
-
-    config.writeEntry("Notify_On_Full_Battery", false);
-    config.writeEntry("Battery_Status_Time", 2);
-    config.writeEntry("Low_Battery_Trigger", 15);
-    config.writeEntry("Critical_Battery_Trigger", 5);
-    config.writeEntry("Audio_Player", 1);
-    config.writeEntry("Bluetooth_Startup", true);
-    config.writeEntry("Fn_Esc", 1);
-    config.writeEntry("Fn_F1", 2);
-    config.writeEntry("Fn_F2", 3);
-    config.writeEntry("Fn_F3", 4);
-    config.writeEntry("Fn_F4", 5);
-    config.writeEntry("Fn_F5", 6);
-    config.writeEntry("Fn_F6", 7);
-    config.writeEntry("Fn_F7", 8);
-    config.writeEntry("Fn_F8", 9);
-    config.writeEntry("Fn_F9", 10);
-    config.writeEntry("Processing_Speed", 1);
-    config.writeEntry("CPU_Sleep_Mode", 0);
-    config.writeEntry("Display_Auto_Off", 5);
-    config.writeEntry("HDD_Auto_Off", 5);
-    config.writeEntry("LCD_Brightness", 2);
-    config.writeEntry("Cooling_Method", 2);
-    config.sync();
-}
-
-bool KToshiba::checkConfiguration()
-{
-    KStandardDirs kstd;
-    QString config = kstd.findResource("config", "ktoshibarc");
-
-    if (config.isEmpty()) {
-        kdDebug() << "Configuration file not found" << endl;
-        return false;
-    }
-
-    return true;
 }
 
 
