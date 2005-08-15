@@ -476,6 +476,8 @@ void KToshiba::displayPixmap()
     int new_code = 0;
     int ac = 0;
     mDriver->batteryStatus(&time, &perc);
+    if ((time == -1) && (perc == -1))
+        acpiBatteryStatus(&time, &perc);
 
     ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
     if ((ac == -1) || (ac == SCI_FAILURE))
