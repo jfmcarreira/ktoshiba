@@ -108,6 +108,7 @@ private:
     void doMenu();
     void bsmUserSettings(KConfig *, int *);
     void checkSelectBay();
+    void acpiBatteryStatus(int *, int *);
     int acpiAC();
     int bayUnregister();
     int bayRescan();
@@ -134,6 +135,7 @@ private:
     int sblock;
     int removed;
     int svideo;
+    int acpiBatCap;
 };
 
 #endif // KTOSHIBA_H
