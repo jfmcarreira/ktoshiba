@@ -79,11 +79,6 @@ public:
 	 */
 	int acPowerStatus();
 	/**
-	 * Checks proc entry for hotkeys.
-	 * @return @p value holding the Fn-Key combo id
-	 */
-	int procStatus();
-	/**
 	 * Checks System Event FIFO for hotkeys.
 	 * @return @p value holding the hotkey id
 	 */
@@ -275,7 +270,6 @@ private:
 	void setBluetoothControl(int state);
 private:
 	SMMRegisters reg;
-	FILE *str;
 	int mFd;
 };
 
