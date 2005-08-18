@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-16 13:28-0600\n"
+"POT-Creation-Date: 2005-08-15 13:56-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,19 +27,19 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: main.cpp:54
+#: main.cpp:56
 msgid "kcmktoshiba"
 msgstr ""
 
-#: main.cpp:55
+#: main.cpp:57
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr ""
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Original author"
 msgstr ""
 
-#: main.cpp:235
+#: main.cpp:236
 msgid "Helpful information about the KToshiba module."
 msgstr ""
 
@@ -555,13 +555,13 @@ msgstr ""
 #. i18n: file kcmtoshiba_general.ui line 1858
 #: rc.cpp:609
 #, no-c-format
-msgid "&Display Auto Off:"
+msgid "D&isplay Auto Off:"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 1869
 #: rc.cpp:612
 #, no-c-format
-msgid "C&ooling Method:"
+msgid "Cooling &Method:"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 1878
@@ -573,7 +573,7 @@ msgstr ""
 #. i18n: file kcmtoshiba_general.ui line 1895
 #: rc.cpp:621
 #, no-c-format
-msgid "&HDD Auto Off:"
+msgid "HDD Au&to Off:"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 1904
@@ -664,7 +664,7 @@ msgstr ""
 #. i18n: file kcmtoshiba_general.ui line 2038
 #: rc.cpp:684
 #, no-c-format
-msgid "&CPU Sleep Mode:"
+msgid "CP&U Sleep Mode:"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 2047
@@ -688,7 +688,7 @@ msgstr ""
 #. i18n: file kcmtoshiba_general.ui line 2078
 #: rc.cpp:696
 #, no-c-format
-msgid "LCD Brightn&ess:"
+msgid "LCD &Brightness:"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 2095

@@ -38,6 +38,7 @@ class KAboutApplication;
 
 class KToshibaSMMInterface;
 class FnActions;
+class ProcActions;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -85,6 +86,7 @@ protected slots:
 protected:
     KToshibaSMMInterface *mDriver;
     FnActions *mFn;
+    ProcActions *mProc;
     KAboutApplication *mAboutWidget;
     KInstance *instance;
     DCOPClient mClient;
@@ -108,8 +110,6 @@ private:
     void doMenu();
     void bsmUserSettings(KConfig *, int *);
     void checkSelectBay();
-    void acpiBatteryStatus(int *, int *);
-    int acpiAC();
     int bayUnregister();
     int bayRescan();
     QTimer *mPowTimer;
@@ -123,6 +123,7 @@ private:
     bool wstrig;
     bool baytrig;
     bool btstart;
+    bool acpi;
     int pow;
     int oldpow;
     int time;
@@ -135,7 +136,6 @@ private:
     int sblock;
     int removed;
     int svideo;
-    int acpiBatCap;
 };
 
 #endif // KTOSHIBA_H

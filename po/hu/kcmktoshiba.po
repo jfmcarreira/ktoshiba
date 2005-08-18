@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-16 13:28-0600\n"
+"POT-Creation-Date: 2005-08-15 13:56-0600\n"
 "PO-Revision-Date: 2005-06-15 20:45+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,19 +28,19 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: main.cpp:54
+#: main.cpp:56
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:55
+#: main.cpp:57
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "KDE beállítómodul Toshiba noteszgépekhez"
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Original author"
 msgstr "Eredeti szerző"
 
-#: main.cpp:235
+#: main.cpp:236
 msgid "Helpful information about the KToshiba module."
 msgstr "Információ a(z) KToshiba modulról."
 
@@ -556,14 +556,14 @@ msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 1858
 #: rc.cpp:609
-#, no-c-format
-msgid "&Display Auto Off:"
+#, fuzzy, no-c-format
+msgid "D&isplay Auto Off:"
 msgstr "Kijelző auto lekapcsolás:"
 
 #. i18n: file kcmtoshiba_general.ui line 1869
 #: rc.cpp:612
-#, no-c-format
-msgid "C&ooling Method:"
+#, fuzzy, no-c-format
+msgid "Cooling &Method:"
 msgstr "Hűtési &mód:"
 
 #. i18n: file kcmtoshiba_general.ui line 1878
@@ -574,8 +574,8 @@ msgstr "Bekapcsolva"
 
 #. i18n: file kcmtoshiba_general.ui line 1895
 #: rc.cpp:621
-#, no-c-format
-msgid "&HDD Auto Off:"
+#, fuzzy, no-c-format
+msgid "HDD Au&to Off:"
 msgstr "&HDD Auto lekapcsolás"
 
 #. i18n: file kcmtoshiba_general.ui line 1904
@@ -665,8 +665,8 @@ msgstr "Halvány"
 
 #. i18n: file kcmtoshiba_general.ui line 2038
 #: rc.cpp:684
-#, no-c-format
-msgid "&CPU Sleep Mode:"
+#, fuzzy, no-c-format
+msgid "CP&U Sleep Mode:"
 msgstr "&CPU altatási mód"
 
 #. i18n: file kcmtoshiba_general.ui line 2047
@@ -689,8 +689,8 @@ msgstr "Sebesség &vezérlés:"
 
 #. i18n: file kcmtoshiba_general.ui line 2078
 #: rc.cpp:696
-#, no-c-format
-msgid "LCD Brightn&ess:"
+#, fuzzy, no-c-format
+msgid "LCD &Brightness:"
 msgstr "LCD fényerő:"
 
 #. i18n: file kcmtoshiba_general.ui line 2095

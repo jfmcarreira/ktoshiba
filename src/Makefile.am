@@ -5,7 +5,7 @@ INCLUDES = $(all_includes)
 
 # these are the headers for your project
 noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h synshm.h \
-		modelid.h fnactions.h
+			modelid.h fnactions.h procactions.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -23,7 +23,7 @@ libktoshibasmminterface_la_LDFLAGS = $(all_libraries)
 libktoshibasmminterface_la_SOURCES = hci.c sci.c ktoshibasmminterface.cpp
 
 ktoshiba_SOURCES = main.cpp ktoshiba.cpp settingswidget.ui statuswidget.ui \
-		modelid.cpp fnactions.cpp
+			modelid.cpp fnactions.cpp procactions.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = libktoshibasmminterface.la $(LIB_KDEUI)
 

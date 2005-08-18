@@ -1,3 +1,19 @@
+2005-08-17 Azael Avalos <neftali@utep.edu>
+	* Moved /proc related functions to separate files (exept
+	  from KCModule) in preparation for "omke" branch
+
+2005-08-16 Azael Avalos <neftali@utep.edu>
+	* Removed uneeded code from displayPixmap() function
+
+2005-08-15 Azael Avalos <neftali@utep.edu>
+	* Added checks to use ACPI functions to KCModule
+	* Some small fixes to ACPI check code
+	* Fixed the displayed "time" when ACPI is used
+
+2005-08-14 Azael Avalos <neftali@utep.edu>
+	* Added new function to check battery over ACPI
+	* Added checks to use ACPI functions if needed
+
 2005-08-12 Azael Avalos <neftali@utep.edu>
 	* Added new functions to check configuration file
 	  (it will be created with default values if not found)

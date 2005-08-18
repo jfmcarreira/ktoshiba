@@ -36,7 +36,7 @@ class KCMKToshibaGeneral;
 
 /**
  * @author Azael Avalos <neftali@utep.edu>
- * @version 0.1
+ * @version 0.2
  */
 class KCMToshibaModule: public KCModule
 {
@@ -51,13 +51,17 @@ public:
 public slots:
     void configChanged();
 protected slots:
-	void timeout();
+    void timeout();
 private:
-	KCMKToshibaGeneral *m_KCMKToshibaGeneral;
-	KToshibaSMMInterface *m_Driver;
-	QTimer *mTimer;
-	bool m_InterfaceAvailable;
-	int m_AC;
+    void acpiBatteryStatus(int *time, int *perc);
+    int acpiAC();
+    KCMKToshibaGeneral *m_KCMKToshibaGeneral;
+    KToshibaSMMInterface *m_Driver;
+    QTimer *m_Timer;
+    bool m_InterfaceAvailable;
+    int m_AC;
+    int acpiRemaining;
+    int acpiBatCap;
 };
 
 #endif // KCMTOSHIBA_MAIN_H

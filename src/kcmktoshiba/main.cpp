@@ -30,6 +30,8 @@
 #include <qspinbox.h>
 #include <qtimer.h>
 #include <qcombobox.h>
+#include <qfile.h>
+#include <qregexp.h>
 
 #include <kparts/genericfactory.h>
 #include <kaboutdata.h>
@@ -66,7 +68,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 
 	m_Driver = new KToshibaSMMInterface(this);
 	m_InterfaceAvailable = m_Driver->openInterface();
-	mTimer = new QTimer(this);
+	m_Timer = new QTimer(this);
 
 	load();
 
@@ -78,12 +80,12 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 		m_KCMKToshibaGeneral->tlOff->hide();
 		m_KCMKToshibaGeneral->frameMain->setEnabled(true);
 		m_AC = m_Driver->acPowerStatus();
+		acpiBatCap = 0;
 	}
 
-	mTimer->start(210);
-
 	connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
-	connect( mTimer, SIGNAL( timeout() ), SLOT( timeout() ) );
+	connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
+	m_Timer->start(210);
 };
 
 void KCMToshibaModule::load()
@@ -240,15 +242,19 @@ void KCMToshibaModule::timeout()
 	static bool init = false;
 
 	if (!init) {   // initialize
-		mTimer->start(2000);
+		m_Timer->start(2000);
         init = true;
 	}
 
 	int time = 0, perc = -1, acConnected = -1;
 
 	m_Driver->batteryStatus(&time, &perc);
+	if (perc == -1)
+		acpiBatteryStatus(&time, &perc);
 
 	acConnected = ((m_AC == -1)? SciACPower() : m_Driver->acPowerStatus());
+    if ((acConnected == -1) || (acConnected == SCI_FAILURE))
+        acConnected = acpiAC();
 
 	if (perc == -1)
 		m_KCMKToshibaGeneral->mKPBattery->setValue(0);
@@ -258,3 +264,74 @@ void KCMToshibaModule::timeout()
     m_KCMKToshibaGeneral->kledAC->setState((acConnected == 4)? KLed::On : KLed::Off);
 }
 
+void KCMToshibaModule::acpiBatteryStatus(int *time, int *percent)
+{
+    // Code taken from klaptopdaemon
+    QString buff;
+    QFile *f;
+    int rate;
+
+    if (acpiBatCap == 0)
+        if (::access("/proc/acpi/battery/BAT1/info", F_OK) != -1) {
+            f = new QFile("/proc/acpi/battery/BAT1/info");
+            if (f && f->open(IO_ReadOnly)) {
+                while(f->readLine(buff,1024) > 0) {
+                    if (buff.contains("last full capacity:", false)) {
+                        QRegExp rx("(\\d*)\\D*$");
+                        rx.search(buff);
+                        acpiBatCap = rx.cap(1).toInt();
+                    }
+                }
+                f->close();
+            }
+        }
+    if (::access("/proc/acpi/battery/BAT1/state", F_OK) != -1) {
+        f = new QFile("/proc/acpi/battery/BAT1/state");
+        if (f && f->open(IO_ReadOnly)) {
+            while(f->readLine(buff,1024) > 0) {
+                if (buff.contains("present rate:", false)) {
+                    QRegExp rx("(\\d*)\\D*$");
+                    rx.search(buff);
+                    rate = rx.cap(1).toInt();
+                    continue;
+                }
+                if (buff.contains("remaining capacity:", false)) {
+                    QRegExp rx("(\\d*)\\D*$");
+                    rx.search(buff);
+                    acpiRemaining = rx.cap(1).toInt();
+                    continue;
+                }
+            }
+            f->close();
+        }
+        *percent = (acpiRemaining * 100) / acpiBatCap;
+    } else
+        *percent = -1;
+
+    *time = ((rate == 0)? -1 : ((60 * acpiRemaining) / acpiBatCap));
+}
+
+int KCMToshibaModule::acpiAC()
+{
+    // Code taken from klaptopdaemon
+    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
+
+    if (::access(r, F_OK) != -1) {
+        FILE *f = NULL;
+        char s[1024];
+        f = fopen(r, "r");
+        if (f) {
+            if (fgets(s, sizeof(r), f) == NULL)
+                return -1;
+            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
+                if (strstr(s, "on-line") != NULL) {
+                    fclose(f);
+                    return 4;
+                }
+            fclose(f);
+            return 3;
+        }
+    }
+
+    return -1;
+}

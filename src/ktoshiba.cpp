@@ -21,6 +21,7 @@
 #include "ktoshiba.h"
 #include "ktoshibasmminterface.h"
 #include "fnactions.h"
+#include "procactions.h"
 #include "modelid.h"
 
 #include <qpixmap.h>
@@ -28,8 +29,6 @@
 #include <qtooltip.h>
 #include <qtimer.h>
 #include <qwidget.h>
-#include <qfile.h>
-#include <qregexp.h>
 
 #include <kaboutapplication.h>
 #include <kdebug.h>
@@ -48,6 +47,7 @@ KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
       mDriver( 0 ),
       mFn( 0 ),
+      mProc( 0 ),
       mPowTimer( new QTimer(this) ),
       mHotKeysTimer( new QTimer(this) ),
       mModeTimer( new QTimer(this) ),
@@ -55,6 +55,7 @@ KToshiba::KToshiba()
 {
     mDriver = new KToshibaSMMInterface(this);
     mFn = new FnActions(this);
+    mProc = new ProcActions(this);
     mAboutWidget = new KAboutApplication(this, "About Widget", false);
     instance = new KInstance("ktoshiba");
 
@@ -74,7 +75,6 @@ KToshiba::KToshiba()
         mAC = mDriver->acPowerStatus();
         mWirelessSwitch = 1;
         mBatSave = 2;
-        (perc == 100)? battrig = true : battrig = false;
         crytrig = false;
         lowtrig = false;
         battrig = false;
@@ -85,8 +85,13 @@ KToshiba::KToshiba()
         removed = 0;
         svideo = 0;
         MODE = CD_DVD;
-        acpiBatCap = 0;
+        acpi = false;
     }
+    if (perc == -1) {
+        mProc->acpiBatteryStatus(&time, &perc);
+        acpi = true;
+    }
+    battrig = (perc == 100)? true : false;
 
     // Default to mode 2 if we got a failure
     if (mBatType == -1)
@@ -137,6 +142,7 @@ KToshiba::~KToshiba()
 
     delete instance; instance = NULL;
     delete mAboutWidget; mAboutWidget = NULL;
+    delete mProc; mProc = NULL;
     delete mFn; mFn = NULL;
 }
 
@@ -298,9 +304,9 @@ void KToshiba::checkPowerStatus()
     mDriver->batteryStatus(&time, &perc);
     pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
     if ((pow == -1) || (pow == SCI_FAILURE))
-        pow = acpiAC();
+        pow = mProc->acpiAC();
     if (perc == -1)
-        acpiBatteryStatus(&time, &perc);
+        mProc->acpiBatteryStatus(&time, &perc);
 
     if (perc < 0 && !mInterfaceAvailable)
         wakeupEvent();
@@ -311,7 +317,12 @@ void KToshiba::checkPowerStatus()
         battrig = true;
     }
 
-    int th = SCI_HOUR(time), tm = SCI_MINUTE(time);
+    int th, tm;
+    if (acpi) {
+        th = mProc->acpiRemaining / 60; tm = mProc->acpiRemaining % 60;
+    } else {
+        th = SCI_HOUR(time); tm = SCI_MINUTE(time);
+    }
     if (tm == mLowBat && th == 0 && pow == 3 && !lowtrig) {
         KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
 							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
@@ -375,77 +386,6 @@ void KToshiba::checkPowerStatus()
         displayPixmap();
 }
 
-void KToshiba::acpiBatteryStatus(int *time, int *percent)
-{
-    // Code taken from klaptopdaemon
-    QString buff;
-    QFile *f;
-    int remaining, rate;
-
-    if (acpiBatCap == 0)
-        if (::access("/proc/acpi/battery/BAT1/info", F_OK) != -1) {
-            f = new QFile("/proc/acpi/battery/BAT1/info");
-            if (f && f->open(IO_ReadOnly)) {
-                while(f->readLine(buff,1024) > 0) {
-                    if (buff.contains("last full capacity:", false)) {
-                        QRegExp rx("(\\d*)\\D*$");
-                        rx.search(buff);
-                        acpiBatCap = rx.cap(1).toInt();
-                    }
-                }
-            }
-        }
-    if (::access("/proc/acpi/battery/BAT1/state", F_OK) != -1) {
-        f = new QFile("/proc/acpi/battery/BAT1/state");
-        if (f && f->open(IO_ReadOnly)) {
-            while(f->readLine(buff,1024) > 0) {
-                if (buff.contains("present rate:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(buff);
-                    rate = rx.cap(1).toInt();
-                    continue;
-                }
-                if (buff.contains("remaining capacity:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(buff);
-                    remaining = rx.cap(1).toInt();
-                    continue;
-                }
-            }
-            f->close();
-        }
-        *percent = (remaining * 100) / acpiBatCap;
-    } else
-        *percent = -1;
-
-    *time = ((rate == 0)? -1 : ((60 * remaining) / acpiBatCap));
-}
-
-int KToshiba::acpiAC()
-{
-    // Code taken from klaptopdaemon
-    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
-
-    if (::access(r, F_OK) != -1) {
-        FILE *f = NULL;
-        char s[1024];
-        f = fopen(r, "r");
-        if (f) {
-            if (fgets(s, sizeof(r), f) == NULL)
-                return -1;
-            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
-                if (strstr(s, "on-line") != NULL) {
-                    fclose(f);
-                    return 4;
-                }
-            fclose(f);
-            return 3;
-        }
-    }
-
-    return -1;
-}
-
 void KToshiba::bsmUserSettings(KConfig *k, int *bright)
 {
     int processor, cpu, display, hdd, lcd, cooling;
@@ -477,11 +417,11 @@ void KToshiba::displayPixmap()
     int ac = 0;
     mDriver->batteryStatus(&time, &perc);
     if (perc == -1)
-        acpiBatteryStatus(&time, &perc);
+        mProc->acpiBatteryStatus(&time, &perc);
 
     ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
     if ((ac == -1) || (ac == SCI_FAILURE))
-        ac = acpiAC();
+        ac = mProc->acpiAC();
 
     if (!mInterfaceAvailable)
         new_code = 1;
@@ -496,9 +436,7 @@ void KToshiba::displayPixmap()
         // vary depending on the dock and power
         QString pixmap_name;
 
-        if (!mInterfaceAvailable)
-            pixmap_name = QString("laptop_nobattery");
-        else if (ac == -1 && perc == -1)
+        if (ac == -1 && perc == -1)
             pixmap_name = QString("laptop_nobattery");
         else if (ac == 4 && perc == -1)
             pixmap_name = QString("laptop_power");
@@ -567,19 +505,21 @@ quit:
     adjustSize();
 
     QString tmp;
-    if (!mInterfaceAvailable)
-        tmp = i18n("No interface available");
-    else
     if (ac == 4) {
         if (perc == 100)
             tmp = i18n("Plugged in - fully charged");
         else {
             if (perc >= 0) {
                 QString num3;
-                num3.setNum(SCI_MINUTE(time));
+                int num2;
+                if (acpi) {
+                    num2 = mProc->acpiRemaining / 60; num3.setNum(mProc->acpiRemaining % 60);
+                } else {
+                    num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
+                }
                 num3 = num3.rightJustify(2, '0');
                 tmp = i18n("Plugged in - %1% charged (%2:%3 time left)")
-					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
+					.arg(perc).arg(num2).arg(num3);
             } else
             if (perc == -1)
                 tmp = i18n("Plugged in - no battery");
@@ -589,10 +529,15 @@ quit:
     } else {
         if (perc >= 0) {
             QString num3;
-            num3.setNum(SCI_MINUTE(time));
+            int num2;
+            if (acpi) {
+                num2 = mProc->acpiRemaining / 60; num3.setNum(mProc->acpiRemaining % 60);
+            } else {
+                num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
+            }
             num3 = num3.rightJustify(2, '0');
             tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
-					.arg(perc).arg(SCI_HOUR(time)).arg(num3);
+					.arg(perc).arg(num2).arg(num3);
         } else
         if (perc == -1)
             tmp = i18n("No battery and adaptor found");
@@ -783,7 +728,7 @@ void KToshiba::checkHotKeys()
 
 void KToshiba::checkMode()
 {
-    int temp = mDriver->procStatus();
+    int temp = mProc->procStatus();
 
     if (temp == CD_DVD)
         MODE = CD_DVD;

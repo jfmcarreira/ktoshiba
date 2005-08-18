@@ -144,22 +144,6 @@ int KToshibaSMMInterface::acPowerStatus()
 	return (reg.ecx & 0xffff);
 }
 
-int KToshibaSMMInterface::procStatus()
-{
-	int key;
-	char buffer[64];
-
-	if (!(str = fopen(TOSH_PROC, "r")))
-		return -1;
-
-	fgets(buffer, sizeof(buffer)-1, str);
-	buffer[sizeof(buffer)-1] = '\0';
-	sscanf(buffer, "%*s %*x %*d.%*d %*d.%*d %*x %x\n", &key);
-	fclose(str);
-
-	return key;
-}
-
 int KToshibaSMMInterface::getSystemEvent()
 {
 	reg.eax = HCI_GET;

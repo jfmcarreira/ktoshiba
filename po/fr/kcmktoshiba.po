@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-16 13:28-0600\n"
+"POT-Creation-Date: 2005-08-15 13:56-0600\n"
 "PO-Revision-Date: 2005-06-03 17:45+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
 "Language-Team:  <kde-francophone@kde.org>\n"
@@ -26,19 +26,19 @@ msgid ""
 "Your emails"
 msgstr "nicolas.ternisien@gmail.com"
 
-#: main.cpp:54
+#: main.cpp:56
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:55
+#: main.cpp:57
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "Module de configuration KDE pour les portables Toshiba"
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Original author"
 msgstr "Auteur original"
 
-#: main.cpp:235
+#: main.cpp:236
 msgid "Helpful information about the KToshiba module."
 msgstr "Informations utiles sur le module KToshiba."
 
@@ -562,14 +562,14 @@ msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 1858
 #: rc.cpp:609
-#, no-c-format
-msgid "&Display Auto Off:"
+#, fuzzy, no-c-format
+msgid "D&isplay Auto Off:"
 msgstr "A&ffichage éteint auto. :"
 
 #. i18n: file kcmtoshiba_general.ui line 1869
 #: rc.cpp:612
-#, no-c-format
-msgid "C&ooling Method:"
+#, fuzzy, no-c-format
+msgid "Cooling &Method:"
 msgstr "Méthode de refr&oidissement :"
 
 #. i18n: file kcmtoshiba_general.ui line 1878
@@ -580,8 +580,8 @@ msgstr "Activé"
 
 #. i18n: file kcmtoshiba_general.ui line 1895
 #: rc.cpp:621
-#, no-c-format
-msgid "&HDD Auto Off:"
+#, fuzzy, no-c-format
+msgid "HDD Au&to Off:"
 msgstr "&Disque dur éteint auto. :"
 
 #. i18n: file kcmtoshiba_general.ui line 1904
@@ -671,8 +671,8 @@ msgstr "Faiblement lumineux"
 
 #. i18n: file kcmtoshiba_general.ui line 2038
 #: rc.cpp:684
-#, no-c-format
-msgid "&CPU Sleep Mode:"
+#, fuzzy, no-c-format
+msgid "CP&U Sleep Mode:"
 msgstr "Mode veille du pro&cesseur :"
 
 #. i18n: file kcmtoshiba_general.ui line 2047
@@ -695,8 +695,8 @@ msgstr "Vitesse de &traitement :"
 
 #. i18n: file kcmtoshiba_general.ui line 2078
 #: rc.cpp:696
-#, no-c-format
-msgid "LCD Brightn&ess:"
+#, fuzzy, no-c-format
+msgid "LCD &Brightness:"
 msgstr "Luminosi&té de l'écran :"
 
 #. i18n: file kcmtoshiba_general.ui line 2095
