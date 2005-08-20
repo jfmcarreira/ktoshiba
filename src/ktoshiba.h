@@ -93,6 +93,7 @@ protected:
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
     bool mInterfaceAvailable;
+    bool mOmnibook;
     bool mFullBat;
     int mBatStatus;
     int mOldBatStatus;
@@ -123,7 +124,7 @@ private:
     bool wstrig;
     bool baytrig;
     bool btstart;
-    bool acpi;
+    bool proc;
     int pow;
     int oldpow;
     int time;

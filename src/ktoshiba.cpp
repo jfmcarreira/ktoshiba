@@ -61,12 +61,11 @@ KToshiba::KToshiba()
 
     // check whether toshiba module is loaded
     mInterfaceAvailable = mDriver->openInterface();
-    if (!mInterfaceAvailable) {
-        kdDebug() << "KToshiba: Could not open interface. "
+    if (!mInterfaceAvailable)
+        kdError() << "KToshiba: Could not open SMM interface. "
                   << "Please check that the toshiba module loads without failures"
                   << endl;
-        exit(-1);
-    } else {
+    else {
         kdDebug() << "KToshiba: Interface opened successfully." << endl;
         mBatType = mDriver->getBatterySaveModeType();
         mDriver->batteryStatus(&time, &perc);
@@ -75,9 +74,6 @@ KToshiba::KToshiba()
         mAC = mDriver->acPowerStatus();
         mWirelessSwitch = 1;
         mBatSave = 2;
-        crytrig = false;
-        lowtrig = false;
-        battrig = false;
         wstrig = false;
         baytrig = false;
         bluetooth = 0;
@@ -85,18 +81,35 @@ KToshiba::KToshiba()
         removed = 0;
         svideo = 0;
         MODE = CD_DVD;
-        acpi = false;
+        proc = false;
+        mOmnibook = false;
+        if (perc == -1) {
+            mProc->acpiBatteryStatus(&time, &perc);
+            proc = true;
+        }
+        // Default to mode 2 if we got a failure
+        if (mBatType == -1)
+            mBatType = 2;
+        mFn->m_BatType = mBatType;
     }
-    if (perc == -1) {
-        mProc->acpiBatteryStatus(&time, &perc);
-        acpi = true;
+    if (!mInterfaceAvailable) {
+        mOmnibook = mProc->checkOmnibook();
+        if (!mOmnibook) {
+            kdError() << "KToshiba: Could not found a Toshiba model. "
+                      << "Please check that the omnibook module loads without failures"
+                      << endl;
+            exit(-1);
+        }
+        kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
+        mProc->omnibookBatteryStatus(&time, &perc);
+        mAC = mProc->omnibookAC();
+        proc = true;
     }
-    battrig = (perc == 100)? true : false;
 
-    // Default to mode 2 if we got a failure
-    if (mBatType == -1)
-        mBatType = 2;
-    mFn->m_BatType = mBatType;
+    battrig = (perc == 100)? true : false;
+    crytrig = false;
+    lowtrig = false;
+
 
     if (!mClient.attach())
         kdDebug() << "KToshiba: Cannot attach to DCOP server." << endl;
@@ -111,16 +124,18 @@ KToshiba::KToshiba()
 
     connect( mPowTimer, SIGNAL( timeout() ), SLOT( checkPowerStatus() ) );
     mPowTimer->start(mBatStatus * 1000);
-    connect( mHotKeysTimer, SIGNAL( timeout() ), SLOT( checkHotKeys() ) );
-    mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
-    connect( mModeTimer, SIGNAL( timeout() ), SLOT( checkMode() ) );
-    mModeTimer->start(500);		// Check proc entry every 1/2 seconds
-    connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
-    mSystemTimer->start(500);		// Check system events every 1/2 seconds
-    connect( mFn, SIGNAL( stdActivated() ), this, SLOT( shutdownEvent() ) );
+    if (mInterfaceAvailable) {
+        connect( mHotKeysTimer, SIGNAL( timeout() ), SLOT( checkHotKeys() ) );
+        mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
+        connect( mModeTimer, SIGNAL( timeout() ), SLOT( checkMode() ) );
+        mModeTimer->start(500);		// Check proc entry every 1/2 seconds
+        connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
+        mSystemTimer->start(500);		// Check system events every 1/2 seconds
+        connect( mFn, SIGNAL( stdActivated() ), this, SLOT( shutdownEvent() ) );
+    }
 
     displayPixmap();
-    if (btstart)
+    if (mInterfaceAvailable && btstart)
         doBluetooth();
 }
 
@@ -162,14 +177,16 @@ void KToshiba::doMenu()
     this->contextMenu()->insertSeparator( 5 );
     this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
                                      SLOT( doBluetooth() ), 0, 6, 6 );
+    if (!mInterfaceAvailable)
+        this->contextMenu()->setItemEnabled( 6, FALSE );
     this->contextMenu()->insertSeparator( 7 );
     mHyper = new QPopupMenu( this, i18n("HyperThreading") );
     mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
     mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
     mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
     this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
-    if (mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
-    else if (mHT >= 0)
+    if (!mInterfaceAvailable && mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
+    else if (mInterfaceAvailable && mHT >= 0)
         connect( mHyper, SIGNAL( activated(int) ), this, SLOT( setHyper(int) ) );
     this->contextMenu()->insertSeparator( 9 );
     mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
@@ -177,13 +194,16 @@ void KToshiba::doMenu()
     mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
     mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
     this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 10, 10 );
-    if (mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
-    else if (mSS >= 0)
+    if (!mInterfaceAvailable && mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
+    else if (mInterfaceAvailable && mSS >= 0)
         connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( setFreq(int) ) );
     this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
                                      SLOT( displayAbout() ), 0, 12, 12 );
-    this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
+    if (mInterfaceAvailable)
+        this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
+    else
+        this->contextMenu()->insertTitle( mProc->model, 0, 0 );
 }
 
 void KToshiba::doConfig()
@@ -301,12 +321,18 @@ void KToshiba::checkPowerStatus()
     KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("KToshiba");
     loadConfiguration(&mConfig);
-    mDriver->batteryStatus(&time, &perc);
-    pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
-    if ((pow == -1) || (pow == SCI_FAILURE))
-        pow = mProc->acpiAC();
-    if (perc == -1)
-        mProc->acpiBatteryStatus(&time, &perc);
+    if (mInterfaceAvailable) {
+        mDriver->batteryStatus(&time, &perc);
+        pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+        if ((pow == -1) || (pow == SCI_FAILURE))
+            pow = mProc->acpiAC();
+        if (perc == -1)
+            mProc->acpiBatteryStatus(&time, &perc);
+    } else 
+    if (mOmnibook) {
+        mProc->omnibookBatteryStatus(&time, &perc);
+        pow = mProc->omnibookAC();
+    }
 
     if (perc < 0 && !mInterfaceAvailable)
         wakeupEvent();
@@ -318,8 +344,8 @@ void KToshiba::checkPowerStatus()
     }
 
     int th, tm;
-    if (acpi) {
-        th = mProc->acpiRemaining / 60; tm = mProc->acpiRemaining % 60;
+    if (proc) {
+        th = mProc->RemainingCap / 60; tm = mProc->RemainingCap % 60;
     } else {
         th = SCI_HOUR(time); tm = SCI_MINUTE(time);
     }
@@ -368,7 +394,10 @@ void KToshiba::checkPowerStatus()
                     bright = 7;	// Super-Bright
                 break;
         }
-        mDriver->setBrightness(bright);
+        if (mInterfaceAvailable)
+            mDriver->setBrightness(bright);
+        else
+            mProc->omnibookBrightness(bright);
     }
 
     if (mOldBatStatus != mBatStatus) {
@@ -381,7 +410,8 @@ void KToshiba::checkPowerStatus()
     oldpow = pow;
     oldtime = time;
     mOldBatStatus = mBatStatus;
-    mOldBatSave = mBatSave;
+    if (mInterfaceAvailable)
+        mOldBatSave = mBatSave;
     if (changed)
         displayPixmap();
 }
@@ -415,13 +445,19 @@ void KToshiba::displayPixmap()
 {
     int new_code = 0;
     int ac = 0;
-    mDriver->batteryStatus(&time, &perc);
-    if (perc == -1)
-        mProc->acpiBatteryStatus(&time, &perc);
+    if (mInterfaceAvailable) {
+        mDriver->batteryStatus(&time, &perc);
+        if (perc == -1)
+            mProc->acpiBatteryStatus(&time, &perc);
 
-    ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
-    if ((ac == -1) || (ac == SCI_FAILURE))
-        ac = mProc->acpiAC();
+        ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+        if ((ac == -1) || (ac == SCI_FAILURE))
+            ac = mProc->acpiAC();
+    } else
+    if (mOmnibook) {
+        mProc->omnibookBatteryStatus(&time, &perc);
+        ac = mProc->omnibookAC();
+    }
 
     if (!mInterfaceAvailable)
         new_code = 1;
@@ -512,8 +548,8 @@ quit:
             if (perc >= 0) {
                 QString num3;
                 int num2;
-                if (acpi) {
-                    num2 = mProc->acpiRemaining / 60; num3.setNum(mProc->acpiRemaining % 60);
+                if (proc) {
+                    num2 = mProc->RemainingCap / 60; num3.setNum(mProc->RemainingCap % 60);
                 } else {
                     num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
                 }
@@ -530,8 +566,8 @@ quit:
         if (perc >= 0) {
             QString num3;
             int num2;
-            if (acpi) {
-                num2 = mProc->acpiRemaining / 60; num3.setNum(mProc->acpiRemaining % 60);
+            if (proc) {
+                num2 = mProc->RemainingCap / 60; num3.setNum(mProc->RemainingCap % 60);
             } else {
                 num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
             }
@@ -728,7 +764,7 @@ void KToshiba::checkHotKeys()
 
 void KToshiba::checkMode()
 {
-    int temp = mProc->procStatus();
+    int temp = mProc->toshibaProcStatus();
 
     if (temp == CD_DVD)
         MODE = CD_DVD;
