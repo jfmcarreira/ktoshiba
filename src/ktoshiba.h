@@ -38,7 +38,7 @@ class KAboutApplication;
 
 class KToshibaSMMInterface;
 class FnActions;
-class ProcActions;
+class KToshibaProcInterface;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -85,8 +85,8 @@ protected slots:
     void wakeupEvent();
 protected:
     KToshibaSMMInterface *mDriver;
+    KToshibaProcInterface *mProc;
     FnActions *mFn;
-    ProcActions *mProc;
     KAboutApplication *mAboutWidget;
     KInstance *instance;
     DCOPClient mClient;

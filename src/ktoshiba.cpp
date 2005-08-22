@@ -20,8 +20,8 @@
 
 #include "ktoshiba.h"
 #include "ktoshibasmminterface.h"
+#include "ktoshibaprocinterface.h"
 #include "fnactions.h"
-#include "procactions.h"
 #include "modelid.h"
 
 #include <qpixmap.h>
@@ -46,8 +46,8 @@
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
       mDriver( 0 ),
-      mFn( 0 ),
       mProc( 0 ),
+      mFn( 0 ),
       mPowTimer( new QTimer(this) ),
       mHotKeysTimer( new QTimer(this) ),
       mModeTimer( new QTimer(this) ),
@@ -55,7 +55,7 @@ KToshiba::KToshiba()
 {
     mDriver = new KToshibaSMMInterface(this);
     mFn = new FnActions(this);
-    mProc = new ProcActions(this);
+    mProc = new KToshibaProcInterface(this);
     mAboutWidget = new KAboutApplication(this, "About Widget", false);
     instance = new KInstance("ktoshiba");
 

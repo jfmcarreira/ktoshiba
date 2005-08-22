@@ -40,8 +40,9 @@
 #include <kled.h>
 #include <kprogress.h>
 
+#include "../ktoshibasmminterface.h"
+#include "../ktoshibaprocinterface.h"
 #include "kcmtoshiba_general.h"
-
 #include "main.h"
 #include "main.moc"
 
@@ -67,20 +68,31 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 	layout->addStretch();
 
 	m_Driver = new KToshibaSMMInterface(this);
+	m_Proc = new KToshibaProcInterface(this);
 	m_InterfaceAvailable = m_Driver->openInterface();
 	m_Timer = new QTimer(this);
 
 	load();
 
-	if (!m_InterfaceAvailable) {
-		m_KCMKToshibaGeneral->tlOff->show();
-		m_KCMKToshibaGeneral->frameMain->setEnabled(false);
-		setButtons(buttons() & ~Default);
-	} else {
+	if (m_InterfaceAvailable) {
 		m_KCMKToshibaGeneral->tlOff->hide();
 		m_KCMKToshibaGeneral->frameMain->setEnabled(true);
 		m_AC = m_Driver->acPowerStatus();
-		acpiBatCap = 0;
+	} else
+	if (!m_InterfaceAvailable) {
+		m_Omnibook = m_Proc->checkOmnibook();
+		if (!m_Omnibook) {
+			m_KCMKToshibaGeneral->tlOff->show();
+			m_KCMKToshibaGeneral->frameMain->setEnabled(false);
+			setButtons(buttons() & ~Default);
+		}
+		m_KCMKToshibaGeneral->tlOff->hide();
+		m_KCMKToshibaGeneral->frameMain->setEnabled(true);
+		m_AC = m_Proc->omnibookAC();
+	} else {
+		m_KCMKToshibaGeneral->tlOff->show();
+		m_KCMKToshibaGeneral->frameMain->setEnabled(false);
+		setButtons(buttons() & ~Default);
 	}
 
 	connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
@@ -239,99 +251,33 @@ QString KCMToshibaModule::quickHelp() const
 
 void KCMToshibaModule::timeout()
 {
-	static bool init = false;
+    static bool init = false;
 
-	if (!init) {   // initialize
-		m_Timer->start(2000);
+    if (!init) {   // initialize
+        m_Timer->start(2000);
         init = true;
-	}
-
-	int time = 0, perc = -1, acConnected = -1;
-
-	m_Driver->batteryStatus(&time, &perc);
-	if (perc == -1)
-		acpiBatteryStatus(&time, &perc);
-
-	acConnected = ((m_AC == -1)? SciACPower() : m_Driver->acPowerStatus());
-    if ((acConnected == -1) || (acConnected == SCI_FAILURE))
-        acConnected = acpiAC();
-
-	if (perc == -1)
-		m_KCMKToshibaGeneral->mKPBattery->setValue(0);
-	else
-		m_KCMKToshibaGeneral->mKPBattery->setValue(perc);
-	m_KCMKToshibaGeneral->kledBat->setState((perc == -1)? KLed::Off : KLed::On);
-    m_KCMKToshibaGeneral->kledAC->setState((acConnected == 4)? KLed::On : KLed::Off);
-}
-
-void KCMToshibaModule::acpiBatteryStatus(int *time, int *percent)
-{
-    // Code taken from klaptopdaemon
-    QString buff;
-    QFile *f;
-    int rate;
-
-    if (acpiBatCap == 0)
-        if (::access("/proc/acpi/battery/BAT1/info", F_OK) != -1) {
-            f = new QFile("/proc/acpi/battery/BAT1/info");
-            if (f && f->open(IO_ReadOnly)) {
-                while(f->readLine(buff,1024) > 0) {
-                    if (buff.contains("last full capacity:", false)) {
-                        QRegExp rx("(\\d*)\\D*$");
-                        rx.search(buff);
-                        acpiBatCap = rx.cap(1).toInt();
-                    }
-                }
-                f->close();
-            }
-        }
-    if (::access("/proc/acpi/battery/BAT1/state", F_OK) != -1) {
-        f = new QFile("/proc/acpi/battery/BAT1/state");
-        if (f && f->open(IO_ReadOnly)) {
-            while(f->readLine(buff,1024) > 0) {
-                if (buff.contains("present rate:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(buff);
-                    rate = rx.cap(1).toInt();
-                    continue;
-                }
-                if (buff.contains("remaining capacity:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(buff);
-                    acpiRemaining = rx.cap(1).toInt();
-                    continue;
-                }
-            }
-            f->close();
-        }
-        *percent = (acpiRemaining * 100) / acpiBatCap;
-    } else
-        *percent = -1;
-
-    *time = ((rate == 0)? -1 : ((60 * acpiRemaining) / acpiBatCap));
-}
-
-int KCMToshibaModule::acpiAC()
-{
-    // Code taken from klaptopdaemon
-    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
-
-    if (::access(r, F_OK) != -1) {
-        FILE *f = NULL;
-        char s[1024];
-        f = fopen(r, "r");
-        if (f) {
-            if (fgets(s, sizeof(r), f) == NULL)
-                return -1;
-            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
-                if (strstr(s, "on-line") != NULL) {
-                    fclose(f);
-                    return 4;
-                }
-            fclose(f);
-            return 3;
-        }
     }
 
-    return -1;
+    int time = 0, perc = -1, acConnected = -1;
+
+    if (m_InterfaceAvailable) {
+        m_Driver->batteryStatus(&time, &perc);
+        if (perc == -1)
+            m_Proc->acpiBatteryStatus(&time, &perc);
+
+        acConnected = ((m_AC == -1)? SciACPower() : m_Driver->acPowerStatus());
+        if ((acConnected == -1) || (acConnected == SCI_FAILURE))
+            acConnected = m_Proc->acpiAC();
+    } else
+    if (m_Omnibook) {
+        m_Proc->omnibookBatteryStatus(&time, &perc);
+        acConnected = m_Proc->omnibookAC();
+    }
+
+    if (perc == -1)
+        m_KCMKToshibaGeneral->mKPBattery->setValue(0);
+    else
+        m_KCMKToshibaGeneral->mKPBattery->setValue(perc);
+    m_KCMKToshibaGeneral->kledBat->setState((perc == -1)? KLed::Off : KLed::On);
+    m_KCMKToshibaGeneral->kledAC->setState((acConnected == 4)? KLed::On : KLed::Off);
 }

@@ -1,13 +1,8 @@
 /***************************************************************************
- *   main.h                                                                *
- *                                                                         *
  *   Copyright (C) 2004 by Azael Avalos                                    *
  *   neftali@utep.edu                                                      *
  *                                                                         *
- *   Based on kcm_kvaio                                                    *
- *   Copyright (C) 2003 Mirko Boehm (mirko@kde.org)                        *
- *                                                                         *
- *   This library is free software; you can redistribute it and/or modify  *
+ *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
@@ -23,44 +18,61 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef KTOSHIBA_PROCINTERFACE_H
+#define KTOSHIBA_PROCINTERFACE_H
 
-#ifndef KCMTOSHIBA_MAIN_H
-#define KCMTOSHIBA_MAIN_H
+#include <qobject.h>
 
-#include <kcmodule.h>
-
-class QTimer;
-class KCMKToshibaGeneral;
-
-class KToshibaSMMInterface;
-class KToshibaProcInterface;
+#define OMNI_DMI "/proc/omnibook/dmi"
 
 /**
+ * @short Provides access to /proc files
  * @author Azael Avalos <neftali@utep.edu>
  * @version 0.2
  */
-class KCMToshibaModule: public KCModule
+class KToshibaProcInterface : public QObject
 {
     Q_OBJECT
 public:
-    KCMToshibaModule( QWidget *parent=0, const char *name=0, const QStringList& = QStringList() );
-
-    void load();
-    void save();
-    void defaults();
-    QString quickHelp() const;
-public slots:
-    void configChanged();
-protected slots:
-    void timeout();
+    /**
+     * Default Constructor
+     */
+    KToshibaProcInterface(QObject *parent = 0);
+    /**
+     * Checks /proc entry for Toshiba model
+     * @return @p true if found, false otherwise
+     */
+    bool checkOmnibook();
+    /**
+     * Checks /proc entry for battery status.
+     * @param time the int to hold the current time
+     * @param perc the int to hold the current percent
+     */
+    void omnibookBatteryStatus(int *time, int *perc);
+    int omnibookAC();
+    void omnibookBrightness(int bright);
+    /**
+     * Checks /proc entry for battery status.
+     * @param time the int to hold the current time
+     * @param perc the int to hold the current percent
+     */
+    void acpiBatteryStatus(int *time, int *perc);
+    /**
+     * Checks /proc entry for the AC adaptor status.
+     * @return @p value holding the AC adaptor status
+     */
+    int acpiAC();
+    /**
+     * Checks /proc entry for hotkeys.
+     * @return @p value holding the Fn-Key combo id
+     */
+    int toshibaProcStatus();
+public:
+    QString model;
+    int BatteryCap;
+    int RemainingCap;
 private:
-    KCMKToshibaGeneral *m_KCMKToshibaGeneral;
-    KToshibaSMMInterface *m_Driver;
-    KToshibaProcInterface *m_Proc;
-    QTimer *m_Timer;
-    bool m_InterfaceAvailable;
-    bool m_Omnibook;
-    int m_AC;
+    FILE *str;
 };
 
-#endif // KCMTOSHIBA_MAIN_H
+#endif // KTOSHIBA_PROCINTERFACE_H
