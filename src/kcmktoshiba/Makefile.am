@@ -8,7 +8,8 @@ kcm_ktoshibam_la_METASOURCES = AUTO
 kde_module_LTLIBRARIES = kcm_ktoshibam.la
 kcm_ktoshibam_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN)
 kcm_ktoshibam_la_SOURCES = main.cpp kcmtoshiba_general.ui
-kcm_ktoshibam_la_LIBADD = ../libktoshibasmminterface.la $(LIB_KDEUI)
+kcm_ktoshibam_la_LIBADD = ../libktoshibasmminterface.la \
+			../libktoshibaprocinterface.la $(LIB_KDEUI)
 
 # this is where the desktop file will go
 
