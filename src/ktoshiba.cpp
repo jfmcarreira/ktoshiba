@@ -334,7 +334,7 @@ void KToshiba::checkPowerStatus()
         pow = mProc->omnibookAC();
     }
 
-    if (perc < 0 && !mInterfaceAvailable)
+    if (perc < 0 && !mInterfaceAvailable && !mOmnibook)
         wakeupEvent();
 
     if (mFullBat && perc == 100 && !battrig) {
