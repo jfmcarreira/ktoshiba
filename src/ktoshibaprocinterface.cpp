@@ -65,7 +65,6 @@ bool KToshibaProcInterface::checkOmnibook()
                     model += " " + rx.cap(1);
                 } else
                     model += " " + rx.cap(1) + rx.cap(2);
-                model += " " + rx.cap(1) + rx.cap(2);
                 continue;
             }
         }

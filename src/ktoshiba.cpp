@@ -444,24 +444,10 @@ void KToshiba::bsmUserSettings(KConfig *k, int *bright)
 void KToshiba::displayPixmap()
 {
     int new_code = 0;
-    int ac = 0;
-    if (mInterfaceAvailable) {
-        mDriver->batteryStatus(&time, &perc);
-        if (perc == -1)
-            mProc->acpiBatteryStatus(&time, &perc);
 
-        ac = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
-        if ((ac == -1) || (ac == SCI_FAILURE))
-            ac = mProc->acpiAC();
-    } else
-    if (mOmnibook) {
-        mProc->omnibookBatteryStatus(&time, &perc);
-        ac = mProc->omnibookAC();
-    }
-
-    if (!mInterfaceAvailable)
+    if (!mInterfaceAvailable && !mOmnibook)
         new_code = 1;
-    else if (ac == 3)
+    else if (pow == 3)
         new_code = 2;
     else
         new_code = 3;
@@ -472,11 +458,11 @@ void KToshiba::displayPixmap()
         // vary depending on the dock and power
         QString pixmap_name;
 
-        if (ac == -1 && perc == -1)
+        if (pow == -1 && perc == -1)
             pixmap_name = QString("laptop_nobattery");
-        else if (ac == 4 && perc == -1)
+        else if (pow == 4 && perc == -1)
             pixmap_name = QString("laptop_power");
-        else if (ac == 3)
+        else if (pow == 3)
             pixmap_name = QString("laptop_nocharge");
         else
             pixmap_name = QString("laptop_charge");
@@ -541,7 +527,7 @@ quit:
     adjustSize();
 
     QString tmp;
-    if (ac == 4) {
+    if (pow == 4) {
         if (perc == 100)
             tmp = i18n("Plugged in - fully charged");
         else {
@@ -549,7 +535,7 @@ quit:
                 QString num3;
                 int num2;
                 if (proc) {
-                    num2 = mProc->RemainingCap / 60; num3.setNum(mProc->RemainingCap % 60);
+                    num2 = (mProc->RemainingCap / 60); num3.setNum(mProc->RemainingCap % 60);
                 } else {
                     num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
                 }
@@ -567,7 +553,7 @@ quit:
             QString num3;
             int num2;
             if (proc) {
-                num2 = mProc->RemainingCap / 60; num3.setNum(mProc->RemainingCap % 60);
+                num2 = (mProc->RemainingCap / 60); num3.setNum(mProc->RemainingCap % 60);
             } else {
                 num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
             }

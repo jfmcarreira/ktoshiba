@@ -1,6 +1,17 @@
-2005-08-20 Azael Avalos <neftali@utep.edu>
+2005-08-23 Azael Avalos <neftali@utep.edu>
+	* Fixed an issue with AC checking for omnibook
+	* Removed some un-needed code from displayPixmap() function
+
+2005-08-22 Azael Avalos <neftali@utep.edu>
+	* Fixed model display, I had it double...
+	* Fixed typo on changelog (again)... I need some sleep...
+	* Initialized a variable that could lead to a bug on KCM
+
+2005-08-21 Azael Avalos <neftali@utep.edu>
 	* Fixed battery percent display for omnibook
 	* Converted procactions.* into library for better access
+	* Fixed wrong function calling when using the omnibook module
+	  (this "should" reduce lots of garbage messages)
 
 2005-08-20 Azael Avalos <neftali@utep.edu>
 	* Added support for battery and AC adaptor monitoring
