@@ -78,6 +78,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 		m_KCMKToshibaGeneral->tlOff->hide();
 		m_KCMKToshibaGeneral->frameMain->setEnabled(true);
 		m_AC = m_Driver->acPowerStatus();
+		m_Omnibook = false;
 	} else
 	if (!m_InterfaceAvailable) {
 		m_Omnibook = m_Proc->checkOmnibook();

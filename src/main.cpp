@@ -54,6 +54,8 @@ int main(int argc, char **argv)
                     "nicolas.ternisien@gmail.com", 0 );
     about.addCredit( "Charles Barcza", I18N_NOOP("Hungarian translation"),
                     "kbarcza@blackpanther.hu", "http://www.blackpanther.hu" );
+    about.addCredit( "Gonzalo Raúl Nemmi", I18N_NOOP("omnibook stuff tester"),
+                    "gnemmi@gmail.com", 0 );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
 
