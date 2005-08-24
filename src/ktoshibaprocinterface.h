@@ -50,7 +50,9 @@ public:
      */
     void omnibookBatteryStatus(int *time, int *perc);
     int omnibookAC();
-    void omnibookBrightness(int bright);
+    int omnibookGetBrightness();
+    void omnibookSetBrightness(int bright);
+    int omnibookGetVideo();
     /**
      * Checks /proc entry for battery status.
      * @param time the int to hold the current time

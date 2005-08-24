@@ -65,7 +65,7 @@ KToshiba::KToshiba()
         kdError() << "KToshiba: Could not open SMM interface. "
                   << "Please check that the toshiba module loads without failures"
                   << endl;
-    else {
+    else if (mInterfaceAvailable) {
         kdDebug() << "KToshiba: Interface opened successfully." << endl;
         mBatType = mDriver->getBatterySaveModeType();
         mDriver->batteryStatus(&time, &perc);
@@ -91,6 +91,7 @@ KToshiba::KToshiba()
         if (mBatType == -1)
             mBatType = 2;
         mFn->m_BatType = mBatType;
+        mFn->m_SMM = true;
     }
     if (!mInterfaceAvailable) {
         mOmnibook = mProc->checkOmnibook();
@@ -103,6 +104,7 @@ KToshiba::KToshiba()
         kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
         mProc->omnibookBatteryStatus(&time, &perc);
         mAC = mProc->omnibookAC();
+        mFn->m_Omnibook = true;
         proc = true;
     }
 
@@ -397,7 +399,7 @@ void KToshiba::checkPowerStatus()
         if (mInterfaceAvailable)
             mDriver->setBrightness(bright);
         else
-            mProc->omnibookBrightness(bright);
+            mProc->omnibookSetBrightness(bright);
     }
 
     if (mOldBatStatus != mBatStatus) {

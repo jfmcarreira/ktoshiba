@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-15 13:56-0600\n"
+"POT-Creation-Date: 2005-08-23 16:30-0600\n"
 "PO-Revision-Date: 2005-06-15 21:15+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -91,8 +91,8 @@ msgstr "fel"
 msgid "down"
 msgstr "le"
 
-#: fnactions.cpp:445 fnactions.cpp:515 ktoshiba.cpp:217 ktoshiba.cpp:829
-#: ktoshiba.cpp:889 ktoshiba.cpp:910 main.cpp:39
+#: fnactions.cpp:445 fnactions.cpp:515 ktoshiba.cpp:238 ktoshiba.cpp:775
+#: ktoshiba.cpp:835 ktoshiba.cpp:856 main.cpp:39
 msgid "KToshiba"
 msgstr "KToshiba"
 
@@ -100,7 +100,7 @@ msgstr "KToshiba"
 msgid "Wireless interface %1"
 msgstr "Wireless csatoló %1"
 
-#: fnactions.cpp:447 ktoshiba.cpp:830
+#: fnactions.cpp:447 ktoshiba.cpp:776
 msgid "Wireless"
 msgstr "Wireless"
 
@@ -117,167 +117,163 @@ msgstr ""
 msgid "Bluetooth device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: fnactions.cpp:517 ktoshiba.cpp:218
+#: fnactions.cpp:517 ktoshiba.cpp:239
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: ktoshiba.cpp:150
+#: ktoshiba.cpp:166
 msgid "&Configure KToshiba..."
 msgstr "KToshiba &beállításai"
 
-#: ktoshiba.cpp:153
+#: ktoshiba.cpp:169
 msgid "Suspend To &RAM"
 msgstr "Felfüggesztés RAM-ba"
 
-#: ktoshiba.cpp:155
+#: ktoshiba.cpp:171
 msgid "Suspend To &Disk"
 msgstr "Felfüggesztés lemezre"
 
-#: ktoshiba.cpp:162
+#: ktoshiba.cpp:178
 msgid "Enable &Bluetooth"
 msgstr "&Bluetooth bekapcsolása"
 
-#: ktoshiba.cpp:165
+#: ktoshiba.cpp:183
 msgid "HyperThreading"
 msgstr "HyperThreading"
 
-#: ktoshiba.cpp:166
+#: ktoshiba.cpp:184
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:167
+#: ktoshiba.cpp:185
 msgid "Enabled - PM aware"
 msgstr "Bekapcsolva - PM aware"
 
-#: ktoshiba.cpp:168
+#: ktoshiba.cpp:186
 msgid "Enabled - No PM aware"
 msgstr "Bekapcsolva - No PM aware"
 
-#: ktoshiba.cpp:169
+#: ktoshiba.cpp:187
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:174
+#: ktoshiba.cpp:192
 msgid "SpeedStep"
 msgstr "SpeedStep"
 
-#: ktoshiba.cpp:175
+#: ktoshiba.cpp:193
 msgid "Dynamic"
 msgstr "Dinamikus"
 
-#: ktoshiba.cpp:176
+#: ktoshiba.cpp:194
 msgid "Always High"
 msgstr "Mindig magas"
 
-#: ktoshiba.cpp:177
+#: ktoshiba.cpp:195
 msgid "Always Low"
 msgstr "Mindig alacsony"
 
-#: ktoshiba.cpp:178
+#: ktoshiba.cpp:196
 msgid "CPU Frequency"
 msgstr "CPU Frekvencia"
 
-#: ktoshiba.cpp:183
+#: ktoshiba.cpp:201
 msgid "&About KToshiba"
 msgstr "KToshiba &névjegye"
 
-#: ktoshiba.cpp:217
+#: ktoshiba.cpp:238
 msgid "Bluetooth device activated"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: ktoshiba.cpp:315
+#: ktoshiba.cpp:342
 msgid "Your battery is now fully charged."
 msgstr "A telepek feltöltöttsége 100%-os"
 
-#: ktoshiba.cpp:315
+#: ktoshiba.cpp:342
 msgid "Laptop Battery"
 msgstr "Laptop akkumlátor"
 
-#: ktoshiba.cpp:326
+#: ktoshiba.cpp:353
 msgid "The battery state has changed to low"
 msgstr "Alacson töltöttségű akkumlátor állapot"
 
-#: ktoshiba.cpp:331
+#: ktoshiba.cpp:358
 msgid "The battery state has changed to critical"
 msgstr "Kritikus töltöttségű akkumlátor állapot"
 
-#: ktoshiba.cpp:336
+#: ktoshiba.cpp:363
 msgid "I'm Gone..."
 msgstr "Elvesztem..."
 
-#: ktoshiba.cpp:582
-msgid "No interface available"
-msgstr "Adapter nem elérhető"
-
-#: ktoshiba.cpp:586
+#: ktoshiba.cpp:532
 msgid "Plugged in - fully charged"
 msgstr "Külső áramellátással való működés - a feltöltöttség 100%-os"
 
-#: ktoshiba.cpp:597
+#: ktoshiba.cpp:543
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 "Külső áramellátással való működés - %1%-os feltöltöttség (%2.%3 a hátralevő "
 "idő)"
 
-#: ktoshiba.cpp:601
+#: ktoshiba.cpp:547
 msgid "Plugged in - no battery"
 msgstr "Külső áramellátással való működés - nincs telep"
 
-#: ktoshiba.cpp:603
+#: ktoshiba.cpp:549
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr "Külső áramellátással való működés - %1%-os feltöltöttség"
 
-#: ktoshiba.cpp:615
+#: ktoshiba.cpp:561
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr "Telepről való működés - %1%-os feltöltöttség (%2.%3 a hátralevő idő)"
 
-#: ktoshiba.cpp:619
+#: ktoshiba.cpp:565
 msgid "No battery and adaptor found"
 msgstr ""
 
-#: ktoshiba.cpp:621
+#: ktoshiba.cpp:567
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr "Telepről való működés - %1%-os feltöltöttség"
 
-#: ktoshiba.cpp:828
+#: ktoshiba.cpp:774
 msgid "on"
 msgstr "be"
 
-#: ktoshiba.cpp:828
+#: ktoshiba.cpp:774
 msgid "off"
 msgstr "ki"
 
-#: ktoshiba.cpp:829
+#: ktoshiba.cpp:775
 msgid "Wireless antenna turned %1"
 msgstr "Wireless antenna turned %1"
 
-#: ktoshiba.cpp:865
+#: ktoshiba.cpp:811
 msgid "Please umount all filesystems on the SelectBay device, if any."
 msgstr ""
 
-#: ktoshiba.cpp:866 ktoshiba.cpp:871 ktoshiba.cpp:876
+#: ktoshiba.cpp:812 ktoshiba.cpp:817 ktoshiba.cpp:822
 msgid "SelectBay"
 msgstr ""
 
-#: ktoshiba.cpp:870
+#: ktoshiba.cpp:816
 msgid ""
 "Unable to remove device in\n"
 "the SelectBay. Please re-lock."
 msgstr ""
 
-#: ktoshiba.cpp:876
+#: ktoshiba.cpp:822
 msgid "Device in the SelectBay sucessfully removed."
 msgstr ""
 
-#: ktoshiba.cpp:887
+#: ktoshiba.cpp:833
 msgid ""
 "Could not unregister device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:908
+#: ktoshiba.cpp:854
 msgid ""
 "Could not register device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
@@ -316,7 +312,11 @@ msgstr "Francia fordítás"
 msgid "Hungarian translation"
 msgstr "Francia fordítás"
 
-#: modelid.cpp:327
+#: main.cpp:57
+msgid "omnibook stuff tester"
+msgstr ""
+
+#: modelid.cpp:33
 msgid ""
 "Could not get model id.\n"
 "Weird"
@@ -325,8 +325,9 @@ msgstr ""
 "Furcsa."
 
 #: modelid.cpp:332
+#, fuzzy
 msgid ""
-"Please send the model name and this id %1 to:\n"
+"Please send the model name and this id 0x%1 to:\n"
 "coproscefalo@gmail.com"
 msgstr ""
 "Kérem küldje el a model nevét és ezt az azonosítót (%1) a következő címre:\n"
@@ -353,3 +354,6 @@ msgstr "KToshiba: Videó, Energia és Boot állapot"
 #, no-c-format
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Status Widget"
+
+#~ msgid "No interface available"
+#~ msgstr "Adapter nem elérhető"

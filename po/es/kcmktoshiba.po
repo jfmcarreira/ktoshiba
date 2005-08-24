@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-15 13:56-0600\n"
+"POT-Creation-Date: 2005-08-23 16:30-0600\n"
 "PO-Revision-Date: 2005-08-15 14:01-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
@@ -27,19 +27,19 @@ msgid ""
 "Your emails"
 msgstr "neftali@utep.edu"
 
-#: main.cpp:56
+#: main.cpp:57
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:57
+#: main.cpp:58
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "Módulo de Control de KDE para el soporte del portátil Toshiba"
 
-#: main.cpp:61
+#: main.cpp:62
 msgid "Original author"
 msgstr "Autor Original"
 
-#: main.cpp:236
+#: main.cpp:249
 msgid "Helpful information about the KToshiba module."
 msgstr "Información acerca del modulo KToshiba"
 
@@ -100,7 +100,8 @@ msgstr " seg"
 #. i18n: file kcmtoshiba_general.ui line 174
 #: rc.cpp:30
 #, no-c-format
-msgid "This is used to determine how often the program will check the battery status"
+msgid ""
+"This is used to determine how often the program will check the battery status"
 msgstr ""
 "Esto es usado para determinar cada cuanto tiempo el programa verificara el "
 "estado de la batería"
@@ -708,4 +709,3 @@ msgstr ""
 "No se pudo encontrar el <i>Controlador de Modo de Manejo del Sistema de "
 "Toshiba</i>. Sí esta es un portátil Toshiba verifique que el controlador "
 "<b>toshiba</b> sea cargado sin problemas."
-

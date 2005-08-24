@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-15 13:56-0600\n"
+"POT-Creation-Date: 2005-08-23 16:30-0600\n"
 "PO-Revision-Date: 2005-06-15 20:45+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,19 +28,19 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: main.cpp:56
+#: main.cpp:57
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:57
+#: main.cpp:58
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "KDE beállítómodul Toshiba noteszgépekhez"
 
-#: main.cpp:61
+#: main.cpp:62
 msgid "Original author"
 msgstr "Eredeti szerző"
 
-#: main.cpp:236
+#: main.cpp:249
 msgid "Helpful information about the KToshiba module."
 msgstr "Információ a(z) KToshiba modulról."
 
