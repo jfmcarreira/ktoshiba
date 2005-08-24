@@ -188,7 +188,7 @@ void KToshiba::doMenu()
     this->contextMenu()->insertSeparator( 5 );
     this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
                                      SLOT( doBluetooth() ), 0, 6, 6 );
-    if (!mInterfaceAvailable)
+    if (!mInterfaceAvailable || mOmnibook)
         this->contextMenu()->setItemEnabled( 6, FALSE );
     this->contextMenu()->insertSeparator( 7 );
     mHyper = new QPopupMenu( this, i18n("HyperThreading") );
@@ -196,7 +196,7 @@ void KToshiba::doMenu()
     mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
     mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
     this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
-    if (!mInterfaceAvailable && mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
+    if (mHT < 0 || mOmnibook) this->contextMenu()->setItemEnabled( 8, FALSE );
     else if (mInterfaceAvailable && mHT >= 0)
         connect( mHyper, SIGNAL( activated(int) ), this, SLOT( setHyper(int) ) );
     this->contextMenu()->insertSeparator( 9 );
@@ -205,7 +205,7 @@ void KToshiba::doMenu()
     mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
     mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
     this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 10, 10 );
-    if (!mInterfaceAvailable && mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
+    if (mSS < 0 || mOmnibook) this->contextMenu()->setItemEnabled( 10, FALSE );
     else if (mInterfaceAvailable && mSS >= 0)
         connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( setFreq(int) ) );
     this->contextMenu()->insertSeparator( 11 );
