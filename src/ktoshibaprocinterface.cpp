@@ -42,7 +42,7 @@ bool KToshibaProcInterface::checkOmnibook()
     if (!file.exists())
         return false;
     if (file.open(IO_ReadOnly)) {
-        QTextStream stream( &file );
+        QTextStream stream(&file);
         QString line, tmp;
         while (!stream.atEnd()) {
             line = stream.readLine();
@@ -81,7 +81,7 @@ void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
     QFile file("/proc/omnibook/battery");
     if (BatteryCap == 0)
         if (file.open(IO_ReadOnly)) {
-            QTextStream stream( &file );
+            QTextStream stream(&file);
             QString line;
             while (!stream.atEnd()) {
                 line = stream.readLine();
@@ -96,7 +96,7 @@ void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
         }
 
     if (file.open(IO_ReadOnly)) {
-            QTextStream stream( &file );
+            QTextStream stream(&file);
             QString line;
             while (!stream.atEnd()) {
                 line = stream.readLine();
@@ -123,7 +123,7 @@ int KToshibaProcInterface::omnibookAC()
 {
     QFile file("/proc/omnibook/ac");
     if (file.open(IO_ReadOnly)) {
-        QTextStream stream( &file );
+        QTextStream stream(&file);
         QString line;
         line = stream.readLine();
         if (line.contains("AC", false)) {
@@ -141,13 +141,56 @@ int KToshibaProcInterface::omnibookAC()
     return -1;
 }
 
-void KToshibaProcInterface::omnibookBrightness(int bright)
+int KToshibaProcInterface::omnibookGetBrightness()
+{
+    int brightness;
+
+    QFile file("/proc/omnibook/lcd");
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line;
+        line = stream.readLine();
+        if (line.contains("LCD brightness:", false)) {
+            QRegExp rx("(\\d*)\\D*$");
+            rx.search(line);
+            brightness = rx.cap(1).toInt();
+        }
+        file.close();
+        return brightness;
+    }
+
+    return -1;
+}
+
+void KToshibaProcInterface::omnibookSetBrightness(int bright)
 {
     if (bright > 10)
         bright = 10;
     else if (bright < 0)
         bright = 0;
     // TODO: Add relevant code here
+}
+
+int KToshibaProcInterface::omnibookGetVideo()
+{
+    QFile file("/proc/omnibook/display");
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line;
+        line = stream.readLine();
+        if (line.contains("External display is", false)) {
+            QRegExp rx("(not)$");
+            rx.search(line);
+            if (rx.cap(1) == "not") {
+                file.close();
+                return 0;
+            }
+        }
+        file.close();
+        return 1;
+    }
+
+    return -1;
 }
 
 int KToshibaProcInterface::toshibaProcStatus()

@@ -64,6 +64,8 @@ public:
     void loadConfiguration(KConfig *);
     void createConfiguration();
     bool checkConfiguration();
+    bool mInterfaceAvailable;
+    bool mOmnibook;
 
     /**
      * Default Destructor
@@ -92,8 +94,6 @@ protected:
     DCOPClient mClient;
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
-    bool mInterfaceAvailable;
-    bool mOmnibook;
     bool mFullBat;
     int mBatStatus;
     int mOldBatStatus;
