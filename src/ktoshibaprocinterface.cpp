@@ -168,7 +168,8 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
         bright = 10;
     else if (bright < 0)
         bright = 0;
-    // TODO: Add relevant code here
+    // TODO: Find out if we really need this, as it appears that
+    // the machine does this automatically
 }
 
 int KToshibaProcInterface::omnibookGetVideo()

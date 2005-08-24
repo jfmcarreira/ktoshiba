@@ -29,6 +29,8 @@
 #include <qtooltip.h>
 #include <qtimer.h>
 #include <qwidget.h>
+#include <qwidgetstack.h>
+#include <qapplication.h>
 
 #include <kaboutapplication.h>
 #include <kdebug.h>
@@ -41,6 +43,8 @@
 #include <kpassivepopup.h>
 #include <kstandarddirs.h>
 
+#include "statuswidget.h"
+
 #define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
@@ -51,7 +55,8 @@ KToshiba::KToshiba()
       mPowTimer( new QTimer(this) ),
       mHotKeysTimer( new QTimer(this) ),
       mModeTimer( new QTimer(this) ),
-      mSystemTimer( new QTimer(this) )
+      mSystemTimer( new QTimer(this) ),
+      mOmnibookTimer( new QTimer(this) )
 {
     mDriver = new KToshibaSMMInterface(this);
     mFn = new FnActions(this);
@@ -134,6 +139,10 @@ KToshiba::KToshiba()
         connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
         mSystemTimer->start(500);		// Check system events every 1/2 seconds
         connect( mFn, SIGNAL( stdActivated() ), this, SLOT( shutdownEvent() ) );
+    } else
+    if (mOmnibook) {
+        connect( mOmnibookTimer, SIGNAL( timeout() ), SLOT( checkOmnibook() ) );
+        mOmnibookTimer->start(100);
     }
 
     displayPixmap();
@@ -884,6 +893,29 @@ void KToshiba::wakeupEvent()
     if (!mInterfaceAvailable)
         kdDebug() << "KToshiba: Interface could not be opened again "
                   << "please re-start application" << endl;
+}
+
+void KToshiba::checkOmnibook()
+{
+    // TODO: Add more stuff here, for now only the LCD is being monitored
+
+    if (mFn->m_Popup != 0) {
+        mFn->m_StatusWidget->hide();
+        mFn->m_Popup = 0;
+    }
+
+    if (mFn->m_Popup == 0) {
+        QRect r = QApplication::desktop()->geometry();
+        mFn->m_StatusWidget->move(r.center() - 
+            QPoint(mFn->m_StatusWidget->width()/2, mFn->m_StatusWidget->height()/2));
+        mFn->m_StatusWidget->show();
+        mFn->m_Popup = 1;
+    }
+    if (mFn->m_Popup == 1) {
+        int bright = mProc->omnibookGetBrightness();
+        if (bright != mFn->m_Bright)
+            mFn->m_StatusWidget->wsStatus->raiseWidget(bright + 4);
+    }
 }
 
 

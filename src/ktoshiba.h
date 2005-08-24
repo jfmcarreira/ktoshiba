@@ -64,8 +64,6 @@ public:
     void loadConfiguration(KConfig *);
     void createConfiguration();
     bool checkConfiguration();
-    bool mInterfaceAvailable;
-    bool mOmnibook;
 
     /**
      * Default Destructor
@@ -85,6 +83,7 @@ protected slots:
     void checkMode();
     void shutdownEvent();
     void wakeupEvent();
+    void checkOmnibook();
 protected:
     KToshibaSMMInterface *mDriver;
     KToshibaProcInterface *mProc;
@@ -94,6 +93,8 @@ protected:
     DCOPClient mClient;
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
+    bool mInterfaceAvailable;
+    bool mOmnibook;
     bool mFullBat;
     int mBatStatus;
     int mOldBatStatus;
@@ -117,6 +118,7 @@ private:
     QTimer *mHotKeysTimer;
     QTimer *mModeTimer;
     QTimer *mSystemTimer;
+    QTimer *mOmnibookTimer;
     QPixmap pm;
     bool lowtrig;
     bool crytrig;
