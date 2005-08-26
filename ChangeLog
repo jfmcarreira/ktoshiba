@@ -1,5 +1,7 @@
-2005-08-23 Azael Avalos <neftali@utep.edu>
+2005-08-24 Azael Avalos <neftali@utep.edu>
 	* Added LCD brightness monitoring for omnibook
+	* Fixed popup menu, now irrelevant settings will not be
+	  available for omnibook users (and others also)
 
 2005-08-23 Azael Avalos <neftali@utep.edu>
 	* Fixed an issue with AC checking for omnibook

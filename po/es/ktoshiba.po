@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-08-23 16:30-0600\n"
-"PO-Revision-Date: 2005-08-15 14:04-0600\n"
+"PO-Revision-Date: 2005-08-24 13:50-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
@@ -337,12 +337,11 @@ msgstr ""
 "Extraño"
 
 #: modelid.cpp:332
-#, fuzzy
 msgid ""
 "Please send the model name and this id 0x%1 to:\n"
 "coproscefalo@gmail.com"
 msgstr ""
-"Por favor manda el nombre del modelo y este número %1 a:\n"
+"Por favor manda el nombre del modelo y este número 0x%1 a:\n"
 "coproscefalo@gmail.com"
 
 #: modelid.cpp:333
@@ -367,5 +366,3 @@ msgstr "KToshiba: Estado de Vidéo, Batería y Método de Inicio"
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Widget de Estado"
 
-#~ msgid "No interface available"
-#~ msgstr "Interfaz no disponible"
