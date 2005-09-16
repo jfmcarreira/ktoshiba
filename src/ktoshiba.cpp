@@ -85,7 +85,7 @@ KToshiba::KToshiba()
         sblock = HCI_LOCKED;
         removed = 0;
         svideo = 0;
-        MODE = CD_DVD;
+        MODE = DIGITAL;
         proc = false;
         mOmnibook = false;
         if (perc == -1) {
@@ -129,19 +129,19 @@ KToshiba::KToshiba()
 
     doMenu();
 
-    connect( mPowTimer, SIGNAL( timeout() ), SLOT( checkPowerStatus() ) );
+    connect( mPowTimer, SIGNAL( timeout() ), this, SLOT( checkPowerStatus() ) );
     mPowTimer->start(mBatStatus * 1000);
     if (mInterfaceAvailable) {
-        connect( mHotKeysTimer, SIGNAL( timeout() ), SLOT( checkHotKeys() ) );
+        connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
         mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
-        connect( mModeTimer, SIGNAL( timeout() ), SLOT( checkMode() ) );
+        connect( mModeTimer, SIGNAL( timeout() ), this, SLOT( checkMode() ) );
         mModeTimer->start(500);		// Check proc entry every 1/2 seconds
-        connect( mSystemTimer, SIGNAL( timeout() ), SLOT( checkSystem() ) );
+        connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
         mSystemTimer->start(500);		// Check system events every 1/2 seconds
         connect( mFn, SIGNAL( stdActivated() ), this, SLOT( shutdownEvent() ) );
     } else
     if (mOmnibook) {
-        connect( mOmnibookTimer, SIGNAL( timeout() ), SLOT( checkOmnibook() ) );
+        connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
         mOmnibookTimer->start(100);
     }
 
@@ -356,7 +356,7 @@ void KToshiba::checkPowerStatus()
 
     int th, tm;
     if (proc) {
-        th = mProc->RemainingCap / 60; tm = mProc->RemainingCap % 60;
+        th = time / 60; tm = time % 60;
     } else {
         th = SCI_HOUR(time); tm = SCI_MINUTE(time);
     }
@@ -407,8 +407,8 @@ void KToshiba::checkPowerStatus()
         }
         if (mInterfaceAvailable)
             mDriver->setBrightness(bright);
-        else
-            mProc->omnibookSetBrightness(bright);
+        //else
+        //    mProc->omnibookSetBrightness(bright);
     }
 
     if (mOldBatStatus != mBatStatus) {
@@ -546,7 +546,7 @@ quit:
                 QString num3;
                 int num2;
                 if (proc) {
-                    num2 = (mProc->RemainingCap / 60); num3.setNum(mProc->RemainingCap % 60);
+                    num2 = time / 60; num3.setNum(time % 60);
                 } else {
                     num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
                 }
@@ -564,7 +564,7 @@ quit:
             QString num3;
             int num2;
             if (proc) {
-                num2 = (mProc->RemainingCap / 60); num3.setNum(mProc->RemainingCap % 60);
+                num2 = time / 60; num3.setNum(time % 60);
             } else {
                 num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
             }

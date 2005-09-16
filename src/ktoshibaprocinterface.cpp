@@ -28,6 +28,8 @@
 
 #include <kdebug.h>
 
+#include <math.h>
+
 KToshibaProcInterface::KToshibaProcInterface(QObject *parent)
     : QObject( parent ),
       BatteryCap( 0 )
@@ -38,7 +40,7 @@ bool KToshibaProcInterface::checkOmnibook()
 {
     QString bios;
 
-    QFile file(OMNI_DMI);
+    QFile file(OMNI_ROOT"/dmi");
     if (!file.exists())
         return false;
     if (file.open(IO_ReadOnly)) {
@@ -78,23 +80,12 @@ bool KToshibaProcInterface::checkOmnibook()
 
 void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
 {
-    QFile file("/proc/omnibook/battery");
-    if (BatteryCap == 0)
-        if (file.open(IO_ReadOnly)) {
-            QTextStream stream(&file);
-            QString line;
-            while (!stream.atEnd()) {
-                line = stream.readLine();
-                if (line.contains("Last Full Capacity:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(line);
-                    BatteryCap = rx.cap(1).toInt();
-                    break;
-                }
-            }
-            file.close();
-        }
-
+    QFile file(OMNI_ROOT"/battery");
+    if (!file.exists()) {
+        *percent = -1;
+        *time = -1;
+        return;
+    }
     if (file.open(IO_ReadOnly)) {
             QTextStream stream(&file);
             QString line;
@@ -104,6 +95,12 @@ void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
                     QRegExp rx("(\\d*)\\D*$");
                     rx.search(line);
                     RemainingCap = rx.cap(1).toInt();
+                    continue;
+                }
+                if (line.contains("Last Full Capacity:", false) && BatteryCap == 0) {
+                    QRegExp rx("(\\d*)\\D*$");
+                    rx.search(line);
+                    BatteryCap = rx.cap(1).toInt();
                     continue;
                 }
                 if (line.contains("Gauge:", false)) {
@@ -116,16 +113,15 @@ void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
             file.close();
         }
 
-    *time = (60 * RemainingCap) / BatteryCap;
+    *time = (BatteryCap * 60) / RemainingCap;
 }
 
 int KToshibaProcInterface::omnibookAC()
 {
-    QFile file("/proc/omnibook/ac");
+    QFile file(OMNI_ROOT"/ac");
     if (file.open(IO_ReadOnly)) {
         QTextStream stream(&file);
-        QString line;
-        line = stream.readLine();
+        QString line = stream.readLine();
         if (line.contains("AC", false)) {
             QRegExp rx("(on-line)$");
             rx.search(line);
@@ -143,13 +139,12 @@ int KToshibaProcInterface::omnibookAC()
 
 int KToshibaProcInterface::omnibookGetBrightness()
 {
-    int brightness;
+    int brightness = 0;
 
-    QFile file("/proc/omnibook/lcd");
+    QFile file(OMNI_ROOT"/lcd");
     if (file.open(IO_ReadOnly)) {
         QTextStream stream(&file);
-        QString line;
-        line = stream.readLine();
+        QString line = stream.readLine();
         if (line.contains("LCD brightness:", false)) {
             QRegExp rx("(\\d*)\\D*$");
             rx.search(line);
@@ -162,23 +157,12 @@ int KToshibaProcInterface::omnibookGetBrightness()
     return -1;
 }
 
-void KToshibaProcInterface::omnibookSetBrightness(int bright)
-{
-    if (bright > 10)
-        bright = 10;
-    else if (bright < 0)
-        bright = 0;
-    // TODO: Find out if we really need this, as it appears that
-    // the machine does this automatically
-}
-
 int KToshibaProcInterface::omnibookGetVideo()
 {
-    QFile file("/proc/omnibook/display");
+    QFile file(OMNI_ROOT"/display");
     if (file.open(IO_ReadOnly)) {
         QTextStream stream(&file);
-        QString line;
-        line = stream.readLine();
+        QString line = stream.readLine();
         if (line.contains("External display is", false)) {
             QRegExp rx("(not)$");
             rx.search(line);
@@ -212,69 +196,71 @@ int KToshibaProcInterface::toshibaProcStatus()
 
 void KToshibaProcInterface::acpiBatteryStatus(int *time, int *percent)
 {
-    // Code taken from klaptopdaemon
-    QString buff;
-    QFile *f;
-    int rate;
+    int rate = 0;
 
-    if (BatteryCap == 0)
-        if (::access("/proc/acpi/battery/BAT1/info", F_OK) != -1) {
-            f = new QFile("/proc/acpi/battery/BAT1/info");
-            if (f && f->open(IO_ReadOnly)) {
-                while (f->readLine(buff, 1024) > 0) {
-                    if (buff.contains("last full capacity:", false)) {
-                        QRegExp rx("(\\d*)\\D*$");
-                        rx.search(buff);
-                        BatteryCap = rx.cap(1).toInt();
-                    }
-                }
-                f->close();
-            }
-        }
-    if (::access("/proc/acpi/battery/BAT1/state", F_OK) != -1) {
-        f = new QFile("/proc/acpi/battery/BAT1/state");
-        if (f && f->open(IO_ReadOnly)) {
-            while (f->readLine(buff, 1024) > 0) {
-                if (buff.contains("present rate:", false)) {
+    if (BatteryCap == 0) {
+        QFile file(ACPI_ROOT"/battery/BAT1/info");
+        if (file.open(IO_ReadOnly)) {
+            QTextStream stream(&file);
+            QString line;
+            while (!stream.atEnd()) {
+                line = stream.readLine();
+                if (line.contains("last full capacity:", false)) {
                     QRegExp rx("(\\d*)\\D*$");
-                    rx.search(buff);
-                    rate = rx.cap(1).toInt();
-                    continue;
-                }
-                if (buff.contains("remaining capacity:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(buff);
-                    RemainingCap = rx.cap(1).toInt();
-                    continue;
+                    rx.search(line);
+                    BatteryCap = rx.cap(1).toInt();
+                    break;
                 }
             }
-            f->close();
+            file.close();
         }
-        *percent = (RemainingCap * 100) / BatteryCap;
-    } else
+    }
+
+    QFile file2(ACPI_ROOT"/battery/BAT1/state");
+    if (!file2.exists()) {
         *percent = -1;
+        *time = -1;
+        return;
+    }
+    if (file2.open(IO_ReadOnly)) {
+        QTextStream stream(&file2);
+        QString line;
+        while (!stream.atEnd()) {
+            line = stream.readLine();
+            if (line.contains("present rate:", false)) {
+                QRegExp rx("(\\d*)\\D*$");
+                rx.search(line);
+                rate = rx.cap(1).toInt();
+                continue;
+            }
+            if (line.contains("remaining capacity:", false)) {
+                QRegExp rx("(\\d*)\\D*$");
+                rx.search(line);
+                RemainingCap = rx.cap(1).toInt();
+                continue;
+            }
+        }
+        file2.close();
+    }
 
-    *time = ((rate == 0)? -1 : ((60 * RemainingCap) / BatteryCap));
+    *percent = (RemainingCap * 100) / BatteryCap;
+    *time = (int)roundf(((float)(RemainingCap) / rate) * 60);
 }
 
 int KToshibaProcInterface::acpiAC()
 {
-    // Code taken from klaptopdaemon
-    static char r[1024] = "/proc/acpi/ac_adapter/ADP1/state";
-
-    if (::access(r, F_OK) != -1) {
-        FILE *f = NULL;
-        char s[1024];
-        f = fopen(r, "r");
-        if (f) {
-            if (fgets(s, sizeof(r), f) == NULL)
-                return -1;
-            if (strstr(s, "Status:") != NULL || strstr(s, "state:") != NULL)
-                if (strstr(s, "on-line") != NULL) {
-                    fclose(f);
-                    return 4;
-                }
-            fclose(f);
+    QFile file(ACPI_ROOT"/ac_adapter/ADP1/state");
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line = stream.readLine();
+        if (line.contains("Status:", false) || line.contains("state:", false)) {
+            QRegExp rx("(on-line)$");
+            rx.search(line);
+            if (rx.cap(1) == "on-line") {
+                file.close();
+                return 4;
+            }
+            file.close();
             return 3;
         }
     }

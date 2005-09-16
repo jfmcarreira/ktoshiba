@@ -23,7 +23,8 @@
 
 #include <qobject.h>
 
-#define OMNI_DMI "/proc/omnibook/dmi"
+#define OMNI_ROOT "/proc/omnibook"
+#define ACPI_ROOT "/proc/acpi"
 
 /**
  * @short Provides access to /proc files
@@ -51,7 +52,6 @@ public:
     void omnibookBatteryStatus(int *time, int *perc);
     int omnibookAC();
     int omnibookGetBrightness();
-    void omnibookSetBrightness(int bright);
     int omnibookGetVideo();
     /**
      * Checks /proc entry for battery status.
@@ -71,10 +71,10 @@ public:
     int toshibaProcStatus();
 public:
     QString model;
-    int BatteryCap;
-    int RemainingCap;
 private:
     FILE *str;
+    int BatteryCap;
+    int RemainingCap;
 };
 
 #endif // KTOSHIBA_PROCINTERFACE_H

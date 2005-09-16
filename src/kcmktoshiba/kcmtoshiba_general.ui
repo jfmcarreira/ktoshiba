@@ -1818,22 +1818,6 @@
                         <attribute name="title">
                             <string>Battery &amp;Save Mode</string>
                         </attribute>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>textLabel1</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>16</x>
-                                    <y>17</y>
-                                    <width>510</width>
-                                    <height>40</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>The options shown here are only aplicable when the &lt;b&gt;Battery Save Mode&lt;/b&gt; is set to &lt;i&gt;User Settings&lt;/i&gt;.</string>
-                            </property>
-                        </widget>
                         <widget class="QLayoutWidget">
                             <property name="name">
                                 <cstring>layout1</cstring>
@@ -1843,7 +1827,7 @@
                                     <x>10</x>
                                     <y>60</y>
                                     <width>520</width>
-                                    <height>250</height>
+                                    <height>290</height>
                                 </rect>
                             </property>
                             <grid>
@@ -2083,6 +2067,22 @@
                                 </widget>
                             </grid>
                         </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel1</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>16</x>
+                                    <y>17</y>
+                                    <width>510</width>
+                                    <height>40</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>The options shown here are only applicable when the &lt;b&gt;Battery Save Mode&lt;/b&gt; is set to &lt;i&gt;User Settings&lt;/i&gt;.</string>
+                            </property>
+                        </widget>
                     </widget>
                 </widget>
             </hbox>
@@ -2254,18 +2254,6 @@
         <slot>changedSlot()</slot>
     </connection>
     <connection>
-        <sender>cpuComboBox</sender>
-        <signal>activated(int)</signal>
-        <receiver>KCMKToshibaGeneral</receiver>
-        <slot>changedSlot()</slot>
-    </connection>
-    <connection>
-        <sender>displayComboBox</sender>
-        <signal>activated(int)</signal>
-        <receiver>KCMKToshibaGeneral</receiver>
-        <slot>changedSlot()</slot>
-    </connection>
-    <connection>
         <sender>hddComboBox</sender>
         <signal>activated(int)</signal>
         <receiver>KCMKToshibaGeneral</receiver>
@@ -2279,6 +2267,18 @@
     </connection>
     <connection>
         <sender>coolingComboBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>displayComboBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>cpuComboBox</sender>
         <signal>activated(int)</signal>
         <receiver>KCMKToshibaGeneral</receiver>
         <slot>changedSlot()</slot>

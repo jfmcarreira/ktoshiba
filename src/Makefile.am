@@ -24,8 +24,8 @@ libktoshibasmminterface_la_SOURCES = hci.c sci.c ktoshibasmminterface.cpp
 libktoshibaprocinterface_la_LDFLAGS = $(all_libraries)
 libktoshibaprocinterface_la_SOURCES = ktoshibaprocinterface.cpp
 
-ktoshiba_SOURCES = main.cpp ktoshiba.cpp settingswidget.ui statuswidget.ui \
-			modelid.cpp fnactions.cpp
+ktoshiba_SOURCES = settingswidget.ui statuswidget.ui fnactions.cpp \
+			modelid.cpp ktoshiba.cpp main.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = libktoshibasmminterface.la \
 			libktoshibaprocinterface.la $(LIB_KDEUI)
