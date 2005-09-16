@@ -1,3 +1,8 @@
+2005-09-16 Azael Avalos <neftali@utep.edu>
+	* Changed discharging icon, now it should display correctly
+	* Changed /proc enries access (reduced some code)
+	* Fixed time left displaying on taskbar (ACPI only)
+
 2005-08-24 Azael Avalos <neftali@utep.edu>
 	* Added LCD brightness monitoring for omnibook
 	* Fixed popup menu, now irrelevant settings will not be
