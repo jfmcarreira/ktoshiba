@@ -2283,6 +2283,12 @@
         <receiver>KCMKToshibaGeneral</receiver>
         <slot>changedSlot()</slot>
     </connection>
+    <connection>
+        <sender>btstartCheckBox</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>configTabWidget</tabstop>
