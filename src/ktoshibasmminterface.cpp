@@ -791,7 +791,8 @@ void KToshibaSMMInterface::setBluetoothControl(int state)
 		return;
 	}
 	
-	kdDebug() << "Bluetooth device "
+	kdDebug() << "KToshibaSMMInterface::setBluetoothControl(): "
+		  << "Bluetooth device "
 		  << ((state == 1)? "attached" : "detached")
 		  << " successfully" << endl;
 }

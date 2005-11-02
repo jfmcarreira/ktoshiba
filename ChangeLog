@@ -1,3 +1,11 @@
+2005-11-01 Azael Avalos <neftali@utep.edu>
+	* Fixed an annoying brightness bug if laptop was put
+	  into User Setting Mode
+
+2005-10-30 Azael Avalos <neftali@utep.edu>
+	* Fixed brightness widget for omnibook users
+	  (it was being displayed constantly)
+
 2005-10-18 Azael Avalos <neftali@utep.edu>
 	* Fixed Bluetooth checkbox on config dialog
 	* Formating changes on some files
