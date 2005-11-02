@@ -66,16 +66,12 @@ KToshiba::KToshiba()
 
     // check whether toshiba module is loaded
     mInterfaceAvailable = mFn->m_SMM;
-    if (!mInterfaceAvailable)
-        kdError() << "KToshiba: Could not open SMM interface. "
-                  << "Please check that the toshiba module loads without failures"
-                  << endl;
-    else if (mInterfaceAvailable) {
-        mBatType = mDriver->getBatterySaveModeType();
+    if (mInterfaceAvailable) {
         mDriver->batteryStatus(&time, &perc);
+        mAC = mDriver->acPowerStatus();
+        mBatType = mDriver->getBatterySaveModeType();
         mHT = mDriver->getHyperThreading();
         mSS = mDriver->getSpeedStep();
-        mAC = mDriver->acPowerStatus();
         mWirelessSwitch = 1;
         mBatSave = 2;
         wstrig = false;
@@ -97,11 +93,12 @@ KToshiba::KToshiba()
         mFn->m_BatType = mBatType;
     }
     if (!mInterfaceAvailable) {
+        kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
         mOmnibook = mProc->checkOmnibook();
         if (!mOmnibook) {
             kdError() << "KToshiba: Could not found a Toshiba model. "
-                      << "Please check that the omnibook module loads without failures"
-                      << endl;
+                      << "Please check that the toshiba or omnibook "
+                      << "module loads without failures" << endl;
             exit(-1);
         }
         kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
@@ -247,7 +244,7 @@ void KToshiba::doBluetooth()
     if (!bluetooth || (btstart && !bluetooth)) {
         mDriver->setBluetoothPower(1);
         KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
-							   SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
+				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 5000);
         this->contextMenu()->setItemEnabled(6, FALSE);
         bluetooth = 1;
     }
@@ -334,11 +331,11 @@ void KToshiba::checkPowerStatus()
     loadConfiguration(&mConfig);
     if (mInterfaceAvailable) {
         mDriver->batteryStatus(&time, &perc);
+        if (perc == -1)
+            mProc->acpiBatteryStatus(&time, &perc);
         pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
         if ((pow == -1) || (pow == SCI_FAILURE))
             pow = mProc->acpiAC();
-        if (perc == -1)
-            mProc->acpiBatteryStatus(&time, &perc);
     } else 
     if (mOmnibook) {
         mProc->omnibookBatteryStatus(&time, &perc);
@@ -350,7 +347,7 @@ void KToshiba::checkPowerStatus()
 
     if (mFullBat && perc == 100 && !battrig) {
         KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-									  i18n("Your battery is now fully charged."), i18n("Laptop Battery"));
+					i18n("Your battery is now fully charged."), i18n("Laptop Battery"));
         battrig = true;
     }
 
@@ -362,17 +359,17 @@ void KToshiba::checkPowerStatus()
     }
     if (tm == mLowBat && th == 0 && pow == 3 && !lowtrig) {
         KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
         lowtrig = true;
     } else
     if (tm == mCryBat && th == 0 && pow == 3 && !crytrig) {
         KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
         crytrig = true;
     } else
     if (tm == 0 && th == 0 && pow == 3)
         KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
-							   SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
+				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
 
     if (tm > lowtrig && pow == 4) {
         if (battrig && (perc < 100))
@@ -405,7 +402,7 @@ void KToshiba::checkPowerStatus()
                     bright = 7;	// Super-Bright
                 break;
         }
-        if (mInterfaceAvailable)
+        if (mInterfaceAvailable && mBatType != 2)
             mDriver->setBrightness(bright);
         //else
         //    mProc->omnibookSetBrightness(bright);
@@ -552,7 +549,7 @@ quit:
                 }
                 num3 = num3.rightJustify(2, '0');
                 tmp = i18n("Plugged in - %1% charged (%2:%3 time left)")
-					.arg(perc).arg(num2).arg(num3);
+			   .arg(perc).arg(num2).arg(num3);
             } else
             if (perc == -1)
                 tmp = i18n("Plugged in - no battery");
@@ -570,7 +567,7 @@ quit:
             }
             num3 = num3.rightJustify(2, '0');
             tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
-					.arg(perc).arg(num2).arg(num3);
+			.arg(perc).arg(num2).arg(num3);
         } else
         if (perc == -1)
             tmp = i18n("No battery and adaptor found");
@@ -784,7 +781,7 @@ void KToshiba::checkSystem()
         if (mWirelessSwitch != ws) {
             QString s = ((ws == 1)? i18n("on") : i18n("off"));
             KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
-							   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
+				   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
         }
         mWirelessSwitch = ws;
     }
@@ -842,8 +839,8 @@ int KToshiba::bayUnregister()
     QString helper = KStandardDirs::findExe("ktosh_helper");
     if (helper.isEmpty()) {
         KMessageBox::sorry(0, i18n("Could not unregister device because ktosh_helper cannot be found.\n"
-						   "Please make sure that it is installed correctly."),
-						   i18n("KToshiba"));
+			   "Please make sure that it is installed correctly."),
+			   i18n("KToshiba"));
         return -1;
     }
 
@@ -863,8 +860,8 @@ int KToshiba::bayRescan()
     QString helper = KStandardDirs::findExe("ktosh_helper");
     if (helper.isEmpty()) {
         KMessageBox::sorry(0, i18n("Could not register device because ktosh_helper cannot be found.\n"
-						   "Please make sure that it is installed correctly."),
-						   i18n("KToshiba"));
+			   "Please make sure that it is installed correctly."),
+			   i18n("KToshiba"));
         return -1;
     }
 
@@ -882,17 +879,21 @@ int KToshiba::bayRescan()
 void KToshiba::shutdownEvent()
 {
     kdDebug() << "KToshiba: Shutting down..." << endl;
-    mDriver->closeInterface();
-    mInterfaceAvailable = false;
+    if (mInterfaceAvailable) {
+        mDriver->closeInterface();
+        mInterfaceAvailable = false;
+    }
 }
 
 void KToshiba::wakeupEvent()
 {
     kdDebug() << "KToshiba: Starting up..." << endl;
-    mInterfaceAvailable = mDriver->openInterface();
-    if (!mInterfaceAvailable)
-        kdDebug() << "KToshiba: Interface could not be opened again "
-                  << "please re-start application" << endl;
+    if (!mOmnibook) {
+        mInterfaceAvailable = mDriver->openInterface();
+        if (!mInterfaceAvailable)
+            kdDebug() << "KToshiba: Interface could not be opened again "
+                      << "please re-start application" << endl;
+    }
 }
 
 void KToshiba::checkOmnibook()
@@ -904,17 +905,19 @@ void KToshiba::checkOmnibook()
         mFn->m_Popup = 0;
     }
 
-    if (mFn->m_Popup == 0) {
-        QRect r = QApplication::desktop()->geometry();
-        mFn->m_StatusWidget->move(r.center() - 
-            QPoint(mFn->m_StatusWidget->width()/2, mFn->m_StatusWidget->height()/2));
-        mFn->m_StatusWidget->show();
-        mFn->m_Popup = 1;
-    }
-    if (mFn->m_Popup == 1) {
-        int bright = mProc->omnibookGetBrightness();
-        if (bright != mFn->m_Bright)
+    int bright = mProc->omnibookGetBrightness();
+    if (mFn->m_Bright != bright) {
+        if (mFn->m_Popup == 0) {
+            QRect r = QApplication::desktop()->geometry();
+            mFn->m_StatusWidget->move(r.center() - 
+                QPoint(mFn->m_StatusWidget->width()/2, mFn->m_StatusWidget->height()/2));
+            mFn->m_StatusWidget->show();
+            mFn->m_Popup = 1;
+        }
+        if (mFn->m_Popup == 1) {
             mFn->m_StatusWidget->wsStatus->raiseWidget(bright + 4);
+            mFn->m_Bright = bright;
+        }
     }
 }
 

@@ -57,8 +57,8 @@ class KToshiba : public KSystemTray
     Q_OBJECT
 public:
     /**
-     * Default Constructor
-     */
+    * Default Constructor
+    */
     KToshiba();
     void displayPixmap();
     void loadConfiguration(KConfig *);
@@ -66,8 +66,8 @@ public:
     bool checkConfiguration();
 
     /**
-     * Default Destructor
-     */
+    * Default Destructor
+    */
     virtual ~KToshiba();
 protected slots:
     void doConfig();

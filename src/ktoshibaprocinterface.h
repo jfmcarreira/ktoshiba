@@ -36,38 +36,38 @@ class KToshibaProcInterface : public QObject
     Q_OBJECT
 public:
     /**
-     * Default Constructor
-     */
+    * Default Constructor
+    */
     KToshibaProcInterface(QObject *parent = 0);
     /**
-     * Checks /proc entry for Toshiba model
-     * @return @p true if found, false otherwise
-     */
+    * Checks /proc entry for Toshiba model
+    * @return @p true if found, false otherwise
+    */
     bool checkOmnibook();
     /**
-     * Checks /proc entry for battery status.
-     * @param time the int to hold the current time
-     * @param perc the int to hold the current percent
-     */
+    * Checks /proc entry for battery status.
+    * @param time the int to hold the current time
+    * @param perc the int to hold the current percent
+    */
     void omnibookBatteryStatus(int *time, int *perc);
     int omnibookAC();
     int omnibookGetBrightness();
     int omnibookGetVideo();
     /**
-     * Checks /proc entry for battery status.
-     * @param time the int to hold the current time
-     * @param perc the int to hold the current percent
-     */
+    * Checks /proc entry for battery status.
+    * @param time the int to hold the current time
+    * @param perc the int to hold the current percent
+    */
     void acpiBatteryStatus(int *time, int *perc);
     /**
-     * Checks /proc entry for the AC adaptor status.
-     * @return @p value holding the AC adaptor status
-     */
+    * Checks /proc entry for the AC adaptor status.
+    * @return @p value holding the AC adaptor status
+    */
     int acpiAC();
     /**
-     * Checks /proc entry for hotkeys.
-     * @return @p value holding the Fn-Key combo id
-     */
+    * Checks /proc entry for hotkeys.
+    * @return @p value holding the Fn-Key combo id
+    */
     int toshibaProcStatus();
 public:
     QString model;

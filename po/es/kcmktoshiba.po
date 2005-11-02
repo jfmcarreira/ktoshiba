@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-23 16:30-0600\n"
+"POT-Creation-Date: 2005-11-01 23:10-0700\n"
 "PO-Revision-Date: 2005-08-15 14:01-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
@@ -295,9 +295,9 @@ msgstr "Fn-F&6:"
 #. i18n: file kcmtoshiba_general.ui line 1407
 #. i18n: file kcmtoshiba_general.ui line 1543
 #. i18n: file kcmtoshiba_general.ui line 1679
-#. i18n: file kcmtoshiba_general.ui line 1883
+#. i18n: file kcmtoshiba_general.ui line 1867
 #: rc.cpp:123 rc.cpp:171 rc.cpp:219 rc.cpp:267 rc.cpp:315 rc.cpp:363
-#: rc.cpp:411 rc.cpp:459 rc.cpp:507 rc.cpp:555 rc.cpp:618
+#: rc.cpp:411 rc.cpp:459 rc.cpp:507 rc.cpp:555 rc.cpp:615
 #, no-c-format
 msgid "Disabled"
 msgstr "Deshabilitado"
@@ -548,155 +548,155 @@ msgstr "Encendido/Apagado del Bluetooth"
 msgid "Battery &Save Mode"
 msgstr "Modo de Ahorro de Batería"
 
-#. i18n: file kcmtoshiba_general.ui line 1834
+#. i18n: file kcmtoshiba_general.ui line 1842
 #: rc.cpp:606
+#, fuzzy, no-c-format
+msgid "D&isplay Auto Off:"
+msgstr "Auto Apagado de la Pantalla:"
+
+#. i18n: file kcmtoshiba_general.ui line 1853
+#: rc.cpp:609
 #, no-c-format
+msgid "Cooling &Method:"
+msgstr "Método de Enfriamiento:"
+
+#. i18n: file kcmtoshiba_general.ui line 1862
+#: rc.cpp:612
+#, no-c-format
+msgid "Enabled"
+msgstr "Habilitado"
+
+#. i18n: file kcmtoshiba_general.ui line 1879
+#: rc.cpp:618
+#, no-c-format
+msgid "HDD Au&to Off:"
+msgstr "Au&to Apagado del Disco Duro:"
+
+#. i18n: file kcmtoshiba_general.ui line 1888
+#. i18n: file kcmtoshiba_general.ui line 1977
+#: rc.cpp:621 rc.cpp:660
+#, no-c-format
+msgid "30 min"
+msgstr "30 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1893
+#. i18n: file kcmtoshiba_general.ui line 1982
+#: rc.cpp:624 rc.cpp:663
+#, no-c-format
+msgid "20 min"
+msgstr "20 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1898
+#. i18n: file kcmtoshiba_general.ui line 1987
+#: rc.cpp:627 rc.cpp:666
+#, no-c-format
+msgid "15 min"
+msgstr "15 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1903
+#. i18n: file kcmtoshiba_general.ui line 1992
+#: rc.cpp:630 rc.cpp:669
+#, no-c-format
+msgid "10 min"
+msgstr "10 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1908
+#. i18n: file kcmtoshiba_general.ui line 1997
+#: rc.cpp:633 rc.cpp:672
+#, no-c-format
+msgid "05 min"
+msgstr "05 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1913
+#. i18n: file kcmtoshiba_general.ui line 2002
+#: rc.cpp:636 rc.cpp:675
+#, no-c-format
+msgid "03 min"
+msgstr "03 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1918
+#. i18n: file kcmtoshiba_general.ui line 2007
+#: rc.cpp:639 rc.cpp:678
+#, no-c-format
+msgid "01 min"
+msgstr "01 min"
+
+#. i18n: file kcmtoshiba_general.ui line 1931
+#: rc.cpp:642
+#, no-c-format
+msgid "Max Performance"
+msgstr "Maximo Rendimiento"
+
+#. i18n: file kcmtoshiba_general.ui line 1936
+#: rc.cpp:645
+#, no-c-format
+msgid "Battery Optimized"
+msgstr "Optimizado para Batería"
+
+#. i18n: file kcmtoshiba_general.ui line 1941
+#: rc.cpp:648
+#, no-c-format
+msgid "Performance"
+msgstr "Rendimiento"
+
+#. i18n: file kcmtoshiba_general.ui line 1954
+#: rc.cpp:651
+#, no-c-format
+msgid "Super Bright"
+msgstr "Super Brilloso"
+
+#. i18n: file kcmtoshiba_general.ui line 1959
+#: rc.cpp:654
+#, no-c-format
+msgid "Bright"
+msgstr "Brilloso"
+
+#. i18n: file kcmtoshiba_general.ui line 1964
+#: rc.cpp:657
+#, no-c-format
+msgid "Semi Bright"
+msgstr "Semi Brilloso"
+
+#. i18n: file kcmtoshiba_general.ui line 2022
+#: rc.cpp:681
+#, no-c-format
+msgid "CP&U Sleep Mode:"
+msgstr "Modo de Espera del CP&U:"
+
+#. i18n: file kcmtoshiba_general.ui line 2031
+#: rc.cpp:684
+#, no-c-format
+msgid "High"
+msgstr "Alta"
+
+#. i18n: file kcmtoshiba_general.ui line 2036
+#: rc.cpp:687
+#, no-c-format
+msgid "Low"
+msgstr "Baja"
+
+#. i18n: file kcmtoshiba_general.ui line 2051
+#: rc.cpp:690
+#, no-c-format
+msgid "&Processing Speed:"
+msgstr "Velocidad de &Procesamiento:"
+
+#. i18n: file kcmtoshiba_general.ui line 2062
+#: rc.cpp:693
+#, no-c-format
+msgid "LCD &Brightness:"
+msgstr "&Brillo del LCD:"
+
+#. i18n: file kcmtoshiba_general.ui line 2083
+#: rc.cpp:696
+#, fuzzy, no-c-format
 msgid ""
-"The options shown here are only aplicable when the <b>Battery Save Mode</b> "
+"The options shown here are only applicable when the <b>Battery Save Mode</b> "
 "is set to <i>User Settings</i>."
 msgstr ""
 "Las opciones que aquí se muestran tomaran efecto solamente si están "
 "activadas las <i>Opciones del Usuario</i> del <b>Modo de Ahorro de Batería</"
 "b>."
-
-#. i18n: file kcmtoshiba_general.ui line 1858
-#: rc.cpp:609
-#, fuzzy, no-c-format
-msgid "D&isplay Auto Off:"
-msgstr "Auto Apagado de la Pantalla:"
-
-#. i18n: file kcmtoshiba_general.ui line 1869
-#: rc.cpp:612
-#, no-c-format
-msgid "Cooling &Method:"
-msgstr "Método de Enfriamiento:"
-
-#. i18n: file kcmtoshiba_general.ui line 1878
-#: rc.cpp:615
-#, no-c-format
-msgid "Enabled"
-msgstr "Habilitado"
-
-#. i18n: file kcmtoshiba_general.ui line 1895
-#: rc.cpp:621
-#, no-c-format
-msgid "HDD Au&to Off:"
-msgstr "Au&to Apagado del Disco Duro:"
-
-#. i18n: file kcmtoshiba_general.ui line 1904
-#. i18n: file kcmtoshiba_general.ui line 1993
-#: rc.cpp:624 rc.cpp:663
-#, no-c-format
-msgid "30 min"
-msgstr "30 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1909
-#. i18n: file kcmtoshiba_general.ui line 1998
-#: rc.cpp:627 rc.cpp:666
-#, no-c-format
-msgid "20 min"
-msgstr "20 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1914
-#. i18n: file kcmtoshiba_general.ui line 2003
-#: rc.cpp:630 rc.cpp:669
-#, no-c-format
-msgid "15 min"
-msgstr "15 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1919
-#. i18n: file kcmtoshiba_general.ui line 2008
-#: rc.cpp:633 rc.cpp:672
-#, no-c-format
-msgid "10 min"
-msgstr "10 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1924
-#. i18n: file kcmtoshiba_general.ui line 2013
-#: rc.cpp:636 rc.cpp:675
-#, no-c-format
-msgid "05 min"
-msgstr "05 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1929
-#. i18n: file kcmtoshiba_general.ui line 2018
-#: rc.cpp:639 rc.cpp:678
-#, no-c-format
-msgid "03 min"
-msgstr "03 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1934
-#. i18n: file kcmtoshiba_general.ui line 2023
-#: rc.cpp:642 rc.cpp:681
-#, no-c-format
-msgid "01 min"
-msgstr "01 min"
-
-#. i18n: file kcmtoshiba_general.ui line 1947
-#: rc.cpp:645
-#, no-c-format
-msgid "Max Performance"
-msgstr "Maximo Rendimiento"
-
-#. i18n: file kcmtoshiba_general.ui line 1952
-#: rc.cpp:648
-#, no-c-format
-msgid "Battery Optimized"
-msgstr "Optimizado para Batería"
-
-#. i18n: file kcmtoshiba_general.ui line 1957
-#: rc.cpp:651
-#, no-c-format
-msgid "Performance"
-msgstr "Rendimiento"
-
-#. i18n: file kcmtoshiba_general.ui line 1970
-#: rc.cpp:654
-#, no-c-format
-msgid "Super Bright"
-msgstr "Super Brilloso"
-
-#. i18n: file kcmtoshiba_general.ui line 1975
-#: rc.cpp:657
-#, no-c-format
-msgid "Bright"
-msgstr "Brilloso"
-
-#. i18n: file kcmtoshiba_general.ui line 1980
-#: rc.cpp:660
-#, no-c-format
-msgid "Semi Bright"
-msgstr "Semi Brilloso"
-
-#. i18n: file kcmtoshiba_general.ui line 2038
-#: rc.cpp:684
-#, no-c-format
-msgid "CP&U Sleep Mode:"
-msgstr "Modo de Espera del CP&U:"
-
-#. i18n: file kcmtoshiba_general.ui line 2047
-#: rc.cpp:687
-#, no-c-format
-msgid "High"
-msgstr "Alta"
-
-#. i18n: file kcmtoshiba_general.ui line 2052
-#: rc.cpp:690
-#, no-c-format
-msgid "Low"
-msgstr "Baja"
-
-#. i18n: file kcmtoshiba_general.ui line 2067
-#: rc.cpp:693
-#, no-c-format
-msgid "&Processing Speed:"
-msgstr "Velocidad de &Procesamiento:"
-
-#. i18n: file kcmtoshiba_general.ui line 2078
-#: rc.cpp:696
-#, no-c-format
-msgid "LCD &Brightness:"
-msgstr "&Brillo del LCD:"
 
 #. i18n: file kcmtoshiba_general.ui line 2095
 #: rc.cpp:699
