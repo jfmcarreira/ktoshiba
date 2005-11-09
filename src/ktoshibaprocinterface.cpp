@@ -170,6 +170,37 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
     file.close();
 }
 
+int KToshibaProcInterface::omnibookGetOneTouch()
+{
+    QFile file(OMNI_ROOT"/onetouch");
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line = stream.readLine();
+        if (line.contains("OneTouch buttons are", false)) {
+            QRegExp rx("(enabled)$");
+            rx.search(line);
+            if (rx.cap(1) == "enabled") {
+                file.close();
+                return 1;
+            }
+            file.close();
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+void KToshibaProcInterface::omnibookSetOneTouch(int state)
+{
+    QFile file(OMNI_ROOT"/onetouch");
+    if (file.open(IO_WriteOnly)) {
+        QTextStream stream(&file);
+        stream.writeRawBytes(QString("%1").arg(state), 1);
+    }
+    file.close();
+}
+
 int KToshibaProcInterface::omnibookGetFan()
 {
     QFile file(OMNI_ROOT"/fan");

@@ -66,13 +66,23 @@ public:
     */
     void omnibookSetBrightness(int bright);
     /**
+    * Checks /proc entry for OneTouch buttons status.
+    * @return @p the int holding the current status
+    */
+    int omnibookGetOneTouch();
+    /**
+    * Enables/Disables OneTouch buttons.
+    * @param state the int to turn on/off OneTouch buttons
+    */
+    void omnibookSetOneTouch(int state);
+    /**
     * Checks /proc entry for fan status.
     * @return @p the int holding the current fan status
     */
     int omnibookGetFan();
     /**
     * Enables/Disables the fan.
-    * @param status the int holding the current state
+    * @param status the int to turn on/off the fan
     */
     void omnibookSetFan(int status);
     int omnibookGetVideo();

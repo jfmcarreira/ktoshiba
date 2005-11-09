@@ -1,5 +1,6 @@
 2005-11-09 Azael Avalos <neftali@utep.edu>
 	* Added popup menu for enabling/disabling fan for omnibook
+	* Fixed big mistake for enabling/disabling fan...
 
 2005-11-08 Azael Avalos <neftali@utep.edu>
 	* Enabled brightness change on omnibook to reflect
