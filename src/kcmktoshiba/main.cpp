@@ -32,6 +32,8 @@
 #include <qcombobox.h>
 #include <qfile.h>
 #include <qregexp.h>
+#include <qbuttongroup.h>
+#include <qtabwidget.h>
 
 #include <kparts/genericfactory.h>
 #include <kaboutdata.h>
@@ -55,9 +57,9 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     : KCModule(KCMToshibaModuleFactory::instance(), parent, name)
 {
 	KAboutData *about = new KAboutData(I18N_NOOP("kcmktoshiba"),
-									   I18N_NOOP("KDE Control Module for Toshiba Laptops"),
-									   0, 0, KAboutData::License_GPL,
-									   "(c) 2004 Azael Avalos");
+				   I18N_NOOP("KDE Control Module for Toshiba Laptops"),
+				   0, 0, KAboutData::License_GPL,
+				   "(c) 2004 Azael Avalos");
 
 	about->addAuthor("Azael Avalos", I18N_NOOP("Original author"), "neftali@utep.edu");
 	setAboutData( about );
@@ -89,6 +91,11 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 		}
 		m_KCMKToshibaGeneral->tlOff->hide();
 		m_KCMKToshibaGeneral->frameMain->setEnabled(true);
+		m_KCMKToshibaGeneral->bgOtherOptions->setEnabled(false);
+		m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+			m_KCMKToshibaGeneral->configTabWidget->page(1), false);
+		m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
 		m_AC = m_Proc->omnibookAC();
 	} else {
 		m_KCMKToshibaGeneral->tlOff->show();
@@ -183,57 +190,55 @@ void KCMToshibaModule::defaults()
 
 void KCMToshibaModule::save()
 {
-	if (!m_InterfaceAvailable) return;
-
 	kdDebug() << "KCMToshibaModule: saving." << endl;
 
 	KConfig config(CONFIG_FILE);
 	config.setGroup("KToshiba");
 
 	config.writeEntry("Notify_On_Full_Battery",
-					  m_KCMKToshibaGeneral->batfullCheckBox->isChecked());
+			  m_KCMKToshibaGeneral->batfullCheckBox->isChecked());
 	config.writeEntry("Battery_Status_Time",
-					  m_KCMKToshibaGeneral->batstatSpinBox->value());
+			  m_KCMKToshibaGeneral->batstatSpinBox->value());
 	config.writeEntry("Low_Battery_Trigger",
-					  m_KCMKToshibaGeneral->lowbatSpinBox->value());
+			  m_KCMKToshibaGeneral->lowbatSpinBox->value());
 	config.writeEntry("Critical_Battery_Trigger",
-					  m_KCMKToshibaGeneral->crybatSpinBox->value());
+			  m_KCMKToshibaGeneral->crybatSpinBox->value());
 	config.writeEntry("Audio_Player",
-					  m_KCMKToshibaGeneral->audioComboBox->currentItem());
+			  m_KCMKToshibaGeneral->audioComboBox->currentItem());
 	config.writeEntry("Bluetooth_Startup",
-					  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
+			  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
 	config.writeEntry("Fn_Esc",
-					  m_KCMKToshibaGeneral->fnComboBox->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox->currentItem());
 	config.writeEntry("Fn_F1",
-					  m_KCMKToshibaGeneral->fnComboBox_1->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_1->currentItem());
 	config.writeEntry("Fn_F2",
-					  m_KCMKToshibaGeneral->fnComboBox_2->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_2->currentItem());
 	config.writeEntry("Fn_F3",
-					  m_KCMKToshibaGeneral->fnComboBox_3->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_3->currentItem());
 	config.writeEntry("Fn_F4",
-					  m_KCMKToshibaGeneral->fnComboBox_4->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_4->currentItem());
 	config.writeEntry("Fn_F5",
-					  m_KCMKToshibaGeneral->fnComboBox_5->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_5->currentItem());
 	config.writeEntry("Fn_F6",
-					  m_KCMKToshibaGeneral->fnComboBox_6->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_6->currentItem());
 	config.writeEntry("Fn_F7",
-					  m_KCMKToshibaGeneral->fnComboBox_7->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_7->currentItem());
 	config.writeEntry("Fn_F8",
-					  m_KCMKToshibaGeneral->fnComboBox_8->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_8->currentItem());
 	config.writeEntry("Fn_F9",
-					  m_KCMKToshibaGeneral->fnComboBox_9->currentItem());
+			  m_KCMKToshibaGeneral->fnComboBox_9->currentItem());
 	config.writeEntry("Processing_Speed",
-					  m_KCMKToshibaGeneral->processorComboBox->currentItem());
+			  m_KCMKToshibaGeneral->processorComboBox->currentItem());
 	config.writeEntry("CPU_Sleep_Mode",
-					  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
+			  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
 	config.writeEntry("Display_Auto_Off",
-					  m_KCMKToshibaGeneral->displayComboBox->currentItem());
+			  m_KCMKToshibaGeneral->displayComboBox->currentItem());
 	config.writeEntry("HDD_Auto_Off",
-					  m_KCMKToshibaGeneral->hddComboBox->currentItem());
+			  m_KCMKToshibaGeneral->hddComboBox->currentItem());
 	config.writeEntry("LCD_Brightness",
-					  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
+			  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
 	config.writeEntry("Cooling_Method",
-					  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
+			  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
 	config.sync();
 }
 

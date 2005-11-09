@@ -50,8 +50,31 @@ public:
     * @param perc the int to hold the current percent
     */
     void omnibookBatteryStatus(int *time, int *perc);
+    /**
+    * Checks /proc entry for AC adapter status.
+    * @return @p value holding the AC adaptor status
+    */
     int omnibookAC();
+    /**
+    * Checks /proc entry for brightness status.
+    * @return @p value holding the brightness status
+    */
     int omnibookGetBrightness();
+    /**
+    * Set the display brightness.
+    * @param bright the int to set the brightness
+    */
+    void omnibookSetBrightness(int bright);
+    /**
+    * Checks /proc entry for fan status.
+    * @return @p the int holding the current fan status
+    */
+    int omnibookGetFan();
+    /**
+    * Enables/Disables the fan.
+    * @param status the int holding the current state
+    */
+    void omnibookSetFan(int status);
     int omnibookGetVideo();
     /**
     * Checks /proc entry for battery status.

@@ -84,6 +84,7 @@ protected slots:
     void shutdownEvent();
     void wakeupEvent();
     void checkOmnibook();
+    void doSetOneTouch(int);
 protected:
     KToshibaSMMInterface *mDriver;
     KToshibaProcInterface *mProc;
@@ -93,6 +94,7 @@ protected:
     DCOPClient mClient;
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
+    QPopupMenu *mOneTouch;
     bool mInterfaceAvailable;
     bool mOmnibook;
     bool mFullBat;
