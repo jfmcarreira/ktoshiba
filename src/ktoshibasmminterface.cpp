@@ -87,11 +87,8 @@ int KToshibaSMMInterface::getBrightness()
 
 void KToshibaSMMInterface::setBrightness(int value)
 {
-	if (value < 0)
-		value = 0;
-	else 
-	if (value > HCI_LCD_BRIGHTNESS_LEVELS)
-		value = 7;
+	if (value < 0 || value > HCI_LCD_BRIGHTNESS_LEVELS)
+		value = ((value < 0)? 0 : 7);
 
 	if (getBrightness() != -1 && value >= 0 &&
 		    value < HCI_LCD_BRIGHTNESS_LEVELS) {

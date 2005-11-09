@@ -157,6 +157,50 @@ int KToshibaProcInterface::omnibookGetBrightness()
     return -1;
 }
 
+void KToshibaProcInterface::omnibookSetBrightness(int bright)
+{
+    if (bright < 0 || bright > 7)
+        bright = ((bright < 0)? 0 : 7);
+
+    QFile file(OMNI_ROOT"/lcd");
+    if (file.open(IO_WriteOnly)) {
+        QTextStream stream(&file);
+        stream.writeRawBytes(QString("%1").arg(bright), 1);
+    }
+    file.close();
+}
+
+int KToshibaProcInterface::omnibookGetFan()
+{
+    QFile file(OMNI_ROOT"/fan");
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line = stream.readLine();
+        if (line.contains("Fan is", false)) {
+            QRegExp rx("(on)$");
+            rx.search(line);
+            if (rx.cap(1) == "on") {
+                file.close();
+                return 1;
+            }
+            file.close();
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+void KToshibaProcInterface::omnibookSetFan(int status)
+{
+    QFile file(OMNI_ROOT"/fan");
+    if (file.open(IO_WriteOnly)) {
+        QTextStream stream(&file);
+        stream.writeRawBytes(QString("%1").arg(status), 1);
+    }
+    file.close();
+}
+
 int KToshibaProcInterface::omnibookGetVideo()
 {
     QFile file(OMNI_ROOT"/display");

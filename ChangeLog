@@ -1,3 +1,16 @@
+2005-11-09 Azael Avalos <neftali@utep.edu>
+	* Added popup menu for enabling/disabling fan for omnibook
+
+2005-11-08 Azael Avalos <neftali@utep.edu>
+	* Enabled brightness change on omnibook to reflect
+	  changes in AC power
+	* Disabled non needed tabs for omnibook users on KCModule
+
+2005-11-06 Azael Avalos <neftali@utep.edu>
+	* Started support for writing to /proc entries
+	* Enabled change of battery polling on omnibook
+	  (was disabled before, so changes on KCModule didn't affect)
+
 2005-11-01 Azael Avalos <neftali@utep.edu>
 	* Fixed an annoying brightness bug if laptop was put
 	  into User Setting Mode

@@ -107,6 +107,8 @@ KToshiba::KToshiba()
         mFn->m_Video = mProc->omnibookGetVideo();
         mFn->m_Bright = mProc->omnibookGetBrightness();
         mFn->m_Omnibook = true;
+        mBatSave = 2;
+        mBatType = 3;
         proc = true;
     }
 
@@ -183,34 +185,41 @@ void KToshiba::doMenu()
         this->contextMenu()->setItemEnabled( 4, FALSE );
     }
     this->contextMenu()->insertSeparator( 5 );
-    this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
-                                     SLOT( doBluetooth() ), 0, 6, 6 );
-    if (!mInterfaceAvailable || mOmnibook)
-        this->contextMenu()->setItemEnabled( 6, FALSE );
-    this->contextMenu()->insertSeparator( 7 );
-    mHyper = new QPopupMenu( this, i18n("HyperThreading") );
-    mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
-    mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
-    mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
-    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
-    if (mHT < 0 || mOmnibook) this->contextMenu()->setItemEnabled( 8, FALSE );
-    else if (mInterfaceAvailable && mHT >= 0)
-        connect( mHyper, SIGNAL( activated(int) ), this, SLOT( setHyper(int) ) );
-    this->contextMenu()->insertSeparator( 9 );
-    mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
-    mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
-    mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
-    mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
-    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 10, 10 );
-    if (mSS < 0 || mOmnibook) this->contextMenu()->setItemEnabled( 10, FALSE );
-    else if (mInterfaceAvailable && mSS >= 0)
-        connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( setFreq(int) ) );
+    if (mInterfaceAvailable) {
+        this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
+                                         SLOT( doBluetooth() ), 0, 6, 6 );
+        this->contextMenu()->insertSeparator( 7 );
+        mHyper = new QPopupMenu( this, i18n("HyperThreading") );
+        mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
+        mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
+        mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
+        this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
+        if (mHT < 0) this->contextMenu()->setItemEnabled( 8, FALSE );
+        else if (mHT >= 0)
+            connect( mHyper, SIGNAL( activated(int) ), this, SLOT( doSetHyper(int) ) );
+        this->contextMenu()->insertSeparator( 9 );
+        mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
+        mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
+        mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
+        mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
+        this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 10, 10 );
+        if (mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
+        else if (mSS >= 0)
+            connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
+    } else
+    if (mOmnibook) {
+        mOneTouch = new QPopupMenu( this, i18n("OneTouch") );
+        mOneTouch->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
+        mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
+        this->contextMenu()->insertItem( SmallIcon(""), i18n("OneTouch Buttons"), mOneTouch, 6, 6 );
+        connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
+    }
     this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
                                      SLOT( displayAbout() ), 0, 12, 12 );
     if (mInterfaceAvailable)
         this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
-    else
+    else if (mOmnibook)
         this->contextMenu()->insertTitle( mProc->model, 0, 0 );
 }
 
@@ -336,7 +345,7 @@ void KToshiba::checkPowerStatus()
         pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
         if ((pow == -1) || (pow == SCI_FAILURE))
             pow = mProc->acpiAC();
-    } else 
+    } else
     if (mOmnibook) {
         mProc->omnibookBatteryStatus(&time, &perc);
         pow = mProc->omnibookAC();
@@ -404,8 +413,8 @@ void KToshiba::checkPowerStatus()
         }
         if (mInterfaceAvailable && mBatType != 2)
             mDriver->setBrightness(bright);
-        //else
-        //    mProc->omnibookSetBrightness(bright);
+        else if (mOmnibook)
+            mProc->omnibookSetBrightness(bright);
     }
 
     if (mOldBatStatus != mBatStatus) {
@@ -919,6 +928,11 @@ void KToshiba::checkOmnibook()
             mFn->m_Bright = bright;
         }
     }
+}
+
+void KToshiba::doSetOneTouch(int state)
+{
+    mProc->omnibookSetFan(state);
 }
 
 
