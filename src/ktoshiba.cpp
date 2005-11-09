@@ -213,6 +213,12 @@ void KToshiba::doMenu()
         mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
         this->contextMenu()->insertItem( SmallIcon(""), i18n("OneTouch Buttons"), mOneTouch, 6, 6 );
         connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
+        this->contextMenu()->insertSeparator( 7 );
+        mOmniFan = new QPopupMenu( this, i18n("Fan") );
+        mOmniFan->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
+        mOmniFan->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
+        this->contextMenu()->insertItem( SmallIcon(""), i18n("System Fan"), mOmniFan, 8, 8 );
+        connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
     }
     this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
@@ -931,6 +937,11 @@ void KToshiba::checkOmnibook()
 }
 
 void KToshiba::doSetOneTouch(int state)
+{
+    mProc->omnibookSetOneTouch(state);
+}
+
+void KToshiba::doSetOmnibookFan(int state)
 {
     mProc->omnibookSetFan(state);
 }
