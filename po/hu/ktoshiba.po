@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-01 23:10-0700\n"
+"POT-Creation-Date: 2005-12-09 13:11-0700\n"
 "PO-Revision-Date: 2005-06-15 21:15+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,252 +28,293 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: fnactions.cpp:192
+#: fnactions.cpp:196
 msgid "Long Life"
 msgstr "Hosszú élettartam"
 
-#: fnactions.cpp:193
+#: fnactions.cpp:197
 msgid "User Settings"
 msgstr "Felhasználói beállítások"
 
-#: fnactions.cpp:197
+#: fnactions.cpp:201
 msgid "Normal Life"
 msgstr "Normal élettartam"
 
-#: fnactions.cpp:198
+#: fnactions.cpp:202
 msgid "Low Power"
 msgstr "Alacsony töltöttség"
 
-#: fnactions.cpp:202
+#: fnactions.cpp:206
 msgid "Full Life"
 msgstr "Teljes élettartam"
 
-#: fnactions.cpp:203
+#: fnactions.cpp:207
 msgid "Full Power"
 msgstr "Feltöltve"
 
-#: fnactions.cpp:388
-msgid ""
-"Could not Suspend To RAM because ktosh_helper cannot be found.\n"
-"Please make sure that it is installed correctly."
-msgstr ""
-
-#: fnactions.cpp:390
-msgid "STR"
-msgstr "STR"
-
-#: fnactions.cpp:395 fnactions.cpp:420
+#: fnactions.cpp:389 fnactions.cpp:432
 msgid ""
 "Before continuing, be aware that ACPI Sleep States\n"
 "are a work in progress and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
 
-#: fnactions.cpp:397 fnactions.cpp:422
+#: fnactions.cpp:391 fnactions.cpp:401 fnactions.cpp:403 fnactions.cpp:405
+#: fnactions.cpp:407 fnactions.cpp:434 fnactions.cpp:444 fnactions.cpp:446
+#: fnactions.cpp:449 fnactions.cpp:451
 msgid "WARNING"
 msgstr "FIGYELEM"
 
-#: fnactions.cpp:413
+#: fnactions.cpp:402
+msgid "Suspend To RAM disabled by administrator."
+msgstr ""
+
+#: fnactions.cpp:406
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To RAM."
+msgstr ""
+
+#: fnactions.cpp:414
+msgid ""
+"Could not Suspend To RAM because ktosh_helper cannot be found.\n"
+"Please make sure that it is installed correctly."
+msgstr ""
+
+#: fnactions.cpp:416
+msgid "STR"
+msgstr "STR"
+
+#: fnactions.cpp:445
+msgid "Suspend To Disk disabled by administrator."
+msgstr ""
+
+#: fnactions.cpp:450
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To Disk."
+msgstr ""
+
+#: fnactions.cpp:459
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: fnactions.cpp:415
+#: fnactions.cpp:461
 msgid "STD"
 msgstr "STD"
 
-#: fnactions.cpp:460
+#: fnactions.cpp:502
 msgid "up"
 msgstr "fel"
 
-#: fnactions.cpp:460
+#: fnactions.cpp:502
 msgid "down"
 msgstr "le"
 
-#: fnactions.cpp:461 fnactions.cpp:529 ktoshiba.cpp:246 ktoshiba.cpp:783
-#: ktoshiba.cpp:843 ktoshiba.cpp:864 main.cpp:39
+#: fnactions.cpp:503 fnactions.cpp:571 ktoshiba.cpp:275 ktoshiba.cpp:812
+#: ktoshiba.cpp:872 ktoshiba.cpp:893 main.cpp:39
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: fnactions.cpp:462
+#: fnactions.cpp:504
 msgid "Wireless interface %1"
 msgstr "Wireless csatoló %1"
 
-#: fnactions.cpp:463 ktoshiba.cpp:784
+#: fnactions.cpp:505 ktoshiba.cpp:813
 msgid "Wireless"
 msgstr "Wireless"
 
-#: fnactions.cpp:528
+#: fnactions.cpp:570
 msgid "activated"
 msgstr ""
 
-#: fnactions.cpp:528
+#: fnactions.cpp:570
 msgid "deactivated"
 msgstr ""
 
-#: fnactions.cpp:529
+#: fnactions.cpp:571
 #, fuzzy
 msgid "Bluetooth device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: fnactions.cpp:530 ktoshiba.cpp:247
+#: fnactions.cpp:572 ktoshiba.cpp:276
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: ktoshiba.cpp:174
+#: ktoshiba.cpp:180
 msgid "&Configure KToshiba..."
 msgstr "KToshiba &beállításai"
 
-#: ktoshiba.cpp:177
+#: ktoshiba.cpp:183
 msgid "Suspend To &RAM"
 msgstr "Felfüggesztés RAM-ba"
 
-#: ktoshiba.cpp:179
+#: ktoshiba.cpp:185
 msgid "Suspend To &Disk"
 msgstr "Felfüggesztés lemezre"
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:203
 msgid "Enable &Bluetooth"
 msgstr "&Bluetooth bekapcsolása"
 
-#: ktoshiba.cpp:191
+#: ktoshiba.cpp:206
 msgid "HyperThreading"
 msgstr "HyperThreading"
 
-#: ktoshiba.cpp:192
+#: ktoshiba.cpp:207 ktoshiba.cpp:226 ktoshiba.cpp:232
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:193
+#: ktoshiba.cpp:208
 msgid "Enabled - PM aware"
 msgstr "Bekapcsolva - PM aware"
 
-#: ktoshiba.cpp:194
+#: ktoshiba.cpp:209
 msgid "Enabled - No PM aware"
 msgstr "Bekapcsolva - No PM aware"
 
-#: ktoshiba.cpp:195
+#: ktoshiba.cpp:210
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:200
+#: ktoshiba.cpp:215
 msgid "SpeedStep"
 msgstr "SpeedStep"
 
-#: ktoshiba.cpp:201
+#: ktoshiba.cpp:216
 msgid "Dynamic"
 msgstr "Dinamikus"
 
-#: ktoshiba.cpp:202
+#: ktoshiba.cpp:217
 msgid "Always High"
 msgstr "Mindig magas"
 
-#: ktoshiba.cpp:203
+#: ktoshiba.cpp:218
 msgid "Always Low"
 msgstr "Mindig alacsony"
 
-#: ktoshiba.cpp:204
+#: ktoshiba.cpp:219
 msgid "CPU Frequency"
 msgstr "CPU Frekvencia"
 
-#: ktoshiba.cpp:209
+#: ktoshiba.cpp:225
+msgid "OneTouch"
+msgstr ""
+
+#: ktoshiba.cpp:227 ktoshiba.cpp:233
+#, fuzzy
+msgid "Enabled"
+msgstr "Kikapcsolva"
+
+#: ktoshiba.cpp:228
+msgid "OneTouch Buttons"
+msgstr ""
+
+#: ktoshiba.cpp:231
+msgid "Fan"
+msgstr ""
+
+#: ktoshiba.cpp:234
+msgid "System Fan"
+msgstr ""
+
+#: ktoshiba.cpp:238
 msgid "&About KToshiba"
 msgstr "KToshiba &névjegye"
 
-#: ktoshiba.cpp:246
+#: ktoshiba.cpp:275
 msgid "Bluetooth device activated"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: ktoshiba.cpp:350
+#: ktoshiba.cpp:379
 msgid "Your battery is now fully charged."
 msgstr "A telepek feltöltöttsége 100%-os"
 
-#: ktoshiba.cpp:350
+#: ktoshiba.cpp:379
 msgid "Laptop Battery"
 msgstr "Laptop akkumlátor"
 
-#: ktoshiba.cpp:361
+#: ktoshiba.cpp:390
 msgid "The battery state has changed to low"
 msgstr "Alacson töltöttségű akkumlátor állapot"
 
-#: ktoshiba.cpp:366
+#: ktoshiba.cpp:395
 msgid "The battery state has changed to critical"
 msgstr "Kritikus töltöttségű akkumlátor állapot"
 
-#: ktoshiba.cpp:371
+#: ktoshiba.cpp:400
 msgid "I'm Gone..."
 msgstr "Elvesztem..."
 
-#: ktoshiba.cpp:540
+#: ktoshiba.cpp:569
 msgid "Plugged in - fully charged"
 msgstr "Külső áramellátással való működés - a feltöltöttség 100%-os"
 
-#: ktoshiba.cpp:551
+#: ktoshiba.cpp:580
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 "Külső áramellátással való működés - %1%-os feltöltöttség (%2.%3 a hátralevő "
 "idő)"
 
-#: ktoshiba.cpp:555
+#: ktoshiba.cpp:584
 msgid "Plugged in - no battery"
 msgstr "Külső áramellátással való működés - nincs telep"
 
-#: ktoshiba.cpp:557
+#: ktoshiba.cpp:586
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr "Külső áramellátással való működés - %1%-os feltöltöttség"
 
-#: ktoshiba.cpp:569
+#: ktoshiba.cpp:598
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr "Telepről való működés - %1%-os feltöltöttség (%2.%3 a hátralevő idő)"
 
-#: ktoshiba.cpp:573
+#: ktoshiba.cpp:602
 msgid "No battery and adaptor found"
 msgstr ""
 
-#: ktoshiba.cpp:575
+#: ktoshiba.cpp:604
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr "Telepről való működés - %1%-os feltöltöttség"
 
-#: ktoshiba.cpp:782
+#: ktoshiba.cpp:811
 msgid "on"
 msgstr "be"
 
-#: ktoshiba.cpp:782
+#: ktoshiba.cpp:811
 msgid "off"
 msgstr "ki"
 
-#: ktoshiba.cpp:783
+#: ktoshiba.cpp:812
 msgid "Wireless antenna turned %1"
 msgstr "Wireless antenna turned %1"
 
-#: ktoshiba.cpp:819
+#: ktoshiba.cpp:848
 msgid "Please umount all filesystems on the SelectBay device, if any."
 msgstr ""
 
-#: ktoshiba.cpp:820 ktoshiba.cpp:825 ktoshiba.cpp:830
+#: ktoshiba.cpp:849 ktoshiba.cpp:854 ktoshiba.cpp:859
 msgid "SelectBay"
 msgstr ""
 
-#: ktoshiba.cpp:824
+#: ktoshiba.cpp:853
 msgid ""
 "Unable to remove device in\n"
 "the SelectBay. Please re-lock."
 msgstr ""
 
-#: ktoshiba.cpp:830
+#: ktoshiba.cpp:859
 msgid "Device in the SelectBay sucessfully removed."
 msgstr ""
 
-#: ktoshiba.cpp:841
+#: ktoshiba.cpp:870
 msgid ""
 "Could not unregister device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: ktoshiba.cpp:862
+#: ktoshiba.cpp:891
 msgid ""
 "Could not register device because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."

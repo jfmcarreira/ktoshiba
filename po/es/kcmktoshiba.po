@@ -5,14 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-01 23:10-0700\n"
-"PO-Revision-Date: 2005-08-15 14:01-0600\n"
-"Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
+"POT-Creation-Date: 2005-12-09 13:11-0700\n"
+"PO-Revision-Date: 2005-12-09 16:00-0700\n"
+"Last-Translator: Azael Avalos\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.10.2\n"
+"X-Generator: KBabel 1.11\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: _translatorinfo.cpp:1
@@ -27,19 +27,19 @@ msgid ""
 "Your emails"
 msgstr "neftali@utep.edu"
 
-#: main.cpp:57
+#: main.cpp:59
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "Módulo de Control de KDE para el soporte del portátil Toshiba"
 
-#: main.cpp:62
+#: main.cpp:64
 msgid "Original author"
 msgstr "Autor Original"
 
-#: main.cpp:249
+#: main.cpp:254
 msgid "Helpful information about the KToshiba module."
 msgstr "Información acerca del modulo KToshiba"
 
@@ -100,8 +100,7 @@ msgstr " seg"
 #. i18n: file kcmtoshiba_general.ui line 174
 #: rc.cpp:30
 #, no-c-format
-msgid ""
-"This is used to determine how often the program will check the battery status"
+msgid "This is used to determine how often the program will check the battery status"
 msgstr ""
 "Esto es usado para determinar cada cuanto tiempo el programa verificara el "
 "estado de la batería"
@@ -550,7 +549,7 @@ msgstr "Modo de Ahorro de Batería"
 
 #. i18n: file kcmtoshiba_general.ui line 1842
 #: rc.cpp:606
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "D&isplay Auto Off:"
 msgstr "Auto Apagado de la Pantalla:"
 
@@ -689,7 +688,7 @@ msgstr "&Brillo del LCD:"
 
 #. i18n: file kcmtoshiba_general.ui line 2083
 #: rc.cpp:696
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "The options shown here are only applicable when the <b>Battery Save Mode</b> "
 "is set to <i>User Settings</i>."
@@ -709,3 +708,4 @@ msgstr ""
 "No se pudo encontrar el <i>Controlador de Modo de Manejo del Sistema de "
 "Toshiba</i>. Sí esta es un portátil Toshiba verifique que el controlador "
 "<b>toshiba</b> sea cargado sin problemas."
+

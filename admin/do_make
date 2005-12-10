@@ -80,8 +80,8 @@ if test -z "$MAKE"; then
 		echo 'is no unsermake in $PATH'
 		exit 1
 	fi
-	args=("${args[@]}" --no-real-compare)
-	if test -n "$jobs"; then args=("${args[@]}" --compile-jobs $jobs); fi
+	MAKE="$MAKE --no-real-compare VERBOSE=1"
+	if test -n "$jobs"; then args=("${args[@]}" --compile-jobs=$jobs); fi
     else
         MAKE=/usr/bin/make
 	if test -n "$jobs"; then args=("${args[@]}" -j $jobs); fi

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-01 23:10-0700\n"
+"POT-Creation-Date: 2005-12-09 13:11-0700\n"
 "PO-Revision-Date: 2005-06-03 17:45+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
 "Language-Team:  <kde-francophone@kde.org>\n"
@@ -26,19 +26,19 @@ msgid ""
 "Your emails"
 msgstr "nicolas.ternisien@gmail.com"
 
-#: main.cpp:57
+#: main.cpp:59
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "Module de configuration KDE pour les portables Toshiba"
 
-#: main.cpp:62
+#: main.cpp:64
 msgid "Original author"
 msgstr "Auteur original"
 
-#: main.cpp:249
+#: main.cpp:254
 msgid "Helpful information about the KToshiba module."
 msgstr "Informations utiles sur le module KToshiba."
 

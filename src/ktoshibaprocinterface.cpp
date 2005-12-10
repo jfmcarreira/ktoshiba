@@ -165,7 +165,9 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
     QFile file(OMNI_ROOT"/lcd");
     if (file.open(IO_WriteOnly)) {
         QTextStream stream(&file);
-        stream.writeRawBytes(QString("%1").arg(bright), 1);
+        char str[2];		// KOmnibook style...
+        sprintf(str, "%d", bright);
+        stream.writeRawBytes(str, 2);
     }
     file.close();
 }
@@ -196,7 +198,9 @@ void KToshibaProcInterface::omnibookSetOneTouch(int state)
     QFile file(OMNI_ROOT"/onetouch");
     if (file.open(IO_WriteOnly)) {
         QTextStream stream(&file);
-        stream.writeRawBytes(QString("%1").arg(state), 1);
+        char str[2];		// KOmnibook style...
+        sprintf(str, "%d", state);
+        stream.writeRawBytes(str, 2);
     }
     file.close();
 }
@@ -227,7 +231,9 @@ void KToshibaProcInterface::omnibookSetFan(int status)
     QFile file(OMNI_ROOT"/fan");
     if (file.open(IO_WriteOnly)) {
         QTextStream stream(&file);
-        stream.writeRawBytes(QString("%1").arg(status), 1);
+        char str[2];		// KOmnibook style...
+        sprintf(str, "%d", status);
+        stream.writeRawBytes(str, 2);
     }
     file.close();
 }

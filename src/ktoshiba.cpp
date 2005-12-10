@@ -45,6 +45,10 @@
 
 #include "statuswidget.h"
 
+#ifdef ENABLE_POWERSAVE
+#include <powersave_dbus.h>
+#endif
+
 #define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
@@ -180,10 +184,20 @@ void KToshiba::doMenu()
                                      SLOT( doSuspendToRAM() ), 0, 3, 3 );
     this->contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
                                      SLOT( doSuspendToDisk() ), 0, 4, 4 );
+#ifdef ENABLE_POWERSAVE
+    static int res;
+    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToRam");
+    if (res == REPLY_DISABLED)
+        this->contextMenu()->setItemEnabled( 3, FALSE );
+    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToDisk");
+    if (res == REPLY_DISABLED)
+        this->contextMenu()->setItemEnabled( 4, FALSE );
+#else
     if (::access("/proc/acpi/sleep", F_OK) == -1) {
         this->contextMenu()->setItemEnabled( 3, FALSE );
         this->contextMenu()->setItemEnabled( 4, FALSE );
     }
+#endif
     this->contextMenu()->insertSeparator( 5 );
     if (mInterfaceAvailable) {
         this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
@@ -283,7 +297,7 @@ bool KToshiba::checkConfiguration()
     QString config = kstd.findResource("config", "ktoshibarc");
 
     if (config.isEmpty()) {
-        kdDebug() << "Configuration file not found" << endl;
+        kdDebug() << "KToshiba: Configuration file not found" << endl;
         return false;
     }
 
@@ -305,7 +319,7 @@ void KToshiba::loadConfiguration(KConfig *k)
 
 void KToshiba::createConfiguration()
 {
-    kdDebug() << "Creating configuration file..." << endl;
+    kdDebug() << "KToshiba: Creating configuration file..." << endl;
     KConfig config(CONFIG_FILE);
     config.setGroup("KToshiba");
 
