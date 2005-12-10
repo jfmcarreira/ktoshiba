@@ -2328,8 +2328,8 @@
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>kprogress.h</includehint>
-    <includehint>kled.h</includehint>
-    <includehint>kled.h</includehint>
+    
+    
+    
 </includehints>
 </UI>

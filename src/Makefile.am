@@ -1,7 +1,7 @@
 SUBDIRS = . kcmktoshiba images
 
 # set the include path for X, qt and KDE
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) @DBUS_CFLAGS@
 
 # these are the headers for your project
 noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h synshm.h \
@@ -28,7 +28,8 @@ ktoshiba_SOURCES = settingswidget.ui statuswidget.ui fnactions.cpp \
 			modelid.cpp ktoshiba.cpp main.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = libktoshibasmminterface.la \
-			libktoshibaprocinterface.la $(LIB_KDEUI)
+			libktoshibaprocinterface.la \
+			$(LIB_KDEUI) @POWERSAVE_LIBS@ @DBUS_LIBS@
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities

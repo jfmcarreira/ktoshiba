@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-01 23:10-0700\n"
+"POT-Creation-Date: 2005-12-09 13:11-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,19 +27,19 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: main.cpp:57
+#: main.cpp:59
 msgid "kcmktoshiba"
 msgstr ""
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr ""
 
-#: main.cpp:62
+#: main.cpp:64
 msgid "Original author"
 msgstr ""
 
-#: main.cpp:249
+#: main.cpp:254
 msgid "Helpful information about the KToshiba module."
 msgstr ""
 
