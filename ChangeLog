@@ -1,3 +1,8 @@
+2005-12-12 Azael Avalos <neftali@utep.edu>
+	* Removed SelectBay code, seems nobody is using it and
+	  it needs a rewrite...
+	* Small changes to wireless switch cheching
+
 2005-12-08 Azael Avalos <neftali@utep.edu>
 	* Added powersave support again (disabeld by default),
 	  can be enabled by adding --enable-powersave to ./configure
