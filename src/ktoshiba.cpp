@@ -76,13 +76,10 @@ KToshiba::KToshiba()
         mBatType = mDriver->getBatterySaveModeType();
         mHT = mDriver->getHyperThreading();
         mSS = mDriver->getSpeedStep();
-        mWirelessSwitch = 1;
+        mWirelessSwitch = mDriver->getWirelessSwitch();
         mBatSave = 2;
         wstrig = false;
-        baytrig = false;
         bluetooth = 0;
-        sblock = HCI_LOCKED;
-        removed = 0;
         svideo = 0;
         MODE = DIGITAL;
         proc = false;
@@ -797,16 +794,13 @@ void KToshiba::checkMode()
 
 void KToshiba::checkSystem()
 {
-    int bay = -1, ws = -1;
+    int ws = -1;
 
-    if (wstrig == false)
-        ws = mDriver->getWirelessSwitch();
-    if (baytrig == false)
-        bay = mDriver->getBayDevice(1);
-
-    if (ws < 0)
+    if (mWirelessSwitch == -1)
         wstrig = true;
-    else if (wstrig == false) {
+    else {
+        ws = mDriver->getWirelessSwitch();
+
         if (mWirelessSwitch != ws) {
             QString s = ((ws == 1)? i18n("on") : i18n("off"));
             KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
@@ -815,94 +809,10 @@ void KToshiba::checkSystem()
         mWirelessSwitch = ws;
     }
 
-    if (bay < 0)
-        baytrig = true;
-    else if (baytrig == false)
-        checkSelectBay();
-
-    if ((wstrig == true) && (baytrig == true)) {
+    if (wstrig == true) {
         mSystemTimer->stop();
         disconnect( mSystemTimer );
-        return;
     }
-}
-
-void KToshiba::checkSelectBay()
-{
-    mDriver->systemLocks(&sblock, 1);
-
-    if (sblock == HCI_LOCKED) {
-        if (removed == 0)
-            return;
-        if (bayRescan() < 0)
-            return;
-        removed = 0;
-        return;
-    } else
-    if (sblock == HCI_UNLOCKED) {
-        if (removed == 1)
-            return;
-
-        int device = mDriver->getBayDevice(1);
-        if ((device == HCI_ATAPI) || (device == HCI_IDE)) {
-            int res = KMessageBox::warningContinueCancel(0, i18n("Please umount all filesystems on the "
-				   "SelectBay device, if any."), i18n("SelectBay"));
-            if (res == KMessageBox::Continue) {
-                if (bayUnregister() < 0) {
-                    KMessageBox::queuedMessageBox(0, KMessageBox::Error,
-				        i18n("Unable to remove device in\n"
-				        "the SelectBay. Please re-lock."), i18n("SelectBay"));
-                    return;
-                }
-
-                KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-				    i18n("Device in the SelectBay sucessfully removed."), i18n("SelectBay"));
-                removed = 1;
-            }
-        }
-    }
-}
-
-int KToshiba::bayUnregister()
-{
-    QString helper = KStandardDirs::findExe("ktosh_helper");
-    if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not unregister device because ktosh_helper cannot be found.\n"
-			   "Please make sure that it is installed correctly."),
-			   i18n("KToshiba"));
-        return -1;
-    }
-
-    KProcess proc;
-    proc << helper << "--unregister";
-    proc.start(KProcess::NotifyOnExit);
-    int res = proc.exitStatus();
-    proc.detach();
-    if (res != 0)
-        return -1;
-
-    return 0;
-}
-
-int KToshiba::bayRescan()
-{
-    QString helper = KStandardDirs::findExe("ktosh_helper");
-    if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not register device because ktosh_helper cannot be found.\n"
-			   "Please make sure that it is installed correctly."),
-			   i18n("KToshiba"));
-        return -1;
-    }
-
-    KProcess proc;
-    proc << helper << "--rescan";
-    proc.start(KProcess::NotifyOnExit);
-    int res = proc.exitStatus();
-    proc.detach();
-    if (res != 0)
-        return -1;
-
-    return 0;
 }
 
 void KToshiba::shutdownEvent()

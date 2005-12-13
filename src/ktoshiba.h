@@ -115,9 +115,6 @@ protected:
 private:
     void doMenu();
     void bsmUserSettings(KConfig *, int *);
-    void checkSelectBay();
-    int bayUnregister();
-    int bayRescan();
     QTimer *mPowTimer;
     QTimer *mHotKeysTimer;
     QTimer *mModeTimer;
@@ -128,7 +125,6 @@ private:
     bool crytrig;
     bool battrig;
     bool wstrig;
-    bool baytrig;
     bool btstart;
     bool proc;
     int pow;
@@ -140,8 +136,6 @@ private:
     int current_code;
     int MODE;
     int bluetooth;
-    int sblock;
-    int removed;
     int svideo;
 };
 
