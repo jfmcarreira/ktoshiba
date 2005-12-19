@@ -1,7 +1,14 @@
+2005-12-19 Azael Avalos <neftali@utep.edu>
+	* New model added, thanks to Matteo Andreozzi
+
+2005-12-13 Azael Avalos <neftali@utep.edu>
+	* Smal change on STD code using powersave and fixed
+	  a small typo in changelog
+
 2005-12-12 Azael Avalos <neftali@utep.edu>
 	* Removed SelectBay code, seems nobody is using it and
 	  it needs a rewrite...
-	* Small changes to wireless switch cheching
+	* Small changes to wireless switch checking
 
 2005-12-08 Azael Avalos <neftali@utep.edu>
 	* Added powersave support again (disabeld by default),
