@@ -23,6 +23,7 @@
 
 #include <qobject.h>
 
+#define TOSH_PROC "/proc/toshiba"
 #define OMNI_ROOT "/proc/omnibook"
 #define ACPI_ROOT "/proc/acpi"
 

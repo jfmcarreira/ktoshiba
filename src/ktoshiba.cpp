@@ -107,7 +107,7 @@ KToshiba::KToshiba()
         mAC = mProc->omnibookAC();
         mFn->m_Video = mProc->omnibookGetVideo();
         mFn->m_Bright = mProc->omnibookGetBrightness();
-        mFn->m_Omnibook = true;
+        mOmnibook = true;
         mBatSave = 2;
         mBatType = 3;
         proc = true;

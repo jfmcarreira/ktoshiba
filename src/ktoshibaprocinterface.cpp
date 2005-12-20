@@ -19,8 +19,6 @@
  ***************************************************************************/
 
 #include "ktoshibaprocinterface.h"
-#include "ktoshiba.h"
-#include "ktoshibasmminterface.h"
 
 #include <qstring.h>
 #include <qfile.h>
@@ -119,22 +117,25 @@ void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
 int KToshibaProcInterface::omnibookAC()
 {
     QFile file(OMNI_ROOT"/ac");
-    if (file.open(IO_ReadOnly)) {
-        QTextStream stream(&file);
-        QString line = stream.readLine();
-        if (line.contains("AC", false)) {
-            QRegExp rx("(on-line)$");
-            rx.search(line);
-            if (rx.cap(1) == "on-line") {
-                file.close();
-                return 4;
-            }
-            file.close();
-            return 3;
-        }
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookAC(): "
+                  << "Could not get AC Power status" << endl;
+        return -1;
     }
 
-    return -1;
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("AC", false)) {
+        QRegExp rx("(on-line)$");
+        rx.search(line);
+        if (rx.cap(1) == "on-line") {
+            file.close();
+            return 4;
+        }
+    }
+    file.close();
+
+    return 3;
 }
 
 int KToshibaProcInterface::omnibookGetBrightness()
@@ -142,19 +143,22 @@ int KToshibaProcInterface::omnibookGetBrightness()
     int brightness = 0;
 
     QFile file(OMNI_ROOT"/lcd");
-    if (file.open(IO_ReadOnly)) {
-        QTextStream stream(&file);
-        QString line = stream.readLine();
-        if (line.contains("LCD brightness:", false)) {
-            QRegExp rx("(\\d*)\\D*$");
-            rx.search(line);
-            brightness = rx.cap(1).toInt();
-        }
-        file.close();
-        return brightness;
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetBrightness(): "
+                  << "Failed obtaining brightness" << endl;
+        return -1;
     }
 
-    return -1;
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("LCD brightness:", false)) {
+        QRegExp rx("(\\d*)\\D*$");
+        rx.search(line);
+        brightness = rx.cap(1).toInt();
+    }
+    file.close();
+
+    return brightness;
 }
 
 void KToshibaProcInterface::omnibookSetBrightness(int bright)
@@ -163,100 +167,117 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
         bright = ((bright < 0)? 0 : 7);
 
     QFile file(OMNI_ROOT"/lcd");
-    if (file.open(IO_WriteOnly)) {
-        QTextStream stream(&file);
-        char str[2];		// KOmnibook style...
-        sprintf(str, "%d", bright);
-        stream.writeRawBytes(str, 2);
+    if (!file.open(IO_WriteOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookSetBrightness(): "
+                  << "Failed setting brightness" << endl;
+        return;
     }
+
+    QTextStream stream(&file);
+    stream << bright;
     file.close();
 }
 
 int KToshibaProcInterface::omnibookGetOneTouch()
 {
     QFile file(OMNI_ROOT"/onetouch");
-    if (file.open(IO_ReadOnly)) {
-        QTextStream stream(&file);
-        QString line = stream.readLine();
-        if (line.contains("OneTouch buttons are", false)) {
-            QRegExp rx("(enabled)$");
-            rx.search(line);
-            if (rx.cap(1) == "enabled") {
-                file.close();
-                return 1;
-            }
-            file.close();
-            return 0;
-        }
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetOneTouch(): "
+                  << "Failed obtaining OneTouch buttons status" << endl;
+        return -1;
     }
 
-    return -1;
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("OneTouch buttons are", false)) {
+        QRegExp rx("(enabled)$");
+        rx.search(line);
+        if (rx.cap(1) == "enabled") {
+            file.close();
+            return 1;
+        }
+    }
+    file.close();
+
+    return 0;
 }
 
 void KToshibaProcInterface::omnibookSetOneTouch(int state)
 {
     QFile file(OMNI_ROOT"/onetouch");
-    if (file.open(IO_WriteOnly)) {
-        QTextStream stream(&file);
-        char str[2];		// KOmnibook style...
-        sprintf(str, "%d", state);
-        stream.writeRawBytes(str, 2);
+    if (!file.open(IO_WriteOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookSetOneTouch()"
+                  << "Could not " << ((state == 0)? "disable" : "enable")
+                  << " OneTouch buttons" << endl;
+        return;
     }
+
+    QTextStream stream(&file);
+    stream << state;
     file.close();
 }
 
 int KToshibaProcInterface::omnibookGetFan()
 {
     QFile file(OMNI_ROOT"/fan");
-    if (file.open(IO_ReadOnly)) {
-        QTextStream stream(&file);
-        QString line = stream.readLine();
-        if (line.contains("Fan is", false)) {
-            QRegExp rx("(on)$");
-            rx.search(line);
-            if (rx.cap(1) == "on") {
-                file.close();
-                return 1;
-            }
-            file.close();
-            return 0;
-        }
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetFan(): "
+                  << "Could not get fan status" << endl;
+        return -1;
     }
 
-    return -1;
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("Fan is", false)) {
+        QRegExp rx("(on)$");
+        rx.search(line);
+        if (rx.cap(1) == "on") {
+            file.close();
+            return 1;
+        }
+    }
+    file.close();
+
+    return 0;
 }
 
 void KToshibaProcInterface::omnibookSetFan(int status)
 {
     QFile file(OMNI_ROOT"/fan");
-    if (file.open(IO_WriteOnly)) {
-        QTextStream stream(&file);
-        char str[2];		// KOmnibook style...
-        sprintf(str, "%d", status);
-        stream.writeRawBytes(str, 2);
+    if (!file.open(IO_WriteOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookSetFan()"
+                  << "Could not " << ((status == 0)? "disable" : "enable")
+                  << "system fan" << endl;
+        return;
     }
+
+    QTextStream stream(&file);
+    stream << status;
     file.close();
 }
 
 int KToshibaProcInterface::omnibookGetVideo()
 {
     QFile file(OMNI_ROOT"/display");
-    if (file.open(IO_ReadOnly)) {
-        QTextStream stream(&file);
-        QString line = stream.readLine();
-        if (line.contains("External display is", false)) {
-            QRegExp rx("(not)$");
-            rx.search(line);
-            if (rx.cap(1) == "not") {
-                file.close();
-                return 0;
-            }
-        }
-        file.close();
-        return 1;
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetVideo(): "
+                  << "Could not get video state" << endl;
+        return -1;
     }
 
-    return -1;
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("External display is", false)) {
+        QRegExp rx("(not)$");
+        rx.search(line);
+        if (rx.cap(1) == "not") {
+            file.close();
+            return 0;
+        }
+    }
+    file.close();
+
+    return 1;
 }
 
 int KToshibaProcInterface::toshibaProcStatus()
@@ -331,22 +352,25 @@ void KToshibaProcInterface::acpiBatteryStatus(int *time, int *percent)
 int KToshibaProcInterface::acpiAC()
 {
     QFile file(ACPI_ROOT"/ac_adapter/ADP1/state");
-    if (file.open(IO_ReadOnly)) {
-        QTextStream stream(&file);
-        QString line = stream.readLine();
-        if (line.contains("Status:", false) || line.contains("state:", false)) {
-            QRegExp rx("(on-line)$");
-            rx.search(line);
-            if (rx.cap(1) == "on-line") {
-                file.close();
-                return 4;
-            }
-            file.close();
-            return 3;
-        }
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::acpiAC(): "
+                  << "Could not get AC Power status" << endl;
+        return -1;
     }
 
-    return -1;
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("Status:", false) || line.contains("state:", false)) {
+        QRegExp rx("(on-line)$");
+        rx.search(line);
+        if (rx.cap(1) == "on-line") {
+            file.close();
+            return 4;
+        }
+    }
+    file.close();
+
+    return 3;
 }
 
 

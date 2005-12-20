@@ -163,7 +163,7 @@ int KToshibaSMMInterface::getSystemEvent()
 			reg.ecx = HCI_ENABLE;
 			reg.edx = 0x0000;
 			if (HciFunction(&reg) != HCI_SUCCESS)
-				kdError() << "ToshibaSMMInterface::getSystemEvent(): "
+				kdError() << "KToshibaSMMInterface::getSystemEvent(): "
 					  << "Could not enable Hotkeys" << endl;
 
 			kdDebug() << "KToshibaSMMInterface::getSystemEvent(): "
@@ -185,7 +185,7 @@ void KToshibaSMMInterface::enableSystemEvent()
 	reg.ecx = HCI_ENABLE;
 	reg.edx = 0x0000;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "ToshibaSMMInterface::enableSystemEvent(): "
+		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
 			  << "Could not enable Hotkeys" << endl;
 		return;
 	}
