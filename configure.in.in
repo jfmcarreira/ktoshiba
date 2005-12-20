@@ -7,17 +7,14 @@ AC_CHECK_KDEMAXPATHLEN
 AC_ARG_ENABLE(powersave, [  --enable-powersave      build with powersave daemon support],enable_powersave=$enableval,enable_powersave=auto)
 
 if test x$enable_powersave = xyes; then
+    # check for pkg-config
+    AC_CHECK_PROG(PKGCONFIG, [pkg-config], [pkg-config], [])
+    # check for dbus
+    pkg_modules="dbus-1 >= 0.33"
+    PKG_CHECK_MODULES(DBUS, [$pkg_modules])
+    POWERSAVE_LIBS="-lpowersave -lpowersave_dbus"
     AC_DEFINE([ENABLE_POWERSAVE],1,[Adds powersave daemon support])
 fi
-
-# check for pkg-config
-AC_CHECK_PROG(PKGCONFIG, [pkg-config], [pkg-config], [])
-
-# check for dbus
-pkg_modules="dbus-1 >= 0.33"
-PKG_CHECK_MODULES(DBUS, [$pkg_modules])
-
-POWERSAVE_LIBS="-lpowersave -lpowersave_dbus"
 
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
