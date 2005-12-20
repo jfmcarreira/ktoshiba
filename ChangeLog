@@ -1,5 +1,12 @@
+2005-12-20 Azael Avalos <neftali@utep.edu>
+	* Removed unused constructor from FnActions class
+	* Use correct member name on KToshiba's contructor
+	* Remove some unused includes from ktoshibaprocinterface.h
+
 2005-12-19 Azael Avalos <neftali@utep.edu>
 	* New model added, thanks to Matteo Andreozzi
+	* Changes on ktoshibaprocinteface so it is similar
+	  to ktoshibasmminterface (now more verbose on errors)
 
 2005-12-13 Azael Avalos <neftali@utep.edu>
 	* Smal change on STD code using powersave and fixed
