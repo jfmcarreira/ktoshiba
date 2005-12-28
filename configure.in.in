@@ -4,20 +4,32 @@ AM_INIT_AUTOMAKE(ktoshiba, 0.8)
 AC_C_BIGENDIAN
 AC_CHECK_KDEMAXPATHLEN
 
-AC_ARG_ENABLE(powersave, [  --enable-powersave      build with powersave daemon support],enable_powersave=$enableval,enable_powersave=auto)
+dnl === powersave daemon support check - begin ===
+AC_ARG_WITH(powersave,
+    AS_HELP_STRING([--without-powersave], [build without powersave daemon support (default=no)]),
+    [ac_cv_use_powersave=$withval],
+    [ac_cv_use_powersave=yes]
+)
 
-if test x$enable_powersave = xyes; then
-    # check for pkg-config
-    AC_CHECK_PROG(PKGCONFIG, [pkg-config], [pkg-config], [])
-    # check for dbus
-    pkg_modules="dbus-1 >= 0.33"
-    PKG_CHECK_MODULES(DBUS, [$pkg_modules])
-    POWERSAVE_LIBS="-lpowersave -lpowersave_dbus"
-    AC_DEFINE([ENABLE_POWERSAVE],1,[Adds powersave daemon support])
+if test "$ac_cv_use_powersave" = "yes"; then
+    AC_CHECK_LIB(powersave_dbus, dbusSendSimpleMessage, [
+	POWERSAVE_LIBS="-lpowersave -lpowersave_dbus"
+	AC_CHECK_PROG(PKGCONFIG, [pkg-config], [pkg-config], [])
+	PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
+	PKG_CHECK_MODULES(HAL, [hal >= 0.5.4])
+	have_powersave=true
+    ])
+
+    if test "$have_powersave" = "true"; then
+	AC_DEFINE(ENABLE_POWERSAVE, 1, [defined if you have powersave headers and libraries])
+    else
+	AC_MSG_WARN([You are missing the powersave headers and libraries. The powersave support won't be compiled])
+    fi
+
+    AC_SUBST(POWERSAVE_LIBS)
+    AC_SUBST(DBUS_CFLAGS)
+    AC_SUBST(DBUS_LIBS)
 fi
 
-AC_SUBST(DBUS_CFLAGS)
-AC_SUBST(DBUS_LIBS)
-AC_SUBST(POWERSAVE_LIBS)
-
-AC_OUTPUT
+AM_CONDITIONAL(ENABLE_POWERSAVE, test x$have_powersave = xtrue)
+dnl === powersave daemon support check - end ===
