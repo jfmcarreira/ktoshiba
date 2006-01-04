@@ -31,5 +31,5 @@ if test "$ac_cv_use_powersave" = "yes"; then
     AC_SUBST(DBUS_LIBS)
 fi
 
-AM_CONDITIONAL(ENABLE_POWERSAVE, test x$have_powersave = xtrue)
+AC_OUTPUT
 dnl === powersave daemon support check - end ===
