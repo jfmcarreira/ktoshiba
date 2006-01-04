@@ -1,3 +1,6 @@
+2006-01-04 Azael Avalos <neftali@utep.edu>
+	* The powersave support is finally fiished...
+
 2005-12-20 Azael Avalos <neftali@utep.edu>
 	* Removed unused constructor from FnActions class
 	* Use correct member name on KToshiba's contructor
