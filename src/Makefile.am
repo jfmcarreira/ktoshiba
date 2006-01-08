@@ -4,8 +4,8 @@ SUBDIRS = . kcmktoshiba images
 INCLUDES = $(all_includes) @DBUS_CFLAGS@
 
 # these are the headers for your project
-noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h synshm.h \
-			modelid.h fnactions.h ktoshibaprocinterface.h
+noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h modelid.h \
+	fnactions.h ktoshibaprocinterface.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -29,8 +29,8 @@ ktoshiba_SOURCES = settingswidget.ui statuswidget.ui fnactions.cpp \
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = libktoshibasmminterface.la \
 			libktoshibaprocinterface.la \
-			$(LIB_KDEUI) @POWERSAVE_LIBS@ @DBUS_LIBS@ \
-			-lsynaptics
+			$(LIB_KDEUI) -lsynaptics \
+			@POWERSAVE_LIBS@ @DBUS_LIBS@
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
