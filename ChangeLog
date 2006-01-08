@@ -1,3 +1,7 @@
+2006-01-08 Azael Avalos <neftali@utep.edu>
+	* MousePad disabling/enabling now working again, we now use
+	  libsynaptics library and the new synaptics driver 0.14.4
+
 2006-01-04 Azael Avalos <neftali@utep.edu>
 	* The powersave support is finally fiished...
 

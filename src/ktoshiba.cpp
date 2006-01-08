@@ -838,6 +838,7 @@ void KToshiba::wakeupEvent()
 void KToshiba::checkOmnibook()
 {
     // TODO: Add more stuff here, for now only the LCD is being monitored
+    // TODO: Move this to own files once it is finished and complete
 
     if (mFn->m_Popup != 0) {
         mFn->m_StatusWidget->hide();
