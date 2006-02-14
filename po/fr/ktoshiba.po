@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-13 12:10-0700\n"
+"POT-Creation-Date: 2006-02-14 01:16-0700\n"
 "PO-Revision-Date: 2005-06-03 17:44+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
 "Language-Team:  <kde-francophone@kde.org>\n"
@@ -26,31 +26,31 @@ msgid ""
 "Your emails"
 msgstr "nicolas.ternisien@gmail.com"
 
-#: fnactions.cpp:196
+#: fnactions.cpp:195
 msgid "Long Life"
 msgstr "Vie longue"
 
-#: fnactions.cpp:197
+#: fnactions.cpp:196
 msgid "User Settings"
 msgstr "Paramètres utilisateur"
 
-#: fnactions.cpp:201
+#: fnactions.cpp:200
 msgid "Normal Life"
 msgstr "Vie normale"
 
-#: fnactions.cpp:202
+#: fnactions.cpp:201
 msgid "Low Power"
 msgstr "Puissance faible"
 
-#: fnactions.cpp:206
+#: fnactions.cpp:205
 msgid "Full Life"
 msgstr "Vie pleine"
 
-#: fnactions.cpp:207
+#: fnactions.cpp:206
 msgid "Full Power"
 msgstr "Pleine puissance"
 
-#: fnactions.cpp:389 fnactions.cpp:434
+#: fnactions.cpp:388 fnactions.cpp:435
 msgid ""
 "Before continuing, be aware that ACPI Sleep States\n"
 "are a work in progress and may or may not work on your computer.\n"
@@ -60,17 +60,17 @@ msgstr ""
 "en cours de développement et peut ou non fonctionner sur votre ordinateur.\n"
 "Veuillez également décharger les modules problèmatiques"
 
-#: fnactions.cpp:391 fnactions.cpp:402 fnactions.cpp:404 fnactions.cpp:407
-#: fnactions.cpp:409 fnactions.cpp:436 fnactions.cpp:449 fnactions.cpp:451
-#: fnactions.cpp:454 fnactions.cpp:456
+#: fnactions.cpp:390 fnactions.cpp:401 fnactions.cpp:403 fnactions.cpp:406
+#: fnactions.cpp:408 fnactions.cpp:437 fnactions.cpp:448 fnactions.cpp:450
+#: fnactions.cpp:453 fnactions.cpp:455
 msgid "WARNING"
 msgstr "Avertissement"
 
-#: fnactions.cpp:403
+#: fnactions.cpp:402
 msgid "Suspend To RAM disabled by administrator."
 msgstr ""
 
-#: fnactions.cpp:408
+#: fnactions.cpp:407
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr ""
@@ -88,11 +88,11 @@ msgstr ""
 msgid "STR"
 msgstr "SSM"
 
-#: fnactions.cpp:450
+#: fnactions.cpp:449
 msgid "Suspend To Disk disabled by administrator."
 msgstr ""
 
-#: fnactions.cpp:455
+#: fnactions.cpp:454
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To Disk."
 msgstr ""
@@ -118,8 +118,8 @@ msgstr "haut"
 msgid "down"
 msgstr "bas"
 
-#: fnactions.cpp:507 fnactions.cpp:575 ktoshiba.cpp:272 ktoshiba.cpp:806
-#: main.cpp:39
+#: fnactions.cpp:507 fnactions.cpp:575 ktoshiba.cpp:278 ktoshiba.cpp:825
+#: main.cpp:35
 msgid "KToshiba"
 msgstr "KToshiba"
 
@@ -127,7 +127,7 @@ msgstr "KToshiba"
 msgid "Wireless interface %1"
 msgstr "Interface sans-fil %1"
 
-#: fnactions.cpp:509 ktoshiba.cpp:807
+#: fnactions.cpp:509 ktoshiba.cpp:826
 msgid "Wireless"
 msgstr "Sans-fil"
 
@@ -144,192 +144,193 @@ msgstr ""
 msgid "Bluetooth device %1"
 msgstr "Périphérique Bluetooth activé"
 
-#: fnactions.cpp:576 ktoshiba.cpp:273
+#: fnactions.cpp:576 ktoshiba.cpp:279
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: ktoshiba.cpp:181
+#: ktoshiba.cpp:183
 msgid "&Configure KToshiba..."
 msgstr "&Configurer KToshiba..."
 
-#: ktoshiba.cpp:184
+#: ktoshiba.cpp:186
 msgid "Suspend To &RAM"
 msgstr "Suspendre en &mémoire"
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:188
 msgid "Suspend To &Disk"
 msgstr "Suspendre sur &disque"
 
-#: ktoshiba.cpp:204
+#: ktoshiba.cpp:206
 msgid "Enable &Bluetooth"
 msgstr "Activer le &Bluetooth"
 
-#: ktoshiba.cpp:207
+#: ktoshiba.cpp:209
 msgid "HyperThreading"
 msgstr "HyperThreading"
 
-#: ktoshiba.cpp:208 ktoshiba.cpp:227 ktoshiba.cpp:233
+#: ktoshiba.cpp:210 ktoshiba.cpp:229 ktoshiba.cpp:235
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: ktoshiba.cpp:209
+#: ktoshiba.cpp:211
 msgid "Enabled - PM aware"
 msgstr "Activé - PM branché"
 
-#: ktoshiba.cpp:210
+#: ktoshiba.cpp:212
 msgid "Enabled - No PM aware"
 msgstr "Activé - Aucun PM branché"
 
-#: ktoshiba.cpp:211
+#: ktoshiba.cpp:213
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:216
+#: ktoshiba.cpp:218
 msgid "SpeedStep"
 msgstr "Cadence"
 
-#: ktoshiba.cpp:217
+#: ktoshiba.cpp:219
 msgid "Dynamic"
 msgstr "Dynamique"
 
-#: ktoshiba.cpp:218
+#: ktoshiba.cpp:220
 msgid "Always High"
 msgstr "Toujours haut"
 
-#: ktoshiba.cpp:219
+#: ktoshiba.cpp:221
 msgid "Always Low"
 msgstr "Toujours bas"
 
-#: ktoshiba.cpp:220
+#: ktoshiba.cpp:222
 msgid "CPU Frequency"
 msgstr "Fréquence du processeur"
 
-#: ktoshiba.cpp:226
+#: ktoshiba.cpp:228
 msgid "OneTouch"
 msgstr ""
 
-#: ktoshiba.cpp:228 ktoshiba.cpp:234
+#: ktoshiba.cpp:230 ktoshiba.cpp:236
 #, fuzzy
 msgid "Enabled"
 msgstr "Désactivé"
 
-#: ktoshiba.cpp:229
+#: ktoshiba.cpp:231
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:232
+#: ktoshiba.cpp:234
 msgid "Fan"
 msgstr ""
 
-#: ktoshiba.cpp:235
+#: ktoshiba.cpp:237
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:239
+#: ktoshiba.cpp:241
 msgid "&About KToshiba"
 msgstr "&À propos de KToshiba"
 
-#: ktoshiba.cpp:272
+#: ktoshiba.cpp:278
 msgid "Bluetooth device activated"
 msgstr "Périphérique Bluetooth activé"
 
-#: ktoshiba.cpp:376
+#: ktoshiba.cpp:381
 msgid "Your battery is now fully charged."
 msgstr "Votre batterie est complètement chargée."
 
-#: ktoshiba.cpp:376
+#: ktoshiba.cpp:381
 msgid "Laptop Battery"
 msgstr "Batterie de portable"
 
-#: ktoshiba.cpp:387
+#: ktoshiba.cpp:392
 msgid "The battery state has changed to low"
 msgstr "L'état de la batterie est faible"
 
-#: ktoshiba.cpp:392
+#: ktoshiba.cpp:397
 msgid "The battery state has changed to critical"
 msgstr "L'état de la batterie est critique"
 
-#: ktoshiba.cpp:397
+#: ktoshiba.cpp:402
 msgid "I'm Gone..."
 msgstr "Je suis parti..."
 
-#: ktoshiba.cpp:566
+#: ktoshiba.cpp:585
 msgid "Plugged in - fully charged"
 msgstr "Sur secteur - complètement chargé"
 
-#: ktoshiba.cpp:577
+#: ktoshiba.cpp:596
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr "Sur secteur - %1% chargé (%2:%3 restant)"
 
-#: ktoshiba.cpp:581
+#: ktoshiba.cpp:600
 msgid "Plugged in - no battery"
 msgstr "Sur secteur - aucune batterie"
 
-#: ktoshiba.cpp:583
+#: ktoshiba.cpp:602
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr "Sur secteur - %1% chargé"
 
-#: ktoshiba.cpp:595
+#: ktoshiba.cpp:614
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr "Sur batterie - %1% chargé (%2:%3 restant)"
 
-#: ktoshiba.cpp:599
+#: ktoshiba.cpp:618
 msgid "No battery and adaptor found"
 msgstr ""
 
-#: ktoshiba.cpp:601
+#: ktoshiba.cpp:620
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr "Sur batterie - %1% chargé"
 
-#: ktoshiba.cpp:805
+#: ktoshiba.cpp:824
 msgid "on"
 msgstr "active"
 
-#: ktoshiba.cpp:805
+#: ktoshiba.cpp:824
 msgid "off"
 msgstr "inactive"
 
-#: ktoshiba.cpp:806
+#: ktoshiba.cpp:825
 msgid "Wireless antenna turned %1"
 msgstr "L'antenne sans-fil est %1"
 
-#: main.cpp:28
+#: main.cpp:29
 msgid "Hotkeys & Battery monitoring for Toshiba laptops."
 msgstr ""
 "Touches spéciales et surveillance de la batterie pour les portables Toshiba."
 
-#: main.cpp:43
+#: main.cpp:39
 msgid "toshutils and HCI-SCI stuff"
 msgstr "« toshutils » et outils HCI-SCI"
 
-#: main.cpp:45
+#: main.cpp:41
 msgid "Toshiba Laptop ACPI Extras driver"
 msgstr "Pilote ACPI supplémentaire pour les portables Toshiba"
 
-#: main.cpp:47
+#: main.cpp:43
 msgid "Powersave Daemon & KPowersave"
 msgstr "Démon d'économie d'énergie et KPowersave"
 
-#: main.cpp:49
+#: main.cpp:45
 msgid "Some ideas and pieces of code"
 msgstr "Quelques idées et morceaux de code"
 
-#: main.cpp:51
-msgid "Code for enabling/disabling TouchPad"
+#: main.cpp:47
+#, fuzzy
+msgid "library for enabling/disabling TouchPad"
 msgstr "Code activant et désactivant la tablette"
 
-#: main.cpp:53
+#: main.cpp:49
 msgid "French translation"
 msgstr "Traduction française"
 
-#: main.cpp:55
+#: main.cpp:51
 #, fuzzy
 msgid "Hungarian translation"
 msgstr "Traduction française"
 
-#: main.cpp:57
+#: main.cpp:53
 msgid "omnibook stuff tester"
 msgstr ""
 
@@ -341,7 +342,7 @@ msgstr ""
 "Impossible d'obtenir l'identifiant du modèle\n"
 "Étrange"
 
-#: modelid.cpp:332
+#: modelid.cpp:335
 #, fuzzy
 msgid ""
 "Please send the model name and this id 0x%1 to:\n"
@@ -350,7 +351,7 @@ msgstr ""
 "Veuillez envoyer le nom du modèle et cet identifiant « %1 » à :\n"
 "coproscefalo@gmail.com"
 
-#: modelid.cpp:333
+#: modelid.cpp:336
 msgid "Model Name"
 msgstr "Nom du modèle"
 

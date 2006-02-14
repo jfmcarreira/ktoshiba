@@ -50,3 +50,5 @@ void KCMKToshibaGeneral::setupHelperSlot()
 					   i18n("KToshiba"));
     }
 }
+
+

@@ -249,6 +249,17 @@
                                             <string>Alt+N</string>
                                         </property>
                                     </widget>
+                                    <widget class="QCheckBox" row="4" column="0">
+                                        <property name="name">
+                                            <cstring>checkpowerCheckBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Do not monitor Battery and AC status</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+D</string>
+                                        </property>
+                                    </widget>
                                 </grid>
                             </widget>
                             <widget class="QButtonGroup">
@@ -2289,6 +2300,12 @@
         <receiver>KCMKToshibaGeneral</receiver>
         <slot>changedSlot()</slot>
     </connection>
+    <connection>
+        <sender>checkpowerCheckBox</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>configTabWidget</tabstop>
@@ -2328,8 +2345,8 @@
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    
-    
-    
+    <includehint>kprogress.h</includehint>
+    <includehint>kled.h</includehint>
+    <includehint>kled.h</includehint>
 </includehints>
 </UI>
