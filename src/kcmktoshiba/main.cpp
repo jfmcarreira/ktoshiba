@@ -2,7 +2,7 @@
  *   main.cpp                                                              *
  *                                                                         *
  *   Copyright (C) 2004 by Azael Avalos                                    *
- *   neftali@utep.edu                                                      *
+ *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   Based on kcm_kvaio                                                    *
  *   Copyright (C) 2003 Mirko Boehm (mirko@kde.org)                        *
@@ -59,9 +59,9 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 	KAboutData *about = new KAboutData(I18N_NOOP("kcmktoshiba"),
 				   I18N_NOOP("KDE Control Module for Toshiba Laptops"),
 				   0, 0, KAboutData::License_GPL,
-				   "(c) 2004 Azael Avalos");
+				   "(c) 2004-2005 Azael Avalos");
 
-	about->addAuthor("Azael Avalos", I18N_NOOP("Original author"), "neftali@utep.edu");
+	about->addAuthor("Azael Avalos", I18N_NOOP("Original author"), "coproscefalo@gmail.com");
 	setAboutData( about );
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -158,6 +158,8 @@ void KCMToshibaModule::load()
 				( config.readNumEntry("LCD_Brightness", 2) );
 	m_KCMKToshibaGeneral->coolingComboBox->setCurrentItem
 				( config.readNumEntry("Cooling_Method", 2) );
+	m_KCMKToshibaGeneral->checkpowerCheckBox->setChecked
+				( config.readBoolEntry("Power_Status_Check", false) );
 }
 
 
@@ -185,6 +187,7 @@ void KCMToshibaModule::defaults()
 	m_KCMKToshibaGeneral->hddComboBox->setCurrentItem( 5 );
 	m_KCMKToshibaGeneral->lcdComboBox->setCurrentItem( 2 );
 	m_KCMKToshibaGeneral->coolingComboBox->setCurrentItem( 2 );
+	m_KCMKToshibaGeneral->checkpowerCheckBox->setChecked( false );
 }
 
 
@@ -239,6 +242,8 @@ void KCMToshibaModule::save()
 			  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
 	config.writeEntry("Cooling_Method",
 			  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
+	config.writeEntry("Power_Status_Check",
+			  m_KCMKToshibaGeneral->checkpowerCheckBox->isChecked());
 	config.sync();
 }
 

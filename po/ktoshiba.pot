@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-13 12:10-0700\n"
+"POT-Creation-Date: 2006-02-14 01:16-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,48 +27,48 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: fnactions.cpp:196
+#: fnactions.cpp:195
 msgid "Long Life"
 msgstr ""
 
-#: fnactions.cpp:197
+#: fnactions.cpp:196
 msgid "User Settings"
 msgstr ""
 
-#: fnactions.cpp:201
+#: fnactions.cpp:200
 msgid "Normal Life"
 msgstr ""
 
-#: fnactions.cpp:202
+#: fnactions.cpp:201
 msgid "Low Power"
 msgstr ""
 
-#: fnactions.cpp:206
+#: fnactions.cpp:205
 msgid "Full Life"
 msgstr ""
 
-#: fnactions.cpp:207
+#: fnactions.cpp:206
 msgid "Full Power"
 msgstr ""
 
-#: fnactions.cpp:389 fnactions.cpp:434
+#: fnactions.cpp:388 fnactions.cpp:435
 msgid ""
 "Before continuing, be aware that ACPI Sleep States\n"
 "are a work in progress and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
 
-#: fnactions.cpp:391 fnactions.cpp:402 fnactions.cpp:404 fnactions.cpp:407
-#: fnactions.cpp:409 fnactions.cpp:436 fnactions.cpp:449 fnactions.cpp:451
-#: fnactions.cpp:454 fnactions.cpp:456
+#: fnactions.cpp:390 fnactions.cpp:401 fnactions.cpp:403 fnactions.cpp:406
+#: fnactions.cpp:408 fnactions.cpp:437 fnactions.cpp:448 fnactions.cpp:450
+#: fnactions.cpp:453 fnactions.cpp:455
 msgid "WARNING"
 msgstr ""
 
-#: fnactions.cpp:403
+#: fnactions.cpp:402
 msgid "Suspend To RAM disabled by administrator."
 msgstr ""
 
-#: fnactions.cpp:408
+#: fnactions.cpp:407
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr ""
@@ -83,11 +83,11 @@ msgstr ""
 msgid "STR"
 msgstr ""
 
-#: fnactions.cpp:450
+#: fnactions.cpp:449
 msgid "Suspend To Disk disabled by administrator."
 msgstr ""
 
-#: fnactions.cpp:455
+#: fnactions.cpp:454
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To Disk."
 msgstr ""
@@ -110,8 +110,8 @@ msgstr ""
 msgid "down"
 msgstr ""
 
-#: fnactions.cpp:507 fnactions.cpp:575 ktoshiba.cpp:272 ktoshiba.cpp:806
-#: main.cpp:39
+#: fnactions.cpp:507 fnactions.cpp:575 ktoshiba.cpp:278 ktoshiba.cpp:825
+#: main.cpp:35
 msgid "KToshiba"
 msgstr ""
 
@@ -119,7 +119,7 @@ msgstr ""
 msgid "Wireless interface %1"
 msgstr ""
 
-#: fnactions.cpp:509 ktoshiba.cpp:807
+#: fnactions.cpp:509 ktoshiba.cpp:826
 msgid "Wireless"
 msgstr ""
 
@@ -135,189 +135,189 @@ msgstr ""
 msgid "Bluetooth device %1"
 msgstr ""
 
-#: fnactions.cpp:576 ktoshiba.cpp:273
+#: fnactions.cpp:576 ktoshiba.cpp:279
 msgid "Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:181
+#: ktoshiba.cpp:183
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:184
+#: ktoshiba.cpp:186
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:188
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:204
+#: ktoshiba.cpp:206
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:207
+#: ktoshiba.cpp:209
 msgid "HyperThreading"
 msgstr ""
 
-#: ktoshiba.cpp:208 ktoshiba.cpp:227 ktoshiba.cpp:233
+#: ktoshiba.cpp:210 ktoshiba.cpp:229 ktoshiba.cpp:235
 msgid "Disabled"
 msgstr ""
 
-#: ktoshiba.cpp:209
+#: ktoshiba.cpp:211
 msgid "Enabled - PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:210
+#: ktoshiba.cpp:212
 msgid "Enabled - No PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:211
+#: ktoshiba.cpp:213
 msgid "Hyper-Threading"
 msgstr ""
 
-#: ktoshiba.cpp:216
+#: ktoshiba.cpp:218
 msgid "SpeedStep"
 msgstr ""
 
-#: ktoshiba.cpp:217
+#: ktoshiba.cpp:219
 msgid "Dynamic"
 msgstr ""
 
-#: ktoshiba.cpp:218
+#: ktoshiba.cpp:220
 msgid "Always High"
 msgstr ""
 
-#: ktoshiba.cpp:219
+#: ktoshiba.cpp:221
 msgid "Always Low"
 msgstr ""
 
-#: ktoshiba.cpp:220
+#: ktoshiba.cpp:222
 msgid "CPU Frequency"
 msgstr ""
 
-#: ktoshiba.cpp:226
+#: ktoshiba.cpp:228
 msgid "OneTouch"
 msgstr ""
 
-#: ktoshiba.cpp:228 ktoshiba.cpp:234
+#: ktoshiba.cpp:230 ktoshiba.cpp:236
 msgid "Enabled"
 msgstr ""
 
-#: ktoshiba.cpp:229
+#: ktoshiba.cpp:231
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:232
+#: ktoshiba.cpp:234
 msgid "Fan"
 msgstr ""
 
-#: ktoshiba.cpp:235
+#: ktoshiba.cpp:237
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:239
+#: ktoshiba.cpp:241
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:272
+#: ktoshiba.cpp:278
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:376
+#: ktoshiba.cpp:381
 msgid "Your battery is now fully charged."
 msgstr ""
 
-#: ktoshiba.cpp:376
+#: ktoshiba.cpp:381
 msgid "Laptop Battery"
 msgstr ""
 
-#: ktoshiba.cpp:387
+#: ktoshiba.cpp:392
 msgid "The battery state has changed to low"
 msgstr ""
 
-#: ktoshiba.cpp:392
+#: ktoshiba.cpp:397
 msgid "The battery state has changed to critical"
 msgstr ""
 
-#: ktoshiba.cpp:397
+#: ktoshiba.cpp:402
 msgid "I'm Gone..."
 msgstr ""
 
-#: ktoshiba.cpp:566
+#: ktoshiba.cpp:585
 msgid "Plugged in - fully charged"
 msgstr ""
 
-#: ktoshiba.cpp:577
+#: ktoshiba.cpp:596
 msgid "Plugged in - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:581
+#: ktoshiba.cpp:600
 msgid "Plugged in - no battery"
 msgstr ""
 
-#: ktoshiba.cpp:583
+#: ktoshiba.cpp:602
 #, c-format
 msgid "Plugged in - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:595
+#: ktoshiba.cpp:614
 msgid "Running on batteries - %1% charged (%2:%3 time left)"
 msgstr ""
 
-#: ktoshiba.cpp:599
+#: ktoshiba.cpp:618
 msgid "No battery and adaptor found"
 msgstr ""
 
-#: ktoshiba.cpp:601
+#: ktoshiba.cpp:620
 #, c-format
 msgid "Running on batteries  - %1% charged"
 msgstr ""
 
-#: ktoshiba.cpp:805
+#: ktoshiba.cpp:824
 msgid "on"
 msgstr ""
 
-#: ktoshiba.cpp:805
+#: ktoshiba.cpp:824
 msgid "off"
 msgstr ""
 
-#: ktoshiba.cpp:806
+#: ktoshiba.cpp:825
 msgid "Wireless antenna turned %1"
 msgstr ""
 
-#: main.cpp:28
+#: main.cpp:29
 msgid "Hotkeys & Battery monitoring for Toshiba laptops."
 msgstr ""
 
-#: main.cpp:43
+#: main.cpp:39
 msgid "toshutils and HCI-SCI stuff"
 msgstr ""
 
-#: main.cpp:45
+#: main.cpp:41
 msgid "Toshiba Laptop ACPI Extras driver"
 msgstr ""
 
-#: main.cpp:47
+#: main.cpp:43
 msgid "Powersave Daemon & KPowersave"
 msgstr ""
 
-#: main.cpp:49
+#: main.cpp:45
 msgid "Some ideas and pieces of code"
 msgstr ""
 
-#: main.cpp:51
-msgid "Code for enabling/disabling TouchPad"
+#: main.cpp:47
+msgid "library for enabling/disabling TouchPad"
 msgstr ""
 
-#: main.cpp:53
+#: main.cpp:49
 msgid "French translation"
 msgstr ""
 
-#: main.cpp:55
+#: main.cpp:51
 msgid "Hungarian translation"
 msgstr ""
 
-#: main.cpp:57
+#: main.cpp:53
 msgid "omnibook stuff tester"
 msgstr ""
 
@@ -327,13 +327,13 @@ msgid ""
 "Weird"
 msgstr ""
 
-#: modelid.cpp:332
+#: modelid.cpp:335
 msgid ""
 "Please send the model name and this id 0x%1 to:\n"
 "coproscefalo@gmail.com"
 msgstr ""
 
-#: modelid.cpp:333
+#: modelid.cpp:336
 msgid "Model Name"
 msgstr ""
 

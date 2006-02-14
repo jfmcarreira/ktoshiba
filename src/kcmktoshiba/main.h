@@ -2,7 +2,7 @@
  *   main.h                                                                *
  *                                                                         *
  *   Copyright (C) 2004 by Azael Avalos                                    *
- *   neftali@utep.edu                                                      *
+ *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   Based on kcm_kvaio                                                    *
  *   Copyright (C) 2003 Mirko Boehm (mirko@kde.org)                        *
