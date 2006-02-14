@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Azael Avalos                                    *
- *   neftali@utep.edu                                                      *
+ *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,7 +64,7 @@ public:
     /**
     * Default Destructor
     */
-    virtual ~KToshiba();
+    ~KToshiba();
 protected slots:
     void doConfig();
     void doSuspendToRAM();
@@ -77,8 +77,6 @@ protected slots:
     void checkHotKeys();
     void checkSystem();
     void checkMode();
-    void shutdownEvent();
-    void wakeupEvent();
     void checkOmnibook();
     void doSetOneTouch(int);
     void doSetOmnibookFan(int);
@@ -96,6 +94,7 @@ protected:
     bool mInterfaceAvailable;
     bool mOmnibook;
     bool mFullBat;
+    bool mPSC;
     int mBatStatus;
     int mOldBatStatus;
     int mLowBat;
@@ -120,6 +119,7 @@ private:
     bool lowtrig;
     bool crytrig;
     bool battrig;
+    bool bsmtrig;
     bool wstrig;
     bool btstart;
     bool proc;

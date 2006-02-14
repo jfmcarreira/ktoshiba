@@ -1,5 +1,10 @@
 SUBDIRS = . kcmktoshiba images
 
+if with_helper
+  HELPER = ktosh_helper
+  ktosh_helper_SOURCES = ktosh_helper.cpp
+endif
+
 # set the include path for X, qt and KDE
 INCLUDES = $(all_includes) @DBUS_CFLAGS@
 
@@ -15,7 +20,7 @@ METASOURCES = AUTO
 #########################################################################
 # this is the program that gets installed.  it's name is used for all
 # of the other Makefile.am variables
-bin_PROGRAMS = ktoshiba ktosh_helper
+bin_PROGRAMS = ktoshiba $(HELPER)
 
 # the application source, library search path, and link libraries
 lib_LTLIBRARIES = libktoshibasmminterface.la libktoshibaprocinterface.la
@@ -35,8 +40,6 @@ ktoshiba_LDADD = libktoshibasmminterface.la \
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
 shelldesktop_DATA = ktoshiba.desktop
-
-ktosh_helper_SOURCES = ktosh_helper.cpp
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/ktoshiba.pot

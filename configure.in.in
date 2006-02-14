@@ -1,4 +1,4 @@
-#MIN_CONFIG(3.0.0)
+#MIN_CONFIG(3.2.0)
 
 AM_INIT_AUTOMAKE(ktoshiba, 0.8)
 AC_C_BIGENDIAN
@@ -8,7 +8,7 @@ dnl === powersave daemon support check - begin ===
 AC_ARG_WITH(powersave,
     AS_HELP_STRING([--without-powersave], [build without powersave daemon support (default=no)]),
     [ac_cv_use_powersave=$withval],
-    [ac_cv_use_powersave=yes]
+    [ac_cv_use_powersave=no]
 )
 
 if test "$ac_cv_use_powersave" = "yes"; then
@@ -30,6 +30,15 @@ if test "$ac_cv_use_powersave" = "yes"; then
     AC_SUBST(DBUS_CFLAGS)
     AC_SUBST(DBUS_LIBS)
 fi
-
-AC_OUTPUT
 dnl === powersave daemon support check - end ===
+
+dnl === build ktosh_helper check - begin ===
+compile_helper=yes
+AC_ARG_WITH(helper,
+    AS_HELP_STRING([--without-helper], [build without ktosh_helper (default=yes)]),
+    [compile_helper=$withval],
+    [compile_helper=yes]
+)
+
+AM_CONDITIONAL(with_helper, [test x$compile_helper = xyes])
+dnl === build ktosh_helper check - end ===

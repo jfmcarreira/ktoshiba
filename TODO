@@ -2,3 +2,5 @@ KToshiba TODO list
 - Make the audio and video programs configurable (partly done)
 - Add support for more laptops (partly done)
 - Add more options for the Fn-Key (partly done)
+- Properly re-read Battery and AC when resuming from a Suspend To Disk
+  (it only detects AC status correctly...)
