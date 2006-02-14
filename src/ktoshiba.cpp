@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Azael Avalos                                    *
- *   neftali@utep.edu                                                      *
+ *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -78,6 +78,7 @@ KToshiba::KToshiba()
         mSS = mDriver->getSpeedStep();
         mWirelessSwitch = mDriver->getWirelessSwitch();
         mBatSave = 2;
+        bsmtrig = false;
         wstrig = false;
         bluetooth = 0;
         svideo = 0;
@@ -116,6 +117,7 @@ KToshiba::KToshiba()
     battrig = (perc == 100)? true : false;
     crytrig = false;
     lowtrig = false;
+    current_code = -2;
 
 
     if (!mClient.attach())
@@ -126,6 +128,8 @@ KToshiba::KToshiba()
         loadConfiguration(&mConfig);
     } else
         createConfiguration();
+
+    displayPixmap();
 
     doMenu();
 
@@ -138,14 +142,12 @@ KToshiba::KToshiba()
         mModeTimer->start(500);		// Check proc entry every 1/2 seconds
         connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
         mSystemTimer->start(500);		// Check system events every 1/2 seconds
-        connect( mFn, SIGNAL( stdActivated() ), this, SLOT( shutdownEvent() ) );
     } else
     if (mOmnibook) {
         connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
         mOmnibookTimer->start(100);
     }
 
-    displayPixmap();
     if (mInterfaceAvailable && btstart)
         doBluetooth();
 }
@@ -154,9 +156,13 @@ KToshiba::~KToshiba()
 {
     // Stop timers
     mPowTimer->stop();
-    mHotKeysTimer->stop();
-    mModeTimer->stop();
-    mSystemTimer->stop();
+    if (mInterfaceAvailable) {
+        mHotKeysTimer->stop();
+        mModeTimer->stop();
+        mSystemTimer->stop();
+    } else
+    if (mOmnibook)
+        mOmnibookTimer->stop();
 
     if (mClient.isAttached())
         mClient.detach();
@@ -304,7 +310,6 @@ bool KToshiba::checkConfiguration()
 void KToshiba::loadConfiguration(KConfig *k)
 {
     k->setGroup("KToshiba");
-
     mFullBat = k->readBoolEntry("Notify_On_Full_Battery", false);
     mBatStatus = k->readNumEntry("Battery_Status_Time", 2);
     mLowBat = k->readNumEntry("Low_Battery_Trigger", 15);
@@ -312,14 +317,15 @@ void KToshiba::loadConfiguration(KConfig *k)
     mBatSave = k->readNumEntry("Battery_Save_Mode", 2);
     mAudioPlayer = k->readNumEntry("Audio_Player", 1);
     btstart = k->readBoolEntry("Bluetooth_Startup", true);
+    mPSC = k->readBoolEntry("Power_Status_Check", false);
 }
 
 void KToshiba::createConfiguration()
 {
     kdDebug() << "KToshiba: Creating configuration file..." << endl;
     KConfig config(CONFIG_FILE);
-    config.setGroup("KToshiba");
 
+    config.setGroup("KToshiba");
     config.writeEntry("Notify_On_Full_Battery", false);
     config.writeEntry("Battery_Status_Time", 2);
     config.writeEntry("Low_Battery_Trigger", 15);
@@ -342,6 +348,7 @@ void KToshiba::createConfiguration()
     config.writeEntry("HDD_Auto_Off", 5);
     config.writeEntry("LCD_Brightness", 2);
     config.writeEntry("Cooling_Method", 2);
+    config.writeEntry("Power_Status_Check", false);
     config.sync();
 }
 
@@ -353,58 +360,65 @@ void KToshiba::displayAbout()
 void KToshiba::checkPowerStatus()
 {
     KConfig mConfig(CONFIG_FILE);
-    mConfig.setGroup("KToshiba");
     loadConfiguration(&mConfig);
-    if (mInterfaceAvailable) {
-        mDriver->batteryStatus(&time, &perc);
-        if (perc == -1)
+
+    if (!mPSC) {
+        if (mInterfaceAvailable && !proc) {
+            mDriver->batteryStatus(&time, &perc);
+            pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+        } else
+        if (mInterfaceAvailable && proc) {
             mProc->acpiBatteryStatus(&time, &perc);
-        pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
-        if ((pow == -1) || (pow == SCI_FAILURE))
             pow = mProc->acpiAC();
-    } else
-    if (mOmnibook) {
-        mProc->omnibookBatteryStatus(&time, &perc);
-        pow = mProc->omnibookAC();
-    }
+        } else
+        if (mOmnibook) {
+            mProc->omnibookBatteryStatus(&time, &perc);
+            pow = mProc->omnibookAC();
+        }
 
-    if (perc < 0 && !mInterfaceAvailable && !mOmnibook)
-        wakeupEvent();
-
-    if (mFullBat && perc == 100 && !battrig) {
-        KMessageBox::queuedMessageBox(0, KMessageBox::Information,
+        if (mFullBat && perc == 100 && !battrig) {
+            KMessageBox::queuedMessageBox(0, KMessageBox::Information,
 					i18n("Your battery is now fully charged."), i18n("Laptop Battery"));
-        battrig = true;
-    }
+            battrig = true;
+        }
 
-    int th, tm;
-    if (proc) {
-        th = time / 60; tm = time % 60;
-    } else {
-        th = SCI_HOUR(time); tm = SCI_MINUTE(time);
-    }
-    if (tm == mLowBat && th == 0 && pow == 3 && !lowtrig) {
-        KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
+        int th, tm;
+        if (proc) {
+            th = time / 60; tm = time % 60;
+        } else {
+            th = SCI_HOUR(time); tm = SCI_MINUTE(time);
+        }
+        if (tm == mLowBat && th == 0 && pow == 3 && !lowtrig) {
+            KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
 				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-        lowtrig = true;
-    } else
-    if (tm == mCryBat && th == 0 && pow == 3 && !crytrig) {
-        KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
+            lowtrig = true;
+        } else
+        if (tm == mCryBat && th == 0 && pow == 3 && !crytrig) {
+            KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
 				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-        crytrig = true;
-    } else
-    if (tm == 0 && th == 0 && pow == 3)
-        KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
+            crytrig = true;
+        } else
+        if (tm == 0 && th == 0 && pow == 3)
+            KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
 				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
 
-    if (tm > lowtrig && pow == 4) {
-        if (battrig && (perc < 100))
-            battrig = false;
-        if (lowtrig)
-            lowtrig = false;
-        if (crytrig)
-            crytrig = false;
+        if (tm > lowtrig && pow == 4) {
+            if (battrig && (perc < 100))
+                battrig = false;
+            if (lowtrig)
+                lowtrig = false;
+            if (crytrig)
+                crytrig = false;
+        }
+
+        if (mOldBatStatus != mBatStatus) {
+            mPowTimer->stop();
+            mPowTimer->start(mBatStatus * 1000);
+        }
     }
+    bool changed = oldpow != pow || oldperc != perc || oldtime != time;
+    if (changed || mPSC)
+        displayPixmap();
 
     if (mBatSave != mOldBatSave || pow != oldpow) {
         int bright;
@@ -412,20 +426,24 @@ void KToshiba::checkPowerStatus()
             case 0:			// USER SETTINGS or LONG LIFE
                 if (mBatType == 3)
                     bright = 0;	// Semi-Bright
-                else if (mBatType == 2)
+                else if (mBatType == 2 && !bsmtrig) {
                     bsmUserSettings(&mConfig, &bright);
+                    bsmtrig = true;
+                }
                 break;
             case 1:			// LOW POWER or NORMAL LIFE
                 if (pow == 3)
                     bright = 0;	// Semi-Bright
                 else if (pow == 4)
                     bright = 3;	// Bright
+                bsmtrig = false;
                 break;
             case 2:			// FULL POWER or FULL LIFE
                 if (pow == 3)
                     bright = 3;	// Bright
                 else if (pow == 4)
                     bright = 7;	// Super-Bright
+                bsmtrig = false;
                 break;
         }
         if (mInterfaceAvailable && mBatType != 2)
@@ -434,20 +452,12 @@ void KToshiba::checkPowerStatus()
             mProc->omnibookSetBrightness(bright);
     }
 
-    if (mOldBatStatus != mBatStatus) {
-        mPowTimer->stop();
-        mPowTimer->start(mBatStatus * 1000);
-    }
-
-    bool changed = oldpow != pow || oldperc != perc || oldtime != time;
     oldperc = perc;
     oldpow = pow;
     oldtime = time;
     mOldBatStatus = mBatStatus;
     if (mInterfaceAvailable)
         mOldBatSave = mBatSave;
-    if (changed)
-        displayPixmap();
 }
 
 void KToshiba::bsmUserSettings(KConfig *k, int *bright)
@@ -479,7 +489,9 @@ void KToshiba::displayPixmap()
 {
     int new_code = 0;
 
-    if (!mInterfaceAvailable && !mOmnibook)
+    if (mPSC)
+        new_code = -1;
+    else if (!mInterfaceAvailable && !mOmnibook)
         new_code = 1;
     else if (pow == 3)
         new_code = 2;
@@ -488,21 +500,28 @@ void KToshiba::displayPixmap()
 
     if (current_code != new_code) {
         current_code = new_code;
+
         // we will try to deduce the pixmap (or gif) name now.  it will
         // vary depending on the dock and power
-        QString pixmap_name;
+        QString pixmap;
 
         if (pow == -1 && perc == -1)
-            pixmap_name = QString("laptop_nobattery");
+            pixmap = QString("laptop_nobattery");
         else if (pow == 4 && perc == -1)
-            pixmap_name = QString("laptop_power");
+            pixmap = QString("laptop_power");
         else if (pow == 3)
-            pixmap_name = QString("laptop_nocharge");
-        else
-            pixmap_name = QString("laptop_charge");
+            pixmap = QString("laptop_nocharge");
+        else if (mPSC) {
+            pm = loadIcon("ktoshiba", instance);
+            setPixmap(pm);
+            return;
+        } else
+            pixmap = QString("laptop_charge");
 
-        pm = loadIcon(pixmap_name, instance);
+        pm = loadIcon(pixmap, instance);
     }
+    if (current_code == -1)
+        return;
 
     // at this point, we have the file to display.  so display it
 
@@ -812,26 +831,6 @@ void KToshiba::checkSystem()
     if (wstrig == true) {
         mSystemTimer->stop();
         disconnect( mSystemTimer );
-    }
-}
-
-void KToshiba::shutdownEvent()
-{
-    kdDebug() << "KToshiba: Shutting down..." << endl;
-    if (mInterfaceAvailable) {
-        mDriver->closeInterface();
-        mInterfaceAvailable = false;
-    }
-}
-
-void KToshiba::wakeupEvent()
-{
-    kdDebug() << "KToshiba: Starting up..." << endl;
-    if (!mOmnibook) {
-        mInterfaceAvailable = mDriver->openInterface();
-        if (!mInterfaceAvailable)
-            kdDebug() << "KToshiba: Interface could not be opened again "
-                      << "please re-start application" << endl;
     }
 }
 

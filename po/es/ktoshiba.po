@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-12-13 12:10-0700\n"
-"PO-Revision-Date: 2005-12-09 14:59-0700\n"
+"PO-Revision-Date: 2006-01-08 19:04-0700\n"
 "Last-Translator: Azael Avalos\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
@@ -72,8 +72,7 @@ msgid "Suspend To RAM disabled by administrator."
 msgstr "Suspender a RAM esta deshabilitado por el administrador."
 
 #: fnactions.cpp:408
-msgid ""
-"The powersave daemon must be running in the background for a Suspend To RAM."
+msgid "The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr "El servicio powersave debe estar activado para poder Suspender a RAM."
 
 #: fnactions.cpp:416
@@ -93,10 +92,8 @@ msgid "Suspend To Disk disabled by administrator."
 msgstr "Suspender a Disco esta deshabilitado por el administrador."
 
 #: fnactions.cpp:455
-msgid ""
-"The powersave daemon must be running in the background for a Suspend To Disk."
-msgstr ""
-"El servicio powersave debe estar activado para poder Suspender a Disco."
+msgid "The powersave daemon must be running in the background for a Suspend To Disk."
+msgstr "El servicio powersave debe estar activado para poder Suspender a Disco."
 
 #: fnactions.cpp:463
 msgid ""
@@ -205,7 +202,7 @@ msgstr "Frecuencia del CPU"
 
 #: ktoshiba.cpp:226
 msgid "OneTouch"
-msgstr ""
+msgstr "OneTouch"
 
 #: ktoshiba.cpp:228 ktoshiba.cpp:234
 msgid "Enabled"
@@ -367,36 +364,3 @@ msgstr "KToshiba: Estado de Vidéo, Batería y Método de Inicio"
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Widget de Estado"
 
-#~ msgid "Please umount all filesystems on the SelectBay device, if any."
-#~ msgstr ""
-#~ "Por favor desmonta todos los sistemas de ficheros localizados en la Bahía "
-#~ "de Selección, sí alguno existe."
-
-#~ msgid "SelectBay"
-#~ msgstr "Bahía de Selección"
-
-#~ msgid ""
-#~ "Unable to remove device in\n"
-#~ "the SelectBay. Please re-lock."
-#~ msgstr ""
-#~ "Imposible de remover dispositivo en la Bahía de Selección. Por favor "
-#~ "vuelve a bloquear."
-
-#~ msgid "Device in the SelectBay sucessfully removed."
-#~ msgstr "Dispositivo en la Bahía de Selección removido exitosamente."
-
-#~ msgid ""
-#~ "Could not unregister device because ktosh_helper cannot be found.\n"
-#~ "Please make sure that it is installed correctly."
-#~ msgstr ""
-#~ "No se pudo dar de baja el dispositivo porque ktosh_helper no fue "
-#~ "encontrado.\n"
-#~ "Por favor verifique que este ha sido instalado correctamente."
-
-#~ msgid ""
-#~ "Could not register device because ktosh_helper cannot be found.\n"
-#~ "Please make sure that it is installed correctly."
-#~ msgstr ""
-#~ "No se pudo dar de alta el dispositivo porque ktosh_helper no fue "
-#~ "encontrado.\n"
-#~ "Por favor verifique que este ha sido instalado correctamente."

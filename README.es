@@ -114,4 +114,4 @@ coproscefalo@gmail.com
 
 La pagina del proyecto esta en SourceForge.net
 http://sourceforge.net/projects/ktoshiba
-http://ktoshiba.sourceforge.net/ (Necesito un webmaster...)
+http://ktoshiba.sourceforge.net/

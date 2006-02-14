@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Azael Avalos                                    *
- *   neftali@utep.edu                                                      *
+ *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ktoshiba.h"
+
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -29,17 +30,12 @@ static const char description[] =
 
 static const char version[] = "0.8Alpha";
 
-static KCmdLineOptions options[] =
-{
-    KCmdLineLastOption
-};
-
 int main(int argc, char **argv)
 {
     KAboutData about("ktoshiba", I18N_NOOP("KToshiba"), version, description,
-                     KAboutData::License_GPL, "(C) 2004 Azael Avalos", 0,
+                     KAboutData::License_GPL, "(C) 2004-2005 Azael Avalos", 0,
                      "http://ktoshiba.sourceforge.net/", "coproscefalo@gmail.com" );
-    about.addAuthor( "Azael Avalos", 0, "neftali@utep.edu", 0 );
+    about.addAuthor( "Azael Avalos", 0, "coproscefalo@gmail.com", 0 );
     about.addCredit( "Jonathan A. Buzzard", I18N_NOOP("toshutils and HCI-SCI stuff"),
                     "jonathan@buzzard.org.uk", "http://www.buzzard.org.uk/toshiba/" );
     about.addCredit( "John Belmonte", I18N_NOOP("Toshiba Laptop ACPI Extras driver"),
@@ -48,7 +44,7 @@ int main(int argc, char **argv)
                     "trenn@suse.de", 0 );
     about.addCredit( "KDE Team", I18N_NOOP("Some ideas and pieces of code"), 0,
                     "http://www.kde.org/" );
-    about.addCredit( "ksynaptics Team", I18N_NOOP("Code for enabling/disabling TouchPad"),
+    about.addCredit( "ksynaptics Team", I18N_NOOP("library for enabling/disabling TouchPad"),
                     0, "http://qsynaptics.sourceforge.net/" );
     about.addCredit( "Nicolas Ternisien", I18N_NOOP("French translation"),
                     "nicolas.ternisien@gmail.com", 0 );
@@ -57,7 +53,6 @@ int main(int argc, char **argv)
     about.addCredit( "Gonzalo Raúl Nemmi", I18N_NOOP("omnibook stuff tester"),
                     "gnemmi@gmail.com", 0 );
     KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
 
     KApplication app;
     KToshiba *mainWin = new KToshiba();

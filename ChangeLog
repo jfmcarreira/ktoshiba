@@ -1,10 +1,40 @@
+2006-02-13 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue displaying the icon when Battery and AC
+	  were not monitored
+
+2006-02-06 Azael Avalos <coproscefalo@gmail.com>
+	* Added new configure parameter to disable ktosh_helper
+	  (useful if you use powersave since it's not needed)
+	* Added new config option to disable Battery and AC monitoring
+	  (since there are already a lot of programs that do the same),
+	  now KToshiba can be used only to monitor Fn-Key combos and
+	  system related changes only
+	* Added a debug message showing SCI version number, this to
+	  identify models with problems accessing the SCI functions
+
+2006-02-05 Azael Avalos <coproscefalo@gmail.com>
+	* Remove code regarding suspending laptop to Disk, it
+	  will be reworked and added again when the issue is found
+	* Updated e-mail all over the place...
+
+2006-01-10 Azael Avalos <neftali@utep.edu>
+	* Fixed an issue regarding BSM, it was triggered everytime
+	  the laptop was connected/disconnected from AC
+
+2006-01-09 Azael Avalos <neftali@utep.edu>
+	* Removed command line options code from main.cpp since
+	  they are not used plus corrected a typo in changelog...
+	* Changed battery and power status code a bit, now it
+	  defaults to ACPI if SMM Interface reports errors
+	* Added more checks when STD is activated
+
 2006-01-08 Azael Avalos <neftali@utep.edu>
 	* MousePad disabling/enabling now working again, we now use
 	  libsynaptics library and the new synaptics driver 0.14.4
 	* Removed uneeded file synshm.h
 
 2006-01-04 Azael Avalos <neftali@utep.edu>
-	* The powersave support is finally fiished...
+	* The powersave support is finally finished...
 
 2005-12-20 Azael Avalos <neftali@utep.edu>
 	* Removed unused constructor from FnActions class

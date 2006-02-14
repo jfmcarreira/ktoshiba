@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Azael Avalos                                    *
- *   neftali@utep.edu                                                      *
+ *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

@@ -1,7 +1,7 @@
 /*
  *  ktosh_helper.cpp - KToshiba Helper
  *
- *  Copyright (c) 2004 Azael Avalos <neftali@utep.edu>
+ *  Copyright (c) 2004 Azael Avalos <coproscefalo@gmail.com>
  *
  *  Based on acpi_helper from klaptopdaemon
  *  Copyright (c) 2002 Paul Campbell <paul@taniwha.com>
