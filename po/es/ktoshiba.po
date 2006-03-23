@@ -25,7 +25,7 @@ msgstr "Neftalí Azael Avalos"
 msgid ""
 "_: EMAIL OF TRANSLATORS\n"
 "Your emails"
-msgstr "neftali@utep.edu"
+msgstr "coproscefalo@gmail.com"
 
 #: fnactions.cpp:195
 msgid "Long Life"
@@ -72,7 +72,8 @@ msgid "Suspend To RAM disabled by administrator."
 msgstr "Suspender a RAM esta deshabilitado por el administrador."
 
 #: fnactions.cpp:407
-msgid "The powersave daemon must be running in the background for a Suspend To RAM."
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr "El servicio powersave debe estar activado para poder Suspender a RAM."
 
 #: fnactions.cpp:416
@@ -92,8 +93,10 @@ msgid "Suspend To Disk disabled by administrator."
 msgstr "Suspender a Disco esta deshabilitado por el administrador."
 
 #: fnactions.cpp:454
-msgid "The powersave daemon must be running in the background for a Suspend To Disk."
-msgstr "El servicio powersave debe estar activado para poder Suspender a Disco."
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To Disk."
+msgstr ""
+"El servicio powersave debe estar activado para poder Suspender a Disco."
 
 #: fnactions.cpp:463
 msgid ""
@@ -363,4 +366,3 @@ msgstr "KToshiba: Estado de Vidéo, Batería y Método de Inicio"
 #, no-c-format
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Widget de Estado"
-

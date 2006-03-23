@@ -33,9 +33,12 @@ ktoshiba_SOURCES = settingswidget.ui statuswidget.ui fnactions.cpp \
 			modelid.cpp ktoshiba.cpp main.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = libktoshibasmminterface.la \
-			libktoshibaprocinterface.la \
-			$(LIB_KDEUI) -lsynaptics \
-			@POWERSAVE_LIBS@ @DBUS_LIBS@
+		 libktoshibaprocinterface.la \
+		 $(LIB_KDEUI) \
+		 @SYNAPTICS@ \
+		 @POWERSAVE_LIBS@ \
+		 @POWERSAVE_DBUS_LIBS@ \
+		 @DBUS_LIBS@
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities

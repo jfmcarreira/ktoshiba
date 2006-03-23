@@ -100,7 +100,8 @@ msgstr " seg"
 #. i18n: file kcmtoshiba_general.ui line 174
 #: rc.cpp:30
 #, no-c-format
-msgid "This is used to determine how often the program will check the battery status"
+msgid ""
+"This is used to determine how often the program will check the battery status"
 msgstr ""
 "Esto es usado para determinar cada cuanto tiempo el programa verificara el "
 "estado de la batería"
@@ -720,4 +721,3 @@ msgstr ""
 "No se pudo encontrar el <i>Controlador de Modo de Manejo del Sistema de "
 "Toshiba</i>. Sí esta es un portátil Toshiba verifique que el controlador "
 "<b>toshiba</b> sea cargado sin problemas."
-

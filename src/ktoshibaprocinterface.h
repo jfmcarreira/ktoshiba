@@ -23,6 +23,13 @@
 
 #include <qobject.h>
 
+extern "C" {
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <math.h>
+}
+
 #define TOSH_PROC "/proc/toshiba"
 #define OMNI_ROOT "/proc/omnibook"
 #define ACPI_ROOT "/proc/acpi"
@@ -86,6 +93,9 @@ public:
     * @param status the int to turn on/off the fan
     */
     void omnibookSetFan(int status);
+    /**
+    *
+    */
     int omnibookGetVideo();
     /**
     * Checks /proc entry for battery status.
@@ -107,6 +117,7 @@ public:
     QString model;
 private:
     FILE *str;
+    int mFd;
     int BatteryCap;
     int RemainingCap;
 };

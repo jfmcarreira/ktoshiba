@@ -6,39 +6,54 @@ AC_CHECK_KDEMAXPATHLEN
 
 dnl === powersave daemon support check - begin ===
 AC_ARG_WITH(powersave,
-    AS_HELP_STRING([--without-powersave], [build without powersave daemon support (default=no)]),
+    AS_HELP_STRING([--without-powersave], [build without powersave daemon support (default=yes)]),
     [ac_cv_use_powersave=$withval],
     [ac_cv_use_powersave=no]
 )
 
 if test "$ac_cv_use_powersave" = "yes"; then
     AC_CHECK_LIB(powersave_dbus, dbusSendSimpleMessage, [
-	POWERSAVE_LIBS="-lpowersave -lpowersave_dbus"
-	AC_CHECK_PROG(PKGCONFIG, [pkg-config], [pkg-config], [])
-	PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
-	PKG_CHECK_MODULES(HAL, [hal >= 0.5.4])
-	have_powersave=true
-    ])
+        PKG_CHECK_MODULES(POWERSAVE, [powersave >= 0.12.2])
+        PKG_CHECK_MODULES(POWERSAVE_DBUS, [powersave-dbus >= 0.12.2])
+        PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
+        have_powersave=true
+    ], [have_powersave=false])
 
     if test "$have_powersave" = "true"; then
-	AC_DEFINE(ENABLE_POWERSAVE, 1, [defined if you have powersave headers and libraries])
+        AC_DEFINE(ENABLE_POWERSAVE, 1, [defined if you have powersave headers and libraries])
     else
-	AC_MSG_WARN([You are missing the powersave headers and libraries. The powersave support won't be compiled])
+        AC_MSG_WARN([You are missing the powersave headers and libraries. The powersave support won't be compiled])
     fi
 
     AC_SUBST(POWERSAVE_LIBS)
+    AC_SUBST(POWERSAVE_DBUS_LIBS)
     AC_SUBST(DBUS_CFLAGS)
     AC_SUBST(DBUS_LIBS)
 fi
 dnl === powersave daemon support check - end ===
 
 dnl === build ktosh_helper check - begin ===
-compile_helper=yes
+compile_helper=no
 AC_ARG_WITH(helper,
-    AS_HELP_STRING([--without-helper], [build without ktosh_helper (default=yes)]),
+    AS_HELP_STRING([--without-helper], [build without ktosh_helper (default=no)]),
     [compile_helper=$withval],
     [compile_helper=yes]
 )
 
 AM_CONDITIONAL(with_helper, [test x$compile_helper = xyes])
 dnl === build ktosh_helper check - end ===
+
+dnl === libsynaptics support check - begin ===
+AC_ARG_WITH(libsynaptics,
+    AS_HELP_STRING([--without-libsynaptics], [build without libsynaptics support (default=no)]),
+    [ac_cv_use_synaptics=$withval],
+    [ac_cv_use_synaptics=yes]
+)
+
+if test "$ac_cv_use_synaptics" = "yes"; then
+    SYNAPTICS="-lsynaptics"
+
+    AC_DEFINE(ENABLE_SYNAPTICS, 1, [defined if you have libsynaptics support enabled])
+    AC_SUBST(SYNAPTICS)
+fi
+dnl === libsynaptics support check - end ===
