@@ -26,10 +26,9 @@
 
 #include <kdebug.h>
 
-#include <math.h>
-
 KToshibaProcInterface::KToshibaProcInterface(QObject *parent)
     : QObject( parent ),
+      mFd( 0 ),
       BatteryCap( 0 )
 {
 }
@@ -166,16 +165,20 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
     if (bright < 0 || bright > 7)
         bright = ((bright < 0)? 0 : 7);
 
-    QFile file(OMNI_ROOT"/lcd");
-    if (!file.open(IO_WriteOnly)) {
-        kdError() << "KToshibaProcInterface::omnibookSetBrightness(): "
-                  << "Failed setting brightness" << endl;
+    if ((mFd = open(OMNI_ROOT"/lcd", O_RDWR))) {
+        kdError() << "KToshibaProcInterface::omnibookSetBrightness()"
+                  << "Could not open: " << OMNI_ROOT << "/lcd" << endl;
         return;
     }
 
-    QTextStream stream(&file);
-    stream << bright;
-    file.close();
+    if (write(mFd, "%d", bright) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetBrightness(): "
+                  << "Failed setting brightness" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
 }
 
 int KToshibaProcInterface::omnibookGetOneTouch()
@@ -204,17 +207,21 @@ int KToshibaProcInterface::omnibookGetOneTouch()
 
 void KToshibaProcInterface::omnibookSetOneTouch(int state)
 {
-    QFile file(OMNI_ROOT"/onetouch");
-    if (!file.open(IO_WriteOnly)) {
-        kdError() << "KToshibaProcInterface::omnibookSetOneTouch()"
-                  << "Could not " << ((state == 0)? "disable" : "enable")
-                  << " OneTouch buttons" << endl;
+    if ((mFd = open(OMNI_ROOT"/onetouch", O_RDWR))) {
+        kdError() << "KToshibaProcInterface::omnibookSetFan()"
+                  << "Could not open: " << OMNI_ROOT << "/onetouch" << endl;
         return;
     }
 
-    QTextStream stream(&file);
-    stream << state;
-    file.close();
+    if (write(mFd, "%d", state) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetOneTouch()"
+                  << "Could not " << ((state == 0)? "disable" : "enable")
+                  << " OneTouch buttons" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
 }
 
 int KToshibaProcInterface::omnibookGetFan()
@@ -243,17 +250,21 @@ int KToshibaProcInterface::omnibookGetFan()
 
 void KToshibaProcInterface::omnibookSetFan(int status)
 {
-    QFile file(OMNI_ROOT"/fan");
-    if (!file.open(IO_WriteOnly)) {
+    if ((mFd = open(OMNI_ROOT"/fan", O_RDWR))) {
         kdError() << "KToshibaProcInterface::omnibookSetFan()"
-                  << "Could not " << ((status == 0)? "disable" : "enable")
-                  << "system fan" << endl;
+                  << "Could not open: " << OMNI_ROOT << "/fan" << endl;
         return;
     }
 
-    QTextStream stream(&file);
-    stream << status;
-    file.close();
+    if (write(mFd, "%d", status) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetFan()"
+                  << "Could not " << ((status == 0)? "disable" : "enable")
+                  << " system fan" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
 }
 
 int KToshibaProcInterface::omnibookGetVideo()
@@ -288,8 +299,8 @@ int KToshibaProcInterface::toshibaProcStatus()
     if (!(str = fopen(TOSH_PROC, "r")))
         return -1;
 
-    fgets(buffer, sizeof(buffer)-1, str);
-    buffer[sizeof(buffer)-1] = '\0';
+    fgets(buffer, sizeof(buffer) - 1, str);
+    buffer[sizeof(buffer) - 1] = '\0';
     sscanf(buffer, "%*s %*x %*d.%*d %*d.%*d %*x %x\n", &key);
     fclose(str);
 

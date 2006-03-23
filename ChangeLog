@@ -1,3 +1,17 @@
+2006-03-23 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the way on how to write to /proc files
+	* Fix typo (Incopatible -> Incompatible)
+
+2006-03-20 Azael Avalos <coproscefalo@gmail.com>
+	* Added new configure parameter to enable/disable
+	  libsynaptics support
+	* Updated files to reflect libsynaptics changes
+
+2006-03-13 Azael Avalos <coproscefalo@gmail.com>
+	* updated configure.in.in check for powersave, it now
+	  depends on powersave >= 0.12.2
+	* updated Makefile.am for new powersave changes
+
 2006-02-13 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed an issue displaying the icon when Battery and AC
 	  were not monitored
