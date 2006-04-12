@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2005 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -94,6 +94,7 @@ KToshiba::KToshiba()
             mBatType = 2;
         mFn->m_BatType = mBatType;
     }
+#ifdef ENABLE_OMNIBOOK
     if (!mInterfaceAvailable) {
         kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
         mOmnibook = mProc->checkOmnibook();
@@ -113,6 +114,7 @@ KToshiba::KToshiba()
         mBatType = 3;
         proc = true;
     }
+#endif
 
     battrig = (perc == 100)? true : false;
     crytrig = false;
@@ -142,11 +144,13 @@ KToshiba::KToshiba()
         mModeTimer->start(500);		// Check proc entry every 1/2 seconds
         connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
         mSystemTimer->start(500);		// Check system events every 1/2 seconds
-    } else
-    if (mOmnibook) {
+    }
+#ifdef ENABLE_OMNIBOOK
+    else if (mOmnibook) {
         connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
         mOmnibookTimer->start(100);
     }
+#endif
 
     if (mInterfaceAvailable && btstart)
         doBluetooth();
@@ -223,8 +227,9 @@ void KToshiba::doMenu()
         if (mSS < 0) this->contextMenu()->setItemEnabled( 10, FALSE );
         else if (mSS >= 0)
             connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
-    } else
-    if (mOmnibook) {
+    }
+#ifdef ENABLE_OMNIBOOK
+    else if (mOmnibook) {
         mOneTouch = new QPopupMenu( this, i18n("OneTouch") );
         mOneTouch->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
         mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
@@ -237,13 +242,16 @@ void KToshiba::doMenu()
         this->contextMenu()->insertItem( SmallIcon(""), i18n("System Fan"), mOmniFan, 8, 8 );
         connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
     }
+#endif
     this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
                                      SLOT( displayAbout() ), 0, 12, 12 );
     if (mInterfaceAvailable)
         this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
+#ifdef ENABLE_OMNIBOOK
     else if (mOmnibook)
         this->contextMenu()->insertTitle( mProc->model, 0, 0 );
+#endif
 }
 
 void KToshiba::doConfig()
@@ -370,11 +378,13 @@ void KToshiba::checkPowerStatus()
         if (mInterfaceAvailable && proc) {
             mProc->acpiBatteryStatus(&time, &perc);
             pow = mProc->acpiAC();
-        } else
-        if (mOmnibook) {
+        }
+#ifdef ENABLE_OMNIBOOK
+        else if (mOmnibook) {
             mProc->omnibookBatteryStatus(&time, &perc);
             pow = mProc->omnibookAC();
         }
+#endif
 
         if (mFullBat && perc == 100 && !battrig) {
             KMessageBox::queuedMessageBox(0, KMessageBox::Information,
@@ -448,8 +458,10 @@ void KToshiba::checkPowerStatus()
         }
         if (mInterfaceAvailable && mBatType != 2)
             mDriver->setBrightness(bright);
+#ifdef ENABLE_OMNIBOOK
         else if (mOmnibook)
             mProc->omnibookSetBrightness(bright);
+#endif
     }
 
     oldperc = perc;
@@ -514,6 +526,7 @@ void KToshiba::displayPixmap()
         else if (mPSC) {
             pm = loadIcon("ktoshiba", instance);
             setPixmap(pm);
+            QToolTip::add(this, "KToshiba");
             return;
         } else
             pixmap = QString("laptop_charge");
@@ -834,6 +847,7 @@ void KToshiba::checkSystem()
     }
 }
 
+#ifdef ENABLE_OMNIBOOK
 void KToshiba::checkOmnibook()
 {
     // TODO: Add more stuff here, for now only the LCD is being monitored
@@ -869,6 +883,7 @@ void KToshiba::doSetOmnibookFan(int state)
 {
     mProc->omnibookSetFan(state);
 }
+#endif
 
 
 #include "ktoshiba.moc"

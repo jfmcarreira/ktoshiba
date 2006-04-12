@@ -6,10 +6,16 @@ Toshiba System Management Mode driver (toshiba), if it fails, it now checks
 for a synaptics MousePad (since most modern laptops now use) and does some checks
 to verify compatibility.
 
-If you are sure your laptop has a synaptics TouchPad you will need to download
+If you are sure your laptop has a synaptics TouchPad, you will need to download
 and install the newest XOrg/XFree86 driver (0.14.4 or better) and the libsynaptics
 (0.14.4c or better) library in order to get the MousePad enabling/disabling
 functionality to work.
+
+A configure switch has been added to enable or disable libsynaptics support in
+the program, this is to reduce dependency problems and to ensure more compatibility
+with the different distros out there. To disable libsynaptics support simply do:
+
+	./configure --without-libsynaptics (other options may be added)
 
 You can get the sources of the driver and the library from here respectively:
 

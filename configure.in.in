@@ -57,3 +57,13 @@ if test "$ac_cv_use_synaptics" = "yes"; then
     AC_SUBST(SYNAPTICS)
 fi
 dnl === libsynaptics support check - end ===
+
+dnl === omnibook support check - begin ===
+AC_ARG_WITH(omnibook,
+    AS_HELP_STRING([--without-omnibook], [build without omnibook support (default=yes)]),
+    [ac_cv_use_synaptics=$withval],
+    [ac_cv_use_synaptics=no]
+)
+
+AC_DEFINE(ENABLE_OMNIBOOK, 1, [defined if you have omnibook support enabled])
+dnl === omnibook support check - end ===

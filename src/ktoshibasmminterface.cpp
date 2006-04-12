@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2005 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This library is free software; you can redistribute it and/or modify  *
@@ -138,7 +138,7 @@ int KToshibaSMMInterface::acPowerStatus()
 		return -1;
 	}
 
-	return (reg.ecx & 0xffff);
+	return (int) (reg.ecx & 0xffff);
 }
 
 int KToshibaSMMInterface::getSystemEvent()
@@ -275,7 +275,7 @@ int KToshibaSMMInterface::getVideo()
 		return -1;
 	}
 
-	return (reg.ecx & 0xff);
+	return (int) (reg.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setVideo(int vid)
@@ -298,7 +298,7 @@ void KToshibaSMMInterface::setVideo(int vid)
 			  << "Could not change display state" << endl;
 }
 
-void KToshibaSMMInterface::systemLocks(int *lock, int bay)
+void KToshibaSMMInterface::getSystemLocks(int *lock, int bay)
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_LOCK_STATUS;
@@ -321,8 +321,8 @@ void KToshibaSMMInterface::systemLocks(int *lock, int bay)
 	else if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED))
 		*lock = HCI_LOCKED;
 	kdDebug() << "KToshibaSMMInterface::systemLocks(): "
-		  << "Bay " << ((*lock == HCI_LOCKED)?
-			 "locked": "unlocked") << endl;
+		  << "Bay is " 
+		  << ((*lock == HCI_LOCKED)? "locked": "unlocked") << endl;
 }
 
 int KToshibaSMMInterface::getBayDevice(int bay)
@@ -345,7 +345,7 @@ int KToshibaSMMInterface::getBayDevice(int bay)
 		return -1;
 	}
 
-	return reg.ecx;
+	return (int) reg.ecx;
 }
 
 int KToshibaSMMInterface::getWirelessSwitch()
@@ -377,7 +377,7 @@ int KToshibaSMMInterface::getBluetooth()
 		return -1;
 	}
 
-	return (reg.ecx & 0xff);
+	return (int) (reg.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setBluetoothPower(int state)
@@ -651,7 +651,7 @@ void KToshibaSMMInterface::setFan(int state)
 
 int KToshibaSMMInterface::getBootType()
 {
-	reg.ebx = SCI_BOOT_METHOD;
+	reg.ebx = SCI_BOOT_PRIORITY;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
 	if (SciGet(&reg) != SCI_SUCCESS) {
@@ -665,7 +665,7 @@ int KToshibaSMMInterface::getBootType()
 
 int KToshibaSMMInterface::getBootMethod()
 {
-	reg.ebx = SCI_BOOT_METHOD;
+	reg.ebx = SCI_BOOT_PRIORITY;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
 	if (SciGet(&reg) != SCI_SUCCESS) {
@@ -679,19 +679,19 @@ int KToshibaSMMInterface::getBootMethod()
 
 void KToshibaSMMInterface::setBootMethod(int method)
 {
-	reg.ebx = SCI_BOOT_METHOD;
+	reg.ebx = SCI_BOOT_PRIORITY;
 	if (method == 0)
-		reg.ecx = SCI_FD_HD_CDROM;
+		reg.ecx = SCI_FD_HD_CDROM_LAN;
 	else if (method == 1)
-		reg.ecx = SCI_HD_FD_CDROM;
+		reg.ecx = SCI_HD_CDROM_LAN_HD;
 	else if (method == 2)
-		reg.ecx = SCI_FD_CDROM_HD;
+		reg.ecx = SCI_FD_CDROM_LAN_HD;
 	else if (method == 3)
-		reg.ecx = SCI_HD_CDROM_FD;
+		reg.ecx = SCI_CDROM_LAN_HD_FD;
 	else if (method == 4)
-		reg.ecx = SCI_CDROM_FD_HD;
+		reg.ecx = SCI_CDROM_LAN_FD_HD;
 	else if (method == 5)
-		reg.ecx = SCI_CDROM_HD_FD;
+		reg.ecx = SCI_HD_FD_CDROM_LAN;
 	reg.edx = 0x0000;
 	if (SciSet(&reg) != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setBootMethod(): "
@@ -710,7 +710,7 @@ int KToshibaSMMInterface::getWirelessPower()
 		return -1;
 	}
 
-	return (reg.ecx & 0xff);
+	return (int) (reg.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setWirelessPower(int state)
@@ -740,7 +740,7 @@ int KToshibaSMMInterface::getBackLight()
 		return -1;
 	}
 
-	return (reg.ecx & 0xff);
+	return (int) (reg.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setBackLight(int state)
@@ -770,7 +770,7 @@ int KToshibaSMMInterface::getBluetoothPower()
 		return -1;
 	}
 
-	return (reg.ecx & 0xff);
+	return (int) (reg.ecx & 0xff);
 }
 
 void KToshibaSMMInterface::setBluetoothControl(int state)
@@ -792,6 +792,450 @@ void KToshibaSMMInterface::setBluetoothControl(int state)
 		  << "Bluetooth device "
 		  << ((state == 1)? "attached" : "detached")
 		  << " successfully" << endl;
+}
+
+int KToshibaSMMInterface::getATAPriorityIndex()
+{
+	reg.ebx = SCI_ATA_PRIORITY;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getATAPriorityIndex(): "
+			  << "Could not get current ATA Boot Priority index" << endl;
+		return -1;
+	}
+
+	return (int) reg.edx;
+}
+
+int KToshibaSMMInterface::getATAPriority(int index)
+{
+	int maxindex = getATAPriorityIndex();
+	reg.ebx = SCI_ATA_PRIORITY;
+	if (index > maxindex)
+		reg.ecx = maxindex;
+	else
+		reg.ecx = index;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getATAPriority(): "
+			  << "Could not get current ATA Boot Priority" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setATAPriority(int index)
+{
+	int maxindex = getATAPriorityIndex();
+	reg.ebx = SCI_ATA_PRIORITY;
+	if (index > maxindex)
+		reg.ecx = maxindex;
+	else
+		reg.ecx = index;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setATAPriority(): "
+			  << "Could not set desired ATA Boot Priority index" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getDeviceConfig()
+{
+	reg.ebx = SCI_DEVICE_CONFIG;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getDeviceConfig(): "
+			  << "Could not get current device configuration mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setDeviceConfig(int mode)
+{
+	reg.ebx = SCI_DEVICE_CONFIG;
+	if (mode == 0)
+		reg.ecx = SCI_DEV_CONFIG_ALL;
+	else if (mode == 1)
+		reg.ecx = SCI_DEV_CONFIG_OS;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setDeviceConfig(): "
+			  << "Could not set device configuration mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getPowerButtonLamp()
+{
+	reg.ebx = SCI_PWR_BUTTON_LAMP;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getPowerButtonLamp(): "
+			  << "Could not get current Power Button Lamp mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setPowerButtonLamp(int mode)
+{
+	reg.ebx = SCI_PWR_BUTTON_LAMP;
+	if (mode == 1)
+		reg.ecx = SCI_PWR_BTTN_MODE1;
+	else if (mode == 2)
+		reg.ecx = SCI_PWR_BTTN_MODE2;
+	else if (mode == 3)
+		reg.ecx = SCI_PWR_BTTN_MODE3;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setPowerButtonLamp(): "
+			  << "Could not set Power Button Lamp mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getStartUpLogo()
+{
+	reg.ebx = SCI_START_UP_LOGO;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getStartUpLogo(): "
+			  << "Could not get current Start Up Logo mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setStartUpLogo(int mode)
+{
+	reg.ebx = SCI_START_UP_LOGO;
+	if (mode == 0)
+		reg.ecx = SCI_PICTURE_LOGO;
+	else if (mode == 1)
+		reg.ecx = SCI_ANIMATION_LOGO;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setStartUpLogo(): "
+			  << "Could not set Start Up Logo mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getPowerSW()
+{
+	reg.ebx = SCI_POWER_SW;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getPowerSW(): "
+			  << "Could not get current Power SW mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setPowerSW(int mode)
+{
+	reg.ebx = SCI_POWER_SW;
+	if (mode == 0)
+		reg.ecx = SCI_PWS_ENABLED;
+	else if (mode == 1)
+		reg.ecx = SCI_PWS_DIS_PCLOSE;
+	else if (mode == 2)
+		reg.ecx = SCI_PWS_DIS_NOAC;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setPowerSW(): "
+			  << "Could not set Power SW mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getRemoteBootProtocol()
+{
+	reg.ecx = SCI_REMOTE_BOOT;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getRemoteBootProtocol(): "
+			  << "Could not get current Boot Protocol" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setRemoteBootProtocol(int mode)
+{
+	reg.ecx = SCI_REMOTE_BOOT;
+	if (mode == 0)
+		reg.ecx = SCI_NET_BOOT_PXE;
+	else if (mode == 1)
+		reg.ecx = SCI_NET_BOOT_RPL;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setRemoteBootProtocol(): "
+			  << "Could not set Boot Protocol" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getWOL()
+{
+	reg.ebx = SCI_WAKE_ON_LAN;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getWOL(): "
+			  << "Could not get current WOL mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setWOL(int state)
+{
+	reg.ebx = SCI_WAKE_ON_LAN;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setWOL(): "
+			  << "WOL could not be "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getLANController()
+{
+	reg.ebx = SCI_LAN_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getLANController(): "
+			  << "Could not get LAN controller mode "
+			  << "or system doesn't have one" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setLANController(int state)
+{
+	reg.ebx = SCI_LAN_CONTROL;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setLANController(): "
+			  << "LAN controller could not be "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getSoundLogo()
+{
+	reg.ebx = SCI_SOUND_LOGO;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getSoundLogo(): "
+			  << "Could not get Sound Logo state "
+			  << "or system doesn't support it" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setSoundLogo(int state)
+{
+	reg.ebx = SCI_SOUND_LOGO;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setSoundLogo(): "
+			  << "Sound Logo could not be "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getDisplayDevice()
+{
+	reg.ebx = SCI_DISPLAY_DEVICE;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getDisplayDevice(): "
+			  << "Could not get current Display Device mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setDisplayDevice(int mode)
+{
+	reg.ebx = SCI_DISPLAY_DEVICE;
+	if (mode == 0)
+		reg.ecx = SCI_DISPLAY_DEV_DV;
+	else if (mode == 1)
+		reg.ecx = SCI_DISPLAY_DEV_DO;
+	else if (mode == 2)
+		reg.ecx = SCI_DISPLAY_DEV_DI;
+	else if (mode == 3)
+		reg.ecx = SCI_DISPLAY_DEV_DE;
+	else if (mode == 4)
+		reg.ecx = SCI_DISPLAY_DEV_DS;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setDisplayDevice(): "
+			  << "Could not set Display Device mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getUSBLegacySupport()
+{
+	reg.ebx = SCI_USB_LEGACY;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getUSBLegacySupport(): "
+			  << "Could not get USB Legacy Support state" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setUSBLegacySupport(int state)
+{
+	reg.ebx = SCI_USB_LEGACY;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setUSBLegacySupport(): "
+			  << "USB Legacy Support "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getUSBFDDEmulation()
+{
+	reg.ebx = SCI_USB_FDD_EMUL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getUSBFDDEmulation(): "
+			  << "Could not get USB FDD Legacy state" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setUSBFDDEmulation(int state)
+{
+	reg.ebx = SCI_USB_FDD_EMUL;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setUSBFDDEmulation(): "
+			  << "USB FDD Emulation is "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getParallelPort()
+{
+	reg.ebx = SCI_PARALLEL_PORT;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getParallelPort(): "
+			  << "Could not get current Parallel Port mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setParallelPort(int mode)
+{
+	reg.ebx = SCI_PARALLEL_PORT;
+	if (mode == 0)
+		reg.ecx = SCI_PARALLEL_ECP;
+	else if (mode == 1)
+		reg.ecx = SCI_PARALLEL_SPP;
+	else if (mode == 2)
+		reg.ecx = SCI_PARALLEL_PS2;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setParallelPort(): "
+			  << "Could not set Parallel Port mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getKeyboardType()
+{
+	reg.ebx = SCI_KEYBOARD_TYPE;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getKeyboardType(): "
+			  << "Could not get current Keyboard Type mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setKeyboardType(int mode)
+{
+	reg.ebx = SCI_KEYBOARD_TYPE;
+	if (mode == 0)
+		reg.ecx = 0x0000;
+	else if (mode == 1)
+		reg.ecx = 0x0001;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setKeyboardType(): "
+			  << "Could not set Keyboard Type mode" << endl;
+		return;
+	}
 }
 
 
