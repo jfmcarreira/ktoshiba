@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2005 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This library is free software; you can redistribute it and/or modify  *
@@ -39,7 +39,7 @@ extern "C" {
 
 /**
  * @short Provides access to the SMM functions
- * @author Azael Avalos <neftali@utep.edu>
+ * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.8
  */
 class KToshibaSMMInterface : public QObject
@@ -127,7 +127,7 @@ public:
 	 * @param lock the int holding the current lock status
 	 * @param bay the int holding the desired select bay
 	 */
-	void systemLocks(int *lock, int bay);
+	void getSystemLocks(int *lock, int bay);
 	/**
 	 * Gets the device attached to the desired bay.
 	 * @param bay the int holding the desired bay
@@ -259,6 +259,120 @@ public:
 	 * @param state the int holding the desired state
 	 */
 	void setBackLight(int state);
+	/**
+	 * Gets the current ATA Priority state.
+	 * @return @p the int holding the current state
+	 */
+	int getATAPriority(int index);
+	/**
+	 * Sets the ATA Priority to the desired index.
+	 * @param index the int holding the desired index
+	 */
+	void setATAPriority(int index);
+	/**
+	 *
+	 */
+	int getDeviceConfig();
+	/**
+	 *
+	 */
+	void setDeviceConfig(int mode);
+	/**
+	 *
+	 */
+	int getPowerButtonLamp();
+	/**
+	 *
+	 */
+	void setPowerButtonLamp(int mode);
+	/**
+	 *
+	 */
+	int getStartUpLogo();
+	/**
+	 *
+	 */
+	void setStartUpLogo(int mode);
+	/**
+	 *
+	 */
+	int getPowerSW();
+	/**
+	 *
+	 */
+	void setPowerSW(int mode);
+	/**
+	 *
+	 */
+	int getRemoteBootProtocol();
+	/**
+	 *
+	 */
+	void setRemoteBootProtocol(int mode);
+	/**
+	 *
+	 */
+	int getWOL();
+	/**
+	 *
+	 */
+	void setWOL(int state);
+	/**
+	 *
+	 */
+	int getLANController();
+	/**
+	 *
+	 */
+	void setLANController(int state);
+	/**
+	 *
+	 */
+	int getSoundLogo();
+	/**
+	 *
+	 */
+	void setSoundLogo(int state);
+	/**
+	 *
+	 */
+	int getDisplayDevice();
+	/**
+	 *
+	 */
+	void setDisplayDevice(int mode);
+	/**
+	 *
+	 */
+	int getUSBLegacySupport();
+	/**
+	 *
+	 */
+	void setUSBLegacySupport(int state);
+	/**
+	 *
+	 */
+	int getUSBFDDEmulation();
+	/**
+	 *
+	 */
+	void setUSBFDDEmulation(int state);
+	/**
+	 *
+	 */
+	int getParallelPort();
+	/**
+	 *
+	 */
+	void setParallelPort(int mode);
+	/**
+	 *
+	 */
+	int getKeyboardType();
+	/**
+	 *
+	 */
+	void setKeyboardType(int mode);
 public:
 	bool hotkeys;
 	int sciversion;
@@ -268,6 +382,11 @@ private:
 	 * @param state the int holding the desired state
 	 */
 	void setBluetoothControl(int state);
+	/**
+	 * Gets the maximum ATA Priority index.
+	 * @return @p the int holding the maximum index
+	 */
+	int getATAPriorityIndex();
 private:
 	SMMRegisters reg;
 	int mFd;

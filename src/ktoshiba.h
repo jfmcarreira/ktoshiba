@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2005 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -45,7 +45,7 @@ class KToshibaProcInterface;
 
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
- * @author Azael Avalos <neftali@utep.edu>
+ * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.8
  */
 class KToshiba : public KSystemTray

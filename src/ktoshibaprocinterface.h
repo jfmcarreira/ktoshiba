@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2005 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -36,7 +36,7 @@ extern "C" {
 
 /**
  * @short Provides access to /proc files
- * @author Azael Avalos <neftali@utep.edu>
+ * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.2
  */
 class KToshibaProcInterface : public QObject

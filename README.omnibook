@@ -1,1 +1,23 @@
- 
+omnibook
+=====
+As of version 0.8, KToshiba now supports Toshiba models with a Phoenix BIOS,
+but be aware that this is only initial support for them, more features are
+planned and will be added on upcomming versions.
+
+In order to get you laptop supported, you'll need to download, compile and
+install the omnibook kernel module (version 20060126 as of this writing).
+Once installed you will need to load the
+module by issuing the following command:
+
+	insmod omnibook user=1
+
+The option `user=1` is to enable writing to normal user to the /proc interface
+so KToshiba can set certain values (eg.: brightness), more options may be
+available for your model, but that options is a _must_ in order for KToshiba
+to work for you.
+
+You can get the sources for the omnibook kernel module from here:
+
+http://sourceforge.net/projects/omke
+
+Enjoy !!!

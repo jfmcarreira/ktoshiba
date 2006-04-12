@@ -1,6 +1,24 @@
+2006-04-12 Azael Avalos <coproscefalo@gmail.com>
+	* Finished adding new functions to KToshibaSMMInterface
+	* Finished README.omnibook file
+	* Added configure parameter to enable/disable omnibook
+	  support and addapted flags accordingly
+
+2006-04-11 Azael Avalos <coproscefalo@gmail.com>
+	* Added new MODES to sci.h and some existing ones
+	  were renamed slightly
+	* Updated copyright year
+	* Added newly added mode functions to KToshibaSMMInterface
+	* Updated settingswidget to reflect boot order changes
+
+2006-03-24 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed a small tooltip display problem
+	* Updated my e-mail on some parts I've forgot...
+
 2006-03-23 Azael Avalos <coproscefalo@gmail.com>
 	* Changed the way on how to write to /proc files
 	* Fix typo (Incopatible -> Incompatible)
+	* Litle retouches to some icons, look a bit nicer, jeje
 
 2006-03-20 Azael Avalos <coproscefalo@gmail.com>
 	* Added new configure parameter to enable/disable

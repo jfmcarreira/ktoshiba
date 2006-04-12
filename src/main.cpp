@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2005 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,7 +28,7 @@
 static const char description[] =
     I18N_NOOP("Hotkeys & Battery monitoring for Toshiba laptops.");
 
-static const char version[] = "0.8Alpha";
+static const char version[] = "0.8";
 
 int main(int argc, char **argv)
 {

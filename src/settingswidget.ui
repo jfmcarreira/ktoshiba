@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>286</width>
-            <height>121</height>
+            <width>296</width>
+            <height>120</height>
         </rect>
     </property>
     <property name="caption">
@@ -40,9 +40,9 @@
         </property>
         <property name="geometry">
             <rect>
-                <x>11</x>
-                <y>11</y>
-                <width>260</width>
+                <x>8</x>
+                <y>10</y>
+                <width>280</width>
                 <height>70</height>
             </rect>
         </property>
@@ -177,11 +177,11 @@
             <attribute name="id">
                 <number>2</number>
             </attribute>
-            <hbox>
+            <grid>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QLabel">
+                <widget class="QLabel" row="0" column="0">
                     <property name="name">
                         <cstring>pl1</cstring>
                     </property>
@@ -195,7 +195,7 @@
                         <set>AlignCenter</set>
                     </property>
                 </widget>
-                <widget class="QLabel">
+                <widget class="QLabel" row="0" column="1">
                     <property name="name">
                         <cstring>pl2</cstring>
                     </property>
@@ -209,9 +209,78 @@
                         <set>AlignCenter</set>
                     </property>
                 </widget>
-                <widget class="QLabel">
+                <widget class="QLabel" row="0" column="2">
                     <property name="name">
                         <cstring>pl3</cstring>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image7</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="3">
+                    <property name="name">
+                        <cstring>pl4</cstring>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image7</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>wspBootMethod2</cstring>
+            </property>
+            <attribute name="id">
+                <number>3</number>
+            </attribute>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>pl1_2</cstring>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image7</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>pl2_2</cstring>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image7</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>pl3_2</cstring>
                     </property>
                     <property name="pixmap">
                         <pixmap>image7</pixmap>
