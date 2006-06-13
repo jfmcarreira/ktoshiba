@@ -1,3 +1,23 @@
+2006-06-13 Azael Avalos <coproscefalo@gmail.com>
+	* Added new option to toggle Ethernet device On/Off
+	* Some retouches to ktoshiba and KCM icons
+	* Updated KCMKToshiba to reflect recent changes
+	* Fixed an issue where timers where started on KCModule
+	  even if the toshiba or omnibook modules weren't found
+
+2006-06-12 Azael Avalos <coproscefalo@gmail.com>
+	* Removed battery checking code (from main program)
+	* Some misc changes
+	* Fixed a horrible mistake in configure.in.in
+	  (that happens when you copy paste and don't pay attention...)
+
+2006-05-02 Azael Avalos <coproscefalo@gmail.com>
+	* Changed KCM Module icon, now it uses the laptop one
+	* Some small executable size reduction for omnibook users
+
+2006-04-13 Azael Avalos <coproscefalo@gmail.com>
+	* New model added, thanks to Christian Jägle
+
 2006-04-12 Azael Avalos <coproscefalo@gmail.com>
 	* Finished adding new functions to KToshibaSMMInterface
 	* Finished README.omnibook file
