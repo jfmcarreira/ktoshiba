@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2005 by Azael Avalos                               *
+ *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -56,7 +56,6 @@ KToshiba::KToshiba()
       mDriver( 0 ),
       mProc( 0 ),
       mFn( 0 ),
-      mPowTimer( new QTimer(this) ),
       mHotKeysTimer( new QTimer(this) ),
       mModeTimer( new QTimer(this) ),
       mSystemTimer( new QTimer(this) ),
@@ -69,33 +68,8 @@ KToshiba::KToshiba()
     instance = new KInstance("ktoshiba");
 
     // check whether toshiba module is loaded
-    mInterfaceAvailable = mFn->m_SMM;
-    if (mInterfaceAvailable) {
-        mDriver->batteryStatus(&time, &perc);
-        mAC = mDriver->acPowerStatus();
-        mBatType = mDriver->getBatterySaveModeType();
-        mHT = mDriver->getHyperThreading();
-        mSS = mDriver->getSpeedStep();
-        mWirelessSwitch = mDriver->getWirelessSwitch();
-        mBatSave = 2;
-        bsmtrig = false;
-        wstrig = false;
-        bluetooth = 0;
-        svideo = 0;
-        MODE = DIGITAL;
-        proc = false;
-        mOmnibook = false;
-        if (perc == -1) {
-            mProc->acpiBatteryStatus(&time, &perc);
-            proc = true;
-        }
-        // Default to mode 2 if we got a failure
-        if (mBatType == -1)
-            mBatType = 2;
-        mFn->m_BatType = mBatType;
-    }
 #ifdef ENABLE_OMNIBOOK
-    if (!mInterfaceAvailable) {
+    if (!mFn->m_SMM) {
         kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
         mOmnibook = mProc->checkOmnibook();
         if (!mOmnibook) {
@@ -105,22 +79,34 @@ KToshiba::KToshiba()
             exit(-1);
         }
         kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
-        mProc->omnibookBatteryStatus(&time, &perc);
         mAC = mProc->omnibookAC();
         mFn->m_Video = mProc->omnibookGetVideo();
         mFn->m_Bright = mProc->omnibookGetBrightness();
         mOmnibook = true;
+        (mAC == -1)? mACPI = true : mACPI = false;
         mBatSave = 2;
         mBatType = 3;
-        proc = true;
+    }
+#else
+    if (mFn->m_SMM) {
+        kdDebug() << "KToshiba: Loading..." << endl;
+        mAC = mDriver->acPowerStatus();
+        mHT = mDriver->getHyperThreading();
+        mSS = mDriver->getSpeedStep();
+        mWirelessSwitch = mDriver->getWirelessSwitch();
+        mBatType = mFn->m_BatType;
+        bsmtrig = false;
+        wstrig = false;
+        bluetooth = 0;
+        svideo = 0;
+        MODE = DIGITAL;
+        mOmnibook = false;
+        mACPI = false;
+        // Default to mode 2 if we got a failure
+        if (mFn->m_BatType == -1)
+            mFn->m_BatType = 2;
     }
 #endif
-
-    battrig = (perc == 100)? true : false;
-    crytrig = false;
-    lowtrig = false;
-    current_code = -2;
-
 
     if (!mClient.attach())
         kdDebug() << "KToshiba: Cannot attach to DCOP server." << endl;
@@ -131,13 +117,15 @@ KToshiba::KToshiba()
     } else
         createConfiguration();
 
-    displayPixmap();
-
     doMenu();
 
-    connect( mPowTimer, SIGNAL( timeout() ), this, SLOT( checkPowerStatus() ) );
-    mPowTimer->start(mBatStatus * 1000);
-    if (mInterfaceAvailable) {
+#ifdef ENABLE_OMNIBOOK
+    if (mOmnibook) {
+        connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
+        mOmnibookTimer->start(100);
+    }
+#else
+    if (mFn->m_SMM) {
         connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
         mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
         connect( mModeTimer, SIGNAL( timeout() ), this, SLOT( checkMode() ) );
@@ -145,36 +133,34 @@ KToshiba::KToshiba()
         connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
         mSystemTimer->start(500);		// Check system events every 1/2 seconds
     }
-#ifdef ENABLE_OMNIBOOK
-    else if (mOmnibook) {
-        connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
-        mOmnibookTimer->start(100);
-    }
 #endif
 
-    if (mInterfaceAvailable && btstart)
+    if (mFn->m_SMM && btstart)
         doBluetooth();
+
+    setPixmap( loadIcon("ktoshiba", instance) );
+    QToolTip::add(this, "KToshiba");
 }
 
 KToshiba::~KToshiba()
 {
     // Stop timers
-    mPowTimer->stop();
-    if (mInterfaceAvailable) {
+#ifdef ENABLE_OMNIBOOK
+    if (mOmnibook)
+        mOmnibookTimer->stop();
+#else
+    if (mFn->m_SMM) {
         mHotKeysTimer->stop();
         mModeTimer->stop();
         mSystemTimer->stop();
-    } else
-    if (mOmnibook)
-        mOmnibookTimer->stop();
-
-    if (mClient.isAttached())
-        mClient.detach();
-    if (mInterfaceAvailable) {
         kdDebug() << "KToshiba: Closing interface." << endl;
         mDriver->closeInterface();
         delete mDriver; mDriver = NULL;
     }
+#endif
+
+    if (mClient.isAttached())
+        mClient.detach();
 
     delete instance; instance = NULL;
     delete mAboutWidget; mAboutWidget = NULL;
@@ -206,7 +192,7 @@ void KToshiba::doMenu()
     }
 #endif
     this->contextMenu()->insertSeparator( 5 );
-    if (mInterfaceAvailable) {
+    if (mFn->m_SMM) {
         this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
                                          SLOT( doBluetooth() ), 0, 6, 6 );
         this->contextMenu()->insertSeparator( 7 );
@@ -229,7 +215,7 @@ void KToshiba::doMenu()
             connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
     }
 #ifdef ENABLE_OMNIBOOK
-    else if (mOmnibook) {
+    if (mOmnibook) {
         mOneTouch = new QPopupMenu( this, i18n("OneTouch") );
         mOneTouch->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
         mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
@@ -246,21 +232,22 @@ void KToshiba::doMenu()
     this->contextMenu()->insertSeparator( 11 );
     this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
                                      SLOT( displayAbout() ), 0, 12, 12 );
-    if (mInterfaceAvailable)
-        this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
 #ifdef ENABLE_OMNIBOOK
-    else if (mOmnibook)
+    if (mOmnibook)
         this->contextMenu()->insertTitle( mProc->model, 0, 0 );
+#else
+    if (mFn->m_SMM)
+        this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
 #endif
 }
 
 void KToshiba::doConfig()
 {
-    KProcess proc;
-    proc << KStandardDirs::findExe("kcmshell");
-    proc << "ktoshibam";
-    proc.start(KProcess::DontCare);
-    proc.detach();
+    KProcess kproc;
+    kproc << KStandardDirs::findExe("kcmshell");
+    kproc << "ktoshibam";
+    kproc.start(KProcess::DontCare);
+    kproc.detach();
 }
 
 void KToshiba::doSuspendToRAM()
@@ -318,14 +305,10 @@ bool KToshiba::checkConfiguration()
 void KToshiba::loadConfiguration(KConfig *k)
 {
     k->setGroup("KToshiba");
-    mFullBat = k->readBoolEntry("Notify_On_Full_Battery", false);
-    mBatStatus = k->readNumEntry("Battery_Status_Time", 2);
-    mLowBat = k->readNumEntry("Low_Battery_Trigger", 15);
-    mCryBat = k->readNumEntry("Critical_Battery_Trigger", 5);
     mBatSave = k->readNumEntry("Battery_Save_Mode", 2);
     mAudioPlayer = k->readNumEntry("Audio_Player", 1);
     btstart = k->readBoolEntry("Bluetooth_Startup", true);
-    mPSC = k->readBoolEntry("Power_Status_Check", false);
+    if (mFn->m_SMM) mFn->m_BatSave = mBatSave;
 }
 
 void KToshiba::createConfiguration()
@@ -334,10 +317,7 @@ void KToshiba::createConfiguration()
     KConfig config(CONFIG_FILE);
 
     config.setGroup("KToshiba");
-    config.writeEntry("Notify_On_Full_Battery", false);
-    config.writeEntry("Battery_Status_Time", 2);
-    config.writeEntry("Low_Battery_Trigger", 15);
-    config.writeEntry("Critical_Battery_Trigger", 5);
+    config.writeEntry("Battery_Save_Mode", 2);
     config.writeEntry("Audio_Player", 1);
     config.writeEntry("Bluetooth_Startup", true);
     config.writeEntry("Fn_Esc", 1);
@@ -356,7 +336,6 @@ void KToshiba::createConfiguration()
     config.writeEntry("HDD_Auto_Off", 5);
     config.writeEntry("LCD_Brightness", 2);
     config.writeEntry("Cooling_Method", 2);
-    config.writeEntry("Power_Status_Check", false);
     config.sync();
 }
 
@@ -365,117 +344,9 @@ void KToshiba::displayAbout()
     mAboutWidget->show();
 }
 
-void KToshiba::checkPowerStatus()
-{
-    KConfig mConfig(CONFIG_FILE);
-    loadConfiguration(&mConfig);
-
-    if (!mPSC) {
-        if (mInterfaceAvailable && !proc) {
-            mDriver->batteryStatus(&time, &perc);
-            pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
-        } else
-        if (mInterfaceAvailable && proc) {
-            mProc->acpiBatteryStatus(&time, &perc);
-            pow = mProc->acpiAC();
-        }
-#ifdef ENABLE_OMNIBOOK
-        else if (mOmnibook) {
-            mProc->omnibookBatteryStatus(&time, &perc);
-            pow = mProc->omnibookAC();
-        }
-#endif
-
-        if (mFullBat && perc == 100 && !battrig) {
-            KMessageBox::queuedMessageBox(0, KMessageBox::Information,
-					i18n("Your battery is now fully charged."), i18n("Laptop Battery"));
-            battrig = true;
-        }
-
-        int th, tm;
-        if (proc) {
-            th = time / 60; tm = time % 60;
-        } else {
-            th = SCI_HOUR(time); tm = SCI_MINUTE(time);
-        }
-        if (tm == mLowBat && th == 0 && pow == 3 && !lowtrig) {
-            KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to low"),
-				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-            lowtrig = true;
-        } else
-        if (tm == mCryBat && th == 0 && pow == 3 && !crytrig) {
-            KPassivePopup::message(i18n("Warning"), i18n("The battery state has changed to critical"),
-				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-            crytrig = true;
-        } else
-        if (tm == 0 && th == 0 && pow == 3)
-            KPassivePopup::message(i18n("Warning"), i18n("I'm Gone..."),
-				SmallIcon("messagebox_warning", 20), this, i18n("Warning"), 15000);
-
-        if (tm > lowtrig && pow == 4) {
-            if (battrig && (perc < 100))
-                battrig = false;
-            if (lowtrig)
-                lowtrig = false;
-            if (crytrig)
-                crytrig = false;
-        }
-
-        if (mOldBatStatus != mBatStatus) {
-            mPowTimer->stop();
-            mPowTimer->start(mBatStatus * 1000);
-        }
-    }
-    bool changed = oldpow != pow || oldperc != perc || oldtime != time;
-    if (changed || mPSC)
-        displayPixmap();
-
-    if (mBatSave != mOldBatSave || pow != oldpow) {
-        int bright;
-        switch (mBatSave) {
-            case 0:			// USER SETTINGS or LONG LIFE
-                if (mBatType == 3)
-                    bright = 0;	// Semi-Bright
-                else if (mBatType == 2 && !bsmtrig) {
-                    bsmUserSettings(&mConfig, &bright);
-                    bsmtrig = true;
-                }
-                break;
-            case 1:			// LOW POWER or NORMAL LIFE
-                if (pow == 3)
-                    bright = 0;	// Semi-Bright
-                else if (pow == 4)
-                    bright = 3;	// Bright
-                bsmtrig = false;
-                break;
-            case 2:			// FULL POWER or FULL LIFE
-                if (pow == 3)
-                    bright = 3;	// Bright
-                else if (pow == 4)
-                    bright = 7;	// Super-Bright
-                bsmtrig = false;
-                break;
-        }
-        if (mInterfaceAvailable && mBatType != 2)
-            mDriver->setBrightness(bright);
-#ifdef ENABLE_OMNIBOOK
-        else if (mOmnibook)
-            mProc->omnibookSetBrightness(bright);
-#endif
-    }
-
-    oldperc = perc;
-    oldpow = pow;
-    oldtime = time;
-    mOldBatStatus = mBatStatus;
-    if (mInterfaceAvailable)
-        mOldBatSave = mBatSave;
-}
-
 void KToshiba::bsmUserSettings(KConfig *k, int *bright)
 {
-    int processor, cpu, display, hdd, lcd, cooling;
-    int tmp;
+    int processor, cpu, display, hdd, lcd, cooling, tmp;
 
     processor = k->readNumEntry("Processing_Speed", 1);
     cpu = k->readNumEntry("CPU_Sleep_Mode", 0);
@@ -497,147 +368,9 @@ void KToshiba::bsmUserSettings(KConfig *k, int *bright)
     mDriver->setHDDAutoOff(hdd);
 }
 
-void KToshiba::displayPixmap()
-{
-    int new_code = 0;
-
-    if (mPSC)
-        new_code = -1;
-    else if (!mInterfaceAvailable && !mOmnibook)
-        new_code = 1;
-    else if (pow == 3)
-        new_code = 2;
-    else
-        new_code = 3;
-
-    if (current_code != new_code) {
-        current_code = new_code;
-
-        // we will try to deduce the pixmap (or gif) name now.  it will
-        // vary depending on the dock and power
-        QString pixmap;
-
-        if (pow == -1 && perc == -1)
-            pixmap = QString("laptop_nobattery");
-        else if (pow == 4 && perc == -1)
-            pixmap = QString("laptop_power");
-        else if (pow == 3)
-            pixmap = QString("laptop_nocharge");
-        else if (mPSC) {
-            pm = loadIcon("ktoshiba", instance);
-            setPixmap(pm);
-            QToolTip::add(this, "KToshiba");
-            return;
-        } else
-            pixmap = QString("laptop_charge");
-
-        pm = loadIcon(pixmap, instance);
-    }
-    if (current_code == -1)
-        return;
-
-    // at this point, we have the file to display.  so display it
-
-    QImage image = pm.convertToImage();
-
-    int w = image.width();
-    int h = image.height();
-    int count = 0;
-    QRgb rgb;
-    int x, y;
-    for (x = 0; x < w; x++)
-        for (y = 0; y < h; y++) {
-            rgb = image.pixel(x, y);
-            if (qRed(rgb) == 0xff &&
-                qGreen(rgb) == 0xff &&
-                qBlue(rgb) == 0xff)
-                count++;
-        }
-    int c = (count*perc)/100;
-    if (c == 100)
-        c = count;
-    else
-    if (perc != 100 && c == count)
-        c = count-1;
-
-
-    if (c) {
-        uint ui;
-        QRgb blue = qRgb(0x00,0x00,0xff);
-
-        if (image.depth() <= 8) {
-            ui = image.numColors();		// this fix thanks to Sven Krumpke
-            image.setNumColors(ui+1);
-            image.setColor(ui, blue);
-        } else
-            ui = 0xff000000|blue;
-
-        for (y = h-1; y >= 0; y--)
-            for (x = 0; x < w; x++) {
-                rgb = image.pixel(x, y);
-                if (qRed(rgb) == 0xff &&
-                    qGreen(rgb) == 0xff &&
-                    qBlue(rgb) == 0xff) {
-                    image.setPixel(x, y, ui);
-                    c--;
-                    if (c <= 0)
-                        goto quit;
-                }
-            }
-    }
-quit:
-
-    QPixmap q;
-    q.convertFromImage(image);
-    setPixmap(q);
-    adjustSize();
-
-    QString tmp;
-    if (pow == 4) {
-        if (perc == 100)
-            tmp = i18n("Plugged in - fully charged");
-        else {
-            if (perc >= 0) {
-                QString num3;
-                int num2;
-                if (proc) {
-                    num2 = time / 60; num3.setNum(time % 60);
-                } else {
-                    num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
-                }
-                num3 = num3.rightJustify(2, '0');
-                tmp = i18n("Plugged in - %1% charged (%2:%3 time left)")
-			   .arg(perc).arg(num2).arg(num3);
-            } else
-            if (perc == -1)
-                tmp = i18n("Plugged in - no battery");
-            else
-                tmp = i18n("Plugged in - %1% charged").arg(perc);
-        }
-    } else {
-        if (perc >= 0) {
-            QString num3;
-            int num2;
-            if (proc) {
-                num2 = time / 60; num3.setNum(time % 60);
-            } else {
-                num2 = SCI_HOUR(time); num3.setNum(SCI_MINUTE(time));
-            }
-            num3 = num3.rightJustify(2, '0');
-            tmp = i18n("Running on batteries - %1% charged (%2:%3 time left)")
-			.arg(perc).arg(num2).arg(num3);
-        } else
-        if (perc == -1)
-            tmp = i18n("No battery and adaptor found");
-        else
-            tmp = i18n("Running on batteries  - %1% charged").arg(perc);
-    }
-    QToolTip::add(this, tmp);
-}
-
 void KToshiba::checkHotKeys()
 {
-    KProcess proc;
+    KProcess kproc;
     QByteArray data, replyData;
     QCString replyType;
     KConfig mConfig(CONFIG_FILE);
@@ -701,14 +434,14 @@ void KToshiba::checkHotKeys()
             if (MODE == CD_DVD)
                 if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
                     if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData))
-                        proc << "eject" << "--cdrom";
+                        kproc << "eject" << "--cdrom";
             if (MODE == DIGITAL) {
                 if (mAudioPlayer == amaroK)
                     mClient.send("amarok", "player", "stop()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "stop()", "");
                 else if (mAudioPlayer == XMMS)
-                    proc << "xmms" << "--stop";
+                    kproc << "xmms" << "--stop";
             }
             break;
         case 0xb31:	// Previous
@@ -724,7 +457,7 @@ void KToshiba::checkHotKeys()
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "back()", "");
                 else if (mAudioPlayer == XMMS)
-                    proc << "xmms" << "--rew";
+                    kproc << "xmms" << "--rew";
             }
             break;
         case 0xb32:	// Next
@@ -740,7 +473,7 @@ void KToshiba::checkHotKeys()
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "forward()", "");
                 else if (mAudioPlayer == XMMS)
-                    proc << "xmms" << "--fwd";
+                    kproc << "xmms" << "--fwd";
             }
             break;
         case 0xb33:	// Play/Pause
@@ -749,7 +482,7 @@ void KToshiba::checkHotKeys()
             if (MODE == CD_DVD) {
                 if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
                     if (!mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData))
-                        kdDebug() << "KsCD and Kaffeine are not running" << endl;
+                        kdDebug() << "KsCD or Kaffeine not running" << endl;
                     else {
                         QDataStream reply(replyData, IO_ReadOnly);
                         bool res;
@@ -766,7 +499,7 @@ void KToshiba::checkHotKeys()
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "playPause()", "");
                 else if (mAudioPlayer == XMMS)
-                    proc << "xmms" << "--play-pause";
+                    kproc << "xmms" << "--play-pause";
             }
             break;
         case 0xb85:	// Toggle S-Video Out
@@ -781,10 +514,10 @@ void KToshiba::checkHotKeys()
             }
             return;
         case 0xb86:	// E-Button
-            proc << "kfmclient" << "openProfile" << "webbrowsing";
+            kproc << "kfmclient" << "openProfile" << "webbrowsing";
             break;
         case 0xb87:	// I-Button
-            proc << "konsole";
+            kproc << "konsole";
             break;
         case 0xd42: // Maximize
             return;
@@ -807,8 +540,8 @@ void KToshiba::checkHotKeys()
             return;
     }
     if (key >= 0xb30) {
-        proc.start(KProcess::DontCare);
-        proc.detach();
+        kproc.start(KProcess::DontCare);
+        kproc.detach();
         return;
     }
     mFn->performFnAction(tmp, key);
@@ -826,12 +559,62 @@ void KToshiba::checkMode()
 
 void KToshiba::checkSystem()
 {
-    int ws = -1;
+#ifdef ENABLE_OMNIBOOK
+    if (mOmnibook)
+        pow = ((mACPI)? mProc->acpiAC() : mProc->omnibookAC());
+#else
+    if (mFn->m_SMM && !mACPI)
+        pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+    if (mACPI || pow == -1) {
+        pow = mProc->acpiAC();
+        mACPI = true;
+    }
+#endif
+
+    KConfig mConfig(CONFIG_FILE);
+    loadConfiguration(&mConfig);
+    if (mBatSave != mOldBatSave || pow != oldpow) {
+        int bright;
+        switch (mBatSave) {
+            case 0:			// USER SETTINGS or LONG LIFE
+                if (mBatType == 3)
+                    bright = 0;	// Semi-Bright
+                else if (mBatType == 2 && !bsmtrig) {
+                    bsmUserSettings(&mConfig, &bright);
+                    bsmtrig = true;
+                }
+                break;
+            case 1:			// LOW POWER or NORMAL LIFE
+                if (pow == 3)
+                    bright = 0;	// Semi-Bright
+                else if (pow == 4)
+                    bright = 3;	// Bright
+                bsmtrig = false;
+                break;
+            case 2:			// FULL POWER or FULL LIFE
+                if (pow == 3)
+                    bright = 3;	// Bright
+                else if (pow == 4)
+                    bright = 7;	// Super-Bright
+                bsmtrig = false;
+                break;
+        }
+#ifdef ENABLE_OMNIBOOK
+        if (mOmnibook)
+            mProc->omnibookSetBrightness(bright);
+#else
+        if (mFn->m_SMM && mFn->m_BatType != 2)
+            mDriver->setBrightness(bright);
+#endif
+    }
+
+    oldpow = pow;
+    mOldBatSave = mBatSave;
 
     if (mWirelessSwitch == -1)
-        wstrig = true;
+        return;
     else {
-        ws = mDriver->getWirelessSwitch();
+        int ws = mDriver->getWirelessSwitch();
 
         if (mWirelessSwitch != ws) {
             QString s = ((ws == 1)? i18n("on") : i18n("off"));
@@ -840,16 +623,11 @@ void KToshiba::checkSystem()
         }
         mWirelessSwitch = ws;
     }
-
-    if (wstrig == true) {
-        mSystemTimer->stop();
-        disconnect( mSystemTimer );
-    }
 }
 
-#ifdef ENABLE_OMNIBOOK
 void KToshiba::checkOmnibook()
 {
+#ifdef ENABLE_OMNIBOOK
     // TODO: Add more stuff here, for now only the LCD is being monitored
     // TODO: Move this to own files once it is finished and complete
 
@@ -872,6 +650,7 @@ void KToshiba::checkOmnibook()
             mFn->m_Bright = bright;
         }
     }
+#endif
 }
 
 void KToshiba::doSetOneTouch(int state)
@@ -883,7 +662,6 @@ void KToshiba::doSetOmnibookFan(int state)
 {
     mProc->omnibookSetFan(state);
 }
-#endif
 
 
 #include "ktoshiba.moc"

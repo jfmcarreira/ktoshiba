@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Exec=kcmshell ktoshibam
-Icon=pda_black
+Icon=laptop
 Type=Application
 
 X-KDE-Library=ktoshibam

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2005 by Azael Avalos                               *
+ *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -46,7 +46,7 @@ class KToshibaProcInterface;
 /**
  * @short Hotkeys & battery monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.8
+ * @version 0.9
  */
 class KToshiba : public KSystemTray
 {
@@ -56,7 +56,6 @@ public:
     * Default Constructor
     */
     KToshiba();
-    void displayPixmap();
     void loadConfiguration(KConfig *);
     void createConfiguration();
     bool checkConfiguration();
@@ -73,7 +72,6 @@ protected slots:
     void doSetFreq(int);
     void doSetHyper(int);
     void displayAbout();
-    void checkPowerStatus();
     void checkHotKeys();
     void checkSystem();
     void checkMode();
@@ -91,14 +89,8 @@ protected:
     QPopupMenu *mHyper;
     QPopupMenu *mOneTouch;
     QPopupMenu *mOmniFan;
-    bool mInterfaceAvailable;
     bool mOmnibook;
-    bool mFullBat;
-    bool mPSC;
-    int mBatStatus;
-    int mOldBatStatus;
-    int mLowBat;
-    int mCryBat;
+    bool mACPI;
     int mBatSave;
     int mOldBatSave;
     int mBatType;
@@ -110,26 +102,15 @@ protected:
 private:
     void doMenu();
     void bsmUserSettings(KConfig *, int *);
-    QTimer *mPowTimer;
     QTimer *mHotKeysTimer;
     QTimer *mModeTimer;
     QTimer *mSystemTimer;
     QTimer *mOmnibookTimer;
-    QPixmap pm;
-    bool lowtrig;
-    bool crytrig;
-    bool battrig;
     bool bsmtrig;
     bool wstrig;
     bool btstart;
-    bool proc;
     int pow;
     int oldpow;
-    int time;
-    int oldtime;
-    int perc;
-    int oldperc;
-    int current_code;
     int MODE;
     int bluetooth;
     int svideo;

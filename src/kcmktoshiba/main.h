@@ -1,7 +1,7 @@
 /***************************************************************************
  *   main.h                                                                *
  *                                                                         *
- *   Copyright (C) 2004 by Azael Avalos                                    *
+ *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   Based on kcm_kvaio                                                    *
@@ -23,9 +23,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef KCMTOSHIBA_MAIN_H
 #define KCMTOSHIBA_MAIN_H
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <kcmodule.h>
 
@@ -36,8 +39,8 @@ class KToshibaSMMInterface;
 class KToshibaProcInterface;
 
 /**
- * @author Azael Avalos <neftali@utep.edu>
- * @version 0.2
+ * @author Azael Avalos <coproscefalo@gmail.com>
+ * @version 0.3
  */
 class KCMToshibaModule: public KCModule
 {
@@ -61,6 +64,7 @@ private:
     bool m_InterfaceAvailable;
     bool m_Omnibook;
     int m_AC;
+    bool init;
 };
 
 #endif // KCMTOSHIBA_MAIN_H
