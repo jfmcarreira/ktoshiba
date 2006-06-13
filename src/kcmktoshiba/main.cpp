@@ -107,11 +107,12 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         setButtons(buttons() & ~Default);
     }
 
-    connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
-    connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
-    m_Timer->start(210);
-
-    init = false;
+    if (m_InterfaceAvailable || m_Omnibook) {
+        connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
+        connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
+        m_Timer->start(210);
+        init = false;
+    }
 };
 
 void KCMToshibaModule::load()
