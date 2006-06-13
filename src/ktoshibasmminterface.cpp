@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2005 by Azael Avalos                               *
+ *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This library is free software; you can redistribute it and/or modify  *
@@ -33,8 +33,8 @@ bool KToshibaSMMInterface::openInterface()
 {
 	if (SciSupportCheck(&sciversion) == SCI_FAILURE) {
 		kdError() << "KToshibaSMMInterface::openInterface(): "
-			  << "This computer is not supported "
-			  << "or the kernel module is not installed." << endl;
+			  << "This computer is not supported or "
+			  << "the kernel module is not installed." << endl;
 		return false;
 	}
 

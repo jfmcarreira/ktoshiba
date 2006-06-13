@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2005 by Azael Avalos                               *
+ *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,14 +26,14 @@
 #include <klocale.h>
 
 static const char description[] =
-    I18N_NOOP("Hotkeys & Battery monitoring for Toshiba laptops.");
+    I18N_NOOP("Hotkeys monitoring for Toshiba laptops.");
 
-static const char version[] = "0.8";
+static const char version[] = "0.9Alpha";
 
 int main(int argc, char **argv)
 {
     KAboutData about("ktoshiba", I18N_NOOP("KToshiba"), version, description,
-                     KAboutData::License_GPL, "(C) 2004-2005 Azael Avalos", 0,
+                     KAboutData::License_GPL, "(C) 2004-2006 Azael Avalos", 0,
                      "http://ktoshiba.sourceforge.net/", "coproscefalo@gmail.com" );
     about.addAuthor( "Azael Avalos", 0, "coproscefalo@gmail.com", 0 );
     about.addCredit( "Jonathan A. Buzzard", I18N_NOOP("toshutils and HCI-SCI stuff"),

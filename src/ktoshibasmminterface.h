@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2005 by Azael Avalos                               *
+ *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This library is free software; you can redistribute it and/or modify  *
@@ -40,7 +40,7 @@ extern "C" {
 /**
  * @short Provides access to the SMM functions
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.8
+ * @version 0.9
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -318,11 +318,13 @@ public:
 	 */
 	void setWOL(int state);
 	/**
-	 *
+	 * Gets the current LAN controller state
+	 * @return @p the int holding the LAN controller state
 	 */
 	int getLANController();
 	/**
-	 *
+	 * Sets the LAN controller On/Off
+	 * @param state the int holding the desired state
 	 */
 	void setLANController(int state);
 	/**
