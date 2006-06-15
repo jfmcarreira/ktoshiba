@@ -67,9 +67,9 @@ KToshiba::KToshiba()
     mAboutWidget = new KAboutApplication(this, "About Widget", false);
     instance = new KInstance("ktoshiba");
 
-    // check whether toshiba module is loaded
 #ifdef ENABLE_OMNIBOOK
-    if (!mFn->m_SMM) {
+    // check whether omnibook module is loaded
+    if (!mFn->m_SCIIface) {
         kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
         mOmnibook = mProc->checkOmnibook();
         if (!mOmnibook) {
@@ -88,8 +88,8 @@ KToshiba::KToshiba()
         mBatType = 3;
     }
 #else
-    if (mFn->m_SMM) {
-        kdDebug() << "KToshiba: Loading..." << endl;
+    // check whether toshiba module is loaded
+    if (mFn->m_SCIIface) {
         mAC = mDriver->acPowerStatus();
         mHT = mDriver->getHyperThreading();
         mSS = mDriver->getSpeedStep();
@@ -125,7 +125,7 @@ KToshiba::KToshiba()
         mOmnibookTimer->start(100);
     }
 #else
-    if (mFn->m_SMM) {
+    if (mFn->m_SCIIface) {
         connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
         mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
         connect( mModeTimer, SIGNAL( timeout() ), this, SLOT( checkMode() ) );
@@ -134,8 +134,9 @@ KToshiba::KToshiba()
         mSystemTimer->start(500);		// Check system events every 1/2 seconds
     }
 #endif
+    connect( this, SIGNAL( quitSelected() ), this, SLOT( quit() ) );
 
-    if (mFn->m_SMM && btstart)
+    if (mFn->m_SCIIface && btstart)
         doBluetooth();
 
     setPixmap( loadIcon("ktoshiba", instance) );
@@ -144,28 +145,30 @@ KToshiba::KToshiba()
 
 KToshiba::~KToshiba()
 {
-    // Stop timers
+    delete instance; instance = NULL;
+    delete mAboutWidget; mAboutWidget = NULL;
+    delete mProc; mProc = NULL;
+    delete mFn; mFn = NULL;
+    delete mDriver; mDriver = NULL;
+}
+
+void KToshiba::quit()
+{
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook)
         mOmnibookTimer->stop();
 #else
-    if (mFn->m_SMM) {
+    if (mFn->m_SCIIface) {
         mHotKeysTimer->stop();
         mModeTimer->stop();
         mSystemTimer->stop();
-        kdDebug() << "KToshiba: Closing interface." << endl;
-        mDriver->closeInterface();
-        delete mDriver; mDriver = NULL;
+        kdDebug() << "KToshiba: Closing Toshiba SMM interface." << endl;
+        mDriver->closeSCIInterface();
     }
 #endif
 
     if (mClient.isAttached())
         mClient.detach();
-
-    delete instance; instance = NULL;
-    delete mAboutWidget; mAboutWidget = NULL;
-    delete mProc; mProc = NULL;
-    delete mFn; mFn = NULL;
 }
 
 void KToshiba::doMenu()
@@ -192,7 +195,7 @@ void KToshiba::doMenu()
     }
 #endif
     this->contextMenu()->insertSeparator( 5 );
-    if (mFn->m_SMM) {
+    if (mFn->m_SCIIface) {
         this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
                                          SLOT( doBluetooth() ), 0, 6, 6 );
         this->contextMenu()->insertSeparator( 7 );
@@ -236,7 +239,7 @@ void KToshiba::doMenu()
     if (mOmnibook)
         this->contextMenu()->insertTitle( mProc->model, 0, 0 );
 #else
-    if (mFn->m_SMM)
+    if (mFn->m_SCIIface)
         this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
 #endif
 }
@@ -308,7 +311,7 @@ void KToshiba::loadConfiguration(KConfig *k)
     mBatSave = k->readNumEntry("Battery_Save_Mode", 2);
     mAudioPlayer = k->readNumEntry("Audio_Player", 1);
     btstart = k->readBoolEntry("Bluetooth_Startup", true);
-    if (mFn->m_SMM) mFn->m_BatSave = mBatSave;
+    if (mFn->m_SCIIface) mFn->m_BatSave = mBatSave;
 }
 
 void KToshiba::createConfiguration()
@@ -368,6 +371,7 @@ void KToshiba::bsmUserSettings(KConfig *k, int *bright)
     mDriver->setHDDAutoOff(hdd);
 }
 
+#ifndef ENABLE_OMNIBOOK
 void KToshiba::checkHotKeys()
 {
     KProcess kproc;
@@ -385,7 +389,7 @@ void KToshiba::checkHotKeys()
     switch (key) {
         case 0:	// FIFO empty
             return;
-        case 1:
+        case 1:	// Failed accessing System Events
             if (mDriver->hotkeys == false) {
                 mDriver->enableSystemEvent();
                 mDriver->hotkeys = true;
@@ -556,6 +560,7 @@ void KToshiba::checkMode()
     else if (temp == DIGITAL)
         MODE = DIGITAL;
 }
+#endif
 
 void KToshiba::checkSystem()
 {
@@ -563,7 +568,7 @@ void KToshiba::checkSystem()
     if (mOmnibook)
         pow = ((mACPI)? mProc->acpiAC() : mProc->omnibookAC());
 #else
-    if (mFn->m_SMM && !mACPI)
+    if (mFn->m_SCIIface && !mACPI)
         pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
     if (mACPI || pow == -1) {
         pow = mProc->acpiAC();
@@ -603,7 +608,7 @@ void KToshiba::checkSystem()
         if (mOmnibook)
             mProc->omnibookSetBrightness(bright);
 #else
-        if (mFn->m_SMM && mFn->m_BatType != 2)
+        if (mFn->m_SCIIface && mFn->m_BatType != 2)
             mDriver->setBrightness(bright);
 #endif
     }
@@ -611,6 +616,7 @@ void KToshiba::checkSystem()
     oldpow = pow;
     mOldBatSave = mBatSave;
 
+#ifndef ENABLE_OMNIBOOK
     if (mWirelessSwitch == -1)
         return;
     else {
@@ -623,6 +629,7 @@ void KToshiba::checkSystem()
         }
         mWirelessSwitch = ws;
     }
+#endif
 }
 
 void KToshiba::checkOmnibook()

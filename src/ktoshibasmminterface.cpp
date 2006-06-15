@@ -29,17 +29,17 @@ KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 {
 }
 
-bool KToshibaSMMInterface::openInterface()
+bool KToshibaSMMInterface::openSCIInterface()
 {
 	if (SciSupportCheck(&sciversion) == SCI_FAILURE) {
-		kdError() << "KToshibaSMMInterface::openInterface(): "
+		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
 			  << "This computer is not supported or "
 			  << "the kernel module is not installed." << endl;
 		return false;
 	}
 
 	if (!(mFd = open(TOSH_DEVICE, O_RDWR))) {
-		kdError() << "KToshibaSMMInterface::openInterface(): "
+		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
 			  << "Failed to open " << TOSH_DEVICE << endl;
 		return false;
 	}
@@ -47,7 +47,7 @@ bool KToshibaSMMInterface::openInterface()
 	SciOpenInterface();
 	SciCloseInterface();
 	if (SciOpenInterface() == SCI_FAILURE) {
-		kdError() << "KToshibaSMMInterface::openInterface(): "
+		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
 			  << "Failed to open SCI interface" << endl;
 		return false;
 	}
@@ -55,12 +55,12 @@ bool KToshibaSMMInterface::openInterface()
 	return true;
 }
 
-void KToshibaSMMInterface::closeInterface()
+void KToshibaSMMInterface::closeSCIInterface()
 {
 	if (mFd)
 		close(mFd);
 	if (SciCloseInterface() == SCI_FAILURE)
-		kdError() << "KToshibaSMMInterface::closeInterface(): "
+		kdError() << "KToshibaSMMInterface::closeSCIInterface(): "
 			  << "Failed to close SCI interface" << endl;
 }
 
@@ -150,7 +150,7 @@ int KToshibaSMMInterface::getSystemEvent()
 	int ev = HciFunction(&reg);
 	if ((ev == HCI_FAILURE) || (ev == HCI_NOT_SUPPORTED)) {
 		/**
-		 *	ISSUE: After enabling the hotkeys again, we receice
+		 *	ISSUE: After enabling the hotkeys again, we receive
 		 *	HCI_FAILURE when 'no' events are present in the
 		 *	system. However, when events are entered into
 		 *	the system we receive HCI_SUCCESS.
@@ -158,17 +158,6 @@ int KToshibaSMMInterface::getSystemEvent()
 		if (hotkeys == false) {
 			kdError() << "KToshibaSMMInterface::getSystemEvent(): "
 				  << "Failed accessing System Events" << endl;
-			reg.eax = HCI_SET;
-			reg.ebx = HCI_SYSTEM_EVENT;
-			reg.ecx = HCI_ENABLE;
-			reg.edx = 0x0000;
-			if (HciFunction(&reg) != HCI_SUCCESS)
-				kdError() << "KToshibaSMMInterface::getSystemEvent(): "
-					  << "Could not enable Hotkeys" << endl;
-
-			kdDebug() << "KToshibaSMMInterface::getSystemEvent(): "
-				  << "Re-enabled Hotkeys" << endl;
-			hotkeys = true;
 		}
 		return 1;
 	} else
@@ -393,8 +382,8 @@ void KToshibaSMMInterface::setBluetoothPower(int state)
 				  << "Could not disable Bluetooth device" << endl;
 			return;
 		}
-	}
-	else if (state == 1) {
+	} else
+	if (state == 1) {
 		reg.eax = HCI_SET;
 		reg.ebx = HCI_RF_CONTROL;
 		reg.ecx = HCI_ENABLE;
