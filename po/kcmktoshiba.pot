@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-13 15:26-0600\n"
+"POT-Creation-Date: 2006-06-14 21:30-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgstr ""
 msgid "Original author"
 msgstr ""
 
-#: main.cpp:240
+#: main.cpp:241
 msgid "Helpful information about the KToshiba module."
 msgstr ""
 
@@ -243,7 +243,7 @@ msgstr ""
 #: rc.cpp:90 rc.cpp:141 rc.cpp:192 rc.cpp:243 rc.cpp:294 rc.cpp:345 rc.cpp:396
 #: rc.cpp:447 rc.cpp:498 rc.cpp:549
 #, no-c-format
-msgid "Unmute/Mute"
+msgid "Speaker Unmute/Mute"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 363
@@ -435,7 +435,7 @@ msgstr ""
 #: rc.cpp:126 rc.cpp:177 rc.cpp:228 rc.cpp:279 rc.cpp:330 rc.cpp:381
 #: rc.cpp:432 rc.cpp:483 rc.cpp:534 rc.cpp:585
 #, no-c-format
-msgid "Boot Method"
+msgid "Boot Sequence"
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 459

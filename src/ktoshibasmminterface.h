@@ -54,9 +54,9 @@ public:
 	 * Opens an interface to the driver.
 	 * @return @p true when opened interface
 	 */
-	bool openInterface();
+	bool openSCIInterface();
 	/** Closes any opened interfaces. */
-	void closeInterface();
+	void closeSCIInterface();
 	/**
 	 * Return the current display brightness.
 	 * @return @p value the current brightness is

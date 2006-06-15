@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-13 15:26-0600\n"
+"POT-Creation-Date: 2006-06-14 21:30-0600\n"
 "PO-Revision-Date: 2005-06-15 20:45+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -40,7 +40,7 @@ msgstr "KDE beállítómodul Toshiba noteszgépekhez"
 msgid "Original author"
 msgstr "Eredeti szerző"
 
-#: main.cpp:240
+#: main.cpp:241
 msgid "Helpful information about the KToshiba module."
 msgstr "Információ a(z) KToshiba modulról."
 
@@ -243,8 +243,8 @@ msgstr "Kikapcsolva"
 #. i18n: file kcmtoshiba_general.ui line 1654
 #: rc.cpp:90 rc.cpp:141 rc.cpp:192 rc.cpp:243 rc.cpp:294 rc.cpp:345 rc.cpp:396
 #: rc.cpp:447 rc.cpp:498 rc.cpp:549
-#, no-c-format
-msgid "Unmute/Mute"
+#, fuzzy, no-c-format
+msgid "Speaker Unmute/Mute"
 msgstr "Elnémítás ki-be"
 
 #. i18n: file kcmtoshiba_general.ui line 363
@@ -436,8 +436,8 @@ msgstr "Ventillátor Be/Ki"
 #: rc.cpp:126 rc.cpp:177 rc.cpp:228 rc.cpp:279 rc.cpp:330 rc.cpp:381
 #: rc.cpp:432 rc.cpp:483 rc.cpp:534 rc.cpp:585
 #, no-c-format
-msgid "Boot Method"
-msgstr "Boot  "
+msgid "Boot Sequence"
+msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 459
 #. i18n: file kcmtoshiba_general.ui line 603
@@ -651,6 +651,9 @@ msgstr ""
 "Nem található a <i>Toshiba Rendszerkezelő Meghajtó</i>. Ha ez egy Toshiba "
 "laptop, próbálja meg betuölteni a <b>toshiba</b> modult, enélkül nem fog "
 "működni."
+
+#~ msgid "Boot Method"
+#~ msgstr "Boot  "
 
 #~ msgid "Battery Options"
 #~ msgstr "Akkumlátor Opciók:"

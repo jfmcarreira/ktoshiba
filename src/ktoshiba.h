@@ -78,6 +78,7 @@ protected slots:
     void checkOmnibook();
     void doSetOneTouch(int);
     void doSetOmnibookFan(int);
+    void quit();
 protected:
     KToshibaSMMInterface *mDriver;
     KToshibaProcInterface *mProc;

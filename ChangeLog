@@ -1,9 +1,14 @@
+2006-06-14 Azael Avalos <coproscefalo@gmail.com>
+	* Some small updates to KCModule icons an text
+	  (like renamed Boot Method -> Boot Sequence)
+
 2006-06-13 Azael Avalos <coproscefalo@gmail.com>
 	* Added new option to toggle Ethernet device On/Off
 	* Some retouches to ktoshiba and KCM icons
 	* Updated KCMKToshiba to reflect recent changes
 	* Fixed an issue where timers where started on KCModule
 	  even if the toshiba or omnibook modules weren't found
+	* Misc changes
 
 2006-06-12 Azael Avalos <coproscefalo@gmail.com>
 	* Removed battery checking code (from main program)

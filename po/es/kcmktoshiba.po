@@ -1,13 +1,13 @@
 # translation of kcmktoshiba.po to Español
-# Azael Avalos <coproscefalo@gmail.com>, 2005.
 #
+# Azael Avalos <coproscefalo@gmail.com>, 2005, 2006.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-13 15:26-0600\n"
-"PO-Revision-Date: 2006-02-14 01:19-0700\n"
-"Last-Translator: Azael Avalos\n"
+"POT-Creation-Date: 2006-06-14 21:30-0600\n"
+"PO-Revision-Date: 2006-06-14 21:35-0600\n"
+"Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,13 +19,13 @@ msgstr ""
 msgid ""
 "_: NAME OF TRANSLATORS\n"
 "Your names"
-msgstr "Neftalí Azael Avalos"
+msgstr "Azael Avalos"
 
 #: _translatorinfo.cpp:3
 msgid ""
 "_: EMAIL OF TRANSLATORS\n"
 "Your emails"
-msgstr "neftali@utep.edu"
+msgstr "coproscefalo@gmail.com"
 
 #: main.cpp:58
 msgid "kcmktoshiba"
@@ -39,7 +39,7 @@ msgstr "Módulo de Control de KDE para el soporte del portátil Toshiba"
 msgid "Original author"
 msgstr "Autor Original"
 
-#: main.cpp:240
+#: main.cpp:241
 msgid "Helpful information about the KToshiba module."
 msgstr "Información acerca del modulo KToshiba"
 
@@ -245,8 +245,8 @@ msgstr "Deshabilitado"
 #: rc.cpp:90 rc.cpp:141 rc.cpp:192 rc.cpp:243 rc.cpp:294 rc.cpp:345 rc.cpp:396
 #: rc.cpp:447 rc.cpp:498 rc.cpp:549
 #, no-c-format
-msgid "Unmute/Mute"
-msgstr "Desilenciador/Silenciador"
+msgid "Speaker Unmute/Mute"
+msgstr "Desilenciar/Silenciar Bocina"
 
 #. i18n: file kcmtoshiba_general.ui line 363
 #. i18n: file kcmtoshiba_general.ui line 507
@@ -372,9 +372,9 @@ msgstr "Subir Brillo"
 #. i18n: file kcmtoshiba_general.ui line 1718
 #: rc.cpp:114 rc.cpp:165 rc.cpp:216 rc.cpp:267 rc.cpp:318 rc.cpp:369
 #: rc.cpp:420 rc.cpp:471 rc.cpp:522 rc.cpp:573
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Wireless On/Off"
-msgstr "Inalámbrico"
+msgstr "Apagado/Encendido del Inalámbrico"
 
 #. i18n: file kcmtoshiba_general.ui line 427
 #. i18n: file kcmtoshiba_general.ui line 571
@@ -388,9 +388,9 @@ msgstr "Inalámbrico"
 #. i18n: file kcmtoshiba_general.ui line 1726
 #: rc.cpp:117 rc.cpp:168 rc.cpp:219 rc.cpp:270 rc.cpp:321 rc.cpp:372
 #: rc.cpp:423 rc.cpp:474 rc.cpp:525 rc.cpp:576
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "MousePad On/Off"
-msgstr "Encendido/Apagado del abanico"
+msgstr "Encendido/Apagado del MousePad"
 
 #. i18n: file kcmtoshiba_general.ui line 435
 #. i18n: file kcmtoshiba_general.ui line 579
@@ -406,7 +406,7 @@ msgstr "Encendido/Apagado del abanico"
 #: rc.cpp:426 rc.cpp:477 rc.cpp:528 rc.cpp:579
 #, no-c-format
 msgid "Speaker Volume"
-msgstr "Volumen de la bocina"
+msgstr "Volumen de la Bocina"
 
 #. i18n: file kcmtoshiba_general.ui line 443
 #. i18n: file kcmtoshiba_general.ui line 587
@@ -422,7 +422,7 @@ msgstr "Volumen de la bocina"
 #: rc.cpp:429 rc.cpp:480 rc.cpp:531 rc.cpp:582
 #, no-c-format
 msgid "Fan On/Off"
-msgstr "Encendido/Apagado del abanico"
+msgstr "Encendido/Apagado del Abanico"
 
 #. i18n: file kcmtoshiba_general.ui line 451
 #. i18n: file kcmtoshiba_general.ui line 595
@@ -437,8 +437,8 @@ msgstr "Encendido/Apagado del abanico"
 #: rc.cpp:126 rc.cpp:177 rc.cpp:228 rc.cpp:279 rc.cpp:330 rc.cpp:381
 #: rc.cpp:432 rc.cpp:483 rc.cpp:534 rc.cpp:585
 #, no-c-format
-msgid "Boot Method"
-msgstr "Método de Arranque"
+msgid "Boot Sequence"
+msgstr "Secuencia de Arranque"
 
 #. i18n: file kcmtoshiba_general.ui line 459
 #. i18n: file kcmtoshiba_general.ui line 603
@@ -484,9 +484,9 @@ msgstr "Encendido/Apagado del Bluetooth"
 #. i18n: file kcmtoshiba_general.ui line 1774
 #: rc.cpp:135 rc.cpp:186 rc.cpp:237 rc.cpp:288 rc.cpp:339 rc.cpp:390
 #: rc.cpp:441 rc.cpp:492 rc.cpp:543 rc.cpp:594
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Ethernet On/Off"
-msgstr "Encendido/Apagado del abanico"
+msgstr "Encendido/Apagado del Ethernet"
 
 #. i18n: file kcmtoshiba_general.ui line 1794
 #: rc.cpp:597
@@ -656,49 +656,3 @@ msgstr ""
 "Toshiba</i>. Sí esta es un portátil Toshiba verifique que el controlador "
 "<b>toshiba</b> sea cargado sin problemas."
 
-#~ msgid "Battery Options"
-#~ msgstr "Opciones de Batería"
-
-#~ msgid "Check &battery status every:"
-#~ msgstr "Verifica el estado de la &batería cada:"
-
-#~ msgid " sec"
-#~ msgstr " seg"
-
-#~ msgid ""
-#~ "This is used to determine how often the program will check the battery "
-#~ "status"
-#~ msgstr ""
-#~ "Esto es usado para determinar cada cuanto tiempo el programa verificara "
-#~ "el estado de la batería"
-
-#~ msgid "&Low battery trigger:"
-#~ msgstr "Indicador de batería ba&ja:"
-
-#~ msgid " min"
-#~ msgstr " min"
-
-#~ msgid "This is used to enable the low battery information"
-#~ msgstr "Esto es usado para habilitar el indicador de batería baja"
-
-#~ msgid "This is used to enable the critical battery information"
-#~ msgstr ""
-#~ "Esto es usado para habilitar el indicador de batería en estado critico"
-
-#~ msgid "C&ritical battery trigger:"
-#~ msgstr "Indicador de batería en estado c&ritico:"
-
-#~ msgid "&Notify when battery becomes fully charged"
-#~ msgstr "&Notifica cuando la batería este completamente cargada"
-
-#~ msgid "Alt+N"
-#~ msgstr "Alt+N"
-
-#~ msgid "&Do not monitor Battery and AC status"
-#~ msgstr "No monitorear la batería y el adaptador de corriente"
-
-#~ msgid "Alt+D"
-#~ msgstr "Alt+D"
-
-#~ msgid "Enable/Disable MousePad"
-#~ msgstr "Habilitar/Deshabilitar MousePad"
