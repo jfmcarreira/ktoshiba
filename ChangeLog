@@ -1,3 +1,7 @@
+2006-06-19 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed amaroK to Amarok due to recent name change
+	* Added icons to the "Select Audio Application" combobox
+
 2006-06-14 Azael Avalos <coproscefalo@gmail.com>
 	* Some small updates to KCModule icons an text
 	  (like renamed Boot Method -> Boot Sequence)
