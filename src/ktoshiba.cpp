@@ -440,7 +440,7 @@ void KToshiba::checkHotKeys()
                     if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData))
                         kproc << "eject" << "--cdrom";
             if (MODE == DIGITAL) {
-                if (mAudioPlayer == amaroK)
+                if (mAudioPlayer == Amarok)
                     mClient.send("amarok", "player", "stop()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "stop()", "");
@@ -456,7 +456,7 @@ void KToshiba::checkHotKeys()
                     mClient.send("kaffeine", "KaffeineIface", "previous()", "");
             } else
             if (MODE == DIGITAL) {
-            if (mAudioPlayer == amaroK)
+            if (mAudioPlayer == Amarok)
                 mClient.send("amarok", "player", "prev()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "back()", "");
@@ -472,7 +472,7 @@ void KToshiba::checkHotKeys()
                     mClient.send("kaffeine", "KaffeineIface", "next()", "");
             } else
             if (MODE == DIGITAL) {
-                if (mAudioPlayer == amaroK)
+                if (mAudioPlayer == Amarok)
                     mClient.send("amarok", "player", "next()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "forward()", "");
@@ -498,7 +498,7 @@ void KToshiba::checkHotKeys()
                     }
             } else
             if (MODE == DIGITAL) {
-                if (mAudioPlayer == amaroK)
+                if (mAudioPlayer == Amarok)
                     mClient.send("amarok", "player", "playPause()", "");
                 else if (mAudioPlayer == JuK)
                     mClient.send("juk", "Player", "playPause()", "");

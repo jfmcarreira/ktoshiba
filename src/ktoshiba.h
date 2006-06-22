@@ -39,7 +39,7 @@ class KToshibaProcInterface;
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
 
-#define amaroK  	0
+#define Amarok  	0
 #define JuK 		1
 #define XMMS		2
 
