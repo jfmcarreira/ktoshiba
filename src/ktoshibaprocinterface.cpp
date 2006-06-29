@@ -296,10 +296,19 @@ int KToshibaProcInterface::toshibaProcStatus()
     int key;
     char buffer[64];
 
-    if (!(str = fopen(TOSH_PROC, "r")))
+    if (!(str = fopen(TOSH_PROC, "r"))) {
+        kdError() << "KToshibaProcInterface::toshibaProcStatus(): "
+                  << "Could not open " << TOSH_PROC
+                  << " for reading" << endl;
         return -1;
+    }
 
-    fgets(buffer, sizeof(buffer) - 1, str);
+    char *ret = fgets(buffer, sizeof(buffer) - 1, str);
+    if (ret == NULL) {
+        kdError() << "KToshibaProcInterface::toshibaProcStatus(): "
+                  << "Could not read /proc value" << endl;
+        return -1;
+    }
     buffer[sizeof(buffer) - 1] = '\0';
     sscanf(buffer, "%*s %*x %*d.%*d %*d.%*d %*x %x\n", &key);
     fclose(str);

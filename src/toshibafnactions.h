@@ -1,13 +1,8 @@
 /***************************************************************************
- *   main.h                                                                *
- *                                                                         *
  *   Copyright (C) 2004-2006 by Azael Avalos                               *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
- *   Based on kcm_kvaio                                                    *
- *   Copyright (C) 2003 Mirko Boehm (mirko@kde.org)                        *
- *                                                                         *
- *   This library is free software; you can redistribute it and/or modify  *
+ *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
@@ -23,48 +18,80 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KCMTOSHIBA_MAIN_H
-#define KCMTOSHIBA_MAIN_H
+#ifndef TOSHIBA_FN_ACTIONS_H
+#define TOSHIBA_FN_ACTIONS_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <kcmodule.h>
+#include <qobject.h>
 
-class QTimer;
-class KCMKToshibaGeneral;
+class QWidget;
 
 class KToshibaSMMInterface;
-class KToshibaProcInterface;
+class SettingsWidget;
+class StatusWidget;
 
 /**
+ * @short Performs the Fn assosiated action
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.3
+ * @version 0.2
  */
-class KCMToshibaModule: public KCModule
+class ToshibaFnActions : public QObject
 {
     Q_OBJECT
 public:
-    KCMToshibaModule( QWidget *parent=0, const char *name=0, const QStringList& = QStringList() );
+    /**
+    * Default Constructor
+    */
+    ToshibaFnActions(QWidget *parent = 0);
+    void closeSCIIface();
+    void hideWidgets();
+    void performFnAction(int, int);
+    StatusWidget *m_StatusWidget;
+    bool m_SCIIface;
+    int m_Popup;
+    int m_BatType;
+    int m_BatSave;
+    int m_Video;
+    int m_Bright;
 
-    void load();
-    void save();
-    void defaults();
-    QString quickHelp() const;
-public slots:
-    void configChanged();
-protected slots:
-    void timeout();
+    /**
+    * Default Destructor
+    */
+    virtual ~ToshibaFnActions();
 private:
-    KCMKToshibaGeneral *m_KCMKToshibaGeneral;
+    void checkSynaptics();
+    void toggleMute();
+    void lockScreen();
+    void toggleBSM();
+    void suspendToRAM();
+    void suspendToDisk();
+    void toggleVideo();
+    void brightDown();
+    void brightUp();
+    void toggleWireless();
+    void toggleMousePad();
+    void toggleSpeakerVolume();
+    void toggleFan();
+    void toggleBootMethod();
+    void toogleBackLight();
+    void toggleBluetooth();
+    void toggleEthernet();
+    void initSCI();
     KToshibaSMMInterface *m_Driver;
-    KToshibaProcInterface *m_Proc;
-    QTimer *m_Timer;
-    bool m_InterfaceAvailable;
-    bool m_Omnibook;
-    bool m_Init;
-    int m_AC;
+    SettingsWidget *m_SettingsWidget;
+    QWidget *m_Parent;
+    int m_BootType;
+    int m_Pad;
+    int m_Snd;
+    int m_Wireless;
+    int m_Mousepad;
+    int m_Vol;
+    int m_Fan;
+    int m_Boot;
+    int m_LANCtrl;
 };
 
-#endif // KCMTOSHIBA_MAIN_H
+#endif // TOSHIBA_FN_ACTIONS_H
