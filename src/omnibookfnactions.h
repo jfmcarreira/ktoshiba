@@ -45,7 +45,7 @@ public:
     * Default Constructor
     */
     OmnibookFnActions(QWidget *parent = 0);
-    //void performFnAction();
+    void performFnAction(int action);
     StatusWidget *m_StatusWidget;
     bool m_OmnibookIface;
     int m_Popup;
