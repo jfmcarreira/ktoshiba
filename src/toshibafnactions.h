@@ -54,8 +54,6 @@ public:
     int m_Popup;
     int m_BatType;
     int m_BatSave;
-    int m_Video;
-    int m_Bright;
 
     /**
     * Default Destructor
@@ -83,11 +81,13 @@ private:
     KToshibaSMMInterface *m_Driver;
     SettingsWidget *m_SettingsWidget;
     QWidget *m_Parent;
-    int m_BootType;
-    int m_Pad;
     int m_Snd;
+    int m_Video;
+    int m_Bright;
     int m_Wireless;
+    int m_Pad;
     int m_Mousepad;
+    int m_BootType;
     int m_Vol;
     int m_Fan;
     int m_Boot;

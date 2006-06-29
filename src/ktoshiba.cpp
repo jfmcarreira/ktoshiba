@@ -29,9 +29,6 @@
 #include <qimage.h>
 #include <qtooltip.h>
 #include <qtimer.h>
-#include <qwidget.h>
-#include <qwidgetstack.h>
-#include <qapplication.h>
 
 #include <kaboutapplication.h>
 #include <kdebug.h>
@@ -43,8 +40,6 @@
 #include <kmessagebox.h>
 #include <kpassivepopup.h>
 #include <kstandarddirs.h>
-
-#include "statuswidget.h"
 
 #ifdef ENABLE_POWERSAVE
 #include <powersave_dbus.h>
@@ -640,7 +635,6 @@ void KToshiba::checkOmnibook()
 {
 #ifdef ENABLE_OMNIBOOK
     // TODO: Add more stuff here, for now only the LCD is being monitored
-    // TODO: Move this to own files once it is finished and complete
 
     if (mOFn->m_Popup != 0) {
         mOFn->m_StatusWidget->hide();
@@ -649,17 +643,8 @@ void KToshiba::checkOmnibook()
 
     int bright = mProc->omnibookGetBrightness();
     if (mOFn->m_Bright != bright) {
-        if (mOFn->m_Popup == 0) {
-            QRect r = QApplication::desktop()->geometry();
-            mOFn->m_StatusWidget->move(r.center() - 
-                QPoint(mOFn->m_StatusWidget->width()/2, mOFn->m_StatusWidget->height()/2));
-            mOFn->m_StatusWidget->show();
-            mOFn->m_Popup = 1;
-        }
-        if (mOFn->m_Popup == 1) {
-            mOFn->m_StatusWidget->wsStatus->raiseWidget(bright + 4);
-            mOFn->m_Bright = bright;
-        }
+        mOFn->m_Bright = bright;
+        mOFn->performFnAction(1);
     }
 #endif
 }

@@ -22,6 +22,7 @@
 #include "ktoshibaprocinterface.h"
 
 #include <qwidgetstack.h>
+#include <qapplication.h>
 
 #include <kdebug.h>
 
@@ -57,6 +58,26 @@ OmnibookFnActions::~OmnibookFnActions()
     delete m_Parent; m_Parent = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
     delete m_Proc; m_Proc = NULL;
+}
+
+void OmnibookFnActions::performFnAction(int action)
+{
+    switch(action) {
+        case 1: // Raise/Lower Brightness
+            if (m_Popup == 0) {
+                QRect r = QApplication::desktop()->geometry();
+                m_StatusWidget->move(r.center() - 
+                    QPoint(m_StatusWidget->width()/2, m_StatusWidget->height()/2));
+                m_StatusWidget->show();
+                m_Popup = 1;
+            }
+            if (m_Popup == 1)
+                break;
+    }
+
+    if (action == 1)
+        if (m_Bright <= 7 && m_Bright >= 0)
+            m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
 }
 
 
