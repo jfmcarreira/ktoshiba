@@ -33,8 +33,9 @@ class KInstance;
 class KAboutApplication;
 
 class KToshibaSMMInterface;
-class FnActions;
 class KToshibaProcInterface;
+class ToshibaFnActions;
+class OmnibookFnActions;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -82,7 +83,8 @@ protected slots:
 protected:
     KToshibaSMMInterface *mDriver;
     KToshibaProcInterface *mProc;
-    FnActions *mFn;
+    ToshibaFnActions *mTFn;
+    OmnibookFnActions *mOFn;
     KAboutApplication *mAboutWidget;
     KInstance *instance;
     DCOPClient mClient;

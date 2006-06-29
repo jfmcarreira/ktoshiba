@@ -1,3 +1,21 @@
+2006-06-28 Azael Avalos <coproscefalo@gmail.com>
+	* Added some error messages to toshibaProcStatus()
+	  function and a check to a return value of fgets()
+	  to make g++ happy (KToshiba now compiles cleanly
+	  and without warnings)
+	* Added fan action images for omnibook menu
+
+2006-06-28 Azael Avalos <coproscefalo@gmail.com>
+	* Slightly changed Wireless toggling function, now
+	  it will only trigger if the wireless anthena switch
+	  is turned on
+
+2006-06-25 Azael Avalos <coproscefalo@gmail.com>
+	* Reordered SCI and HCI functions
+	  (now we can see which functions depend on what)
+	* Added some checks to SCI functions, now the functions
+	  will not trigger if the SCI interface is not open
+
 2006-06-19 Azael Avalos <coproscefalo@gmail.com>
 	* Renamed amaroK to Amarok due to recent name change
 	* Added icons to the "Select Audio Application" combobox

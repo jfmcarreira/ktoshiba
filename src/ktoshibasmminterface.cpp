@@ -29,6 +29,11 @@ KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 {
 }
 
+/**************************************
+ *           SCI Functions            *
+ * (Software Configuration Interface) *
+ **************************************/
+
 bool KToshibaSMMInterface::openSCIInterface()
 {
 	if (SciSupportCheck(&sciversion) == SCI_FAILURE) {
@@ -64,163 +69,6 @@ void KToshibaSMMInterface::closeSCIInterface()
 			  << "Failed to close SCI interface" << endl;
 }
 
-int KToshibaSMMInterface::getBrightness()
-{
-	int bright;
-
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_BRIGHTNESS_LEVEL;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getBrightness(): "
-			  << "Failed obtaining brightness" << endl;
-		return -1;
-	}
-	else {
-		bright = (reg.ecx & 0xffff);
-		bright = bright >> HCI_LCD_BRIGHTNESS_SHIFT;
-	}
-
-	return bright;
-}
-
-void KToshibaSMMInterface::setBrightness(int value)
-{
-	if (value < 0 || value > HCI_LCD_BRIGHTNESS_LEVELS)
-		value = ((value < 0)? 0 : 7);
-
-	if (getBrightness() != -1 && value >= 0 &&
-		    value < HCI_LCD_BRIGHTNESS_LEVELS) {
-		reg.eax = HCI_SET;
-		reg.ebx = HCI_BRIGHTNESS_LEVEL;
-		value = value << HCI_LCD_BRIGHTNESS_SHIFT;
-		reg.ecx = (int) value;
-		reg.edx = 0x0000;
-
-		if (HciFunction(&reg) != HCI_SUCCESS)
-			kdError() << "KToshibaSMMInterface::setBrightness(): "
-				  << "Failed setting brightness" << endl;
-	}
-}
-
-void KToshibaSMMInterface::batteryStatus(int *time, int *percent)
-{
-	reg.ebx = SCI_BATTERY_PERCENT;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS)
-		*percent = -1;
-	else
-		*percent = ((100 * (reg.ecx & 0xffff)) / (reg.edx & 0xffff));
-
-	reg.ebx = SCI_BATTERY_TIME;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		int hours = *time/60;
-		int minutes = *time-(60*hours);
-		*time = SCI_TIME(hours, minutes);
-	}
-	else
-		*time = (reg.ecx & 0xffff);
-}
-
-int KToshibaSMMInterface::acPowerStatus()
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_AC_ADAPTOR;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::acPowerStatus(): "
-			  << "Could not get AC Power status" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-int KToshibaSMMInterface::getSystemEvent()
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_SYSTEM_EVENT;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	int ev = HciFunction(&reg);
-	if ((ev == HCI_FAILURE) || (ev == HCI_NOT_SUPPORTED)) {
-		/**
-		 *	ISSUE: After enabling the hotkeys again, we receive
-		 *	HCI_FAILURE when 'no' events are present in the
-		 *	system. However, when events are entered into
-		 *	the system we receive HCI_SUCCESS.
-		 */
-		if (hotkeys == false) {
-			kdError() << "KToshibaSMMInterface::getSystemEvent(): "
-				  << "Failed accessing System Events" << endl;
-		}
-		return 1;
-	} else
-	if (ev == HCI_FIFO_EMPTY)
-		return 0;
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::enableSystemEvent()
-{
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_SYSTEM_EVENT;
-	reg.ecx = HCI_ENABLE;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
-			  << "Could not enable Hotkeys" << endl;
-		return;
-	}
-
-	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
-		  << "Enabled Hotkeys" << endl;
-}
-
-int KToshibaSMMInterface::machineID()
-{
-	int id;
-
-	if (HciGetMachineID(&id) != HCI_SUCCESS)
-		return -1;
-
-	return id;
-}
-
-int KToshibaSMMInterface::getPointingDevice()
-{
-	reg.ebx = SCI_POINTING_DEVICE;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getPointingDevice(): "
-			  << "Could not get pointing device status" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setPointingDevice(int status)
-{
-	reg.ebx = SCI_POINTING_DEVICE;
-	if (status)
-		reg.ecx = SCI_ENABLED;
-	else if (!status)
-		reg.ecx = SCI_DISABLED;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::pointingDevice(): "
-			  << "Could not " << ((status == 1)? "enable"
-				 : "disable") << " MousePad" << endl;
-}
-
 int KToshibaSMMInterface::getBatterySaveMode()
 {
 	reg.ebx = SCI_BATTERY_SAVE;
@@ -252,153 +100,18 @@ void KToshibaSMMInterface::setBatterySaveMode(int mode)
 			  << "Could not change Battery Save Mode" << endl;
 }
 
-int KToshibaSMMInterface::getVideo()
+int KToshibaSMMInterface::getBatterySaveModeType()
 {
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_VIDEO_OUT;
+	reg.ebx = SCI_BATTERY_SAVE;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getVideo(): "
-			  << "Could not get display state" << endl;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBatterySaveModeType(): "
+			  << "Could not get Battery Save Mode type" << endl;
 		return -1;
 	}
 
-	return (int) (reg.ecx & 0xff);
-}
-
-void KToshibaSMMInterface::setVideo(int vid)
-{
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_VIDEO_OUT;
-	if (vid == 0)
-		reg.ecx = HCI_INTERNAL;
-	else if (vid == 1)
-		reg.ecx = HCI_LCD;	// HCI_EXTERNAL
-	else if (vid == 2)
-		reg.ecx = HCI_CRT;	// HCI_SIMULTANEOUS
-	else if (vid == 3)
-		reg.ecx = HCI_LCD_CRT;
-	else if (vid == 4)
-		reg.ecx = HCI_S_VIDEO;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setVideo(): "
-			  << "Could not change display state" << endl;
-}
-
-void KToshibaSMMInterface::getSystemLocks(int *lock, int bay)
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_LOCK_STATUS;
-	if (bay == 0)
-		reg.ecx = HCI_BUILT_IN;
-	else if (bay == 1)
-		reg.ecx = HCI_SELECT_INT;
-	else if (bay == 2)
-		reg.ecx = HCI_SELECT_DOCK;
-	else if (bay == 3)
-		reg.ecx = HCI_5INCH_DOCK;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::systemLocks(): "
-			  << "Could not get Bay lock status" << endl;
-		return;
-	}
-	if ((reg.ecx == HCI_UNLOCKED) && (*lock == HCI_LOCKED))
-		*lock = HCI_UNLOCKED;
-	else if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED))
-		*lock = HCI_LOCKED;
-	kdDebug() << "KToshibaSMMInterface::systemLocks(): "
-		  << "Bay is " 
-		  << ((*lock == HCI_LOCKED)? "locked": "unlocked") << endl;
-}
-
-int KToshibaSMMInterface::getBayDevice(int bay)
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_SELECT_STATUS;
-	if (bay == 0)
-		reg.ecx = HCI_BUILT_IN;
-	else if (bay == 1)
-		reg.ecx = HCI_SELECT_INT;
-	else if (bay == 2)
-		reg.ecx = HCI_SELECT_DOCK;
-	else if (bay == 3)
-		reg.ecx = HCI_5INCH_DOCK;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getBayDevice(): "
-			  << "Could not get Bay device or "
-			  << "laptop doesn't have one" << endl;
-		return -1;
-	}
-
-	return (int) reg.ecx;
-}
-
-int KToshibaSMMInterface::getWirelessSwitch()
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = 0x0000;
-	reg.edx = HCI_WIRELESS_CHECK;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getWirelessSwitch(): "
-			  << "Could not check wireless switch "
-			  << "or system doesn't have one" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xff);
-}
-
-int KToshibaSMMInterface::getBluetooth()
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = 0x0000;
-	reg.edx = HCI_BLUETOOTH_CHECK;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdDebug() << "KToshibaSMMInterface::getBluetooth(): "
-			  << "Could not check Bluetooth device "
-			  << "or system doesn't have one" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xff);
-}
-
-void KToshibaSMMInterface::setBluetoothPower(int state)
-{
-	if (state == 0) {
-		setBluetoothControl(state);
-		reg.eax = HCI_SET;
-		reg.ebx = HCI_RF_CONTROL;
-		reg.ecx = HCI_DISABLE;
-		reg.edx = HCI_BLUETOOTH_POWER;
-		if (HciFunction(&reg) != HCI_SUCCESS) {
-			kdError() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Could not disable Bluetooth device" << endl;
-			return;
-		}
-	} else
-	if (state == 1) {
-		reg.eax = HCI_SET;
-		reg.ebx = HCI_RF_CONTROL;
-		reg.ecx = HCI_ENABLE;
-		reg.edx = HCI_BLUETOOTH_POWER;
-		if (HciFunction(&reg) != HCI_SUCCESS) {
-			kdError() << "KToshibaSMMInterface::setBluetooth(): "
-				  << "Could not enable Bluetooth device" << endl;
-			return;
-		}
-		setBluetoothControl(state);
-	}
-	kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
-		  << "Bluetooth device "
-		  << ((state == 1)? "enabled" : "disabled")
-		  << " successfully" << endl;
+	return (int) (reg.edx & 0xffff);
 }
 
 void KToshibaSMMInterface::setProcessingSpeed(int speed)
@@ -439,44 +152,6 @@ void KToshibaSMMInterface::setCPUSleepMode(int mode)
 			 "DISABLED" : "ENABLED") << " CPU Sleep Mode" << endl;
 }
 
-void KToshibaSMMInterface::setCoolingMethod(int method)
-{
-	reg.ebx = SCI_COOLING_METHOD;
-	if (method == 0)
-		reg.ecx = SCI_MAX_PERFORMANCE;
-	else if (method == 1)
-		reg.ecx = SCI_BAT_OPTIMIZED;
-	else if (method == 2)
-		reg.ecx = SCI_PERFORMANCE_2;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setCoolingMethod(): "
-			  << "Could not change Cooling Method" << endl;
-}
-
-void KToshibaSMMInterface::setHDDAutoOff(int time)
-{
-	reg.ebx = SCI_HDD_AUTO_OFF;
-	if (time == 0)
-		reg.ecx = SCI_TIME_30;
-	else if (time == 1)
-		reg.ecx = SCI_TIME_20;
-	else if (time == 2)
-		reg.ecx = SCI_TIME_15;
-	else if (time == 3)
-		reg.ecx = SCI_TIME_10;
-	else if (time == 4)
-		reg.ecx = SCI_TIME_05;
-	else if (time == 5)
-		reg.ecx = SCI_TIME_03;
-	else if (time == 6)
-		reg.ecx = SCI_TIME_01;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setHDDAutoOff(): "
-			  << "Could not change HDD Auto Off time" << endl;
-}
-
 void KToshibaSMMInterface::setDisplayAutoOff(int time)
 {
 	reg.ebx = SCI_DISPLAY_AUTO;
@@ -500,78 +175,27 @@ void KToshibaSMMInterface::setDisplayAutoOff(int time)
 			  << "Could not change Display Auto Off time" << endl;
 }
 
-int KToshibaSMMInterface::getSpeedStep()
+void KToshibaSMMInterface::setHDDAutoOff(int time)
 {
-	reg.ebx = SCI_INTEL_SPEEDSTEP;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getSpeedStep(): "
-			  << "Could not get SpeedStep mode "
-			  << "or system doesn't support it" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setSpeedStep(int mode)
-{
-	reg.ebx = SCI_INTEL_SPEEDSTEP;
-	if (mode == 0)
-		reg.ecx = SCI_DYNAMICALLY;
-	else if (mode == 1)
-		reg.ecx = SCI_ALWAYS_HIGH;
-	else if (mode == 2)
-		reg.ecx = SCI_ALWAYS_LOW;
+	reg.ebx = SCI_HDD_AUTO_OFF;
+	if (time == 0)
+		reg.ecx = SCI_TIME_30;
+	else if (time == 1)
+		reg.ecx = SCI_TIME_20;
+	else if (time == 2)
+		reg.ecx = SCI_TIME_15;
+	else if (time == 3)
+		reg.ecx = SCI_TIME_10;
+	else if (time == 4)
+		reg.ecx = SCI_TIME_05;
+	else if (time == 5)
+		reg.ecx = SCI_TIME_03;
+	else if (time == 6)
+		reg.ecx = SCI_TIME_01;
 	reg.edx = 0x0000;
 	if (SciSet(&reg) != SCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setSpeedStep(): "
-			  << "Could not change SpeedStep mode" << endl;
-}
-
-int KToshibaSMMInterface::getHyperThreading()
-{
-	reg.ebx = SCI_HYPER_THREADING;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getHyperThreading(): "
-			  << "Could not get Hyper-Threading mode "
-			  << "or system doesn't support it" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setHyperThreading(int status)
-{
-	reg.ebx = SCI_HYPER_THREADING;
-	if (status == 0)
-		reg.ecx = SCI_DISABLED;
-	else if (status == 1)
-		reg.ecx = SCI_ENABLED_PM;
-	else if (status == 2)
-		reg.ecx = SCI_ENABLED_NO_PM;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setHyperThreading(): "
-			  << "Could not change Hyper-Threading mode" << endl;
-}
-
-int KToshibaSMMInterface::getBatterySaveModeType()
-{
-	reg.ebx = SCI_BATTERY_SAVE;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getBatterySaveModeType(): "
-			  << "Could not get Battery Save Mode type" << endl;
-		return -1;
-	}
-
-	return (int) (reg.edx & 0xffff);
+		kdError() << "KToshibaSMMInterface::setHDDAutoOff(): "
+			  << "Could not change HDD Auto Off time" << endl;
 }
 
 int KToshibaSMMInterface::getSpeakerVolume()
@@ -605,51 +229,26 @@ void KToshibaSMMInterface::setSpeakerVolume(int vol)
 			  << "Could not change volume" << endl;
 }
 
-int KToshibaSMMInterface::getFan()
+void KToshibaSMMInterface::batteryStatus(int *time, int *percent)
 {
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_FAN;
+	reg.ebx = SCI_BATTERY_PERCENT;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getFan(): "
-			  << "Could not get fan status or laptop"
-			  << " doesn't have one" << endl;
-		return -1;
-	}
+	if (SciGet(&reg) != SCI_SUCCESS)
+		*percent = -1;
+	else
+		*percent = ((100 * (reg.ecx & 0xffff)) / (reg.edx & 0xffff));
 
-	return (int) reg.ecx;
-}
-
-void KToshibaSMMInterface::setFan(int state)
-{
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_FAN;
-	if (state == 0)
-		reg.ecx = HCI_DISABLE;
-	else if (state == 1)
-		reg.ecx = HCI_ENABLE;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setFan(): "
-			  << "Fan could not be turned "
-			  << ((state == 1)? "On" : "Off") << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getBootType()
-{
-	reg.ebx = SCI_BOOT_PRIORITY;
+	reg.ebx = SCI_BATTERY_TIME;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
 	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getBootType(): "
-			  << "Could not get supported boot method" << endl;
-		return -1;	
+		int hours = *time/60;
+		int minutes = *time-(60*hours);
+		*time = SCI_TIME(hours, minutes);
 	}
-
-	return (int) (reg.edx & 0xffff);
+	else
+		*time = (reg.ecx & 0xffff);
 }
 
 int KToshibaSMMInterface::getBootMethod()
@@ -687,114 +286,33 @@ void KToshibaSMMInterface::setBootMethod(int method)
 			  << "Could not set boot method" << endl;
 }
 
-int KToshibaSMMInterface::getWirelessPower()
+int KToshibaSMMInterface::getBootType()
 {
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = 0x0000;
-	reg.edx = HCI_WIRELESS_CHECK;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getWirelessPower(): "
-			  << "Could not get wireless power state" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xff);
-}
-
-void KToshibaSMMInterface::setWirelessPower(int state)
-{
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_RF_CONTROL;
-	if (state == 0)
-		reg.ecx = HCI_DISABLE;
-	else if (state == 1)
-		reg.ecx = HCI_ENABLE;
-	reg.edx = HCI_WIRELESS_POWER;
-	if (HciFunction(&reg) != HCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setWirelessPower(): "
-			  << "Could not set wireless power "
-			  << ((state == 1)? "On" : "Off") << endl;
-}
-
-int KToshibaSMMInterface::getBackLight()
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_BACKLIGHT;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getBackLight(): "
-			  << "Could not get LCD backlight status" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xff);
-}
-
-void KToshibaSMMInterface::setBackLight(int state)
-{
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_BACKLIGHT;
-	if (state == 0)
-		reg.ecx = HCI_DISABLE;
-	else if (state == 1)
-		reg.ecx = HCI_ENABLE;
-	reg.edx = 0x0000;
-	if (HciFunction(&reg) != HCI_SUCCESS)
-		kdError() << "KToshibaSMMInterface::setBackLight(): "
-			  << "Could not turn LCD backlight " 
-			  << ((state == 1)? "On" : "Off") << endl;
-}
-
-int KToshibaSMMInterface::getBluetoothPower()
-{
-	reg.eax = HCI_GET;
-	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0001;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getBluetoothPower(): "
-			  << "Could not get Bluetooth power state" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xff);
-}
-
-void KToshibaSMMInterface::setBluetoothControl(int state)
-{
-	reg.eax = HCI_SET;
-	reg.ebx = HCI_RF_CONTROL;
-	if (state == 0)
-		reg.ecx = HCI_DISABLE;
-	else if (state == 1)
-		reg.ecx = HCI_ENABLE;
-	reg.edx = HCI_BLUETOOTH_CTRL;
-	if (HciFunction(&reg) != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setBluetoothControl(): "
-			  << "Could not attach/detach Bluetooth device" << endl;
-		return;
-	}
-	
-	kdDebug() << "KToshibaSMMInterface::setBluetoothControl(): "
-		  << "Bluetooth device "
-		  << ((state == 1)? "attached" : "detached")
-		  << " successfully" << endl;
-}
-
-int KToshibaSMMInterface::getATAPriorityIndex()
-{
-	reg.ebx = SCI_ATA_PRIORITY;
+	reg.ebx = SCI_BOOT_PRIORITY;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
 	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getATAPriorityIndex(): "
-			  << "Could not get current ATA Boot Priority index" << endl;
-		return -1;
+		kdError() << "KToshibaSMMInterface::getBootType(): "
+			  << "Could not get supported boot method" << endl;
+		return -1;	
 	}
 
-	return (int) reg.edx;
+	return (int) (reg.edx & 0xffff);
+}
+
+void KToshibaSMMInterface::setCoolingMethod(int method)
+{
+	reg.ebx = SCI_COOLING_METHOD;
+	if (method == 0)
+		reg.ecx = SCI_MAX_PERFORMANCE;
+	else if (method == 1)
+		reg.ecx = SCI_BAT_OPTIMIZED;
+	else if (method == 2)
+		reg.ecx = SCI_PERFORMANCE_2;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setCoolingMethod(): "
+			  << "Could not change Cooling Method" << endl;
 }
 
 int KToshibaSMMInterface::getATAPriority(int index)
@@ -831,6 +349,20 @@ void KToshibaSMMInterface::setATAPriority(int index)
 	}
 }
 
+int KToshibaSMMInterface::getATAPriorityIndex()
+{
+	reg.ebx = SCI_ATA_PRIORITY;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getATAPriorityIndex(): "
+			  << "Could not get current ATA Boot Priority index" << endl;
+		return -1;
+	}
+
+	return (int) reg.edx;
+}
+
 int KToshibaSMMInterface::getDeviceConfig()
 {
 	reg.ebx = SCI_DEVICE_CONFIG;
@@ -856,6 +388,98 @@ void KToshibaSMMInterface::setDeviceConfig(int mode)
 	if (SciSet(&reg) != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::setDeviceConfig(): "
 			  << "Could not set device configuration mode" << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getLANController()
+{
+	reg.ebx = SCI_LAN_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getLANController(): "
+			  << "Could not get LAN controller mode "
+			  << "or system doesn't have one" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setLANController(int state)
+{
+	reg.ebx = SCI_LAN_CONTROL;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setLANController(): "
+			  << "LAN controller could not be "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getSpeedStep()
+{
+	reg.ebx = SCI_INTEL_SPEEDSTEP;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getSpeedStep(): "
+			  << "Could not get SpeedStep mode "
+			  << "or system doesn't support it" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setSpeedStep(int mode)
+{
+	reg.ebx = SCI_INTEL_SPEEDSTEP;
+	if (mode == 0)
+		reg.ecx = SCI_DYNAMICALLY;
+	else if (mode == 1)
+		reg.ecx = SCI_ALWAYS_HIGH;
+	else if (mode == 2)
+		reg.ecx = SCI_ALWAYS_LOW;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setSpeedStep(): "
+			  << "Could not change SpeedStep mode" << endl;
+}
+
+int KToshibaSMMInterface::getSoundLogo()
+{
+	reg.ebx = SCI_SOUND_LOGO;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getSoundLogo(): "
+			  << "Could not get Sound Logo state "
+			  << "or system doesn't support it" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setSoundLogo(int state)
+{
+	reg.ebx = SCI_SOUND_LOGO;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setSoundLogo(): "
+			  << "Sound Logo could not be "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
 		return;
 	}
 }
@@ -920,6 +544,36 @@ void KToshibaSMMInterface::setStartUpLogo(int mode)
 	}
 }
 
+int KToshibaSMMInterface::getHyperThreading()
+{
+	reg.ebx = SCI_HYPER_THREADING;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getHyperThreading(): "
+			  << "Could not get Hyper-Threading mode "
+			  << "or system doesn't support it" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setHyperThreading(int status)
+{
+	reg.ebx = SCI_HYPER_THREADING;
+	if (status == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (status == 1)
+		reg.ecx = SCI_ENABLED_PM;
+	else if (status == 2)
+		reg.ecx = SCI_ENABLED_NO_PM;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setHyperThreading(): "
+			  << "Could not change Hyper-Threading mode" << endl;
+}
+
 int KToshibaSMMInterface::getPowerSW()
 {
 	reg.ebx = SCI_POWER_SW;
@@ -947,127 +601,6 @@ void KToshibaSMMInterface::setPowerSW(int mode)
 	if (SciSet(&reg) != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::setPowerSW(): "
 			  << "Could not set Power SW mode" << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getRemoteBootProtocol()
-{
-	reg.ecx = SCI_REMOTE_BOOT;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getRemoteBootProtocol(): "
-			  << "Could not get current Boot Protocol" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setRemoteBootProtocol(int mode)
-{
-	reg.ecx = SCI_REMOTE_BOOT;
-	if (mode == 0)
-		reg.ecx = SCI_NET_BOOT_PXE;
-	else if (mode == 1)
-		reg.ecx = SCI_NET_BOOT_RPL;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setRemoteBootProtocol(): "
-			  << "Could not set Boot Protocol" << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getWOL()
-{
-	reg.ebx = SCI_WAKE_ON_LAN;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getWOL(): "
-			  << "Could not get current WOL mode" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xff);
-}
-
-void KToshibaSMMInterface::setWOL(int state)
-{
-	reg.ebx = SCI_WAKE_ON_LAN;
-	if (state == 0)
-		reg.ecx = SCI_DISABLED;
-	else if (state == 1)
-		reg.ecx = SCI_ENABLED;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setWOL(): "
-			  << "WOL could not be "
-			  << ((state == 0)? "disabled" : "enabled") << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getLANController()
-{
-	reg.ebx = SCI_LAN_CONTROL;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getLANController(): "
-			  << "Could not get LAN controller mode "
-			  << "or system doesn't have one" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setLANController(int state)
-{
-	reg.ebx = SCI_LAN_CONTROL;
-	if (state == 0)
-		reg.ecx = SCI_DISABLED;
-	else if (state == 1)
-		reg.ecx = SCI_ENABLED;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setLANController(): "
-			  << "LAN controller could not be "
-			  << ((state == 0)? "disabled" : "enabled") << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getSoundLogo()
-{
-	reg.ebx = SCI_SOUND_LOGO;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getSoundLogo(): "
-			  << "Could not get Sound Logo state "
-			  << "or system doesn't support it" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setSoundLogo(int state)
-{
-	reg.ebx = SCI_SOUND_LOGO;
-	if (state == 0)
-		reg.ecx = SCI_DISABLED;
-	else if (state == 1)
-		reg.ecx = SCI_ENABLED;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setSoundLogo(): "
-			  << "Sound Logo could not be "
-			  << ((state == 0)? "disabled" : "enabled") << endl;
 		return;
 	}
 }
@@ -1103,66 +636,6 @@ void KToshibaSMMInterface::setDisplayDevice(int mode)
 	if (SciSet(&reg) != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::setDisplayDevice(): "
 			  << "Could not set Display Device mode" << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getUSBLegacySupport()
-{
-	reg.ebx = SCI_USB_LEGACY;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getUSBLegacySupport(): "
-			  << "Could not get USB Legacy Support state" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setUSBLegacySupport(int state)
-{
-	reg.ebx = SCI_USB_LEGACY;
-	if (state == 0)
-		reg.ecx = SCI_DISABLED;
-	else if (state == 1)
-		reg.ecx = SCI_ENABLED;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setUSBLegacySupport(): "
-			  << "USB Legacy Support "
-			  << ((state == 0)? "disabled" : "enabled") << endl;
-		return;
-	}
-}
-
-int KToshibaSMMInterface::getUSBFDDEmulation()
-{
-	reg.ebx = SCI_USB_FDD_EMUL;
-	reg.ecx = 0x0000;
-	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::getUSBFDDEmulation(): "
-			  << "Could not get USB FDD Legacy state" << endl;
-		return -1;
-	}
-
-	return (int) (reg.ecx & 0xffff);
-}
-
-void KToshibaSMMInterface::setUSBFDDEmulation(int state)
-{
-	reg.ebx = SCI_USB_FDD_EMUL;
-	if (state == 0)
-		reg.ecx = SCI_DISABLED;
-	else if (state == 1)
-		reg.ecx = SCI_ENABLED;
-	reg.edx = 0x0000;
-	if (SciSet(&reg) != SCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::setUSBFDDEmulation(): "
-			  << "USB FDD Emulation is "
-			  << ((state == 0)? "disabled" : "enabled") << endl;
 		return;
 	}
 }
@@ -1225,6 +698,544 @@ void KToshibaSMMInterface::setKeyboardType(int mode)
 			  << "Could not set Keyboard Type mode" << endl;
 		return;
 	}
+}
+
+int KToshibaSMMInterface::getPointingDevice()
+{
+	reg.ebx = SCI_POINTING_DEVICE;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getPointingDevice(): "
+			  << "Could not get pointing device status" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setPointingDevice(int status)
+{
+	reg.ebx = SCI_POINTING_DEVICE;
+	if (status)
+		reg.ecx = SCI_ENABLED;
+	else if (!status)
+		reg.ecx = SCI_DISABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::pointingDevice(): "
+			  << "Could not " << ((status == 1)? "enable"
+				 : "disable") << " MousePad" << endl;
+}
+
+int KToshibaSMMInterface::getUSBLegacySupport()
+{
+	reg.ebx = SCI_USB_LEGACY;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getUSBLegacySupport(): "
+			  << "Could not get USB Legacy Support state" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setUSBLegacySupport(int state)
+{
+	reg.ebx = SCI_USB_LEGACY;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setUSBLegacySupport(): "
+			  << "USB Legacy Support "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getUSBFDDEmulation()
+{
+	reg.ebx = SCI_USB_FDD_EMUL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getUSBFDDEmulation(): "
+			  << "Could not get USB FDD Legacy state" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setUSBFDDEmulation(int state)
+{
+	reg.ebx = SCI_USB_FDD_EMUL;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setUSBFDDEmulation(): "
+			  << "USB FDD Emulation is "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getWOL()
+{
+	reg.ebx = SCI_WAKE_ON_LAN;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getWOL(): "
+			  << "Could not get current WOL mode" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setWOL(int state)
+{
+	reg.ebx = SCI_WAKE_ON_LAN;
+	if (state == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (state == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setWOL(): "
+			  << "WOL could not be "
+			  << ((state == 0)? "disabled" : "enabled") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getRemoteBootProtocol()
+{
+	reg.ecx = SCI_REMOTE_BOOT;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (SciGet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getRemoteBootProtocol(): "
+			  << "Could not get current Boot Protocol" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setRemoteBootProtocol(int mode)
+{
+	reg.ecx = SCI_REMOTE_BOOT;
+	if (mode == 0)
+		reg.ecx = SCI_NET_BOOT_PXE;
+	else if (mode == 1)
+		reg.ecx = SCI_NET_BOOT_RPL;
+	reg.edx = 0x0000;
+	if (SciSet(&reg) != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setRemoteBootProtocol(): "
+			  << "Could not set Boot Protocol" << endl;
+		return;
+	}
+}
+
+/**************************************
+ *           HCI Functions            *
+ * (Hardware Configuration Interface) *
+ **************************************/
+
+int KToshibaSMMInterface::machineID()
+{
+	int id;
+
+	if (HciGetMachineID(&id) != HCI_SUCCESS)
+		return -1;
+
+	return id;
+}
+
+int KToshibaSMMInterface::getBackLight()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_BACKLIGHT;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBackLight(): "
+			  << "Could not get LCD backlight status" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setBackLight(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_BACKLIGHT;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setBackLight(): "
+			  << "Could not turn LCD backlight " 
+			  << ((state == 1)? "On" : "Off") << endl;
+}
+
+int KToshibaSMMInterface::acPowerStatus()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_AC_ADAPTOR;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::acPowerStatus(): "
+			  << "Could not get AC Power status" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+int KToshibaSMMInterface::getFan()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_FAN;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getFan(): "
+			  << "Could not get fan status or laptop"
+			  << " doesn't have one" << endl;
+		return -1;
+	}
+
+	return (int) reg.ecx;
+}
+
+void KToshibaSMMInterface::setFan(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_FAN;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setFan(): "
+			  << "Fan could not be turned "
+			  << ((state == 1)? "On" : "Off") << endl;
+		return;
+	}
+}
+
+int KToshibaSMMInterface::getBayDevice(int bay)
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_SELECT_STATUS;
+	if (bay == 0)
+		reg.ecx = HCI_BUILT_IN;
+	else if (bay == 1)
+		reg.ecx = HCI_SELECT_INT;
+	else if (bay == 2)
+		reg.ecx = HCI_SELECT_DOCK;
+	else if (bay == 3)
+		reg.ecx = HCI_5INCH_DOCK;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBayDevice(): "
+			  << "Could not get Bay device or "
+			  << "laptop doesn't have one" << endl;
+		return -1;
+	}
+
+	return (int) reg.ecx;
+}
+
+int KToshibaSMMInterface::getSystemEvent()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_SYSTEM_EVENT;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	int ev = HciFunction(&reg);
+	if ((ev == HCI_FAILURE) || (ev == HCI_NOT_SUPPORTED)) {
+		/**
+		 *	ISSUE: After enabling the hotkeys again, we receive
+		 *	HCI_FAILURE when 'no' events are present in the
+		 *	system. However, when events are entered into
+		 *	the system we receive HCI_SUCCESS.
+		 */
+		if (hotkeys == false) {
+			kdError() << "KToshibaSMMInterface::getSystemEvent(): "
+				  << "Failed accessing System Events" << endl;
+		}
+		return 1;
+	} else
+	if (ev == HCI_FIFO_EMPTY)
+		return 0;
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::enableSystemEvent()
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_SYSTEM_EVENT;
+	reg.ecx = HCI_ENABLE;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
+			  << "Could not enable Hotkeys" << endl;
+		return;
+	}
+
+	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
+		  << "Enabled Hotkeys" << endl;
+}
+
+int KToshibaSMMInterface::getVideo()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_VIDEO_OUT;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getVideo(): "
+			  << "Could not get display state" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setVideo(int vid)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_VIDEO_OUT;
+	if (vid == 0)
+		reg.ecx = HCI_INTERNAL;
+	else if (vid == 1)
+		reg.ecx = HCI_LCD;	// HCI_EXTERNAL
+	else if (vid == 2)
+		reg.ecx = HCI_CRT;	// HCI_SIMULTANEOUS
+	else if (vid == 3)
+		reg.ecx = HCI_LCD_CRT;
+	else if (vid == 4)
+		reg.ecx = HCI_S_VIDEO;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setVideo(): "
+			  << "Could not change display state" << endl;
+}
+
+void KToshibaSMMInterface::getSystemLocks(int *lock, int bay)
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_LOCK_STATUS;
+	if (bay == 0)
+		reg.ecx = HCI_BUILT_IN;
+	else if (bay == 1)
+		reg.ecx = HCI_SELECT_INT;
+	else if (bay == 2)
+		reg.ecx = HCI_SELECT_DOCK;
+	else if (bay == 3)
+		reg.ecx = HCI_5INCH_DOCK;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::systemLocks(): "
+			  << "Could not get Bay lock status" << endl;
+		return;
+	}
+	if ((reg.ecx == HCI_UNLOCKED) && (*lock == HCI_LOCKED))
+		*lock = HCI_UNLOCKED;
+	else if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED))
+		*lock = HCI_LOCKED;
+	kdDebug() << "KToshibaSMMInterface::systemLocks(): "
+		  << "Bay is " 
+		  << ((*lock == HCI_LOCKED)? "locked": "unlocked") << endl;
+}
+
+int KToshibaSMMInterface::getBrightness()
+{
+	int bright;
+
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_BRIGHTNESS_LEVEL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBrightness(): "
+			  << "Failed obtaining brightness" << endl;
+		return -1;
+	}
+	else {
+		bright = (reg.ecx & 0xffff);
+		bright = bright >> HCI_LCD_BRIGHTNESS_SHIFT;
+	}
+
+	return bright;
+}
+
+void KToshibaSMMInterface::setBrightness(int value)
+{
+	if (value < 0 || value > HCI_LCD_BRIGHTNESS_LEVELS)
+		value = ((value < 0)? 0 : 7);
+
+	if (getBrightness() != -1 && value >= 0 &&
+		    value < HCI_LCD_BRIGHTNESS_LEVELS) {
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_BRIGHTNESS_LEVEL;
+		value = value << HCI_LCD_BRIGHTNESS_SHIFT;
+		reg.ecx = (int) value;
+		reg.edx = 0x0000;
+
+		if (HciFunction(&reg) != HCI_SUCCESS)
+			kdError() << "KToshibaSMMInterface::setBrightness(): "
+				  << "Failed setting brightness" << endl;
+	}
+}
+
+int KToshibaSMMInterface::getWirelessSwitch()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = HCI_WIRELESS_CHECK;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getWirelessSwitch(): "
+			  << "Could not check wireless switch "
+			  << "or system doesn't have one" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+int KToshibaSMMInterface::getWirelessPower()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = HCI_WIRELESS_CHECK;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getWirelessPower(): "
+			  << "Could not get wireless power state "
+			  << "or system doesn't have wireless" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setWirelessPower(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_RF_CONTROL;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	reg.edx = HCI_WIRELESS_POWER;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setWirelessPower(): "
+			  << "Could not set wireless power "
+			  << ((state == 1)? "On" : "Off") << endl;
+}
+
+int KToshibaSMMInterface::getBluetooth()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = HCI_BLUETOOTH_CHECK;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdDebug() << "KToshibaSMMInterface::getBluetooth(): "
+			  << "Could not check Bluetooth device "
+			  << "or system doesn't have one" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+int KToshibaSMMInterface::getBluetoothPower()
+{
+	reg.eax = HCI_GET;
+	reg.ebx = HCI_RF_CONTROL;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0001;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getBluetoothPower(): "
+			  << "Could not get Bluetooth power state" << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xff);
+}
+
+void KToshibaSMMInterface::setBluetoothPower(int state)
+{
+	if (state == 0) {
+		setBluetoothControl(state);
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_RF_CONTROL;
+		reg.ecx = HCI_DISABLE;
+		reg.edx = HCI_BLUETOOTH_POWER;
+		if (HciFunction(&reg) != HCI_SUCCESS) {
+			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+				  << "Could not disable Bluetooth device" << endl;
+			return;
+		}
+	} else
+	if (state == 1) {
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_RF_CONTROL;
+		reg.ecx = HCI_ENABLE;
+		reg.edx = HCI_BLUETOOTH_POWER;
+		if (HciFunction(&reg) != HCI_SUCCESS) {
+			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+				  << "Could not enable Bluetooth device" << endl;
+			return;
+		}
+		setBluetoothControl(state);
+	}
+	kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
+		  << "Bluetooth device "
+		  << ((state == 1)? "enabled" : "disabled")
+		  << " successfully" << endl;
+}
+
+void KToshibaSMMInterface::setBluetoothControl(int state)
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_RF_CONTROL;
+	if (state == 0)
+		reg.ecx = HCI_DISABLE;
+	else if (state == 1)
+		reg.ecx = HCI_ENABLE;
+	reg.edx = HCI_BLUETOOTH_CTRL;
+	if (HciFunction(&reg) != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::setBluetoothControl(): "
+			  << "Could not attach/detach Bluetooth device" << endl;
+		return;
+	}
+	
+	kdDebug() << "KToshibaSMMInterface::setBluetoothControl(): "
+		  << "Bluetooth device "
+		  << ((state == 1)? "attached" : "detached")
+		  << " successfully" << endl;
 }
 
 

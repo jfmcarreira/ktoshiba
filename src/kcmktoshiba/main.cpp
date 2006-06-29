@@ -70,7 +70,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 
     m_Driver = new KToshibaSMMInterface(this);
     m_Proc = new KToshibaProcInterface(this);
-    m_InterfaceAvailable = m_Driver->openInterface();
+    m_InterfaceAvailable = m_Driver->openSCIInterface();
     m_Timer = new QTimer(this);
 
     load();
@@ -111,7 +111,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
         connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
         m_Timer->start(210);
-        init = false;
+        m_Init = false;
     }
 };
 
@@ -244,9 +244,9 @@ QString KCMToshibaModule::quickHelp() const
 
 void KCMToshibaModule::timeout()
 {
-    if (!init) {   // initialize
+    if (!m_Init) {   // initialize
         m_Timer->start(2000);
-        init = true;
+        m_Init = true;
     }
 
     int time = 0, perc = -1, acConnected = -1;
@@ -256,7 +256,7 @@ void KCMToshibaModule::timeout()
         m_Proc->omnibookBatteryStatus(&time, &perc);
         if (perc == -1)
             m_Proc->acpiBatteryStatus(&time, &perc);
-        acConnected = m_Proc->omnibookAC();
+
         acConnected = ((acConnected == -1)? m_Proc->acpiAC() : m_Proc->omnibookAC());
     }
 #else
