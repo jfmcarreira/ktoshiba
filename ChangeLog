@@ -1,3 +1,6 @@
+2006-07-01 Azael Avalos <coproscefalo@gmail.com>
+	* Some small change to the application menu
+
 2006-06-28 Azael Avalos <coproscefalo@gmail.com>
 	* Added some error messages to toshibaProcStatus()
 	  function and a check to a return value of fgets()

@@ -41,11 +41,11 @@
 #include <synaptics/synparams.h>
 
 using namespace Synaptics;
-#endif
+#endif // ENABLE_SYNAPTICS
 
 #ifdef ENABLE_POWERSAVE
 #include <powersave_dbus.h>
-#endif
+#endif // ENABLE_POWERSAVE
 
 #include "settingswidget.h"
 #include "statuswidget.h"
@@ -86,7 +86,7 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
 #ifdef ENABLE_SYNAPTICS
     if (m_Pad == -1)
         checkSynaptics();
-#endif
+#endif // ENABLE_SYNAPTICS
 }
 
 ToshibaFnActions::~ToshibaFnActions() {
@@ -144,7 +144,7 @@ void ToshibaFnActions::checkSynaptics()
 
     m_Mousepad = (int)Pad::getParam(TOUCHPADOFF);
 }
-#endif
+#endif // ENABLE_SYNAPTICS
 
 void ToshibaFnActions::hideWidgets()
 {
@@ -492,7 +492,7 @@ void ToshibaFnActions::suspendToRAM()
 			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
             return;
     }
-#else
+#else // ENABLE_POWERSAVE
     QString helper = KStandardDirs::findExe("ktosh_helper");
     if (helper.isEmpty())
         helper = KStandardDirs::findExe("klaptop_acpi_helper");
@@ -510,7 +510,7 @@ void ToshibaFnActions::suspendToRAM()
         proc.start(KProcess::DontCare);
         proc.detach();
     }
-#endif
+#endif // ENABLE_POWERSAVE
 }
 
 void ToshibaFnActions::suspendToDisk()
@@ -520,7 +520,7 @@ void ToshibaFnActions::suspendToDisk()
 			 "are a work in progress and may or may not work on your computer.\n"
 			 "Also make sure to unload problematic modules"), i18n("WARNING"));
 
-#ifdef ENABLE_POWERSAVE
+#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
         res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
 
@@ -539,7 +539,7 @@ void ToshibaFnActions::suspendToDisk()
 			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
            return;
     }
-#else
+#else // ENABLE_POWERSAVE
     QString helper = KStandardDirs::findExe("ktosh_helper");
     if (helper.isEmpty())
         helper = KStandardDirs::findExe("klaptop_acpi_helper");
@@ -557,7 +557,7 @@ void ToshibaFnActions::suspendToDisk()
         proc.start(KProcess::DontCare);
         proc.detach();
     }
-#endif
+#endif // ENABLE_POWERSAVE
 }
 
 void ToshibaFnActions::toggleVideo()
@@ -608,7 +608,7 @@ void ToshibaFnActions::toggleMousePad()
 
         Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
     } else
-#endif
+#endif // ENABLE_SYNAPTICS
     if (m_Pad >= 0 && m_SCIIface)
         m_Driver->setPointingDevice(m_Mousepad);
 }

@@ -294,7 +294,7 @@ int KToshibaProcInterface::omnibookGetVideo()
 int KToshibaProcInterface::toshibaProcStatus()
 {
     int key;
-    char buffer[64];
+    char buffer[64], *ret;
 
     if (!(str = fopen(TOSH_PROC, "r"))) {
         kdError() << "KToshibaProcInterface::toshibaProcStatus(): "
@@ -303,12 +303,12 @@ int KToshibaProcInterface::toshibaProcStatus()
         return -1;
     }
 
-    char *ret = fgets(buffer, sizeof(buffer) - 1, str);
-    if (ret == NULL) {
+    if ((ret = fgets(buffer, sizeof(buffer) - 1, str)) == NULL) {
         kdError() << "KToshibaProcInterface::toshibaProcStatus(): "
-                  << "Could not read /proc value" << endl;
+                  << "Could not read " << TOSH_PROC << " value" << endl;
         return -1;
     }
+
     buffer[sizeof(buffer) - 1] = '\0';
     sscanf(buffer, "%*s %*x %*d.%*d %*d.%*d %*x %x\n", &key);
     fclose(str);
