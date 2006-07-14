@@ -20,17 +20,22 @@
 
 #include "ktoshiba.h"
 
-#include <kapplication.h>
+#include <kuniqueapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <kwin.h>
+
+#if defined Q_WS_X11
+#include <qxembed.h>
+#endif
 
 static const char description[] =
     I18N_NOOP("Hotkeys monitoring for Toshiba laptops.");
 
 static const char version[] = "0.9Alpha";
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     KAboutData about("ktoshiba", I18N_NOOP("KToshiba"), version, description,
                      KAboutData::License_GPL, "(C) 2004-2006 Azael Avalos", 0,
@@ -54,10 +59,22 @@ int main(int argc, char **argv)
                     "gnemmi@gmail.com", 0 );
     KCmdLineArgs::init(argc, argv, &about);
 
-    KApplication app;
+    if (!KUniqueApplication::start()) {
+        fprintf(stderr, "KToshiba is already running!\n");
+        exit(0);
+    }
+
+    KUniqueApplication app;
     KToshiba *mainWin = new KToshiba();
+
+#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+    QXEmbed::initialize();
+#endif
+
     app.setMainWidget( mainWin );
     mainWin->show();
 
-    return app.exec();
+    int res = app.exec();
+    delete mainWin; mainWin = NULL;
+    return res;
 }

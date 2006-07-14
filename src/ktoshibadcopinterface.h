@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2006 by Azael Avalos                               *
+ *   Copyright (C) 2006 by Azael Avalos                                    *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,79 +18,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TOSHIBA_FN_ACTIONS_H
-#define TOSHIBA_FN_ACTIONS_H
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#ifndef KTOSHIBA_DCOPINTERFACE_H
+#define KTOSHIBA_DCOPINTERFACE_H
 
 #include <qobject.h>
 
-class QWidget;
-
-class KToshibaSMMInterface;
-class SettingsWidget;
-class StatusWidget;
+#include <dcopobject.h>
 
 /**
- * @short Performs the Fn assosiated action
+ * @short KToshiba DCOP Interafce
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.2
+ * @version 0.1
  */
-class ToshibaFnActions : public QObject
+class KToshibaDCOPInterface : public QObject, public DCOPObject
 {
     Q_OBJECT
+    K_DCOP
+k_dcop:
+    /**
+     * This method can be called via DCOP to give a keycode.
+     */
+    ASYNC hotkey(int keycode);
 public:
-    /**
-    * Default Constructor
-    */
-    ToshibaFnActions(QWidget *parent = 0);
-    void closeSCIIface();
-    void hideWidgets();
-    void performFnAction(int, int);
-    bool m_SCIIface;
-    int m_Popup;
-    int m_BatType;
-    int m_BatSave;
-    int m_Pad;
-    int m_Mousepad;
-
-    /**
-    * Default Destructor
-    */
-    virtual ~ToshibaFnActions();
-private:
-    void toggleMute();
-    void lockScreen();
-    void toggleBSM();
-    void suspendToRAM();
-    void suspendToDisk();
-    void toggleVideo();
-    void brightDown();
-    void brightUp();
-    void toggleWireless();
-    void toggleMousePad();
-    void toggleSpeakerVolume();
-    void toggleFan();
-    void toggleBootMethod();
-    void toogleBackLight();
-    void toggleBluetooth();
-    void toggleEthernet();
-    void initSCI();
-    KToshibaSMMInterface *m_Driver;
-    SettingsWidget *m_SettingsWidget;
-    StatusWidget *m_StatusWidget;
-    QWidget *m_Parent;
-    int m_Snd;
-    int m_Video;
-    int m_Bright;
-    int m_Wireless;
-    int m_BootType;
-    int m_Vol;
-    int m_Fan;
-    int m_Boot;
-    int m_LANCtrl;
+    KToshibaDCOPInterface(QObject *parent = 0, const char *name = 0);
+    ~KToshibaDCOPInterface();
+signals:
+    void signalHotKey(int keycode);
 };
 
-#endif // TOSHIBA_FN_ACTIONS_H
+#endif // KTOSHIBA_DCOPINTERFACE_H

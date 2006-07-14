@@ -29,6 +29,10 @@ KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 {
 }
 
+KToshibaSMMInterface::~KToshibaSMMInterface()
+{
+}
+
 /**************************************
  *           SCI Functions            *
  * (Software Configuration Interface) *
@@ -978,7 +982,7 @@ int KToshibaSMMInterface::getSystemEvent()
 		 *	the system we receive HCI_SUCCESS.
 		 */
 		if (hotkeys == false) {
-			kdError() << "KToshibaSMMInterface::getSystemEvent(): "
+			kdWarning() << "KToshibaSMMInterface::getSystemEvent(): "
 				  << "Failed accessing System Events" << endl;
 		}
 		return 1;

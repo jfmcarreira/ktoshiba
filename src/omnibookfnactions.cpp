@@ -25,10 +25,18 @@
 #include <qapplication.h>
 
 #include <kdebug.h>
+#include <dcopref.h>
+
+#ifdef ENABLE_SYNAPTICS
+#include <synaptics/synaptics.h>
+#include <synaptics/synparams.h>
+
+using namespace Synaptics;
+#endif // ENABLE_SYNAPTICS
 
 #include "statuswidget.h"
 
-OmnibookFnActions::OmnibookFnActions(QWidget *parent)
+OmnibookFnActions::OmnibookFnActions(QObject *parent)
     : QObject( parent ),
       m_Proc( 0 )
 {
@@ -39,31 +47,44 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     m_OmnibookIface = m_Proc->checkOmnibook();
     if (m_OmnibookIface) {
         m_Bright = m_Proc->omnibookGetBrightness();
+        //m_Video = m_Proc->omnibookGetVideo();
+        m_Pad = m_Proc->omnibookGetTouchPad();
         m_Fan = m_Proc->omnibookGetFan();
-        m_Video = m_Proc->omnibookGetVideo();
-        m_Parent = parent;
-        m_Popup = 0;
     }
     else {
-        m_Bright = -1;
-        m_Fan = -1;
         m_Video = -1;
-        m_Parent = parent;
-        m_Popup = 0;
+        m_Bright = -1;
+        m_Pad = -1;
+        m_Fan = -1;
     }
+    m_Popup = 0;
+    m_Snd = 1;
+    m_Mousepad = 0;
 }
 
 OmnibookFnActions::~OmnibookFnActions()
 {
-    delete m_Parent; m_Parent = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
     delete m_Proc; m_Proc = NULL;
 }
 
+void OmnibookFnActions::hideWidgets()
+{
+    m_StatusWidget->hide();
+    m_Popup = 0;
+}
+
 void OmnibookFnActions::performFnAction(int action)
 {
+    // TODO: Add more actions here once we have more data
     switch(action) {
-        case 1: // Raise/Lower Brightness
+        case 0: // Disabled (Do Nothing)
+            return;
+        case 1: // Mute/Unmute
+        case 7: // Brightness Down
+        case 8: // Brightness Up
+        case 10: // Enable/Disable MousePad
+        case 12: // Fan On/Off
             if (m_Popup == 0) {
                 QRect r = QApplication::desktop()->geometry();
                 m_StatusWidget->move(r.center() - 
@@ -73,11 +94,92 @@ void OmnibookFnActions::performFnAction(int action)
             }
             if (m_Popup == 1)
                 break;
+        case 2: // LockScreen
+            lockScreen();
+            return;
+        case 4: // Suspend To RAM (STR)
+            //suspendToRAM();
+            return;
+        case 5: // Suspend To Disk (STD)
+            //suspendToDisk();
+            return;
+        case 14: // LCD Backlight On/Off
+            toogleBackLight();
+            return;
     }
 
-    if (action == 1)
+    if (action == 1) {
+        m_Snd--;
+        if (m_Snd < 0) m_Snd = 1;
+        toggleMute();
+        m_StatusWidget->wsStatus->raiseWidget(m_Snd);
+    }
+    if (action == 7 || action == 8)
         if (m_Bright <= 7 && m_Bright >= 0)
             m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
+    if (action == 10) {
+        if ((m_Pad != -1) || (m_Mousepad != -1)) {
+            m_Mousepad--;
+            if (m_Mousepad < 0) m_Mousepad = 1;
+            toggleMousePad();
+            m_StatusWidget->wsStatus->raiseWidget(((m_Mousepad == 0)? 2 : 3));
+        }
+        else
+            m_StatusWidget->wsStatus->raiseWidget(2);
+    }
+    if (action == 12) {
+        toggleFan();
+        if (m_Fan == -1) return;
+
+        (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
+            : m_StatusWidget->wsStatus->raiseWidget(13);
+    }
+}
+
+void OmnibookFnActions::toggleMute()
+{
+    DCOPRef kmixClient("kmix", "Mixer0");
+    kmixClient.send("toggleMute", 0);
+}
+
+void OmnibookFnActions::lockScreen()
+{
+    DCOPRef kdesktopClient("kdesktop", "KScreensaverIface");
+    kdesktopClient.send("lock()", 0);
+}
+
+void OmnibookFnActions::toggleMousePad()
+{
+#ifdef ENABLE_SYNAPTICS
+    if (m_Pad == -1) {
+        if (m_Mousepad == -1)
+            return;
+
+        Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
+    }
+#endif // ENABLE_SYNAPTICS
+    if (m_Pad >= 0)
+        m_Proc->omnibookSetTouchPad(m_Mousepad);
+}
+
+void OmnibookFnActions::toggleFan()
+{
+    int res = m_Proc->omnibookGetFan();
+
+    if (res == -1) return;
+
+    m_Fan = (res == 0)? 1 : 0;
+    m_Proc->omnibookSetFan(m_Fan);
+}
+
+void OmnibookFnActions::toogleBackLight()
+{
+    int bl = m_Proc->omnibookGetLCDBackLight();
+
+    if (bl == -1) return;
+
+    (bl == 1)? m_Proc->omnibookSetLCDBackLight(0)
+        : m_Proc->omnibookSetLCDBackLight(1);
 }
 
 

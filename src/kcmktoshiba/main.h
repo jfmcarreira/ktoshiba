@@ -47,6 +47,7 @@ class KCMToshibaModule: public KCModule
     Q_OBJECT
 public:
     KCMToshibaModule( QWidget *parent=0, const char *name=0, const QStringList& = QStringList() );
+    ~KCMToshibaModule();
 
     void load();
     void save();
@@ -58,8 +59,8 @@ protected slots:
     void timeout();
 private:
     KCMKToshibaGeneral *m_KCMKToshibaGeneral;
-    KToshibaSMMInterface *m_Driver;
-    KToshibaProcInterface *m_Proc;
+    KToshibaSMMInterface *m_SMMIFace;
+    KToshibaProcInterface *m_ProcIFace;
     QTimer *m_Timer;
     bool m_InterfaceAvailable;
     bool m_Omnibook;

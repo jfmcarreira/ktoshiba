@@ -10,8 +10,14 @@
             <x>0</x>
             <y>0</y>
             <width>581</width>
-            <height>462</height>
+            <height>478</height>
         </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>570</width>
+            <height>470</height>
+        </size>
     </property>
     <property name="caption">
         <string>KToshiba: General Options</string>
@@ -19,13 +25,47 @@
     <property name="icon">
         <pixmap>image0</pixmap>
     </property>
-    <grid>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QFrame" row="1" column="0">
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>tlOff</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>559</width>
+                    <height>60</height>
+                </size>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>32767</width>
+                    <height>60</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>Cannot find the &lt;i&gt;Toshiba System Managment Mode Driver&lt;/i&gt;. If this is a Toshiba Laptop, make sure the &lt;b&gt;toshiba&lt;/b&gt; driver module loads without failures.</string>
+            </property>
+        </widget>
+        <widget class="QFrame">
             <property name="name">
                 <cstring>frameMain</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>559</width>
+                    <height>390</height>
+                </size>
             </property>
             <property name="frameShape">
                 <enum>NoFrame</enum>
@@ -37,201 +77,247 @@
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
                 <widget class="QTabWidget">
                     <property name="name">
                         <cstring>configTabWidget</cstring>
                     </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>540</width>
+                            <height>360</height>
+                        </size>
+                    </property>
                     <widget class="QWidget">
                         <property name="name">
-                            <cstring>tab</cstring>
+                            <cstring>GeneralOptionsTab</cstring>
                         </property>
                         <attribute name="title">
                             <string>&amp;General Options</string>
                         </attribute>
-                        <widget class="QButtonGroup">
+                        <vbox>
                             <property name="name">
-                                <cstring>bgBattery</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>11</y>
-                                    <width>511</width>
-                                    <height>70</height>
-                                </rect>
-                            </property>
-                            <property name="title">
-                                <string>System Power</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignTop</set>
-                            </property>
-                            <hbox>
+                            <widget class="QButtonGroup">
                                 <property name="name">
-                                    <cstring>unnamed</cstring>
+                                    <cstring>bgBattery</cstring>
                                 </property>
-                                <widget class="QLabel">
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>511</width>
+                                        <height>70</height>
+                                    </size>
+                                </property>
+                                <property name="title">
+                                    <string>System Power</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignTop</set>
+                                </property>
+                                <hbox>
                                     <property name="name">
-                                        <cstring>tlBattery</cstring>
+                                        <cstring>unnamed</cstring>
                                     </property>
-                                    <property name="text">
-                                        <string>Remaining battery capacity:</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignVCenter|AlignRight</set>
-                                    </property>
-                                </widget>
-                                <widget class="KProgress">
-                                    <property name="name">
-                                        <cstring>mKPBattery</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="KLed">
-                                    <property name="name">
-                                        <cstring>kledAC</cstring>
-                                    </property>
-                                    <property name="state">
-                                        <enum>Off</enum>
-                                    </property>
-                                    <property name="shape">
-                                        <enum>Rectangular</enum>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel">
-                                    <property name="name">
-                                        <cstring>tlAC</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>AC</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignVCenter|AlignLeft</set>
-                                    </property>
-                                </widget>
-                                <widget class="KLed">
-                                    <property name="name">
-                                        <cstring>kledBat</cstring>
-                                    </property>
-                                    <property name="state">
-                                        <enum>Off</enum>
-                                    </property>
-                                    <property name="shape">
-                                        <enum>Rectangular</enum>
-                                    </property>
-                                    <property name="color">
-                                        <color>
-                                            <red>255</red>
-                                            <green>255</green>
-                                            <blue>0</blue>
-                                        </color>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel">
-                                    <property name="name">
-                                        <cstring>tlBat</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Bat</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignVCenter|AlignLeft</set>
-                                    </property>
-                                </widget>
-                            </hbox>
-                        </widget>
-                        <widget class="QButtonGroup">
-                            <property name="name">
-                                <cstring>bgOtherOptions</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>10</x>
-                                    <y>90</y>
-                                    <width>511</width>
-                                    <height>91</height>
-                                </rect>
-                            </property>
-                            <property name="title">
-                                <string>Other Options</string>
-                            </property>
-                            <grid>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>tlBattery</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Remaining battery capacity:</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignLeft</set>
+                                        </property>
+                                    </widget>
+                                    <widget class="KProgress">
+                                        <property name="name">
+                                            <cstring>mKPBattery</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KLed">
+                                        <property name="name">
+                                            <cstring>kledAC</cstring>
+                                        </property>
+                                        <property name="state">
+                                            <enum>Off</enum>
+                                        </property>
+                                        <property name="shape">
+                                            <enum>Rectangular</enum>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>tlAC</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>AC</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignLeft</set>
+                                        </property>
+                                    </widget>
+                                    <widget class="KLed">
+                                        <property name="name">
+                                            <cstring>kledBat</cstring>
+                                        </property>
+                                        <property name="state">
+                                            <enum>Off</enum>
+                                        </property>
+                                        <property name="shape">
+                                            <enum>Rectangular</enum>
+                                        </property>
+                                        <property name="color">
+                                            <color>
+                                                <red>255</red>
+                                                <green>255</green>
+                                                <blue>0</blue>
+                                            </color>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>tlBat</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Bat</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignLeft</set>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                            <widget class="QButtonGroup">
                                 <property name="name">
-                                    <cstring>unnamed</cstring>
+                                    <cstring>bgOtherOptions</cstring>
                                 </property>
-                                <widget class="QPushButton" row="0" column="0">
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>5</hsizetype>
+                                        <vsizetype>5</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>511</width>
+                                        <height>100</height>
+                                    </size>
+                                </property>
+                                <property name="title">
+                                    <string>Other Options</string>
+                                </property>
+                                <grid>
                                     <property name="name">
-                                        <cstring>helperPushButton</cstring>
+                                        <cstring>unnamed</cstring>
                                     </property>
-                                    <property name="text">
-                                        <string>Setup &amp;Helper Application</string>
-                                    </property>
-                                    <property name="accel">
-                                        <string>Alt+H</string>
-                                    </property>
-                                    <property name="toolTip" stdset="0">
-                                        <string>This button can be used to enable the helper application</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-                                    <property name="name">
-                                        <cstring>btstartCheckBox</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Enable Bluetooth device at program start-up</string>
-                                    </property>
-                                    <property name="accel">
-                                        <string>Alt+E</string>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>audioAppTextLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Select &amp;Audio Application:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>audioComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="0" column="2">
-                                    <item>
+                                    <widget class="QPushButton" row="0" column="0">
+                                        <property name="name">
+                                            <cstring>helperPushButton</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>Amarok</string>
+                                            <string>Setup &amp;Helper Application</string>
                                         </property>
-                                        <property name="pixmap">
-                                            <pixmap>image1</pixmap>
+                                        <property name="accel">
+                                            <string>Alt+H</string>
                                         </property>
-                                    </item>
-                                    <item>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This button can be used to enable the helper application</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                                        <property name="name">
+                                            <cstring>btstartCheckBox</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>JuK</string>
+                                            <string>&amp;Enable Bluetooth device at program start-up</string>
                                         </property>
-                                        <property name="pixmap">
-                                            <pixmap>image2</pixmap>
+                                        <property name="accel">
+                                            <string>Alt+E</string>
                                         </property>
-                                    </item>
-                                    <item>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Check this if you want the Bluetooth device activated at program startup</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="0" column="1">
+                                        <property name="name">
+                                            <cstring>audioAppTextLabel</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>XMMS</string>
+                                            <string>Select &amp;Audio Application:</string>
                                         </property>
-                                        <property name="pixmap">
-                                            <pixmap>image3</pixmap>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>audioComboBox</cstring>
                                         </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>audioComboBox</cstring>
-                                    </property>
-                                    <property name="toolTip" stdset="0">
-                                        <string>This can be used to select prefered audio application to use with front panel buttons</string>
-                                    </property>
-                                </widget>
-                            </grid>
-                        </widget>
+                                    </widget>
+                                    <widget class="QComboBox" row="0" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>Amarok</string>
+                                            </property>
+                                            <property name="pixmap">
+                                                <pixmap>image1</pixmap>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>JuK</string>
+                                            </property>
+                                            <property name="pixmap">
+                                                <pixmap>image2</pixmap>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>XMMS</string>
+                                            </property>
+                                            <property name="pixmap">
+                                                <pixmap>image3</pixmap>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>audioComboBox</cstring>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>This can be used to select prefered audio application to use with front panel buttons</string>
+                                        </property>
+                                    </widget>
+                                </grid>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>GeneralOptionsSpacer</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>130</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </vbox>
                     </widget>
                     <widget class="QWidget">
                         <property name="name">
-                            <cstring>tab</cstring>
+                            <cstring>FnKeyTab</cstring>
                         </property>
                         <attribute name="title">
                             <string>Fn-Ke&amp;y</string>
@@ -240,117 +326,7 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QLabel" row="0" column="0">
-                                <property name="name">
-                                    <cstring>fnescTextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-&amp;Esc:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="3" column="0">
-                                <property name="name">
-                                    <cstring>fnf3TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;3:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_3</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="4" column="0">
-                                <property name="name">
-                                    <cstring>fnf4TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;4:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_4</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="7" column="0">
-                                <property name="name">
-                                    <cstring>fnf7TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;7:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_7</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="8" column="0">
-                                <property name="name">
-                                    <cstring>fnf8TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;8:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_8</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="9" column="0">
-                                <property name="name">
-                                    <cstring>fnf9TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;9:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_9</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="5" column="0">
-                                <property name="name">
-                                    <cstring>fnf5TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;5:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_5</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="1" column="0">
-                                <property name="name">
-                                    <cstring>fnf1TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;1:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_1</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="2" column="0">
-                                <property name="name">
-                                    <cstring>fnf2TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;2:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_2</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="6" column="0">
-                                <property name="name">
-                                    <cstring>fnf6TextLabel</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Fn-F&amp;6:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>fnComboBox_6</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QComboBox" row="2" column="1">
+                            <widget class="QComboBox" row="2" column="2">
                                 <item>
                                     <property name="text">
                                         <string>Disabled</string>
@@ -493,8 +469,11 @@
                                 <property name="currentItem">
                                     <number>3</number>
                                 </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
                             </widget>
-                            <widget class="QComboBox" row="4" column="1">
+                            <widget class="QComboBox" row="4" column="2">
                                 <item>
                                     <property name="text">
                                         <string>Disabled</string>
@@ -637,8 +616,11 @@
                                 <property name="currentItem">
                                     <number>5</number>
                                 </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
                             </widget>
-                            <widget class="QComboBox" row="8" column="1">
+                            <widget class="QComboBox" row="8" column="2">
                                 <item>
                                     <property name="text">
                                         <string>Disabled</string>
@@ -781,8 +763,1033 @@
                                 <property name="currentItem">
                                     <number>9</number>
                                 </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
                             </widget>
-                            <widget class="QComboBox" row="0" column="1">
+                            <widget class="QComboBox" row="3" column="2">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image12</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image13</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>MousePad On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image14</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Volume</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fan On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Boot Sequence</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image17</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>LCD Backlight On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image18</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image19</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ethernet On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image20</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_3</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>4</number>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="6" column="2">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image12</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image13</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>MousePad On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image14</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Volume</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fan On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Boot Sequence</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image17</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>LCD Backlight On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image18</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image19</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ethernet On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image20</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_6</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>7</number>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="1" column="2">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image12</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image13</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>MousePad On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image14</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Volume</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fan On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Boot Sequence</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image17</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>LCD Backlight On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image18</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image19</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ethernet On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image20</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_1</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>2</number>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="9" column="2">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image12</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image13</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>MousePad On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image14</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Volume</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fan On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Boot Sequence</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image17</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>LCD Backlight On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image18</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image19</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ethernet On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image20</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_9</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>10</number>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="5" column="2">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image12</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image13</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>MousePad On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image14</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Volume</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fan On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Boot Sequence</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image17</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>LCD Backlight On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image18</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image19</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ethernet On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image20</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_5</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>6</number>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="7" column="2">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image4</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Unmute/Mute</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image5</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Lock Screen</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image6</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Battery Save Mode</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image7</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To RAM</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image8</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Suspend To Disk</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image9</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Video Out</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image10</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Down</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image11</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bright Up</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image12</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Wireless On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image13</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>MousePad On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image14</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Speaker Volume</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image15</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fan On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image16</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Boot Sequence</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image17</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>LCD Backlight On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image18</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bluetooth On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image19</pixmap>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Ethernet On/Off</string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image20</pixmap>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>fnComboBox_7</cstring>
+                                </property>
+                                <property name="currentItem">
+                                    <number>8</number>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>fnescTextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-&amp;Esc:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fnf1TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;1:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_1</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>fnf2TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;2:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_2</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>fnf3TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;3:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_3</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="4" column="0">
+                                <property name="name">
+                                    <cstring>fnf4TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;4:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_4</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="5" column="0">
+                                <property name="name">
+                                    <cstring>fnf5TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;5:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_5</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="6" column="0">
+                                <property name="name">
+                                    <cstring>fnf6TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;6:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_6</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="7" column="0">
+                                <property name="name">
+                                    <cstring>fnf7TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;7:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_7</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="8" column="0">
+                                <property name="name">
+                                    <cstring>fnf8TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;8:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_8</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="9" column="0">
+                                <property name="name">
+                                    <cstring>fnf9TextLabel</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Fn-F&amp;9:</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>AlignVCenter|AlignLeft</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fnComboBox_9</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="0" column="2">
                                 <item>
                                     <property name="text">
                                         <string>Disabled</string>
@@ -928,1158 +1935,588 @@
                                 <property name="duplicatesEnabled">
                                     <bool>true</bool>
                                 </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>These are the different options that you can assign to your Fn-F# keys</string>
+                                </property>
                             </widget>
-                            <widget class="QComboBox" row="3" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Disabled</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image4</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Unmute/Mute</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image5</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Lock Screen</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image6</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Battery Save Mode</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image7</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To RAM</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image8</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To Disk</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image9</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Video Out</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image10</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Down</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image11</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Up</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image12</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Wireless On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image13</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>MousePad On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image14</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Volume</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image15</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Fan On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image16</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Boot Sequence</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image17</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>LCD Backlight On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image18</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bluetooth On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image19</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ethernet On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image20</pixmap>
-                                    </property>
-                                </item>
+                            <spacer row="0" column="1">
                                 <property name="name">
-                                    <cstring>fnComboBox_3</cstring>
+                                    <cstring>spacerFnEsc</cstring>
                                 </property>
-                                <property name="currentItem">
-                                    <number>4</number>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
                                 </property>
-                            </widget>
-                            <widget class="QComboBox" row="6" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Disabled</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image4</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Unmute/Mute</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image5</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Lock Screen</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image6</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Battery Save Mode</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image7</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To RAM</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image8</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To Disk</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image9</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Video Out</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image10</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Down</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image11</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Up</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image12</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Wireless On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image13</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>MousePad On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image14</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Volume</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image15</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Fan On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image16</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Boot Sequence</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image17</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>LCD Backlight On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image18</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bluetooth On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image19</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ethernet On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image20</pixmap>
-                                    </property>
-                                </item>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="1" column="1">
                                 <property name="name">
-                                    <cstring>fnComboBox_6</cstring>
+                                    <cstring>spacerFnF1</cstring>
                                 </property>
-                                <property name="currentItem">
-                                    <number>7</number>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
                                 </property>
-                            </widget>
-                            <widget class="QComboBox" row="1" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Disabled</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image4</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Unmute/Mute</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image5</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Lock Screen</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image6</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Battery Save Mode</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image7</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To RAM</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image8</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To Disk</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image9</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Video Out</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image10</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Down</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image11</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Up</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image12</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Wireless On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image13</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>MousePad On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image14</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Volume</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image15</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Fan On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image16</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Boot Sequence</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image17</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>LCD Backlight On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image18</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bluetooth On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image19</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ethernet On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image20</pixmap>
-                                    </property>
-                                </item>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="2" column="1">
                                 <property name="name">
-                                    <cstring>fnComboBox_1</cstring>
+                                    <cstring>spacerFnF2</cstring>
                                 </property>
-                                <property name="currentItem">
-                                    <number>2</number>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
                                 </property>
-                            </widget>
-                            <widget class="QComboBox" row="9" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Disabled</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image4</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Unmute/Mute</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image5</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Lock Screen</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image6</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Battery Save Mode</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image7</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To RAM</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image8</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To Disk</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image9</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Video Out</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image10</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Down</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image11</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Up</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image12</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Wireless On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image13</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>MousePad On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image14</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Volume</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image15</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Fan On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image16</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Boot Sequence</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image17</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>LCD Backlight On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image18</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bluetooth On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image19</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ethernet On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image20</pixmap>
-                                    </property>
-                                </item>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="3" column="1">
                                 <property name="name">
-                                    <cstring>fnComboBox_9</cstring>
+                                    <cstring>spacerFnF3</cstring>
                                 </property>
-                                <property name="currentItem">
-                                    <number>10</number>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
                                 </property>
-                            </widget>
-                            <widget class="QComboBox" row="5" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Disabled</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image4</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Unmute/Mute</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image5</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Lock Screen</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image6</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Battery Save Mode</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image7</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To RAM</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image8</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To Disk</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image9</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Video Out</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image10</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Down</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image11</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Up</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image12</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Wireless On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image13</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>MousePad On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image14</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Volume</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image15</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Fan On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image16</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Boot Sequence</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image17</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>LCD Backlight On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image18</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bluetooth On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image19</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ethernet On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image20</pixmap>
-                                    </property>
-                                </item>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="4" column="1">
                                 <property name="name">
-                                    <cstring>fnComboBox_5</cstring>
+                                    <cstring>spacerFnF4</cstring>
                                 </property>
-                                <property name="currentItem">
-                                    <number>6</number>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
                                 </property>
-                            </widget>
-                            <widget class="QComboBox" row="7" column="1">
-                                <item>
-                                    <property name="text">
-                                        <string>Disabled</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image4</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Unmute/Mute</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image5</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Lock Screen</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image6</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Battery Save Mode</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image7</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To RAM</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image8</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Suspend To Disk</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image9</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Video Out</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image10</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Down</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image11</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bright Up</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image12</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Wireless On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image13</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>MousePad On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image14</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Speaker Volume</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image15</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Fan On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image16</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Boot Sequence</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image17</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>LCD Backlight On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image18</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Bluetooth On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image19</pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Ethernet On/Off</string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap>image20</pixmap>
-                                    </property>
-                                </item>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="5" column="1">
                                 <property name="name">
-                                    <cstring>fnComboBox_7</cstring>
+                                    <cstring>spacerFnF5</cstring>
                                 </property>
-                                <property name="currentItem">
-                                    <number>8</number>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
                                 </property>
-                            </widget>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="6" column="1">
+                                <property name="name">
+                                    <cstring>spacerFnF6</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="7" column="1">
+                                <property name="name">
+                                    <cstring>spacerFnF7</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="8" column="1">
+                                <property name="name">
+                                    <cstring>spacerFnF8</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <spacer row="9" column="1">
+                                <property name="name">
+                                    <cstring>spacerFnF9</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>200</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
                         </grid>
                     </widget>
                     <widget class="QWidget">
                         <property name="name">
-                            <cstring>TabPage</cstring>
+                            <cstring>BatSavModTab</cstring>
                         </property>
                         <attribute name="title">
                             <string>&amp;Battery Save Mode</string>
                         </attribute>
-                        <widget class="QLayoutWidget">
+                        <vbox>
                             <property name="name">
-                                <cstring>layout1</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>10</x>
-                                    <y>60</y>
-                                    <width>520</width>
-                                    <height>290</height>
-                                </rect>
-                            </property>
-                            <grid>
+                            <widget class="QLabel">
                                 <property name="name">
-                                    <cstring>unnamed</cstring>
+                                    <cstring>BatSavModTextLabel</cstring>
                                 </property>
-                                <widget class="QLabel" row="2" column="0">
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>530</width>
+                                        <height>50</height>
+                                    </size>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>32767</width>
+                                        <height>50</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string>The options shown here are only applicable when the &lt;b&gt;Battery Save Mode&lt;/b&gt; is set to &lt;i&gt;User Settings&lt;/i&gt;.</string>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>BatSavModLayout</cstring>
+                                </property>
+                                <grid>
                                     <property name="name">
-                                        <cstring>displayTextLabel</cstring>
+                                        <cstring>unnamed</cstring>
                                     </property>
-                                    <property name="text">
-                                        <string>D&amp;isplay Auto Off:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>displayComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="5" column="0">
-                                    <property name="name">
-                                        <cstring>coolingTextLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Cooling &amp;Method:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>coolingComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="1" column="1">
-                                    <item>
-                                        <property name="text">
-                                            <string>Enabled</string>
+                                    <widget class="QLabel" row="3" column="0">
+                                        <property name="name">
+                                            <cstring>hddTextLabel</cstring>
                                         </property>
-                                    </item>
-                                    <item>
                                         <property name="text">
-                                            <string>Disabled</string>
+                                            <string>HDD Au&amp;to Off:</string>
                                         </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>cpuComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="3" column="0">
-                                    <property name="name">
-                                        <cstring>hddTextLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>HDD Au&amp;to Off:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>hddComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="2" column="1">
-                                    <item>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>hddComboBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <spacer row="2" column="1">
+                                        <property name="name">
+                                            <cstring>DisplaySpacer</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>130</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QComboBox" row="1" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>Enabled</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Disabled</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>cpuComboBox</cstring>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>These are the different options to configure the Battery Save Mode when it changes to User Settings</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox" row="4" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>Super Bright</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Bright</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Semi Bright</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>lcdComboBox</cstring>
+                                        </property>
+                                        <property name="currentItem">
+                                            <number>2</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>These are the different options to configure the Battery Save Mode when it changes to User Settings</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="4" column="0">
+                                        <property name="name">
+                                            <cstring>lcdTextLabel</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>30 min</string>
+                                            <string>LCD &amp;Brightness:</string>
                                         </property>
-                                    </item>
-                                    <item>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>lcdComboBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox" row="0" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>High</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Low</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>processorComboBox</cstring>
+                                        </property>
+                                        <property name="currentItem">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>These are the different options to configure the Battery Save Mode when it changes to User Settings</string>
+                                        </property>
+                                    </widget>
+                                    <spacer row="0" column="1">
+                                        <property name="name">
+                                            <cstring>ProcSpeedSpacer</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>130</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QComboBox" row="5" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>Max Performance</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Battery Optimized</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Performance</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>coolingComboBox</cstring>
+                                        </property>
+                                        <property name="currentItem">
+                                            <number>2</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>These are the different options to configure the Battery Save Mode when it changes to User Settings</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="5" column="0">
+                                        <property name="name">
+                                            <cstring>coolingTextLabel</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>20 min</string>
+                                            <string>Cooling &amp;Method:</string>
                                         </property>
-                                    </item>
-                                    <item>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>coolingComboBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox" row="3" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>30 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>20 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>15 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>10 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>05 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>03 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>01 min</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>hddComboBox</cstring>
+                                        </property>
+                                        <property name="currentItem">
+                                            <number>5</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>These are the different options to configure the Battery Save Mode when it changes to User Settings</string>
+                                        </property>
+                                    </widget>
+                                    <spacer row="3" column="1">
+                                        <property name="name">
+                                            <cstring>HDDSpacer</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>130</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <spacer row="1" column="1">
+                                        <property name="name">
+                                            <cstring>CPUSleepSpacer</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>130</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLabel" row="1" column="0">
+                                        <property name="name">
+                                            <cstring>cpuTextLabel</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>15 min</string>
+                                            <string>CP&amp;U Sleep Mode:</string>
                                         </property>
-                                    </item>
-                                    <item>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>cpuComboBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox" row="2" column="2">
+                                        <item>
+                                            <property name="text">
+                                                <string>30 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>20 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>15 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>10 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>05 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>03 min</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>01 min</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>displayComboBox</cstring>
+                                        </property>
+                                        <property name="currentItem">
+                                            <number>5</number>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>These are the different options to configure the Battery Save Mode when it changes to User Settings</string>
+                                        </property>
+                                    </widget>
+                                    <spacer row="4" column="1">
+                                        <property name="name">
+                                            <cstring>LCDSpacer</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>130</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLabel" row="0" column="0">
+                                        <property name="name">
+                                            <cstring>processorTextLabel</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>10 min</string>
+                                            <string>&amp;Processing Speed:</string>
                                         </property>
-                                    </item>
-                                    <item>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>processorComboBox</cstring>
+                                        </property>
+                                    </widget>
+                                    <spacer row="5" column="1">
+                                        <property name="name">
+                                            <cstring>CoolingSpacer</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>130</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLabel" row="2" column="0">
+                                        <property name="name">
+                                            <cstring>displayTextLabel</cstring>
+                                        </property>
                                         <property name="text">
-                                            <string>05 min</string>
+                                            <string>D&amp;isplay Auto Off:</string>
                                         </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>03 min</string>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>displayComboBox</cstring>
                                         </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>01 min</string>
-                                        </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>displayComboBox</cstring>
-                                    </property>
-                                    <property name="currentItem">
-                                        <number>5</number>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="5" column="1">
-                                    <item>
-                                        <property name="text">
-                                            <string>Max Performance</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Battery Optimized</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Performance</string>
-                                        </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>coolingComboBox</cstring>
-                                    </property>
-                                    <property name="currentItem">
-                                        <number>2</number>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="4" column="1">
-                                    <item>
-                                        <property name="text">
-                                            <string>Super Bright</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Bright</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Semi Bright</string>
-                                        </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>lcdComboBox</cstring>
-                                    </property>
-                                    <property name="currentItem">
-                                        <number>2</number>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="3" column="1">
-                                    <item>
-                                        <property name="text">
-                                            <string>30 min</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>20 min</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>15 min</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>10 min</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>05 min</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>03 min</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>01 min</string>
-                                        </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>hddComboBox</cstring>
-                                    </property>
-                                    <property name="currentItem">
-                                        <number>5</number>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="1" column="0">
-                                    <property name="name">
-                                        <cstring>cpuTextLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>CP&amp;U Sleep Mode:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>cpuComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QComboBox" row="0" column="1">
-                                    <item>
-                                        <property name="text">
-                                            <string>High</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Low</string>
-                                        </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>processorComboBox</cstring>
-                                    </property>
-                                    <property name="currentItem">
-                                        <number>1</number>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="0" column="0">
-                                    <property name="name">
-                                        <cstring>processorTextLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Processing Speed:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>processorComboBox</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="4" column="0">
-                                    <property name="name">
-                                        <cstring>lcdTextLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>LCD &amp;Brightness:</string>
-                                    </property>
-                                    <property name="buddy" stdset="0">
-                                        <cstring>lcdComboBox</cstring>
-                                    </property>
-                                </widget>
-                            </grid>
-                        </widget>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>textLabel1</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>16</x>
-                                    <y>17</y>
-                                    <width>510</width>
-                                    <height>40</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>The options shown here are only applicable when the &lt;b&gt;Battery Save Mode&lt;/b&gt; is set to &lt;i&gt;User Settings&lt;/i&gt;.</string>
-                            </property>
-                        </widget>
+                                    </widget>
+                                </grid>
+                            </widget>
+                        </vbox>
                     </widget>
                 </widget>
             </hbox>
         </widget>
-        <widget class="QLabel" row="0" column="0">
-            <property name="name">
-                <cstring>tlOff</cstring>
-            </property>
-            <property name="text">
-                <string>Cannot find the &lt;i&gt;Toshiba System Managment Mode Driver&lt;/i&gt;. If this is a Toshiba Laptop, make sure the &lt;b&gt;toshiba&lt;/b&gt; driver module loads without failures.</string>
-            </property>
-        </widget>
-    </grid>
+    </vbox>
 </widget>
 <images>
     <image name="image0">

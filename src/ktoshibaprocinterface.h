@@ -48,6 +48,10 @@ public:
     */
     KToshibaProcInterface(QObject *parent = 0);
     /**
+    * Default Destructor
+    */
+    ~KToshibaProcInterface();
+    /**
     * Checks /proc entry for Toshiba model
     * @return @p true if found, false otherwise
     */
@@ -93,6 +97,26 @@ public:
     * @param status the int to turn on/off the fan
     */
     void omnibookSetFan(int status);
+    /**
+    * Checks /proc entry for LCD Backlight status
+    * @return @p the int holding the current LCD state
+    */
+    int omnibookGetLCDBackLight();
+    /**
+    * Enables/Disables the LCD Backlight
+    * @param status the int holding the desired status
+    */
+    void omnibookSetLCDBackLight(int status);
+    /**
+    * Checks /proc entry for TouchPad status
+    * @return @p the int holding the current TouchPad status
+    */
+    int omnibookGetTouchPad();
+    /**
+    * Enables/Disables the TouchPad
+    * @param status the int holding the desired status
+    */
+    void omnibookSetTouchPad(int status);
     /**
     *
     */

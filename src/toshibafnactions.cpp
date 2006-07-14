@@ -54,6 +54,7 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     : QObject( parent ),
       m_Driver( 0 )
 {
+    m_Parent = parent;
     m_Driver = new KToshibaSMMInterface(this);
     m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
@@ -75,18 +76,12 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     m_Video = m_Driver->getVideo();
     m_Bright = m_Driver->getBrightness();
     m_Wireless = m_Driver->getWirelessPower();
-    m_Parent = parent;
     m_Popup = 0;
     m_Snd = 1;
     m_BatSave = 2;
     m_Mousepad = 0;
     m_Vol = -1;
     m_Fan = -1;
-
-#ifdef ENABLE_SYNAPTICS
-    if (m_Pad == -1)
-        checkSynaptics();
-#endif // ENABLE_SYNAPTICS
 }
 
 ToshibaFnActions::~ToshibaFnActions() {
@@ -117,34 +112,6 @@ void ToshibaFnActions::closeSCIIface()
     if (m_SCIIface)
         m_Driver->closeSCIInterface();
 }
-
-#ifdef ENABLE_SYNAPTICS
-void ToshibaFnActions::checkSynaptics()
-{
-    static bool driver = Pad::hasDriver();
-    if (driver == false) {
-        kdError() << "KToshiba: Incompatible synaptics driver version " << endl;
-        m_Mousepad = -1;
-        return;
-    }
-
-    static bool shm = Pad::hasShm();
-    if (shm == false) {
-        kdError() << "KToshiba: Access denied to driver shared memory area" << endl;
-        m_Mousepad = -1;
-        return;
-    }
-
-    static bool param = Pad::hasParam(TOUCHPADOFF);
-    if (param == false) {
-        kdDebug() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
-        m_Mousepad = -1;
-        return;
-    }
-
-    m_Mousepad = (int)Pad::getParam(TOUCHPADOFF);
-}
-#endif // ENABLE_SYNAPTICS
 
 void ToshibaFnActions::hideWidgets()
 {
@@ -420,8 +387,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
             m_Mousepad--;
             if (m_Mousepad < 0) m_Mousepad = 1;
             toggleMousePad();
-            int mpad = ((m_Mousepad == 0)? 2 : 3);
-            m_StatusWidget->wsStatus->raiseWidget(mpad);
+            m_StatusWidget->wsStatus->raiseWidget(((m_Mousepad == 0)? 2 : 3));
         }
         else
             m_StatusWidget->wsStatus->raiseWidget(2);
@@ -437,12 +403,10 @@ void ToshibaFnActions::performFnAction(int action, int key)
     }
     if (action == 12) {
         toggleFan();
-        if (m_Fan == -1)
-            return;
-        else if (m_Fan == 1)
-            m_StatusWidget->wsStatus->raiseWidget(12);
-        else if (m_Fan == 0)
-            m_StatusWidget->wsStatus->raiseWidget(13);
+        if (m_Fan == -1) return;
+
+        (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
+            : m_StatusWidget->wsStatus->raiseWidget(13);
     }
 }
 
@@ -460,10 +424,8 @@ void ToshibaFnActions::lockScreen()
 
 void ToshibaFnActions::toggleBSM()
 {
-    if (m_BatType == 3)
-        m_Driver->setBatterySaveMode(m_BatSave + 1);
-    else
-        m_Driver->setBatterySaveMode(m_BatSave);
+    (m_BatType == 3)? m_Driver->setBatterySaveMode(m_BatSave + 1)
+        : m_Driver->setBatterySaveMode(m_BatSave);
 }
 
 void ToshibaFnActions::suspendToRAM()
@@ -476,6 +438,8 @@ void ToshibaFnActions::suspendToRAM()
 #ifdef ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
         res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRam");
+    else if (res == KMessageBox::Cancel)
+        return;
 
     switch (res) {
         case REPLY_SUCCESS:
@@ -523,6 +487,8 @@ void ToshibaFnActions::suspendToDisk()
 #ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
         res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
+    else if (res == KMessageBox::Cancel)
+        return;
 
     switch (res) {
         case REPLY_SUCCESS:
@@ -607,7 +573,7 @@ void ToshibaFnActions::toggleMousePad()
             return;
 
         Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
-    } else
+    }
 #endif // ENABLE_SYNAPTICS
     if (m_Pad >= 0 && m_SCIIface)
         m_Driver->setPointingDevice(m_Mousepad);
@@ -645,24 +611,20 @@ void ToshibaFnActions::toogleBackLight()
 {
     int bl = m_Driver->getBackLight();
 
-    if (bl == -1)
-        return;
-    else if (bl == 1)
-        m_Driver->setBackLight(0);
-    else if (bl == 0)
-        m_Driver->setBackLight(1);
+    if (bl == -1) return;
+
+    (bl == 1)? m_Driver->setBackLight(0)
+        : m_Driver->setBackLight(1);
 }
 
 void ToshibaFnActions::toggleBluetooth()
 {
     int bt = m_Driver->getBluetoothPower();
 
-    if (bt == -1)
-        return;
-    else if (bt == 1)
-        m_Driver->setBluetoothPower(0);
-    else if (bt == 0)
-        m_Driver->setBluetoothPower(1);
+    if (bt == -1) return;
+
+    (bt == 1)? m_Driver->setBluetoothPower(0)
+        : m_Driver->setBluetoothPower(1);
     QString w = ((bt == 0)? i18n("activated") : i18n("deactivated"));
     KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device %1").arg(w),
 			   SmallIcon("kdebluetooth", 20), m_Parent, i18n("Bluetooth"), 4000);
@@ -672,12 +634,10 @@ void ToshibaFnActions::toggleEthernet()
 {
     int eth = m_Driver->getLANController();
 
-    if (eth == -1)
-        return;
-    else if (eth == 1)
-        m_Driver->setLANController(0);
-    else if (eth == 0)
-        m_Driver->setLANController(1);
+    if (eth == -1) return;
+
+    (eth == 1)? m_Driver->setLANController(0)
+        : m_Driver->setLANController(1);
     QString w = ((eth == 0)? i18n("activated") : i18n("deactivated"));
     KPassivePopup::message(i18n("KToshiba"), i18n("Ethernet device %1").arg(w),
 			   SmallIcon("messagebox_info", 20), m_Parent, i18n("Ethernet"), 4000);

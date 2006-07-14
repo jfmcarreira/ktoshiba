@@ -26,10 +26,14 @@
 
 #include <kdebug.h>
 
-KToshibaProcInterface::KToshibaProcInterface(QObject *parent)
+KToshibaProcInterface::KToshibaProcInterface( QObject *parent )
     : QObject( parent ),
       mFd( 0 ),
       BatteryCap( 0 )
+{
+}
+
+KToshibaProcInterface::~KToshibaProcInterface()
 {
 }
 
@@ -260,6 +264,93 @@ void KToshibaProcInterface::omnibookSetFan(int status)
         kdError() << "KToshibaProcInterface::omnibookSetFan()"
                   << "Could not " << ((status == 0)? "disable" : "enable")
                   << " system fan" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
+}
+
+int KToshibaProcInterface::omnibookGetLCDBackLight()
+{
+    QFile file(OMNI_ROOT"/blank");
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetLCDBacklight(): "
+                  << "Could not get LCD Backlight status" << endl;
+        return -1;
+    }
+
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("LCD console blanking is", false)) {
+        QRegExp rx("(enabled)$");
+        rx.search(line);
+        if (rx.cap(1) == "enabled") {
+            file.close();
+            return 1;
+        }
+    }
+    file.close();
+
+    return 0;
+}
+
+void KToshibaProcInterface::omnibookSetLCDBackLight(int status)
+{
+    if ((mFd = open(OMNI_ROOT"/blank", O_RDWR))) {
+        kdError() << "KToshibaProcInterface::omnibookSetLCDBacklight()"
+                  << "Could not open: " << OMNI_ROOT << "/blank" << endl;
+        return;
+    }
+
+    if (write(mFd, "%d", status) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetLCDBacklight()"
+                  << "Could not turn " << ((status == 0)? "off" : "on")
+                  << " LCD backlight" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
+}
+
+int KToshibaProcInterface::omnibookGetTouchPad()
+{
+    QFile file(OMNI_ROOT"/touchpad");
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetTouchPad(): "
+                  << "Could not get TouchPad state or system doesn't"
+                  << " support it" << endl;
+        return -1;
+    }
+
+    /*QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("", false)) {
+        QRegExp rx("(not)$");
+        rx.search(line);
+        if (rx.cap(1) == "not") {
+            file.close();
+            return 0;
+        }
+    }
+    file.close();*/
+
+    return 1;
+}
+
+void KToshibaProcInterface::omnibookSetTouchPad(int status)
+{
+    if ((mFd = open(OMNI_ROOT"/touchpad", O_RDWR))) {
+        kdError() << "KToshibaProcInterface::omnibookSetTouchPad()"
+                  << "Could not open: " << OMNI_ROOT << "/touchpad" << endl;
+        return;
+    }
+
+    if (write(mFd, "%d", status) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetTouchPad()"
+                  << "Could not " << ((status == 0)? "disable" : "enable")
+                  << " TouchPad" << endl;
         close(mFd);
         return;
     }

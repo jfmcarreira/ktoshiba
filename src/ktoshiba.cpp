@@ -30,6 +30,7 @@
 #include <qtooltip.h>
 #include <qtimer.h>
 
+#include <kapplication.h>
 #include <kaboutapplication.h>
 #include <kdebug.h>
 #include <kconfig.h>
@@ -40,6 +41,14 @@
 #include <kmessagebox.h>
 #include <kpassivepopup.h>
 #include <kstandarddirs.h>
+#include <dcopclient.h>
+
+#ifdef ENABLE_SYNAPTICS
+#include <synaptics/synaptics.h>
+#include <synaptics/synparams.h>
+
+using namespace Synaptics;
+#endif // ENABLE_SYNAPTICS
 
 #ifdef ENABLE_POWERSAVE
 #include <powersave_dbus.h>
@@ -49,44 +58,93 @@
 
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
-      mDriver( 0 ),
-      mProc( 0 ),
+      mSMMIFace( 0 ),
+      mProcIFace( 0 ),
+      mDCOPIFace( 0 ),
       mTFn( 0 ),
       mOFn( 0 ),
-      mHotKeysTimer( new QTimer(this) ),
-      mModeTimer( new QTimer(this) ),
-      mSystemTimer( new QTimer(this) ),
-      mOmnibookTimer( new QTimer(this) )
+      mHotKeysTimer( 0 ),
+      mModeTimer( 0 ),
+      mSystemTimer( 0 ),
+      mOmnibookTimer( 0 ),
+      mKProc( new KProcess(this) )
 {
-    mDriver = new KToshibaSMMInterface(this);
-    mTFn = new ToshibaFnActions(this);
-    mOFn = new OmnibookFnActions(this);
-    mProc = new KToshibaProcInterface(this);
-    mAboutWidget = new KAboutApplication(this, "About Widget", false);
-    instance = new KInstance("ktoshiba");
+    this->setPixmap( KSystemTray::loadIcon("ktoshiba") );
+    QToolTip::add(this, "KToshiba");
+    this->show();
+
+    mSMMIFace = new KToshibaSMMInterface(this);
+    mProcIFace = new KToshibaProcInterface(this);
+
+    if (kapp->dcopClient()->isRegistered())
+        kdDebug() << "KToshiba: Registered with DCOP server as: "
+                  << kapp->dcopClient()->appId() << endl;
+    else {
+        QCString appID = kapp->dcopClient()->registerAs("ktoshiba", false);
+        kdDebug() << "KToshiba: Registered with DCOP server as: "
+                  << appID << endl;
+    }
+
+    if (checkConfiguration()) {
+        KConfig mConfig(CONFIG_FILE);
+        loadConfiguration(&mConfig);
+    } else
+        createConfiguration();
 
 #ifdef ENABLE_OMNIBOOK
     // check whether omnibook module is loaded
-    if (!mTFn->m_SCIIface) {
-        kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
-        mOmnibook = mOFn->m_OmnibookIface;
-        if (!mOmnibook) {
-            kdError() << "KToshiba: Could not found a Toshiba model. "
-                      << "Please check that the toshiba or omnibook "
-                      << "module loads without failures" << endl;
-            exit(-1);
-        }
-        kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
-        mAC = mProc->omnibookAC();
-        (mAC == -1)? mACPI = true : mACPI = false;
-        mBatSave = 2;
-        mBatType = 3;
+    mOFn = new OmnibookFnActions(this);
+    kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
+    mOmnibook = mOFn->m_OmnibookIface;
+    if (!mOmnibook) {
+        kdError() << "KToshiba: Could not found a Toshiba model. "
+                  << "Please check that the toshiba or omnibook "
+                  << "module loads without failures" << endl;
+        exit(-1);
     }
+    kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
+    mAC = mProcIFace->omnibookAC();
+    (mAC == -1)? mACPI = true : mACPI = false;
+    mBatSave = 2;
+    mBatType = 3;
+    MODE = DIGITAL;
+
+    // Let's check if it's already running
+    if (kapp->dcopClient()->send("ktoshkeyhandler", "", "", "")) {
+        kdWarning << "KToshiba: Another instance of ktosh_keyhandler"
+                  << " is already running" << endl;
+        hotkeys = true;
+    }
+    else {
+        pid_t mKeyPID;
+        mKeyProc = new KProcess(this);
+        *mKeyProc << "ktosh_keyhandler";
+        mKeyProc->start(KProcess::DontCare);
+        if (mKeyProc->isRunning()) {
+            kdError() << "KToshiba: The key handling program is not running."
+                      << " Hotkeys monitoring will no be enabled" << endl;
+            hotkeys = false;
+        } else {
+            mKeyPID = mKeyProc->pid();
+            kdDebug() << "KToshiba: Key handling program PID "
+                      << (unsigned int)mKeyPid << endl;
+            hotkeys = true;
+        }
+    }
+
+    mOmnibookTimer = new QTimer(this);
+    mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
+
+    connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
+    mOmnibookTimer->start(100);
+    if (hotkeys)
+        connect( mDCOPIFace, SIGNAL( signalHotKey(int) ), this, SLOT( omnibookHotKeys(int) ) );
 #else // ENABLE_OMNIBOOK
     // check whether toshiba module is loaded and we got an opened SCI IFace
+    mTFn = new ToshibaFnActions(this);
     if (mTFn->m_SCIIface) {
-        mSS = mDriver->getSpeedStep();
-        mHT = mDriver->getHyperThreading();
+        mSS = mSMMIFace->getSpeedStep();
+        mHT = mSMMIFace->getHyperThreading();
         mBatType = mTFn->m_BatType;
     }
     else {
@@ -96,66 +154,67 @@ KToshiba::KToshiba()
     // Default to mode 2 if we got a failure
     if (mTFn->m_BatType == -1)
         mTFn->m_BatType = 2;
-    mAC = mDriver->acPowerStatus();
-    mWirelessSwitch = mDriver->getWirelessSwitch();
+    mAC = mSMMIFace->acPowerStatus();
+    mWirelessSwitch = mSMMIFace->getWirelessSwitch();
     bsmtrig = false;
     wstrig = false;
-    bluetooth = 0;
+    bluetooth = false;
     svideo = 0;
     MODE = DIGITAL;
     mOmnibook = false;
     mACPI = false;
+
+    mHotKeysTimer = new QTimer(this);
+    mModeTimer = new QTimer(this);
+
+    connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
+    mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
+    connect( mModeTimer, SIGNAL( timeout() ), this, SLOT( checkMode() ) );
+    mModeTimer->start(500);		// Check proc entry every 1/2 seconds
 #endif // ENABLE_OMNIBOOK
-
-    if (!mClient.attach())
-        kdDebug() << "KToshiba: Cannot attach to DCOP server." << endl;
-
-    if (checkConfiguration()) {
-        KConfig mConfig(CONFIG_FILE);
-        loadConfiguration(&mConfig);
-    } else
-        createConfiguration();
 
     doMenu();
 
-#ifdef ENABLE_OMNIBOOK
-    if (mOmnibook) {
-        connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
-        mOmnibookTimer->start(100);
-    }
-#else // ENABLE_OMNIBOOK
-    if (mTFn->m_SCIIface) {
-        connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
-        mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
-        connect( mModeTimer, SIGNAL( timeout() ), this, SLOT( checkMode() ) );
-        mModeTimer->start(500);		// Check proc entry every 1/2 seconds
-        connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
-        mSystemTimer->start(500);		// Check system events every 1/2 seconds
-    }
-#endif // ENABLE_OMNIBOOK
+    mSystemTimer = new QTimer(this);
+    connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
+    mSystemTimer->start(500);		// Check system events every 1/2 seconds
     connect( this, SIGNAL( quitSelected() ), this, SLOT( quit() ) );
+
+#ifdef ENABLE_SYNAPTICS
+    if (mTFn->m_Pad == -1 || (mOmnibook && mOFn->m_Pad == -1))
+        checkSynaptics();
+#endif // ENABLE_SYNAPTICS
 
     if (btstart)
         doBluetooth();
-
-    setPixmap( loadIcon("ktoshiba", instance) );
-    QToolTip::add(this, "KToshiba");
 }
 
 KToshiba::~KToshiba()
 {
-    delete instance; instance = NULL;
-    delete mAboutWidget; mAboutWidget = NULL;
-    delete mProc; mProc = NULL;
+    delete mKProc; mKProc = NULL;
+    delete mOmnibookTimer; mOmnibookTimer = NULL;
+    delete mSystemTimer; mSystemTimer = NULL;
+    delete mModeTimer; mModeTimer = NULL;
+    delete mHotKeysTimer; mHotKeysTimer = NULL;
+
+    delete mOFn; mOFn = NULL;
     delete mTFn; mTFn = NULL;
-    delete mDriver; mDriver = NULL;
+    delete mProcIFace; mProcIFace = NULL;
+    delete mSMMIFace; mSMMIFace = NULL;
 }
 
 void KToshiba::quit()
 {
 #ifdef ENABLE_OMNIBOOK
-    if (mOmnibook)
-        mOmnibookTimer->stop();
+    mOmnibookTimer->stop();
+    if (mKeyProc->isRunning()) {
+        kdDebug() << "KToshiba: Killing key handler program" << endl;
+        mKeyProc->kill(SIGQUIT);
+        if (mKeyProc->signalled()) {
+            delete mKeyProc; mKeyProc = NULL;
+        }
+    }
+    delete mDCOPIFace; mDCOPIFace = NULL;
 #else // ENABLE_OMNIBOOK
     mHotKeysTimer->stop();
     mModeTimer->stop();
@@ -166,130 +225,8 @@ void KToshiba::quit()
     }
 #endif // ENABLE_OMNIBOOK
 
-    if (mClient.isAttached())
-        mClient.detach();
-}
-
-void KToshiba::doMenu()
-{
-    this->contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
-                                     SLOT( doConfig() ), 0, 1, 1 );
-    this->contextMenu()->insertSeparator( 2 );
-    this->contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
-                                     SLOT( doSuspendToRAM() ), 0, 3, 3 );
-    this->contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
-                                     SLOT( doSuspendToDisk() ), 0, 4, 4 );
-#ifdef ENABLE_POWERSAVE
-    static int res;
-    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToRam");
-    if (res == REPLY_DISABLED)
-        this->contextMenu()->setItemEnabled( 3, FALSE );
-    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToDisk");
-    if (res == REPLY_DISABLED)
-        this->contextMenu()->setItemEnabled( 4, FALSE );
-#else // ENABLE_POWERSAVE
-    if (::access("/proc/acpi/sleep", F_OK) == -1) {
-        this->contextMenu()->setItemEnabled( 3, FALSE );
-        this->contextMenu()->setItemEnabled( 4, FALSE );
-    }
-#endif // ENABLE_POWERSAVE
-    this->contextMenu()->insertSeparator( 5 );
-#ifdef ENABLE_OMNIBOOK
-    mOneTouch = new QPopupMenu( this, i18n("OneTouch") );
-    mOneTouch->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
-    mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
-    this->contextMenu()->insertItem( SmallIcon(""), i18n("OneTouch Buttons"), mOneTouch, 6, 6 );
-    this->contextMenu()->insertSeparator( 7 );
-    mOmniFan = new QPopupMenu( this, i18n("Fan") );
-    mOmniFan->insertItem( SmallIcon("fan_off"), i18n("Disabled"), 0 );
-    mOmniFan->insertItem( SmallIcon("fan_on"), i18n("Enabled"), 1 );
-    this->contextMenu()->insertItem( SmallIcon("fan"), i18n("System Fan"), mOmniFan, 8, 8 );
-    if (mOmnibook) {
-        connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
-        connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
-    } else {
-        this->contextMenu()->setItemEnabled( 6, FALSE );
-        this->contextMenu()->setItemEnabled( 8, FALSE );
-    }
-#else // ENABLE_OMNIBOOK
-    this->contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
-                                     SLOT( doBluetooth() ), 0, 6, 6 );
-    this->contextMenu()->insertSeparator( 7 );
-    mHyper = new QPopupMenu( this, i18n("HyperThreading") );
-    mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
-    mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
-    mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
-    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
-    mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
-    mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
-    mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
-    mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
-    this->contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 9, 9 );
-    if (mTFn->m_SCIIface && (mHT >= 0 || mSS >= 0)) {
-        connect( mHyper, SIGNAL( activated(int) ), this, SLOT( doSetHyper(int) ) );
-        connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
-    } else {
-        this->contextMenu()->setItemEnabled( 8, FALSE );
-        this->contextMenu()->setItemEnabled( 9, FALSE );
-    }
-#endif // ENABLE_OMNIBOOK
-    this->contextMenu()->insertSeparator( 10 );
-    this->contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
-                                     SLOT( displayAbout() ), 0, 11, 11 );
-#ifdef ENABLE_OMNIBOOK
-    if (mOmnibook)
-        this->contextMenu()->insertTitle( mProc->model, 0, 0 );
-#else // ENABLE_OMNIBOOK
-    this->contextMenu()->insertTitle( modelID( mDriver->machineID() ), 0, 0 );
-#endif // ENABLE_OMNIBOOK
-}
-
-void KToshiba::doConfig()
-{
-    KProcess kproc;
-    kproc << KStandardDirs::findExe("kcmshell");
-    kproc << "ktoshibam";
-    kproc.start(KProcess::DontCare);
-    kproc.detach();
-}
-
-void KToshiba::doSuspendToRAM()
-{
-    mTFn->performFnAction(4, 0);
-}
-
-void KToshiba::doSuspendToDisk()
-{
-    mTFn->performFnAction(5, 0);
-}
-
-void KToshiba::doBluetooth()
-{
-    if (!mDriver->getBluetooth()) {
-        this->contextMenu()->setItemEnabled(6, FALSE);
-        kdDebug() << "KToshiba::doBluetooth(): "
-                  << "No Bluetooth device found" << endl;
-        return;
-    } else
-    if (!bluetooth || (btstart && !bluetooth)) {
-        mDriver->setBluetoothPower(1);
-        KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
-				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 4000);
-        this->contextMenu()->setItemEnabled(6, FALSE);
-        bluetooth = 1;
-    }
-    else
-        this->contextMenu()->setItemEnabled(6, TRUE);
-}
-
-void KToshiba::doSetFreq(int freq)
-{
-    mDriver->setSpeedStep(freq);
-}
-
-void KToshiba::doSetHyper(int state)
-{
-    mDriver->setHyperThreading(state);
+    if (kapp->dcopClient()->isAttached())
+        kapp->dcopClient()->detach();
 }
 
 bool KToshiba::checkConfiguration()
@@ -311,7 +248,7 @@ void KToshiba::loadConfiguration(KConfig *k)
     mBatSave = k->readNumEntry("Battery_Save_Mode", 2);
     mAudioPlayer = k->readNumEntry("Audio_Player", 1);
     btstart = k->readBoolEntry("Bluetooth_Startup", true);
-    if (mTFn->m_SCIIface) mTFn->m_BatSave = mBatSave;
+    if (mTFn != 0 && mTFn->m_SCIIface) mTFn->m_BatSave = mBatSave;
 }
 
 void KToshiba::createConfiguration()
@@ -342,9 +279,142 @@ void KToshiba::createConfiguration()
     config.sync();
 }
 
+void KToshiba::doMenu()
+{
+    contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
+                                     SLOT( doConfig() ), 0, 1, 1 );
+    contextMenu()->insertSeparator( 2 );
+    contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
+                                     SLOT( doSuspendToRAM() ), 0, 3, 3 );
+    contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
+                                     SLOT( doSuspendToDisk() ), 0, 4, 4 );
+#ifdef ENABLE_POWERSAVE
+    static int res;
+    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToRam");
+    if (res == REPLY_DISABLED)
+        contextMenu()->setItemEnabled( 3, FALSE );
+    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToDisk");
+    if (res == REPLY_DISABLED)
+        contextMenu()->setItemEnabled( 4, FALSE );
+#else // ENABLE_POWERSAVE
+    if (::access("/proc/acpi/sleep", F_OK) == -1) {
+        contextMenu()->setItemEnabled( 3, FALSE );
+        contextMenu()->setItemEnabled( 4, FALSE );
+    }
+#endif // ENABLE_POWERSAVE
+    contextMenu()->insertSeparator( 5 );
+#ifdef ENABLE_OMNIBOOK
+    mOneTouch = new QPopupMenu( this, i18n("OneTouch") );
+    mOneTouch->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
+    mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
+    contextMenu()->insertItem( SmallIcon(""), i18n("OneTouch Buttons"), mOneTouch, 6, 6 );
+    contextMenu()->insertSeparator( 7 );
+    mOmniFan = new QPopupMenu( this, i18n("Fan") );
+    mOmniFan->insertItem( SmallIcon("fan_off"), i18n("Disabled"), 0 );
+    mOmniFan->insertItem( SmallIcon("fan_on"), i18n("Enabled"), 1 );
+    contextMenu()->insertItem( SmallIcon("fan"), i18n("System Fan"), mOmniFan, 8, 8 );
+    if (mOmnibook) {
+        connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
+        connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
+    } else {
+        contextMenu()->setItemEnabled( 6, FALSE );
+        contextMenu()->setItemEnabled( 8, FALSE );
+    }
+#else // ENABLE_OMNIBOOK
+    contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
+                                     SLOT( doBluetooth() ), 0, 6, 6 );
+    contextMenu()->insertSeparator( 7 );
+    mHyper = new QPopupMenu( this, i18n("HyperThreading") );
+    mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
+    mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
+    mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
+    contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
+    mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
+    mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
+    mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
+    mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
+    contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 9, 9 );
+    if (mTFn->m_SCIIface && (mHT >= 0 || mSS >= 0)) {
+        connect( mHyper, SIGNAL( activated(int) ), this, SLOT( doSetHyper(int) ) );
+        connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
+    } else {
+        contextMenu()->setItemEnabled( 8, FALSE );
+        contextMenu()->setItemEnabled( 9, FALSE );
+    }
+#endif // ENABLE_OMNIBOOK
+    contextMenu()->insertSeparator( 10 );
+    contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
+                                     SLOT( displayAbout() ), 0, 11, 11 );
+#ifdef ENABLE_OMNIBOOK
+    if (mOmnibook)
+        contextMenu()->insertTitle( mProcIFace->model, 0, 0 );
+#else // ENABLE_OMNIBOOK
+    contextMenu()->insertTitle( modelID( mSMMIFace->machineID() ), 0, 0 );
+#endif // ENABLE_OMNIBOOK
+}
+
+void KToshiba::doConfig()
+{
+    *mKProc << KStandardDirs::findExe("kcmshell");
+    *mKProc << "ktoshibam";
+    mKProc->start(KProcess::DontCare);
+    mKProc->detach();
+}
+
+// TODO: Move suspend to RAM/Disk to own class
+void KToshiba::doSuspendToRAM()
+{
+    //mTFn->performFnAction(4, 0);
+}
+
+void KToshiba::doSuspendToDisk()
+{
+    //mTFn->performFnAction(5, 0);
+}
+
+void KToshiba::doBluetooth()
+{
+    if (!mSMMIFace->getBluetooth()) {
+        contextMenu()->setItemEnabled(6, FALSE);
+        kdDebug() << "KToshiba::doBluetooth(): "
+                  << "No Bluetooth device found" << endl;
+        return;
+    } else
+    if (!bluetooth || (btstart && !bluetooth)) {
+        mSMMIFace->setBluetoothPower(1);
+        KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
+				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 4000);
+        contextMenu()->setItemEnabled(6, FALSE);
+        bluetooth = true;
+    }
+    else
+        contextMenu()->setItemEnabled(6, TRUE);
+}
+
+void KToshiba::doSetFreq(int freq)
+{
+    mSMMIFace->setSpeedStep(freq);
+}
+
+void KToshiba::doSetHyper(int state)
+{
+    mSMMIFace->setHyperThreading(state);
+}
+
+void KToshiba::doSetOneTouch(int state)
+{
+    mProcIFace->omnibookSetOneTouch(state);
+}
+
+void KToshiba::doSetOmnibookFan(int state)
+{
+    mProcIFace->omnibookSetFan(state);
+}
+
 void KToshiba::displayAbout()
 {
-    mAboutWidget->show();
+    KAboutApplication about(KGlobal::instance()->aboutData(), this);
+    about.exec();
 }
 
 void KToshiba::bsmUserSettings(KConfig *k, int *bright)
@@ -360,28 +430,61 @@ void KToshiba::bsmUserSettings(KConfig *k, int *bright)
 
     kdDebug() << "Enabling User Settings..." << endl;
     (processor == 0)? tmp = 1 : tmp = 0;
-    mDriver->setProcessingSpeed(tmp);
+    mSMMIFace->setProcessingSpeed(tmp);
     (cpu == 0)? tmp = 1 : tmp = 0;
-    mDriver->setCPUSleepMode(tmp);
+    mSMMIFace->setCPUSleepMode(tmp);
     if (lcd == 0) *bright = 7;		// Super-Bright
     else if (lcd == 1) *bright = 3;	// Bright
     else if (lcd == 2) *bright = 0;	// Semi-Bright
-    mDriver->setCoolingMethod(cooling);
-    mDriver->setDisplayAutoOff(display);
-    mDriver->setHDDAutoOff(hdd);
+    mSMMIFace->setCoolingMethod(cooling);
+    mSMMIFace->setDisplayAutoOff(display);
+    mSMMIFace->setHDDAutoOff(hdd);
 }
+
+#ifdef ENABLE_SYNAPTICS
+void KToshiba::checkSynaptics()
+{
+    static bool err = false;
+    if (!Pad::hasDriver()) {
+        kdError() << "KToshiba: Incompatible synaptics driver version " << endl;
+        err = true;
+    }
+
+    if (!err && !Pad::hasShm()) {
+        kdError() << "KToshiba: Access denied to driver shared memory area" << endl;
+        err = true;
+    }
+
+    if (!err && !Pad::hasParam(TOUCHPADOFF)) {
+        kdDebug() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
+        err = true;
+    }
+
+    if (err) {
+#ifdef ENABLE_OMNIBOOK
+        mOFn->m_Mousepad = -1;
+        return;
+#else // ENABLE_OMNIBOOK
+        mTFn->m_Mousepad = -1;
+        return;
+#endif // ENABLE_OMNIBOOK
+    } else
+#ifdef ENABLE_OMNIBOOK
+        mOFn->m_Mousepad = (int)Pad::getParam(TOUCHPADOFF);
+#else // ENABLE_OMNIBOOK
+        mTFn->m_Mousepad = (int)Pad::getParam(TOUCHPADOFF);
+#endif // ENABLE_OMNIBOOK
+}
+#endif // ENABLE_SYNAPTICS
 
 #ifndef ENABLE_OMNIBOOK
 void KToshiba::checkHotKeys()
 {
-    KProcess kproc;
-    QByteArray data, replyData;
-    QCString replyType;
     KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("KToshiba");
 
     int tmp = 0;
-    int key = mDriver->getSystemEvent();
+    int key = mSMMIFace->getSystemEvent();
 
     if ((key == 0x100) && (mTFn->m_Popup != 0))
         mTFn->hideWidgets();
@@ -390,9 +493,9 @@ void KToshiba::checkHotKeys()
         case 0:	// FIFO empty
             return;
         case 1:	// Failed accessing System Events
-            if (mDriver->hotkeys == false) {
-                mDriver->enableSystemEvent();
-                mDriver->hotkeys = true;
+            if (mSMMIFace->hotkeys == false) {
+                mSMMIFace->enableSystemEvent();
+                mSMMIFace->hotkeys = true;
             }
             return;
         case 0x101: // Fn-Esc
@@ -426,6 +529,8 @@ void KToshiba::checkHotKeys()
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
         /** Multimedia Buttons */
+        // TODO: Add a MODE selection entry for omnibook, so they can change it
+        // from DIGITAL to CD_DVD and viceversa
         case 0xb25: // CD/DVD Mode
             MODE = CD_DVD;
             return;
@@ -435,117 +540,54 @@ void KToshiba::checkHotKeys()
         case 0xb30:	// Stop/Eject
         case 0xd4f:
         case 0x9b3:
-            if (MODE == CD_DVD)
-                if (!mClient.call("kscd", "CDPlayer", "stop()", data, replyType, replyData))
-                    if (!mClient.call("kaffeine", "KaffeineIface", "stop()", data, replyType, replyData))
-                        kproc << "eject" << "--cdrom";
-            if (MODE == DIGITAL) {
-                if (mAudioPlayer == Amarok)
-                    mClient.send("amarok", "player", "stop()", "");
-                else if (mAudioPlayer == JuK)
-                    mClient.send("juk", "Player", "stop()", "");
-                else if (mAudioPlayer == XMMS)
-                    kproc << "xmms" << "--stop";
-            }
+            multimediaStopEject();
             break;
         case 0xb31:	// Previous
         case 0xd50:
         case 0x9b1:
-            if (MODE == CD_DVD) {
-                if (!mClient.call("kscd", "CDPlayer", "previous()", data, replyType, replyData))
-                    mClient.send("kaffeine", "KaffeineIface", "previous()", "");
-            } else
-            if (MODE == DIGITAL) {
-            if (mAudioPlayer == Amarok)
-                mClient.send("amarok", "player", "prev()", "");
-                else if (mAudioPlayer == JuK)
-                    mClient.send("juk", "Player", "back()", "");
-                else if (mAudioPlayer == XMMS)
-                    kproc << "xmms" << "--rew";
-            }
+            multimediaPrevious();
             break;
         case 0xb32:	// Next
         case 0xd53:
         case 0x9b4:
-            if (MODE == CD_DVD) {
-                if (!mClient.call("kscd", "CDPlayer", "next()", data, replyType, replyData))
-                    mClient.send("kaffeine", "KaffeineIface", "next()", "");
-            } else
-            if (MODE == DIGITAL) {
-                if (mAudioPlayer == Amarok)
-                    mClient.send("amarok", "player", "next()", "");
-                else if (mAudioPlayer == JuK)
-                    mClient.send("juk", "Player", "forward()", "");
-                else if (mAudioPlayer == XMMS)
-                    kproc << "xmms" << "--fwd";
-            }
+            multimediaNext();
             break;
         case 0xb33:	// Play/Pause
         case 0xd4e:
         case 0x9b2:
-            if (MODE == CD_DVD) {
-                if (!mClient.call("kscd", "CDPlayer", "play()", data, replyType, replyData))
-                    if (!mClient.call("kaffeine", "KaffeineIface", "isPlaying()", data, replyType, replyData))
-                        kdDebug() << "KsCD or Kaffeine not running" << endl;
-                    else {
-                        QDataStream reply(replyData, IO_ReadOnly);
-                        bool res;
-                        reply >> res;
-                        if (res)
-                            mClient.send("kaffeine", "KaffeineIface", "pause()", "");
-                        else
-                            mClient.send("kaffeine", "KaffeineIface", "play()", "");
-                    }
-            } else
-            if (MODE == DIGITAL) {
-                if (mAudioPlayer == Amarok)
-                    mClient.send("amarok", "player", "playPause()", "");
-                else if (mAudioPlayer == JuK)
-                    mClient.send("juk", "Player", "playPause()", "");
-                else if (mAudioPlayer == XMMS)
-                    kproc << "xmms" << "--play-pause";
-            }
+            multimediaPlayPause();
             break;
         case 0xb85:	// Toggle S-Video Out
         case 0xd55:
-            if (!svideo) {
-                mDriver->setVideo(4);	// S-Video
-                svideo = 1;
-            }
-            else if (svideo) {
-                mDriver->setVideo(1);	// LCD
-                svideo = 0;
-            }
+            (svideo)? mSMMIFace->setVideo(1) : mSMMIFace->setVideo(4);
+            svideo = (svideo)? 0 : 1;
             return;
         case 0xb86:	// E-Button
-            kproc << "kfmclient" << "openProfile" << "webbrowsing";
+            *mKProc << "kfmclient" << "openProfile" << "webbrowsing";
             break;
         case 0xb87:	// I-Button
-            kproc << "konsole";
+            *mKProc << "konsole";
             break;
-        case 0xd42: // Maximize
+        case 0xd42:	// Maximize
             return;
-        case 0xd43: // Switch
+        case 0xd43:	// Switch
             return;
-        case 0xd51: // Rewind
+        case 0xd51:	// Rewind
             return;
-        case 0xd52: // Fast Forward
+        case 0xd52:	// Fast Forward
             return;
-        case 0xd54: // Mute
+        case 0xd54:	// Mute
             mTFn->performFnAction(1, key);
             return;
-        case 0xd4c: // Menu
+        case 0xd4c:	// Menu
             return;
-        case 0xd4d: // Mode
-            if (MODE == CD_DVD)
-                MODE = DIGITAL;
-            else if (MODE == DIGITAL)
-                MODE = CD_DVD;
+        case 0xd4d:	// Mode
+            MODE = (MODE == CD_DVD)? DIGITAL : CD_DVD;
             return;
     }
     if (key >= 0xb30) {
-        kproc.start(KProcess::DontCare);
-        kproc.detach();
+        mKProc->start(KProcess::DontCare);
+        mKProc->detach();
         return;
     }
     mTFn->performFnAction(tmp, key);
@@ -553,25 +595,93 @@ void KToshiba::checkHotKeys()
 
 void KToshiba::checkMode()
 {
-    int temp = mProc->toshibaProcStatus();
+    int temp = mProcIFace->toshibaProcStatus();
 
-    if (temp == CD_DVD)
-        MODE = CD_DVD;
-    else if (temp == DIGITAL)
-        MODE = DIGITAL;
+    MODE = (temp == CD_DVD)? CD_DVD : DIGITAL;
 }
 #endif // ENABLE_OMNIBOOK
+
+void KToshiba::multimediaStopEject()
+{
+    if (MODE == CD_DVD)
+        if (!kapp->dcopClient()->call("kscd", "CDPlayer", "stop()", mData, mReplyType, mReplyData))
+            if (!kapp->dcopClient()->call("kaffeine", "KaffeineIface", "stop()", mData, mReplyType, mReplyData))
+                *mKProc << "eject" << "--cdrom";
+    if (MODE == DIGITAL) {
+        if (mAudioPlayer == Amarok)
+            kapp->dcopClient()->send("amarok", "player", "stop()", "");
+        else if (mAudioPlayer == JuK)
+            kapp->dcopClient()->send("juk", "Player", "stop()", "");
+        else if (mAudioPlayer == XMMS)
+            *mKProc << "xmms" << "--stop";
+    }
+}
+
+void KToshiba::multimediaPrevious()
+{
+    if (MODE == CD_DVD) {
+        if (!kapp->dcopClient()->call("kscd", "CDPlayer", "previous()", mData, mReplyType, mReplyData))
+            kapp->dcopClient()->send("kaffeine", "KaffeineIface", "previous()", "");
+    } else
+    if (MODE == DIGITAL) {
+        if (mAudioPlayer == Amarok)
+            kapp->dcopClient()->send("amarok", "player", "prev()", "");
+        else if (mAudioPlayer == JuK)
+            kapp->dcopClient()->send("juk", "Player", "back()", "");
+        else if (mAudioPlayer == XMMS)
+            *mKProc << "xmms" << "--rew";
+    }
+}
+
+void KToshiba::multimediaNext()
+{
+    if (MODE == CD_DVD) {
+        if (!kapp->dcopClient()->call("kscd", "CDPlayer", "next()", mData,mReplyType, mReplyData))
+            kapp->dcopClient()->send("kaffeine", "KaffeineIface", "next()", "");
+    } else
+    if (MODE == DIGITAL) {
+        if (mAudioPlayer == Amarok)
+            kapp->dcopClient()->send("amarok", "player", "next()", "");
+        else if (mAudioPlayer == JuK)
+            kapp->dcopClient()->send("juk", "Player", "forward()", "");
+        else if (mAudioPlayer == XMMS)
+            *mKProc << "xmms" << "--fwd";
+    }
+}
+
+void KToshiba::multimediaPlayPause()
+{
+    if (MODE == CD_DVD) {
+        if (!kapp->dcopClient()->call("kscd", "CDPlayer", "play()", mData, mReplyType, mReplyData))
+            if (!kapp->dcopClient()->call("kaffeine", "KaffeineIface", "isPlaying()", mData, mReplyType, mReplyData))
+                kdDebug() << "KsCD or Kaffeine not running" << endl;
+            else {
+                QDataStream reply(mReplyData, IO_ReadOnly);
+                bool res; reply >> res;
+                (res == true)? kapp->dcopClient()->send("kaffeine", "KaffeineIface", "pause()", "")
+                    : kapp->dcopClient()->send("kaffeine", "KaffeineIface", "play()", "");
+            }
+    } else
+    if (MODE == DIGITAL) {
+                if (mAudioPlayer == Amarok)
+                    kapp->dcopClient()->send("amarok", "player", "playPause()", "");
+                else if (mAudioPlayer == JuK)
+                    kapp->dcopClient()->send("juk", "Player", "playPause()", "");
+                else if (mAudioPlayer == XMMS)
+                    *mKProc << "xmms" << "--play-pause";
+    }
+}
 
 void KToshiba::checkSystem()
 {
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook)
-        pow = ((mACPI)? mProc->acpiAC() : mProc->omnibookAC());
+        pow = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
 #else // ENABLE_OMNIBOOK
     if (mTFn->m_SCIIface && !mACPI)
-        pow = ((mAC == -1)? SciACPower() : mDriver->acPowerStatus());
+        pow = ((mAC == -1)? SciACPower() : mSMMIFace->acPowerStatus());
     if (mACPI || pow == -1) {
-        pow = mProc->acpiAC();
+        pow = mProcIFace->acpiAC();
         mACPI = true;
     }
 #endif // ENABLE_OMNIBOOK
@@ -590,26 +700,20 @@ void KToshiba::checkSystem()
                 }
                 break;
             case 1:			// LOW POWER or NORMAL LIFE
-                if (pow == 3)
-                    bright = 0;	// Semi-Bright
-                else if (pow == 4)
-                    bright = 3;	// Bright
+                bright = (pow == 3)? 0 /*Semi-Bright*/ : 3 /*Bright*/;
                 bsmtrig = false;
                 break;
             case 2:			// FULL POWER or FULL LIFE
-                if (pow == 3)
-                    bright = 3;	// Bright
-                else if (pow == 4)
-                    bright = 7;	// Super-Bright
+                bright = (pow == 3)? 3 /*Bright*/ : 7 /*Super-Bright*/;
                 bsmtrig = false;
                 break;
         }
 #ifdef ENABLE_OMNIBOOK
         if (mOmnibook)
-            mProc->omnibookSetBrightness(bright);
+            mProcIFace->omnibookSetBrightness(bright);
 #else // ENABLE_OMNIBOOK
-        if (mTFn->m_SCIIface && mTFn->m_BatType != 2)
-            mDriver->setBrightness(bright);
+        if (mTFn->m_BatType != 2)
+            mSMMIFace->setBrightness(bright);
 #endif // ENABLE_OMNIBOOK
     }
 
@@ -620,7 +724,7 @@ void KToshiba::checkSystem()
     if (mWirelessSwitch == -1)
         return;
     else {
-        int ws = mDriver->getWirelessSwitch();
+        int ws = mSMMIFace->getWirelessSwitch();
 
         if (mWirelessSwitch != ws) {
             QString s = ((ws == 1)? i18n("on") : i18n("off"));
@@ -632,32 +736,66 @@ void KToshiba::checkSystem()
 #endif // ENABLE_OMNIBOOK
 }
 
+void KToshiba::omnibookHotKeys(int keycode)
+{
+    //KConfig mConfig(CONFIG_FILE);
+    //mConfig.setGroup("KToshiba");
+
+    int tmp = 0;
+
+    if (mOFn->m_Popup != 0)
+        mOFn->hideWidgets();
+
+    switch (keycode) {
+        case 144:	// Previous
+            multimediaPrevious();
+            break;
+        case 153:	// Play/Pause
+            multimediaPlayPause();
+            break;
+        case 160:	// Fn-Esc
+            //tmp = mConfig.readNumEntry("Fn_Esc");
+            tmp = 1; // For now, hard-code to Mute/Unmute
+            break;
+        case 162:	// Next
+            multimediaNext();
+            break;
+        case 164:	// Stop/Eject
+            multimediaStopEject();
+            break;
+        case 178:	// WWW
+            *mKProc << "kfmclient" << "openProfile" << "webbrowsing";
+            return;
+        case 236:	// Console Direct Access
+            *mKProc << "konsole";
+            return;
+        case 239:	// Fn-F6
+            //tmp = mConfig.readNumEntry("Fn_F6");
+            kdDebug() << "KToshiba: Fn-F6 pressed, doing nothing..." << endl;
+            break;
+    }
+    if (keycode == 178 || keycode == 236) {
+        mKProc->start(KProcess::DontCare);
+        mKProc->detach();
+        return;
+    }
+    mOFn->performFnAction(tmp);
+}
+
 void KToshiba::checkOmnibook()
 {
 #ifdef ENABLE_OMNIBOOK
-    // TODO: Add more stuff here, for now only the LCD is being monitored
-
     if (mOFn->m_Popup != 0) {
-        mOFn->m_StatusWidget->hide();
+        mOFn->hideWidgets();
         mOFn->m_Popup = 0;
     }
 
-    int bright = mProc->omnibookGetBrightness();
+    int bright = mProcIFace->omnibookGetBrightness();
     if (mOFn->m_Bright != bright) {
         mOFn->m_Bright = bright;
-        mOFn->performFnAction(1);
+        mOFn->performFnAction(7);
     }
 #endif // ENABLE_OMNIBOOK
-}
-
-void KToshiba::doSetOneTouch(int state)
-{
-    mProc->omnibookSetOneTouch(state);
-}
-
-void KToshiba::doSetOmnibookFan(int state)
-{
-    mProc->omnibookSetFan(state);
 }
 
 
