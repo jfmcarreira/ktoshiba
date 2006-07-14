@@ -1,3 +1,40 @@
+2006-07-14 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed a typo on main.cpp
+
+2006-07-13 Azael Avalos <coproscefalo@gmail.com>
+	* Some changes here and there
+	* Finished key handling stuff, we now need to get more
+	  keycodes and actions for omnibook models
+
+2006-07-11 Azael Avalos <coproscefalo@gmail.com>
+	* Small clean up, reduced some code lines
+	* Moved synaptics check function to KToshiba class
+	* Added functions for omnibook TouchPad enabling/disabling
+	  functionality (if system supports it)
+	* Added a DCOP interface to receive the keycodes from
+	  the key handler program (only activated for omnibook)
+
+2006-07-10 Azael Avalos <coproscefalo@gmail.com>
+	* Key handling success, thanks go to the lineak project
+	  since I borrowed their ideas, hehe ;-)
+	* Misc changes here and there
+
+2006-07-07 Azael Avalos <coproscefalo@gmail.com>
+	* Added new function to turn on/off LCD Backlight for
+	  omnibook users
+	* Started testing the Fn-key and onetouch handling for
+	  omnibook users
+	* Moved all multimedia related stuff to own funtions
+	  to avoid duplicate code
+
+2006-07-06 Azael Avalos <coproscefalo@gmail.com>
+	* Disabled Setup Helper Application button if helper
+	  was not enabled
+	* Disabled Bluetooth checkbox for omnibook users
+	* Disabled Battery Save Mode tab if SCI interface
+	  is not available
+	* Small changes to KCModule layout
+
 2006-07-01 Azael Avalos <coproscefalo@gmail.com>
 	* Some small change to the application menu
 

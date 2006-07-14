@@ -18,54 +18,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef OMNIBOOK_FN_ACTIONS_H
-#define OMNIBOOK_FN_ACTIONS_H
+#include "ktoshibadcopinterface.h"
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <qobject.h>
-
-class KToshibaProcInterface;
-class StatusWidget;
-
-/**
- * @short Performs the Fn assosiated action
- * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.1
- */
-class OmnibookFnActions : public QObject
+KToshibaDCOPInterface::KToshibaDCOPInterface( QObject *parent, const char *name )
+    : QObject( parent, name ),
+      DCOPObject( name )
 {
-    Q_OBJECT
-public:
-    /**
-    * Default Constructor
-    */
-    OmnibookFnActions(QObject *parent = 0);
-    void hideWidgets();
-    void performFnAction(int action);
-    bool m_OmnibookIface;
-    int m_Popup;
-    int m_Video;
-    int m_Bright;
-    int m_Pad;
-    int m_Mousepad;
+}
 
-    /**
-    * Default Destructor
-    */
-    virtual ~OmnibookFnActions();
-private:
-    KToshibaProcInterface *m_Proc;
-    StatusWidget *m_StatusWidget;
-    void toggleMute();
-    void lockScreen();
-    void toggleMousePad();
-    void toggleFan();
-    void toogleBackLight();
-    int m_Snd;
-    int m_Fan;
-};
+KToshibaDCOPInterface::~KToshibaDCOPInterface()
+{
+}
 
-#endif // OMNIBOOK_FN_ACTIONS_H
+void KToshibaDCOPInterface::hotkey(int keycode)
+{
+    emit signalHotKey(keycode);
+}
+
+
+#include "ktoshibadcopinterface.moc"

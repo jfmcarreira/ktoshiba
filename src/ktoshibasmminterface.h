@@ -51,6 +51,10 @@ public:
    * Default Constructor
    */
   KToshibaSMMInterface(QObject *parent = 0);
+  /**
+   * Default Destructor
+   */
+  ~KToshibaSMMInterface();
   /**************************************
    *           SCI Functions            *
    * (Software Configuration Interface) *

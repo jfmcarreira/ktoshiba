@@ -21,16 +21,17 @@
 #ifndef KTOSHIBA_H
 #define KTOSHIBA_H
 
-#include <qpixmap.h>
+#include <qobject.h>
 
 #include <ksystemtray.h>
-#include <dcopclient.h>
+#include <kconfig.h>
+
+#include "ktoshibadcopinterface.h"
 
 class QTimer;
 class QPopupMenu;
 
-class KInstance;
-class KAboutApplication;
+class KProcess;
 
 class KToshibaSMMInterface;
 class KToshibaProcInterface;
@@ -49,7 +50,7 @@ class OmnibookFnActions;
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.9
  */
-class KToshiba : public KSystemTray
+class KToshiba :  public KSystemTray
 {
     Q_OBJECT
 public:
@@ -77,21 +78,17 @@ protected slots:
     void checkSystem();
     void checkMode();
     void checkOmnibook();
+    void omnibookHotKeys(int);
     void doSetOneTouch(int);
     void doSetOmnibookFan(int);
     void quit();
 protected:
-    KToshibaSMMInterface *mDriver;
-    KToshibaProcInterface *mProc;
+    void doMenu();
+    KToshibaSMMInterface *mSMMIFace;
+    KToshibaProcInterface *mProcIFace;
+    KToshibaDCOPInterface *mDCOPIFace;
     ToshibaFnActions *mTFn;
     OmnibookFnActions *mOFn;
-    KAboutApplication *mAboutWidget;
-    KInstance *instance;
-    DCOPClient mClient;
-    QPopupMenu *mSpeed;
-    QPopupMenu *mHyper;
-    QPopupMenu *mOneTouch;
-    QPopupMenu *mOmniFan;
     bool mOmnibook;
     bool mACPI;
     int mBatSave;
@@ -103,19 +100,33 @@ protected:
     int mSS;
     int mAC;
 private:
-    void doMenu();
     void bsmUserSettings(KConfig *, int *);
+    void checkSynaptics();
+    void multimediaStopEject();
+    void multimediaPrevious();
+    void multimediaNext();
+    void multimediaPlayPause();
+    QPopupMenu *mSpeed;
+    QPopupMenu *mHyper;
+    QPopupMenu *mOneTouch;
+    QPopupMenu *mOmniFan;
     QTimer *mHotKeysTimer;
     QTimer *mModeTimer;
     QTimer *mSystemTimer;
     QTimer *mOmnibookTimer;
+    QByteArray mData;
+    QByteArray mReplyData;
+    QCString mReplyType;
+    KProcess *mKProc;
+    KProcess *mKeyProc;
     bool bsmtrig;
     bool wstrig;
     bool btstart;
+    bool bluetooth;
+    bool hotkeys;
     int pow;
     int oldpow;
     int MODE;
-    int bluetooth;
     int svideo;
 };
 
