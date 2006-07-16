@@ -24,6 +24,7 @@
 #include "toshibafnactions.h"
 #include "omnibookfnactions.h"
 #include "modelid.h"
+#include "suspend.h"
 
 #include <qpixmap.h>
 #include <qimage.h>
@@ -175,6 +176,8 @@ KToshiba::KToshiba()
 
     doMenu();
 
+    mSuspend = new suspend(this);
+
     mSystemTimer = new QTimer(this);
     connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
     mSystemTimer->start(500);		// Check system events every 1/2 seconds
@@ -191,14 +194,20 @@ KToshiba::KToshiba()
 
 KToshiba::~KToshiba()
 {
-    delete mKProc; mKProc = NULL;
+#ifdef ENABLE_OMNIBOOK
+    delete mDCOPIFace; mDCOPIFace = NULL;
     delete mOmnibookTimer; mOmnibookTimer = NULL;
-    delete mSystemTimer; mSystemTimer = NULL;
+    if (hotkeys)
+        delete mKeyProc; mKeyProc = NULL;
+    delete mOFn; mOFn = NULL;
+#else
     delete mModeTimer; mModeTimer = NULL;
     delete mHotKeysTimer; mHotKeysTimer = NULL;
-
-    delete mOFn; mOFn = NULL;
     delete mTFn; mTFn = NULL;
+#endif
+    delete mKProc; mKProc = NULL;
+    delete mSystemTimer; mSystemTimer = NULL;
+    delete mSuspend; mSuspend = NULL;
     delete mProcIFace; mProcIFace = NULL;
     delete mSMMIFace; mSMMIFace = NULL;
 }
@@ -210,11 +219,7 @@ void KToshiba::quit()
     if (mKeyProc->isRunning()) {
         kdDebug() << "KToshiba: Killing key handler program" << endl;
         mKeyProc->kill(SIGQUIT);
-        if (mKeyProc->signalled()) {
-            delete mKeyProc; mKeyProc = NULL;
-        }
     }
-    delete mDCOPIFace; mDCOPIFace = NULL;
 #else // ENABLE_OMNIBOOK
     mHotKeysTimer->stop();
     mModeTimer->stop();
@@ -224,9 +229,6 @@ void KToshiba::quit()
         mTFn->closeSCIIface();
     }
 #endif // ENABLE_OMNIBOOK
-
-    if (kapp->dcopClient()->isAttached())
-        kapp->dcopClient()->detach();
 }
 
 bool KToshiba::checkConfiguration()
@@ -355,21 +357,22 @@ void KToshiba::doMenu()
 
 void KToshiba::doConfig()
 {
-    *mKProc << KStandardDirs::findExe("kcmshell");
-    *mKProc << "ktoshibam";
-    mKProc->start(KProcess::DontCare);
-    mKProc->detach();
+    KProcess proc;
+    proc << KStandardDirs::findExe("kcmshell");
+    proc << "ktoshibam";
+    proc.start(KProcess::DontCare);
+    proc.detach();
 }
 
 // TODO: Move suspend to RAM/Disk to own class
 void KToshiba::doSuspendToRAM()
 {
-    //mTFn->performFnAction(4, 0);
+    mSuspend->toRAM();
 }
 
 void KToshiba::doSuspendToDisk()
 {
-    //mTFn->performFnAction(5, 0);
+    mSuspend->toDisk();
 }
 
 void KToshiba::doBluetooth()
@@ -750,15 +753,24 @@ void KToshiba::omnibookHotKeys(int keycode)
         case 144:	// Previous
             multimediaPrevious();
             break;
-        case 153:	// Play/Pause
+        case 147:	// Media Player
+            // Implement me...
+            break;
+        case 150:	// Fn-F1
+            //tmp = mConfig.readNumEntry("Fn_F1");
+            break;
+        case 153:	// Play/Pause also Next with ecype=12
             multimediaPlayPause();
+            break;
+        case 159:	// Fn-F7
+            //tmp = mConfig.readNumEntry("Fn_F7");
             break;
         case 160:	// Fn-Esc
             //tmp = mConfig.readNumEntry("Fn_Esc");
             tmp = 1; // For now, hard-code to Mute/Unmute
             break;
-        case 162:	// Next
-            multimediaNext();
+        case 162:	// Next also Play/Pause with ectype=12
+            //multimediaNext();
             break;
         case 164:	// Stop/Eject
             multimediaStopEject();
@@ -771,7 +783,6 @@ void KToshiba::omnibookHotKeys(int keycode)
             return;
         case 239:	// Fn-F6
             //tmp = mConfig.readNumEntry("Fn_F6");
-            kdDebug() << "KToshiba: Fn-F6 pressed, doing nothing..." << endl;
             break;
     }
     if (keycode == 178 || keycode == 236) {

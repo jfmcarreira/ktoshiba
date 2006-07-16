@@ -1,12 +1,12 @@
 KToshiba
 =====
-KToshiba esta protegido bajo la licencia GPL version 2 o mejor. Una copia
+KToshiba está protegido bajo la licencia GPL version 2 o mejor. Una copia
 de esta licencia puede ser encontrada en el archivo COPYING en el directorio base
 
 
 ¿Qué es esto?
 =====
-KToshiba es un monitor para KDE de las teclas especiales encontradas en los portatiles
+KToshiba es un monitor para KDE de las teclas especiales encontradas en los portátiles
 de Toshiba (Fn-F#) y el panel multimedia frontal.
 
 Este programa a sido probado en un modelo Satellite(R) A25-S279,
@@ -17,7 +17,7 @@ la tecla Fn es la misma en todos ellos hasta donde he visto.
 
 Requisitos
 =====
-- Un portatil Toshiba (indispensable)
+- Un portátil Toshiba (indispensable)
 - Compilador y utilerias (gcc, autoconf, automake, etc.)
 - KDE 3.2.x y librerias de desarrollo (-devel)
 
@@ -26,41 +26,41 @@ Preparativos
 =====
 Para que este programa funcione eficientemente se necesita especificar
 el puerto de la tecla Fn al momento de la carga del controlador del kernel
-('insmod toshiba tosh_fn=0x62').
-Actualmente solo se conocen dos puertos para la tecla Fn 0x62 y 0x68,
+('insmod toshiba fn=0x62').
+Actualmente solo se conocen dos puertos para la tecla Fn, 0x62 y 0x68,
 tu puedes intentar con cualquiera de estos hasta que encuentres el puerto
-que trabaja con tu portatil.
+que trabaja con tu portátil.
 
-Si no surge ningun problema al momento de ejecutar 'insmod toshiba tosh_fn=0x62'
+Si no surge ningun problema al momento de ejecutar 'insmod toshiba fn=0x62'
 entonces van a poder ver algo como esto si ejecutan 'cat /proc/toshiba'
 
 	1.1 0xfcf8 2.82 1.10 0x24ca 0x00
 
 Si encontraste un puerto que funciona entonces tu querras automatizar esto
-en vez de estarlo tecleando cada vez (si soy algo flojo).
-Asi que basicamente solo necesitas editar modules.conf o modprobe.conf
+en vez de estarlo tecleando cada vez (sí, soy algo flojo).
+Así que basicamente solo necesitas editar el archivo modules.conf o modprobe.conf
 dependiendo de la version del kernel que estes corriendo, busca algo similar a:
 
 	alias char-major-10-181 toshiba
 
-y despues solo adhiere lo siguiente "options toshiba tosh_fn=0x62"
-sin las comillas y se vera algo asi:
+y despues solo adhiere lo siguiente "options toshiba fn=0x62"
+sin las comillas y se vera algo así:
 
 	alias char-major-10-181 toshiba
-	options toshiba tosh_fn=0x62
+	options toshiba fn=0x62
 
-Si tu usas SuSE entonces tu querras editar modules.conf.local o
-modprobe.conf.local (dependiendo del kernel) entonces.
+Si tu usas SuSE entonces tu querras editar el archivo modules.conf.local
+ó modprobe.conf.local (dependiendo del kernel) entonces.
 
 Una vez terminado con los preparativos anteriores y el modulo del kernel
-fue cargado exitosamente ('insmod toshiba tosh_fn=0x6X', donde 6X es el
+fue cargado exitosamente ('insmod toshiba fn=0x6X', donde 6X es el
 puerto que acabas de encontrar), verifica que tienes acceso de lectura y
-escritura al dispositivo /dev/toshiba se vera algo como esto si ejecutas
+escritura al dispositivo /dev/toshiba, se vera algo como esto si ejecutas
 el siguiente comando 'ls -la /dev/toshiba' :
 
 	crw-------  1 azael root 10, 181 2005-03-19 12:36 /dev/toshiba
 
-En el dado caso de que no tengas acceso de lectura y/o escritura deberas
+En el dado caso de que no tengas acceso de lectura y escritura deberas
 cambiar los permisos con el siguiente comando (como administrador):
 
 	chmod o+rw /dev/toshiba
@@ -70,7 +70,7 @@ Ahora si ya esta todo listo.
 
 Instalación
 =====
-Si todo salio bien hasta este punto entonces la instalacion es muy
+Si todo salio bien hasta este punto entonces la instalación es muy
 sencilla, descomprime el archivo descargado y haz lo siguiente:
 
 	cd ktoshiba-0.X 		(donde X es la version actual)
@@ -86,7 +86,7 @@ o si descargaste el rpm entonces haz lo siguiente:
 
 Modo de uso
 =====
-Si la instalacion se llevo acabo sin problemas tu podras encontrar KToshiba
+Si la instalación se llevo acabo sin problemas tu podras encontrar KToshiba
 en el menu de Utilidades, da click en el y un icono aparecera en la barra
 de tareas, da click con el boton derecho del raton y selecciona configurar,
 una nueva ventana aparecera en la cual tu podras configurar algunos valores
@@ -97,14 +97,14 @@ y recuerda guardar los cambios asi KToshiba los usara de inmediato.
 
 Soporte, Bichos y/o Pedidos
 =====
-Tengo planes de dar mas soporte a otros portatiles de Toshiba en futuras
-versiones, si te gusto el programa y deseas obtener soporte para tu portatil
+Tengo planes de dar mas soporte a otros portátiles de Toshiba en futuras
+versiones, si te gusto el programa y deseas obtener soporte para tu portátil
 manda un correo electronico a coproscefalo@gmail.com e incluye las combinaciones
 Fn-F{1,2,3,4,5,6,7,8,9} y que hacen (ej: Fn-F1 Bloquea pantalla o
 Fn-F7 Aumenta el brillo de pantalla).
 
 Si encontraste algun error o solamente quieres soporte para algo en futuras
-versiones manda un correo electronico a la direccion dada con la descripcion
+versiones manda un correo electronico a la direccion dada con la descripción
 del problema o la caracteristica de soporte deseada.
 
 Contacto

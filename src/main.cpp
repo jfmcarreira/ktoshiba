@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     QXEmbed::initialize();
 #endif
 
+    app.disableSessionManagement();
     app.setMainWidget( mainWin );
     mainWin->show();
 

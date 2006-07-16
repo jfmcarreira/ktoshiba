@@ -26,16 +26,12 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
-#include <qspinbox.h>
 #include <qtimer.h>
 #include <qcombobox.h>
-#include <qfile.h>
-#include <qregexp.h>
-#include <qbuttongroup.h>
 #include <qtabwidget.h>
 #include <qpushbutton.h>
 
-#include <kparts/genericfactory.h>
+#include <kgenericfactory.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 #include <kconfig.h>
@@ -53,7 +49,7 @@
 typedef KGenericFactory<KCMToshibaModule, QWidget> KCMToshibaModuleFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_ktoshibam, KCMToshibaModuleFactory("kcmktoshiba"))
 
-KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStringList&)
+KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStringList &)
     : KCModule(KCMToshibaModuleFactory::instance(), parent, name)
 {
     KAboutData *about = new KAboutData(I18N_NOOP("kcmktoshiba"),
@@ -71,19 +67,15 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 
     m_SMMIFace = new KToshibaSMMInterface(this);
     m_ProcIFace = new KToshibaProcInterface(this);
-    m_InterfaceAvailable = m_SMMIFace->openSCIInterface();
-    m_Timer = new QTimer(this);
 
     load();
 
+    m_InterfaceAvailable = false;
+    m_Omnibook = false;
+
 #ifdef ENABLE_OMNIBOOK
-    if (!m_InterfaceAvailable) {
-        m_Omnibook = m_ProcIFace->checkOmnibook();
-        if (!m_Omnibook) {
-            m_KCMKToshibaGeneral->tlOff->show();
-            m_KCMKToshibaGeneral->frameMain->setEnabled(false);
-            setButtons(buttons() & ~Default);
-        }
+    m_Omnibook = m_ProcIFace->checkOmnibook();
+    if (m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->hide();
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
         m_KCMKToshibaGeneral->bgOtherOptions->setEnabled(false);
@@ -93,13 +85,12 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
         m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
         m_AC = m_ProcIFace->omnibookAC();
-        m_Omnibook = true;
     }
 #else // ENABLE_OMNIBOOK
+    m_InterfaceAvailable = m_SMMIFace->openSCIInterface();
     m_KCMKToshibaGeneral->tlOff->hide();
     m_KCMKToshibaGeneral->frameMain->setEnabled(true);
     m_AC = m_SMMIFace->acPowerStatus();
-    m_Omnibook = false;
     if (!m_InterfaceAvailable)
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
@@ -115,21 +106,12 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 #endif // ENABLE_HELPER
 
     connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
+    m_Timer = new QTimer(this);
     connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
     m_Timer->start(210);
     m_Init = false;
 };
 
-KCMToshibaModule::~KCMToshibaModule()
-{
-    m_Timer->stop();
-    delete m_Timer; m_Timer = NULL;
-
-    delete m_ProcIFace; m_ProcIFace = NULL;
-    delete m_SMMIFace; m_SMMIFace = NULL;
-    delete m_KCMKToshibaGeneral;
-    m_KCMKToshibaGeneral = NULL;
-}
 
 void KCMToshibaModule::load()
 {
@@ -249,12 +231,6 @@ kdDebug() << "KCMToshibaModule: saving." << endl;
 void KCMToshibaModule::configChanged()
 {
     emit changed(true);
-}
-
-
-QString KCMToshibaModule::quickHelp() const
-{
-    return i18n("Helpful information about the KToshiba module.");
 }
 
 

@@ -25,11 +25,11 @@ Preparatives
 =====
 For the program to function properly you need to specify the port for 
 the Fn key at the moment of kernel module insertion 
-('insmod toshiba tosh_fn=0x62'). 
+('insmod toshiba fn=0x62'). 
 Currently only two port locations are known for the Fn key 0x62 and 0x68, 
 you can try these numbers until you find one that does work.
 
-If no problems arise when you do 'insmod toshiba tosh_fn=0x62'
+If no problems arise when you do 'insmod toshiba fn=0x62'
 then you will be able to see something like this if you type
 'cat /proc/toshiba' then you are all set.
 
@@ -46,13 +46,13 @@ then just add the following "options toshiba tosh_fn=0x62"
 without the cuotes and it should look something like this:
 
 	alias char-major-10-181 toshiba
-	options toshiba tosh_fn=0x62
+	options toshiba fn=0x62
 
 If you are using SuSE you might want to add this to modules.conf.local or
 modprobe.conf.local (again depending on running kernel) instead.
 
 Once finished with the above procedures and the kernel module is loaded
-('insmod toshiba tosh_fn=0x6X', where 6X is the port you just found),
+('insmod toshiba fn=0x6X', where 6X is the port you just found),
 verify that you have read and write access to /dev/toshiba it should
 look something like this if you do 'ls -la /dev/toshiba' :
 

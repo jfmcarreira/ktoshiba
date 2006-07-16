@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef OMNIBOOK_FN_ACTIONS_H
-#define OMNIBOOK_FN_ACTIONS_H
+#ifndef SUSPEND_H
+#define SUSPEND_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -29,49 +29,22 @@
 
 class QWidget;
 
-class KToshibaProcInterface;
-class StatusWidget;
-class suspend;
-
 /**
- * @short Performs the Fn assosiated action
+ * @short Suspend to RAM/Disk
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.1
  */
-class OmnibookFnActions : public QObject
+class suspend : public QObject
 {
     Q_OBJECT
 public:
-    /**
-    * Default Constructor
-    */
-    OmnibookFnActions(QWidget *parent = 0);
-    void hideWidgets();
-    void performFnAction(int action);
-    bool m_OmnibookIface;
-    int m_Popup;
-    int m_Video;
-    int m_Bright;
-    int m_Pad;
-    int m_Mousepad;
+    suspend(QWidget *parent = 0);
+    ~suspend();
 
-    /**
-    * Default Destructor
-    */
-    virtual ~OmnibookFnActions();
+    void toRAM();
+    void toDisk();
 private:
-    KToshibaProcInterface *m_Proc;
-    StatusWidget *m_StatusWidget;
-    suspend *m_Suspend;
-    void toggleMute();
-    void lockScreen();
-    void suspendToRAM();
-    void suspendToDisk();
-    void toggleMousePad();
-    void toggleFan();
-    void toogleBackLight();
-    int m_Snd;
-    int m_Fan;
+    QWidget *m_Parent;
 };
 
-#endif // OMNIBOOK_FN_ACTIONS_H
+#endif // SUSPEND_H

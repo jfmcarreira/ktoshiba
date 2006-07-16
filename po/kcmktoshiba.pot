@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-06 19:32-0600\n"
+"POT-Creation-Date: 2006-07-15 19:02-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,20 +27,16 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: main.cpp:59
+#: main.cpp:55
 msgid "kcmktoshiba"
 msgstr ""
 
-#: main.cpp:60
+#: main.cpp:56
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr ""
 
-#: main.cpp:64
+#: main.cpp:60
 msgid "Original author"
-msgstr ""
-
-#: main.cpp:246
-msgid "Helpful information about the KToshiba module."
 msgstr ""
 
 #. i18n: file kcmtoshiba_general.ui line 23
@@ -49,7 +45,7 @@ msgstr ""
 msgid "KToshiba: General Options"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 51
+#. i18n: file kcmtoshiba_general.ui line 57
 #: rc.cpp:6
 #, no-c-format
 msgid ""
@@ -58,104 +54,104 @@ msgid ""
 "failures."
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 100
+#. i18n: file kcmtoshiba_general.ui line 106
 #: rc.cpp:9
 #, no-c-format
 msgid "&General Options"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 117
+#. i18n: file kcmtoshiba_general.ui line 123
 #: rc.cpp:12
 #, no-c-format
 msgid "System Power"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 131
+#. i18n: file kcmtoshiba_general.ui line 137
 #: rc.cpp:15
 #, no-c-format
 msgid "Remaining battery capacity:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 158
+#. i18n: file kcmtoshiba_general.ui line 164
 #: rc.cpp:18
 #, no-c-format
 msgid "AC"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 187
+#. i18n: file kcmtoshiba_general.ui line 193
 #: rc.cpp:21
 #, no-c-format
 msgid "Bat"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 214
+#. i18n: file kcmtoshiba_general.ui line 220
 #: rc.cpp:24
 #, no-c-format
 msgid "Other Options"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 225
+#. i18n: file kcmtoshiba_general.ui line 231
 #: rc.cpp:27
 #, no-c-format
 msgid "Setup &Helper Application"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 228
+#. i18n: file kcmtoshiba_general.ui line 234
 #: rc.cpp:30
 #, no-c-format
 msgid "Alt+H"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 231
+#. i18n: file kcmtoshiba_general.ui line 237
 #: rc.cpp:33
 #, no-c-format
 msgid "This button can be used to enable the helper application"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 239
+#. i18n: file kcmtoshiba_general.ui line 245
 #: rc.cpp:36
 #, no-c-format
 msgid "&Enable Bluetooth device at program start-up"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 242
+#. i18n: file kcmtoshiba_general.ui line 248
 #: rc.cpp:39
 #, no-c-format
 msgid "Alt+E"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 245
+#. i18n: file kcmtoshiba_general.ui line 251
 #: rc.cpp:42
 #, no-c-format
 msgid ""
 "Check this if you want the Bluetooth device activated at program startup"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 253
+#. i18n: file kcmtoshiba_general.ui line 259
 #: rc.cpp:45
 #, no-c-format
 msgid "Select &Audio Application:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 262
+#. i18n: file kcmtoshiba_general.ui line 268
 #: rc.cpp:48
 #, no-c-format
 msgid "Amarok"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 270
+#. i18n: file kcmtoshiba_general.ui line 276
 #: rc.cpp:51
 #, no-c-format
 msgid "JuK"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 278
+#. i18n: file kcmtoshiba_general.ui line 284
 #: rc.cpp:54
 #, no-c-format
 msgid "XMMS"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 288
+#. i18n: file kcmtoshiba_general.ui line 294
 #: rc.cpp:57
 #, no-c-format
 msgid ""
@@ -163,13 +159,285 @@ msgid ""
 "panel buttons"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 317
+#. i18n: file kcmtoshiba_general.ui line 323
 #: rc.cpp:60
 #, no-c-format
 msgid "Fn-Ke&y"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 326
+#. i18n: file kcmtoshiba_general.ui line 332
+#. i18n: file kcmtoshiba_general.ui line 479
+#. i18n: file kcmtoshiba_general.ui line 626
+#. i18n: file kcmtoshiba_general.ui line 773
+#. i18n: file kcmtoshiba_general.ui line 920
+#. i18n: file kcmtoshiba_general.ui line 1067
+#. i18n: file kcmtoshiba_general.ui line 1214
+#. i18n: file kcmtoshiba_general.ui line 1361
+#. i18n: file kcmtoshiba_general.ui line 1508
+#. i18n: file kcmtoshiba_general.ui line 1795
+#. i18n: file kcmtoshiba_general.ui line 2197
+#: rc.cpp:63 rc.cpp:117 rc.cpp:171 rc.cpp:225 rc.cpp:279 rc.cpp:333 rc.cpp:387
+#: rc.cpp:441 rc.cpp:495 rc.cpp:579 rc.cpp:645
+#, no-c-format
+msgid "Disabled"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 340
+#. i18n: file kcmtoshiba_general.ui line 487
+#. i18n: file kcmtoshiba_general.ui line 634
+#. i18n: file kcmtoshiba_general.ui line 781
+#. i18n: file kcmtoshiba_general.ui line 928
+#. i18n: file kcmtoshiba_general.ui line 1075
+#. i18n: file kcmtoshiba_general.ui line 1222
+#. i18n: file kcmtoshiba_general.ui line 1369
+#. i18n: file kcmtoshiba_general.ui line 1516
+#. i18n: file kcmtoshiba_general.ui line 1803
+#: rc.cpp:66 rc.cpp:120 rc.cpp:174 rc.cpp:228 rc.cpp:282 rc.cpp:336 rc.cpp:390
+#: rc.cpp:444 rc.cpp:498 rc.cpp:582
+#, no-c-format
+msgid "Speaker Unmute/Mute"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 348
+#. i18n: file kcmtoshiba_general.ui line 495
+#. i18n: file kcmtoshiba_general.ui line 642
+#. i18n: file kcmtoshiba_general.ui line 789
+#. i18n: file kcmtoshiba_general.ui line 936
+#. i18n: file kcmtoshiba_general.ui line 1083
+#. i18n: file kcmtoshiba_general.ui line 1230
+#. i18n: file kcmtoshiba_general.ui line 1377
+#. i18n: file kcmtoshiba_general.ui line 1524
+#. i18n: file kcmtoshiba_general.ui line 1811
+#: rc.cpp:69 rc.cpp:123 rc.cpp:177 rc.cpp:231 rc.cpp:285 rc.cpp:339 rc.cpp:393
+#: rc.cpp:447 rc.cpp:501 rc.cpp:585
+#, no-c-format
+msgid "Lock Screen"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 356
+#. i18n: file kcmtoshiba_general.ui line 503
+#. i18n: file kcmtoshiba_general.ui line 650
+#. i18n: file kcmtoshiba_general.ui line 797
+#. i18n: file kcmtoshiba_general.ui line 944
+#. i18n: file kcmtoshiba_general.ui line 1091
+#. i18n: file kcmtoshiba_general.ui line 1238
+#. i18n: file kcmtoshiba_general.ui line 1385
+#. i18n: file kcmtoshiba_general.ui line 1532
+#. i18n: file kcmtoshiba_general.ui line 1819
+#: rc.cpp:72 rc.cpp:126 rc.cpp:180 rc.cpp:234 rc.cpp:288 rc.cpp:342 rc.cpp:396
+#: rc.cpp:450 rc.cpp:504 rc.cpp:588
+#, no-c-format
+msgid "Battery Save Mode"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 364
+#. i18n: file kcmtoshiba_general.ui line 511
+#. i18n: file kcmtoshiba_general.ui line 658
+#. i18n: file kcmtoshiba_general.ui line 805
+#. i18n: file kcmtoshiba_general.ui line 952
+#. i18n: file kcmtoshiba_general.ui line 1099
+#. i18n: file kcmtoshiba_general.ui line 1246
+#. i18n: file kcmtoshiba_general.ui line 1393
+#. i18n: file kcmtoshiba_general.ui line 1540
+#. i18n: file kcmtoshiba_general.ui line 1827
+#: rc.cpp:75 rc.cpp:129 rc.cpp:183 rc.cpp:237 rc.cpp:291 rc.cpp:345 rc.cpp:399
+#: rc.cpp:453 rc.cpp:507 rc.cpp:591
+#, no-c-format
+msgid "Suspend To RAM"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 372
+#. i18n: file kcmtoshiba_general.ui line 519
+#. i18n: file kcmtoshiba_general.ui line 666
+#. i18n: file kcmtoshiba_general.ui line 813
+#. i18n: file kcmtoshiba_general.ui line 960
+#. i18n: file kcmtoshiba_general.ui line 1107
+#. i18n: file kcmtoshiba_general.ui line 1254
+#. i18n: file kcmtoshiba_general.ui line 1401
+#. i18n: file kcmtoshiba_general.ui line 1548
+#. i18n: file kcmtoshiba_general.ui line 1835
+#: rc.cpp:78 rc.cpp:132 rc.cpp:186 rc.cpp:240 rc.cpp:294 rc.cpp:348 rc.cpp:402
+#: rc.cpp:456 rc.cpp:510 rc.cpp:594
+#, no-c-format
+msgid "Suspend To Disk"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 380
+#. i18n: file kcmtoshiba_general.ui line 527
+#. i18n: file kcmtoshiba_general.ui line 674
+#. i18n: file kcmtoshiba_general.ui line 821
+#. i18n: file kcmtoshiba_general.ui line 968
+#. i18n: file kcmtoshiba_general.ui line 1115
+#. i18n: file kcmtoshiba_general.ui line 1262
+#. i18n: file kcmtoshiba_general.ui line 1409
+#. i18n: file kcmtoshiba_general.ui line 1556
+#. i18n: file kcmtoshiba_general.ui line 1843
+#: rc.cpp:81 rc.cpp:135 rc.cpp:189 rc.cpp:243 rc.cpp:297 rc.cpp:351 rc.cpp:405
+#: rc.cpp:459 rc.cpp:513 rc.cpp:597
+#, no-c-format
+msgid "Video Out"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 388
+#. i18n: file kcmtoshiba_general.ui line 535
+#. i18n: file kcmtoshiba_general.ui line 682
+#. i18n: file kcmtoshiba_general.ui line 829
+#. i18n: file kcmtoshiba_general.ui line 976
+#. i18n: file kcmtoshiba_general.ui line 1123
+#. i18n: file kcmtoshiba_general.ui line 1270
+#. i18n: file kcmtoshiba_general.ui line 1417
+#. i18n: file kcmtoshiba_general.ui line 1564
+#. i18n: file kcmtoshiba_general.ui line 1851
+#: rc.cpp:84 rc.cpp:138 rc.cpp:192 rc.cpp:246 rc.cpp:300 rc.cpp:354 rc.cpp:408
+#: rc.cpp:462 rc.cpp:516 rc.cpp:600
+#, no-c-format
+msgid "Bright Down"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 396
+#. i18n: file kcmtoshiba_general.ui line 543
+#. i18n: file kcmtoshiba_general.ui line 690
+#. i18n: file kcmtoshiba_general.ui line 837
+#. i18n: file kcmtoshiba_general.ui line 984
+#. i18n: file kcmtoshiba_general.ui line 1131
+#. i18n: file kcmtoshiba_general.ui line 1278
+#. i18n: file kcmtoshiba_general.ui line 1425
+#. i18n: file kcmtoshiba_general.ui line 1572
+#. i18n: file kcmtoshiba_general.ui line 1859
+#: rc.cpp:87 rc.cpp:141 rc.cpp:195 rc.cpp:249 rc.cpp:303 rc.cpp:357 rc.cpp:411
+#: rc.cpp:465 rc.cpp:519 rc.cpp:603
+#, no-c-format
+msgid "Bright Up"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 404
+#. i18n: file kcmtoshiba_general.ui line 551
+#. i18n: file kcmtoshiba_general.ui line 698
+#. i18n: file kcmtoshiba_general.ui line 845
+#. i18n: file kcmtoshiba_general.ui line 992
+#. i18n: file kcmtoshiba_general.ui line 1139
+#. i18n: file kcmtoshiba_general.ui line 1286
+#. i18n: file kcmtoshiba_general.ui line 1433
+#. i18n: file kcmtoshiba_general.ui line 1580
+#. i18n: file kcmtoshiba_general.ui line 1867
+#: rc.cpp:90 rc.cpp:144 rc.cpp:198 rc.cpp:252 rc.cpp:306 rc.cpp:360 rc.cpp:414
+#: rc.cpp:468 rc.cpp:522 rc.cpp:606
+#, no-c-format
+msgid "Wireless On/Off"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 412
+#. i18n: file kcmtoshiba_general.ui line 559
+#. i18n: file kcmtoshiba_general.ui line 706
+#. i18n: file kcmtoshiba_general.ui line 853
+#. i18n: file kcmtoshiba_general.ui line 1000
+#. i18n: file kcmtoshiba_general.ui line 1147
+#. i18n: file kcmtoshiba_general.ui line 1294
+#. i18n: file kcmtoshiba_general.ui line 1441
+#. i18n: file kcmtoshiba_general.ui line 1588
+#. i18n: file kcmtoshiba_general.ui line 1875
+#: rc.cpp:93 rc.cpp:147 rc.cpp:201 rc.cpp:255 rc.cpp:309 rc.cpp:363 rc.cpp:417
+#: rc.cpp:471 rc.cpp:525 rc.cpp:609
+#, no-c-format
+msgid "MousePad On/Off"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 420
+#. i18n: file kcmtoshiba_general.ui line 567
+#. i18n: file kcmtoshiba_general.ui line 714
+#. i18n: file kcmtoshiba_general.ui line 861
+#. i18n: file kcmtoshiba_general.ui line 1008
+#. i18n: file kcmtoshiba_general.ui line 1155
+#. i18n: file kcmtoshiba_general.ui line 1302
+#. i18n: file kcmtoshiba_general.ui line 1449
+#. i18n: file kcmtoshiba_general.ui line 1596
+#. i18n: file kcmtoshiba_general.ui line 1883
+#: rc.cpp:96 rc.cpp:150 rc.cpp:204 rc.cpp:258 rc.cpp:312 rc.cpp:366 rc.cpp:420
+#: rc.cpp:474 rc.cpp:528 rc.cpp:612
+#, no-c-format
+msgid "Speaker Volume"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 428
+#. i18n: file kcmtoshiba_general.ui line 575
+#. i18n: file kcmtoshiba_general.ui line 722
+#. i18n: file kcmtoshiba_general.ui line 869
+#. i18n: file kcmtoshiba_general.ui line 1016
+#. i18n: file kcmtoshiba_general.ui line 1163
+#. i18n: file kcmtoshiba_general.ui line 1310
+#. i18n: file kcmtoshiba_general.ui line 1457
+#. i18n: file kcmtoshiba_general.ui line 1604
+#. i18n: file kcmtoshiba_general.ui line 1891
+#: rc.cpp:99 rc.cpp:153 rc.cpp:207 rc.cpp:261 rc.cpp:315 rc.cpp:369 rc.cpp:423
+#: rc.cpp:477 rc.cpp:531 rc.cpp:615
+#, no-c-format
+msgid "Fan On/Off"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 436
+#. i18n: file kcmtoshiba_general.ui line 583
+#. i18n: file kcmtoshiba_general.ui line 730
+#. i18n: file kcmtoshiba_general.ui line 877
+#. i18n: file kcmtoshiba_general.ui line 1024
+#. i18n: file kcmtoshiba_general.ui line 1171
+#. i18n: file kcmtoshiba_general.ui line 1318
+#. i18n: file kcmtoshiba_general.ui line 1465
+#. i18n: file kcmtoshiba_general.ui line 1612
+#. i18n: file kcmtoshiba_general.ui line 1899
+#: rc.cpp:102 rc.cpp:156 rc.cpp:210 rc.cpp:264 rc.cpp:318 rc.cpp:372
+#: rc.cpp:426 rc.cpp:480 rc.cpp:534 rc.cpp:618
+#, no-c-format
+msgid "Boot Sequence"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 444
+#. i18n: file kcmtoshiba_general.ui line 591
+#. i18n: file kcmtoshiba_general.ui line 738
+#. i18n: file kcmtoshiba_general.ui line 885
+#. i18n: file kcmtoshiba_general.ui line 1032
+#. i18n: file kcmtoshiba_general.ui line 1179
+#. i18n: file kcmtoshiba_general.ui line 1326
+#. i18n: file kcmtoshiba_general.ui line 1473
+#. i18n: file kcmtoshiba_general.ui line 1620
+#. i18n: file kcmtoshiba_general.ui line 1907
+#: rc.cpp:105 rc.cpp:159 rc.cpp:213 rc.cpp:267 rc.cpp:321 rc.cpp:375
+#: rc.cpp:429 rc.cpp:483 rc.cpp:537 rc.cpp:621
+#, no-c-format
+msgid "LCD Backlight On/Off"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 452
+#. i18n: file kcmtoshiba_general.ui line 599
+#. i18n: file kcmtoshiba_general.ui line 746
+#. i18n: file kcmtoshiba_general.ui line 893
+#. i18n: file kcmtoshiba_general.ui line 1040
+#. i18n: file kcmtoshiba_general.ui line 1187
+#. i18n: file kcmtoshiba_general.ui line 1334
+#. i18n: file kcmtoshiba_general.ui line 1481
+#. i18n: file kcmtoshiba_general.ui line 1628
+#. i18n: file kcmtoshiba_general.ui line 1915
+#: rc.cpp:108 rc.cpp:162 rc.cpp:216 rc.cpp:270 rc.cpp:324 rc.cpp:378
+#: rc.cpp:432 rc.cpp:486 rc.cpp:540 rc.cpp:624
+#, no-c-format
+msgid "Bluetooth On/Off"
+msgstr ""
+
+#. i18n: file kcmtoshiba_general.ui line 460
+#. i18n: file kcmtoshiba_general.ui line 607
+#. i18n: file kcmtoshiba_general.ui line 754
+#. i18n: file kcmtoshiba_general.ui line 901
+#. i18n: file kcmtoshiba_general.ui line 1048
+#. i18n: file kcmtoshiba_general.ui line 1195
+#. i18n: file kcmtoshiba_general.ui line 1342
+#. i18n: file kcmtoshiba_general.ui line 1489
+#. i18n: file kcmtoshiba_general.ui line 1636
+#. i18n: file kcmtoshiba_general.ui line 1923
+#: rc.cpp:111 rc.cpp:165 rc.cpp:219 rc.cpp:273 rc.cpp:327 rc.cpp:381
+#: rc.cpp:435 rc.cpp:489 rc.cpp:543 rc.cpp:627
+#, no-c-format
+msgid "Ethernet On/Off"
+msgstr ""
+
 #. i18n: file kcmtoshiba_general.ui line 473
 #. i18n: file kcmtoshiba_general.ui line 620
 #. i18n: file kcmtoshiba_general.ui line 767
@@ -178,353 +446,81 @@ msgstr ""
 #. i18n: file kcmtoshiba_general.ui line 1208
 #. i18n: file kcmtoshiba_general.ui line 1355
 #. i18n: file kcmtoshiba_general.ui line 1502
-#. i18n: file kcmtoshiba_general.ui line 1789
-#. i18n: file kcmtoshiba_general.ui line 2185
-#: rc.cpp:63 rc.cpp:117 rc.cpp:171 rc.cpp:225 rc.cpp:279 rc.cpp:333 rc.cpp:387
-#: rc.cpp:441 rc.cpp:495 rc.cpp:579 rc.cpp:645
-#, no-c-format
-msgid "Disabled"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 334
-#. i18n: file kcmtoshiba_general.ui line 481
-#. i18n: file kcmtoshiba_general.ui line 628
-#. i18n: file kcmtoshiba_general.ui line 775
-#. i18n: file kcmtoshiba_general.ui line 922
-#. i18n: file kcmtoshiba_general.ui line 1069
-#. i18n: file kcmtoshiba_general.ui line 1216
-#. i18n: file kcmtoshiba_general.ui line 1363
-#. i18n: file kcmtoshiba_general.ui line 1510
-#. i18n: file kcmtoshiba_general.ui line 1797
-#: rc.cpp:66 rc.cpp:120 rc.cpp:174 rc.cpp:228 rc.cpp:282 rc.cpp:336 rc.cpp:390
-#: rc.cpp:444 rc.cpp:498 rc.cpp:582
-#, no-c-format
-msgid "Speaker Unmute/Mute"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 342
-#. i18n: file kcmtoshiba_general.ui line 489
-#. i18n: file kcmtoshiba_general.ui line 636
-#. i18n: file kcmtoshiba_general.ui line 783
-#. i18n: file kcmtoshiba_general.ui line 930
-#. i18n: file kcmtoshiba_general.ui line 1077
-#. i18n: file kcmtoshiba_general.ui line 1224
-#. i18n: file kcmtoshiba_general.ui line 1371
-#. i18n: file kcmtoshiba_general.ui line 1518
-#. i18n: file kcmtoshiba_general.ui line 1805
-#: rc.cpp:69 rc.cpp:123 rc.cpp:177 rc.cpp:231 rc.cpp:285 rc.cpp:339 rc.cpp:393
-#: rc.cpp:447 rc.cpp:501 rc.cpp:585
-#, no-c-format
-msgid "Lock Screen"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 350
-#. i18n: file kcmtoshiba_general.ui line 497
-#. i18n: file kcmtoshiba_general.ui line 644
-#. i18n: file kcmtoshiba_general.ui line 791
-#. i18n: file kcmtoshiba_general.ui line 938
-#. i18n: file kcmtoshiba_general.ui line 1085
-#. i18n: file kcmtoshiba_general.ui line 1232
-#. i18n: file kcmtoshiba_general.ui line 1379
-#. i18n: file kcmtoshiba_general.ui line 1526
-#. i18n: file kcmtoshiba_general.ui line 1813
-#: rc.cpp:72 rc.cpp:126 rc.cpp:180 rc.cpp:234 rc.cpp:288 rc.cpp:342 rc.cpp:396
-#: rc.cpp:450 rc.cpp:504 rc.cpp:588
-#, no-c-format
-msgid "Battery Save Mode"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 358
-#. i18n: file kcmtoshiba_general.ui line 505
-#. i18n: file kcmtoshiba_general.ui line 652
-#. i18n: file kcmtoshiba_general.ui line 799
-#. i18n: file kcmtoshiba_general.ui line 946
-#. i18n: file kcmtoshiba_general.ui line 1093
-#. i18n: file kcmtoshiba_general.ui line 1240
-#. i18n: file kcmtoshiba_general.ui line 1387
-#. i18n: file kcmtoshiba_general.ui line 1534
-#. i18n: file kcmtoshiba_general.ui line 1821
-#: rc.cpp:75 rc.cpp:129 rc.cpp:183 rc.cpp:237 rc.cpp:291 rc.cpp:345 rc.cpp:399
-#: rc.cpp:453 rc.cpp:507 rc.cpp:591
-#, no-c-format
-msgid "Suspend To RAM"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 366
-#. i18n: file kcmtoshiba_general.ui line 513
-#. i18n: file kcmtoshiba_general.ui line 660
-#. i18n: file kcmtoshiba_general.ui line 807
-#. i18n: file kcmtoshiba_general.ui line 954
-#. i18n: file kcmtoshiba_general.ui line 1101
-#. i18n: file kcmtoshiba_general.ui line 1248
-#. i18n: file kcmtoshiba_general.ui line 1395
-#. i18n: file kcmtoshiba_general.ui line 1542
-#. i18n: file kcmtoshiba_general.ui line 1829
-#: rc.cpp:78 rc.cpp:132 rc.cpp:186 rc.cpp:240 rc.cpp:294 rc.cpp:348 rc.cpp:402
-#: rc.cpp:456 rc.cpp:510 rc.cpp:594
-#, no-c-format
-msgid "Suspend To Disk"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 374
-#. i18n: file kcmtoshiba_general.ui line 521
-#. i18n: file kcmtoshiba_general.ui line 668
-#. i18n: file kcmtoshiba_general.ui line 815
-#. i18n: file kcmtoshiba_general.ui line 962
-#. i18n: file kcmtoshiba_general.ui line 1109
-#. i18n: file kcmtoshiba_general.ui line 1256
-#. i18n: file kcmtoshiba_general.ui line 1403
-#. i18n: file kcmtoshiba_general.ui line 1550
-#. i18n: file kcmtoshiba_general.ui line 1837
-#: rc.cpp:81 rc.cpp:135 rc.cpp:189 rc.cpp:243 rc.cpp:297 rc.cpp:351 rc.cpp:405
-#: rc.cpp:459 rc.cpp:513 rc.cpp:597
-#, no-c-format
-msgid "Video Out"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 382
-#. i18n: file kcmtoshiba_general.ui line 529
-#. i18n: file kcmtoshiba_general.ui line 676
-#. i18n: file kcmtoshiba_general.ui line 823
-#. i18n: file kcmtoshiba_general.ui line 970
-#. i18n: file kcmtoshiba_general.ui line 1117
-#. i18n: file kcmtoshiba_general.ui line 1264
-#. i18n: file kcmtoshiba_general.ui line 1411
-#. i18n: file kcmtoshiba_general.ui line 1558
-#. i18n: file kcmtoshiba_general.ui line 1845
-#: rc.cpp:84 rc.cpp:138 rc.cpp:192 rc.cpp:246 rc.cpp:300 rc.cpp:354 rc.cpp:408
-#: rc.cpp:462 rc.cpp:516 rc.cpp:600
-#, no-c-format
-msgid "Bright Down"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 390
-#. i18n: file kcmtoshiba_general.ui line 537
-#. i18n: file kcmtoshiba_general.ui line 684
-#. i18n: file kcmtoshiba_general.ui line 831
-#. i18n: file kcmtoshiba_general.ui line 978
-#. i18n: file kcmtoshiba_general.ui line 1125
-#. i18n: file kcmtoshiba_general.ui line 1272
-#. i18n: file kcmtoshiba_general.ui line 1419
-#. i18n: file kcmtoshiba_general.ui line 1566
-#. i18n: file kcmtoshiba_general.ui line 1853
-#: rc.cpp:87 rc.cpp:141 rc.cpp:195 rc.cpp:249 rc.cpp:303 rc.cpp:357 rc.cpp:411
-#: rc.cpp:465 rc.cpp:519 rc.cpp:603
-#, no-c-format
-msgid "Bright Up"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 398
-#. i18n: file kcmtoshiba_general.ui line 545
-#. i18n: file kcmtoshiba_general.ui line 692
-#. i18n: file kcmtoshiba_general.ui line 839
-#. i18n: file kcmtoshiba_general.ui line 986
-#. i18n: file kcmtoshiba_general.ui line 1133
-#. i18n: file kcmtoshiba_general.ui line 1280
-#. i18n: file kcmtoshiba_general.ui line 1427
-#. i18n: file kcmtoshiba_general.ui line 1574
-#. i18n: file kcmtoshiba_general.ui line 1861
-#: rc.cpp:90 rc.cpp:144 rc.cpp:198 rc.cpp:252 rc.cpp:306 rc.cpp:360 rc.cpp:414
-#: rc.cpp:468 rc.cpp:522 rc.cpp:606
-#, no-c-format
-msgid "Wireless On/Off"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 406
-#. i18n: file kcmtoshiba_general.ui line 553
-#. i18n: file kcmtoshiba_general.ui line 700
-#. i18n: file kcmtoshiba_general.ui line 847
-#. i18n: file kcmtoshiba_general.ui line 994
-#. i18n: file kcmtoshiba_general.ui line 1141
-#. i18n: file kcmtoshiba_general.ui line 1288
-#. i18n: file kcmtoshiba_general.ui line 1435
-#. i18n: file kcmtoshiba_general.ui line 1582
-#. i18n: file kcmtoshiba_general.ui line 1869
-#: rc.cpp:93 rc.cpp:147 rc.cpp:201 rc.cpp:255 rc.cpp:309 rc.cpp:363 rc.cpp:417
-#: rc.cpp:471 rc.cpp:525 rc.cpp:609
-#, no-c-format
-msgid "MousePad On/Off"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 414
-#. i18n: file kcmtoshiba_general.ui line 561
-#. i18n: file kcmtoshiba_general.ui line 708
-#. i18n: file kcmtoshiba_general.ui line 855
-#. i18n: file kcmtoshiba_general.ui line 1002
-#. i18n: file kcmtoshiba_general.ui line 1149
-#. i18n: file kcmtoshiba_general.ui line 1296
-#. i18n: file kcmtoshiba_general.ui line 1443
-#. i18n: file kcmtoshiba_general.ui line 1590
-#. i18n: file kcmtoshiba_general.ui line 1877
-#: rc.cpp:96 rc.cpp:150 rc.cpp:204 rc.cpp:258 rc.cpp:312 rc.cpp:366 rc.cpp:420
-#: rc.cpp:474 rc.cpp:528 rc.cpp:612
-#, no-c-format
-msgid "Speaker Volume"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 422
-#. i18n: file kcmtoshiba_general.ui line 569
-#. i18n: file kcmtoshiba_general.ui line 716
-#. i18n: file kcmtoshiba_general.ui line 863
-#. i18n: file kcmtoshiba_general.ui line 1010
-#. i18n: file kcmtoshiba_general.ui line 1157
-#. i18n: file kcmtoshiba_general.ui line 1304
-#. i18n: file kcmtoshiba_general.ui line 1451
-#. i18n: file kcmtoshiba_general.ui line 1598
-#. i18n: file kcmtoshiba_general.ui line 1885
-#: rc.cpp:99 rc.cpp:153 rc.cpp:207 rc.cpp:261 rc.cpp:315 rc.cpp:369 rc.cpp:423
-#: rc.cpp:477 rc.cpp:531 rc.cpp:615
-#, no-c-format
-msgid "Fan On/Off"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 430
-#. i18n: file kcmtoshiba_general.ui line 577
-#. i18n: file kcmtoshiba_general.ui line 724
-#. i18n: file kcmtoshiba_general.ui line 871
-#. i18n: file kcmtoshiba_general.ui line 1018
-#. i18n: file kcmtoshiba_general.ui line 1165
-#. i18n: file kcmtoshiba_general.ui line 1312
-#. i18n: file kcmtoshiba_general.ui line 1459
-#. i18n: file kcmtoshiba_general.ui line 1606
-#. i18n: file kcmtoshiba_general.ui line 1893
-#: rc.cpp:102 rc.cpp:156 rc.cpp:210 rc.cpp:264 rc.cpp:318 rc.cpp:372
-#: rc.cpp:426 rc.cpp:480 rc.cpp:534 rc.cpp:618
-#, no-c-format
-msgid "Boot Sequence"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 438
-#. i18n: file kcmtoshiba_general.ui line 585
-#. i18n: file kcmtoshiba_general.ui line 732
-#. i18n: file kcmtoshiba_general.ui line 879
-#. i18n: file kcmtoshiba_general.ui line 1026
-#. i18n: file kcmtoshiba_general.ui line 1173
-#. i18n: file kcmtoshiba_general.ui line 1320
-#. i18n: file kcmtoshiba_general.ui line 1467
-#. i18n: file kcmtoshiba_general.ui line 1614
-#. i18n: file kcmtoshiba_general.ui line 1901
-#: rc.cpp:105 rc.cpp:159 rc.cpp:213 rc.cpp:267 rc.cpp:321 rc.cpp:375
-#: rc.cpp:429 rc.cpp:483 rc.cpp:537 rc.cpp:621
-#, no-c-format
-msgid "LCD Backlight On/Off"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 446
-#. i18n: file kcmtoshiba_general.ui line 593
-#. i18n: file kcmtoshiba_general.ui line 740
-#. i18n: file kcmtoshiba_general.ui line 887
-#. i18n: file kcmtoshiba_general.ui line 1034
-#. i18n: file kcmtoshiba_general.ui line 1181
-#. i18n: file kcmtoshiba_general.ui line 1328
-#. i18n: file kcmtoshiba_general.ui line 1475
-#. i18n: file kcmtoshiba_general.ui line 1622
-#. i18n: file kcmtoshiba_general.ui line 1909
-#: rc.cpp:108 rc.cpp:162 rc.cpp:216 rc.cpp:270 rc.cpp:324 rc.cpp:378
-#: rc.cpp:432 rc.cpp:486 rc.cpp:540 rc.cpp:624
-#, no-c-format
-msgid "Bluetooth On/Off"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 454
-#. i18n: file kcmtoshiba_general.ui line 601
-#. i18n: file kcmtoshiba_general.ui line 748
-#. i18n: file kcmtoshiba_general.ui line 895
-#. i18n: file kcmtoshiba_general.ui line 1042
-#. i18n: file kcmtoshiba_general.ui line 1189
-#. i18n: file kcmtoshiba_general.ui line 1336
-#. i18n: file kcmtoshiba_general.ui line 1483
-#. i18n: file kcmtoshiba_general.ui line 1630
-#. i18n: file kcmtoshiba_general.ui line 1917
-#: rc.cpp:111 rc.cpp:165 rc.cpp:219 rc.cpp:273 rc.cpp:327 rc.cpp:381
-#: rc.cpp:435 rc.cpp:489 rc.cpp:543 rc.cpp:627
-#, no-c-format
-msgid "Ethernet On/Off"
-msgstr ""
-
-#. i18n: file kcmtoshiba_general.ui line 467
-#. i18n: file kcmtoshiba_general.ui line 614
-#. i18n: file kcmtoshiba_general.ui line 761
-#. i18n: file kcmtoshiba_general.ui line 908
-#. i18n: file kcmtoshiba_general.ui line 1055
-#. i18n: file kcmtoshiba_general.ui line 1202
-#. i18n: file kcmtoshiba_general.ui line 1349
-#. i18n: file kcmtoshiba_general.ui line 1496
-#. i18n: file kcmtoshiba_general.ui line 1643
-#. i18n: file kcmtoshiba_general.ui line 1933
+#. i18n: file kcmtoshiba_general.ui line 1649
+#. i18n: file kcmtoshiba_general.ui line 1939
 #: rc.cpp:114 rc.cpp:168 rc.cpp:222 rc.cpp:276 rc.cpp:330 rc.cpp:384
 #: rc.cpp:438 rc.cpp:492 rc.cpp:546 rc.cpp:630
 #, no-c-format
 msgid "These are the different options that you can assign to your Fn-F# keys"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1651
+#. i18n: file kcmtoshiba_general.ui line 1657
 #: rc.cpp:549
 #, no-c-format
 msgid "Fn-&Esc:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1665
+#. i18n: file kcmtoshiba_general.ui line 1671
 #: rc.cpp:552
 #, no-c-format
 msgid "Fn-F&1:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1679
+#. i18n: file kcmtoshiba_general.ui line 1685
 #: rc.cpp:555
 #, no-c-format
 msgid "Fn-F&2:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1693
+#. i18n: file kcmtoshiba_general.ui line 1699
 #: rc.cpp:558
 #, no-c-format
 msgid "Fn-F&3:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1707
+#. i18n: file kcmtoshiba_general.ui line 1713
 #: rc.cpp:561
 #, no-c-format
 msgid "Fn-F&4:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1721
+#. i18n: file kcmtoshiba_general.ui line 1727
 #: rc.cpp:564
 #, no-c-format
 msgid "Fn-F&5:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1735
+#. i18n: file kcmtoshiba_general.ui line 1741
 #: rc.cpp:567
 #, no-c-format
 msgid "Fn-F&6:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1749
+#. i18n: file kcmtoshiba_general.ui line 1755
 #: rc.cpp:570
 #, no-c-format
 msgid "Fn-F&7:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1763
+#. i18n: file kcmtoshiba_general.ui line 1769
 #: rc.cpp:573
 #, no-c-format
 msgid "Fn-F&8:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 1777
+#. i18n: file kcmtoshiba_general.ui line 1783
 #: rc.cpp:576
 #, no-c-format
 msgid "Fn-F&9:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2113
+#. i18n: file kcmtoshiba_general.ui line 2119
 #: rc.cpp:633
 #, no-c-format
 msgid "&Battery Save Mode"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2138
+#. i18n: file kcmtoshiba_general.ui line 2150
 #: rc.cpp:636
 #, no-c-format
 msgid ""
@@ -532,24 +528,24 @@ msgid ""
 "is set to <i>User Settings</i>."
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2154
+#. i18n: file kcmtoshiba_general.ui line 2166
 #: rc.cpp:639
 #, no-c-format
 msgid "HDD Au&to Off:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2180
+#. i18n: file kcmtoshiba_general.ui line 2192
 #: rc.cpp:642
 #, no-c-format
 msgid "Enabled"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2192
-#. i18n: file kcmtoshiba_general.ui line 2218
-#. i18n: file kcmtoshiba_general.ui line 2250
-#. i18n: file kcmtoshiba_general.ui line 2293
-#. i18n: file kcmtoshiba_general.ui line 2350
-#. i18n: file kcmtoshiba_general.ui line 2441
+#. i18n: file kcmtoshiba_general.ui line 2204
+#. i18n: file kcmtoshiba_general.ui line 2230
+#. i18n: file kcmtoshiba_general.ui line 2262
+#. i18n: file kcmtoshiba_general.ui line 2305
+#. i18n: file kcmtoshiba_general.ui line 2362
+#. i18n: file kcmtoshiba_general.ui line 2453
 #: rc.cpp:648 rc.cpp:660 rc.cpp:672 rc.cpp:684 rc.cpp:711 rc.cpp:738
 #, no-c-format
 msgid ""
@@ -557,128 +553,128 @@ msgid ""
 "changes to User Settings"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2198
+#. i18n: file kcmtoshiba_general.ui line 2210
 #: rc.cpp:651
 #, no-c-format
 msgid "Super Bright"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2203
+#. i18n: file kcmtoshiba_general.ui line 2215
 #: rc.cpp:654
 #, no-c-format
 msgid "Bright"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2208
+#. i18n: file kcmtoshiba_general.ui line 2220
 #: rc.cpp:657
 #, no-c-format
 msgid "Semi Bright"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2226
+#. i18n: file kcmtoshiba_general.ui line 2238
 #: rc.cpp:663
 #, no-c-format
 msgid "LCD &Brightness:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2235
+#. i18n: file kcmtoshiba_general.ui line 2247
 #: rc.cpp:666
 #, no-c-format
 msgid "High"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2240
+#. i18n: file kcmtoshiba_general.ui line 2252
 #: rc.cpp:669
 #, no-c-format
 msgid "Low"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2273
+#. i18n: file kcmtoshiba_general.ui line 2285
 #: rc.cpp:675
 #, no-c-format
 msgid "Max Performance"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2278
+#. i18n: file kcmtoshiba_general.ui line 2290
 #: rc.cpp:678
 #, no-c-format
 msgid "Battery Optimized"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2283
+#. i18n: file kcmtoshiba_general.ui line 2295
 #: rc.cpp:681
 #, no-c-format
 msgid "Performance"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2301
+#. i18n: file kcmtoshiba_general.ui line 2313
 #: rc.cpp:687
 #, no-c-format
 msgid "Cooling &Method:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2310
-#. i18n: file kcmtoshiba_general.ui line 2401
+#. i18n: file kcmtoshiba_general.ui line 2322
+#. i18n: file kcmtoshiba_general.ui line 2413
 #: rc.cpp:690 rc.cpp:717
 #, no-c-format
 msgid "30 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2315
-#. i18n: file kcmtoshiba_general.ui line 2406
+#. i18n: file kcmtoshiba_general.ui line 2327
+#. i18n: file kcmtoshiba_general.ui line 2418
 #: rc.cpp:693 rc.cpp:720
 #, no-c-format
 msgid "20 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2320
-#. i18n: file kcmtoshiba_general.ui line 2411
+#. i18n: file kcmtoshiba_general.ui line 2332
+#. i18n: file kcmtoshiba_general.ui line 2423
 #: rc.cpp:696 rc.cpp:723
 #, no-c-format
 msgid "15 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2325
-#. i18n: file kcmtoshiba_general.ui line 2416
+#. i18n: file kcmtoshiba_general.ui line 2337
+#. i18n: file kcmtoshiba_general.ui line 2428
 #: rc.cpp:699 rc.cpp:726
 #, no-c-format
 msgid "10 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2330
-#. i18n: file kcmtoshiba_general.ui line 2421
+#. i18n: file kcmtoshiba_general.ui line 2342
+#. i18n: file kcmtoshiba_general.ui line 2433
 #: rc.cpp:702 rc.cpp:729
 #, no-c-format
 msgid "05 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2335
-#. i18n: file kcmtoshiba_general.ui line 2426
+#. i18n: file kcmtoshiba_general.ui line 2347
+#. i18n: file kcmtoshiba_general.ui line 2438
 #: rc.cpp:705 rc.cpp:732
 #, no-c-format
 msgid "03 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2340
-#. i18n: file kcmtoshiba_general.ui line 2431
+#. i18n: file kcmtoshiba_general.ui line 2352
+#. i18n: file kcmtoshiba_general.ui line 2443
 #: rc.cpp:708 rc.cpp:735
 #, no-c-format
 msgid "01 min"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2392
+#. i18n: file kcmtoshiba_general.ui line 2404
 #: rc.cpp:714
 #, no-c-format
 msgid "CP&U Sleep Mode:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2466
+#. i18n: file kcmtoshiba_general.ui line 2478
 #: rc.cpp:741
 #, no-c-format
 msgid "&Processing Speed:"
 msgstr ""
 
-#. i18n: file kcmtoshiba_general.ui line 2494
+#. i18n: file kcmtoshiba_general.ui line 2506
 #: rc.cpp:744
 #, no-c-format
 msgid "D&isplay Auto Off:"
