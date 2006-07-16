@@ -1,4 +1,13 @@
 2006-07-14 Azael Avalos <coproscefalo@gmail.com>
+	* Updated README files
+	* Moved Suspend To RAM/Disk to own class
+	* Some changes to KCModule
+	* Reverted changes on how the KCModule was called,
+	  it was causing a lot of instances of the module to appear
+	* Added the toshiba.h header file, now we don't need
+	  the kernel sources to compile KToshiba ;-)
+
+2006-07-14 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed a typo on main.cpp
 
 2006-07-13 Azael Avalos <coproscefalo@gmail.com>

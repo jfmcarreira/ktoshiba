@@ -10,7 +10,8 @@ INCLUDES = $(all_includes) @DBUS_CFLAGS@
 
 # these are the headers for your project
 noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h modelid.h \
-	ktoshibaprocinterface.h toshibafnactions.h omnibookfnactions.h ktoshibadcopinterface.h
+		ktoshibaprocinterface.h toshibafnactions.h omnibookfnactions.h ktoshibadcopinterface.h \
+	suspend.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -30,8 +31,8 @@ libktoshibaprocinterface_la_LDFLAGS = $(all_libraries)
 libktoshibaprocinterface_la_SOURCES = ktoshibaprocinterface.cpp
 
 ktoshiba_SOURCES = settingswidget.ui statuswidget.ui modelid.cpp ktoshiba.cpp \
-	main.cpp toshibafnactions.cpp omnibookfnactions.cpp \
-	ktoshibadcopinterface.cpp ktoshibadcopinterface.skel
+		main.cpp toshibafnactions.cpp omnibookfnactions.cpp 	ktoshibadcopinterface.cpp \
+	ktoshibadcopinterface.skel suspend.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) \
 		 libktoshibasmminterface.la \

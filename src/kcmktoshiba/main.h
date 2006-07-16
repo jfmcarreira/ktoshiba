@@ -40,22 +40,19 @@ class KToshibaProcInterface;
 
 /**
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.3
+ * @version 0.4
  */
 class KCMToshibaModule: public KCModule
 {
     Q_OBJECT
 public:
-    KCMToshibaModule( QWidget *parent=0, const char *name=0, const QStringList& = QStringList() );
-    ~KCMToshibaModule();
+    KCMToshibaModule(QWidget *parent=0, const char *name = 0, const QStringList & = QStringList());
 
     void load();
     void save();
     void defaults();
-    QString quickHelp() const;
-public slots:
-    void configChanged();
 protected slots:
+    void configChanged();
     void timeout();
 private:
     KCMKToshibaGeneral *m_KCMKToshibaGeneral;

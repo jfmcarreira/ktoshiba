@@ -20,6 +20,7 @@
 
 #include "omnibookfnactions.h"
 #include "ktoshibaprocinterface.h"
+#include "suspend.h"
 
 #include <qwidgetstack.h>
 #include <qapplication.h>
@@ -36,13 +37,14 @@ using namespace Synaptics;
 
 #include "statuswidget.h"
 
-OmnibookFnActions::OmnibookFnActions(QObject *parent)
+OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     : QObject( parent ),
       m_Proc( 0 )
 {
-    m_Proc = new KToshibaProcInterface(this);
+    m_Proc = new KToshibaProcInterface(parent);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
+    m_Suspend = new suspend(parent);
 
     m_OmnibookIface = m_Proc->checkOmnibook();
     if (m_OmnibookIface) {
@@ -65,6 +67,7 @@ OmnibookFnActions::OmnibookFnActions(QObject *parent)
 OmnibookFnActions::~OmnibookFnActions()
 {
     delete m_StatusWidget; m_StatusWidget = NULL;
+    delete m_Suspend; m_Suspend = NULL;
     delete m_Proc; m_Proc = NULL;
 }
 
@@ -146,6 +149,16 @@ void OmnibookFnActions::lockScreen()
 {
     DCOPRef kdesktopClient("kdesktop", "KScreensaverIface");
     kdesktopClient.send("lock()", 0);
+}
+
+void OmnibookFnActions::suspendToRAM()
+{
+    m_Suspend->toRAM();
+}
+
+void OmnibookFnActions::suspendToDisk()
+{
+    m_Suspend->toDisk();
 }
 
 void OmnibookFnActions::toggleMousePad()

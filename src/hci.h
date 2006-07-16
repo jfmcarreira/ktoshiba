@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-#include<linux/toshiba.h>
+#include "./toshiba.h"
 
 
 enum {

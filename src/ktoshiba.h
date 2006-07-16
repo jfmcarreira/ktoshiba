@@ -37,6 +37,7 @@ class KToshibaSMMInterface;
 class KToshibaProcInterface;
 class ToshibaFnActions;
 class OmnibookFnActions;
+class suspend;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -89,6 +90,7 @@ protected:
     KToshibaDCOPInterface *mDCOPIFace;
     ToshibaFnActions *mTFn;
     OmnibookFnActions *mOFn;
+    suspend *mSuspend;
     bool mOmnibook;
     bool mACPI;
     int mBatSave;

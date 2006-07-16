@@ -20,6 +20,7 @@
 
 #include "toshibafnactions.h"
 #include "ktoshibasmminterface.h"
+#include "suspend.h"
 
 #include <qwidgetstack.h>
 #include <qapplication.h>
@@ -29,7 +30,6 @@
 #include <dcopref.h>
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
-#include <kpopupmenu.h>
 #include <kprocess.h>
 #include <klocale.h>
 #include <kpassivepopup.h>
@@ -43,10 +43,6 @@
 using namespace Synaptics;
 #endif // ENABLE_SYNAPTICS
 
-#ifdef ENABLE_POWERSAVE
-#include <powersave_dbus.h>
-#endif // ENABLE_POWERSAVE
-
 #include "settingswidget.h"
 #include "statuswidget.h"
 
@@ -55,11 +51,12 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
       m_Driver( 0 )
 {
     m_Parent = parent;
-    m_Driver = new KToshibaSMMInterface(this);
+    m_Driver = new KToshibaSMMInterface(parent);
     m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
+    m_Suspend = new suspend(parent);
 
     m_SCIIface = m_Driver->openSCIInterface();
     if (m_SCIIface)
@@ -86,6 +83,7 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
 
 ToshibaFnActions::~ToshibaFnActions() {
     delete m_Parent; m_Parent = NULL;
+    delete m_Suspend; m_Suspend = NULL;
     delete m_SettingsWidget; m_SettingsWidget = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
     delete m_Driver; m_Driver = NULL;
@@ -430,100 +428,12 @@ void ToshibaFnActions::toggleBSM()
 
 void ToshibaFnActions::suspendToRAM()
 {
-    int res = KMessageBox::warningContinueCancel(0,
-			i18n("Before continuing, be aware that ACPI Sleep States\n"
-			 "are a work in progress and may or may not work on your computer.\n"
-			 "Also make sure to unload problematic modules"), i18n("WARNING"));
-
-#ifdef ENABLE_POWERSAVE
-    if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRam");
-    else if (res == KMessageBox::Cancel)
-        return;
-
-    switch (res) {
-        case REPLY_SUCCESS:
-            kdDebug() << "KToshiba: Suspending To RAM (using powersave)" << endl;
-            return;
-        case REPLY_DISABLED:
-            KPassivePopup::message(i18n("WARNING"),
-			i18n("Suspend To RAM disabled by administrator."),
-			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
-            return;
-        default:
-            KPassivePopup::message(i18n("WARNING"),
-			i18n("The powersave daemon must be running in the background for a Suspend To RAM."),
-			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
-            return;
-    }
-#else // ENABLE_POWERSAVE
-    QString helper = KStandardDirs::findExe("ktosh_helper");
-    if (helper.isEmpty())
-        helper = KStandardDirs::findExe("klaptop_acpi_helper");
-    if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
-			   "Please make sure that it is installed correctly."),
-			   i18n("STR"));
-        return;
-    }
-
-    if (res == KMessageBox::Continue) {
-        kdDebug() << "KToshiba: Suspending To RAM (using ACPI)" << endl;
-        KProcess proc;
-        proc << helper << "--suspend";
-        proc.start(KProcess::DontCare);
-        proc.detach();
-    }
-#endif // ENABLE_POWERSAVE
+    m_Suspend->toRAM();
 }
 
 void ToshibaFnActions::suspendToDisk()
 {
-    int res = KMessageBox::warningContinueCancel(0,
-			i18n("Before continuing, be aware that ACPI Sleep States\n"
-			 "are a work in progress and may or may not work on your computer.\n"
-			 "Also make sure to unload problematic modules"), i18n("WARNING"));
-
-#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
-    if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
-    else if (res == KMessageBox::Cancel)
-        return;
-
-    switch (res) {
-        case REPLY_SUCCESS:
-            kdDebug() << "KToshiba: Suspending To Disk (using powersave)" << endl;
-            return;
-        case REPLY_DISABLED:
-            KPassivePopup::message(i18n("WARNING"),
-			i18n("Suspend To Disk disabled by administrator."),
-			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
-            return;
-        default:
-            KPassivePopup::message(i18n("WARNING"),
-			i18n("The powersave daemon must be running in the background for a Suspend To Disk."),
-			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
-           return;
-    }
-#else // ENABLE_POWERSAVE
-    QString helper = KStandardDirs::findExe("ktosh_helper");
-    if (helper.isEmpty())
-        helper = KStandardDirs::findExe("klaptop_acpi_helper");
-    if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
-			   "Please make sure that it is installed correctly."),
-			   i18n("STD"));
-        return;
-    }
-
-    if (res == KMessageBox::Continue) {
-        kdDebug() << "KToshiba: Suspending To Disk (using ACPI)" << endl;
-        KProcess proc;
-        proc << helper << "--hibernate";
-        proc.start(KProcess::DontCare);
-        proc.detach();
-    }
-#endif // ENABLE_POWERSAVE
+    m_Suspend->toDisk();
 }
 
 void ToshibaFnActions::toggleVideo()

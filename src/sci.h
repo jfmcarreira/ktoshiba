@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 
-#include<linux/toshiba.h>
+#include "./toshiba.h"
 
 /*
  * the different modes that can be changed
