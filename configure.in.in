@@ -39,9 +39,9 @@ AC_ARG_WITH(helper,
     [compile_helper=$withval],
     [compile_helper=yes]
 
-if test "$compile_helper" = "yes"; then
-    AC_DEFINE(ENABLE_HELPER, 1, [defined if you have ktosh_helper enabled])
-fi
+    if test "$compile_helper" = "yes"; then
+        AC_DEFINE(ENABLE_HELPER, 1, [defined if you have ktosh_helper enabled])
+    fi
 )
 
 AM_CONDITIONAL(with_helper, [test x$compile_helper = xyes])

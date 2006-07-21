@@ -1,3 +1,22 @@
+2006-07-21 Azael Avalos <coproscefalo@gmail.com>
+	* Added a function to open the configured Media Player
+	* Changed default Audio Application to Amarok
+	  (weird, why wasn't this the default...?)
+	* Enabled the Fn-Key tab for omnibook users
+	  (tho only some options are working for them)
+	* Some small change to configure.in.in and Makefile.am
+	* Removed modelid.cpp, moved all stuff to header file
+
+2006-07-19 Azael Avalos <coproscefalo@gmail.com>
+	* Updated ktoshiba.desktop file
+	* Re-ordered panel menu
+	* Fixed an issue regarding the multimedia MODE
+	  (was causing a lot of error messages)
+	* Deactivated hotkeys monitoring if we could not
+	  activate them
+	* Added AutoStart functionality and added a checkbox
+	  on KCModule to toggle state
+
 2006-07-14 Azael Avalos <coproscefalo@gmail.com>
 	* Updated README files
 	* Moved Suspend To RAM/Disk to own class

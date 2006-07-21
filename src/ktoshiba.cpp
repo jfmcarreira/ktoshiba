@@ -32,7 +32,9 @@
 #include <qtimer.h>
 
 #include <kapplication.h>
+#include <kbugreport.h>
 #include <kaboutapplication.h>
+#include <kaboutkde.h>
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kiconloader.h>
@@ -68,7 +70,8 @@ KToshiba::KToshiba()
       mModeTimer( 0 ),
       mSystemTimer( 0 ),
       mOmnibookTimer( 0 ),
-      mKProc( new KProcess(this) )
+      mKProc( new KProcess(this) ),
+      hotkeys( false )
 {
     this->setPixmap( KSystemTray::loadIcon("ktoshiba") );
     QToolTip::add(this, "KToshiba");
@@ -248,7 +251,7 @@ void KToshiba::loadConfiguration(KConfig *k)
 {
     k->setGroup("KToshiba");
     mBatSave = k->readNumEntry("Battery_Save_Mode", 2);
-    mAudioPlayer = k->readNumEntry("Audio_Player", 1);
+    mAudioPlayer = k->readNumEntry("Audio_Player", 0);
     btstart = k->readBoolEntry("Bluetooth_Startup", true);
     if (mTFn != 0 && mTFn->m_SCIIface) mTFn->m_BatSave = mBatSave;
 }
@@ -259,8 +262,9 @@ void KToshiba::createConfiguration()
     KConfig config(CONFIG_FILE);
 
     config.setGroup("KToshiba");
+    config.writeEntry("AutoStart", true);
     config.writeEntry("Battery_Save_Mode", 2);
-    config.writeEntry("Audio_Player", 1);
+    config.writeEntry("Audio_Player", 0);
     config.writeEntry("Bluetooth_Startup", true);
     config.writeEntry("Fn_Esc", 1);
     config.writeEntry("Fn_F1", 2);
@@ -283,70 +287,77 @@ void KToshiba::createConfiguration()
 
 void KToshiba::doMenu()
 {
-    contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
-                                     SLOT( doConfig() ), 0, 1, 1 );
-    contextMenu()->insertSeparator( 2 );
     contextMenu()->insertItem( SmallIcon("memory"), i18n("Suspend To &RAM"), this,
-                                     SLOT( doSuspendToRAM() ), 0, 3, 3 );
+                              SLOT( doSuspendToRAM() ), 0, 1, 1 );
     contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
-                                     SLOT( doSuspendToDisk() ), 0, 4, 4 );
+                              SLOT( doSuspendToDisk() ), 0, 2, 2 );
 #ifdef ENABLE_POWERSAVE
     static int res;
     res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToRam");
     if (res == REPLY_DISABLED)
-        contextMenu()->setItemEnabled( 3, FALSE );
+        contextMenu()->setItemEnabled( 1, FALSE );
     res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToDisk");
     if (res == REPLY_DISABLED)
-        contextMenu()->setItemEnabled( 4, FALSE );
+        contextMenu()->setItemEnabled( 2, FALSE );
 #else // ENABLE_POWERSAVE
     if (::access("/proc/acpi/sleep", F_OK) == -1) {
-        contextMenu()->setItemEnabled( 3, FALSE );
-        contextMenu()->setItemEnabled( 4, FALSE );
+        contextMenu()->setItemEnabled( 1, FALSE );
+        contextMenu()->setItemEnabled( 2, FALSE );
     }
 #endif // ENABLE_POWERSAVE
-    contextMenu()->insertSeparator( 5 );
+    contextMenu()->insertSeparator( 3 );
 #ifdef ENABLE_OMNIBOOK
-    mOneTouch = new QPopupMenu( this, i18n("OneTouch") );
+    mOneTouch = new QPopupMenu( this, "OneTouch" );
     mOneTouch->insertItem( SmallIcon(""), i18n("Disabled"), 0 );
     mOneTouch->insertItem( SmallIcon(""), i18n("Enabled"), 1 );
-    contextMenu()->insertItem( SmallIcon(""), i18n("OneTouch Buttons"), mOneTouch, 6, 6 );
+    contextMenu()->insertItem( SmallIcon(""), i18n("OneTouch Buttons"), mOneTouch, 4, 4 );
     contextMenu()->insertSeparator( 7 );
-    mOmniFan = new QPopupMenu( this, i18n("Fan") );
+    mOmniFan = new QPopupMenu( this, "Fan" );
     mOmniFan->insertItem( SmallIcon("fan_off"), i18n("Disabled"), 0 );
     mOmniFan->insertItem( SmallIcon("fan_on"), i18n("Enabled"), 1 );
-    contextMenu()->insertItem( SmallIcon("fan"), i18n("System Fan"), mOmniFan, 8, 8 );
+    contextMenu()->insertItem( SmallIcon("fan"), i18n("System Fan"), mOmniFan, 5, 5 );
     if (mOmnibook) {
         connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
         connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
     } else {
-        contextMenu()->setItemEnabled( 6, FALSE );
-        contextMenu()->setItemEnabled( 8, FALSE );
+        contextMenu()->setItemEnabled( 4, FALSE );
+        contextMenu()->setItemEnabled( 5, FALSE );
     }
 #else // ENABLE_OMNIBOOK
     contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
-                                     SLOT( doBluetooth() ), 0, 6, 6 );
-    contextMenu()->insertSeparator( 7 );
-    mHyper = new QPopupMenu( this, i18n("HyperThreading") );
+                                     SLOT( doBluetooth() ), 0, 4, 4 );
+    contextMenu()->insertSeparator( 5 );
+    mHyper = new QPopupMenu( this, "HyperThreading" );
     mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
     mHyper->insertItem( SmallIcon("ht_pm"), i18n("Enabled - PM aware"), 1 );
     mHyper->insertItem( SmallIcon("ht_no_pm"), i18n("Enabled - No PM aware"), 2 );
-    contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 8, 8 );
-    mSpeed = new QPopupMenu( this, i18n("SpeedStep") );
+    contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("Hyper-Threading"), mHyper, 6, 6 );
+    mSpeed = new QPopupMenu( this, "SpeedStep" );
     mSpeed->insertItem( SmallIcon("cpu_dynamic"), i18n("Dynamic"), 0 );
     mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
     mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
-    contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 9, 9 );
+    contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 7, 7 );
     if (mTFn->m_SCIIface && (mHT >= 0 || mSS >= 0)) {
         connect( mHyper, SIGNAL( activated(int) ), this, SLOT( doSetHyper(int) ) );
         connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
     } else {
-        contextMenu()->setItemEnabled( 8, FALSE );
-        contextMenu()->setItemEnabled( 9, FALSE );
+        contextMenu()->setItemEnabled( 6, FALSE );
+        contextMenu()->setItemEnabled( 7, FALSE );
     }
 #endif // ENABLE_OMNIBOOK
-    contextMenu()->insertSeparator( 10 );
-    contextMenu()->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
-                                     SLOT( displayAbout() ), 0, 11, 11 );
+    contextMenu()->insertSeparator( 8 );
+    contextMenu()->insertItem( SmallIcon("configure"), i18n("&Configure KToshiba..."), this,
+                              SLOT( doConfig() ), 0, 9, 9 );
+    mHelp = new QPopupMenu( this, "Help" );
+    mHelp->insertItem( i18n("&Report Bug..."), this,
+                      SLOT( displayBugReport() ) );
+    mHelp->insertSeparator();
+    mHelp->insertItem( SmallIcon("ktoshiba"), i18n("&About KToshiba"), this,
+                      SLOT( displayAbout() ) );
+    mHelp->insertItem( SmallIcon("about_kde"), i18n("About &KDE"), this,
+                      SLOT( displayAboutKDE() ) );
+    contextMenu()->insertItem( SmallIcon("help"), i18n("&Help"), mHelp, 10, 10 );
+
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook)
         contextMenu()->insertTitle( mProcIFace->model, 0, 0 );
@@ -364,7 +375,6 @@ void KToshiba::doConfig()
     proc.detach();
 }
 
-// TODO: Move suspend to RAM/Disk to own class
 void KToshiba::doSuspendToRAM()
 {
     mSuspend->toRAM();
@@ -414,10 +424,22 @@ void KToshiba::doSetOmnibookFan(int state)
     mProcIFace->omnibookSetFan(state);
 }
 
+void KToshiba::displayBugReport()
+{
+    KBugReport bug;
+    bug.exec();
+}
+
 void KToshiba::displayAbout()
 {
     KAboutApplication about(KGlobal::instance()->aboutData(), this);
     about.exec();
+}
+
+void KToshiba::displayAboutKDE()
+{
+    KAboutKDE aboutKDE;
+    aboutKDE.exec();
 }
 
 void KToshiba::bsmUserSettings(KConfig *k, int *bright)
@@ -496,10 +518,16 @@ void KToshiba::checkHotKeys()
         case 0:	// FIFO empty
             return;
         case 1:	// Failed accessing System Events
-            if (mSMMIFace->hotkeys == false) {
-                mSMMIFace->enableSystemEvent();
+            if (mSMMIFace->hotkeys == false)
+                hotkeys = mSMMIFace->enableSystemEvent();
+            if (!hotkeys) {
                 mSMMIFace->hotkeys = true;
+                mHotKeysTimer->stop();
+                disconnect(mHotKeysTimer);
+                return;
             }
+            else
+                mSMMIFace->hotkeys = true;
             return;
         case 0x101: // Fn-Esc
             tmp = mConfig.readNumEntry("Fn_Esc");
@@ -600,6 +628,12 @@ void KToshiba::checkMode()
 {
     int temp = mProcIFace->toshibaProcStatus();
 
+    if (temp < 0) {
+        mModeTimer->stop();
+        disconnect(mModeTimer);
+        return;
+    }
+
     MODE = (temp == CD_DVD)? CD_DVD : DIGITAL;
 }
 #endif // ENABLE_OMNIBOOK
@@ -675,6 +709,24 @@ void KToshiba::multimediaPlayPause()
     }
 }
 
+void KToshiba::multimediaPlayer()
+{
+    KConfig config(CONFIG_FILE);
+    config.setGroup("KToshiba");
+
+    mAudioPlayer = config.readNumEntry("Audio_Player", 0);
+
+    KProcess proc;
+    if (mAudioPlayer == 0)
+        proc << "amarok";
+    else if (mAudioPlayer == 1)
+        proc << "juk";
+    else if (mAudioPlayer == 2)
+        proc << "xmms";
+    proc.start(KProcess::DontCare);
+    proc.detach();
+}
+
 void KToshiba::checkSystem()
 {
 #ifdef ENABLE_OMNIBOOK
@@ -741,8 +793,8 @@ void KToshiba::checkSystem()
 
 void KToshiba::omnibookHotKeys(int keycode)
 {
-    //KConfig mConfig(CONFIG_FILE);
-    //mConfig.setGroup("KToshiba");
+    KConfig config(CONFIG_FILE);
+    config.setGroup("KToshiba");
 
     int tmp = 0;
 
@@ -754,20 +806,19 @@ void KToshiba::omnibookHotKeys(int keycode)
             multimediaPrevious();
             break;
         case 147:	// Media Player
-            // Implement me...
+            multimediaPlayer();
             break;
         case 150:	// Fn-F1
-            //tmp = mConfig.readNumEntry("Fn_F1");
+            tmp = config.readNumEntry("Fn_F1");
             break;
         case 153:	// Play/Pause also Next with ecype=12
-            multimediaPlayPause();
+            //multimediaPlayPause();
             break;
         case 159:	// Fn-F7
-            //tmp = mConfig.readNumEntry("Fn_F7");
+            tmp = config.readNumEntry("Fn_F7");
             break;
         case 160:	// Fn-Esc
-            //tmp = mConfig.readNumEntry("Fn_Esc");
-            tmp = 1; // For now, hard-code to Mute/Unmute
+            tmp = config.readNumEntry("Fn_Esc");
             break;
         case 162:	// Next also Play/Pause with ectype=12
             //multimediaNext();
@@ -782,7 +833,7 @@ void KToshiba::omnibookHotKeys(int keycode)
             *mKProc << "konsole";
             return;
         case 239:	// Fn-F6
-            //tmp = mConfig.readNumEntry("Fn_F6");
+            tmp = config.readNumEntry("Fn_F6");
             break;
     }
     if (keycode == 178 || keycode == 236) {
