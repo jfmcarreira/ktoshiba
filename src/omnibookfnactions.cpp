@@ -165,8 +165,7 @@ void OmnibookFnActions::toggleMousePad()
 {
 #ifdef ENABLE_SYNAPTICS
     if (m_Pad == -1) {
-        if (m_Mousepad == -1)
-            return;
+        if (m_Mousepad == -1) return;
 
         Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
     }

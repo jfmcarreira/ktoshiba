@@ -237,20 +237,6 @@
                                             <string>This button can be used to enable the helper application</string>
                                         </property>
                                     </widget>
-                                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-                                        <property name="name">
-                                            <cstring>btstartCheckBox</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Enable Bluetooth device at program start-up</string>
-                                        </property>
-                                        <property name="accel">
-                                            <string>Alt+E</string>
-                                        </property>
-                                        <property name="toolTip" stdset="0">
-                                            <string>Check this if you want the Bluetooth device activated at program startup</string>
-                                        </property>
-                                    </widget>
                                     <widget class="QLabel" row="0" column="1">
                                         <property name="name">
                                             <cstring>audioAppTextLabel</cstring>
@@ -294,6 +280,34 @@
                                             <string>This can be used to select prefered audio application to use with front panel buttons</string>
                                         </property>
                                     </widget>
+                                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                                        <property name="name">
+                                            <cstring>btstartCheckBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Enable Bluetooth device at program start-up</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+E</string>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Check this if you want the Bluetooth device activated at program startup</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                                        <property name="name">
+                                            <cstring>autostartCheckBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Start automatically at KDE login</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+S</string>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Check this if you want KToshiba to start automatically at KDE login</string>
+                                        </property>
+                                    </widget>
                                 </grid>
                             </widget>
                             <spacer>
@@ -309,7 +323,7 @@
                                 <property name="sizeHint">
                                     <size>
                                         <width>20</width>
-                                        <height>130</height>
+                                        <height>150</height>
                                     </size>
                                 </property>
                             </spacer>
@@ -2694,6 +2708,12 @@
     </connection>
     <connection>
         <sender>btstartCheckBox</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KCMKToshibaGeneral</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+    <connection>
+        <sender>autostartCheckBox</sender>
         <signal>toggled(bool)</signal>
         <receiver>KCMKToshibaGeneral</receiver>
         <slot>changedSlot()</slot>

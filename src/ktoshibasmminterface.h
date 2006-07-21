@@ -328,13 +328,14 @@ public:
   int getBayDevice(int bay);
   /**
    * Checks System Event FIFO for hotkeys.
-   * @return @p value holding the hotkey id
+   * @return @p the value holding the hotkey id
    */
   int getSystemEvent();
   /**
    * Enables the System Event
+   * @return @p true if successful, false otherwise
    */
-  void enableSystemEvent();
+  bool enableSystemEvent();
   /**
    * Gets the current video-out setting.
    * @return @p the int holdint the current display setting

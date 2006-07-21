@@ -479,8 +479,7 @@ void ToshibaFnActions::toggleMousePad()
 {
 #ifdef ENABLE_SYNAPTICS
     if (m_Pad == -1) {
-        if (m_Mousepad == -1)
-            return;
+        if (m_Mousepad == -1) return;
 
         Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
     }
@@ -492,8 +491,7 @@ void ToshibaFnActions::toggleMousePad()
 void ToshibaFnActions::toggleSpeakerVolume()
 {
     m_Vol = m_Driver->getSpeakerVolume();
-    if (m_Vol == -1)
-        return;
+    if (m_Vol == -1) return;
 
     m_Vol++;
     if (m_Vol > 3) m_Vol = 0;

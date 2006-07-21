@@ -47,7 +47,7 @@
 #define CONFIG_FILE "ktoshibarc"
 
 typedef KGenericFactory<KCMToshibaModule, QWidget> KCMToshibaModuleFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_ktoshibam, KCMToshibaModuleFactory("kcmktoshiba"))
+K_EXPORT_COMPONENT_FACTORY( kcm_ktoshibam, KCMToshibaModuleFactory("kcmktoshiba") )
 
 KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStringList &)
     : KCModule(KCMToshibaModuleFactory::instance(), parent, name)
@@ -79,8 +79,6 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_KCMKToshibaGeneral->tlOff->hide();
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
         m_KCMKToshibaGeneral->bgOtherOptions->setEnabled(false);
-        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
-			m_KCMKToshibaGeneral->configTabWidget->page(1), false);
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
         m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
@@ -120,9 +118,11 @@ void KCMToshibaModule::load()
     config.setGroup("KToshiba");
 
     m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
-		( config.readNumEntry("Audio_Player", 1) );
+		( config.readNumEntry("Audio_Player", 0) );
     m_KCMKToshibaGeneral->btstartCheckBox->setChecked
 		( config.readBoolEntry("Bluetooth_Startup", true) );
+    m_KCMKToshibaGeneral->autostartCheckBox->setChecked
+		( config.readBoolEntry("AutoStart", true) );
     m_KCMKToshibaGeneral->fnComboBox->setCurrentItem
 		( config.readNumEntry("Fn_Esc", 1) );
     m_KCMKToshibaGeneral->fnComboBox_1->setCurrentItem
@@ -160,8 +160,9 @@ void KCMToshibaModule::load()
 
 void KCMToshibaModule::defaults()
 {
-    m_KCMKToshibaGeneral->audioComboBox->setCurrentItem( 1 );
+    m_KCMKToshibaGeneral->audioComboBox->setCurrentItem( 0 );
     m_KCMKToshibaGeneral->btstartCheckBox->setChecked( true );
+    m_KCMKToshibaGeneral->autostartCheckBox->setChecked( true );
     m_KCMKToshibaGeneral->fnComboBox->setCurrentItem( 1 );
     m_KCMKToshibaGeneral->fnComboBox_1->setCurrentItem( 2 );
     m_KCMKToshibaGeneral->fnComboBox_2->setCurrentItem( 3 );
@@ -192,6 +193,8 @@ kdDebug() << "KCMToshibaModule: saving." << endl;
 		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
     config.writeEntry("Bluetooth_Startup",
 		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
+    config.writeEntry("AutoStart",
+		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
     config.writeEntry("Fn_Esc",
 		  m_KCMKToshibaGeneral->fnComboBox->currentItem());
     config.writeEntry("Fn_F1",

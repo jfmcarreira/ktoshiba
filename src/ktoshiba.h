@@ -74,7 +74,6 @@ protected slots:
     void doBluetooth();
     void doSetFreq(int);
     void doSetHyper(int);
-    void displayAbout();
     void checkHotKeys();
     void checkSystem();
     void checkMode();
@@ -82,6 +81,9 @@ protected slots:
     void omnibookHotKeys(int);
     void doSetOneTouch(int);
     void doSetOmnibookFan(int);
+    void displayBugReport();
+    void displayAbout();
+    void displayAboutKDE();
     void quit();
 protected:
     void doMenu();
@@ -108,10 +110,12 @@ private:
     void multimediaPrevious();
     void multimediaNext();
     void multimediaPlayPause();
+    void multimediaPlayer();
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
     QPopupMenu *mOneTouch;
     QPopupMenu *mOmniFan;
+    QPopupMenu *mHelp;
     QTimer *mHotKeysTimer;
     QTimer *mModeTimer;
     QTimer *mSystemTimer;

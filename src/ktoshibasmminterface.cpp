@@ -993,7 +993,7 @@ int KToshibaSMMInterface::getSystemEvent()
 	return (int) (reg.ecx & 0xffff);
 }
 
-void KToshibaSMMInterface::enableSystemEvent()
+bool KToshibaSMMInterface::enableSystemEvent()
 {
 	reg.eax = HCI_SET;
 	reg.ebx = HCI_SYSTEM_EVENT;
@@ -1002,11 +1002,13 @@ void KToshibaSMMInterface::enableSystemEvent()
 	if (HciFunction(&reg) != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
 			  << "Could not enable Hotkeys" << endl;
-		return;
+		return false;
 	}
 
 	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
 		  << "Enabled Hotkeys" << endl;
+
+    return true;
 }
 
 int KToshibaSMMInterface::getVideo()

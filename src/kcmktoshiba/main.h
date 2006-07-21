@@ -33,8 +33,8 @@
 #include <kcmodule.h>
 
 class QTimer;
-class KCMKToshibaGeneral;
 
+class KCMKToshibaGeneral;
 class KToshibaSMMInterface;
 class KToshibaProcInterface;
 
