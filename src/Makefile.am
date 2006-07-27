@@ -9,12 +9,7 @@ if with_keyhandler
    KEYHANDLER = ktosh_keyhandler
    ktosh_keyhandler_SOURCES = ktosh_keyhandler.cpp
    ktosh_keyhandler_LDFLAGS = $(all_libraries)
-# 			 @MODULAR_XORG_XSERVER_CFLAGS@ \
-# 			 @X_LIBRARY_CFLAGS@
-   ktosh_keyhandler_LDADD = $(LIB_KDEUI) $(LIB_XFIXES)
-# 			 @MODULAR_XORG_XSERVER_LIBS@ \
-# 			 @X_LIBRARY_LIBS@ \
-# 			 @XKBFILE_LIBS@
+   ktosh_keyhandler_LDADD = $(LIB_KDEUI) -lXext -lXtst
 endif
 
 # set the include path for X, qt and KDE

@@ -4,6 +4,10 @@
 	* Removed MODE timer, now you can select the desired MODE
 	  using Fn-d (Digital) and Fn-c (CD/DVD) or toggle MODE
 	  using Fn-t (Digital <-> CD/DVD)
+	* Removed modular X.Org Server check, it now compiles
+	  by some added libraries to Makefile.am
+	* Added some needed libraries to SYNAPTICS flag in
+	  order to compile under modular X.Org Server
 
 2006-07-26 Azael Avalos <coproscefalo@gmail.com>
 	* Added a function to retreive the model name for

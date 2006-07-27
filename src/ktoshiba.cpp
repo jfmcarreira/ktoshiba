@@ -85,8 +85,6 @@ KToshiba::KToshiba()
                   << appID << endl;
     }
 
-    mConfig = new KConfig(CONFIG_FILE);
-
     if (checkConfiguration()) {
         loadConfiguration();
     } else
@@ -107,25 +105,26 @@ KToshiba::KToshiba()
     kdDebug() << "KToshiba: Machine ECTYPE: " << mOFn->m_ECType << endl;
     mAC = mProcIFace->omnibookAC();
     (mAC == -1)? mACPI = true : mACPI = false;
+    mPad = mOFn->m_Pad;
     mBatSave = 2;
     mBatType = 3;
     MODE = DIGITAL;
     hotkeys = false;
 
     // keyhandler program process
-    /*pid_t mKeyPID;
+    pid_t mKeyPID;
     mKeyProc = new KProcess(this);
     *mKeyProc << "ktosh_keyhandler";
     mKeyProc->start(KProcess::DontCare);
     if (!mKeyProc->isRunning())
-        kdError() << "KToshiba: The key handling program is not running."
-                  << " Hotkeys monitoring will no be enabled" << endl;
+        kdError() << "KToshiba: The key handler program is not running."
+                  << " HotKeys monitoring will no be enabled" << endl;
     else {
         mKeyPID = mKeyProc->pid();
-        kdDebug() << "KToshiba: Key handling program PID "
+        kdDebug() << "KToshiba: Key handler program PID "
                   << (unsigned int)mKeyPID << endl;
         hotkeys = true;
-    }*/
+    }
 
     mOmnibookTimer = new QTimer(this);
     mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
@@ -155,6 +154,7 @@ KToshiba::KToshiba()
         mTFn->m_BatType = 2;
     mAC = mSMMIFace->acPowerStatus();
     mWirelessSwitch = mSMMIFace->getWirelessSwitch();
+    mPad = mTFn->m_Pad;
     bsmtrig = false;
     bluetooth = false;
     svideo = 0;
@@ -184,7 +184,7 @@ KToshiba::KToshiba()
 
 
 #ifdef ENABLE_SYNAPTICS
-    if (mTFn->m_Pad == -1 || (mOmnibook && mOFn->m_Pad == -1))
+    if (mPad == -1)
         checkSynaptics();
 #endif // ENABLE_SYNAPTICS
 }
@@ -205,7 +205,6 @@ KToshiba::~KToshiba()
     delete mSystemTimer; mSystemTimer = NULL;
     delete mKaffeine; mKaffeine = NULL;
     delete mSuspend; mSuspend = NULL;
-    delete mConfig; mConfig = NULL;
     delete mProcIFace; mProcIFace = NULL;
     delete mSMMIFace; mSMMIFace = NULL;
 }
@@ -214,10 +213,11 @@ void KToshiba::quit()
 {
 #ifdef ENABLE_OMNIBOOK
     mOmnibookTimer->stop();
-    //if (mKeyProc->isRunning()) {
-    //    kdDebug() << "KToshiba: Killing key handler program" << endl;
-    //    mKeyProc->kill(SIGQUIT);
-    //}
+    if (mKeyProc->isRunning()) {
+        kdDebug() << "KToshiba: Killing key handler program" << endl;
+        mKeyProc->kill(SIGQUIT);
+        mKeyProc->detach();
+    }
 #else // ENABLE_OMNIBOOK
     mHotKeysTimer->stop();
     mSystemTimer->stop();
@@ -243,11 +243,12 @@ bool KToshiba::checkConfiguration()
 
 void KToshiba::loadConfiguration()
 {
-    mConfig->setGroup("BSM");
-    mBatSave = mConfig->readNumEntry("Battery_Save_Mode", 2);
-    mConfig->setGroup("KToshiba");
-    mAudioPlayer = mConfig->readNumEntry("Audio_Player", 0);
-    btstart = mConfig->readBoolEntry("Bluetooth_Startup", true);
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("BSM");
+    mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
+    mConfig.setGroup("KToshiba");
+    mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
+    btstart = mConfig.readBoolEntry("Bluetooth_Startup", true);
 }
 
 void KToshiba::createConfiguration()
@@ -453,13 +454,14 @@ void KToshiba::bsmUserSettings(int *bright)
 {
     int processor, cpu, display, hdd, lcd, cooling, tmp;
 
-    mConfig->setGroup("BSM");
-    processor = mConfig->readNumEntry("Processing_Speed", 1);
-    cpu = mConfig->readNumEntry("CPU_Sleep_Mode", 0);
-    display = mConfig->readNumEntry("Display_Auto_Off", 5);
-    hdd = mConfig->readNumEntry("HDD_Auto_Off", 5);
-    lcd = mConfig->readNumEntry("LCD_Brightness", 2);
-    cooling = mConfig->readNumEntry("Cooling_Method", 2);
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("BSM");
+    processor = mConfig.readNumEntry("Processing_Speed", 1);
+    cpu = mConfig.readNumEntry("CPU_Sleep_Mode", 0);
+    display = mConfig.readNumEntry("Display_Auto_Off", 5);
+    hdd = mConfig.readNumEntry("HDD_Auto_Off", 5);
+    lcd = mConfig.readNumEntry("LCD_Brightness", 2);
+    cooling = mConfig.readNumEntry("Cooling_Method", 2);
 
     kdDebug() << "Enabling User Settings..." << endl;
     (processor == 0)? tmp = 1 : tmp = 0;
@@ -598,8 +600,9 @@ void KToshiba::multimediaPlayer()
         kapp->startServiceByDesktopName("kaffeine");
 
     if (MODE == DIGITAL) {
-        mConfig->setGroup("KToshiba");
-        mAudioPlayer = mConfig->readNumEntry("Audio_Player", 0);
+        KConfig mConfig(CONFIG_FILE);
+        mConfig.setGroup("KToshiba");
+        mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
 
         KProcess proc;
         if (mAudioPlayer == 0)
@@ -681,7 +684,8 @@ void KToshiba::checkSystem()
 void KToshiba::omnibookHotKeys(int keycode)
 {
 #ifdef ENABLE_OMNIBOOK
-    mConfig->setGroup("Fn_Key");
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("Fn_Key");
 
     int tmp = 0;
 
@@ -696,17 +700,17 @@ void KToshiba::omnibookHotKeys(int keycode)
             multimediaPlayer();
             return;
         case 150:	// Fn-F1
-            tmp = mConfig->readNumEntry("Fn_F1");
+            tmp = mConfig.readNumEntry("Fn_F1");
             break;
         case 153:	// Play/Pause also Next with ecype=12 (TSM30X)
             (mOFn->m_ECType == TSM30X)? multimediaNext()
                 : multimediaPlayPause();
             return;
         case 159:	// Fn-F7
-            tmp = mConfig->readNumEntry("Fn_F7");
+            tmp = mConfig.readNumEntry("Fn_F7");
             break;
         case 160:	// Fn-Esc
-            tmp = mConfig->readNumEntry("Fn_Esc");
+            tmp = mConfig.readNumEntry("Fn_Esc");
             break;
         case 162:	// Next also Play/Pause with ectype=12 (TSM30X)
             (mOFn->m_ECType == TSM30X)? multimediaPlayPause()
@@ -722,7 +726,7 @@ void KToshiba::omnibookHotKeys(int keycode)
             *mKProc << "konsole";
             break;
         case 239:	// Fn-F6
-            tmp = mConfig->readNumEntry("Fn_F6");
+            tmp = mConfig.readNumEntry("Fn_F6");
             break;
     }
     if (keycode == 178 || keycode == 236) {
@@ -753,7 +757,8 @@ void KToshiba::checkOmnibook()
 void KToshiba::checkHotKeys()
 {
 #ifndef ENABLE_OMNIBOOK
-    mConfig->setGroup("Fn_Key");
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("Fn_Key");
 
     int tmp = 0;
     int key = mSMMIFace->getSystemEvent();
@@ -776,34 +781,34 @@ void KToshiba::checkHotKeys()
                 mSMMIFace->hotkeys = true;
             return;
         case 0x101:	// Fn-Esc
-            tmp = mConfig->readNumEntry("Fn_Esc");
+            tmp = mConfig.readNumEntry("Fn_Esc");
             break;
         case 0x13b:	// Fn-F1
-            tmp = mConfig->readNumEntry("Fn_F1");
+            tmp = mConfig.readNumEntry("Fn_F1");
             break;
         case 0x13c:	// Fn-F2
-            tmp = mConfig->readNumEntry("Fn_F2");
+            tmp = mConfig.readNumEntry("Fn_F2");
             break;
         case 0x13d:	// Fn-F3
-            tmp = mConfig->readNumEntry("Fn_F3");
+            tmp = mConfig.readNumEntry("Fn_F3");
             break;
         case 0x13e:	// Fn-F4
-            tmp = mConfig->readNumEntry("Fn_F4");
+            tmp = mConfig.readNumEntry("Fn_F4");
             break;
         case 0x13f:	// Fn-F5
-            tmp = mConfig->readNumEntry("Fn_F5");
+            tmp = mConfig.readNumEntry("Fn_F5");
             break;
         case 0x140:	// Fn-F6
-            tmp = mConfig->readNumEntry("Fn_F6");
+            tmp = mConfig.readNumEntry("Fn_F6");
             break;
         case 0x141:	// Fn-F7
-            tmp = mConfig->readNumEntry("Fn_F7");
+            tmp = mConfig.readNumEntry("Fn_F7");
             break;
         case 0x142:	// Fn-F8
-            tmp = mConfig->readNumEntry("Fn_F8");
+            tmp = mConfig.readNumEntry("Fn_F8");
             break;
         case 0x143:	// Fn-F9
-            tmp = mConfig->readNumEntry("Fn_F9");
+            tmp = mConfig.readNumEntry("Fn_F9");
             break;
         /** Multimedia Buttons */
         case 0xb25:	// CD/DVD Mode

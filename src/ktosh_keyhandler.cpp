@@ -20,10 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <kdebug.h>
 #include <dcopclient.h>
 
@@ -40,6 +36,7 @@ extern "C" {
 
 // Global variables
 Display *mDisplay;
+Window mWindow;
 XkbFileInfo result;
 pid_t pid;
 
@@ -86,7 +83,6 @@ void grabKeys()
 
 int main(void)
 {
-    Window mWindow;
     XEvent event;
     XModifierKeymap *modmap;
     QByteArray data;

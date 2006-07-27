@@ -32,7 +32,6 @@
 class QTimer;
 class QPopupMenu;
 
-class KConfig;
 class KProcess;
 class DCOPRef;
 
@@ -106,7 +105,6 @@ private:
     QByteArray mData;
     QByteArray mReplyData;
     QCString mReplyType;
-    KConfig *mConfig;
     KProcess *mKProc;
     DCOPRef *mKaffeine;
     bool mOmnibook;
@@ -120,6 +118,7 @@ private:
     int mBatType;
     int mAudioPlayer;
     int mAC;
+    int mPad;
     int pow;
     int oldpow;
     int MODE;
