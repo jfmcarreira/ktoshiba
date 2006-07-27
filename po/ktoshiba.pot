@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-15 19:02-0600\n"
+"POT-Creation-Date: 2006-07-24 01:42-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,112 +27,104 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: ktoshiba.cpp:286
-msgid "&Configure KToshiba..."
-msgstr ""
-
-#: ktoshiba.cpp:289
+#: ktoshiba.cpp:291
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:291
+#: ktoshiba.cpp:293
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:309
-msgid "OneTouch"
-msgstr ""
-
-#: ktoshiba.cpp:310 ktoshiba.cpp:315 ktoshiba.cpp:330
+#: ktoshiba.cpp:312 ktoshiba.cpp:317 ktoshiba.cpp:332
 msgid "Disabled"
 msgstr ""
 
-#: ktoshiba.cpp:311 ktoshiba.cpp:316
+#: ktoshiba.cpp:313 ktoshiba.cpp:318
 msgid "Enabled"
 msgstr ""
 
-#: ktoshiba.cpp:312
+#: ktoshiba.cpp:314
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:314
-msgid "Fan"
-msgstr ""
-
-#: ktoshiba.cpp:317
+#: ktoshiba.cpp:319
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:326
+#: ktoshiba.cpp:328
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:329
-msgid "HyperThreading"
-msgstr ""
-
-#: ktoshiba.cpp:331
+#: ktoshiba.cpp:333
 msgid "Enabled - PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:332
+#: ktoshiba.cpp:334
 msgid "Enabled - No PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:333
+#: ktoshiba.cpp:335
 msgid "Hyper-Threading"
 msgstr ""
 
-#: ktoshiba.cpp:334
-msgid "SpeedStep"
-msgstr ""
-
-#: ktoshiba.cpp:335
+#: ktoshiba.cpp:337
 msgid "Dynamic"
 msgstr ""
 
-#: ktoshiba.cpp:336
+#: ktoshiba.cpp:338
 msgid "Always High"
 msgstr ""
 
-#: ktoshiba.cpp:337
+#: ktoshiba.cpp:339
 msgid "Always Low"
 msgstr ""
 
-#: ktoshiba.cpp:338
+#: ktoshiba.cpp:340
 msgid "CPU Frequency"
 msgstr ""
 
-#: ktoshiba.cpp:348
+#: ktoshiba.cpp:350
+msgid "&Configure KToshiba..."
+msgstr ""
+
+#: ktoshiba.cpp:353
+msgid "&Report Bug..."
+msgstr ""
+
+#: ktoshiba.cpp:356
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:388 ktoshiba.cpp:734 main.cpp:40 toshibafnactions.cpp:473
-#: toshibafnactions.cpp:539 toshibafnactions.cpp:552
+#: ktoshiba.cpp:358
+msgid "About &KDE"
+msgstr ""
+
+#: ktoshiba.cpp:399 ktoshiba.cpp:787 main.cpp:40 toshibafnactions.cpp:473
+#: toshibafnactions.cpp:537 toshibafnactions.cpp:550
 msgid "KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:388
+#: ktoshiba.cpp:399
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:389 toshibafnactions.cpp:540
+#: ktoshiba.cpp:400 toshibafnactions.cpp:538
 msgid "Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:733
+#: ktoshiba.cpp:786
 msgid "on"
 msgstr ""
 
-#: ktoshiba.cpp:733
+#: ktoshiba.cpp:786
 msgid "off"
 msgstr ""
 
-#: ktoshiba.cpp:734
+#: ktoshiba.cpp:787
 msgid "Wireless antenna turned %1"
 msgstr ""
 
-#: ktoshiba.cpp:735 toshibafnactions.cpp:475
+#: ktoshiba.cpp:788 toshibafnactions.cpp:475
 msgid "Wireless"
 msgstr ""
 
@@ -170,22 +162,6 @@ msgstr ""
 
 #: main.cpp:58
 msgid "omnibook stuff tester"
-msgstr ""
-
-#: modelid.cpp:33
-msgid ""
-"Could not get model id.\n"
-"Weird"
-msgstr ""
-
-#: modelid.cpp:338
-msgid ""
-"Please send the model name and this id 0x%1 to:\n"
-"coproscefalo@gmail.com"
-msgstr ""
-
-#: modelid.cpp:339
-msgid "Model Name"
 msgstr ""
 
 #. i18n: file ktoshibaui.rc line 4
@@ -281,11 +257,11 @@ msgstr ""
 msgid "Full Power"
 msgstr ""
 
-#: toshibafnactions.cpp:472 toshibafnactions.cpp:538 toshibafnactions.cpp:551
+#: toshibafnactions.cpp:472 toshibafnactions.cpp:536 toshibafnactions.cpp:549
 msgid "activated"
 msgstr ""
 
-#: toshibafnactions.cpp:472 toshibafnactions.cpp:538 toshibafnactions.cpp:551
+#: toshibafnactions.cpp:472 toshibafnactions.cpp:536 toshibafnactions.cpp:549
 msgid "deactivated"
 msgstr ""
 
@@ -293,14 +269,14 @@ msgstr ""
 msgid "Wireless interface %1"
 msgstr ""
 
-#: toshibafnactions.cpp:539
+#: toshibafnactions.cpp:537
 msgid "Bluetooth device %1"
 msgstr ""
 
-#: toshibafnactions.cpp:552
+#: toshibafnactions.cpp:550
 msgid "Ethernet device %1"
 msgstr ""
 
-#: toshibafnactions.cpp:553
+#: toshibafnactions.cpp:551
 msgid "Ethernet"
 msgstr ""

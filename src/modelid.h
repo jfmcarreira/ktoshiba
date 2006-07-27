@@ -339,7 +339,7 @@ QString modelID(int id)
 			mod = "UNKNOWN";
 			QString modelID = "Model_ID";
 			KMessageBox::information(0, i18n("Please send the model name and this id 0x%1 to:\n"
-									 "coproscefalo@gmail.com").arg(id, 0, 16), i18n("Model Name"), modelID);
+									 "coproscefalo@gmail.com").arg(id, 0, 16), i18n("Model Name"), "Model_ID");
 	}
 
 	return mod;

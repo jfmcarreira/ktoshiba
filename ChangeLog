@@ -1,3 +1,46 @@
+2006-07-27 Azael Avalos <coproscefalo@gmail.com>
+	* Dropped KsCD support from CD/DVD mode, Kaffeine is a more
+	  feature rich player and also supports audio CDs
+	* Removed MODE timer, now you can select the desired MODE
+	  using Fn-d (Digital) and Fn-c (CD/DVD) or toggle MODE
+	  using Fn-t (Digital <-> CD/DVD)
+
+2006-07-26 Azael Avalos <coproscefalo@gmail.com>
+	* Added a function to retreive the model name for
+	  omnibook users (the previous code wasn't working...)
+	* Updated Multimedia MODE and OneTouch icons
+	  (they look kinda nicer now ;-))
+	* Fixed setting of parameters for omnibook users
+	  (damn, I'm making a lot of mistakes... anyway...)
+	* Moved model name code to own function and reordered a bit
+	* New function to return the ectype for omnibook users
+	  (now all REPORTED keycodes are working)
+
+2006-07-25 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed a bug that caused KToshiba to crash at loading
+	  configuration file
+	* Some changes to the configuration file (ktoshibarc)
+	* Implemented the _Maximize_ hotkey found on some models
+	  (it toggles fullscreen on kaffeine instead of maximize)
+	* Added a new menu entry for omnibook users so they can
+	  toggle the MultiMedia MODE (CD/DVD <-> Digital) and
+	  also fixed menu ordering (I need to pay more attention...)
+	* Enabled some more stuff for omnibook users on KCM
+	* Added icons for OneTouch buttons and multimedia MODE
+
+2006-07-24 Azael Avalos <coproscefalo@gmail.com>
+	* Updated keycodes on keyhandler program
+	* Moved keycodes to own _subfunction_
+	* The keyhandler program is only compiled if
+	  user specified --with-omnibook
+	* Updated Spanish translation
+	* Some misc changes
+
+2006-07-23 Azael Avalos <coproscefalo@gmail.com>
+	* Some small changes on omnibook hotkeys function
+	  (replaced some breaks with returns instead)
+	* Added configure check for Modular X.Org X Server
+
 2006-07-21 Azael Avalos <coproscefalo@gmail.com>
 	* Added a function to open the configured Media Player
 	* Changed default Audio Application to Amarok

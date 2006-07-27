@@ -41,7 +41,7 @@ bool KToshibaProcInterface::checkOmnibook()
 {
     QString bios;
 
-    QFile file(OMNI_ROOT"/dmi");
+    QFile file(OMNI_DMI);
     if (!file.exists())
         return false;
     if (file.open(IO_ReadOnly)) {
@@ -53,30 +53,67 @@ bool KToshibaProcInterface::checkOmnibook()
                 QRegExp rx("(TOSHIBA)$");
                 rx.search(line);
                 bios = rx.cap(1);
-                continue;
+                break;
             }
+        }
+        file.close();
+        if (bios == "TOSHIBA")
+            return true;
+    }
+
+    return false;
+}
+
+QString KToshibaProcInterface::omnibookModelName()
+{
+    QFile file(OMNI_DMI);
+    if (!file.exists()) {
+        model = "UNKNOWN";
+        return model;
+    }
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line, tmp;
+        while (!stream.atEnd()) {
+            line = stream.readLine();
             if (line.contains("Product Name:", false)) {
                 QRegExp rx("(Satellite)");
                 rx.search(line);
                 model = rx.cap(1);
-                rx.setPattern("\\b([A-Z])(?:\\s*)(\\d+)$");
+                rx.setPattern("\\b(\\d+)$"); // eg.: 3005
                 rx.search(line);
-                tmp = rx.cap(1) + rx.cap(2);
+                tmp = rx.cap(1);
+                ectype = XE3GF;
                 if (tmp.isEmpty()) {
-                    rx.setPattern("\\b(\\d+)$");
+                    rx.setPattern("\\b([A-Z])(\\d+)$"); // eg.: P15
                     rx.search(line);
-                    model += " " + rx.cap(1);
-                } else
-                    model += " " + rx.cap(1) + rx.cap(2);
-                continue;
+                    tmp = rx.cap(1) + rx.cap(2);
+                    ectype = TSP10;
+                }
+                if (tmp.isEmpty()) {
+                    rx.setPattern("\\b([A-Z])(\\d+)([A-Z])$"); // eg.: M30X
+                    rx.search(line);
+                    tmp = rx.cap(1) + rx.cap(2) + rx.cap(3);
+                    ectype = TSM30X;
+                }
+                if (tmp.isEmpty()) {
+                    model = "UNKNOWN";
+                    ectype = NONE;
+                    break;
+                }
+                model += " " + tmp;
+                break;
             }
         }
         file.close();
     }
-    if (bios == "TOSHIBA")
-        return true;
 
-    return false;
+    return model;
+}
+
+int KToshibaProcInterface::omnibookECType()
+{
+    return ectype;
 }
 
 void KToshibaProcInterface::omnibookBatteryStatus(int *time, int *percent)
@@ -145,7 +182,7 @@ int KToshibaProcInterface::omnibookGetBrightness()
 {
     int brightness = 0;
 
-    QFile file(OMNI_ROOT"/lcd");
+    QFile file(OMNI_LCD);
     if (!file.open(IO_ReadOnly)) {
         kdError() << "KToshibaProcInterface::omnibookGetBrightness(): "
                   << "Failed obtaining brightness" << endl;
@@ -169,8 +206,8 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
     if (bright < 0 || bright > 7)
         bright = ((bright < 0)? 0 : 7);
 
-    if ((mFd = open(OMNI_ROOT"/lcd", O_RDWR))) {
-        kdError() << "KToshibaProcInterface::omnibookSetBrightness()"
+    if ((mFd = open(OMNI_LCD, O_RDWR)) == -1) {
+        kdError() << "KToshibaProcInterface::omnibookSetBrightness(): "
                   << "Could not open: " << OMNI_ROOT << "/lcd" << endl;
         return;
     }
@@ -187,7 +224,7 @@ void KToshibaProcInterface::omnibookSetBrightness(int bright)
 
 int KToshibaProcInterface::omnibookGetOneTouch()
 {
-    QFile file(OMNI_ROOT"/onetouch");
+    QFile file(OMNI_ONETOUCH);
     if (!file.open(IO_ReadOnly)) {
         kdError() << "KToshibaProcInterface::omnibookGetOneTouch(): "
                   << "Failed obtaining OneTouch buttons status" << endl;
@@ -211,7 +248,7 @@ int KToshibaProcInterface::omnibookGetOneTouch()
 
 void KToshibaProcInterface::omnibookSetOneTouch(int state)
 {
-    if ((mFd = open(OMNI_ROOT"/onetouch", O_RDWR))) {
+    if ((mFd = open(OMNI_ONETOUCH, O_RDWR)) == -1) {
         kdError() << "KToshibaProcInterface::omnibookSetFan()"
                   << "Could not open: " << OMNI_ROOT << "/onetouch" << endl;
         return;
@@ -230,7 +267,7 @@ void KToshibaProcInterface::omnibookSetOneTouch(int state)
 
 int KToshibaProcInterface::omnibookGetFan()
 {
-    QFile file(OMNI_ROOT"/fan");
+    QFile file(OMNI_FAN);
     if (!file.open(IO_ReadOnly)) {
         kdError() << "KToshibaProcInterface::omnibookGetFan(): "
                   << "Could not get fan status" << endl;
@@ -254,7 +291,7 @@ int KToshibaProcInterface::omnibookGetFan()
 
 void KToshibaProcInterface::omnibookSetFan(int status)
 {
-    if ((mFd = open(OMNI_ROOT"/fan", O_RDWR))) {
+    if ((mFd = open(OMNI_FAN, O_RDWR)) == -1) {
         kdError() << "KToshibaProcInterface::omnibookSetFan()"
                   << "Could not open: " << OMNI_ROOT << "/fan" << endl;
         return;
@@ -273,7 +310,7 @@ void KToshibaProcInterface::omnibookSetFan(int status)
 
 int KToshibaProcInterface::omnibookGetLCDBackLight()
 {
-    QFile file(OMNI_ROOT"/blank");
+    QFile file(OMNI_BLANK);
     if (!file.open(IO_ReadOnly)) {
         kdError() << "KToshibaProcInterface::omnibookGetLCDBacklight(): "
                   << "Could not get LCD Backlight status" << endl;
@@ -297,7 +334,7 @@ int KToshibaProcInterface::omnibookGetLCDBackLight()
 
 void KToshibaProcInterface::omnibookSetLCDBackLight(int status)
 {
-    if ((mFd = open(OMNI_ROOT"/blank", O_RDWR))) {
+    if ((mFd = open(OMNI_BLANK, O_RDWR)) == -1) {
         kdError() << "KToshibaProcInterface::omnibookSetLCDBacklight()"
                   << "Could not open: " << OMNI_ROOT << "/blank" << endl;
         return;
@@ -316,7 +353,7 @@ void KToshibaProcInterface::omnibookSetLCDBackLight(int status)
 
 int KToshibaProcInterface::omnibookGetTouchPad()
 {
-    QFile file(OMNI_ROOT"/touchpad");
+    QFile file(OMNI_TOUCHPAD);
     if (!file.open(IO_ReadOnly)) {
         kdError() << "KToshibaProcInterface::omnibookGetTouchPad(): "
                   << "Could not get TouchPad state or system doesn't"
@@ -324,6 +361,7 @@ int KToshibaProcInterface::omnibookGetTouchPad()
         return -1;
     }
 
+    // TODO: Find a model with touchpad and ask for data file
     /*QTextStream stream(&file);
     QString line = stream.readLine();
     if (line.contains("", false)) {
@@ -341,7 +379,7 @@ int KToshibaProcInterface::omnibookGetTouchPad()
 
 void KToshibaProcInterface::omnibookSetTouchPad(int status)
 {
-    if ((mFd = open(OMNI_ROOT"/touchpad", O_RDWR))) {
+    if ((mFd = open(OMNI_TOUCHPAD, O_RDWR)) == -1) {
         kdError() << "KToshibaProcInterface::omnibookSetTouchPad()"
                   << "Could not open: " << OMNI_ROOT << "/touchpad" << endl;
         return;

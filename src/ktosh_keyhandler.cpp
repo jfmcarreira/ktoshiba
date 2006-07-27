@@ -20,6 +20,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <kdebug.h>
 #include <dcopclient.h>
 
@@ -34,8 +38,6 @@ extern "C" {
 #include <unistd.h>
 }
 
-using namespace std;
-
 // Global variables
 Display *mDisplay;
 XkbFileInfo result;
@@ -44,10 +46,6 @@ pid_t pid;
 static void signal_handler(int signal)
 {
     kdDebug() << "ktosh_keyhandler: Received signal " << signal << ". Exiting..." << endl;
-
-    //if (mClient->isAttached())
-    //    mClient->detach();
-    //delete mClient; mClient = NULL;
 
     if (result.xkb != NULL)
         XkbFreeClientMap(result.xkb, XkbAllMapComponentsMask, True);
@@ -71,12 +69,26 @@ static int XErrHandler(Display *display, XErrorEvent *XErrEv)
     return ret;
 }
 
+void grabKeys()
+{
+    XGrabKey(mDisplay, 144, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Previous
+    XGrabKey(mDisplay, 147, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Media Player
+    XGrabKey(mDisplay, 150, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F1
+    XGrabKey(mDisplay, 153, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Play/Pause
+    XGrabKey(mDisplay, 159, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F7
+    XGrabKey(mDisplay, 160, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-Esc
+    XGrabKey(mDisplay, 162, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Next
+    XGrabKey(mDisplay, 164, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Stop/Eject
+    XGrabKey(mDisplay, 178, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// WWW
+    XGrabKey(mDisplay, 236, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Console Direct Access
+    XGrabKey(mDisplay, 239, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F6
+}
+
 int main(void)
 {
     Window mWindow;
     XEvent event;
     XModifierKeymap *modmap;
-    KeyCode skeycode;
     QByteArray data;
     QDataStream arg(data, IO_WriteOnly);
     int major, minor, error, min_keycodes, max_keycodes;
@@ -97,8 +109,10 @@ int main(void)
     if (mClient.isRegistered()) {
         kdDebug() << "ktosh_keyhandler: Registered with DCOP" << endl;
         kdDebug() << "ktosh_keyhandler: App ID: " << appID << endl;
-    } else
+    } else {
         kdError() << "ktosh_keyhandler: Could not register with DCOP server" << endl;
+        return -1;
+    }
 
     // Initialize variables
     mDisplay = NULL;
@@ -106,24 +120,24 @@ int main(void)
     major = XkbMajorVersion;
     minor = XkbMinorVersion;
     mDisplayName = getenv("DISPLAY");
+    mScreen = 0;
     mEventBaseRet = 0;
     mOpcodeRet = 0;
     min_keycodes = 1;
-    max_keycodes = 8;
-    skeycode = 39;
+    max_keycodes = 11;
 
-    // Open X server conecction
+    // Open X server connection
     mDisplay = XOpenDisplay(NULL);
     mScreen = DefaultScreen(mDisplay);
     if (mDisplay == NULL) {
         kdError() << "ktosh_keyhandler: Could not connect to X server" << endl;
         return -1;
-    }
+    } else
     if (mDisplay != NULL) {
         mWindow = DefaultRootWindow(mDisplay);
         XSetErrorHandler(&XErrHandler);
         XDisplayKeycodes(mDisplay, &min_keycodes, &max_keycodes);
-        modmap = XGetModifierMapping (mDisplay);
+        modmap = XGetModifierMapping(mDisplay);
         if (modmap)
             XFreeModifiermap(modmap);
     }
@@ -149,10 +163,14 @@ int main(void)
             default:
                 kdError() << "Unknown error " << error << " from XkbOpenDisplay" << endl;
         }
-        return -1;
+        if (mDisplay != NULL) {
+            XCloseDisplay(mDisplay);
+            mDisplay = NULL;
+            return -1;
+        }
     } else
-        if (!XkbQueryExtension(mKbdDisplay, &mOpcodeRet, &mEventBaseRet, NULL, &major, &minor))
-            kdError() << "ktosh_keyhandler: Cannot initialize the Xkb extension" << endl;
+    if (!XkbQueryExtension(mKbdDisplay, &mOpcodeRet, &mEventBaseRet, NULL, &major, &minor))
+        kdError() << "ktosh_keyhandler: Cannot initialize the Xkb extension" << endl;
 
     result.xkb = XkbGetMap(mDisplay, XkbAllMapComponentsMask, XkbUseCoreKbd);
     if (result.xkb == NULL)
@@ -163,15 +181,7 @@ int main(void)
     XSelectInput(mDisplay, mWindow, KeyPressMask | ButtonPressMask);
 
     // Key grabbing
-    // TODO: Move to own subroutine once we have more keycodes
-    XGrabKey(mDisplay, 144, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Previous
-    XGrabKey(mDisplay, 153, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Play/Pause
-    XGrabKey(mDisplay, 160, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-Esc
-    XGrabKey(mDisplay, 162, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Next
-    XGrabKey(mDisplay, 164, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Stop/Eject
-    XGrabKey(mDisplay, 178, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// WWW
-    XGrabKey(mDisplay, 236, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Console Direct Access
-    XGrabKey(mDisplay, 239, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F6
+    grabKeys();
 
     // And so the _forever_ loop
     while (true) {

@@ -51,6 +51,7 @@ public:
     void hideWidgets();
     void performFnAction(int, int);
     bool m_SCIIface;
+    int m_MachineID;
     int m_Popup;
     int m_BatType;
     int m_BatSave;

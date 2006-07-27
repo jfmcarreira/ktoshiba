@@ -48,13 +48,17 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
 
     m_OmnibookIface = m_Proc->checkOmnibook();
     if (m_OmnibookIface) {
-        m_Bright = m_Proc->omnibookGetBrightness();
+        m_ModelName = m_Proc->omnibookModelName();
+        m_ECType = m_Proc->omnibookECType();
         //m_Video = m_Proc->omnibookGetVideo();
+        m_Bright = m_Proc->omnibookGetBrightness();
         m_Pad = m_Proc->omnibookGetTouchPad();
         m_Fan = m_Proc->omnibookGetFan();
     }
     else {
-        m_Video = -1;
+        m_ModelName = "UNKNOWN";
+        m_ECType = NONE;
+        //m_Video = -1;
         m_Bright = -1;
         m_Pad = -1;
         m_Fan = -1;

@@ -1,8 +1,20 @@
 #MIN_CONFIG(3.2.0)
 
-AM_INIT_AUTOMAKE(ktoshiba, 0.8)
+AM_INIT_AUTOMAKE(ktoshiba, 0.9)
 AC_C_BIGENDIAN
 AC_CHECK_KDEMAXPATHLEN
+
+dnl === modular X check - begin ===
+have_modular_x=no
+PKG_CHECK_MODULES(MODULAR_XORG_XSERVER, [xorg-server])
+have_modular_x=yes
+
+if test "$have_modular_x" = "yes"; then
+    AC_DEFINE(HAVE_MODULAR_X, 1, [defined if you have a Modular X.Org X Server])
+    AC_SUBST(MODULAR_XORG_XSERVER_LIBS)
+    AC_SUBST(MODULAR_XORG_XSERVER_CFLAGS)
+fi
+dnl === modular X check - end ===
 
 dnl === powersave daemon support check - begin ===
 AC_ARG_WITH(powersave,
@@ -71,5 +83,15 @@ AC_ARG_WITH(omnibook,
 
 if test "$ac_cv_use_omnibook" = "yes"; then
     AC_DEFINE(ENABLE_OMNIBOOK, 1, [defined if you have omnibook support enabled])
+
+    if test "$have_modular_x" = "yes"; then
+        PKG_CHECK_MODULES(X_LIBRARY, [x11])
+        PKG_CHECK_MODULES(XKBFILE, [xkbfile])
+        AC_SUBST(X_LIBRARY_CFLAGS)
+        AC_SUBST(X_LIBRARY_LIBS)
+        AC_SUBST(XKBFILE_LIBS)
+    fi
 fi
+
+AM_CONDITIONAL(with_keyhandler, [test x$ac_cv_use_omnibook = xyes])
 dnl === omnibook support check - end ===
