@@ -70,6 +70,7 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
         m_Pad = -1;
     }
 
+    m_MachineID = m_Driver->machineID();
     m_Video = m_Driver->getVideo();
     m_Bright = m_Driver->getBrightness();
     m_Wireless = m_Driver->getWirelessPower();
@@ -178,8 +179,9 @@ void ToshibaFnActions::performFnAction(int action, int key)
         if (m_BatSave < 0) m_BatSave = 2;
         toggleBSM();
         KConfig cfg("ktoshibarc");
-        cfg.setGroup("KToshiba");
+        cfg.setGroup("BSM");
         cfg.writeEntry("Battery_Save_Mode", m_BatSave);
+        cfg.sync();
         m_SettingsWidget->wsSettings->raiseWidget(0);
         m_SettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
         m_SettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
@@ -417,7 +419,7 @@ void ToshibaFnActions::toggleMute()
 void ToshibaFnActions::lockScreen()
 {
     DCOPRef kdesktopClient("kdesktop", "KScreensaverIface");
-    kdesktopClient.send("lock()", 0);
+    kdesktopClient.send("lock");
 }
 
 void ToshibaFnActions::toggleBSM()

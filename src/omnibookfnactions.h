@@ -26,6 +26,7 @@
 #endif
 
 #include <qobject.h>
+#include <qstring.h>
 
 class QWidget;
 
@@ -48,7 +49,9 @@ public:
     OmnibookFnActions(QWidget *parent = 0);
     void hideWidgets();
     void performFnAction(int action);
+    QString m_ModelName;
     bool m_OmnibookIface;
+    int m_ECType;
     int m_Popup;
     int m_Video;
     int m_Bright;

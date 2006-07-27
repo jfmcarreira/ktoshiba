@@ -1,30 +1,6 @@
 /* hci.c -- Hardware Configuration Interface
  *
  * Copyright (c) 1998-2000  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
- *   
- * $Log$
- * Revision 1.2  2005/01/14 03:51:48  coproscefalo
- * Support for audio applications
- *
- * Revision 1.1.1.1  2004/12/06 19:43:32  coproscefalo
- * Initial import.
- *
- * Revision 1.5  2002/01/27 13:22:57  jab
- * updated list of machine ID's
- *
- * Revision 1.4  2001/10/05 13:04:43  jab
- * checked in change to using kernel module
- *
- * Revision 1.3  1999/12/12 11:33:39  jab
- * changed assembler to save registers, should make the programs stabler
- * slightly fudged addition to GetMachineID to get SCTTable ID's
- *
- * Revision 1.2  1999/08/15 10:43:28  jab
- * removed the HciGet and HciSet and replaced with HciFunction
- *
- * Revision 1.1  1999/03/11 20:27:06  jab
- * Initial revision
- *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  * 
  */
-
-static const char rcsid[]="$Id$";
 
 #include<stdio.h>
 #include<stdlib.h>

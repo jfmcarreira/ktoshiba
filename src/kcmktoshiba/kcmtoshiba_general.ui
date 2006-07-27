@@ -299,7 +299,7 @@
                                             <cstring>autostartCheckBox</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>&amp;Start automatically at KDE login</string>
+                                            <string>Automatically &amp;start KToshiba at startup</string>
                                         </property>
                                         <property name="accel">
                                             <string>Alt+S</string>

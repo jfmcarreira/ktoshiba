@@ -30,6 +30,7 @@
 #include <qcombobox.h>
 #include <qtabwidget.h>
 #include <qpushbutton.h>
+#include <qbuttongroup.h>
 
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
@@ -78,7 +79,6 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     if (m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->hide();
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
-        m_KCMKToshibaGeneral->bgOtherOptions->setEnabled(false);
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
         m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
@@ -88,10 +88,10 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_InterfaceAvailable = m_SMMIFace->openSCIInterface();
     m_KCMKToshibaGeneral->tlOff->hide();
     m_KCMKToshibaGeneral->frameMain->setEnabled(true);
-    m_AC = m_SMMIFace->acPowerStatus();
     if (!m_InterfaceAvailable)
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
+    m_AC = m_SMMIFace->acPowerStatus();
 #endif // ENABLE_OMNIBOOK
     if (!m_InterfaceAvailable && !m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->show();
@@ -115,14 +115,16 @@ void KCMToshibaModule::load()
 {
     kdDebug() << "KCMToshibaModule: loading." << endl;
     KConfig config(CONFIG_FILE);
-    config.setGroup("KToshiba");
 
+    config.setGroup("KToshiba");
     m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
 		( config.readNumEntry("Audio_Player", 0) );
     m_KCMKToshibaGeneral->btstartCheckBox->setChecked
 		( config.readBoolEntry("Bluetooth_Startup", true) );
     m_KCMKToshibaGeneral->autostartCheckBox->setChecked
 		( config.readBoolEntry("AutoStart", true) );
+
+    config.setGroup("Fn_Key");
     m_KCMKToshibaGeneral->fnComboBox->setCurrentItem
 		( config.readNumEntry("Fn_Esc", 1) );
     m_KCMKToshibaGeneral->fnComboBox_1->setCurrentItem
@@ -143,6 +145,8 @@ void KCMToshibaModule::load()
 		( config.readNumEntry("Fn_F8", 9) );
     m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem
 		( config.readNumEntry("Fn_F9", 10) );
+
+    config.setGroup("BSM");
     m_KCMKToshibaGeneral->processorComboBox->setCurrentItem
 		( config.readNumEntry("Processing_Speed", 1) );
     m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem
@@ -195,6 +199,9 @@ kdDebug() << "KCMToshibaModule: saving." << endl;
 		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
     config.writeEntry("AutoStart",
 		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
+    config.sync();
+
+    config.setGroup("Fn_Key");
     config.writeEntry("Fn_Esc",
 		  m_KCMKToshibaGeneral->fnComboBox->currentItem());
     config.writeEntry("Fn_F1",
@@ -215,6 +222,9 @@ kdDebug() << "KCMToshibaModule: saving." << endl;
 		  m_KCMKToshibaGeneral->fnComboBox_8->currentItem());
     config.writeEntry("Fn_F9",
 		  m_KCMKToshibaGeneral->fnComboBox_9->currentItem());
+    config.sync();
+
+    config.setGroup("BSM");
     config.writeEntry("Processing_Speed",
 		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
     config.writeEntry("CPU_Sleep_Mode",

@@ -21,20 +21,24 @@
 #ifndef KTOSHIBA_H
 #define KTOSHIBA_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <qobject.h>
 
 #include <ksystemtray.h>
-#include <kconfig.h>
-
-#include "ktoshibadcopinterface.h"
 
 class QTimer;
 class QPopupMenu;
 
+class KConfig;
 class KProcess;
+class DCOPRef;
 
 class KToshibaSMMInterface;
 class KToshibaProcInterface;
+class KToshibaDCOPInterface;
 class ToshibaFnActions;
 class OmnibookFnActions;
 class suspend;
@@ -59,7 +63,7 @@ public:
     * Default Constructor
     */
     KToshiba();
-    void loadConfiguration(KConfig *);
+    void loadConfiguration();
     void createConfiguration();
     bool checkConfiguration();
 
@@ -71,69 +75,72 @@ protected slots:
     void doConfig();
     void doSuspendToRAM();
     void doSuspendToDisk();
-    void doBluetooth();
-    void doSetFreq(int);
-    void doSetHyper(int);
-    void checkHotKeys();
     void checkSystem();
-    void checkMode();
     void checkOmnibook();
     void omnibookHotKeys(int);
     void doSetOneTouch(int);
     void doSetOmnibookFan(int);
+    void toggleMODE(int);
+    void doBluetooth();
+    void doSetFreq(int);
+    void doSetHyper(int);
+    void checkHotKeys();
     void displayBugReport();
     void displayAbout();
     void displayAboutKDE();
     void quit();
-protected:
-    void doMenu();
-    KToshibaSMMInterface *mSMMIFace;
-    KToshibaProcInterface *mProcIFace;
-    KToshibaDCOPInterface *mDCOPIFace;
-    ToshibaFnActions *mTFn;
-    OmnibookFnActions *mOFn;
-    suspend *mSuspend;
-    bool mOmnibook;
-    bool mACPI;
-    int mBatSave;
-    int mOldBatSave;
-    int mBatType;
-    int mWirelessSwitch;
-    int mAudioPlayer;
-    int mHT;
-    int mSS;
-    int mAC;
 private:
-    void bsmUserSettings(KConfig *, int *);
+    void doMenu();
+    void bsmUserSettings(int *);
     void checkSynaptics();
-    void multimediaStopEject();
+    void multimediaStop();
     void multimediaPrevious();
     void multimediaNext();
     void multimediaPlayPause();
     void multimediaPlayer();
-    QPopupMenu *mSpeed;
-    QPopupMenu *mHyper;
-    QPopupMenu *mOneTouch;
-    QPopupMenu *mOmniFan;
+    KToshibaSMMInterface *mSMMIFace;
+    KToshibaProcInterface *mProcIFace;
+    suspend *mSuspend;
     QPopupMenu *mHelp;
-    QTimer *mHotKeysTimer;
-    QTimer *mModeTimer;
     QTimer *mSystemTimer;
-    QTimer *mOmnibookTimer;
     QByteArray mData;
     QByteArray mReplyData;
     QCString mReplyType;
+    KConfig *mConfig;
     KProcess *mKProc;
-    KProcess *mKeyProc;
+    DCOPRef *mKaffeine;
+    bool mOmnibook;
+    bool mACPI;
     bool bsmtrig;
-    bool wstrig;
     bool btstart;
-    bool bluetooth;
     bool hotkeys;
+    bool bluetooth;
+    int mBatSave;
+    int mOldBatSave;
+    int mBatType;
+    int mAudioPlayer;
+    int mAC;
     int pow;
     int oldpow;
     int MODE;
+#ifdef ENABLE_OMNIBOOK
+    KToshibaDCOPInterface *mDCOPIFace;
+    OmnibookFnActions *mOFn;
+    QPopupMenu *mOneTouch;
+    QPopupMenu *mOmniFan;
+    QPopupMenu *mOmniMODE;
+    QTimer *mOmnibookTimer;
+    KProcess *mKeyProc;
+#else // ENABLE_OMNIBOOK
+    ToshibaFnActions *mTFn;
+    QPopupMenu *mSpeed;
+    QPopupMenu *mHyper;
+    QTimer *mHotKeysTimer;
+    int mWirelessSwitch;
+    int mHT;
+    int mSS;
     int svideo;
+#endif // ENABLE_OMNIBOOK
 };
 
 #endif // KTOSHIBA_H

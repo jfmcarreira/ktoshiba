@@ -22,6 +22,7 @@
 #define KTOSHIBA_PROCINTERFACE_H
 
 #include <qobject.h>
+#include <qstring.h>
 
 extern "C" {
 #include <sys/types.h>
@@ -30,9 +31,21 @@ extern "C" {
 #include <math.h>
 }
 
-#define TOSH_PROC "/proc/toshiba"
-#define OMNI_ROOT "/proc/omnibook"
-#define ACPI_ROOT "/proc/acpi"
+#define TOSH_PROC		"/proc/toshiba"
+#define OMNI_ROOT		"/proc/omnibook"
+#define OMNI_DMI		"/proc/omnibook/dmi"
+#define OMNI_LCD		"/proc/omnibook/lcd"
+#define OMNI_ONETOUCH	"/proc/omnibook/onetouch"
+#define OMNI_FAN 		"/proc/omnibook/fan"
+#define OMNI_BLANK 		"/proc/omnibook/blank"
+#define OMNI_TOUCHPAD 	"/proc/omnibook/touchpad"
+#define ACPI_ROOT 		"/proc/acpi"
+
+// ECTYPE
+#define NONE			0
+#define XE3GF			1
+#define TSP10			11
+#define TSM30X			12
 
 /**
  * @short Provides access to /proc files
@@ -56,6 +69,16 @@ public:
     * @return @p true if found, false otherwise
     */
     bool checkOmnibook();
+    /**
+     * Gets the machine model name
+     * @return @p the string holding the model name
+     */
+    QString omnibookModelName();
+    /**
+     * Gets the machine ectype
+     * @return @p the int holding the ectype
+     */
+    int omnibookECType();
     /**
     * Checks /proc entry for battery status.
     * @param time the int to hold the current time
@@ -137,13 +160,13 @@ public:
     * @return @p value holding the Fn-Key combo id
     */
     int toshibaProcStatus();
-public:
-    QString model;
 private:
     FILE *str;
+    QString model;
     int mFd;
     int BatteryCap;
     int RemainingCap;
+    int ectype;
 };
 
 #endif // KTOSHIBA_PROCINTERFACE_H
