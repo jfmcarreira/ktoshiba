@@ -97,6 +97,8 @@ private:
     void multimediaNext();
     void multimediaPlayPause();
     void multimediaPlayer();
+    void multimediaVolumeDown();
+    void multimediaVolumeUp();
     KToshibaSMMInterface *mSMMIFace;
     KToshibaProcInterface *mProcIFace;
     suspend *mSuspend;

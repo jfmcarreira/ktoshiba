@@ -1,3 +1,10 @@
+2006-07-29 Azael Avalos <coproscefalo@gmail.com>
+	* New function for omnibbok users to increase/decrase volume
+
+2006-07-28 Azael Avalos <coproscefalo@gmail.com>
+	* Small change on how Audio Application was started
+	  (we now use startServiceByDesktopName function)
+
 2006-07-27 Azael Avalos <coproscefalo@gmail.com>
 	* Dropped KsCD support from CD/DVD mode, Kaffeine is a more
 	  feature rich player and also supports audio CDs
