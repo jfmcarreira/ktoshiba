@@ -606,14 +606,24 @@ void KToshiba::multimediaPlayer()
 
         KProcess proc;
         if (mAudioPlayer == 0)
-            proc << "amarok";
+            kapp->startServiceByDesktopName("amarok");
         else if (mAudioPlayer == 1)
-            proc << "juk";
+            kapp->startServiceByDesktopName("juk");
         else if (mAudioPlayer == 2)
             proc << "xmms";
         proc.start(KProcess::DontCare);
         proc.detach();
     }
+}
+
+void KToshiba::multimediaVolumeDown()
+{
+    kapp->dcopClient()->send("kmix", "Mixer0", "decreaseVolume(int)", 0);
+}
+
+void KToshiba::multimediaVolumeUp()
+{
+    kapp->dcopClient()->send("kmix", "Mixer0", "increaseVolume(int)", 0);
 }
 
 void KToshiba::checkSystem()
@@ -696,11 +706,24 @@ void KToshiba::omnibookHotKeys(int keycode)
         case 144:	// Previous
             multimediaPrevious();
             return;
+        case 145:	// Fn-1 (Volume Down)
+            multimediaVolumeDown();
+            return;
+        case 146:	// Fn-2 (Volume Up)
+            multimediaVolumeUp();
+            return;
         case 147:	// Media Player
             multimediaPlayer();
             return;
+        case 148:	// Toggle Mode
+            MODE = (MODE == CD_DVD)? DIGITAL : CD_DVD;
+            return;
         case 150:	// Fn-F1
             tmp = mConfig.readNumEntry("Fn_F1");
+            break;
+        case 151:	// Fn-F9
+        case 152:
+            tmp = mConfig.readNumEntry("Fn_F9");
             break;
         case 153:	// Play/Pause also Next with ecype=12 (TSM30X)
             (mOFn->m_ECType == TSM30X)? multimediaNext()

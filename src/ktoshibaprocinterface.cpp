@@ -88,7 +88,10 @@ QString KToshibaProcInterface::omnibookModelName()
                     rx.setPattern("\\b([A-Z])(\\d+)$"); // eg.: P15
                     rx.search(line);
                     tmp = rx.cap(1) + rx.cap(2);
-                    ectype = TSP10;
+                    if (tmp == "M100")
+                        ectype = TSM30X;
+                    else
+                        ectype = TSP10;
                 }
                 if (tmp.isEmpty()) {
                     rx.setPattern("\\b([A-Z])(\\d+)([A-Z])$"); // eg.: M30X
