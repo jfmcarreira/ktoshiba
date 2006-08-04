@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-24 01:42-0600\n"
+"POT-Creation-Date: 2006-08-04 02:13-0600\n"
 "PO-Revision-Date: 2005-06-15 21:15+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,105 +28,117 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: ktoshiba.cpp:291
+#: ktoshiba.cpp:289
 msgid "Suspend To &RAM"
 msgstr "Felfüggesztés RAM-ba"
 
-#: ktoshiba.cpp:293
+#: ktoshiba.cpp:291
 msgid "Suspend To &Disk"
 msgstr "Felfüggesztés lemezre"
 
-#: ktoshiba.cpp:312 ktoshiba.cpp:317 ktoshiba.cpp:332
+#: ktoshiba.cpp:310 ktoshiba.cpp:314 ktoshiba.cpp:335
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:313 ktoshiba.cpp:318
+#: ktoshiba.cpp:311 ktoshiba.cpp:315
 #, fuzzy
 msgid "Enabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:314
+#: ktoshiba.cpp:312
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:319
+#: ktoshiba.cpp:316
 msgid "System Fan"
 msgstr ""
 
+#: ktoshiba.cpp:326
+msgid "CD/DVD"
+msgstr ""
+
+#: ktoshiba.cpp:327
+msgid "Digital"
+msgstr ""
+
 #: ktoshiba.cpp:328
+msgid "Multimedia MODE"
+msgstr ""
+
+#: ktoshiba.cpp:331
 msgid "Enable &Bluetooth"
 msgstr "&Bluetooth bekapcsolása"
 
-#: ktoshiba.cpp:333
+#: ktoshiba.cpp:336
 msgid "Enabled - PM aware"
 msgstr "Bekapcsolva - PM aware"
 
-#: ktoshiba.cpp:334
+#: ktoshiba.cpp:337
 msgid "Enabled - No PM aware"
 msgstr "Bekapcsolva - No PM aware"
 
-#: ktoshiba.cpp:335
+#: ktoshiba.cpp:338
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:337
+#: ktoshiba.cpp:340
 msgid "Dynamic"
 msgstr "Dinamikus"
 
-#: ktoshiba.cpp:338
+#: ktoshiba.cpp:341
 msgid "Always High"
 msgstr "Mindig magas"
 
-#: ktoshiba.cpp:339
+#: ktoshiba.cpp:342
 msgid "Always Low"
 msgstr "Mindig alacsony"
 
-#: ktoshiba.cpp:340
+#: ktoshiba.cpp:343
 msgid "CPU Frequency"
 msgstr "CPU Frekvencia"
 
-#: ktoshiba.cpp:350
+#: ktoshiba.cpp:353
 msgid "&Configure KToshiba..."
 msgstr "KToshiba &beállításai"
 
-#: ktoshiba.cpp:353
+#: ktoshiba.cpp:356
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:356
+#: ktoshiba.cpp:359
 msgid "&About KToshiba"
 msgstr "KToshiba &névjegye"
 
-#: ktoshiba.cpp:358
+#: ktoshiba.cpp:361
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:399 ktoshiba.cpp:787 main.cpp:40 toshibafnactions.cpp:473
-#: toshibafnactions.cpp:537 toshibafnactions.cpp:550
+#: ktoshiba.cpp:416 ktoshiba.cpp:688 main.cpp:40 toshibafnactions.cpp:473
+#: toshibafnactions.cpp:538 toshibafnactions.cpp:551
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: ktoshiba.cpp:399
+#: ktoshiba.cpp:416
 msgid "Bluetooth device activated"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: ktoshiba.cpp:400 toshibafnactions.cpp:538
+#: ktoshiba.cpp:417 toshibafnactions.cpp:539
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: ktoshiba.cpp:786
+#: ktoshiba.cpp:687
 msgid "on"
 msgstr "be"
 
-#: ktoshiba.cpp:786
+#: ktoshiba.cpp:687
 msgid "off"
 msgstr "ki"
 
-#: ktoshiba.cpp:787
+#: ktoshiba.cpp:688
 msgid "Wireless antenna turned %1"
 msgstr "Wireless antenna turned %1"
 
-#: ktoshiba.cpp:788 toshibafnactions.cpp:475
+#: ktoshiba.cpp:689 toshibafnactions.cpp:475
 msgid "Wireless"
 msgstr "Wireless"
 
@@ -169,6 +181,10 @@ msgstr "Francia fordítás"
 msgid "omnibook stuff tester"
 msgstr ""
 
+#: omnibookfnactions.cpp:60
+msgid "UNKNOWN"
+msgstr ""
+
 #. i18n: file ktoshibaui.rc line 4
 #: rc.cpp:3
 #, no-c-format
@@ -187,16 +203,16 @@ msgstr "KToshiba: Videó, Energia és Boot állapot"
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Status Widget"
 
-#: suspend.cpp:49 suspend.cpp:98
+#: suspend.cpp:39
 msgid ""
-"Before continuing, be aware that ACPI Sleep States\n"
-"are a work in progress and may or may not work on your computer.\n"
+"Before continuing, be aware that ACPI Sleep States are a work in progress "
+"and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
 
 #: suspend.cpp:51 suspend.cpp:64 suspend.cpp:66 suspend.cpp:69 suspend.cpp:71
-#: suspend.cpp:100 suspend.cpp:113 suspend.cpp:115 suspend.cpp:118
-#: suspend.cpp:120
+#: suspend.cpp:102 suspend.cpp:115 suspend.cpp:117 suspend.cpp:120
+#: suspend.cpp:122
 msgid "WARNING"
 msgstr "FIGYELEM"
 
@@ -209,64 +225,86 @@ msgid ""
 "The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr ""
 
-#: suspend.cpp:79
+#: suspend.cpp:80
 msgid ""
 "Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: suspend.cpp:81
+#: suspend.cpp:82
 msgid "STR"
 msgstr "STR"
 
-#: suspend.cpp:114
+#: suspend.cpp:96
+msgid "No Suspend To RAM support was enabled."
+msgstr ""
+
+#: suspend.cpp:97
+#, fuzzy
+msgid "Suspend To RAM"
+msgstr "Felfüggesztés RAM-ba"
+
+#: suspend.cpp:116
 msgid "Suspend To Disk disabled by administrator."
 msgstr ""
 
-#: suspend.cpp:119
+#: suspend.cpp:121
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To Disk."
 msgstr ""
 
-#: suspend.cpp:128
+#: suspend.cpp:131
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: suspend.cpp:130
+#: suspend.cpp:133
 msgid "STD"
 msgstr "STD"
 
-#: toshibafnactions.cpp:189
+#: suspend.cpp:147
+msgid "No Suspend To Disk support was enabled."
+msgstr ""
+
+#: suspend.cpp:148
+#, fuzzy
+msgid "Suspend To Disk"
+msgstr "Felfüggesztés lemezre"
+
+#: toshibafnactions.cpp:191 toshibafnactions.cpp:222 toshibafnactions.cpp:249
+msgid "Function Not Supported"
+msgstr ""
+
+#: toshibafnactions.cpp:193
 msgid "Long Life"
 msgstr "Hosszú élettartam"
 
-#: toshibafnactions.cpp:190
+#: toshibafnactions.cpp:194
 msgid "User Settings"
 msgstr "Felhasználói beállítások"
 
-#: toshibafnactions.cpp:194
+#: toshibafnactions.cpp:198
 msgid "Normal Life"
 msgstr "Normal élettartam"
 
-#: toshibafnactions.cpp:195
+#: toshibafnactions.cpp:199
 msgid "Low Power"
 msgstr "Alacsony töltöttség"
 
-#: toshibafnactions.cpp:199
+#: toshibafnactions.cpp:203
 msgid "Full Life"
 msgstr "Teljes élettartam"
 
-#: toshibafnactions.cpp:200
+#: toshibafnactions.cpp:204
 msgid "Full Power"
 msgstr "Feltöltve"
 
-#: toshibafnactions.cpp:472 toshibafnactions.cpp:536 toshibafnactions.cpp:549
+#: toshibafnactions.cpp:472 toshibafnactions.cpp:537 toshibafnactions.cpp:550
 msgid "activated"
 msgstr ""
 
-#: toshibafnactions.cpp:472 toshibafnactions.cpp:536 toshibafnactions.cpp:549
+#: toshibafnactions.cpp:472 toshibafnactions.cpp:537 toshibafnactions.cpp:550
 msgid "deactivated"
 msgstr ""
 
@@ -274,17 +312,17 @@ msgstr ""
 msgid "Wireless interface %1"
 msgstr "Wireless csatoló %1"
 
-#: toshibafnactions.cpp:537
+#: toshibafnactions.cpp:538
 #, fuzzy
 msgid "Bluetooth device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: toshibafnactions.cpp:550
+#: toshibafnactions.cpp:551
 #, fuzzy
 msgid "Ethernet device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: toshibafnactions.cpp:551
+#: toshibafnactions.cpp:552
 msgid "Ethernet"
 msgstr ""
 

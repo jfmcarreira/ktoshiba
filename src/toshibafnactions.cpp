@@ -56,7 +56,7 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
-    m_Suspend = new suspend(parent);
+    m_Suspend = new Suspend(parent);
 
     m_SCIIface = m_Driver->openSCIInterface();
     if (m_SCIIface)
@@ -122,35 +122,35 @@ void ToshibaFnActions::hideWidgets()
 void ToshibaFnActions::performFnAction(int action, int key)
 {
     switch(action) {
-        case 0: // Disabled (Do Nothing)
+        case 0:	// Disabled (Do Nothing)
             return;
-        case 2: // LockScreen
+        case 2:	// LockScreen
             lockScreen();
             return;
-        case 4: // Suspend To RAM (STR)
+        case 4:	// Suspend To RAM (STR)
             suspendToRAM();
             return;
-        case 5: // Suspend To Disk (STD)
+        case 5:	// Suspend To Disk (STD)
             suspendToDisk();
             return;
-        case 9: // Wireless On/Off
+        case 9:	// Wireless On/Off
             toggleWireless();
             return;
-        case 14: // LCD Backlight On/Off
+        case 14:	// LCD Backlight On/Off
             toogleBackLight();
             return;
-        case 15: // Bluetooth On/Off
+        case 15:	// Bluetooth On/Off
             toggleBluetooth();
             return;
-        case 16: // Ethernet On/Off
+        case 16:	// Ethernet On/Off
             toggleEthernet();
             return;
-        case 1: // Mute/Unmute
-        case 7: // Brightness Down
-        case 8: // Brightness Up
-        case 10: // Enable/Disable MousePad
-        case 11: // Speaker Volume
-        case 12: // Fan On/Off
+        case 1:	// Mute/Unmute
+        case 7:	// Brightness Down
+        case 8:	// Brightness Up
+        case 10:	// Enable/Disable MousePad
+        case 11:	// Speaker Volume
+        case 12:	// Fan On/Off
             if (m_Popup == 0) {
                 QRect r = QApplication::desktop()->geometry();
                 m_StatusWidget->move(r.center() - 
@@ -160,9 +160,9 @@ void ToshibaFnActions::performFnAction(int action, int key)
             }
             if ((key & 0x17f) == m_Popup)
                 break;
-        case 3: // Toggle Battery Save Mode
-        case 6: // Toggle Video
-        case 13: // Toggle Boot Method
+        case 3:	// Toggle Battery Save Mode
+        case 6:	// Toggle Video
+        case 13:	// Toggle Boot Method
             if (m_Popup == 0) {
                 QRect r = QApplication::desktop()->geometry();
                 m_SettingsWidget->move(r.center() - 
@@ -187,6 +187,8 @@ void ToshibaFnActions::performFnAction(int action, int key)
         m_SettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
         m_SettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
         switch (m_BatSave) {
+            case -1:
+                m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
             case 0:
                 (m_BatType == 3)? m_SettingsWidget->tlStatus->setText(i18n("Long Life"))
                     : m_SettingsWidget->tlStatus->setText(i18n("User Settings"));
@@ -216,6 +218,8 @@ void ToshibaFnActions::performFnAction(int action, int key)
         m_SettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
         m_SettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
         switch (m_Video) {
+            case -1:
+                m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
             case 1:
                 m_SettingsWidget->tlStatus->setText("LCD");
                 m_SettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
@@ -238,53 +242,47 @@ void ToshibaFnActions::performFnAction(int action, int key)
         m_Boot++;
         if (m_Boot > m_BootType) m_Boot = 0;
         toggleBootMethod();
-        if (m_BootType == 6) {
-            m_SettingsWidget->wsSettings->raiseWidget(2);
-            m_SettingsWidget->pl1->setPixmap(SmallIcon("", 32));
-            m_SettingsWidget->pl2->setPixmap(SmallIcon("", 32));
-            m_SettingsWidget->pl3->setPixmap(SmallIcon("", 32));
-            m_SettingsWidget->pl4->setPixmap(SmallIcon("", 32));
-        } else {
-            m_SettingsWidget->wsSettings->raiseWidget(3);
-            m_SettingsWidget->pl1_2->setPixmap(SmallIcon("", 32));
-            m_SettingsWidget->pl2_2->setPixmap(SmallIcon("", 32));
-            m_SettingsWidget->pl3_2->setPixmap(SmallIcon("", 32));
-        }
+        (m_BootType == 5)? m_SettingsWidget->wsSettings->raiseWidget(3)
+            : m_SettingsWidget->wsSettings->raiseWidget(2);
         switch (m_BootType) {
             case -1:
-                m_SettingsWidget->tlStatus->setText("Function Not Supported");
+                m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
             case 1:
+                m_SettingsWidget->pl1->setEnabled(false);
+                m_SettingsWidget->pl4->setEnabled(false);
                 if (!m_Boot) {
                     m_SettingsWidget->tlStatus->setText("FDD -> HDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("hdd_unmount", 32));
+                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
+                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
                 }
                 else {
                     m_SettingsWidget->tlStatus->setText("HDD -> FDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("3floppy_unmount", 32));
+                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
+                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
                 }
                 break;
             case 3:
+                m_SettingsWidget->pl1->setEnabled(false);
+                m_SettingsWidget->pl4->setEnabled(false);
                 if (!m_Boot) {
                     m_SettingsWidget->tlStatus->setText("FDD -> Built-in HDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("hdd_unmount", 32));
+                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
+                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
                 } else
                 if (m_Boot == 1) {
                     m_SettingsWidget->tlStatus->setText("Built-in HDD -> FDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("3floppy_unmount", 32));
+                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
+                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
                 } else
                 if (m_Boot == 2) {
                     m_SettingsWidget->tlStatus->setText("FDD -> Second HDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("hdd_unmount", 32));
+                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
+                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
                 }
                 else {
                     m_SettingsWidget->tlStatus->setText("Second HDD -> FDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("3floppy_unmount", 32));
+                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
+                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
                 }
                 break;
             case 5:
@@ -485,9 +483,10 @@ void ToshibaFnActions::toggleMousePad()
 
         Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
     }
-#endif // ENABLE_SYNAPTICS
+#else // ENABLE_SYNAPTICS
     if (m_Pad >= 0 && m_SCIIface)
         m_Driver->setPointingDevice(m_Mousepad);
+#endif // ENABLE_SYNAPTICS
 }
 
 void ToshibaFnActions::toggleSpeakerVolume()

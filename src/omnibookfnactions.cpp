@@ -26,6 +26,7 @@
 #include <qapplication.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 #include <dcopref.h>
 
 #ifdef ENABLE_SYNAPTICS
@@ -44,7 +45,7 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     m_Proc = new KToshibaProcInterface(parent);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
-    m_Suspend = new suspend(parent);
+    m_Suspend = new Suspend(parent);
 
     m_OmnibookIface = m_Proc->checkOmnibook();
     if (m_OmnibookIface) {
@@ -56,7 +57,7 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
         m_Fan = m_Proc->omnibookGetFan();
     }
     else {
-        m_ModelName = "UNKNOWN";
+        m_ModelName = i18n("UNKNOWN");
         m_ECType = NONE;
         //m_Video = -1;
         m_Bright = -1;
@@ -85,13 +86,13 @@ void OmnibookFnActions::performFnAction(int action)
 {
     // TODO: Add more actions here once we have more data
     switch(action) {
-        case 0: // Disabled (Do Nothing)
+        case 0:	// Disabled (Do Nothing)
             return;
-        case 1: // Mute/Unmute
-        case 7: // Brightness Down
-        case 8: // Brightness Up
-        case 10: // Enable/Disable MousePad
-        case 12: // Fan On/Off
+        case 1:	// Mute/Unmute
+        case 7:	// Brightness Down
+        case 8:	// Brightness Up
+        case 10:	// Enable/Disable MousePad
+        case 12:	// Fan On/Off
             if (m_Popup == 0) {
                 QRect r = QApplication::desktop()->geometry();
                 m_StatusWidget->move(r.center() - 
@@ -101,16 +102,16 @@ void OmnibookFnActions::performFnAction(int action)
             }
             if (m_Popup == 1)
                 break;
-        case 2: // LockScreen
+        case 2:	// LockScreen
             lockScreen();
             return;
-        case 4: // Suspend To RAM (STR)
-            //suspendToRAM();
+        case 4:	// Suspend To RAM (STR)
+            suspendToRAM();
             return;
-        case 5: // Suspend To Disk (STD)
-            //suspendToDisk();
+        case 5:	// Suspend To Disk (STD)
+            suspendToDisk();
             return;
-        case 14: // LCD Backlight On/Off
+        case 14:	// LCD Backlight On/Off
             toogleBackLight();
             return;
     }
@@ -173,9 +174,10 @@ void OmnibookFnActions::toggleMousePad()
 
         Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
     }
-#endif // ENABLE_SYNAPTICS
+#else // ENABLE_SYNAPTICS
     if (m_Pad >= 0)
         m_Proc->omnibookSetTouchPad(m_Mousepad);
+#endif // ENABLE_SYNAPTICS
 }
 
 void OmnibookFnActions::toggleFan()

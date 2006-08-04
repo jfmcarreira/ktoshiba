@@ -32,7 +32,7 @@ class QWidget;
 class KToshibaSMMInterface;
 class SettingsWidget;
 class StatusWidget;
-class suspend;
+class Suspend;
 
 /**
  * @short Performs the Fn assosiated action
@@ -83,7 +83,7 @@ private:
     KToshibaSMMInterface *m_Driver;
     SettingsWidget *m_SettingsWidget;
     StatusWidget *m_StatusWidget;
-    suspend *m_Suspend;
+    Suspend *m_Suspend;
     QWidget *m_Parent;
     int m_Snd;
     int m_Video;

@@ -174,7 +174,7 @@ KToshiba::KToshiba()
 
     doMenu();
 
-    mSuspend = new suspend(this);
+    mSuspend = new Suspend(this);
     mKaffeine = new DCOPRef("kaffeine", "KaffeineIface");
 
     mSystemTimer = new QTimer(this);
@@ -365,7 +365,7 @@ void KToshiba::doMenu()
 #ifdef ENABLE_OMNIBOOK
     contextMenu()->insertTitle( mOFn->m_ModelName, 0, 0 );
 #else // ENABLE_OMNIBOOK
-    contextMenu()->insertTitle( modelID( mSMMIFace->machineID() ), 0, 0 );
+    contextMenu()->insertTitle( modelID( mTFn->m_MachineID ), 0, 0 );
 #endif // ENABLE_OMNIBOOK
 }
 
@@ -618,12 +618,14 @@ void KToshiba::multimediaPlayer()
 
 void KToshiba::multimediaVolumeDown()
 {
-    kapp->dcopClient()->send("kmix", "Mixer0", "decreaseVolume(int)", 0);
+    DCOPRef kmixClient("kmix", "Mixer0");
+    kmixClient.send("decreaseVolume", 0);
 }
 
 void KToshiba::multimediaVolumeUp()
 {
-    kapp->dcopClient()->send("kmix", "Mixer0", "increaseVolume(int)", 0);
+    DCOPRef kmixClient("kmix", "Mixer0");
+    kmixClient.send("increaseVolume", 0);
 }
 
 void KToshiba::checkSystem()

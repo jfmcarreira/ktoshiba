@@ -336,10 +336,9 @@ QString modelID(int id)
 			mod = "Tecra M2";
 			break;
 		default:
-			mod = "UNKNOWN";
-			QString modelID = "Model_ID";
+			mod = i18n("UNKNOWN");
 			KMessageBox::information(0, i18n("Please send the model name and this id 0x%1 to:\n"
-									 "coproscefalo@gmail.com").arg(id, 0, 16), i18n("Model Name"), "Model_ID");
+									 "coproscefalo@gmail.com").arg(id, 0, 16), i18n("Model Name"), "ModelID");
 	}
 
 	return mod;

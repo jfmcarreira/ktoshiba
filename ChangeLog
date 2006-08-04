@@ -1,3 +1,10 @@
+2006-08-04 Azael Avalos <coproscefalo@gmail.com>
+	* Some changes to suspend class
+
+2006-08-03 Azael Avalos <coproscefalo@gmail.com>
+	* Some misc changes
+	* Fixed calling of increase/decreaseVolume functions
+
 2006-07-29 Azael Avalos <coproscefalo@gmail.com>
 	* New function for omnibbok users to increase/decrase volume
 
