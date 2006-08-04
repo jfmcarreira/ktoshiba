@@ -26,13 +26,12 @@
 #endif
 
 #include <qobject.h>
-#include <qstring.h>
 
 class QWidget;
 
 class KToshibaProcInterface;
 class StatusWidget;
-class suspend;
+class Suspend;
 
 /**
  * @short Performs the Fn assosiated action
@@ -65,7 +64,7 @@ public:
 private:
     KToshibaProcInterface *m_Proc;
     StatusWidget *m_StatusWidget;
-    suspend *m_Suspend;
+    Suspend *m_Suspend;
     void toggleMute();
     void lockScreen();
     void suspendToRAM();

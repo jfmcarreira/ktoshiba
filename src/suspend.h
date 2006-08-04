@@ -34,17 +34,18 @@ class QWidget;
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.1
  */
-class suspend : public QObject
+class Suspend : public QObject
 {
     Q_OBJECT
 public:
-    suspend(QWidget *parent = 0);
-    ~suspend();
+    Suspend(QWidget *parent = 0);
+    ~Suspend();
 
     void toRAM();
     void toDisk();
 private:
     QWidget *m_Parent;
+    QString m_Info;
 };
 
 #endif // SUSPEND_H

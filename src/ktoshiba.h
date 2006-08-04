@@ -40,7 +40,7 @@ class KToshibaProcInterface;
 class KToshibaDCOPInterface;
 class ToshibaFnActions;
 class OmnibookFnActions;
-class suspend;
+class Suspend;
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -101,7 +101,7 @@ private:
     void multimediaVolumeUp();
     KToshibaSMMInterface *mSMMIFace;
     KToshibaProcInterface *mProcIFace;
-    suspend *mSuspend;
+    Suspend *mSuspend;
     QPopupMenu *mHelp;
     QTimer *mSystemTimer;
     QByteArray mData;

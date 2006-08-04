@@ -32,23 +32,23 @@
 #include <powersave_dbus.h>
 #endif // ENABLE_POWERSAVE
 
-suspend::suspend(QWidget *parent)
+Suspend::Suspend(QWidget *parent)
     : QObject( parent )
 {
     m_Parent = parent;
+    m_Info = i18n("Before continuing, be aware that ACPI Sleep States are a "
+                  "work in progress and may or may not work on your computer.\n"
+                  "Also make sure to unload problematic modules");
 }
 
-suspend::~ suspend()
+Suspend::~Suspend()
 {
     delete m_Parent; m_Parent = NULL;
 }
 
-void suspend::toRAM()
+void Suspend::toRAM()
 {
-    int res = KMessageBox::warningContinueCancel(0,
-			i18n("Before continuing, be aware that ACPI Sleep States\n"
-			 "are a work in progress and may or may not work on your computer.\n"
-			 "Also make sure to unload problematic modules"), i18n("WARNING"));
+    int res = KMessageBox::warningContinueCancel(m_Parent, m_Info, i18n("WARNING"));
 
 #ifdef ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
@@ -72,13 +72,14 @@ void suspend::toRAM()
             return;
     }
 #else // ENABLE_POWERSAVE
+#ifdef ENABLE_HELPER
     QString helper = KStandardDirs::findExe("ktosh_helper");
     if (helper.isEmpty())
         helper = KStandardDirs::findExe("klaptop_acpi_helper");
     if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
-			   "Please make sure that it is installed correctly."),
-			   i18n("STR"));
+        KMessageBox::sorry(m_Parent, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
+                           "Please make sure that it is installed correctly."),
+                           i18n("STR"));
         return;
     }
 
@@ -88,16 +89,17 @@ void suspend::toRAM()
         proc << helper << "--suspend";
         proc.start(KProcess::DontCare);
         proc.detach();
+        return;
     }
+#endif // ENABLE_HELPER
 #endif // ENABLE_POWERSAVE
+    KMessageBox::sorry(m_Parent, i18n("No Suspend To RAM support was enabled."),
+                       i18n("Suspend To RAM"));
 }
 
-void suspend::toDisk()
+void Suspend::toDisk()
 {
-    int res = KMessageBox::warningContinueCancel(0,
-			i18n("Before continuing, be aware that ACPI Sleep States\n"
-			 "are a work in progress and may or may not work on your computer.\n"
-			 "Also make sure to unload problematic modules"), i18n("WARNING"));
+    int res = KMessageBox::warningContinueCancel(m_Parent, m_Info, i18n("WARNING"));
 
 #ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
@@ -121,13 +123,14 @@ void suspend::toDisk()
             return;
     }
 #else // ENABLE_POWERSAVE
+#ifdef ENABLE_HELPER
     QString helper = KStandardDirs::findExe("ktosh_helper");
     if (helper.isEmpty())
         helper = KStandardDirs::findExe("klaptop_acpi_helper");
     if (helper.isEmpty()) {
-        KMessageBox::sorry(0, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
-			   "Please make sure that it is installed correctly."),
-			   i18n("STD"));
+        KMessageBox::sorry(m_Parent, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
+                           "Please make sure that it is installed correctly."),
+                           i18n("STD"));
         return;
     }
 
@@ -137,8 +140,12 @@ void suspend::toDisk()
         proc << helper << "--hibernate";
         proc.start(KProcess::DontCare);
         proc.detach();
+        return;
     }
+#endif // ENABLE_HELPER
 #endif // ENABLE_POWERSAVE
+    KMessageBox::sorry(m_Parent, i18n("No Suspend To Disk support was enabled."),
+                       i18n("Suspend To Disk"));
 }
 
 
