@@ -406,7 +406,7 @@ void KToshiba::toggleMODE(int mode)
 void KToshiba::doBluetooth()
 {
     if (!mSMMIFace->getBluetooth()) {
-        contextMenu()->setItemEnabled(6, FALSE);
+        contextMenu()->setItemEnabled(4, FALSE);
         kdDebug() << "KToshiba::doBluetooth(): "
                   << "No Bluetooth device found" << endl;
         return;
@@ -415,11 +415,11 @@ void KToshiba::doBluetooth()
         mSMMIFace->setBluetoothPower(1);
         KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 4000);
-        contextMenu()->setItemEnabled(6, FALSE);
+        contextMenu()->setItemEnabled(4, FALSE);
         bluetooth = true;
     }
     else
-        contextMenu()->setItemEnabled(6, TRUE);
+        contextMenu()->setItemEnabled(4, TRUE);
 }
 
 void KToshiba::doSetFreq(int freq)
