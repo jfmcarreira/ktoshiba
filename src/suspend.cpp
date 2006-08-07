@@ -52,7 +52,7 @@ void Suspend::toRAM()
 
 #ifdef ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRam");
+        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRAM");
     else if (res == KMessageBox::Cancel)
         return;
 
@@ -79,7 +79,7 @@ void Suspend::toRAM()
     if (helper.isEmpty()) {
         KMessageBox::sorry(m_Parent, i18n("Could not Suspend To RAM because ktosh_helper cannot be found.\n"
                            "Please make sure that it is installed correctly."),
-                           i18n("STR"));
+                           i18n("Suspend To RAM"));
         return;
     }
 
@@ -89,12 +89,13 @@ void Suspend::toRAM()
         proc << helper << "--suspend";
         proc.start(KProcess::DontCare);
         proc.detach();
-        return;
     }
+
+    return;
 #endif // ENABLE_HELPER
-#endif // ENABLE_POWERSAVE
     KMessageBox::sorry(m_Parent, i18n("No Suspend To RAM support was enabled."),
                        i18n("Suspend To RAM"));
+#endif // ENABLE_POWERSAVE
 }
 
 void Suspend::toDisk()
@@ -130,7 +131,7 @@ void Suspend::toDisk()
     if (helper.isEmpty()) {
         KMessageBox::sorry(m_Parent, i18n("Could not Suspend To Disk because ktosh_helper cannot be found.\n"
                            "Please make sure that it is installed correctly."),
-                           i18n("STD"));
+                           i18n("Suspend To Disk"));
         return;
     }
 
@@ -140,12 +141,13 @@ void Suspend::toDisk()
         proc << helper << "--hibernate";
         proc.start(KProcess::DontCare);
         proc.detach();
-        return;
     }
+
+    return;
 #endif // ENABLE_HELPER
-#endif // ENABLE_POWERSAVE
     KMessageBox::sorry(m_Parent, i18n("No Suspend To Disk support was enabled."),
                        i18n("Suspend To Disk"));
+#endif // ENABLE_POWERSAVE
 }
 
 
