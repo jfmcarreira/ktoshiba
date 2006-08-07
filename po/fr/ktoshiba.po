@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-04 02:13-0600\n"
+"POT-Creation-Date: 2006-08-06 23:28-0600\n"
 "PO-Revision-Date: 2005-06-03 17:44+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
 "Language-Team:  <kde-francophone@kde.org>\n"
@@ -140,6 +140,11 @@ msgstr "L'antenne sans-fil est %1"
 msgid "Wireless"
 msgstr "Sans-fil"
 
+#: ktoshibaprocinterface.cpp:72 ktoshibaprocinterface.cpp:104
+#: omnibookfnactions.cpp:60
+msgid "UNKNOWN"
+msgstr ""
+
 #: main.cpp:34
 #, fuzzy
 msgid "Hotkeys monitoring for Toshiba laptops."
@@ -180,10 +185,6 @@ msgstr "Traduction française"
 msgid "omnibook stuff tester"
 msgstr ""
 
-#: omnibookfnactions.cpp:60
-msgid "UNKNOWN"
-msgstr ""
-
 #. i18n: file ktoshibaui.rc line 4
 #: rc.cpp:3
 #, no-c-format
@@ -214,8 +215,8 @@ msgstr ""
 "Veuillez également décharger les modules problèmatiques"
 
 #: suspend.cpp:51 suspend.cpp:64 suspend.cpp:66 suspend.cpp:69 suspend.cpp:71
-#: suspend.cpp:102 suspend.cpp:115 suspend.cpp:117 suspend.cpp:120
-#: suspend.cpp:122
+#: suspend.cpp:103 suspend.cpp:116 suspend.cpp:118 suspend.cpp:121
+#: suspend.cpp:123
 msgid "WARNING"
 msgstr "Avertissement"
 
@@ -237,29 +238,25 @@ msgstr ""
 "trouvé.\n"
 "Veuillez vous assurer qu'elle est installée correctement."
 
-#: suspend.cpp:82
-msgid "STR"
-msgstr "SSM"
+#: suspend.cpp:82 suspend.cpp:97
+#, fuzzy
+msgid "Suspend To RAM"
+msgstr "Suspendre en &mémoire"
 
 #: suspend.cpp:96
 msgid "No Suspend To RAM support was enabled."
 msgstr ""
 
-#: suspend.cpp:97
-#, fuzzy
-msgid "Suspend To RAM"
-msgstr "Suspendre en &mémoire"
-
-#: suspend.cpp:116
+#: suspend.cpp:117
 msgid "Suspend To Disk disabled by administrator."
 msgstr ""
 
-#: suspend.cpp:121
+#: suspend.cpp:122
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To Disk."
 msgstr ""
 
-#: suspend.cpp:131
+#: suspend.cpp:132
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
@@ -268,18 +265,14 @@ msgstr ""
 "trouvé.\n"
 "Veuillez vous assurer qu'elle est installée correctement."
 
-#: suspend.cpp:133
-msgid "STD"
-msgstr "SSD"
-
-#: suspend.cpp:147
-msgid "No Suspend To Disk support was enabled."
-msgstr ""
-
-#: suspend.cpp:148
+#: suspend.cpp:134 suspend.cpp:149
 #, fuzzy
 msgid "Suspend To Disk"
 msgstr "Suspendre sur &disque"
+
+#: suspend.cpp:148
+msgid "No Suspend To Disk support was enabled."
+msgstr ""
 
 #: toshibafnactions.cpp:191 toshibafnactions.cpp:222 toshibafnactions.cpp:249
 msgid "Function Not Supported"
@@ -334,6 +327,12 @@ msgstr "Périphérique Bluetooth activé"
 #: toshibafnactions.cpp:552
 msgid "Ethernet"
 msgstr ""
+
+#~ msgid "STR"
+#~ msgstr "SSM"
+
+#~ msgid "STD"
+#~ msgstr "SSD"
 
 #~ msgid "HyperThreading"
 #~ msgstr "HyperThreading"

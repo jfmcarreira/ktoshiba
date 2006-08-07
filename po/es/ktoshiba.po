@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-04 02:13-0600\n"
+"POT-Creation-Date: 2006-08-06 23:28-0600\n"
 "PO-Revision-Date: 2006-08-04 02:16-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
@@ -140,6 +140,11 @@ msgstr "Antena inalámbrica %1"
 msgid "Wireless"
 msgstr "Inalámbrico"
 
+#: ktoshibaprocinterface.cpp:72 ktoshibaprocinterface.cpp:104
+#: omnibookfnactions.cpp:60
+msgid "UNKNOWN"
+msgstr "DESCONOIDO"
+
 #: main.cpp:34
 msgid "Hotkeys monitoring for Toshiba laptops."
 msgstr "Monitoréo de Tecla-Fn para el portátil Toshiba"
@@ -176,10 +181,6 @@ msgstr "Traducción al Húngaro"
 msgid "omnibook stuff tester"
 msgstr ""
 
-#: omnibookfnactions.cpp:60
-msgid "UNKNOWN"
-msgstr "DESCONOIDO"
-
 #. i18n: file ktoshibaui.rc line 4
 #: rc.cpp:3
 #, no-c-format
@@ -204,12 +205,13 @@ msgid ""
 "and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
-"Antes de continuar, ten en cuenta que los Estados del ACPI aun están en progreso por lo cual puede o no que funcionen.\n"
+"Antes de continuar, ten en cuenta que los Estados del ACPI aun están en "
+"progreso por lo cual puede o no que funcionen.\n"
 "Además asegurate de que los módulos problemáticos sean descargados"
 
 #: suspend.cpp:51 suspend.cpp:64 suspend.cpp:66 suspend.cpp:69 suspend.cpp:71
-#: suspend.cpp:102 suspend.cpp:115 suspend.cpp:117 suspend.cpp:120
-#: suspend.cpp:122
+#: suspend.cpp:103 suspend.cpp:116 suspend.cpp:118 suspend.cpp:121
+#: suspend.cpp:123
 msgid "WARNING"
 msgstr "ADVERTENCIA"
 
@@ -218,7 +220,8 @@ msgid "Suspend To RAM disabled by administrator."
 msgstr "Suspender a RAM esta deshabilitado por el administrador."
 
 #: suspend.cpp:70
-msgid "The powersave daemon must be running in the background for a Suspend To RAM."
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr "El servicio powersave debe estar activado para poder Suspender a RAM."
 
 #: suspend.cpp:80
@@ -229,27 +232,25 @@ msgstr ""
 "No se pudo Suspender a RAM porque ktosh_helper no fue encontrado.\n"
 "Porfavor verifique que este ha sido instalado correctamente."
 
-#: suspend.cpp:82
-msgid "STR"
-msgstr "SAR"
+#: suspend.cpp:82 suspend.cpp:97
+msgid "Suspend To RAM"
+msgstr "Suspender a RAM"
 
 #: suspend.cpp:96
 msgid "No Suspend To RAM support was enabled."
 msgstr "El soporte para Suspender a RAM no fue habilitado."
 
-#: suspend.cpp:97
-msgid "Suspend To RAM"
-msgstr "Suspender a RAM"
-
-#: suspend.cpp:116
+#: suspend.cpp:117
 msgid "Suspend To Disk disabled by administrator."
 msgstr "Suspender a Disco esta deshabilitado por el administrador."
 
-#: suspend.cpp:121
-msgid "The powersave daemon must be running in the background for a Suspend To Disk."
-msgstr "El servicio powersave debe estar activado para poder Suspender a Disco."
+#: suspend.cpp:122
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To Disk."
+msgstr ""
+"El servicio powersave debe estar activado para poder Suspender a Disco."
 
-#: suspend.cpp:131
+#: suspend.cpp:132
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
@@ -257,17 +258,13 @@ msgstr ""
 "No se pudo Suspender a Disco porque ktosh_helper no fue encontrado.\n"
 "Porfavor verifique que este ha sido instalado correctamente."
 
-#: suspend.cpp:133
-msgid "STD"
-msgstr "SAD"
-
-#: suspend.cpp:147
-msgid "No Suspend To Disk support was enabled."
-msgstr "El soporte para Suspender a Disco no fue habilitado."
-
-#: suspend.cpp:148
+#: suspend.cpp:134 suspend.cpp:149
 msgid "Suspend To Disk"
 msgstr "Suspender a Disco"
+
+#: suspend.cpp:148
+msgid "No Suspend To Disk support was enabled."
+msgstr "El soporte para Suspender a Disco no fue habilitado."
 
 #: toshibafnactions.cpp:191 toshibafnactions.cpp:222 toshibafnactions.cpp:249
 msgid "Function Not Supported"
@@ -321,3 +318,8 @@ msgstr "Dispositivo Ethernet %1"
 msgid "Ethernet"
 msgstr "Ethernet"
 
+#~ msgid "STR"
+#~ msgstr "SAR"
+
+#~ msgid "STD"
+#~ msgstr "SAD"

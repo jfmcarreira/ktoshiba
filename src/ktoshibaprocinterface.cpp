@@ -25,6 +25,7 @@
 #include <qregexp.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 
 KToshibaProcInterface::KToshibaProcInterface( QObject *parent )
     : QObject( parent ),
@@ -68,7 +69,7 @@ QString KToshibaProcInterface::omnibookModelName()
 {
     QFile file(OMNI_DMI);
     if (!file.exists()) {
-        model = "UNKNOWN";
+        model = i18n("UNKNOWN");
         return model;
     }
     if (file.open(IO_ReadOnly)) {
@@ -100,7 +101,7 @@ QString KToshibaProcInterface::omnibookModelName()
                     ectype = TSM30X;
                 }
                 if (tmp.isEmpty()) {
-                    model = "UNKNOWN";
+                    model = i18n("UNKNOWN");
                     ectype = NONE;
                     break;
                 }
