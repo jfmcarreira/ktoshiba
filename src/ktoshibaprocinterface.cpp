@@ -70,6 +70,7 @@ QString KToshibaProcInterface::omnibookModelName()
     QFile file(OMNI_DMI);
     if (!file.exists()) {
         model = i18n("UNKNOWN");
+        ectype = NONE;
         return model;
     }
     if (file.open(IO_ReadOnly)) {
@@ -78,7 +79,25 @@ QString KToshibaProcInterface::omnibookModelName()
         while (!stream.atEnd()) {
             line = stream.readLine();
             if (line.contains("Product Name:", false)) {
-                QRegExp rx("(Satellite)");
+                // Some models doesn't show the _Satellite_ string, so lets deal with those known
+                QRegExp rx("\\b([A-Z])(\\d+)$"); // S1110
+                rx.search(line);
+                if (rx.cap(1) == "S1110") {
+                    model = "Satellite 1110";
+                    ectype = XE3GF;
+                    break;
+                }
+                if (model.isEmpty()) {
+                    rx.setPattern("\\b([A-Z])(\\d+)(\\-)(\\d+)$"); // S3000-100
+                    rx.search(line);
+                    if (rx.cap(1) == "S3000-100") {
+                        model = "Satellite 3000-100";
+                        ectype = XE3GF;
+                        break;
+                    }
+                }
+                // Now lets deal with the ones that do show the _Satellite_ string
+                rx.setPattern("(Satellite)");
                 rx.search(line);
                 model = rx.cap(1);
                 rx.setPattern("\\b(\\d+)$"); // eg.: 3005
@@ -89,6 +108,8 @@ QString KToshibaProcInterface::omnibookModelName()
                     rx.setPattern("\\b([A-Z])(\\d+)$"); // eg.: P15
                     rx.search(line);
                     tmp = rx.cap(1) + rx.cap(2);
+                    if (tmp == "M40")
+                        ectype = TSM40;
                     if (tmp == "M100")
                         ectype = TSM30X;
                     else

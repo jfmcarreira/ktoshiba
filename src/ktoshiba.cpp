@@ -63,7 +63,6 @@ using namespace Synaptics;
 
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
-      mSMMIFace( 0 ),
       mProcIFace( 0 ),
       mSystemTimer( 0 ),
       mKProc( new KProcess(this) ),
@@ -73,8 +72,8 @@ KToshiba::KToshiba()
     QToolTip::add(this, "KToshiba");
     this->show();
 
-    mSMMIFace = new KToshibaSMMInterface(this);
     mProcIFace = new KToshibaProcInterface(this);
+    mSuspend = new Suspend(this);
 
     if (kapp->dcopClient()->isRegistered())
         kdDebug() << "KToshiba: Registered with DCOP server as: "
@@ -137,8 +136,8 @@ KToshiba::KToshiba()
     // check whether toshiba module is loaded and we got an opened SCI IFace
     mTFn = new ToshibaFnActions(this);
     if (mTFn->m_SCIIface) {
-        mSS = mSMMIFace->getSpeedStep();
-        mHT = mSMMIFace->getHyperThreading();
+        mSS = mTFn->m_Driver->getSpeedStep();
+        mHT = mTFn->m_Driver->getHyperThreading();
         mBatType = mTFn->m_BatType;
         mTFn->m_BatSave = mBatSave;
     }
@@ -152,8 +151,8 @@ KToshiba::KToshiba()
     // Default to mode 2 if we got a failure
     if (mTFn->m_BatType == -1)
         mTFn->m_BatType = 2;
-    mAC = mSMMIFace->acPowerStatus();
-    mWirelessSwitch = mSMMIFace->getWirelessSwitch();
+    mAC = mTFn->m_Driver->acPowerStatus();
+    mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
     mPad = mTFn->m_Pad;
     bsmtrig = false;
     bluetooth = false;
@@ -167,6 +166,7 @@ KToshiba::KToshiba()
 
     connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
     mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
+    connect( mSuspend, SIGNAL( signalSTD() ), this, SLOT( quit() ) );
 
     if (btstart)
         doBluetooth();
@@ -174,7 +174,6 @@ KToshiba::KToshiba()
 
     doMenu();
 
-    mSuspend = new Suspend(this);
     mKaffeine = new DCOPRef("kaffeine", "KaffeineIface");
 
     mSystemTimer = new QTimer(this);
@@ -206,7 +205,6 @@ KToshiba::~KToshiba()
     delete mKaffeine; mKaffeine = NULL;
     delete mSuspend; mSuspend = NULL;
     delete mProcIFace; mProcIFace = NULL;
-    delete mSMMIFace; mSMMIFace = NULL;
 }
 
 void KToshiba::quit()
@@ -405,14 +403,14 @@ void KToshiba::toggleMODE(int mode)
 
 void KToshiba::doBluetooth()
 {
-    if (!mSMMIFace->getBluetooth()) {
+    if (!mTFn->m_Driver->getBluetooth()) {
         contextMenu()->setItemEnabled(4, FALSE);
         kdDebug() << "KToshiba::doBluetooth(): "
                   << "No Bluetooth device found" << endl;
         return;
     } else
     if (!bluetooth || (btstart && !bluetooth)) {
-        mSMMIFace->setBluetoothPower(1);
+        mTFn->m_Driver->setBluetoothPower(1);
         KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 4000);
         contextMenu()->setItemEnabled(4, FALSE);
@@ -424,12 +422,12 @@ void KToshiba::doBluetooth()
 
 void KToshiba::doSetFreq(int freq)
 {
-    mSMMIFace->setSpeedStep(freq);
+    mTFn->m_Driver->setSpeedStep(freq);
 }
 
 void KToshiba::doSetHyper(int state)
 {
-    mSMMIFace->setHyperThreading(state);
+    mTFn->m_Driver->setHyperThreading(state);
 }
 
 void KToshiba::displayBugReport()
@@ -465,15 +463,15 @@ void KToshiba::bsmUserSettings(int *bright)
 
     kdDebug() << "Enabling User Settings..." << endl;
     (processor == 0)? tmp = 1 : tmp = 0;
-    mSMMIFace->setProcessingSpeed(tmp);
+    mTFn->m_Driver->setProcessingSpeed(tmp);
     (cpu == 0)? tmp = 1 : tmp = 0;
-    mSMMIFace->setCPUSleepMode(tmp);
+    mTFn->m_Driver->setCPUSleepMode(tmp);
     if (lcd == 0) *bright = 7;		// Super-Bright
     else if (lcd == 1) *bright = 3;	// Bright
     else if (lcd == 2) *bright = 0;	// Semi-Bright
-    mSMMIFace->setCoolingMethod(cooling);
-    mSMMIFace->setDisplayAutoOff(display);
-    mSMMIFace->setHDDAutoOff(hdd);
+    mTFn->m_Driver->setCoolingMethod(cooling);
+    mTFn->m_Driver->setDisplayAutoOff(display);
+    mTFn->m_Driver->setHDDAutoOff(hdd);
 }
 
 #ifdef ENABLE_SYNAPTICS
@@ -497,17 +495,16 @@ void KToshiba::checkSynaptics()
 
     if (err) {
 #ifdef ENABLE_OMNIBOOK
-        mOFn->m_Mousepad = -1;
-        return;
+        mOFn->m_Pad = -1;
 #else // ENABLE_OMNIBOOK
-        mTFn->m_Mousepad = -1;
-        return;
+        mTFn->m_Pad = -1;
 #endif // ENABLE_OMNIBOOK
+        return;
     } else {
 #ifdef ENABLE_OMNIBOOK
-        mOFn->m_Mousepad = (int)Pad::getParam(TOUCHPADOFF);
+        mOFn->m_Pad = (int)Pad::getParam(TOUCHPADOFF);
 #else // ENABLE_OMNIBOOK
-        mTFn->m_Mousepad = (int)Pad::getParam(TOUCHPADOFF);
+        mTFn->m_Pad = (int)Pad::getParam(TOUCHPADOFF);
 #endif // ENABLE_OMNIBOOK
     }
 }
@@ -635,7 +632,7 @@ void KToshiba::checkSystem()
         pow = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
 #else // ENABLE_OMNIBOOK
     if (mTFn->m_SCIIface && !mACPI)
-        pow = ((mAC == -1)? SciACPower() : mSMMIFace->acPowerStatus());
+        pow = ((mAC == -1)? SciACPower() : mTFn->m_Driver->acPowerStatus());
     if (mACPI || pow == -1) {
         pow = mProcIFace->acpiAC();
         mACPI = true;
@@ -658,11 +655,9 @@ void KToshiba::checkSystem()
                 break;
             case 1:			// LOW POWER or NORMAL LIFE
                 bright = (pow == 3)? 0 /*Semi-Bright*/ : 3 /*Bright*/;
-                bsmtrig = false;
                 break;
             case 2:			// FULL POWER or FULL LIFE
                 bright = (pow == 3)? 3 /*Bright*/ : 7 /*Super-Bright*/;
-                bsmtrig = false;
                 break;
         }
 #ifdef ENABLE_OMNIBOOK
@@ -670,7 +665,9 @@ void KToshiba::checkSystem()
             mProcIFace->omnibookSetBrightness(bright);
 #else // ENABLE_OMNIBOOK
         if (mTFn->m_BatType != 2)
-            mSMMIFace->setBrightness(bright);
+            mTFn->m_Driver->setBrightness(bright);
+        if (mBatSave != 0)
+            bsmtrig = false;
 #endif // ENABLE_OMNIBOOK
     }
 
@@ -681,7 +678,7 @@ void KToshiba::checkSystem()
     if (mWirelessSwitch == -1)
         return;
     else {
-        int ws = mSMMIFace->getWirelessSwitch();
+        int ws = mTFn->m_Driver->getWirelessSwitch();
 
         if (mWirelessSwitch != ws) {
             QString s = ((ws == 1)? i18n("on") : i18n("off"));
@@ -786,7 +783,7 @@ void KToshiba::checkHotKeys()
     mConfig.setGroup("Fn_Key");
 
     int tmp = 0;
-    int key = mSMMIFace->getSystemEvent();
+    int key = mTFn->m_Driver->getSystemEvent();
 
     if ((key == 0x100) && (mTFn->m_Popup != 0))
         mTFn->hideWidgets();
@@ -795,15 +792,15 @@ void KToshiba::checkHotKeys()
         case 0:		// FIFO empty
             return;
         case 1:		// Failed accessing System Events
-            if (mSMMIFace->hotkeys == false)
-                hotkeys = mSMMIFace->enableSystemEvent();
+            if (mTFn->m_Driver->hotkeys == false)
+                hotkeys = mTFn->m_Driver->enableSystemEvent();
             if (!hotkeys) {
-                mSMMIFace->hotkeys = true;
+                mTFn->m_Driver->hotkeys = true;
                 mHotKeysTimer->stop();
                 disconnect(mHotKeysTimer);
                 return;
             } else
-                mSMMIFace->hotkeys = true;
+                mTFn->m_Driver->hotkeys = true;
             return;
         case 0x101:	// Fn-Esc
             tmp = mConfig.readNumEntry("Fn_Esc");
@@ -866,7 +863,7 @@ void KToshiba::checkHotKeys()
             return;
         case 0xb85:	// Toggle S-Video Out
         case 0xd55:
-            (svideo)? mSMMIFace->setVideo(1) : mSMMIFace->setVideo(4);
+            (svideo)? mTFn->m_Driver->setVideo(1) : mTFn->m_Driver->setVideo(4);
             svideo = (svideo)? 0 : 1;
             return;
         case 0xb86:	// E-Button

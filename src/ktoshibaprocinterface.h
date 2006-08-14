@@ -46,11 +46,12 @@ extern "C" {
 #define XE3GF			1
 #define TSP10			11
 #define TSM30X			12
+#define TSM40			13
 
 /**
  * @short Provides access to /proc files
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.2
+ * @version 0.3
  */
 class KToshibaProcInterface : public QObject
 {

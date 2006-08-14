@@ -66,7 +66,6 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     }
     m_Popup = 0;
     m_Snd = 1;
-    m_Mousepad = 0;
 }
 
 OmnibookFnActions::~OmnibookFnActions()
@@ -126,14 +125,12 @@ void OmnibookFnActions::performFnAction(int action)
         if (m_Bright <= 7 && m_Bright >= 0)
             m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
     if (action == 10) {
-        if ((m_Pad != -1) || (m_Mousepad != -1)) {
-            m_Mousepad--;
-            if (m_Mousepad < 0) m_Mousepad = 1;
-            toggleMousePad();
-            m_StatusWidget->wsStatus->raiseWidget(((m_Mousepad == 0)? 2 : 3));
-        }
-        else
+        if (m_Pad == -1)
             m_StatusWidget->wsStatus->raiseWidget(2);
+        else {
+            toggleMousePad();
+            m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 2 : 3));
+        }
     }
     if (action == 12) {
         toggleFan();
@@ -168,15 +165,18 @@ void OmnibookFnActions::suspendToDisk()
 
 void OmnibookFnActions::toggleMousePad()
 {
-#ifdef ENABLE_SYNAPTICS
-    if (m_Pad == -1) {
-        if (m_Mousepad == -1) return;
+    if (m_Pad == -1) return;
 
-        Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
-    }
+#ifdef ENABLE_SYNAPTICS
+    m_Pad = (m_Pad == 0)? 1 : 0;
+    Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
-    if (m_Pad >= 0)
-        m_Proc->omnibookSetTouchPad(m_Mousepad);
+    if (m_SCIIface) {
+        m_Pad = getPointingDevice();
+
+        m_Pad = (m_Pad == 0)? 1 : 0;
+        m_Driver->setPointingDevice(m_Pad);
+    }
 #endif // ENABLE_SYNAPTICS
 }
 

@@ -43,6 +43,8 @@ public:
 
     void toRAM();
     void toDisk();
+signals:
+    void signalSTD();
 private:
     QWidget *m_Parent;
     QString m_Info;

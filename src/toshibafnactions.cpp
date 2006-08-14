@@ -77,7 +77,6 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     m_Popup = 0;
     m_Snd = 1;
     m_BatSave = 2;
-    m_Mousepad = 0;
     m_Vol = -1;
     m_Fan = -1;
 }
@@ -175,8 +174,6 @@ void ToshibaFnActions::performFnAction(int action, int key)
     }
 
     if (action == 3 && m_SCIIface) {
-        m_BatSave--;
-        if (m_BatSave < 0) m_BatSave = 2;
         toggleBSM();
         KConfig cfg("ktoshibarc");
         cfg.setGroup("BSM");
@@ -189,6 +186,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
         switch (m_BatSave) {
             case -1:
                 m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
+                break;
             case 0:
                 (m_BatType == 3)? m_SettingsWidget->tlStatus->setText(i18n("Long Life"))
                     : m_SettingsWidget->tlStatus->setText(i18n("User Settings"));
@@ -207,11 +205,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
         }
     }
     if (action == 6) {
-        m_Video += 2;
-        if (m_Video == 5) m_Video = 2;
-        else if (m_Video > 4) m_Video = 1;
-        // TODO: Find out wich models do video out change automatically
-        //toggleVideo();
+        toggleVideo();
         m_SettingsWidget->wsSettings->raiseWidget(1);
         m_SettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
         m_SettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
@@ -220,6 +214,12 @@ void ToshibaFnActions::performFnAction(int action, int key)
         switch (m_Video) {
             case -1:
                 m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
+                m_SettingsWidget->plLCD->setEnabled(false);
+                m_SettingsWidget->plCRT->setEnabled(false);
+                m_SettingsWidget->plLCDCRT->setEnabled(false);
+                m_SettingsWidget->plTV->setEnabled(false);
+                break;
+            case 0:
             case 1:
                 m_SettingsWidget->tlStatus->setText("LCD");
                 m_SettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
@@ -239,14 +239,13 @@ void ToshibaFnActions::performFnAction(int action, int key)
         }
     }
     if (action == 13 && m_SCIIface) {
-        m_Boot++;
-        if (m_Boot > m_BootType) m_Boot = 0;
         toggleBootMethod();
         (m_BootType == 5)? m_SettingsWidget->wsSettings->raiseWidget(3)
             : m_SettingsWidget->wsSettings->raiseWidget(2);
         switch (m_BootType) {
             case -1:
                 m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
+                break;
             case 1:
                 m_SettingsWidget->pl1->setEnabled(false);
                 m_SettingsWidget->pl4->setEnabled(false);
@@ -381,14 +380,12 @@ void ToshibaFnActions::performFnAction(int action, int key)
             m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
     }
     if (action == 10) {
-        if ((m_Pad != -1) || (m_Mousepad != -1)) {
-            m_Mousepad--;
-            if (m_Mousepad < 0) m_Mousepad = 1;
-            toggleMousePad();
-            m_StatusWidget->wsStatus->raiseWidget(((m_Mousepad == 0)? 2 : 3));
-        }
-        else
+        if (m_Pad == -1)
             m_StatusWidget->wsStatus->raiseWidget(2);
+        else {
+            toggleMousePad();
+            m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 2 : 3));
+        }
     }
     if (action == 11 && m_SCIIface) {
         toggleSpeakerVolume();
@@ -422,6 +419,11 @@ void ToshibaFnActions::lockScreen()
 
 void ToshibaFnActions::toggleBSM()
 {
+    m_BatSave = m_Driver->getBatterySaveMode();
+    if (m_BatSave == -1) return;
+
+    m_BatSave--;
+    if (m_BatSave < 0) m_BatSave = 2;
     (m_BatType == 3)? m_Driver->setBatterySaveMode(m_BatSave + 1)
         : m_Driver->setBatterySaveMode(m_BatSave);
 }
@@ -438,21 +440,28 @@ void ToshibaFnActions::suspendToDisk()
 
 void ToshibaFnActions::toggleVideo()
 {
-    m_Driver->setVideo(m_Video);
+    m_Video = m_Driver->getVideo();
+    if (m_Video == -1) return;
+
+    // ISSUE: Whenever you toogle video-out we receive
+    // 129 code (for LCD) from the driver, strange indeed...
+    if (m_Video == 129)
+        m_Video = 1;
+
+    // TODO: Find out wich models change video-out automatically
+    //m_Driver->setVideo(m_Video);
 }
 
 void ToshibaFnActions::brightDown()
 {
-    if (m_Bright != m_Driver->getBrightness())
-        m_Bright = m_Driver->getBrightness();
+    m_Bright = m_Driver->getBrightness();
 
     m_Driver->setBrightness(--m_Bright);
 }
 
 void ToshibaFnActions::brightUp()
 {
-    if (m_Bright != m_Driver->getBrightness())
-        m_Bright = m_Driver->getBrightness();
+    m_Bright = m_Driver->getBrightness();
 
     m_Driver->setBrightness(++m_Bright);
 }
@@ -477,15 +486,18 @@ void ToshibaFnActions::toggleWireless()
 
 void ToshibaFnActions::toggleMousePad()
 {
-#ifdef ENABLE_SYNAPTICS
-    if (m_Pad == -1) {
-        if (m_Mousepad == -1) return;
+    if (m_Pad == -1) return;
 
-        Pad::setParam(TOUCHPADOFF, ((double)m_Mousepad));
-    }
+#ifdef ENABLE_SYNAPTICS
+    m_Pad = (m_Pad == 0)? 1 : 0;
+    Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
-    if (m_Pad >= 0 && m_SCIIface)
-        m_Driver->setPointingDevice(m_Mousepad);
+    if (m_SCIIface) {
+        m_Pad = getPointingDevice();
+
+        m_Pad = (m_Pad == 0)? 1 : 0;
+        m_Driver->setPointingDevice(m_Pad);
+    }
 #endif // ENABLE_SYNAPTICS
 }
 
@@ -501,18 +513,20 @@ void ToshibaFnActions::toggleSpeakerVolume()
 
 void ToshibaFnActions::toggleFan()
 {
-    int res = m_Driver->getFan();
+    m_Fan = m_Driver->getFan();
+    if (m_Fan == -1) return;
 
-    if (res < 0) {
-        m_Fan = -1;
-        return;
-    }
-    m_Fan = (res > 0)? 1 : 0;
+    m_Fan = (m_Fan == 0)? 1 : 0;
     m_Driver->setFan(m_Fan);
 }
 
 void ToshibaFnActions::toggleBootMethod()
 {
+    m_Boot = m_Driver->getBootMethod();
+    if (m_Boot == -1) return;
+
+    m_Boot++;
+    if (m_Boot > m_BootType) m_Boot = 0;
     m_Driver->setBootMethod(m_Boot);
 }
 

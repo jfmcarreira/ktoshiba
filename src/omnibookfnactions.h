@@ -48,6 +48,7 @@ public:
     OmnibookFnActions(QWidget *parent = 0);
     void hideWidgets();
     void performFnAction(int action);
+    KToshibaProcInterface *m_Proc;
     QString m_ModelName;
     bool m_OmnibookIface;
     int m_ECType;
@@ -55,14 +56,12 @@ public:
     int m_Video;
     int m_Bright;
     int m_Pad;
-    int m_Mousepad;
 
     /**
     * Default Destructor
     */
     virtual ~OmnibookFnActions();
 private:
-    KToshibaProcInterface *m_Proc;
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;
     void toggleMute();
