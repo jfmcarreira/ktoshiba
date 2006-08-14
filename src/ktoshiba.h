@@ -117,9 +117,8 @@ private:
     int mBatType;
     int mAudioPlayer;
     int mAC;
+    int mOldAC;
     int mPad;
-    int pow;
-    int oldpow;
     int MODE;
 #ifdef ENABLE_OMNIBOOK
     KToshibaDCOPInterface *mDCOPIFace;

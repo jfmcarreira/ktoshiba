@@ -2,6 +2,8 @@
 	* Made the smm driver public so the toshiba class can
 	  access the functions without the need for a constructor
 	* Cleaned up a bit the mousepad handling functions
+	* Removed some redundant variables and initialized some
+	  to make valgrind happy
 
 2006-08-11 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed an issue regarding Video-Out toggle
