@@ -104,8 +104,10 @@ KToshiba::KToshiba()
     kdDebug() << "KToshiba: Machine ECTYPE: " << mOFn->m_ECType << endl;
     mAC = mProcIFace->omnibookAC();
     (mAC == -1)? mACPI = true : mACPI = false;
+    mOldAC = mAC;
     mPad = mOFn->m_Pad;
     mBatSave = 2;
+    mOldBatSave = mBatSave;
     mBatType = 3;
     MODE = DIGITAL;
     hotkeys = false;
@@ -154,6 +156,8 @@ KToshiba::KToshiba()
     mAC = mTFn->m_Driver->acPowerStatus();
     mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
     mPad = mTFn->m_Pad;
+    mOldAC = mAC;
+    mOldBatSave = mBatSave;
     bsmtrig = false;
     bluetooth = false;
     svideo = 0;
@@ -209,6 +213,7 @@ KToshiba::~KToshiba()
 
 void KToshiba::quit()
 {
+    mSystemTimer->stop();
 #ifdef ENABLE_OMNIBOOK
     mOmnibookTimer->stop();
     if (mKeyProc->isRunning()) {
@@ -218,7 +223,6 @@ void KToshiba::quit()
     }
 #else // ENABLE_OMNIBOOK
     mHotKeysTimer->stop();
-    mSystemTimer->stop();
     if (mTFn->m_SCIIface) {
         kdDebug() << "KToshiba: Closing SCI interface." << endl;
         mTFn->closeSCIIface();
@@ -403,6 +407,7 @@ void KToshiba::toggleMODE(int mode)
 
 void KToshiba::doBluetooth()
 {
+#ifndef ENABLE_OMNIBOOK
     if (!mTFn->m_Driver->getBluetooth()) {
         contextMenu()->setItemEnabled(4, FALSE);
         kdDebug() << "KToshiba::doBluetooth(): "
@@ -418,16 +423,21 @@ void KToshiba::doBluetooth()
     }
     else
         contextMenu()->setItemEnabled(4, TRUE);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::doSetFreq(int freq)
 {
+#ifndef ENABLE_OMNIBOOK
     mTFn->m_Driver->setSpeedStep(freq);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::doSetHyper(int state)
 {
+#ifndef ENABLE_OMNIBOOK
     mTFn->m_Driver->setHyperThreading(state);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::displayBugReport()
@@ -450,6 +460,7 @@ void KToshiba::displayAboutKDE()
 
 void KToshiba::bsmUserSettings(int *bright)
 {
+#ifndef ENABLE_OMNIBOOK
     int processor, cpu, display, hdd, lcd, cooling, tmp;
 
     KConfig mConfig(CONFIG_FILE);
@@ -472,6 +483,7 @@ void KToshiba::bsmUserSettings(int *bright)
     mTFn->m_Driver->setCoolingMethod(cooling);
     mTFn->m_Driver->setDisplayAutoOff(display);
     mTFn->m_Driver->setHDDAutoOff(hdd);
+#endif // ENABLE_OMNIBOOK
 }
 
 #ifdef ENABLE_SYNAPTICS
@@ -489,18 +501,11 @@ void KToshiba::checkSynaptics()
     }
 
     if (!err && !Pad::hasParam(TOUCHPADOFF)) {
-        kdDebug() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
+        kdError() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
         err = true;
     }
 
-    if (err) {
-#ifdef ENABLE_OMNIBOOK
-        mOFn->m_Pad = -1;
-#else // ENABLE_OMNIBOOK
-        mTFn->m_Pad = -1;
-#endif // ENABLE_OMNIBOOK
-        return;
-    } else {
+    if (!err) {
 #ifdef ENABLE_OMNIBOOK
         mOFn->m_Pad = (int)Pad::getParam(TOUCHPADOFF);
 #else // ENABLE_OMNIBOOK
@@ -629,18 +634,18 @@ void KToshiba::checkSystem()
 {
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook)
-        pow = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
+        mAC = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
 #else // ENABLE_OMNIBOOK
     if (mTFn->m_SCIIface && !mACPI)
-        pow = ((mAC == -1)? SciACPower() : mTFn->m_Driver->acPowerStatus());
-    if (mACPI || pow == -1) {
-        pow = mProcIFace->acpiAC();
+        mAC = ((mAC == -1)? SciACPower() : mTFn->m_Driver->acPowerStatus());
+    if (mACPI || mAC == -1) {
+        mAC = mProcIFace->acpiAC();
         mACPI = true;
     }
 #endif // ENABLE_OMNIBOOK
 
     loadConfiguration();
-    if (mBatSave != mOldBatSave || pow != oldpow) {
+    if (mBatSave != mOldBatSave || mAC != mOldAC) {
         int bright = 0;
         switch (mBatSave) {
             case 0:			// USER SETTINGS or LONG LIFE
@@ -654,10 +659,10 @@ void KToshiba::checkSystem()
 #endif // ENABLE_OMNIBOOK
                 break;
             case 1:			// LOW POWER or NORMAL LIFE
-                bright = (pow == 3)? 0 /*Semi-Bright*/ : 3 /*Bright*/;
+                bright = (mAC == 3)? 0 /*Semi-Bright*/ : 3 /*Bright*/;
                 break;
             case 2:			// FULL POWER or FULL LIFE
-                bright = (pow == 3)? 3 /*Bright*/ : 7 /*Super-Bright*/;
+                bright = (mAC == 3)? 3 /*Bright*/ : 7 /*Super-Bright*/;
                 break;
         }
 #ifdef ENABLE_OMNIBOOK
@@ -671,7 +676,7 @@ void KToshiba::checkSystem()
 #endif // ENABLE_OMNIBOOK
     }
 
-    oldpow = pow;
+    mOldAC = mAC;
     mOldBatSave = mBatSave;
 
 #ifndef ENABLE_OMNIBOOK
