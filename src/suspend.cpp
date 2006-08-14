@@ -51,10 +51,10 @@ void Suspend::toRAM()
     int res = KMessageBox::warningContinueCancel(m_Parent, m_Info, i18n("WARNING"));
 
 #ifdef ENABLE_POWERSAVE
-    if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRAM");
-    else if (res == KMessageBox::Cancel)
+    if (res == KMessageBox::Cancel)
         return;
+    else if (res == KMessageBox::Continue)
+        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRAM");
 
     switch (res) {
         case REPLY_SUCCESS:
@@ -103,14 +103,15 @@ void Suspend::toDisk()
     int res = KMessageBox::warningContinueCancel(m_Parent, m_Info, i18n("WARNING"));
 
 #ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
-    if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
-    else if (res == KMessageBox::Cancel)
+    if (res == KMessageBox::Cancel)
         return;
+    else if (res == KMessageBox::Continue)
+        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
 
     switch (res) {
         case REPLY_SUCCESS:
             kdDebug() << "KToshiba: Suspending To Disk (using powersave)" << endl;
+            emit signalSTD();
             return;
         case REPLY_DISABLED:
             KPassivePopup::message(i18n("WARNING"),
@@ -141,6 +142,7 @@ void Suspend::toDisk()
         proc << helper << "--hibernate";
         proc.start(KProcess::DontCare);
         proc.detach();
+        emit signalSTD();
     }
 
     return;

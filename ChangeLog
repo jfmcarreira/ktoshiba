@@ -1,3 +1,21 @@
+2006-08-13 Azael Avalos <coproscefalo@gmail.com>
+	* Made the smm driver public so the toshiba class can
+	  access the functions without the need for a constructor
+	* Cleaned up a bit the mousepad handling functions
+
+2006-08-11 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue regarding Video-Out toggle
+
+2006-08-09 Azael Avalos <coproscefalo@gmail.com>
+	* Some small changes to toshibafnactions class
+
+2006-08-08 Azael Avalos <coproscefalo@gmail.com>
+	* Small update to omnibook ectype (tho is still based on
+	  name, I need a better way to identify the ectype...)
+	* Small change to suspend class (we now have a signal emmited
+	  whenever STD is enabled, I now need to figure it out how
+	  to know when we are back from STD...)
+
 2006-08-06 Azael Avalos <coproscefalo@gmail.com>
 	* Small change on suspend class
 	* Updated *.desktop files

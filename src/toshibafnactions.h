@@ -50,13 +50,13 @@ public:
     void closeSCIIface();
     void hideWidgets();
     void performFnAction(int, int);
+    KToshibaSMMInterface *m_Driver;
     bool m_SCIIface;
     int m_MachineID;
     int m_Popup;
     int m_BatType;
     int m_BatSave;
     int m_Pad;
-    int m_Mousepad;
 
     /**
     * Default Destructor
@@ -80,7 +80,6 @@ private:
     void toggleBluetooth();
     void toggleEthernet();
     void initSCI();
-    KToshibaSMMInterface *m_Driver;
     SettingsWidget *m_SettingsWidget;
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;

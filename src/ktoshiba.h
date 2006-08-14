@@ -35,7 +35,6 @@ class QPopupMenu;
 class KProcess;
 class DCOPRef;
 
-class KToshibaSMMInterface;
 class KToshibaProcInterface;
 class KToshibaDCOPInterface;
 class ToshibaFnActions;
@@ -99,7 +98,6 @@ private:
     void multimediaPlayer();
     void multimediaVolumeDown();
     void multimediaVolumeUp();
-    KToshibaSMMInterface *mSMMIFace;
     KToshibaProcInterface *mProcIFace;
     Suspend *mSuspend;
     QPopupMenu *mHelp;
@@ -111,7 +109,6 @@ private:
     DCOPRef *mKaffeine;
     bool mOmnibook;
     bool mACPI;
-    bool bsmtrig;
     bool btstart;
     bool hotkeys;
     bool bluetooth;
@@ -137,6 +134,7 @@ private:
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
     QTimer *mHotKeysTimer;
+    bool bsmtrig;
     int mWirelessSwitch;
     int mHT;
     int mSS;
