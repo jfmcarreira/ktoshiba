@@ -78,8 +78,8 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     m_Popup = 0;
     m_Snd = 1;
     m_BatSave = 2;
-    m_Vol = -1;
-    m_Fan = -1;
+    m_Vol = 1;
+    m_Fan = 1;
 }
 
 ToshibaFnActions::~ToshibaFnActions() {
@@ -115,7 +115,7 @@ void ToshibaFnActions::hideWidgets()
 
 void ToshibaFnActions::performFnAction(int action, int key)
 {
-    switch(action) {
+    switch (action) {
         case 0:	// Disabled (Do Nothing)
             return;
         case 2:	// LockScreen
@@ -199,6 +199,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
                 m_SettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
                 break;
         }
+        return;
     }
     if (action == 6) {
         toggleVideo();
@@ -233,6 +234,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
                 m_SettingsWidget->plTV->setFrameShape(QLabel::PopupPanel);
                 break;
         }
+        return;
     }
     if (action == 13 && m_SCIIface) {
         toggleBootMethod();
@@ -363,6 +365,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
                 }
                 break;
         }
+        return;
     }
     if (action == 22 && m_SCIIface) {
         m_SettingsWidget->wsSettings->raiseWidget(4);
@@ -371,38 +374,54 @@ void ToshibaFnActions::performFnAction(int action, int key)
         m_Driver->batteryStatus(&time, &perc);
         (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
             : m_SettingsWidget->batteryKPB->setValue(perc);
+        return;
     }
     if (action == 1) {
         toggleMute();
         m_StatusWidget->wsStatus->raiseWidget(m_Snd);
+        return;
     }
     if ((action == 7) || (action == 8)) {
         (action == 7)? brightDown() : brightUp();
-        if (m_Bright <= 7 && m_Bright >= 0)
-            m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
+        m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
+        return;
     }
     if (action == 10) {
         if (m_Pad == -1)
-            m_StatusWidget->wsStatus->raiseWidget(2);
+            m_StatusWidget->wsStatus->raiseWidget(3);
         else {
             toggleMousePad();
+#ifdef ENABLE_SYNAPTICS
             m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 2 : 3));
+#else // ENABLE_SYNAPTICS
+            m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 3 : 2));
+#endif // ENABLE_SYNAPTICS
         }
+        return;
     }
     if (action == 11 && m_SCIIface) {
-        toggleSpeakerVolume();
-        if (!m_Vol)
-            m_StatusWidget->wsStatus->raiseWidget(m_Vol);
-        else if (m_Vol == 3)
-            m_StatusWidget->wsStatus->raiseWidget(m_Vol - 2);
-        else
-            m_StatusWidget->wsStatus->raiseWidget(m_Vol + 13);
+        if (m_Vol == -1)
+            m_StatusWidget->wsStatus->raiseWidget(0);
+        else {
+            toggleSpeakerVolume();
+            if (!m_Vol)
+                m_StatusWidget->wsStatus->raiseWidget(m_Vol);
+            else if (m_Vol == 3)
+                m_StatusWidget->wsStatus->raiseWidget(m_Vol - 2);
+            else
+                m_StatusWidget->wsStatus->raiseWidget(m_Vol + 13);
+        }
+        return;
     }
     if (action == 12) {
-        toggleFan();
-
-        (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
-            : m_StatusWidget->wsStatus->raiseWidget(13);
+        if (m_Fan == -1)
+            m_StatusWidget->wsStatus->raiseWidget(13);
+        else {
+            toggleFan();
+            if (m_Fan == -1)
+            (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
+                : m_StatusWidget->wsStatus->raiseWidget(13);
+        }
     }
 }
 
@@ -462,6 +481,7 @@ void ToshibaFnActions::toggleVideo()
 void ToshibaFnActions::brightDown()
 {
     m_Bright = m_Driver->getBrightness();
+    if (m_Bright == 0) return;
 
     m_Driver->setBrightness(--m_Bright);
 }
@@ -469,6 +489,7 @@ void ToshibaFnActions::brightDown()
 void ToshibaFnActions::brightUp()
 {
     m_Bright = m_Driver->getBrightness();
+    if (m_Bright == 7) return;
 
     m_Driver->setBrightness(++m_Bright);
 }

@@ -170,8 +170,9 @@ KToshiba::KToshiba()
         connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
         mHotKeysTimer->start(100);
     }
-#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
+
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
+#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     //connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
 #endif // ENABLE_POWERSAVE
 
@@ -760,9 +761,9 @@ void KToshiba::omnibookHotKeys(int keycode)
         case 150:	// Fn-F1
             tmp = mConfig.readNumEntry("Fn_F1");
             break;
-        case 151:	// Fn-F9
+        case 151:	// Fn-F9 (MousePad On/Off)
         case 152:
-            tmp = mConfig.readNumEntry("Fn_F9");
+            tmp = 10;
             break;
         case 153:	// Play/Pause also Next with ecype=12 (TSM30X)
             (mOFn->m_ECType == TSM30X)? multimediaNext()
@@ -796,7 +797,7 @@ void KToshiba::omnibookHotKeys(int keycode)
         mKProc->detach();
         return;
     }
-    mOFn->performFnAction(tmp);
+    mOFn->performFnAction(tmp, keycode);
 #endif // ENABLE_OMNIBOOK
 }
 
