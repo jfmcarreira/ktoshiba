@@ -66,41 +66,42 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     layout->addWidget( m_KCMKToshibaGeneral );
     layout->addStretch();
 
-    m_SMMIFace = new KToshibaSMMInterface(this);
     m_ProcIFace = new KToshibaProcInterface(this);
 
     load();
 
     m_InterfaceAvailable = false;
+    m_HCIIFace = false;
     m_Omnibook = false;
 
 #ifdef ENABLE_OMNIBOOK
     m_Omnibook = m_ProcIFace->checkOmnibook();
-    if (m_Omnibook) {
-        m_KCMKToshibaGeneral->tlOff->hide();
-        m_KCMKToshibaGeneral->frameMain->setEnabled(true);
-        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
-			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
-        m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
-        m_AC = m_ProcIFace->omnibookAC();
-    }
+    m_KCMKToshibaGeneral->tlOff->hide();
+    m_KCMKToshibaGeneral->frameMain->setEnabled(true);
+    m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+		m_KCMKToshibaGeneral->configTabWidget->page(2), false);
+    m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
+    m_AC = m_ProcIFace->omnibookAC();
 #else // ENABLE_OMNIBOOK
+    m_SMMIFace = new KToshibaSMMInterface(this);
     m_InterfaceAvailable = m_SMMIFace->openSCIInterface();
     m_KCMKToshibaGeneral->tlOff->hide();
     m_KCMKToshibaGeneral->frameMain->setEnabled(true);
     if (!m_InterfaceAvailable)
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
+    (m_SMMIFace->machineID() == -1)? m_HCIIFace = false
+        : m_HCIIFace = true;
     m_AC = m_SMMIFace->acPowerStatus();
 #endif // ENABLE_OMNIBOOK
-    if (!m_InterfaceAvailable && !m_Omnibook) {
+    if (!m_InterfaceAvailable && !m_HCIIFace && !m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->show();
         m_KCMKToshibaGeneral->frameMain->setEnabled(false);
         setButtons(buttons() & ~Default);
     }
 
 #ifndef ENABLE_HELPER
-        m_KCMKToshibaGeneral->helperPushButton->setEnabled(false);
+    m_KCMKToshibaGeneral->helperPushButton->setEnabled(false);
 #endif // ENABLE_HELPER
 
     connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
@@ -254,29 +255,22 @@ void KCMToshibaModule::timeout()
         m_Init = true;
     }
 
-    int time = 0, perc = -1, acConnected = -1;
+    int time = 0, perc = -1;
 
 #ifdef ENABLE_OMNIBOOK
-    if (m_Omnibook) {
-        m_ProcIFace->omnibookBatteryStatus(&time, &perc);
-        if (perc == -1)
-            m_ProcIFace->acpiBatteryStatus(&time, &perc);
+    (m_Omnibook)? m_ProcIFace->omnibookBatteryStatus(&time, &perc)
+        : m_ProcIFace->acpiBatteryStatus(&time, &perc);
 
-        acConnected = ((acConnected == -1)? m_ProcIFace->acpiAC() : m_ProcIFace->omnibookAC());
-    }
+    m_AC = ((m_AC == -1)? m_ProcIFace->acpiAC() : m_ProcIFace->omnibookAC());
 #else // ENABLE_OMNIBOOK
-    if (m_InterfaceAvailable) {
-        m_SMMIFace->batteryStatus(&time, &perc);
-        if (perc == -1)
-            m_ProcIFace->acpiBatteryStatus(&time, &perc);
-    }
-    acConnected = ((m_AC == -1)? SciACPower() : m_SMMIFace->acPowerStatus());
-    if ((acConnected == -1) || (acConnected == SCI_FAILURE))
-        acConnected = m_ProcIFace->acpiAC();
+    (m_InterfaceAvailable)? m_SMMIFace->batteryStatus(&time, &perc)
+        : m_ProcIFace->acpiBatteryStatus(&time, &perc);
+
+    m_AC = (m_AC == -1)? m_ProcIFace->acpiAC() : m_SMMIFace->acPowerStatus();
 #endif // ENABLE_OMNIBOOK
 
     (perc == -1)? m_KCMKToshibaGeneral->mKPBattery->setValue(0)
         : m_KCMKToshibaGeneral->mKPBattery->setValue(perc);
     m_KCMKToshibaGeneral->kledBat->setState((perc == -1)? KLed::Off : KLed::On);
-    m_KCMKToshibaGeneral->kledAC->setState((acConnected == 4)? KLed::On : KLed::Off);
+    m_KCMKToshibaGeneral->kledAC->setState((m_AC == 4)? KLed::On : KLed::Off);
 }

@@ -24,7 +24,7 @@
 
 KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 	: QObject( parent ),
-	  hotkeys( false ),
+	  mHotkeys( false ),
 	  mFd( 0 )
 {
 }
@@ -974,14 +974,19 @@ int KToshibaSMMInterface::getSystemEvent()
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
 	int ev = HciFunction(&reg);
-	if ((ev == HCI_FAILURE) || (ev == HCI_NOT_SUPPORTED)) {
+	if (ev == HCI_NOT_SUPPORTED) {
+		kdError() << "KToshibaSMMInterface::getSystemEvent(): "
+			  << "System does not support Hotkeys" << endl;
+		return -1;
+	} else
+	if (ev == HCI_FAILURE) {
 		/**
 		 *	ISSUE: After enabling the hotkeys again, we receive
 		 *	HCI_FAILURE when 'no' events are present in the
 		 *	system. However, when events are entered into
 		 *	the system we receive HCI_SUCCESS.
 		 */
-		if (hotkeys == false) {
+		if (mHotkeys == false) {
 			kdWarning() << "KToshibaSMMInterface::getSystemEvent(): "
 				  << "Failed accessing System Events" << endl;
 		}
@@ -1009,6 +1014,20 @@ bool KToshibaSMMInterface::enableSystemEvent()
 		  << "Enabled Hotkeys" << endl;
 
     return true;
+}
+
+void KToshibaSMMInterface::disableSystemEvent()
+{
+	reg.eax = HCI_SET;
+	reg.ebx = HCI_SYSTEM_EVENT;
+	reg.ecx = HCI_DISABLE;
+	reg.edx = 0x0000;
+	if (HciFunction(&reg) != HCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::disableSystemEvent(): "
+			  << "Could not disable Hotkeys" << endl;
+
+	kdDebug() << "KToshibaSMMInterface::disableSystemEvent(): "
+		  << "Disabled Hotkeys" << endl;
 }
 
 int KToshibaSMMInterface::getVideo()
@@ -1068,8 +1087,7 @@ void KToshibaSMMInterface::getSystemLocks(int *lock, int bay)
 		*lock = HCI_UNLOCKED;
 	else if ((reg.ecx == HCI_LOCKED) && (*lock == HCI_UNLOCKED))
 		*lock = HCI_LOCKED;
-	kdDebug() << "KToshibaSMMInterface::systemLocks(): "
-		  << "Bay is " 
+	kdDebug() << "KToshibaSMMInterface::systemLocks(): Bay is "
 		  << ((*lock == HCI_LOCKED)? "locked": "unlocked") << endl;
 }
 

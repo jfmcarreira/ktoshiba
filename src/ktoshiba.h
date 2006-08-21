@@ -49,7 +49,7 @@ class Suspend;
 #define XMMS		2
 
 /**
- * @short Hotkeys & battery monitoring for Toshiba laptops
+ * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.9
  */
@@ -57,36 +57,34 @@ class KToshiba :  public KSystemTray
 {
     Q_OBJECT
 public:
-    /**
-    * Default Constructor
-    */
     KToshiba();
+    ~KToshiba();
+
     void loadConfiguration();
     void createConfiguration();
     bool checkConfiguration();
-
-    /**
-    * Default Destructor
-    */
-    ~KToshiba();
-protected slots:
+private slots:
     void doConfig();
+    void checkSystem();
     void doSuspendToRAM();
     void doSuspendToDisk();
-    void checkSystem();
+    void displayBugReport();
+    void displayAbout();
+    void displayAboutKDE();
+    void quit();
+    /** omnibook slots */
     void checkOmnibook();
     void omnibookHotKeys(int);
     void doSetOneTouch(int);
     void doSetOmnibookFan(int);
     void toggleMODE(int);
+    /** toshiba slots */
+    void checkHotKeys();
     void doBluetooth();
     void doSetFreq(int);
     void doSetHyper(int);
-    void checkHotKeys();
-    void displayBugReport();
-    void displayAbout();
-    void displayAboutKDE();
-    void quit();
+    void resumedSTD();
+    void suspendToDisk();
 private:
     void doMenu();
     void bsmUserSettings(int *);
@@ -102,22 +100,16 @@ private:
     Suspend *mSuspend;
     QPopupMenu *mHelp;
     QTimer *mSystemTimer;
-    QByteArray mData;
-    QByteArray mReplyData;
-    QCString mReplyType;
     KProcess *mKProc;
     DCOPRef *mKaffeine;
-    bool mOmnibook;
     bool mACPI;
-    bool btstart;
-    bool hotkeys;
-    bool bluetooth;
+    bool mHotkeys;
+    int mAC;
+    int mOldAC;
     int mBatSave;
     int mOldBatSave;
     int mBatType;
     int mAudioPlayer;
-    int mAC;
-    int mOldAC;
     int mPad;
     int MODE;
 #ifdef ENABLE_OMNIBOOK
@@ -134,10 +126,12 @@ private:
     QPopupMenu *mHyper;
     QTimer *mHotKeysTimer;
     bool bsmtrig;
+    bool btstart;
+    bool bluetooth;
     int mWirelessSwitch;
     int mHT;
     int mSS;
-    int svideo;
+    int mSVideo;
 #endif // ENABLE_OMNIBOOK
 };
 

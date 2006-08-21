@@ -47,14 +47,9 @@ class KToshibaSMMInterface : public QObject
 {
   Q_OBJECT
 public:
-  /**
-   * Default Constructor
-   */
   KToshibaSMMInterface(QObject *parent = 0);
-  /**
-   * Default Destructor
-   */
   ~KToshibaSMMInterface();
+
   /**************************************
    *           SCI Functions            *
    * (Software Configuration Interface) *
@@ -332,10 +327,14 @@ public:
    */
   int getSystemEvent();
   /**
-   * Enables the System Event
+   * Enables the System Events
    * @return @p true if successful, false otherwise
    */
   bool enableSystemEvent();
+  /**
+   * Disables the System Events
+   */
+  void disableSystemEvent();
   /**
    * Gets the current video-out setting.
    * @return @p the int holdint the current display setting
@@ -393,7 +392,7 @@ public:
    */
   void setBluetoothPower(int state);
 public:
-  bool hotkeys;
+  bool mHotkeys;
   int sciversion;
 private:
   /**

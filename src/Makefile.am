@@ -17,8 +17,8 @@ INCLUDES = $(all_includes) @DBUS_CFLAGS@
 
 # these are the headers for your project
 noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h modelid.h \
-		ktoshibaprocinterface.h toshibafnactions.h omnibookfnactions.h ktoshibadcopinterface.h \
-		suspend.h
+			ktoshibaprocinterface.h toshibafnactions.h omnibookfnactions.h ktoshibadcopinterface.h \
+			suspend.h ktoshibadbusinterface.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -38,16 +38,17 @@ libktoshibaprocinterface_la_LDFLAGS = $(all_libraries)
 libktoshibaprocinterface_la_SOURCES = ktoshibaprocinterface.cpp
 
 ktoshiba_SOURCES = settingswidget.ui statuswidget.ui ktoshiba.cpp main.cpp \
-		toshibafnactions.cpp omnibookfnactions.cpp ktoshibadcopinterface.cpp \
-		ktoshibadcopinterface.skel suspend.cpp
+			toshibafnactions.cpp omnibookfnactions.cpp ktoshibadcopinterface.cpp \
+			ktoshibadcopinterface.skel suspend.cpp ktoshibadbusinterface.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) \
 		 libktoshibasmminterface.la \
 		 libktoshibaprocinterface.la \
+		 -ldbus-qt-1 \
 		 @SYNAPTICS@ \
+		 @DBUS_LIBS@ \
 		 @POWERSAVE_LIBS@ \
-		 @POWERSAVE_DBUS_LIBS@ \
-		 @DBUS_LIBS@
+		 @POWERSAVE_DBUS_LIBS@
 
 # this is where the desktop file will go
 xdg_apps_DATA     = ktoshiba.desktop

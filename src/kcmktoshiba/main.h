@@ -59,8 +59,9 @@ private:
     KToshibaSMMInterface *m_SMMIFace;
     KToshibaProcInterface *m_ProcIFace;
     QTimer *m_Timer;
-    bool m_InterfaceAvailable;
     bool m_Omnibook;
+    bool m_InterfaceAvailable;
+    bool m_HCIIFace;
     bool m_Init;
     int m_AC;
 };

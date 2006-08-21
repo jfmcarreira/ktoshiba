@@ -244,6 +244,9 @@
                                         <property name="text">
                                             <string>Select &amp;Audio Application:</string>
                                         </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignRight</set>
+                                        </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>audioComboBox</cstring>
                                         </property>
@@ -285,7 +288,7 @@
                                             <cstring>btstartCheckBox</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>&amp;Enable Bluetooth device at program start-up</string>
+                                            <string>&amp;Enable Bluetooth device at program startup</string>
                                         </property>
                                         <property name="accel">
                                             <string>Alt+E</string>
@@ -334,7 +337,7 @@
                             <cstring>FnKeyTab</cstring>
                         </property>
                         <attribute name="title">
-                            <string>Fn-Ke&amp;y</string>
+                            <string>&amp;Fn-Key</string>
                         </attribute>
                         <grid>
                             <property name="name">
@@ -2525,6 +2528,23 @@
                                     </widget>
                                 </grid>
                             </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>BSMSpacer</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>50</height>
+                                    </size>
+                                </property>
+                            </spacer>
                         </vbox>
                     </widget>
                 </widget>

@@ -43,11 +43,9 @@ class ToshibaFnActions : public QObject
 {
     Q_OBJECT
 public:
-    /**
-    * Default Constructor
-    */
     ToshibaFnActions(QWidget *parent = 0);
-    void closeSCIIface();
+    virtual ~ToshibaFnActions();
+
     void hideWidgets();
     void performFnAction(int, int);
     KToshibaSMMInterface *m_Driver;
@@ -56,12 +54,8 @@ public:
     int m_Popup;
     int m_BatType;
     int m_BatSave;
+    int m_Video;
     int m_Pad;
-
-    /**
-    * Default Destructor
-    */
-    virtual ~ToshibaFnActions();
 private:
     void toggleMute();
     void lockScreen();
@@ -85,7 +79,6 @@ private:
     Suspend *m_Suspend;
     QWidget *m_Parent;
     int m_Snd;
-    int m_Video;
     int m_Bright;
     int m_Wireless;
     int m_BootType;

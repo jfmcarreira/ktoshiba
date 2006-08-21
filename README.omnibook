@@ -1,8 +1,11 @@
 omnibook
 =====
 As of version 0.8, KToshiba now supports Toshiba models with a Phoenix BIOS,
-but be aware that this is only initial support for them, more features are
-planned and will be added on upcomming versions.
+but be aware that this is only initial support for them.
+
+As of version 0.9, KToshiba now gives _full_ support to toshibas with a
+Phoenix BIOS but of course, there might be some issues and/or bugs still
+around.
 
 In order to get your laptop supported, you'll need to download, compile and
 install the omnibook kernel module (version 20060126 as of this writing).
@@ -16,8 +19,46 @@ so KToshiba can set certain values (eg.: brightness), more options may be
 available for your model, but that option is a _must_ in order for KToshiba
 to work for you.
 
+
+HotKeys
+=====
+In order to make the hotkeys work with KToshiba, you must map them to certain
+keycodes, some keys already produce keycodes, but those that don't need to
+be set by the command `setkeycodes scancode keycode` where "scancode" is the
+number provided by the kernel, and "keycode" is one of the following:
+
+144:		Previous
+145:		Fn-1 (Volume Down)
+146:		Fn-2 (Volume Up)
+147:		Media Player
+148:		Toggle Mode
+150:		Fn-F1
+151, 152:	Fn-F9
+153:		Play/Pause also Next with ecype=12
+159:		Fn-F7
+160:		Fn-Esc
+162:		Next also Play/Pause with ectype=12
+164:		Stop
+178:		WWW
+236:		Console Direct Access
+239:		Fn-F6
+
+(NOTE: Fn-Esc, F1, F6, F7, F9, can be configured to do something else
+ via the KCModule, the others are hard-coded)
+
+If your toshiba model produce different keycodes than the ones listed here,
+or does something different than the associated action, please send me an
+e-mail to coproscefalo@gmail.com with the keycode and what it does.
+
+
+Kernel module
+=====
 You can get the sources for the omnibook kernel module from here:
 
 http://sourceforge.net/projects/omke
+
+or here:
+
+http://sourceforge.net/projects/omnibook
 
 Enjoy !!!

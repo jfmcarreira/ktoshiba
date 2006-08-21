@@ -1,8 +1,37 @@
 #MIN_CONFIG(3.2.0)
 
-AM_INIT_AUTOMAKE(ktoshiba, 0.9)
+AM_INIT_AUTOMAKE(ktoshiba, 0.9, coproscefalo@gmail.com)
 AC_C_BIGENDIAN
 AC_CHECK_KDEMAXPATHLEN
+
+
+dnl === dbus support check - begin ===
+PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
+
+# get dbus system bus socket - begin ===
+DBUS_SYSTEM_BUS_SOCKET="`pkg-config --variable=system_bus_default_address dbus-1`"
+if test -z "$DBUS_SYSTEM_BUS_SOCKET"; then
+    # use default
+    DBUS_SYSTEM_BUS_SOCKET="unix:path=/var/run/dbus/system_bus_socket"
+fi
+
+AC_DEFINE_UNQUOTED(DBUS_SYSTEM_BUS_SOCKET, ["$DBUS_SYSTEM_BUS_SOCKET"],
+    [D-BUS system bus socket path])
+
+# check for dbus qt bindings --> copied from KNetworkmanager
+#safe_CPPFLAGS=$CPPFLAGS
+#CPPFLAGS="$CPPFLAGS $DBUS_CFLAGS $all_includes"
+#AC_LANG_SAVE
+#AC_LANG_CPLUSPLUS
+#AC_CHECK_HEADER([dbus/connection.h], , [AC_MSG_ERROR([You need D-BUS/Qt3 bindings])])
+#AC_CHECK_HEADER([dbus/message.h], , [AC_MSG_ERROR([You need D-BUS/Qt3 bindings])])
+#CPPFLAGS=$safe_CPPFLAGS
+#AC_LANG_RESTORE
+
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+dnl === dbus support check - end ===
+
 
 dnl === powersave daemon support check - begin ===
 AC_ARG_WITH(powersave,
@@ -15,7 +44,6 @@ if test "$ac_cv_use_powersave" = "yes"; then
     AC_CHECK_LIB(powersave_dbus, dbusSendSimpleMessage, [
         PKG_CHECK_MODULES(POWERSAVE, [powersave >= 0.12.2])
         PKG_CHECK_MODULES(POWERSAVE_DBUS, [powersave-dbus >= 0.12.2])
-        PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
         have_powersave=true
     ], [have_powersave=false])
 
@@ -27,10 +55,9 @@ if test "$ac_cv_use_powersave" = "yes"; then
 
     AC_SUBST(POWERSAVE_LIBS)
     AC_SUBST(POWERSAVE_DBUS_LIBS)
-    AC_SUBST(DBUS_CFLAGS)
-    AC_SUBST(DBUS_LIBS)
 fi
 dnl === powersave daemon support check - end ===
+
 
 dnl === build ktosh_helper check - begin ===
 compile_helper=no
@@ -47,6 +74,7 @@ AC_ARG_WITH(helper,
 AM_CONDITIONAL(with_helper, [test x$compile_helper = xyes])
 dnl === build ktosh_helper check - end ===
 
+
 dnl === libsynaptics support check - begin ===
 AC_ARG_WITH(libsynaptics,
     AS_HELP_STRING([--without-libsynaptics], [build without libsynaptics support (default=no)]),
@@ -62,6 +90,7 @@ if test "$ac_cv_use_synaptics" = "yes"; then
 fi
 dnl === libsynaptics support check - end ===
 
+
 dnl === omnibook support check - begin ===
 AC_ARG_WITH(omnibook,
     AS_HELP_STRING([--without-omnibook], [build without omnibook support (default=yes)]),
@@ -75,3 +104,6 @@ fi
 
 AM_CONDITIONAL(with_keyhandler, [test x$ac_cv_use_omnibook = xyes])
 dnl === omnibook support check - end ===
+
+
+AC_SUBST(XGETTEXT)

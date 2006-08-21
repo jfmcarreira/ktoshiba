@@ -294,6 +294,24 @@
                 </widget>
             </hbox>
         </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>WStackPage</cstring>
+            </property>
+            <attribute name="id">
+                <number>4</number>
+            </attribute>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="KProgress">
+                    <property name="name">
+                        <cstring>batteryKPB</cstring>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
     </widget>
 </widget>
 <images>
@@ -323,4 +341,7 @@
     </image>
 </images>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kprogress.h</includehint>
+</includehints>
 </UI>

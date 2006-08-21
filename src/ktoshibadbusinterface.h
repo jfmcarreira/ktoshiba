@@ -2,6 +2,10 @@
  *   Copyright (C) 2006 by Azael Avalos                                    *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
+ *   Based on dbusPowersave.h from KPowersave                              *
+ *   Copyright (C) 2005,2006 by Danny Kukawka                              *
+ *                            <dkukawka@suse.de>, <danny.kukawka@web.de>   *
+ *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -18,8 +22,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef OMNIBOOK_FN_ACTIONS_H
-#define OMNIBOOK_FN_ACTIONS_H
+#ifndef KTOSHIBA_DBUSINTERFACE_H
+#define KTOSHIBA_DBUSINTERFACE_H
+
+#ifndef DBUS_API_SUBJECT_TO_CHANGE
+#define DBUS_API_SUBJECT_TO_CHANGE
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -27,46 +35,41 @@
 
 #include <qobject.h>
 
-class QWidget;
+#include <dbus/message.h>
+#include <dbus/connection.h>
 
-class KToshibaProcInterface;
-class StatusWidget;
-class Suspend;
+enum msg_type {
+	POWERSAVE_EVENT,
+	DBUS_EVENT
+};
 
 /**
- * @short Performs the Fn assosiated action
+ * @short KToshiba D-BUS Interafce
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.1
  */
-class OmnibookFnActions : public QObject
+class KToshibaDBUSInterface : public QObject
 {
     Q_OBJECT
 public:
-    OmnibookFnActions(QWidget *parent = 0);
-    virtual ~OmnibookFnActions();
+    KToshibaDBUSInterface();
+    ~KToshibaDBUSInterface();
 
-    void hideWidgets();
-    void performFnAction(int action);
-    KToshibaProcInterface *m_Proc;
-    QString m_ModelName;
-    bool m_OmnibookIface;
-    int m_ECType;
-    int m_Popup;
-    int m_Video;
-    int m_Bright;
-    int m_Pad;
+    void emitMsgReceived(msg_type, QString);
+    bool isConnected();
+    bool noRights();
+    bool reconnect();
+    bool close();
+
+signals:
+    void msgReceived(msg_type, QString);
 private:
-    StatusWidget *m_StatusWidget;
-    Suspend *m_Suspend;
-    void toggleMute();
-    void lockScreen();
-    void suspendToRAM();
-    void suspendToDisk();
-    void toggleMousePad();
-    void toggleFan();
-    void toogleBackLight();
-    int m_Snd;
-    int m_Fan;
+    DBusQt::Connection* m_DBUSQtConnection;
+    bool initDBUS();
+    bool is_connected;
+    bool no_rights;
 };
 
-#endif // OMNIBOOK_FN_ACTIONS_H
+DBusHandlerResult filter_function(DBusConnection *, DBusMessage *, void *);
+
+#endif // KTOSHIBA_DBUSINTERFACE_H
