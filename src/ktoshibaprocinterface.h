@@ -57,14 +57,9 @@ class KToshibaProcInterface : public QObject
 {
     Q_OBJECT
 public:
-    /**
-    * Default Constructor
-    */
     KToshibaProcInterface(QObject *parent = 0);
-    /**
-    * Default Destructor
-    */
     ~KToshibaProcInterface();
+
     /**
     * Checks /proc entry for Toshiba model
     * @return @p true if found, false otherwise

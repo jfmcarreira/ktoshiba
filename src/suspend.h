@@ -27,6 +27,8 @@
 
 #include <qobject.h>
 
+#include "ktoshibadbusinterface.h"
+
 class QWidget;
 
 /**
@@ -44,10 +46,18 @@ public:
     void toRAM();
     void toDisk();
 signals:
-    void signalSTD();
+    void resumedFromSTD();
+    void setSuspendToDisk();
+protected slots:
+    void processMessage(msg_type, QString);
+    void recheckDaemon();
+    bool checkDaemon();
 private:
+    KToshibaDBUSInterface *m_DBUSIFace;
     QWidget *m_Parent;
     QString m_Info;
+    bool powersaved_terminated;
+    bool dbus_terminated;
 };
 
 #endif // SUSPEND_H

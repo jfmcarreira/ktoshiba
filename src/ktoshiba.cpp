@@ -21,7 +21,6 @@
 #include "ktoshiba.h"
 #include "ktoshibasmminterface.h"
 #include "ktoshibaprocinterface.h"
-#include "ktoshibadcopinterface.h"
 #include "toshibafnactions.h"
 #include "omnibookfnactions.h"
 #include "modelid.h"
@@ -66,7 +65,7 @@ KToshiba::KToshiba()
       mProcIFace( 0 ),
       mSystemTimer( 0 ),
       mKProc( new KProcess(this) ),
-      hotkeys( false )
+      mHotkeys( false )
 {
     this->setPixmap( KSystemTray::loadIcon("ktoshiba") );
     QToolTip::add(this, "KToshiba");
@@ -93,8 +92,7 @@ KToshiba::KToshiba()
     // check whether omnibook module is loaded
     mOFn = new OmnibookFnActions(this);
     kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
-    mOmnibook = mOFn->m_OmnibookIface;
-    if (!mOmnibook) {
+    if (!mOFn->m_OmnibookIface) {
         kdError() << "KToshiba: Could not found a Toshiba model. "
                   << "Please check that the omnibook module "
                   << "loads without failures" << endl;
@@ -110,7 +108,6 @@ KToshiba::KToshiba()
     mOldBatSave = mBatSave;
     mBatType = 3;
     MODE = DIGITAL;
-    hotkeys = false;
 
     // keyhandler program process
     pid_t mKeyPID;
@@ -123,25 +120,24 @@ KToshiba::KToshiba()
     else {
         mKeyPID = mKeyProc->pid();
         kdDebug() << "KToshiba: Key handler program PID "
-                  << (unsigned int)mKeyPID << endl;
-        hotkeys = true;
+                  << ((unsigned int)mKeyPID) << endl;
+        mHotkeys = true;
     }
 
     mOmnibookTimer = new QTimer(this);
-    mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
 
     connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
     mOmnibookTimer->start(100);
-    if (hotkeys)
+    if (mHotkeys) {
+        mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
         connect( mDCOPIFace, SIGNAL( signalHotKey(int) ), this, SLOT( omnibookHotKeys(int) ) );
+    }
 #else // ENABLE_OMNIBOOK
     // check whether toshiba module is loaded and we got an opened SCI IFace
     mTFn = new ToshibaFnActions(this);
     if (mTFn->m_SCIIface) {
         mSS = mTFn->m_Driver->getSpeedStep();
         mHT = mTFn->m_Driver->getHyperThreading();
-        mBatType = mTFn->m_BatType;
-        mTFn->m_BatSave = mBatSave;
     }
     else {
         mSS = -1;
@@ -150,27 +146,34 @@ KToshiba::KToshiba()
 
     QString modelid = QString("KToshiba: Machine ID: 0x%1").arg(mTFn->m_MachineID, 0, 16);
     kdDebug() << modelid << endl;
+    mHotkeys = mTFn->m_Driver->enableSystemEvent();
+    mTFn->m_Driver->mHotkeys = mHotkeys;
+    mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
+    mAC = mTFn->m_Driver->acPowerStatus();
+    (mAC == -1)? mACPI = true : mACPI = false;
+    mOldAC = mAC;
     // Default to mode 2 if we got a failure
     if (mTFn->m_BatType == -1)
         mTFn->m_BatType = 2;
-    mAC = mTFn->m_Driver->acPowerStatus();
-    mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
-    mPad = mTFn->m_Pad;
-    mOldAC = mAC;
+    mBatType = mTFn->m_BatType;
+    // Default to last value stored in config
+    mTFn->m_BatSave = mBatSave;
     mOldBatSave = mBatSave;
+    mSVideo = mTFn->m_Video;
+    mPad = mTFn->m_Pad;
+    MODE = DIGITAL;
     bsmtrig = false;
     bluetooth = false;
-    svideo = 0;
-    MODE = DIGITAL;
-    mOmnibook = false;
-    mACPI = false;
-    hotkeys = false;
 
-    mHotKeysTimer = new QTimer(this);
-
-    connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
-    mHotKeysTimer->start(100);		// Check hotkeys every 1/10 seconds
-    connect( mSuspend, SIGNAL( signalSTD() ), this, SLOT( quit() ) );
+    if (mHotkeys) {
+        mHotKeysTimer = new QTimer(this);
+        connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
+        mHotKeysTimer->start(100);
+    }
+#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
+    connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
+    //connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
+#endif // ENABLE_POWERSAVE
 
     if (btstart)
         doBluetooth();
@@ -182,7 +185,7 @@ KToshiba::KToshiba()
 
     mSystemTimer = new QTimer(this);
     connect( mSystemTimer, SIGNAL( timeout() ), this, SLOT( checkSystem() ) );
-    mSystemTimer->start(500);		// Check system events every 1/2 seconds
+    mSystemTimer->start(500);
     connect( this, SIGNAL( quitSelected() ), this, SLOT( quit() ) );
 
 
@@ -195,15 +198,22 @@ KToshiba::KToshiba()
 KToshiba::~KToshiba()
 {
 #ifdef ENABLE_OMNIBOOK
-    delete mDCOPIFace; mDCOPIFace = NULL;
+    delete mOneTouch; mOneTouch = NULL;
+    delete mOmniFan; mOmniFan = NULL;
+    delete mOmniMODE; mOmniMODE = NULL;
+    if (mHotkeys)
+        delete mDCOPIFace; mDCOPIFace = NULL;
     delete mOmnibookTimer; mOmnibookTimer = NULL;
-    if (hotkeys)
-        delete mKeyProc; mKeyProc = NULL;
+    delete mKeyProc; mKeyProc = NULL;
     delete mOFn; mOFn = NULL;
 #else
-    delete mHotKeysTimer; mHotKeysTimer = NULL;
+    delete mHyper; mHyper = NULL;
+    delete mSpeed; mSpeed = NULL;
+    if (mHotkeys)
+        delete mHotKeysTimer; mHotKeysTimer = NULL;
     delete mTFn; mTFn = NULL;
 #endif
+    delete mHelp; mHelp = NULL;
     delete mKProc; mKProc = NULL;
     delete mSystemTimer; mSystemTimer = NULL;
     delete mKaffeine; mKaffeine = NULL;
@@ -225,9 +235,34 @@ void KToshiba::quit()
     mHotKeysTimer->stop();
     if (mTFn->m_SCIIface) {
         kdDebug() << "KToshiba: Closing SCI interface." << endl;
-        mTFn->closeSCIIface();
+        mTFn->m_Driver->closeSCIInterface();
     }
 #endif // ENABLE_OMNIBOOK
+}
+
+void KToshiba::resumedSTD()
+{
+    kdDebug() << "KToshiba: Opening driver interface." << endl;
+    if (!mTFn->m_SCIIface) {
+        kdDebug() << "KToshiba: Opening SCI interface." << endl;
+        mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface();
+    }
+    // Enable HotKeys
+    mTFn->m_Driver->enableSystemEvent();
+}
+
+void KToshiba::suspendToDisk()
+{
+    kdDebug() << "KToshiba: Closing driver interface." << endl;
+    if (mTFn->m_SCIIface) {
+        kdDebug() << "KToshiba: Closing SCI interface." << endl;
+        mTFn->m_Driver->closeSCIInterface();
+    }
+    mTFn->m_SCIIface = false;
+    // Disable HotKeys
+    mTFn->m_Driver->disableSystemEvent();
+    // 1.5 minutes grace time before we call resume slot
+    QTimer::singleShot( 9000, this, SLOT( resumedSTD() ) );
 }
 
 bool KToshiba::checkConfiguration()
@@ -246,11 +281,13 @@ bool KToshiba::checkConfiguration()
 void KToshiba::loadConfiguration()
 {
     KConfig mConfig(CONFIG_FILE);
-    mConfig.setGroup("BSM");
-    mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
     mConfig.setGroup("KToshiba");
     mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
+#ifndef ENABLE_OMNIBOOK
     btstart = mConfig.readBoolEntry("Bluetooth_Startup", true);
+    mConfig.setGroup("BSM");
+    mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::createConfiguration()
@@ -316,7 +353,7 @@ void KToshiba::doMenu()
     mOmniFan->insertItem( SmallIcon("fan_off"), i18n("Disabled"), 0 );
     mOmniFan->insertItem( SmallIcon("fan_on"), i18n("Enabled"), 1 );
     contextMenu()->insertItem( SmallIcon("fan"), i18n("System Fan"), mOmniFan, 5, 5 );
-    if (mOmnibook) {
+    if (mOFn->m_OmnibookIface) {
         connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
         connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
     } else {
@@ -574,7 +611,7 @@ void KToshiba::multimediaPlayPause()
     if (MODE == CD_DVD) {
         DCOPReply reply = mKaffeine->call("isPlaying");
         if (reply.isValid()) {
-            bool res; res = reply;
+            bool res = reply;
             (res == true)? mKaffeine->send("pause")
                 : mKaffeine->send("play");
         } else {
@@ -606,15 +643,16 @@ void KToshiba::multimediaPlayer()
         mConfig.setGroup("KToshiba");
         mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
 
-        KProcess proc;
         if (mAudioPlayer == 0)
             kapp->startServiceByDesktopName("amarok");
         else if (mAudioPlayer == 1)
             kapp->startServiceByDesktopName("juk");
-        else if (mAudioPlayer == 2)
+        else if (mAudioPlayer == 2) {
+            KProcess proc;
             proc << "xmms";
-        proc.start(KProcess::DontCare);
-        proc.detach();
+            proc.start(KProcess::DontCare);
+            proc.detach();
+        }
     }
 }
 
@@ -633,18 +671,14 @@ void KToshiba::multimediaVolumeUp()
 void KToshiba::checkSystem()
 {
 #ifdef ENABLE_OMNIBOOK
-    if (mOmnibook)
-        mAC = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
+    mAC = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
 #else // ENABLE_OMNIBOOK
-    if (mTFn->m_SCIIface && !mACPI)
-        mAC = ((mAC == -1)? SciACPower() : mTFn->m_Driver->acPowerStatus());
-    if (mACPI || mAC == -1) {
-        mAC = mProcIFace->acpiAC();
-        mACPI = true;
-    }
+    mAC = (mACPI)? mProcIFace->acpiAC() : mTFn->m_Driver->acPowerStatus();
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("BSM");
+    mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
 #endif // ENABLE_OMNIBOOK
 
-    loadConfiguration();
     if (mBatSave != mOldBatSave || mAC != mOldAC) {
         int bright = 0;
         switch (mBatSave) {
@@ -652,7 +686,7 @@ void KToshiba::checkSystem()
                 if (mBatType == 3)
                     bright = 0;	// Semi-Bright
 #ifndef ENABLE_OMNIBOOK
-                else if (mBatType == 2 && !bsmtrig && mTFn->m_SCIIface) {
+                if (mBatType == 2 && !bsmtrig && mTFn->m_SCIIface) {
                     bsmUserSettings(&bright);
                     bsmtrig = true;
                 }
@@ -666,7 +700,7 @@ void KToshiba::checkSystem()
                 break;
         }
 #ifdef ENABLE_OMNIBOOK
-        if (mOmnibook)
+        if (mOFn->m_OmnibookIface)
             mProcIFace->omnibookSetBrightness(bright);
 #else // ENABLE_OMNIBOOK
         if (mTFn->m_BatType != 2)
@@ -697,6 +731,7 @@ void KToshiba::checkSystem()
 
 void KToshiba::omnibookHotKeys(int keycode)
 {
+    if (keycode == 0) ;
 #ifdef ENABLE_OMNIBOOK
     KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("Fn_Key");
@@ -794,18 +829,24 @@ void KToshiba::checkHotKeys()
         mTFn->hideWidgets();
 
     switch (key) {
+        case -1:		// Not Supported
+            kdError() << "KToshiba: Hotkeys monitoring will be disabled" << endl;
+            mHotKeysTimer->stop();
+            disconnect(mHotKeysTimer);
+            return;
         case 0:		// FIFO empty
             return;
         case 1:		// Failed accessing System Events
-            if (mTFn->m_Driver->hotkeys == false)
-                hotkeys = mTFn->m_Driver->enableSystemEvent();
-            if (!hotkeys) {
-                mTFn->m_Driver->hotkeys = true;
+            if (mHotkeys == false) {
+                mHotkeys = mTFn->m_Driver->enableSystemEvent();
+                mTFn->m_Driver->mHotkeys = mHotkeys;
+            }
+            if (!mHotkeys) {
+                kdError() << "KToshiba: Hotkeys monitoring will be disabled" << endl;
+                mTFn->m_Driver->mHotkeys = true;
                 mHotKeysTimer->stop();
                 disconnect(mHotKeysTimer);
-                return;
-            } else
-                mTFn->m_Driver->hotkeys = true;
+            }
             return;
         case 0x101:	// Fn-Esc
             tmp = mConfig.readNumEntry("Fn_Esc");
@@ -837,7 +878,10 @@ void KToshiba::checkHotKeys()
         case 0x143:	// Fn-F9
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
-        /** Multimedia Buttons */
+        /** Multimedia & Extra Buttons */
+        case 0x130:	// Fn-b
+            tmp = 22;
+            break;
         case 0xb25:	// CD/DVD Mode
         case 0x12e:
             MODE = CD_DVD;
@@ -868,8 +912,10 @@ void KToshiba::checkHotKeys()
             return;
         case 0xb85:	// Toggle S-Video Out
         case 0xd55:
-            (svideo)? mTFn->m_Driver->setVideo(1) : mTFn->m_Driver->setVideo(4);
-            svideo = (svideo)? 0 : 1;
+            mSVideo = mTFn->m_Driver->getVideo();
+            // If the user changed the video out, we receive 129 for LCD
+            if (mSVideo == 129) mSVideo = 1;
+            (mSVideo != 4)? mTFn->m_Driver->setVideo(4) : mTFn->m_Driver->setVideo(mSVideo);
             return;
         case 0xb86:	// E-Button
         case 0x006:
@@ -880,9 +926,13 @@ void KToshiba::checkHotKeys()
             break;
         case 0xd42:	// Maximize
             if (MODE == CD_DVD) {
-                kapp->dcopClient()->call("kaffeine", "kaffeine_mainview", "fullscreen()", mData, mReplyType, mReplyData);
-                if (mReplyType == "bool")
-                    mKaffeine->send("fullscreen");
+                DCOPRef kaffeine("kaffeine", "kaffeine_mainview");
+                DCOPReply reply = kaffeine.call("fullscreen");
+                if (reply.isValid()) {
+                    bool res = reply;
+                    if (res == false)
+                        kaffeine.send("fullscreen");
+                }
             }
             return;
         case 0xd43:	// Switch

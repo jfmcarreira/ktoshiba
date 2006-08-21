@@ -35,6 +35,7 @@
 #include <kpassivepopup.h>
 #include <kiconloader.h>
 #include <kconfig.h>
+#include <kprogress.h>
 
 #ifdef ENABLE_SYNAPTICS
 #include <synaptics/synaptics.h>
@@ -105,12 +106,6 @@ void ToshibaFnActions::initSCI()
         m_BootType = 6;
 }
 
-void ToshibaFnActions::closeSCIIface()
-{
-    if (m_SCIIface)
-        m_Driver->closeSCIInterface();
-}
-
 void ToshibaFnActions::hideWidgets()
 {
     m_SettingsWidget->hide();
@@ -162,6 +157,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
         case 3:	// Toggle Battery Save Mode
         case 6:	// Toggle Video
         case 13:	// Toggle Boot Method
+        case 22:	// Show Battery Status
             if (m_Popup == 0) {
                 QRect r = QApplication::desktop()->geometry();
                 m_SettingsWidget->move(r.center() - 
@@ -368,9 +364,15 @@ void ToshibaFnActions::performFnAction(int action, int key)
                 break;
         }
     }
+    if (action == 22 && m_SCIIface) {
+        m_SettingsWidget->wsSettings->raiseWidget(4);
+        m_SettingsWidget->tlStatus->setText("Battery Status");
+        int time = 0, perc = -1;
+        m_Driver->batteryStatus(&time, &perc);
+        (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
+            : m_SettingsWidget->batteryKPB->setValue(perc);
+    }
     if (action == 1) {
-        m_Snd--;
-        if (m_Snd < 0) m_Snd = 1;
         toggleMute();
         m_StatusWidget->wsStatus->raiseWidget(m_Snd);
     }
@@ -398,7 +400,6 @@ void ToshibaFnActions::performFnAction(int action, int key)
     }
     if (action == 12) {
         toggleFan();
-        if (m_Fan == -1) return;
 
         (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
             : m_StatusWidget->wsStatus->raiseWidget(13);
@@ -408,6 +409,12 @@ void ToshibaFnActions::performFnAction(int action, int key)
 void ToshibaFnActions::toggleMute()
 {
     DCOPRef kmixClient("kmix", "Mixer0");
+    DCOPReply reply = kmixClient.call("mute", 0);
+    if (reply.isValid()) {
+        bool res = reply;
+        m_Snd = (res == true)? 1 : 0;
+    }
+
     kmixClient.send("toggleMute", 0);
 }
 

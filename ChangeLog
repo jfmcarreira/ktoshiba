@@ -1,3 +1,27 @@
+2006-08-18 Azael Avalos <coproscefalo@gmail.com>
+	* Initial D-BUS support (we now depend on D-BUS also, which
+	  eventually will replace all DCOP stuff when KDE4 is out ;-)
+
+2006-08-16 Azael Avalos <coproscefalo@gmail.com>
+	* Removed some more unneeded variables now that we use DCOPRef
+	* Added battery status by pressing Fn-b (for toshiba users) but
+	  only works if the SCI is opened
+	* Small change to KCM
+
+2006-08-15 Azael Avalos <coproscefalo@gmail.com>
+	* Dropped SCI AC checking, we now use HCI and ACPI only
+	* Removed unneeded call to loadConfiguration function
+	* Fixed possible bug for the Battery Type and Battery Save Mode
+	* Removed unneeded variable mOmnibook
+
+2006-08-14 Azael Avalos <coproscefalo@gmail.com>
+	* Moved a couple variables to the toshiba part
+	* Small change on loadConfiguration function
+	* Fixed a possible bug in the audio app starting function
+	* Small code reduction on main KCM plus fixed an issue for
+	  models having problems accessing the SCI
+	* Updated README.omnibook file
+
 2006-08-13 Azael Avalos <coproscefalo@gmail.com>
 	* Made the smm driver public so the toshiba class can
 	  access the functions without the need for a constructor

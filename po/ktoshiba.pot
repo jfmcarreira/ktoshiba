@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-06 23:28-0600\n"
+"POT-Creation-Date: 2006-08-20 19:29-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,120 +27,120 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: ktoshiba.cpp:289
+#: ktoshiba.cpp:326
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:291
+#: ktoshiba.cpp:328
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:310 ktoshiba.cpp:314 ktoshiba.cpp:335
+#: ktoshiba.cpp:347 ktoshiba.cpp:351 ktoshiba.cpp:372
 msgid "Disabled"
 msgstr ""
 
-#: ktoshiba.cpp:311 ktoshiba.cpp:315
+#: ktoshiba.cpp:348 ktoshiba.cpp:352
 msgid "Enabled"
 msgstr ""
 
-#: ktoshiba.cpp:312
+#: ktoshiba.cpp:349
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:316
+#: ktoshiba.cpp:353
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:326
+#: ktoshiba.cpp:363
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:327
+#: ktoshiba.cpp:364
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:328
+#: ktoshiba.cpp:365
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:331
+#: ktoshiba.cpp:368
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:336
+#: ktoshiba.cpp:373
 msgid "Enabled - PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:337
+#: ktoshiba.cpp:374
 msgid "Enabled - No PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:338
+#: ktoshiba.cpp:375
 msgid "Hyper-Threading"
 msgstr ""
 
-#: ktoshiba.cpp:340
+#: ktoshiba.cpp:377
 msgid "Dynamic"
 msgstr ""
 
-#: ktoshiba.cpp:341
+#: ktoshiba.cpp:378
 msgid "Always High"
 msgstr ""
 
-#: ktoshiba.cpp:342
+#: ktoshiba.cpp:379
 msgid "Always Low"
 msgstr ""
 
-#: ktoshiba.cpp:343
+#: ktoshiba.cpp:380
 msgid "CPU Frequency"
 msgstr ""
 
-#: ktoshiba.cpp:353
+#: ktoshiba.cpp:390
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:356
+#: ktoshiba.cpp:393
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:359
+#: ktoshiba.cpp:396
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:361
+#: ktoshiba.cpp:398
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:416 ktoshiba.cpp:688 main.cpp:40 toshibafnactions.cpp:473
-#: toshibafnactions.cpp:538 toshibafnactions.cpp:551
+#: ktoshiba.cpp:455 ktoshiba.cpp:723 main.cpp:40 toshibafnactions.cpp:489
+#: toshibafnactions.cpp:559 toshibafnactions.cpp:572
 msgid "KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:416
+#: ktoshiba.cpp:455
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:417 toshibafnactions.cpp:539
+#: ktoshiba.cpp:456 toshibafnactions.cpp:560
 msgid "Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:687
+#: ktoshiba.cpp:722
 msgid "on"
 msgstr ""
 
-#: ktoshiba.cpp:687
+#: ktoshiba.cpp:722
 msgid "off"
 msgstr ""
 
-#: ktoshiba.cpp:688
+#: ktoshiba.cpp:723
 msgid "Wireless antenna turned %1"
 msgstr ""
 
-#: ktoshiba.cpp:689 toshibafnactions.cpp:475
+#: ktoshiba.cpp:724 toshibafnactions.cpp:491
 msgid "Wireless"
 msgstr ""
 
-#: ktoshibaprocinterface.cpp:72 ktoshibaprocinterface.cpp:104
+#: ktoshibaprocinterface.cpp:72 ktoshibaprocinterface.cpp:125
 #: omnibookfnactions.cpp:60
 msgid "UNKNOWN"
 msgstr ""
@@ -199,113 +199,126 @@ msgstr ""
 msgid "KToshiba: Status Widget"
 msgstr ""
 
-#: suspend.cpp:39
+#: suspend.cpp:42
 msgid ""
 "Before continuing, be aware that ACPI Sleep States are a work in progress "
 "and may or may not work on your computer.\n"
 "Also make sure to unload problematic modules"
 msgstr ""
 
-#: suspend.cpp:51 suspend.cpp:64 suspend.cpp:66 suspend.cpp:69 suspend.cpp:71
-#: suspend.cpp:103 suspend.cpp:116 suspend.cpp:118 suspend.cpp:121
-#: suspend.cpp:123
+#: suspend.cpp:63 suspend.cpp:76 suspend.cpp:78 suspend.cpp:81 suspend.cpp:83
+#: suspend.cpp:115 suspend.cpp:129 suspend.cpp:131 suspend.cpp:134
+#: suspend.cpp:136 suspend.cpp:189 suspend.cpp:191 suspend.cpp:194
+#: suspend.cpp:196 suspend.cpp:199 suspend.cpp:201
 msgid "WARNING"
 msgstr ""
 
-#: suspend.cpp:65
+#: suspend.cpp:77
 msgid "Suspend To RAM disabled by administrator."
 msgstr ""
 
-#: suspend.cpp:70
+#: suspend.cpp:82
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr ""
 
-#: suspend.cpp:80
+#: suspend.cpp:92
 msgid ""
 "Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: suspend.cpp:82 suspend.cpp:97
+#: suspend.cpp:94 suspend.cpp:109
 msgid "Suspend To RAM"
 msgstr ""
 
-#: suspend.cpp:96
+#: suspend.cpp:108
 msgid "No Suspend To RAM support was enabled."
 msgstr ""
 
-#: suspend.cpp:117
+#: suspend.cpp:130
 msgid "Suspend To Disk disabled by administrator."
 msgstr ""
 
-#: suspend.cpp:122
+#: suspend.cpp:135
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To Disk."
 msgstr ""
 
-#: suspend.cpp:132
+#: suspend.cpp:145
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: suspend.cpp:134 suspend.cpp:149
+#: suspend.cpp:147 suspend.cpp:163
 msgid "Suspend To Disk"
 msgstr ""
 
-#: suspend.cpp:148
+#: suspend.cpp:162
 msgid "No Suspend To Disk support was enabled."
 msgstr ""
 
-#: toshibafnactions.cpp:191 toshibafnactions.cpp:222 toshibafnactions.cpp:249
+#: suspend.cpp:190
+msgid "The powersave daemon must be running in the background."
+msgstr ""
+
+#: suspend.cpp:195
+msgid "The user is not permitted to connect to daemon."
+msgstr ""
+
+#: suspend.cpp:200
+msgid "D-BUS daemon not running."
+msgstr ""
+
+#: toshibafnactions.cpp:184 toshibafnactions.cpp:212 toshibafnactions.cpp:243
 msgid "Function Not Supported"
 msgstr ""
 
-#: toshibafnactions.cpp:193
+#: toshibafnactions.cpp:187
 msgid "Long Life"
 msgstr ""
 
-#: toshibafnactions.cpp:194
+#: toshibafnactions.cpp:188
 msgid "User Settings"
 msgstr ""
 
-#: toshibafnactions.cpp:198
+#: toshibafnactions.cpp:192
 msgid "Normal Life"
 msgstr ""
 
-#: toshibafnactions.cpp:199
+#: toshibafnactions.cpp:193
 msgid "Low Power"
 msgstr ""
 
-#: toshibafnactions.cpp:203
+#: toshibafnactions.cpp:197
 msgid "Full Life"
 msgstr ""
 
-#: toshibafnactions.cpp:204
+#: toshibafnactions.cpp:198
 msgid "Full Power"
 msgstr ""
 
-#: toshibafnactions.cpp:472 toshibafnactions.cpp:537 toshibafnactions.cpp:550
+#: toshibafnactions.cpp:488 toshibafnactions.cpp:558 toshibafnactions.cpp:571
 msgid "activated"
 msgstr ""
 
-#: toshibafnactions.cpp:472 toshibafnactions.cpp:537 toshibafnactions.cpp:550
+#: toshibafnactions.cpp:488 toshibafnactions.cpp:558 toshibafnactions.cpp:571
 msgid "deactivated"
 msgstr ""
 
-#: toshibafnactions.cpp:474
+#: toshibafnactions.cpp:490
 msgid "Wireless interface %1"
 msgstr ""
 
-#: toshibafnactions.cpp:538
+#: toshibafnactions.cpp:559
 msgid "Bluetooth device %1"
 msgstr ""
 
-#: toshibafnactions.cpp:551
+#: toshibafnactions.cpp:572
 msgid "Ethernet device %1"
 msgstr ""
 
-#: toshibafnactions.cpp:552
+#: toshibafnactions.cpp:573
 msgid "Ethernet"
 msgstr ""
