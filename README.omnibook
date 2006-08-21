@@ -33,8 +33,9 @@ number provided by the kernel, and "keycode" is one of the following:
 147:		Media Player
 148:		Toggle Mode
 150:		Fn-F1
-151, 152:	Fn-F9
-153:		Play/Pause also Next with ecype=12
+151:		Fn-F9 (MousePad On)
+152:		Fn-F9 (MousePad Off)
+153:		Play/Pause also Next with ectype=12
 159:		Fn-F7
 160:		Fn-Esc
 162:		Next also Play/Pause with ectype=12
@@ -43,8 +44,20 @@ number provided by the kernel, and "keycode" is one of the following:
 236:		Console Direct Access
 239:		Fn-F6
 
-(NOTE: Fn-Esc, F1, F6, F7, F9, can be configured to do something else
+(NOTE: Fn-Esc, F1, F6, F7, can be configured to do something else
  via the KCModule, the others are hard-coded)
+
+These are the availble options that you can choose to configure your Fn keys
+(all others shown on KCM will be ignored if selected):
+
+Mute/Unmute				(via DCOP and needs KMix to be running)
+Brightness Down			(via omnibook module)
+Brightness Up 			(via omnibook module)
+Fan On/Off				(via omnibook module)
+LockScreen				(via DCOP)
+Suspend To RAM (STR)	(via ACPI or powersave daemon)
+uspend To Disk (STD)	(via ACPI or powersave daemon)
+LCD Backlight On/Off	(via omnibook module)
 
 If your toshiba model produce different keycodes than the ones listed here,
 or does something different than the associated action, please send me an

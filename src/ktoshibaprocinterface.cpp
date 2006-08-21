@@ -386,18 +386,17 @@ int KToshibaProcInterface::omnibookGetTouchPad()
         return -1;
     }
 
-    // TODO: Find a model with touchpad and ask for data file
-    /*QTextStream stream(&file);
+    QTextStream stream(&file);
     QString line = stream.readLine();
-    if (line.contains("", false)) {
-        QRegExp rx("(not)$");
+    if (line.contains("Touchpad is", false)) {
+        QRegExp rx("(disabled)$");
         rx.search(line);
-        if (rx.cap(1) == "not") {
+        if (rx.cap(1) == "disabled") {
             file.close();
             return 0;
         }
     }
-    file.close();*/
+    file.close();
 
     return 1;
 }

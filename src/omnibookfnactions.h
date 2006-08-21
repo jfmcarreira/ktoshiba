@@ -46,7 +46,7 @@ public:
     virtual ~OmnibookFnActions();
 
     void hideWidgets();
-    void performFnAction(int action);
+    void performFnAction(int action, int keycode);
     KToshibaProcInterface *m_Proc;
     QString m_ModelName;
     bool m_OmnibookIface;
@@ -62,7 +62,8 @@ private:
     void lockScreen();
     void suspendToRAM();
     void suspendToDisk();
-    void toggleMousePad();
+    void mousePadOn();
+    void mousePadOff();
     void toggleFan();
     void toogleBackLight();
     int m_Snd;

@@ -1,3 +1,13 @@
+2006-08-21 Azael Avalos <coproscefalo@gmail.com>
+	* Updted README.omnibook file regarding the available
+	  Fn-Key options that work
+	* Fixed an issue about displaying the wrong icon when the
+	  MousePad was disabled or not available
+	* Fixed a long standing issue regarding the brightness
+	  not showing the correct icons (why I didn't fixed it
+	  before...?)
+	* 
+
 2006-08-18 Azael Avalos <coproscefalo@gmail.com>
 	* Initial D-BUS support (we now depend on D-BUS also, which
 	  eventually will replace all DCOP stuff when KDE4 is out ;-)
