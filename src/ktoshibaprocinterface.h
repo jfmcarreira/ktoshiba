@@ -47,6 +47,7 @@ extern "C" {
 #define TSP10			11
 #define TSM30X			12
 #define TSM40			13
+#define TSA105			14
 
 /**
  * @short Provides access to /proc files

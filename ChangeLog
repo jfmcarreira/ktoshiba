@@ -1,3 +1,18 @@
+2006-08-23 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed compilation problems if powersave was not enabled
+	  and got rid of a couple more compiler warnings
+	* Fixed a typo that prevented compiling if libsynaptics was
+	  not enabled
+	* Removed --with-helper configure flag, it will compiled if
+	  powersave is not enabled
+	* Got rid of a couple more compiling warnings for ktosh_helper
+	  (still got one tho...)
+	* Updated omnibookfnctions class functions and added a battery
+	  status to keycode 161
+	* KToshiba now opens an xterm if konsole is not found and
+	  firefox if kfmclient is not found also (maybe we can made
+	  the desired browser configurable...)
+
 2006-08-21 Azael Avalos <coproscefalo@gmail.com>
 	* Updted README.omnibook file regarding the available
 	  Fn-Key options that work
@@ -6,7 +21,10 @@
 	* Fixed a long standing issue regarding the brightness
 	  not showing the correct icons (why I didn't fixed it
 	  before...?)
-	* 
+	* Some more updates to the omnibook ectypes (but we still
+	  depend on model name :-( )
+	* Omnibook code compile again and _removed_ compiler warnings
+	* Updated key handler keys and _removed_ the compiler warning
 
 2006-08-18 Azael Avalos <coproscefalo@gmail.com>
 	* Initial D-BUS support (we now depend on D-BUS also, which

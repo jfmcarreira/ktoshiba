@@ -367,15 +367,6 @@ void ToshibaFnActions::performFnAction(int action, int key)
         }
         return;
     }
-    if (action == 22 && m_SCIIface) {
-        m_SettingsWidget->wsSettings->raiseWidget(4);
-        m_SettingsWidget->tlStatus->setText("Battery Status");
-        int time = 0, perc = -1;
-        m_Driver->batteryStatus(&time, &perc);
-        (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
-            : m_SettingsWidget->batteryKPB->setValue(perc);
-        return;
-    }
     if (action == 1) {
         toggleMute();
         m_StatusWidget->wsStatus->raiseWidget(m_Snd);
@@ -422,6 +413,15 @@ void ToshibaFnActions::performFnAction(int action, int key)
             (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
                 : m_StatusWidget->wsStatus->raiseWidget(13);
         }
+        return;
+    }
+    if (action == 22 && m_SCIIface) {
+        m_SettingsWidget->wsSettings->raiseWidget(4);
+        m_SettingsWidget->tlStatus->setText("Battery Status");
+        int time = 0, perc = -1;
+        m_Driver->batteryStatus(&time, &perc);
+        (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
+            : m_SettingsWidget->batteryKPB->setValue(perc);
     }
 }
 
@@ -521,7 +521,7 @@ void ToshibaFnActions::toggleMousePad()
     Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
     if (m_SCIIface) {
-        m_Pad = getPointingDevice();
+        m_Pad = m_Driver->getPointingDevice();
 
         m_Pad = (m_Pad == 0)? 1 : 0;
         m_Driver->setPointingDevice(m_Pad);
@@ -563,7 +563,6 @@ void ToshibaFnActions::toogleBackLight()
     int bl = m_Driver->getBackLight();
 
     if (bl == -1) return;
-
     (bl == 1)? m_Driver->setBackLight(0)
         : m_Driver->setBackLight(1);
 }
@@ -571,7 +570,6 @@ void ToshibaFnActions::toogleBackLight()
 void ToshibaFnActions::toggleBluetooth()
 {
     int bt = m_Driver->getBluetoothPower();
-
     if (bt == -1) return;
 
     (bt == 1)? m_Driver->setBluetoothPower(0)
@@ -584,7 +582,6 @@ void ToshibaFnActions::toggleBluetooth()
 void ToshibaFnActions::toggleEthernet()
 {
     int eth = m_Driver->getLANController();
-
     if (eth == -1) return;
 
     (eth == 1)? m_Driver->setLANController(0)

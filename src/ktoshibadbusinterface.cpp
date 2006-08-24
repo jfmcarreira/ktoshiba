@@ -183,6 +183,7 @@ DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *messa
     if (!strcmp(signal, "NameAcquired")) {
         return DBUS_HANDLER_RESULT_HANDLED;
     }
+#ifdef ENABLE_POWERSAVE
     else if (!strcmp(signal, "NameOwnerChanged")) {
         char *old_owner;
         char *new_owner;
@@ -204,7 +205,6 @@ DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *messa
         }
         return DBUS_HANDLER_RESULT_HANDLED;
     }
-#ifdef ENABLE_POWERSAVE
     /* powersave event received */
     else if (!strcmp(signal, "PowersaveEvent")) {
         ((KToshibaDBUSInterface *)myInstance)->emitMsgReceived(POWERSAVE_EVENT, value);

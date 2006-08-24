@@ -30,44 +30,55 @@
 #define USAGE \
 "Usage: ktosh_helper [option]\n\n\
 Where options are:\n\
-\t--std           Activates Suspend To Disk.\n\
-\t--str           Activates Suspend To RAM.\n\
-\t--help          Displays this text.\n\
+\t--std			Activates Suspend To Disk.\n\
+\t--str			Activates Suspend To RAM.\n\
+\t--help		Displays this text.\n\
 "
 
 int main(int argc, char **argv)
 {
-	int fd, i;
+    int fd, i;
+    ssize_t res;
 
-	::close(0);	// we're setuid - this is just in case
-	for (i = 1; i < argc; i++)
-	if (strcmp(argv[i], "--std") == 0 || strcmp(argv[i], "--suspend-to-disk") == 0 || strcmp(argv[i], "--hibernate") == 0) {
-		sync();
-		sync();
-		fd = open("/proc/acpi/sleep", O_RDWR);
-		if (fd < 0) exit(1);
-		write(fd, "4", 1);
-		close(fd);
-		setuid(getuid());	// drop all priority asap
-		exit(0);
-	} else
-	if (strcmp(argv[i], "--str") == 0 || strcmp(argv[i], "--suspend-to-ram") == 0 || strcmp(argv[i], "--suspend") == 0) {
-		sync();
-		sync();
-		fd = open("/proc/acpi/sleep", O_RDWR);
-		if (fd < 0) exit(1);
-		write(fd, "3", 1);
-		close(fd);
-		setuid(getuid());	// drop all priority asap
-		exit(0);
-	} else
-	if (strcmp(argv[i], "--help") == 0)
-		goto usage;
-	else {
-usage:
-		setuid(getuid());	// drop all priority asap
-		fprintf(stderr, USAGE, argv[0]);
-		exit(1);
-	}
-	goto usage;
+    ::close(0);	// we're setuid - this is just in case
+    for (i = 1; i < argc; i++)
+        if (strcmp(argv[i], "--std") == 0 || strcmp(argv[i], "--suspend-to-disk") == 0 || strcmp(argv[i], "--hibernate") == 0) {
+            sync();
+            sync();
+            fd = open("/proc/acpi/sleep", O_RDWR);
+            if (fd < 0) exit(1);
+            res = write(fd, "4", 1);
+            if (res == -1) {
+                fprintf(stderr, "Error while writing to /proc/acpi/sleep");
+                close(fd);
+                exit(-1);
+            }
+            close(fd);
+            setuid(getuid());	// drop all priority asap
+            exit(0);
+        } else
+        if (strcmp(argv[i], "--str") == 0 || strcmp(argv[i], "--suspend-to-ram") == 0 || strcmp(argv[i], "--suspend") == 0) {
+            sync();
+            sync();
+            fd = open("/proc/acpi/sleep", O_RDWR);
+            if (fd < 0) exit(1);
+            res = write(fd, "3", 1);
+            if (res == -1) {
+                fprintf(stderr, "Error while writing to /proc/acpi/sleep");
+                close(fd);
+                exit(-1);
+            }
+            close(fd);
+            setuid(getuid());	// drop all priority asap
+            exit(0);
+        } else
+        if (strcmp(argv[i], "--help") == 0)
+            goto usage;
+        else {
+            usage:
+            setuid(getuid());	// drop all priority asap
+            fprintf(stderr, USAGE, argv[0]);
+            exit(1);
+        }
+    goto usage;
 }

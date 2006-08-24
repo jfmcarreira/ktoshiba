@@ -8,7 +8,7 @@ AC_CHECK_KDEMAXPATHLEN
 dnl === dbus support check - begin ===
 PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
 
-# get dbus system bus socket - begin ===
+# get dbus system bus socket
 DBUS_SYSTEM_BUS_SOCKET="`pkg-config --variable=system_bus_default_address dbus-1`"
 if test -z "$DBUS_SYSTEM_BUS_SOCKET"; then
     # use default
@@ -19,14 +19,16 @@ AC_DEFINE_UNQUOTED(DBUS_SYSTEM_BUS_SOCKET, ["$DBUS_SYSTEM_BUS_SOCKET"],
     [D-BUS system bus socket path])
 
 # check for dbus qt bindings --> copied from KNetworkmanager
-#safe_CPPFLAGS=$CPPFLAGS
-#CPPFLAGS="$CPPFLAGS $DBUS_CFLAGS $all_includes"
-#AC_LANG_SAVE
-#AC_LANG_CPLUSPLUS
-#AC_CHECK_HEADER([dbus/connection.h], , [AC_MSG_ERROR([You need D-BUS/Qt3 bindings])])
-#AC_CHECK_HEADER([dbus/message.h], , [AC_MSG_ERROR([You need D-BUS/Qt3 bindings])])
-#CPPFLAGS=$safe_CPPFLAGS
-#AC_LANG_RESTORE
+safe_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$CPPFLAGS $DBUS_CFLAGS $all_includes"
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADER([dbus/connection.h], , [
+    AC_MSG_WARN([You need D-BUS/Qt3 bindings])])
+AC_CHECK_HEADER([dbus/message.h], , [
+    AC_MSG_WARN([You need D-BUS/Qt3 bindings])])
+CPPFLAGS=$safe_CPPFLAGS
+AC_LANG_RESTORE
 
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
@@ -56,23 +58,9 @@ if test "$ac_cv_use_powersave" = "yes"; then
     AC_SUBST(POWERSAVE_LIBS)
     AC_SUBST(POWERSAVE_DBUS_LIBS)
 fi
+
+AM_CONDITIONAL(with_helper, [test x$ac_cv_use_powersave = xno])
 dnl === powersave daemon support check - end ===
-
-
-dnl === build ktosh_helper check - begin ===
-compile_helper=no
-AC_ARG_WITH(helper,
-    AS_HELP_STRING([--without-helper], [build without ktosh_helper (default=no)]),
-    [compile_helper=$withval],
-    [compile_helper=yes]
-
-    if test "$compile_helper" = "yes"; then
-        AC_DEFINE(ENABLE_HELPER, 1, [defined if you have ktosh_helper enabled])
-    fi
-)
-
-AM_CONDITIONAL(with_helper, [test x$compile_helper = xyes])
-dnl === build ktosh_helper check - end ===
 
 
 dnl === libsynaptics support check - begin ===
