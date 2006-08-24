@@ -24,10 +24,12 @@
 
 #include <qwidgetstack.h>
 #include <qapplication.h>
+#include <qlabel.h>
 
 #include <kdebug.h>
 #include <klocale.h>
 #include <dcopref.h>
+#include <kprogress.h>
 
 #ifdef ENABLE_SYNAPTICS
 #include <synaptics/synaptics.h>
@@ -36,6 +38,7 @@
 using namespace Synaptics;
 #endif // ENABLE_SYNAPTICS
 
+#include "settingswidget.h"
 #include "statuswidget.h"
 
 OmnibookFnActions::OmnibookFnActions(QWidget *parent)
@@ -43,6 +46,8 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
       m_Proc( 0 )
 {
     m_Proc = new KToshibaProcInterface(parent);
+    m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
+    m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
     m_Suspend = new Suspend(parent);
@@ -70,6 +75,7 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
 
 OmnibookFnActions::~OmnibookFnActions()
 {
+    delete m_SettingsWidget; m_SettingsWidget = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
     delete m_Suspend; m_Suspend = NULL;
     delete m_Proc; m_Proc = NULL;
@@ -144,11 +150,25 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
             : m_StatusWidget->wsStatus->raiseWidget(13);
         return;
     }
+    if (action == 22) {
+        m_SettingsWidget->wsSettings->raiseWidget(4);
+        m_SettingsWidget->tlStatus->setText("Battery Status");
+        int time = 0, perc = -1;
+         m_Proc->omnibookBatteryStatus(&time, &perc);
+        (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
+            : m_SettingsWidget->batteryKPB->setValue(perc);
+    }
 }
 
 void OmnibookFnActions::toggleMute()
 {
     DCOPRef kmixClient("kmix", "Mixer0");
+    DCOPReply reply = kmixClient.call("mute", 0);
+    if (reply.isValid()) {
+        bool res = reply;
+        m_Snd = (res == true)? 1 : 0;
+    }
+
     kmixClient.send("toggleMute", 0);
 }
 
@@ -196,18 +216,16 @@ void OmnibookFnActions::mousePadOff()
 
 void OmnibookFnActions::toggleFan()
 {
-    int res = m_Proc->omnibookGetFan();
+    m_Fan = m_Proc->omnibookGetFan();
+    if (m_Fan == -1) return;
 
-    if (res == -1) return;
-
-    m_Fan = (res == 0)? 1 : 0;
+    m_Fan = (m_Fan == 0)? 1 : 0;
     m_Proc->omnibookSetFan(m_Fan);
 }
 
 void OmnibookFnActions::toogleBackLight()
 {
     int bl = m_Proc->omnibookGetLCDBackLight();
-
     if (bl == -1) return;
 
     (bl == 1)? m_Proc->omnibookSetLCDBackLight(0)

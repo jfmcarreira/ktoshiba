@@ -54,6 +54,8 @@ static void signal_handler(int signal)
 
 static int XErrHandler(Display *display, XErrorEvent *XErrEv)
 {
+    if (display != NULL) ;
+
     static int ret = (int)(XErrEv->request_code);
     kdError() << "ktosh_keyhandler: *** Xlib error caught ***" << endl;
     kdError() << "Major opcode of failed request: " << (int)(XErrEv->request_code) << " (XKEYBOARD)" << endl;
@@ -69,8 +71,14 @@ static int XErrHandler(Display *display, XErrorEvent *XErrEv)
 void grabKeys()
 {
     XGrabKey(mDisplay, 144, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Previous
+    XGrabKey(mDisplay, 145, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-1 (Volume Down)
+    XGrabKey(mDisplay, 146, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-2 (Volume Up)
     XGrabKey(mDisplay, 147, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Media Player
+    XGrabKey(mDisplay, 148, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Toggle Mode
+    XGrabKey(mDisplay, 149, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Battery Status
     XGrabKey(mDisplay, 150, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F1
+    XGrabKey(mDisplay, 151, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F9 (MousePad On)
+    XGrabKey(mDisplay, 152, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F9 (MousePad Off)
     XGrabKey(mDisplay, 153, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Play/Pause
     XGrabKey(mDisplay, 159, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F7
     XGrabKey(mDisplay, 160, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-Esc
@@ -120,7 +128,7 @@ int main(void)
     mEventBaseRet = 0;
     mOpcodeRet = 0;
     min_keycodes = 1;
-    max_keycodes = 11;
+    max_keycodes = 17;
 
     // Open X server connection
     mDisplay = XOpenDisplay(NULL);

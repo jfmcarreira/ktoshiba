@@ -30,6 +30,7 @@
 class QWidget;
 
 class KToshibaProcInterface;
+class SettingsWidget;
 class StatusWidget;
 class Suspend;
 
@@ -56,6 +57,7 @@ public:
     int m_Bright;
     int m_Pad;
 private:
+    SettingsWidget *m_SettingsWidget;
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;
     void toggleMute();

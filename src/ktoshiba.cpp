@@ -21,6 +21,7 @@
 #include "ktoshiba.h"
 #include "ktoshibasmminterface.h"
 #include "ktoshibaprocinterface.h"
+#include "ktoshibadcopinterface.h"
 #include "toshibafnactions.h"
 #include "omnibookfnactions.h"
 #include "modelid.h"
@@ -172,9 +173,9 @@ KToshiba::KToshiba()
     }
 
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
-#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
+//#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     //connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
-#endif // ENABLE_POWERSAVE
+//#endif // ENABLE_POWERSAVE
 
     if (btstart)
         doBluetooth();
@@ -243,6 +244,7 @@ void KToshiba::quit()
 
 void KToshiba::resumedSTD()
 {
+#ifndef ENABLE_OMNIBOOK
     kdDebug() << "KToshiba: Opening driver interface." << endl;
     if (!mTFn->m_SCIIface) {
         kdDebug() << "KToshiba: Opening SCI interface." << endl;
@@ -250,10 +252,12 @@ void KToshiba::resumedSTD()
     }
     // Enable HotKeys
     mTFn->m_Driver->enableSystemEvent();
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::suspendToDisk()
 {
+#ifndef ENABLE_OMNIBOOK
     kdDebug() << "KToshiba: Closing driver interface." << endl;
     if (mTFn->m_SCIIface) {
         kdDebug() << "KToshiba: Closing SCI interface." << endl;
@@ -264,6 +268,7 @@ void KToshiba::suspendToDisk()
     mTFn->m_Driver->disableSystemEvent();
     // 1.5 minutes grace time before we call resume slot
     QTimer::singleShot( 9000, this, SLOT( resumedSTD() ) );
+#endif // ENABLE_OMNIBOOK
 }
 
 bool KToshiba::checkConfiguration()
@@ -466,6 +471,7 @@ void KToshiba::doBluetooth()
 
 void KToshiba::doSetFreq(int freq)
 {
+    if (freq == 0) ;
 #ifndef ENABLE_OMNIBOOK
     mTFn->m_Driver->setSpeedStep(freq);
 #endif // ENABLE_OMNIBOOK
@@ -473,6 +479,7 @@ void KToshiba::doSetFreq(int freq)
 
 void KToshiba::doSetHyper(int state)
 {
+    if (state == 0) ;
 #ifndef ENABLE_OMNIBOOK
     mTFn->m_Driver->setHyperThreading(state);
 #endif // ENABLE_OMNIBOOK
@@ -498,6 +505,7 @@ void KToshiba::displayAboutKDE()
 
 void KToshiba::bsmUserSettings(int *bright)
 {
+    if (bright == 0) ;
 #ifndef ENABLE_OMNIBOOK
     int processor, cpu, display, hdd, lcd, cooling, tmp;
 
@@ -758,6 +766,9 @@ void KToshiba::omnibookHotKeys(int keycode)
         case 148:	// Toggle Mode
             MODE = (MODE == CD_DVD)? DIGITAL : CD_DVD;
             return;
+        case 149:	// Battery Status
+            tmp = 22;
+            break;
         case 150:	// Fn-F1
             tmp = mConfig.readNumEntry("Fn_F1");
             break;
@@ -783,10 +794,18 @@ void KToshiba::omnibookHotKeys(int keycode)
             multimediaStop();
             return;
         case 178:	// WWW
-            *mKProc << "kfmclient" << "openProfile" << "webbrowsing";
+            QString konqueror = KStandardDirs::findExe("kfmclient");
+            if (konqueror.isEmpty())
+                *mKProc << "firefox";
+            else
+                *mKProc << konqueror << "openProfile" << "webbrowsing";
             break;
         case 236:	// Console Direct Access
-            *mKProc << "konsole";
+            QString konsole = KStandardDirs::findExe("konsole");
+            if (konsole.isEmpty())
+                *mKProc << "xterm";
+            else
+                *mKProc << konsole;
             break;
         case 239:	// Fn-F6
             tmp = mConfig.readNumEntry("Fn_F6");
@@ -812,7 +831,7 @@ void KToshiba::checkOmnibook()
     int bright = mProcIFace->omnibookGetBrightness();
     if (mOFn->m_Bright != bright) {
         mOFn->m_Bright = bright;
-        mOFn->performFnAction(7);
+        mOFn->performFnAction(7, 0);
     }
 #endif // ENABLE_OMNIBOOK
 }
@@ -880,7 +899,7 @@ void KToshiba::checkHotKeys()
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
         /** Multimedia & Extra Buttons */
-        case 0x130:	// Fn-b
+        case 0x130:	// Fn-b (Battery Status)
             tmp = 22;
             break;
         case 0xb25:	// CD/DVD Mode

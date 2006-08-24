@@ -62,10 +62,10 @@ void Suspend::toRAM()
 {
     int res = KMessageBox::warningContinueCancel(m_Parent, m_Info, i18n("WARNING"));
 
-#ifdef ENABLE_POWERSAVE
     if (res == KMessageBox::Cancel)
         return;
-    else if (res == KMessageBox::Continue)
+#ifdef ENABLE_POWERSAVE
+    if (res == KMessageBox::Continue)
         res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRAM");
 
     switch (res) {
@@ -114,10 +114,10 @@ void Suspend::toDisk()
 {
     int res = KMessageBox::warningContinueCancel(m_Parent, m_Info, i18n("WARNING"));
 
-#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     if (res == KMessageBox::Cancel)
         return;
-    else if (res == KMessageBox::Continue)
+#ifdef ENABLE_POWERSAVE
+    if (res == KMessageBox::Continue)
         res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
 
     switch (res) {
@@ -166,6 +166,7 @@ void Suspend::toDisk()
 
 bool Suspend::checkDaemon()
 {
+#ifdef ENABLE_POWERSAVE
     DBusMessage *reply;
     int err_code = dbusSendMessageWithReply(REQUEST_MESSAGE, &reply, "AcPower", DBUS_TYPE_INVALID);
 
@@ -176,6 +177,7 @@ bool Suspend::checkDaemon()
         if (m_DBUSIFace->isConnected() || m_DBUSIFace->reconnect())
             return true;
     }
+#endif // ENABLE_POWERSAVE
 
     return false;
 }
@@ -212,8 +214,8 @@ void Suspend::processMessage(msg_type type, QString signal)
                 dbus_terminated = true;
             }
             break;
-#ifdef ENABLE_POWERSAVE
         case POWERSAVE_EVENT:
+#ifdef ENABLE_POWERSAVE
             //kdDebug() << "Suspend::processMessage(): Powersave Event: " << signal.ascii() << endl;
             if (signal.startsWith("daemon.terminate")) {
                 powersaved_terminated = true;
@@ -224,8 +226,8 @@ void Suspend::processMessage(msg_type type, QString signal)
             else if (signal.startsWith("global.resume.suspend2disk")) {
                 emit resumedFromSTD();
             }
-            break;
 #endif // ENABLE_POWERSAVE
+            break;
     }
 }
 
