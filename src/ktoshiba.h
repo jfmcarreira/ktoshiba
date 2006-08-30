@@ -100,6 +100,8 @@ private:
     Suspend *mSuspend;
     QPopupMenu *mHelp;
     QTimer *mSystemTimer;
+    QString konqueror;
+    QString konsole;
     KProcess *mKProc;
     DCOPRef *mKaffeine;
     bool mACPI;
@@ -127,8 +129,8 @@ private:
     QTimer *mHotKeysTimer;
     bool bsmtrig;
     bool btstart;
-    bool bluetooth;
     int mWirelessSwitch;
+    int mBluetooth;
     int mHT;
     int mSS;
     int mSVideo;

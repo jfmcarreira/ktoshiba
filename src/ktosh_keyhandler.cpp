@@ -109,11 +109,10 @@ int main(void)
 
     // Connect to DCOP
     DCOPClient mClient;
-    QCString appID = mClient.registerAs("ktoshkeyhandler", false);
-    if (mClient.isRegistered()) {
-        kdDebug() << "ktosh_keyhandler: Registered with DCOP" << endl;
-        kdDebug() << "ktosh_keyhandler: App ID: " << appID << endl;
-    } else {
+    QCString appID = mClient.registerAs("ktosh_keyhandler", false);
+    if (mClient.isRegistered())
+        kdDebug() << "ktosh_keyhandler: Registered with DCOP as: " << appID << endl;
+    else {
         kdError() << "ktosh_keyhandler: Could not register with DCOP server" << endl;
         return -1;
     }
@@ -193,7 +192,7 @@ int main(void)
 
         switch (event.type) {
             case KeyPress:
-                kdDebug() << "ktosh_keyhandler: Key pressed " << (int)event.xkey.keycode << endl;
+                //kdDebug() << "ktosh_keyhandler: Key pressed " << (int)event.xkey.keycode << endl;
                 arg << event.xkey.keycode;
                 mClient.send("ktoshiba", "actions", "hotkey(int)", data);
                 break;

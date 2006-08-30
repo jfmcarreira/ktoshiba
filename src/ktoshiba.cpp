@@ -90,9 +90,9 @@ KToshiba::KToshiba()
         createConfiguration();
 
 #ifdef ENABLE_OMNIBOOK
+    kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
     // check whether omnibook module is loaded
     mOFn = new OmnibookFnActions(this);
-    kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
     if (!mOFn->m_OmnibookIface) {
         kdError() << "KToshiba: Could not found a Toshiba model. "
                   << "Please check that the omnibook module "
@@ -111,24 +111,32 @@ KToshiba::KToshiba()
     MODE = DIGITAL;
 
     // keyhandler program process
-    pid_t mKeyPID;
     mKeyProc = new KProcess(this);
-    *mKeyProc << "ktosh_keyhandler";
-    mKeyProc->start(KProcess::DontCare);
-    if (!mKeyProc->isRunning())
-        kdError() << "KToshiba: The key handler program is not running."
-                  << " HotKeys monitoring will no be enabled" << endl;
+    QString keyhandler = KStandardDirs::findExe("ktosh_keyhandler");
+    if (keyhandler.isEmpty()) {
+        KMessageBox::sorry(this, i18n("The program ktosh_keyhandler cannot be found.\n"
+                           " HotKeys monitoring will no be enabled."),
+                           i18n("HotKeys"));
+        mHotkeys = false;
+    }
     else {
-        mKeyPID = mKeyProc->pid();
-        kdDebug() << "KToshiba: Key handler program PID "
-                  << ((unsigned int)mKeyPID) << endl;
-        mHotkeys = true;
+        *mKeyProc << keyhandler << "&";
+        mKeyProc->start(KProcess::DontCare);
+        kdDebug() << "KToshiba: Key handler program PID: "
+                  << mKeyProc->pid() << endl;
+        if (mKeyProc->exitStatus() == -1) {
+            kdError() << "KToshiba: ktosh_keyhandler exited."
+                      << " HotKeys monitoring will no be enabled." << endl;
+            mHotkeys = false;
+        }
+        else
+            mHotkeys = true;
     }
 
     mOmnibookTimer = new QTimer(this);
-
     connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
     mOmnibookTimer->start(100);
+
     if (mHotkeys) {
         mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
         connect( mDCOPIFace, SIGNAL( signalHotKey(int) ), this, SLOT( omnibookHotKeys(int) ) );
@@ -150,6 +158,7 @@ KToshiba::KToshiba()
     mHotkeys = mTFn->m_Driver->enableSystemEvent();
     mTFn->m_Driver->mHotkeys = mHotkeys;
     mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
+    mBluetooth = mTFn->m_Driver->getBluetooth();
     mAC = mTFn->m_Driver->acPowerStatus();
     (mAC == -1)? mACPI = true : mACPI = false;
     mOldAC = mAC;
@@ -164,7 +173,6 @@ KToshiba::KToshiba()
     mPad = mTFn->m_Pad;
     MODE = DIGITAL;
     bsmtrig = false;
-    bluetooth = false;
 
     if (mHotkeys) {
         mHotKeysTimer = new QTimer(this);
@@ -228,9 +236,8 @@ void KToshiba::quit()
     mSystemTimer->stop();
 #ifdef ENABLE_OMNIBOOK
     mOmnibookTimer->stop();
-    if (mKeyProc->isRunning()) {
-        kdDebug() << "KToshiba: Killing key handler program" << endl;
-        mKeyProc->kill(SIGQUIT);
+    if (mHotkeys) {
+        mKeyProc->kill(SIGKILL);
         mKeyProc->detach();
     }
 #else // ENABLE_OMNIBOOK
@@ -375,6 +382,8 @@ void KToshiba::doMenu()
 #else // ENABLE_OMNIBOOK
     contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
                                      SLOT( doBluetooth() ), 0, 4, 4 );
+    if (!mBluetooth)
+        contextMenu()->setItemEnabled( 4, FALSE );
     contextMenu()->insertSeparator( 5 );
     mHyper = new QPopupMenu( this, "HyperThreading" );
     mHyper->insertItem( SmallIcon("ht_disabled"), i18n("Disabled"), 0 );
@@ -451,21 +460,14 @@ void KToshiba::toggleMODE(int mode)
 void KToshiba::doBluetooth()
 {
 #ifndef ENABLE_OMNIBOOK
-    if (!mTFn->m_Driver->getBluetooth()) {
-        contextMenu()->setItemEnabled(4, FALSE);
-        kdDebug() << "KToshiba::doBluetooth(): "
-                  << "No Bluetooth device found" << endl;
-        return;
-    } else
-    if (!bluetooth || (btstart && !bluetooth)) {
+    if (!mBluetooth) return;
+
+    if (btstart && (mBluetooth != 0)) {
         mTFn->m_Driver->setBluetoothPower(1);
         KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 4000);
         contextMenu()->setItemEnabled(4, FALSE);
-        bluetooth = true;
     }
-    else
-        contextMenu()->setItemEnabled(4, TRUE);
 #endif // ENABLE_OMNIBOOK
 }
 
@@ -794,14 +796,14 @@ void KToshiba::omnibookHotKeys(int keycode)
             multimediaStop();
             return;
         case 178:	// WWW
-            QString konqueror = KStandardDirs::findExe("kfmclient");
+            konqueror = KStandardDirs::findExe("kfmclient");
             if (konqueror.isEmpty())
                 *mKProc << "firefox";
             else
                 *mKProc << konqueror << "openProfile" << "webbrowsing";
             break;
         case 236:	// Console Direct Access
-            QString konsole = KStandardDirs::findExe("konsole");
+            konsole = KStandardDirs::findExe("konsole");
             if (konsole.isEmpty())
                 *mKProc << "xterm";
             else
@@ -829,6 +831,11 @@ void KToshiba::checkOmnibook()
     }
 
     int bright = mProcIFace->omnibookGetBrightness();
+    if (bright == -1) {
+        mOmnibookTimer->stop();
+        disconnect(mOmnibookTimer);
+        return;
+    }
     if (mOFn->m_Bright != bright) {
         mOFn->m_Bright = bright;
         mOFn->performFnAction(7, 0);
@@ -939,10 +946,18 @@ void KToshiba::checkHotKeys()
             return;
         case 0xb86:	// E-Button
         case 0x006:
-            *mKProc << "kfmclient" << "openProfile" << "webbrowsing";
+            konqueror = KStandardDirs::findExe("kfmclient");
+            if (konqueror.isEmpty())
+                *mKProc << "firefox";
+            else
+                *mKProc << konqueror << "openProfile" << "webbrowsing";
             break;
         case 0xb87:	// I-Button
-            *mKProc << "konsole";
+            konsole = KStandardDirs::findExe("konsole");
+            if (konsole.isEmpty())
+                *mKProc << "xterm";
+            else
+                *mKProc << konsole;
             break;
         case 0xd42:	// Maximize
             if (MODE == CD_DVD) {
