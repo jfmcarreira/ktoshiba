@@ -160,7 +160,8 @@ msgstr "Alt+E"
 #. i18n: file kcmtoshiba_general.ui line 297
 #: rc.cpp:57
 #, no-c-format
-msgid "Check this if you want the Bluetooth device activated at program startup"
+msgid ""
+"Check this if you want the Bluetooth device activated at program startup"
 msgstr ""
 "Marca esto si deseas habilitar el dispositivo Bluetooth al comienzo del "
 "programa"
@@ -181,7 +182,8 @@ msgstr "Alt+S"
 #: rc.cpp:66
 #, no-c-format
 msgid "Check this if you want KToshiba to start automatically at KDE login"
-msgstr "Marca esto si deseas que KToshiba comienze automaticamente al comienzo de KDE"
+msgstr ""
+"Marca esto si deseas que KToshiba comienze automaticamente al comienzo de KDE"
 
 #. i18n: file kcmtoshiba_general.ui line 340
 #: rc.cpp:69
@@ -710,4 +712,3 @@ msgstr "Velocidad de &Procesamiento:"
 #, no-c-format
 msgid "D&isplay Auto Off:"
 msgstr "Auto Apagado de la Pantalla:"
-

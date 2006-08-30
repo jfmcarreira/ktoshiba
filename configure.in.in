@@ -6,32 +6,35 @@ AC_CHECK_KDEMAXPATHLEN
 
 
 dnl === dbus support check - begin ===
-PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33])
+PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33], [have_dbus=yes],
+    [have_dbus=no])
 
-# get dbus system bus socket
-DBUS_SYSTEM_BUS_SOCKET="`pkg-config --variable=system_bus_default_address dbus-1`"
-if test -z "$DBUS_SYSTEM_BUS_SOCKET"; then
-    # use default
-    DBUS_SYSTEM_BUS_SOCKET="unix:path=/var/run/dbus/system_bus_socket"
+if test "$have_dbus" = "yes"; then
+    # get dbus system bus socket
+    DBUS_SYSTEM_BUS_SOCKET="`pkg-config --variable=system_bus_default_address dbus-1`"
+    if test -z "$DBUS_SYSTEM_BUS_SOCKET"; then
+        # use default
+        DBUS_SYSTEM_BUS_SOCKET="unix:path=/var/run/dbus/system_bus_socket"
+    fi
+
+    AC_DEFINE_UNQUOTED(DBUS_SYSTEM_BUS_SOCKET, ["$DBUS_SYSTEM_BUS_SOCKET"],
+        [D-BUS system bus socket path])
+
+    # check for dbus qt bindings --> copied from KNetworkmanager
+    AC_LANG_SAVE
+    AC_LANG_CPLUSPLUS
+    AC_CHECK_HEADER(dbus/connection.h, [],
+        [AC_MSG_WARN(You need D-BUS/Qt3 bindings, [])
+    ])
+    AC_CHECK_HEADER(dbus/message.h, [],
+        [AC_MSG_WARN(You need D-BUS/Qt3 bindings, [])
+    ])
+    AC_LANG_RESTORE
+
+    DBUS_LIBS="$DBUS_LIBS -ldbus-qt-1"
+    AC_SUBST(DBUS_CFLAGS)
+    AC_SUBST(DBUS_LIBS)
 fi
-
-AC_DEFINE_UNQUOTED(DBUS_SYSTEM_BUS_SOCKET, ["$DBUS_SYSTEM_BUS_SOCKET"],
-    [D-BUS system bus socket path])
-
-# check for dbus qt bindings --> copied from KNetworkmanager
-safe_CPPFLAGS=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $DBUS_CFLAGS $all_includes"
-AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
-AC_CHECK_HEADER([dbus/connection.h], , [
-    AC_MSG_WARN([You need D-BUS/Qt3 bindings])])
-AC_CHECK_HEADER([dbus/message.h], , [
-    AC_MSG_WARN([You need D-BUS/Qt3 bindings])])
-CPPFLAGS=$safe_CPPFLAGS
-AC_LANG_RESTORE
-
-AC_SUBST(DBUS_CFLAGS)
-AC_SUBST(DBUS_LIBS)
 dnl === dbus support check - end ===
 
 

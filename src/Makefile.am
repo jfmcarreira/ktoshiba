@@ -44,7 +44,6 @@ ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) \
 		 libktoshibasmminterface.la \
 		 libktoshibaprocinterface.la \
-		 -ldbus-qt-1 \
 		 @SYNAPTICS@ \
 		 @DBUS_LIBS@ \
 		 @POWERSAVE_LIBS@ \

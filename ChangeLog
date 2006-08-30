@@ -1,3 +1,13 @@
+2006-08-27 Azael Avalos <coproscefalo@gmail.com>
+	* Some misc changes...
+	* Fixed killing of ktosh_keyhandler program (we are now
+	  ready for testing ;-)
+
+2006-08-25 Azael Avalos <coproscefalo@gmail.com>
+	* Small changes to configure.in.in and src/Makefile.am
+	* Added Bluetooth existence check and adapted Enable Bluetooth
+	  function acordingly
+
 2006-08-23 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed compilation problems if powersave was not enabled
 	  and got rid of a couple more compiler warnings

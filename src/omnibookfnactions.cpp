@@ -83,6 +83,7 @@ OmnibookFnActions::~OmnibookFnActions()
 
 void OmnibookFnActions::hideWidgets()
 {
+    m_SettingsWidget->hide();
     m_StatusWidget->hide();
     m_Popup = 0;
 }
