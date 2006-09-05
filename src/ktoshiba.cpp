@@ -783,7 +783,7 @@ void KToshiba::omnibookHotKeys(int keycode)
                 : multimediaPlayPause();
             return;
         case 159:	// Fn-F7
-            tmp = mConfig.readNumEntry("Fn_F7");
+            tmp = 8;
             break;
         case 160:	// Fn-Esc
             tmp = mConfig.readNumEntry("Fn_Esc");
@@ -810,7 +810,7 @@ void KToshiba::omnibookHotKeys(int keycode)
                 *mKProc << konsole;
             break;
         case 239:	// Fn-F6
-            tmp = mConfig.readNumEntry("Fn_F6");
+            tmp = 7;
             break;
     }
     if (keycode == 178 || keycode == 236) {

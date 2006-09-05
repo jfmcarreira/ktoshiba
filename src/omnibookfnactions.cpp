@@ -90,7 +90,6 @@ void OmnibookFnActions::hideWidgets()
 
 void OmnibookFnActions::performFnAction(int action, int keycode)
 {
-    // TODO: Add more actions here once we have more data
     switch (action) {
         case 0:	// Disabled (Do Nothing)
             return;
