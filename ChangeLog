@@ -1,3 +1,11 @@
+2006-09-04 Azael Avalos <coproscefalo@gmail.com>
+	* Hardcoded Fn-F6 and Fn-F7 for omnibook users to do
+	  brightness up/down respectively since some models
+	  do it automatically
+	* Disabled Fn-Key comboboxes from 2 to 9, since only Fn-Esc
+	  and Fn-F1 can be configured
+	* Updated README.omnibook file
+
 2006-08-27 Azael Avalos <coproscefalo@gmail.com>
 	* Some misc changes...
 	* Fixed killing of ktosh_keyhandler program (we are now

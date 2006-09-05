@@ -81,6 +81,14 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 		m_KCMKToshibaGeneral->configTabWidget->page(2), false);
     m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_2->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_3->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_4->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_8->setEnabled(false);
+    m_KCMKToshibaGeneral->fnComboBox_9->setEnabled(false);
     m_AC = m_ProcIFace->omnibookAC();
 #else // ENABLE_OMNIBOOK
     m_SMMIFace = new KToshibaSMMInterface(this);

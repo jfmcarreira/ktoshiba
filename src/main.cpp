@@ -33,7 +33,7 @@
 static const char description[] =
     I18N_NOOP("Hotkeys monitoring for Toshiba laptops.");
 
-static const char version[] = "0.9Alpha";
+static const char version[] = "0.9";
 
 int main(int argc, char *argv[])
 {
