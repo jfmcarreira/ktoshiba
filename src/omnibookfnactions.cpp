@@ -30,6 +30,8 @@
 #include <klocale.h>
 #include <dcopref.h>
 #include <kprogress.h>
+#include <kpassivepopup.h>
+#include <kiconloader.h>
 
 #ifdef ENABLE_SYNAPTICS
 #include <synaptics/synaptics.h>
@@ -45,6 +47,7 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     : QObject( parent ),
       m_Proc( 0 )
 {
+    m_Parent = parent;
     m_Proc = new KToshibaProcInterface(parent);
     m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
@@ -58,6 +61,7 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
         m_ECType = m_Proc->omnibookECType();
         //m_Video = m_Proc->omnibookGetVideo();
         m_Bright = m_Proc->omnibookGetBrightness();
+        m_Wireless = m_Proc->omnibookGetWifi();
         m_Pad = m_Proc->omnibookGetTouchPad();
         m_Fan = m_Proc->omnibookGetFan();
     }
@@ -93,6 +97,21 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
     switch (action) {
         case 0:	// Disabled (Do Nothing)
             return;
+        case 2:	// LockScreen
+            lockScreen();
+            return;
+        case 4:	// Suspend To RAM (STR)
+            suspendToRAM();
+            return;
+        case 5:	// Suspend To Disk (STD)
+            suspendToDisk();
+            return;
+        case 9:	// Wireless On/Off
+            toggleWireless();
+            return;
+        case 14:	// LCD Backlight On/Off
+            toogleBackLight();
+            return;
         case 1:	// Mute/Unmute
         case 7:	// Brightness Down
         case 8:	// Brightness Up
@@ -107,18 +126,6 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
             }
             if (m_Popup == 1)
                 break;
-        case 2:	// LockScreen
-            lockScreen();
-            return;
-        case 4:	// Suspend To RAM (STR)
-            suspendToRAM();
-            return;
-        case 5:	// Suspend To Disk (STD)
-            suspendToDisk();
-            return;
-        case 14:	// LCD Backlight On/Off
-            toogleBackLight();
-            return;
     }
 
     if (action == 1) {
@@ -188,6 +195,21 @@ void OmnibookFnActions::suspendToDisk()
     m_Suspend->toDisk();
 }
 
+void OmnibookFnActions::toggleWireless()
+{
+    if (m_Wireless == -1) return;
+
+    m_Wireless = m_Proc->omnibookGetWifi();
+    m_Wireless--;
+    if (m_Wireless < 0) m_Wireless = 1;
+
+    m_Proc->omnibookSetWifi(m_Wireless);
+    QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
+    KPassivePopup::message(i18n("KToshiba"),
+			   i18n("Wireless interface %1").arg(w),
+			   SmallIcon("kwifimanager", 20), m_Parent, i18n("Wireless"), 4000);
+}
+
 void OmnibookFnActions::mousePadOn()
 {
     if (m_Pad == -1) return;
@@ -230,6 +252,18 @@ void OmnibookFnActions::toogleBackLight()
 
     (bl == 1)? m_Proc->omnibookSetLCDBackLight(0)
         : m_Proc->omnibookSetLCDBackLight(1);
+}
+
+void OmnibookFnActions::toggleBluetooth()
+{
+    int bt = m_Proc->omnibookGetBluetooth();
+    if (bt == -1) return;
+
+    (bt == 1)? m_Proc->omnibookSetBluetooth(0)
+        : m_Proc->omnibookSetBluetooth(1);
+    QString w = ((bt == 0)? i18n("activated") : i18n("deactivated"));
+    KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device %1").arg(w),
+			   SmallIcon("kdebluetooth", 20), m_Parent, i18n("Bluetooth"), 4000);
 }
 
 

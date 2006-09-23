@@ -108,14 +108,14 @@ QString KToshibaProcInterface::omnibookModelName()
                     rx.setPattern("\\b([A-Z])(\\d+)$"); // eg.: P15
                     rx.search(line);
                     tmp = rx.cap(1) + rx.cap(2);
-                    if (tmp == "A105")
-                        ectype = TSA105;
-                    else if (tmp == "M40")
-                        ectype = TSM40;
-                    else if (tmp == "M70" || tmp == "M100")
-                        ectype = TSM30X;
-                    else
+                    if (tmp == "P10" || tmp == "P15" || tmp == "P20")
                         ectype = TSP10;
+                    else if (tmp == "A70" || tmp == "M70" || tmp == "M100")
+                        ectype = TSM30X;
+                    else if (tmp == "M40" || tmp == "M45")
+                        ectype = TSM40;
+                    else if (tmp == "A105")
+                        ectype = TSA105;
                 }
                 if (tmp.isEmpty()) {
                     rx.setPattern("\\b([A-Z])(\\d+)([A-Z])$"); // eg.: M30X
@@ -123,16 +123,28 @@ QString KToshibaProcInterface::omnibookModelName()
                     tmp = rx.cap(1) + rx.cap(2) + rx.cap(3);
                     ectype = TSM30X;
                 }
+                // And now with the _Tecras_
+                if (tmp.isEmpty()) {
+                    rx.setPattern("(Tecra)");
+                    rx.search(line);
+                    model = rx.cap(1);
+                    rx.setPattern("\\b([A-Z])(\\d+)$");
+                    rx.search(line);
+                    tmp = rx.cap(1) + rx.cap(2);
+                    if (tmp == "S2")
+                       ectype = TSM30X;
+                    else if (tmp == "S1")
+                       ectype = TSM40;
+                }
                 if (tmp.isEmpty()) {
                     model = i18n("UNKNOWN");
                     ectype = NONE;
                     break;
                 }
-                model += " " + tmp;
-                break;
             }
         }
         file.close();
+        model += " " + tmp;
     }
 
     return model;
@@ -415,6 +427,94 @@ void KToshibaProcInterface::omnibookSetTouchPad(int status)
         kdError() << "KToshibaProcInterface::omnibookSetTouchPad()"
                   << "Could not " << ((status == 0)? "disable" : "enable")
                   << " TouchPad" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
+}
+
+int KToshibaProcInterface::omnibookGetWifi()
+{
+    QFile file(OMNI_WIFI);
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetWifi(): "
+                  << "Could not get WiFi adapter state or system doesn't"
+                  << " support it" << endl;
+        return -1;
+    }
+
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("Wifi adapter is present and", false)) {
+        QRegExp rx("(disabled)$");
+        rx.search(line);
+        if (rx.cap(1) == "disabled") {
+            file.close();
+            return 0;
+        }
+    }
+    file.close();
+
+    return 1;
+}
+
+void KToshibaProcInterface::omnibookSetWifi(int status)
+{
+    if ((mFd = open(OMNI_WIFI, O_RDWR)) == -1) {
+        kdError() << "KToshibaProcInterface::omnibookSetWifi()"
+                  << "Could not open: " << OMNI_ROOT << "/wifi" << endl;
+        return;
+    }
+
+    if (write(mFd, "%d", status) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetWifi()"
+                  << "Could not " << ((status == 0)? "disable" : "enable")
+                  << " WiFi adapter" << endl;
+        close(mFd);
+        return;
+    }
+
+    close(mFd);
+}
+
+int KToshibaProcInterface::omnibookGetBluetooth()
+{
+    QFile file(OMNI_BLUETOOTH);
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::omnibookGetBluetooth(): "
+                  << "Could not get Bluetooth adapter state or system doesn't"
+                  << " support it" << endl;
+        return -1;
+    }
+
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("Bluetooth adapter is present and", false)) {
+        QRegExp rx("(disabled)$");
+        rx.search(line);
+        if (rx.cap(1) == "disabled") {
+            file.close();
+            return 0;
+        }
+    }
+    file.close();
+
+    return 1;
+}
+
+void KToshibaProcInterface::omnibookSetBluetooth(int status)
+{
+    if ((mFd = open(OMNI_BLUETOOTH, O_RDWR)) == -1) {
+        kdError() << "KToshibaProcInterface::omnibookSetBluetooth()"
+                  << "Could not open: " << OMNI_ROOT << "/bluetooth" << endl;
+        return;
+    }
+
+    if (write(mFd, "%d", status) < 0) {
+        kdError() << "KToshibaProcInterface::omnibookSetBluetooth()"
+                  << "Could not " << ((status == 0)? "disable" : "enable")
+                  << " Bluetooth adapter" << endl;
         close(mFd);
         return;
     }

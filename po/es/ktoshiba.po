@@ -233,7 +233,8 @@ msgid "Suspend To RAM disabled by administrator."
 msgstr "Suspender a RAM esta deshabilitado por el administrador."
 
 #: suspend.cpp:82
-msgid "The powersave daemon must be running in the background for a Suspend To RAM."
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr "El servicio powersave debe estar activado para poder Suspender a RAM."
 
 #: suspend.cpp:92
@@ -257,8 +258,10 @@ msgid "Suspend To Disk disabled by administrator."
 msgstr "Suspender a Disco esta deshabilitado por el administrador."
 
 #: suspend.cpp:135
-msgid "The powersave daemon must be running in the background for a Suspend To Disk."
-msgstr "El servicio powersave debe estar activado para poder Suspender a Disco."
+msgid ""
+"The powersave daemon must be running in the background for a Suspend To Disk."
+msgstr ""
+"El servicio powersave debe estar activado para poder Suspender a Disco."
 
 #: suspend.cpp:145
 msgid ""
@@ -339,4 +342,3 @@ msgstr "Dispositivo Ethernet %1"
 #: toshibafnactions.cpp:591
 msgid "Ethernet"
 msgstr "Ethernet"
-

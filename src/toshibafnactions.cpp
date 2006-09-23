@@ -171,10 +171,6 @@ void ToshibaFnActions::performFnAction(int action, int key)
 
     if (action == 3 && m_SCIIface) {
         toggleBSM();
-        KConfig cfg("ktoshibarc");
-        cfg.setGroup("BSM");
-        cfg.writeEntry("Battery_Save_Mode", m_BatSave);
-        cfg.sync();
         m_SettingsWidget->wsSettings->raiseWidget(0);
         m_SettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
         m_SettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
@@ -445,13 +441,20 @@ void ToshibaFnActions::lockScreen()
 
 void ToshibaFnActions::toggleBSM()
 {
-    m_BatSave = m_Driver->getBatterySaveMode();
+    KConfig cfg("ktoshibarc");
+    cfg.setGroup("BSM");
+    m_BatSave = cfg.readNumEntry("Battery_Save_Mode", 2);
     if (m_BatSave == -1) return;
 
     m_BatSave--;
-    if (m_BatSave < 0) m_BatSave = 2;
-    (m_BatType == 3)? m_Driver->setBatterySaveMode(m_BatSave + 1)
-        : m_Driver->setBatterySaveMode(m_BatSave);
+    if (m_BatSave < 1 && m_BatType == 3)
+        m_BatSave = 3;
+    else if (m_BatSave < 0)
+        m_BatSave = 2;
+
+    m_Driver->setBatterySaveMode(m_BatSave);
+    cfg.writeEntry("Battery_Save_Mode", m_BatSave);
+    cfg.sync();
 }
 
 void ToshibaFnActions::suspendToRAM()

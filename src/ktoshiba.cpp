@@ -168,11 +168,12 @@ KToshiba::KToshiba()
     mBatType = mTFn->m_BatType;
     // Default to last value stored in config
     mTFn->m_BatSave = mBatSave;
+    (mBatType == 3)? mBatSave = 3 : mBatSave = 2;
     mOldBatSave = mBatSave;
+    (!mBatSave)? bsmtrig = true : bsmtrig = false;
     mSVideo = mTFn->m_Video;
     mPad = mTFn->m_Pad;
     MODE = DIGITAL;
-    bsmtrig = false;
 
     if (mHotkeys) {
         mHotKeysTimer = new QTimer(this);
@@ -716,7 +717,7 @@ void KToshiba::checkSystem()
 #else // ENABLE_OMNIBOOK
         if (mTFn->m_BatType != 2)
             mTFn->m_Driver->setBrightness(bright);
-        if (mBatSave != 0)
+        if (mBatSave != 0 && bsmtrig == true)
             bsmtrig = false;
 #endif // ENABLE_OMNIBOOK
     }
