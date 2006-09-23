@@ -1,3 +1,12 @@
+2006-09-22 Azael Avalos <coproscefalo@gmail.com>
+	* Updated ectype according to info found on
+	  omnibook homepage and added the missing Tecra S1/S2
+	* Added WiFi and Bluetooth support for omnibook module
+	  users
+
+2006-09-14 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed bug regarding Battery Save Mode
+
 2006-09-04 Azael Avalos <coproscefalo@gmail.com>
 	* Hardcoded Fn-F6 and Fn-F7 for omnibook users to do
 	  brightness up/down respectively since some models
@@ -5,6 +14,7 @@
 	* Disabled Fn-Key comboboxes from 2 to 9, since only Fn-Esc
 	  and Fn-F1 can be configured
 	* Updated README.omnibook file
+	* Released 0.9
 
 2006-08-27 Azael Avalos <coproscefalo@gmail.com>
 	* Some misc changes...

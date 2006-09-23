@@ -36,10 +36,12 @@ extern "C" {
 #define OMNI_DMI		"/proc/omnibook/dmi"
 #define OMNI_LCD		"/proc/omnibook/lcd"
 #define OMNI_ONETOUCH	"/proc/omnibook/onetouch"
-#define OMNI_FAN 		"/proc/omnibook/fan"
-#define OMNI_BLANK 		"/proc/omnibook/blank"
+#define OMNI_FAN		"/proc/omnibook/fan"
+#define OMNI_BLANK		"/proc/omnibook/blank"
 #define OMNI_TOUCHPAD 	"/proc/omnibook/touchpad"
-#define ACPI_ROOT 		"/proc/acpi"
+#define OMNI_WIFI		"/proc/omnibook/wifi"
+#define OMNI_BLUETOOTH	"/proc/omnibook/bluetooth"
+#define ACPI_ROOT		"/proc/acpi"
 
 // ECTYPE
 #define NONE			0
@@ -137,6 +139,26 @@ public:
     * @param status the int holding the desired status
     */
     void omnibookSetTouchPad(int status);
+    /**
+    * Checks /proc entry for WiFi status
+    * @return @p the int holding the current WiFi adapter status
+    */
+    int omnibookGetWifi();
+    /**
+    * Enables/Disables the WiFi adapter
+    * @param status the int holding the desired status
+    */
+    void omnibookSetWifi(int status);
+    /**
+    * Checks /proc entry for Bluetooth status
+    * @return @p the int holding the current WiFi adapter status
+    */
+    int omnibookGetBluetooth();
+    /**
+    * Enables/Disables the Bluetooth adapter
+    * @param status the int holding the desired status
+    */
+    void omnibookSetBluetooth(int status);
     /**
     *
     */

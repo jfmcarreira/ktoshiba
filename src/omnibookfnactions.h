@@ -60,15 +60,19 @@ private:
     SettingsWidget *m_SettingsWidget;
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;
+    QWidget *m_Parent;
     void toggleMute();
     void lockScreen();
     void suspendToRAM();
     void suspendToDisk();
+    void toggleWireless();
     void mousePadOn();
     void mousePadOff();
     void toggleFan();
     void toogleBackLight();
+    void toggleBluetooth();
     int m_Snd;
+    int m_Wireless;
     int m_Fan;
 };
 
