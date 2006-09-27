@@ -40,6 +40,7 @@
 #include <kprogress.h>
 
 #include "../ktoshibasmminterface.h"
+#include "../ktoshibaomnibookinterface.h"
 #include "../ktoshibaprocinterface.h"
 #include "kcmtoshiba_general.h"
 #include "main.h"
@@ -75,12 +76,12 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_Omnibook = false;
 
 #ifdef ENABLE_OMNIBOOK
-    m_Omnibook = m_ProcIFace->checkOmnibook();
+    m_OmniIFace = new KToshibaOmnibookInterface(this);
+    m_Omnibook = m_OmniIFace->checkOmnibook();
     m_KCMKToshibaGeneral->tlOff->hide();
     m_KCMKToshibaGeneral->frameMain->setEnabled(true);
     m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 		m_KCMKToshibaGeneral->configTabWidget->page(2), false);
-    m_KCMKToshibaGeneral->btstartCheckBox->setEnabled(false);
     m_KCMKToshibaGeneral->fnComboBox_2->setEnabled(false);
     m_KCMKToshibaGeneral->fnComboBox_3->setEnabled(false);
     m_KCMKToshibaGeneral->fnComboBox_4->setEnabled(false);
@@ -89,7 +90,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);
     m_KCMKToshibaGeneral->fnComboBox_8->setEnabled(false);
     m_KCMKToshibaGeneral->fnComboBox_9->setEnabled(false);
-    m_AC = m_ProcIFace->omnibookAC();
+    m_AC = m_OmniIFace->omnibookAC();
 #else // ENABLE_OMNIBOOK
     m_SMMIFace = new KToshibaSMMInterface(this);
     m_InterfaceAvailable = m_SMMIFace->openSCIInterface();
@@ -266,10 +267,10 @@ void KCMToshibaModule::timeout()
     int time = 0, perc = -1;
 
 #ifdef ENABLE_OMNIBOOK
-    (m_Omnibook)? m_ProcIFace->omnibookBatteryStatus(&time, &perc)
+    (m_Omnibook)? m_OmniIFace->batteryStatus(&time, &perc)
         : m_ProcIFace->acpiBatteryStatus(&time, &perc);
 
-    m_AC = ((m_AC == -1)? m_ProcIFace->acpiAC() : m_ProcIFace->omnibookAC());
+    m_AC = ((m_AC == -1)? m_ProcIFace->acpiAC() : m_OmniIFace->omnibookAC());
 #else // ENABLE_OMNIBOOK
     (m_InterfaceAvailable)? m_SMMIFace->batteryStatus(&time, &perc)
         : m_ProcIFace->acpiBatteryStatus(&time, &perc);

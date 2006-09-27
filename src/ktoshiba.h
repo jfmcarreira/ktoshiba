@@ -51,7 +51,7 @@ class Suspend;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.9
+ * @version 0.10
  */
 class KToshiba :  public KSystemTray
 {
@@ -68,6 +68,7 @@ private slots:
     void checkSystem();
     void doSuspendToRAM();
     void doSuspendToDisk();
+    void doBluetooth();
     void displayBugReport();
     void displayAbout();
     void displayAboutKDE();
@@ -80,7 +81,6 @@ private slots:
     void toggleMODE(int);
     /** toshiba slots */
     void checkHotKeys();
-    void doBluetooth();
     void doSetFreq(int);
     void doSetHyper(int);
     void resumedSTD();
@@ -106,13 +106,16 @@ private:
     DCOPRef *mKaffeine;
     bool mACPI;
     bool mHotkeys;
+    bool mBtstart;
     int mAC;
     int mOldAC;
     int mBatSave;
     int mOldBatSave;
     int mBatType;
-    int mAudioPlayer;
+    int mWirelessSwitch;
     int mPad;
+    int mBluetooth;
+    int mAudioPlayer;
     int MODE;
 #ifdef ENABLE_OMNIBOOK
     KToshibaDCOPInterface *mDCOPIFace;
@@ -128,9 +131,6 @@ private:
     QPopupMenu *mHyper;
     QTimer *mHotKeysTimer;
     bool bsmtrig;
-    bool btstart;
-    int mWirelessSwitch;
-    int mBluetooth;
     int mHT;
     int mSS;
     int mSVideo;

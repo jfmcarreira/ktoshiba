@@ -502,17 +502,18 @@ void ToshibaFnActions::toggleWireless()
     if (m_Wireless == -1) return;
 
     int ws = m_Driver->getWirelessSwitch();
-    if (ws == 1) {
+    if (!ws || ws == -1)
+        return;
+    else {
         m_Wireless--;
         if (m_Wireless < 0) m_Wireless = 1;
-    } else
-        return;
 
-    m_Driver->setWirelessPower(m_Wireless);
-    QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
-    KPassivePopup::message(i18n("KToshiba"),
+        m_Driver->setWirelessPower(m_Wireless);
+        QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
+        KPassivePopup::message(i18n("KToshiba"),
 			   i18n("Wireless interface %1").arg(w),
 			   SmallIcon("kwifimanager", 20), m_Parent, i18n("Wireless"), 4000);
+    }
 }
 
 void ToshibaFnActions::toggleMousePad()

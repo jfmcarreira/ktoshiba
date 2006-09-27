@@ -36,6 +36,7 @@ class QTimer;
 
 class KCMKToshibaGeneral;
 class KToshibaSMMInterface;
+class KToshibaOmnibookInterface;
 class KToshibaProcInterface;
 
 /**
@@ -57,6 +58,7 @@ protected slots:
 private:
     KCMKToshibaGeneral *m_KCMKToshibaGeneral;
     KToshibaSMMInterface *m_SMMIFace;
+    KToshibaOmnibookInterface *m_OmniIFace;
     KToshibaProcInterface *m_ProcIFace;
     QTimer *m_Timer;
     bool m_Omnibook;
