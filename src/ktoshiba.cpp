@@ -20,6 +20,7 @@
 
 #include "ktoshiba.h"
 #include "ktoshibasmminterface.h"
+#include "ktoshibaomnibookinterface.h"
 #include "ktoshibaprocinterface.h"
 #include "ktoshibadcopinterface.h"
 #include "toshibafnactions.h"
@@ -99,12 +100,12 @@ KToshiba::KToshiba()
                   << "loads without failures" << endl;
         exit(-1);
     }
-    kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
-    kdDebug() << "KToshiba: Machine ECTYPE: " << mOFn->m_ECType << endl;
-    mAC = mProcIFace->omnibookAC();
+    mAC = mOFn->m_Omni->omnibookAC();
     (mAC == -1)? mACPI = true : mACPI = false;
     mOldAC = mAC;
     mPad = mOFn->m_Pad;
+    mWirelessSwitch = mOFn->m_Omni->getWifiSwitch();
+    mBluetooth = mOFn->m_Omni->getBluetooth();
     mBatSave = 2;
     mOldBatSave = mBatSave;
     mBatType = 3;
@@ -185,9 +186,6 @@ KToshiba::KToshiba()
 //#ifdef ENABLE_POWERSAVE // ENABLE_POWERSAVE
     //connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
 //#endif // ENABLE_POWERSAVE
-
-    if (btstart)
-        doBluetooth();
 #endif // ENABLE_OMNIBOOK
 
     doMenu();
@@ -204,6 +202,9 @@ KToshiba::KToshiba()
     if (mPad == -1)
         checkSynaptics();
 #endif // ENABLE_SYNAPTICS
+
+    if (mBtstart)
+        doBluetooth();
 }
 
 KToshiba::~KToshiba()
@@ -297,8 +298,8 @@ void KToshiba::loadConfiguration()
     KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("KToshiba");
     mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
+    mBtstart = mConfig.readBoolEntry("Bluetooth_Startup", true);
 #ifndef ENABLE_OMNIBOOK
-    btstart = mConfig.readBoolEntry("Bluetooth_Startup", true);
     mConfig.setGroup("BSM");
     mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
 #endif // ENABLE_OMNIBOOK
@@ -370,10 +371,11 @@ void KToshiba::doMenu()
     if (mOFn->m_OmnibookIface) {
         connect( mOneTouch, SIGNAL( activated(int) ), this, SLOT( doSetOneTouch(int) ) );
         connect( mOmniFan, SIGNAL( activated(int) ), this, SLOT( doSetOmnibookFan(int) ) );
-    } else {
-        contextMenu()->setItemEnabled( 4, FALSE );
-        contextMenu()->setItemEnabled( 5, FALSE );
     }
+    if (::access("/proc/omnibook/onetouch", F_OK) == -1)
+        contextMenu()->setItemEnabled( 4, FALSE );
+    if (::access("/proc/omnibook/fan", F_OK) == -1)
+        contextMenu()->setItemEnabled( 5, FALSE );
     contextMenu()->insertSeparator( 6 );
     mOmniMODE = new QPopupMenu( this, "Mode" );
     mOmniMODE->insertItem( SmallIcon("cd_dvd"), i18n("CD/DVD"), 0 );
@@ -445,12 +447,18 @@ void KToshiba::doSuspendToDisk()
 
 void KToshiba::doSetOneTouch(int state)
 {
-    mProcIFace->omnibookSetOneTouch(state);
+    if (state == 0) ;
+#ifdef ENABLE_OMNIBOOK
+    mOFn->m_Omni->setOneTouch(state);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::doSetOmnibookFan(int state)
 {
-    mProcIFace->omnibookSetFan(state);
+    if (state == 0) ;
+#ifdef ENABLE_OMNIBOOK
+    mOFn->m_Omni->setFan(state);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::toggleMODE(int mode)
@@ -460,16 +468,18 @@ void KToshiba::toggleMODE(int mode)
 
 void KToshiba::doBluetooth()
 {
-#ifndef ENABLE_OMNIBOOK
-    if (!mBluetooth) return;
+    if (mBluetooth == -1) return;
 
-    if (btstart && (mBluetooth != 0)) {
+    if (mBtstart && (mBluetooth != 0)) {
+#ifdef ENABLE_OMNIBOOK
+        mOFn->m_Omni->setBluetooth(1);
+#else
         mTFn->m_Driver->setBluetoothPower(1);
+#endif // ENABLE_OMNIBOOK
         KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device activated"),
 				SmallIcon("kdebluetooth", 20), this, i18n("Bluetooth"), 4000);
         contextMenu()->setItemEnabled(4, FALSE);
     }
-#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::doSetFreq(int freq)
@@ -683,7 +693,7 @@ void KToshiba::multimediaVolumeUp()
 void KToshiba::checkSystem()
 {
 #ifdef ENABLE_OMNIBOOK
-    mAC = ((mACPI)? mProcIFace->acpiAC() : mProcIFace->omnibookAC());
+    mAC = (mACPI)? mProcIFace->acpiAC() : mOFn->m_Omni->omnibookAC();
 #else // ENABLE_OMNIBOOK
     mAC = (mACPI)? mProcIFace->acpiAC() : mTFn->m_Driver->acPowerStatus();
     KConfig mConfig(CONFIG_FILE);
@@ -713,7 +723,7 @@ void KToshiba::checkSystem()
         }
 #ifdef ENABLE_OMNIBOOK
         if (mOFn->m_OmnibookIface)
-            mProcIFace->omnibookSetBrightness(bright);
+            mOFn->m_Omni->setBrightness(bright);
 #else // ENABLE_OMNIBOOK
         if (mTFn->m_BatType != 2)
             mTFn->m_Driver->setBrightness(bright);
@@ -725,12 +735,14 @@ void KToshiba::checkSystem()
     mOldAC = mAC;
     mOldBatSave = mBatSave;
 
-#ifndef ENABLE_OMNIBOOK
-    if (mWirelessSwitch == -1)
-        return;
+    if (mWirelessSwitch == -1) return;
     else {
-        int ws = mTFn->m_Driver->getWirelessSwitch();
-
+        int ws = 0;
+#ifdef ENABLE_OMNIBOOK
+        ws = mOFn->m_Omni->getWifiSwitch();
+#else // ENABLE_OMNIBOOK
+        ws = mTFn->m_Driver->getWirelessSwitch();
+#endif // ENABLE_OMNIBOOK
         if (mWirelessSwitch != ws) {
             QString s = ((ws == 1)? i18n("on") : i18n("off"));
             KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
@@ -738,7 +750,6 @@ void KToshiba::checkSystem()
         }
         mWirelessSwitch = ws;
     }
-#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::omnibookHotKeys(int keycode)
@@ -831,7 +842,7 @@ void KToshiba::checkOmnibook()
         mOFn->m_Popup = 0;
     }
 
-    int bright = mProcIFace->omnibookGetBrightness();
+    int bright = mOFn->m_Omni->getBrightness();
     if (bright == -1) {
         mOmnibookTimer->stop();
         disconnect(mOmnibookTimer);

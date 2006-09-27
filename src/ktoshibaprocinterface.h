@@ -24,37 +24,19 @@
 #include <qobject.h>
 #include <qstring.h>
 
+#include <cmath>
+
 extern "C" {
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <math.h>
 }
 
 #define TOSH_PROC		"/proc/toshiba"
-#define OMNI_ROOT		"/proc/omnibook"
-#define OMNI_DMI		"/proc/omnibook/dmi"
-#define OMNI_LCD		"/proc/omnibook/lcd"
-#define OMNI_ONETOUCH	"/proc/omnibook/onetouch"
-#define OMNI_FAN		"/proc/omnibook/fan"
-#define OMNI_BLANK		"/proc/omnibook/blank"
-#define OMNI_TOUCHPAD 	"/proc/omnibook/touchpad"
-#define OMNI_WIFI		"/proc/omnibook/wifi"
-#define OMNI_BLUETOOTH	"/proc/omnibook/bluetooth"
 #define ACPI_ROOT		"/proc/acpi"
-
-// ECTYPE
-#define NONE			0
-#define XE3GF			1
-#define TSP10			11
-#define TSM30X			12
-#define TSM40			13
-#define TSA105			14
 
 /**
  * @short Provides access to /proc files
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.3
+ * @version 0.4
  */
 class KToshibaProcInterface : public QObject
 {
@@ -62,130 +44,26 @@ class KToshibaProcInterface : public QObject
 public:
     KToshibaProcInterface(QObject *parent = 0);
     ~KToshibaProcInterface();
-
     /**
-    * Checks /proc entry for Toshiba model
-    * @return @p true if found, false otherwise
-    */
-    bool checkOmnibook();
-    /**
-     * Gets the machine model name
-     * @return @p the string holding the model name
+     * Checks /proc entry for battery status.
+     * @param time the int to hold the current time
+     * @param perc the int to hold the current percent
      */
-    QString omnibookModelName();
-    /**
-     * Gets the machine ectype
-     * @return @p the int holding the ectype
-     */
-    int omnibookECType();
-    /**
-    * Checks /proc entry for battery status.
-    * @param time the int to hold the current time
-    * @param perc the int to hold the current percent
-    */
-    void omnibookBatteryStatus(int *time, int *perc);
-    /**
-    * Checks /proc entry for AC adapter status.
-    * @return @p value holding the AC adaptor status
-    */
-    int omnibookAC();
-    /**
-    * Checks /proc entry for brightness status.
-    * @return @p value holding the brightness status
-    */
-    int omnibookGetBrightness();
-    /**
-    * Set the display brightness.
-    * @param bright the int to set the brightness
-    */
-    void omnibookSetBrightness(int bright);
-    /**
-    * Checks /proc entry for OneTouch buttons status.
-    * @return @p the int holding the current status
-    */
-    int omnibookGetOneTouch();
-    /**
-    * Enables/Disables OneTouch buttons.
-    * @param state the int to turn on/off OneTouch buttons
-    */
-    void omnibookSetOneTouch(int state);
-    /**
-    * Checks /proc entry for fan status.
-    * @return @p the int holding the current fan status
-    */
-    int omnibookGetFan();
-    /**
-    * Enables/Disables the fan.
-    * @param status the int to turn on/off the fan
-    */
-    void omnibookSetFan(int status);
-    /**
-    * Checks /proc entry for LCD Backlight status
-    * @return @p the int holding the current LCD state
-    */
-    int omnibookGetLCDBackLight();
-    /**
-    * Enables/Disables the LCD Backlight
-    * @param status the int holding the desired status
-    */
-    void omnibookSetLCDBackLight(int status);
-    /**
-    * Checks /proc entry for TouchPad status
-    * @return @p the int holding the current TouchPad status
-    */
-    int omnibookGetTouchPad();
-    /**
-    * Enables/Disables the TouchPad
-    * @param status the int holding the desired status
-    */
-    void omnibookSetTouchPad(int status);
-    /**
-    * Checks /proc entry for WiFi status
-    * @return @p the int holding the current WiFi adapter status
-    */
-    int omnibookGetWifi();
-    /**
-    * Enables/Disables the WiFi adapter
-    * @param status the int holding the desired status
-    */
-    void omnibookSetWifi(int status);
-    /**
-    * Checks /proc entry for Bluetooth status
-    * @return @p the int holding the current WiFi adapter status
-    */
-    int omnibookGetBluetooth();
-    /**
-    * Enables/Disables the Bluetooth adapter
-    * @param status the int holding the desired status
-    */
-    void omnibookSetBluetooth(int status);
-    /**
-    *
-    */
-    int omnibookGetVideo();
-    /**
-    * Checks /proc entry for battery status.
-    * @param time the int to hold the current time
-    * @param perc the int to hold the current percent
-    */
     void acpiBatteryStatus(int *time, int *perc);
     /**
-    * Checks /proc entry for the AC adaptor status.
-    * @return @p value holding the AC adaptor status
-    */
+     * Checks /proc entry for the AC adaptor status.
+     * @return @p value holding the AC adaptor status
+     */
     int acpiAC();
     /**
-    * Checks /proc entry for hotkeys.
-    * @return @p value holding the Fn-Key combo id
-    */
+     * Checks /proc entry for hotkeys.
+     * @return @p value holding the Fn-Key combo id
+     */
     int toshibaProcStatus();
 private:
     FILE *str;
-    QString model;
-    int mFd;
     int BatteryCap;
     int RemainingCap;
-    int ectype;
 };
 
 #endif // KTOSHIBA_PROCINTERFACE_H

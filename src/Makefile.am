@@ -17,8 +17,8 @@ INCLUDES = $(all_includes) @DBUS_CFLAGS@
 
 # these are the headers for your project
 noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h modelid.h \
-			ktoshibaprocinterface.h toshibafnactions.h omnibookfnactions.h ktoshibadcopinterface.h \
-			suspend.h ktoshibadbusinterface.h
+				ktoshibaprocinterface.h toshibafnactions.h omnibookfnactions.h ktoshibadcopinterface.h \
+				suspend.h ktoshibadbusinterface.h ktoshibaomnibookinterface.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -31,9 +31,11 @@ METASOURCES = AUTO
 bin_PROGRAMS = ktoshiba $(HELPER) $(KEYHANDLER)
 
 # the application source, library search path, and link libraries
-lib_LTLIBRARIES = libktoshibasmminterface.la libktoshibaprocinterface.la
+lib_LTLIBRARIES = libktoshibasmminterface.la libktoshibaomnibookinterface.la libktoshibaprocinterface.la
 libktoshibasmminterface_la_LDFLAGS = $(all_libraries)
 libktoshibasmminterface_la_SOURCES = hci.c sci.c ktoshibasmminterface.cpp
+libktoshibaomnibookinterface_la_LDFLAGS = $(all_libraries)
+libktoshibaomnibookinterface_la_SOURCES = ktoshibaomnibookinterface.cpp
 libktoshibaprocinterface_la_LDFLAGS = $(all_libraries)
 libktoshibaprocinterface_la_SOURCES = ktoshibaprocinterface.cpp
 
@@ -43,6 +45,7 @@ ktoshiba_SOURCES = settingswidget.ui statuswidget.ui ktoshiba.cpp main.cpp \
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) \
 		 libktoshibasmminterface.la \
+		 libktoshibaomnibookinterface.la \
 		 libktoshibaprocinterface.la \
 		 @SYNAPTICS@ \
 		 @DBUS_LIBS@ \

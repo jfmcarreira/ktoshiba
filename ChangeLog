@@ -1,3 +1,25 @@
+2006-09-27 Azael Avalos <coproscefalo@gmail.com>
+	* More models added to omnibookModelName function
+	* Created new class nmed KToshibaOmnibookInterface
+	  and moved all omnibook related stuff there
+	* Updated all files accordingly to new changes and
+	  now really activated Bluetooth for omnibook users
+	* Disabled Fan and OneTouch menu entries if corresponding
+	  /proc/omnibook files are not there
+
+2006-09-26 Azael Avalos <coproscefalo@gmail.com>
+	* Added function to get the WiFi antenna switch status
+	* Updated wifi switch functions on both, toshiba and
+	  omnibookfnactions classes
+
+2006-09-25 Azael Avalos <coproscefalo@gmail.com>
+	* Small changes to omnibookModelName function
+
+2006-09-24 Azael Avalos <coproscefalo@gmail.com>
+	* Enabled KCM Bluetooth checkbox for omnibook users
+	  and adapted bluetooth function accordinlgy
+	* Fixed a typo on a debug message on KToshibaSMMInterface
+
 2006-09-22 Azael Avalos <coproscefalo@gmail.com>
 	* Updated ectype according to info found on
 	  omnibook homepage and added the missing Tecra S1/S2

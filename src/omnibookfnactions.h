@@ -29,7 +29,7 @@
 
 class QWidget;
 
-class KToshibaProcInterface;
+class KToshibaOmnibookInterface;
 class SettingsWidget;
 class StatusWidget;
 class Suspend;
@@ -37,7 +37,7 @@ class Suspend;
 /**
  * @short Performs the Fn assosiated action
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.1
+ * @version 0.2
  */
 class OmnibookFnActions : public QObject
 {
@@ -48,7 +48,7 @@ public:
 
     void hideWidgets();
     void performFnAction(int action, int keycode);
-    KToshibaProcInterface *m_Proc;
+    KToshibaOmnibookInterface *m_Omni;
     QString m_ModelName;
     bool m_OmnibookIface;
     int m_ECType;

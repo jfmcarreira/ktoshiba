@@ -1182,7 +1182,7 @@ int KToshibaSMMInterface::getBluetooth()
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = 0x0000;
+	reg.ecx = HCI_BLUETOOTH_CHECK;
 	reg.edx = HCI_BLUETOOTH_CHECK;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
 		kdDebug() << "KToshibaSMMInterface::getBluetooth(): "
@@ -1198,7 +1198,7 @@ int KToshibaSMMInterface::getBluetoothPower()
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_RF_CONTROL;
-	reg.ecx = 0x0000;
+	reg.ecx = HCI_BLUETOOTH_CHECK;
 	reg.edx = 0x0001;
 	if (HciFunction(&reg) != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getBluetoothPower(): "
@@ -1218,7 +1218,7 @@ void KToshibaSMMInterface::setBluetoothPower(int state)
 		reg.ecx = HCI_DISABLE;
 		reg.edx = HCI_BLUETOOTH_POWER;
 		if (HciFunction(&reg) != HCI_SUCCESS) {
-			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+			kdError() << "KToshibaSMMInterface::setBluetoothPower(): "
 				  << "Could not disable Bluetooth device" << endl;
 			return;
 		}
@@ -1229,13 +1229,13 @@ void KToshibaSMMInterface::setBluetoothPower(int state)
 		reg.ecx = HCI_ENABLE;
 		reg.edx = HCI_BLUETOOTH_POWER;
 		if (HciFunction(&reg) != HCI_SUCCESS) {
-			kdError() << "KToshibaSMMInterface::setBluetooth(): "
+			kdError() << "KToshibaSMMInterface::setBluetoothPower(): "
 				  << "Could not enable Bluetooth device" << endl;
 			return;
 		}
 		setBluetoothControl(state);
 	}
-	kdDebug() << "KToshibaSMMInterface::setBluetooth(): "
+	kdDebug() << "KToshibaSMMInterface::setBluetoothPower(): "
 		  << "Bluetooth device "
 		  << ((state == 1)? "enabled" : "disabled")
 		  << " successfully" << endl;

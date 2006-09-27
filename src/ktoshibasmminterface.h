@@ -41,7 +41,7 @@ extern "C"
 /**
  * @short Provides access to the SMM functions
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.9
+ * @version 0.10
  */
 class KToshibaSMMInterface : public QObject
 {

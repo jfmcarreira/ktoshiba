@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "omnibookfnactions.h"
-#include "ktoshibaprocinterface.h"
+#include "ktoshibaomnibookinterface.h"
 #include "suspend.h"
 
 #include <qwidgetstack.h>
@@ -45,25 +45,27 @@ using namespace Synaptics;
 
 OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     : QObject( parent ),
-      m_Proc( 0 )
+      m_Omni( 0 )
 {
     m_Parent = parent;
-    m_Proc = new KToshibaProcInterface(parent);
+    m_Omni = new KToshibaOmnibookInterface(parent);
     m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
     m_Suspend = new Suspend(parent);
 
-    m_OmnibookIface = m_Proc->checkOmnibook();
+    m_OmnibookIface = m_Omni->checkOmnibook();
     if (m_OmnibookIface) {
-        m_ModelName = m_Proc->omnibookModelName();
-        m_ECType = m_Proc->omnibookECType();
-        //m_Video = m_Proc->omnibookGetVideo();
-        m_Bright = m_Proc->omnibookGetBrightness();
-        m_Wireless = m_Proc->omnibookGetWifi();
-        m_Pad = m_Proc->omnibookGetTouchPad();
-        m_Fan = m_Proc->omnibookGetFan();
+        kdDebug() << "KToshiba: Found a Toshiba model with Phoenix BIOS." << endl;
+        m_ModelName = m_Omni->modelName();
+        m_ECType = m_Omni->ecType();
+        kdDebug() << "KToshiba: Machine ECTYPE=" << m_ECType << endl;
+        //m_Video = m_Omni->omnibookGetVideo();
+        m_Bright = m_Omni->getBrightness();
+        m_Wireless = m_Omni->getWifi();
+        m_Pad = m_Omni->getTouchPad();
+        m_Fan = m_Omni->getFan();
     }
     else {
         m_ModelName = i18n("UNKNOWN");
@@ -82,7 +84,7 @@ OmnibookFnActions::~OmnibookFnActions()
     delete m_SettingsWidget; m_SettingsWidget = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
     delete m_Suspend; m_Suspend = NULL;
-    delete m_Proc; m_Proc = NULL;
+    delete m_Omni; m_Omni = NULL;
 }
 
 void OmnibookFnActions::hideWidgets()
@@ -161,7 +163,7 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
         m_SettingsWidget->wsSettings->raiseWidget(4);
         m_SettingsWidget->tlStatus->setText("Battery Status");
         int time = 0, perc = -1;
-         m_Proc->omnibookBatteryStatus(&time, &perc);
+        m_Omni->batteryStatus(&time, &perc);
         (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
             : m_SettingsWidget->batteryKPB->setValue(perc);
     }
@@ -199,15 +201,20 @@ void OmnibookFnActions::toggleWireless()
 {
     if (m_Wireless == -1) return;
 
-    m_Wireless = m_Proc->omnibookGetWifi();
-    m_Wireless--;
-    if (m_Wireless < 0) m_Wireless = 1;
+    int ws = m_Omni->getWifiSwitch();
+    if (!ws || ws == -1)
+        return;
+    else {
+        m_Wireless = m_Omni->getWifi();
+        m_Wireless--;
+        if (m_Wireless < 0) m_Wireless = 1;
 
-    m_Proc->omnibookSetWifi(m_Wireless);
-    QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
-    KPassivePopup::message(i18n("KToshiba"),
+        m_Omni->setWifi(m_Wireless);
+        QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
+        KPassivePopup::message(i18n("KToshiba"),
 			   i18n("Wireless interface %1").arg(w),
 			   SmallIcon("kwifimanager", 20), m_Parent, i18n("Wireless"), 4000);
+    }
 }
 
 void OmnibookFnActions::mousePadOn()
@@ -219,7 +226,7 @@ void OmnibookFnActions::mousePadOn()
     Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
     m_Pad = 1;
-    m_Proc->omnibookSetTouchPad(m_Pad);
+    m_Omni->omnibookSetTouchPad(m_Pad);
 #endif // ENABLE_SYNAPTICS
 }
 
@@ -232,35 +239,35 @@ void OmnibookFnActions::mousePadOff()
     Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
     m_Pad = 0;
-    m_Proc->omnibookSetTouchPad(m_Pad);
+    m_Omni->omnibookSetTouchPad(m_Pad);
 #endif // ENABLE_SYNAPTICS
 }
 
 void OmnibookFnActions::toggleFan()
 {
-    m_Fan = m_Proc->omnibookGetFan();
+    m_Fan = m_Omni->getFan();
     if (m_Fan == -1) return;
 
     m_Fan = (m_Fan == 0)? 1 : 0;
-    m_Proc->omnibookSetFan(m_Fan);
+    m_Omni->setFan(m_Fan);
 }
 
 void OmnibookFnActions::toogleBackLight()
 {
-    int bl = m_Proc->omnibookGetLCDBackLight();
+    int bl = m_Omni->getLCDBackLight();
     if (bl == -1) return;
 
-    (bl == 1)? m_Proc->omnibookSetLCDBackLight(0)
-        : m_Proc->omnibookSetLCDBackLight(1);
+    (bl == 1)? m_Omni->setLCDBackLight(0)
+        : m_Omni->setLCDBackLight(1);
 }
 
 void OmnibookFnActions::toggleBluetooth()
 {
-    int bt = m_Proc->omnibookGetBluetooth();
+    int bt = m_Omni->getBluetooth();
     if (bt == -1) return;
 
-    (bt == 1)? m_Proc->omnibookSetBluetooth(0)
-        : m_Proc->omnibookSetBluetooth(1);
+    (bt == 1)? m_Omni->setBluetooth(0)
+        : m_Omni->setBluetooth(1);
     QString w = ((bt == 0)? i18n("activated") : i18n("deactivated"));
     KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device %1").arg(w),
 			   SmallIcon("kdebluetooth", 20), m_Parent, i18n("Bluetooth"), 4000);
