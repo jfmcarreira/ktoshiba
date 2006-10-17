@@ -104,9 +104,12 @@ private:
     QString konsole;
     KProcess *mKProc;
     DCOPRef *mKaffeine;
+    bool mOmnibook;
     bool mACPI;
     bool mHotkeys;
     bool mBtstart;
+    bool suspended;
+    int mBIOS;
     int mAC;
     int mOldAC;
     int mBatSave;
@@ -117,6 +120,17 @@ private:
     int mBluetooth;
     int mAudioPlayer;
     int MODE;
+    /** toshiba stuff */
+    ToshibaFnActions *mTFn;
+    QPopupMenu *mSpeed;
+    QPopupMenu *mHyper;
+    QTimer *mHotKeysTimer;
+    bool bsmtrig;
+    bool toshacpi;
+    int mHT;
+    int mSS;
+    int mSVideo;
+    /** omnibook stuff */
 #ifdef ENABLE_OMNIBOOK
     KToshibaDCOPInterface *mDCOPIFace;
     OmnibookFnActions *mOFn;
@@ -125,15 +139,6 @@ private:
     QPopupMenu *mOmniMODE;
     QTimer *mOmnibookTimer;
     KProcess *mKeyProc;
-#else // ENABLE_OMNIBOOK
-    ToshibaFnActions *mTFn;
-    QPopupMenu *mSpeed;
-    QPopupMenu *mHyper;
-    QTimer *mHotKeysTimer;
-    bool bsmtrig;
-    int mHT;
-    int mSS;
-    int mSVideo;
 #endif // ENABLE_OMNIBOOK
 };
 

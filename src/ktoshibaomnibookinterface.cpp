@@ -27,12 +27,17 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+extern "C" {
+#include <fcntl.h>
+}
+
 KToshibaOmnibookInterface::KToshibaOmnibookInterface( QObject *parent )
     : QObject( parent ),
       mFd( 0 ),
       BatteryCap( 0 ),
       RemainingCap( 0 )
 {
+    model = i18n("UNKNOWN");
 }
 
 KToshibaOmnibookInterface::~KToshibaOmnibookInterface()
@@ -48,29 +53,56 @@ bool KToshibaOmnibookInterface::checkOmnibook()
         return false;
     if (file.open(IO_ReadOnly)) {
         QTextStream stream(&file);
-        QString line, tmp;
+        QString line;
         while (!stream.atEnd()) {
             line = stream.readLine();
             if(line.contains("BIOS Vendor:", false)) {
                 QRegExp rx("(TOSHIBA)$");
-                rx.search(line);
+                if (rx.search(line) == -1) {
+                    file.close();
+                    return false;
+                }
                 bios = rx.cap(1);
                 break;
             }
         }
         file.close();
-        if (bios == "TOSHIBA")
-            return true;
     }
 
-    return false;
+    return true;
+}
+
+int KToshibaOmnibookInterface::machineBIOS()
+{
+    QFile file(OMNI_DMI);
+    if (!file.exists())
+        return -1;
+    int bios = -1;
+    if (file.open(IO_ReadOnly)) {
+        QTextStream stream(&file);
+        QString line;
+        while (!stream.atEnd()) {
+            line = stream.readLine();
+            if(line.contains("BIOS Version:", false)) {
+                QRegExp rx("(\\d).(\\d+)$");
+                if (rx.search(line) == -1) {
+                    file.close();
+                    return -1;
+                }
+                bios = ((rx.cap(1).toInt()) * 0x100) + rx.cap(2).toInt();
+                break;
+            }
+        }
+        file.close();
+    }
+
+    return bios;
 }
 
 QString KToshibaOmnibookInterface::modelName()
 {
     QFile file(OMNI_DMI);
     if (!file.exists()) {
-        model = i18n("UNKNOWN");
         ectype = NONE;
         return model;
     }
@@ -137,7 +169,6 @@ QString KToshibaOmnibookInterface::modelName()
                     break;
                 }
                 if (tmp.isEmpty()) {
-                    model = i18n("UNKNOWN");
                     ectype = NONE;
                     break;
                 }
@@ -373,13 +404,14 @@ int KToshibaOmnibookInterface::getLCDBackLight()
 
 void KToshibaOmnibookInterface::setLCDBackLight(int status)
 {
-    if ((mFd = open(OMNI_BLANK, O_RDWR)) == -1) {
+    if ((mFd = open(OMNI_LCD, O_RDWR)) == -1) {
         kdError() << "KToshibaOmnibookInterface::setLCDBacklight()"
-                  << "Could not open: " << OMNI_ROOT << "/blank" << endl;
+                  << "Could not open: " << OMNI_ROOT << "/lcd" << endl;
         return;
     }
 
-    if (write(mFd, "%d", status) < 0) {
+    const char *s = (status == 0)? "off" : "on";
+    if (write(mFd, "%s", *s) < 0) {
         kdError() << "KToshibaOmnibookInterface::setLCDBacklight()"
                   << "Could not turn " << ((status == 0)? "off" : "on")
                   << " LCD backlight" << endl;

@@ -1,3 +1,32 @@
+2006-10-16 Azael Avalos <coproscefalo@gmail.com>
+	* Modified ktoshiba.{h,cpp} so that if omnibook support
+	  is compiled in it can work on both, toshiba and
+	  omnibook kernel modules
+
+2006-10-13 Azael Avalos <coproscefalo@gmail.com>
+	* Some changes to KCModule
+
+2006-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to checkOmnibook function
+	* Added function to get hotkeys from toshiba_acpi
+	  kernel module
+	* Some changes to toshibafnactions class
+
+2006-10-04 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to ktosh_keyhandler program
+
+2006-10-04 Azael Avalos <coproscefalo@gmail.com>
+	* Created new class named FnActions which is inherited
+	  from Toshiba/OmnibookFnActions classes to reduce some
+	  duplicated code
+	* Fixed the Battery Status display for omnibook users
+
+2006-10-01 Azael Avalos <coproscefalo@gmail.com>
+	* Added a new kecode entry for wireless on/off
+	  and enabled it on KCM
+	* Changed the LCD Baclight function to _really_
+	  turn off the LCD backlight...
+
 2006-09-27 Azael Avalos <coproscefalo@gmail.com>
 	* More models added to omnibookModelName function
 	* Created new class nmed KToshibaOmnibookInterface

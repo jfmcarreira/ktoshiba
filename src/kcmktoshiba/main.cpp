@@ -24,20 +24,18 @@
  ***************************************************************************/
 
 #include <qlayout.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qtimer.h>
-#include <qcombobox.h>
 #include <qtabwidget.h>
+#include <qcombobox.h>
+#include <qlabel.h>
 #include <qpushbutton.h>
-#include <qbuttongroup.h>
+#include <qtimer.h>
+#include <qcheckbox.h>
 
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
-#include <kdebug.h>
 #include <kconfig.h>
-#include <kled.h>
 #include <kprogress.h>
+#include <kled.h>
 
 #include "../ktoshibasmminterface.h"
 #include "../ktoshibaomnibookinterface.h"
@@ -67,57 +65,60 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     layout->addWidget( m_KCMKToshibaGeneral );
     layout->addStretch();
 
-    m_ProcIFace = new KToshibaProcInterface(this);
-
     load();
 
-    m_InterfaceAvailable = false;
+    m_SCIIFace = false;
     m_HCIIFace = false;
     m_Omnibook = false;
+    m_Init = false;
+    m_AC = -1;
 
-#ifdef ENABLE_OMNIBOOK
-    m_OmniIFace = new KToshibaOmnibookInterface(this);
-    m_Omnibook = m_OmniIFace->checkOmnibook();
-    m_KCMKToshibaGeneral->tlOff->hide();
-    m_KCMKToshibaGeneral->frameMain->setEnabled(true);
-    m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
-		m_KCMKToshibaGeneral->configTabWidget->page(2), false);
-    m_KCMKToshibaGeneral->fnComboBox_2->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_3->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_4->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_8->setEnabled(false);
-    m_KCMKToshibaGeneral->fnComboBox_9->setEnabled(false);
-    m_AC = m_OmniIFace->omnibookAC();
-#else // ENABLE_OMNIBOOK
+    m_ProcIFace = new KToshibaProcInterface(this);
     m_SMMIFace = new KToshibaSMMInterface(this);
-    m_InterfaceAvailable = m_SMMIFace->openSCIInterface();
-    m_KCMKToshibaGeneral->tlOff->hide();
-    m_KCMKToshibaGeneral->frameMain->setEnabled(true);
-    if (!m_InterfaceAvailable)
+    m_SCIIFace = m_SMMIFace->openSCIInterface();
+    m_HCIIFace = (m_SMMIFace->machineBIOS() == -1)? false : true;
+    if (!m_SCIIFace)
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
-    (m_SMMIFace->machineID() == -1)? m_HCIIFace = false
-        : m_HCIIFace = true;
-    m_AC = m_SMMIFace->acPowerStatus();
-#endif // ENABLE_OMNIBOOK
-    if (!m_InterfaceAvailable && !m_HCIIFace && !m_Omnibook) {
+    if (m_HCIIFace)
+        m_AC = m_SMMIFace->acPowerStatus();
+
+    if (!m_HCIIFace && !m_SCIIFace) {
+        delete m_SMMIFace; m_SMMIFace = NULL;
+        m_OmniIFace = new KToshibaOmnibookInterface(this);
+        m_Omnibook = m_OmniIFace->checkOmnibook();
+    }
+    if (m_Omnibook) {
+        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+		    m_KCMKToshibaGeneral->configTabWidget->page(2), false);
+        m_KCMKToshibaGeneral->fnComboBox_2->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_3->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_4->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_9->setEnabled(false);
+        m_AC = m_OmniIFace->omnibookAC();
+    }
+
+    if (!m_SCIIFace && !m_HCIIFace && !m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->show();
         m_KCMKToshibaGeneral->frameMain->setEnabled(false);
         setButtons(buttons() & ~Default);
-    }
+    } else
+    if (m_SCIIFace || m_HCIIFace || m_Omnibook) {
+        m_KCMKToshibaGeneral->tlOff->hide();
+        m_KCMKToshibaGeneral->frameMain->setEnabled(true);
 
 #ifndef ENABLE_HELPER
-    m_KCMKToshibaGeneral->helperPushButton->setEnabled(false);
+        m_KCMKToshibaGeneral->helperPushButton->setEnabled(false);
 #endif // ENABLE_HELPER
 
-    connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
-    m_Timer = new QTimer(this);
-    connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
-    m_Timer->start(210);
-    m_Init = false;
+        connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
+        m_Timer = new QTimer(this);
+        connect( m_Timer, SIGNAL( timeout() ), SLOT( timeout() ) );
+        m_Timer->start(210);
+    }
 };
 
 
@@ -198,11 +199,10 @@ void KCMToshibaModule::defaults()
 
 void KCMToshibaModule::save()
 {
-kdDebug() << "KCMToshibaModule: saving." << endl;
-
+    kdDebug() << "KCMToshibaModule: saving." << endl;
     KConfig config(CONFIG_FILE);
-    config.setGroup("KToshiba");
 
+    config.setGroup("KToshiba");
     config.writeEntry("Audio_Player",
 		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
     config.writeEntry("Bluetooth_Startup",
@@ -266,17 +266,18 @@ void KCMToshibaModule::timeout()
 
     int time = 0, perc = -1;
 
-#ifdef ENABLE_OMNIBOOK
-    (m_Omnibook)? m_OmniIFace->batteryStatus(&time, &perc)
-        : m_ProcIFace->acpiBatteryStatus(&time, &perc);
+    if (m_SCIIFace) m_SMMIFace->batteryStatus(&time, &perc);
 
-    m_AC = ((m_AC == -1)? m_ProcIFace->acpiAC() : m_OmniIFace->omnibookAC());
-#else // ENABLE_OMNIBOOK
-    (m_InterfaceAvailable)? m_SMMIFace->batteryStatus(&time, &perc)
-        : m_ProcIFace->acpiBatteryStatus(&time, &perc);
+    if (m_HCIIFace) m_AC = m_SMMIFace->acPowerStatus();
 
-    m_AC = (m_AC == -1)? m_ProcIFace->acpiAC() : m_SMMIFace->acPowerStatus();
-#endif // ENABLE_OMNIBOOK
+    if (m_Omnibook) {
+        m_OmniIFace->batteryStatus(&time, &perc);
+        m_AC = m_OmniIFace->omnibookAC();
+    }
+
+    if (m_AC == -1) m_AC = m_ProcIFace->acpiAC();
+
+    if (perc == -1) m_ProcIFace->acpiBatteryStatus(&time, &perc);
 
     (perc == -1)? m_KCMKToshibaGeneral->mKPBattery->setValue(0)
         : m_KCMKToshibaGeneral->mKPBattery->setValue(perc);

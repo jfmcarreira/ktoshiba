@@ -1,13 +1,8 @@
 /***************************************************************************
- *   main.h                                                                *
- *                                                                         *
- *   Copyright (C) 2004-2006 by Azael Avalos                               *
+ *   Copyright (C) 2006 by Azael Avalos                                    *
  *   coproscefalo@gmail.com                                                *
  *                                                                         *
- *   Based on kcm_kvaio                                                    *
- *   Copyright (C) 2003 Mirko Boehm (mirko@kde.org)                        *
- *                                                                         *
- *   This library is free software; you can redistribute it and/or modify  *
+ *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
@@ -23,45 +18,51 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KCMTOSHIBA_MAIN_H
-#define KCMTOSHIBA_MAIN_H
+#ifndef FN_ACTIONS_H
+#define FN_ACTIONS_H
 
-#include <kcmodule.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-class QTimer;
+#include <qobject.h>
+#include <qpixmap.h>
 
-class KCMKToshibaGeneral;
-class KToshibaProcInterface;
-class KToshibaSMMInterface;
-class KToshibaOmnibookInterface;
+class SettingsWidget;
+class StatusWidget;
+class Suspend;
 
 /**
+ * @short Shared Fn action class
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.4
+ * @version 0.1
  */
-class KCMToshibaModule: public KCModule
+class FnActions : public QObject
 {
     Q_OBJECT
 public:
-    KCMToshibaModule(QWidget *parent=0, const char *name = 0, const QStringList & = QStringList());
+    FnActions(QWidget *parent = 0);
+    virtual ~FnActions();
 
-    void load();
-    void save();
-    void defaults();
-protected slots:
-    void configChanged();
-    void timeout();
+    void showWidget(int, int);
+    void updateWidget(int, int, int extra = 0);
+    void hideWidgets();
+    void toggleMute(int *);
+    void lockScreen();
+    void showPassiveMsg(int state, char type);
+    SettingsWidget *m_SettingsWidget;
+    StatusWidget *m_StatusWidget;
+    Suspend *m_Suspend;
+    int m_Popup;
 private:
-    KCMKToshibaGeneral *m_KCMKToshibaGeneral;
-    KToshibaProcInterface *m_ProcIFace;
-    KToshibaSMMInterface *m_SMMIFace;
-    KToshibaOmnibookInterface *m_OmniIFace;
-    QTimer *m_Timer;
-    bool m_Omnibook;
-    bool m_SCIIFace;
-    bool m_HCIIFace;
-    bool m_Init;
-    int m_AC;
+    QWidget *m_Parent;
+    QString m_Title;
+    QString m_Text;
+    QString m_Activated;
+    QString m_Deactivated;
+    QString m_NotSupported;
+    QPixmap m_Icon;
+    int m_Duration;
 };
 
-#endif // KCMTOSHIBA_MAIN_H
+#endif // FN_ACTIONS_H

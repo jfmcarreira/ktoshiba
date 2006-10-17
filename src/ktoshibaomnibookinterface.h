@@ -24,10 +24,6 @@
 #include <qobject.h>
 #include <qstring.h>
 
-extern "C" {
-#include <fcntl.h>
-}
-
 #define OMNI_ROOT		"/proc/omnibook"
 #define OMNI_DMI		"/proc/omnibook/dmi"
 #define OMNI_LCD		"/proc/omnibook/lcd"
@@ -63,6 +59,11 @@ public:
      * @return @p true if found, false otherwise
      */
     bool checkOmnibook();
+    /**
+     * Gets the machine BIOS version
+     * @return @p the int holding the BIOS version
+     */
+    int machineBIOS();
     /**
      * Gets the machine model name
      * @return @p the string holding the model name

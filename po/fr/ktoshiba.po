@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-24 19:09-0600\n"
+"POT-Creation-Date: 2006-10-05 13:21-0600\n"
 "PO-Revision-Date: 2005-06-03 17:44+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
 "Language-Team:  <kde-francophone@kde.org>\n"
@@ -26,133 +26,185 @@ msgid ""
 "Your emails"
 msgstr "nicolas.ternisien@gmail.com"
 
-#: ktoshiba.cpp:118
+#: fnactions.cpp:47 ktoshiba.cpp:475 ktoshiba.cpp:744 main.cpp:40
+msgid "KToshiba"
+msgstr "KToshiba"
+
+#: fnactions.cpp:48
+msgid "activated"
+msgstr ""
+
+#: fnactions.cpp:49
+msgid "deactivated"
+msgstr ""
+
+#: fnactions.cpp:50
+msgid "Function Not Supported"
+msgstr ""
+
+#: fnactions.cpp:94
+msgid "Long Life"
+msgstr "Vie longue"
+
+#: fnactions.cpp:95
+msgid "User Settings"
+msgstr "Paramètres utilisateur"
+
+#: fnactions.cpp:99
+msgid "Normal Life"
+msgstr "Vie normale"
+
+#: fnactions.cpp:100
+msgid "Low Power"
+msgstr "Puissance faible"
+
+#: fnactions.cpp:104
+msgid "Full Life"
+msgstr "Vie pleine"
+
+#: fnactions.cpp:105
+msgid "Full Power"
+msgstr "Pleine puissance"
+
+#: fnactions.cpp:280
+msgid "Battery Status"
+msgstr ""
+
+#: fnactions.cpp:357
+#, fuzzy
+msgid "Bluetooth device %1"
+msgstr "Périphérique Bluetooth activé"
+
+#: fnactions.cpp:361
+#, fuzzy
+msgid "Ethernet device %1"
+msgstr "Périphérique Bluetooth activé"
+
+#: fnactions.cpp:364
+msgid "Wireless interface %1"
+msgstr "Interface sans-fil %1"
+
+#: ktoshiba.cpp:114
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
 msgstr ""
 
-#: ktoshiba.cpp:120
+#: ktoshiba.cpp:116
 msgid "HotKeys"
 msgstr ""
 
-#: ktoshiba.cpp:343
+#: ktoshiba.cpp:339
 msgid "Suspend To &RAM"
 msgstr "Suspendre en &mémoire"
 
-#: ktoshiba.cpp:345
+#: ktoshiba.cpp:341
 msgid "Suspend To &Disk"
 msgstr "Suspendre sur &disque"
 
-#: ktoshiba.cpp:364 ktoshiba.cpp:368 ktoshiba.cpp:391
+#: ktoshiba.cpp:360 ktoshiba.cpp:364 ktoshiba.cpp:388
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: ktoshiba.cpp:365 ktoshiba.cpp:369
+#: ktoshiba.cpp:361 ktoshiba.cpp:365
 #, fuzzy
 msgid "Enabled"
 msgstr "Désactivé"
 
-#: ktoshiba.cpp:366
+#: ktoshiba.cpp:362
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:370
+#: ktoshiba.cpp:366
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:380
+#: ktoshiba.cpp:377
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:381
+#: ktoshiba.cpp:378
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:382
+#: ktoshiba.cpp:379
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:385
+#: ktoshiba.cpp:382
 msgid "Enable &Bluetooth"
 msgstr "Activer le &Bluetooth"
 
-#: ktoshiba.cpp:392
+#: ktoshiba.cpp:389
 msgid "Enabled - PM aware"
 msgstr "Activé - PM branché"
 
-#: ktoshiba.cpp:393
+#: ktoshiba.cpp:390
 msgid "Enabled - No PM aware"
 msgstr "Activé - Aucun PM branché"
 
-#: ktoshiba.cpp:394
+#: ktoshiba.cpp:391
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:396
+#: ktoshiba.cpp:393
 msgid "Dynamic"
 msgstr "Dynamique"
 
-#: ktoshiba.cpp:397
+#: ktoshiba.cpp:394
 msgid "Always High"
 msgstr "Toujours haut"
 
-#: ktoshiba.cpp:398
+#: ktoshiba.cpp:395
 msgid "Always Low"
 msgstr "Toujours bas"
 
-#: ktoshiba.cpp:399
+#: ktoshiba.cpp:396
 msgid "CPU Frequency"
 msgstr "Fréquence du processeur"
 
-#: ktoshiba.cpp:409
+#: ktoshiba.cpp:406
 msgid "&Configure KToshiba..."
 msgstr "&Configurer KToshiba..."
 
-#: ktoshiba.cpp:412
+#: ktoshiba.cpp:409
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:415
+#: ktoshiba.cpp:412
 msgid "&About KToshiba"
 msgstr "&À propos de KToshiba"
 
-#: ktoshiba.cpp:417
+#: ktoshiba.cpp:414
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:472 ktoshiba.cpp:739 main.cpp:40 omnibookfnactions.cpp:208
-#: omnibookfnactions.cpp:265 toshibafnactions.cpp:513 toshibafnactions.cpp:581
-#: toshibafnactions.cpp:593
-msgid "KToshiba"
-msgstr "KToshiba"
-
-#: ktoshiba.cpp:472
+#: ktoshiba.cpp:475
 msgid "Bluetooth device activated"
 msgstr "Périphérique Bluetooth activé"
 
-#: ktoshiba.cpp:473 omnibookfnactions.cpp:266 toshibafnactions.cpp:582
+#: ktoshiba.cpp:476
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: ktoshiba.cpp:738
+#: ktoshiba.cpp:743
 msgid "on"
 msgstr "active"
 
-#: ktoshiba.cpp:738
+#: ktoshiba.cpp:743
 msgid "off"
 msgstr "inactive"
 
-#: ktoshiba.cpp:739
+#: ktoshiba.cpp:744
 msgid "Wireless antenna turned %1"
 msgstr "L'antenne sans-fil est %1"
 
-#: ktoshiba.cpp:740 omnibookfnactions.cpp:210 toshibafnactions.cpp:515
+#: ktoshiba.cpp:745
 msgid "Wireless"
 msgstr "Sans-fil"
 
-#: ktoshibaprocinterface.cpp:72 ktoshibaprocinterface.cpp:140
-#: omnibookfnactions.cpp:69
+#: ktoshibaomnibookinterface.cpp:73 ktoshibaomnibookinterface.cpp:140
+#: omnibookfnactions.cpp:55
 msgid "UNKNOWN"
 msgstr ""
 
@@ -195,25 +247,6 @@ msgstr "Traduction française"
 #: main.cpp:58
 msgid "omnibook stuff tester"
 msgstr ""
-
-#: omnibookfnactions.cpp:207 omnibookfnactions.cpp:264
-#: toshibafnactions.cpp:512 toshibafnactions.cpp:580 toshibafnactions.cpp:592
-msgid "activated"
-msgstr ""
-
-#: omnibookfnactions.cpp:207 omnibookfnactions.cpp:264
-#: toshibafnactions.cpp:512 toshibafnactions.cpp:580 toshibafnactions.cpp:592
-msgid "deactivated"
-msgstr ""
-
-#: omnibookfnactions.cpp:209 toshibafnactions.cpp:514
-msgid "Wireless interface %1"
-msgstr "Interface sans-fil %1"
-
-#: omnibookfnactions.cpp:265 toshibafnactions.cpp:581
-#, fuzzy
-msgid "Bluetooth device %1"
-msgstr "Périphérique Bluetooth activé"
 
 #. i18n: file ktoshibaui.rc line 4
 #: rc.cpp:3
@@ -315,43 +348,6 @@ msgstr ""
 
 #: suspend.cpp:202
 msgid "D-BUS daemon not running."
-msgstr ""
-
-#: toshibafnactions.cpp:180 toshibafnactions.cpp:209 toshibafnactions.cpp:241
-msgid "Function Not Supported"
-msgstr ""
-
-#: toshibafnactions.cpp:183
-msgid "Long Life"
-msgstr "Vie longue"
-
-#: toshibafnactions.cpp:184
-msgid "User Settings"
-msgstr "Paramètres utilisateur"
-
-#: toshibafnactions.cpp:188
-msgid "Normal Life"
-msgstr "Vie normale"
-
-#: toshibafnactions.cpp:189
-msgid "Low Power"
-msgstr "Puissance faible"
-
-#: toshibafnactions.cpp:193
-msgid "Full Life"
-msgstr "Vie pleine"
-
-#: toshibafnactions.cpp:194
-msgid "Full Power"
-msgstr "Pleine puissance"
-
-#: toshibafnactions.cpp:593
-#, fuzzy
-msgid "Ethernet device %1"
-msgstr "Périphérique Bluetooth activé"
-
-#: toshibafnactions.cpp:594
-msgid "Ethernet"
 msgstr ""
 
 #~ msgid "STR"

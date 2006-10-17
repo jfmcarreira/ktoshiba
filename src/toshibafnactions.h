@@ -25,43 +25,31 @@
 #include <config.h>
 #endif
 
-#include <qobject.h>
-
-class QWidget;
+#include "fnactions.h"
 
 class KToshibaSMMInterface;
-class SettingsWidget;
-class StatusWidget;
-class Suspend;
 
 /**
  * @short Performs the Fn assosiated action
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.3
  */
-class ToshibaFnActions : public QObject
+class ToshibaFnActions : public FnActions
 {
-    Q_OBJECT
 public:
     ToshibaFnActions(QWidget *parent = 0);
     virtual ~ToshibaFnActions();
 
-    void hideWidgets();
     void performFnAction(int, int);
     KToshibaSMMInterface *m_Driver;
     bool m_SCIIface;
     int m_MachineID;
-    int m_Popup;
     int m_BatType;
     int m_BatSave;
     int m_Video;
     int m_Pad;
 private:
-    void toggleMute();
-    void lockScreen();
     void toggleBSM();
-    void suspendToRAM();
-    void suspendToDisk();
     void toggleVideo();
     void brightDown();
     void brightUp();
@@ -74,10 +62,7 @@ private:
     void toggleBluetooth();
     void toggleEthernet();
     void initSCI();
-    SettingsWidget *m_SettingsWidget;
-    StatusWidget *m_StatusWidget;
-    Suspend *m_Suspend;
-    QWidget *m_Parent;
+    int m_BIOS;
     int m_Snd;
     int m_Bright;
     int m_Wireless;

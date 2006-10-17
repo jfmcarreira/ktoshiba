@@ -39,7 +39,7 @@ KToshibaProcInterface::~KToshibaProcInterface()
 
 int KToshibaProcInterface::toshibaProcStatus()
 {
-    int key;
+    int key = 0;
     char buffer[64], *ret;
 
     if (!(str = fopen(TOSH_PROC, "r"))) {
@@ -58,6 +58,29 @@ int KToshibaProcInterface::toshibaProcStatus()
     buffer[sizeof(buffer) - 1] = '\0';
     sscanf(buffer, "%*s %*x %*d.%*d %*d.%*d %*x %x\n", &key);
     fclose(str);
+
+    return key;
+}
+
+int KToshibaProcInterface::toshibaACPIKey()
+{
+    int key = 0;
+
+    QFile file(ACPI_ROOT"/toshiba/keys");
+    if (!file.open(IO_ReadOnly)) {
+        kdError() << "KToshibaProcInterface::toshibaACPIKey(): "
+                  << "Could not get hotkey status" << endl;
+        return -1;
+    }
+
+    QTextStream stream(&file);
+    QString line = stream.readLine();
+    if (line.contains("hotkey:", false)) {
+        QRegExp rx("(0x[0-9a-fA-F]+)$");
+        rx.search(line);
+        key = rx.cap(1).toInt(NULL, 16);
+    }
+    file.close();
 
     return key;
 }
