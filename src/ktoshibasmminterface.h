@@ -286,6 +286,11 @@ public:
    * (Hardware Configuration Interface) *
    **************************************/
   /**
+   * Gets the machine BIOS version.
+   * @return @p value holding the BIOS version
+   */
+  int machineBIOS();
+  /**
    * Gets the machine ID number.
    * @return @p value holding the machine id
    */

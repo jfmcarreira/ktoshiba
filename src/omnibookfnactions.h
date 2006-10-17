@@ -25,46 +25,30 @@
 #include <config.h>
 #endif
 
-#include <qobject.h>
-
-class QWidget;
+#include "fnactions.h"
 
 class KToshibaOmnibookInterface;
-class SettingsWidget;
-class StatusWidget;
-class Suspend;
 
 /**
  * @short Performs the Fn assosiated action
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.2
  */
-class OmnibookFnActions : public QObject
+class OmnibookFnActions : public FnActions
 {
-    Q_OBJECT
 public:
     OmnibookFnActions(QWidget *parent = 0);
     virtual ~OmnibookFnActions();
 
-    void hideWidgets();
-    void performFnAction(int action, int keycode);
+    void performFnAction(int, int);
     KToshibaOmnibookInterface *m_Omni;
     QString m_ModelName;
     bool m_OmnibookIface;
     int m_ECType;
-    int m_Popup;
     int m_Video;
     int m_Bright;
     int m_Pad;
 private:
-    SettingsWidget *m_SettingsWidget;
-    StatusWidget *m_StatusWidget;
-    Suspend *m_Suspend;
-    QWidget *m_Parent;
-    void toggleMute();
-    void lockScreen();
-    void suspendToRAM();
-    void suspendToDisk();
     void toggleWireless();
     void mousePadOn();
     void mousePadOff();

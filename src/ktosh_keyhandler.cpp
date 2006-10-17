@@ -82,6 +82,7 @@ void grabKeys()
     XGrabKey(mDisplay, 153, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Play/Pause
     XGrabKey(mDisplay, 159, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F7
     XGrabKey(mDisplay, 160, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-Esc
+    XGrabKey(mDisplay, 161, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F8 (Wireless On/Off)
     XGrabKey(mDisplay, 162, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Next
     XGrabKey(mDisplay, 164, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Stop/Eject
     XGrabKey(mDisplay, 178, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// WWW
@@ -123,6 +124,8 @@ int main(void)
     major = XkbMajorVersion;
     minor = XkbMinorVersion;
     mDisplayName = getenv("DISPLAY");
+    if (mDisplayName == NULL)
+        mDisplayName = ":0.0";
     mScreen = 0;
     mEventBaseRet = 0;
     mOpcodeRet = 0;
@@ -130,7 +133,7 @@ int main(void)
     max_keycodes = 17;
 
     // Open X server connection
-    mDisplay = XOpenDisplay(NULL);
+    mDisplay = XOpenDisplay(mDisplayName);
     mScreen = DefaultScreen(mDisplay);
     if (mDisplay == NULL) {
         kdError() << "ktosh_keyhandler: Could not connect to X server" << endl;

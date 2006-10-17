@@ -22,20 +22,8 @@
 #include "ktoshibasmminterface.h"
 #include "suspend.h"
 
-#include <qwidgetstack.h>
-#include <qapplication.h>
-#include <qlabel.h>
-
 #include <kdebug.h>
-#include <dcopref.h>
-#include <kstandarddirs.h>
-#include <kmessagebox.h>
-#include <kprocess.h>
-#include <klocale.h>
-#include <kpassivepopup.h>
-#include <kiconloader.h>
 #include <kconfig.h>
-#include <kprogress.h>
 
 #ifdef ENABLE_SYNAPTICS
 #include <synaptics/synaptics.h>
@@ -44,26 +32,18 @@
 using namespace Synaptics;
 #endif // ENABLE_SYNAPTICS
 
-#include "settingswidget.h"
-#include "statuswidget.h"
-
 ToshibaFnActions::ToshibaFnActions(QWidget *parent)
-    : QObject( parent ),
+    : FnActions( parent ),
       m_Driver( 0 )
 {
-    m_Parent = parent;
-    m_Driver = new KToshibaSMMInterface(parent);
-    m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
-    m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
-    m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
-    m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
-    m_Suspend = new Suspend(parent);
+    m_Driver = new KToshibaSMMInterface(0);
 
     m_SCIIface = m_Driver->openSCIInterface();
     if (m_SCIIface)
         initSCI();
     else if (!m_SCIIface) {
         kdError() << "KToshiba: Could not open SCI interface." << endl;
+        m_BatSave = 2;
         m_BatType = 3;
         m_Boot = -1;
         m_BootType = -1;
@@ -71,23 +51,27 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
         m_Pad = -1;
     }
 
-    m_MachineID = m_Driver->machineID();
-    m_Video = m_Driver->getVideo();
-    m_Bright = m_Driver->getBrightness();
-    m_Wireless = m_Driver->getWirelessPower();
-    m_Popup = 0;
+    m_BIOS = m_Driver->machineBIOS();
+    if (m_BIOS != -1) {
+        m_MachineID = m_Driver->machineID();
+        m_Video = m_Driver->getVideo();
+        m_Bright = m_Driver->getBrightness();
+        m_Wireless = m_Driver->getWirelessPower();
+    }
     m_Snd = 1;
-    m_BatSave = 2;
     m_Vol = 1;
     m_Fan = 1;
+
+    if (m_BIOS == -1 && !m_SCIIface) {
+        delete m_Driver; m_Driver = NULL;
+    }
 }
 
-ToshibaFnActions::~ToshibaFnActions() {
-    delete m_Parent; m_Parent = NULL;
-    delete m_Suspend; m_Suspend = NULL;
-    delete m_SettingsWidget; m_SettingsWidget = NULL;
-    delete m_StatusWidget; m_StatusWidget = NULL;
-    delete m_Driver; m_Driver = NULL;
+ToshibaFnActions::~ToshibaFnActions()
+{
+    if (m_BIOS != -1 || m_SCIIface) {
+        delete m_Driver; m_Driver = NULL;
+    }
 }
 
 void ToshibaFnActions::initSCI()
@@ -96,6 +80,7 @@ void ToshibaFnActions::initSCI()
     int major = ((m_Driver->sciversion & 0xff00)>>8);
     int minor = (m_Driver->sciversion & 0xff);
     kdDebug() << "KToshiba: SCI version: " << major << "." << minor << endl;
+    m_BatSave = m_Driver->getBatterySaveMode();
     m_BatType = m_Driver->getBatterySaveModeType();
     m_Boot = m_Driver->getBootMethod();
     m_BootType = m_Driver->getBootType();
@@ -104,13 +89,6 @@ void ToshibaFnActions::initSCI()
 
     if (m_BootType == 5 && m_LANCtrl >= 0)
         m_BootType = 6;
-}
-
-void ToshibaFnActions::hideWidgets()
-{
-    m_SettingsWidget->hide();
-    m_StatusWidget->hide();
-    m_Popup = 0;
 }
 
 void ToshibaFnActions::performFnAction(int action, int key)
@@ -122,10 +100,10 @@ void ToshibaFnActions::performFnAction(int action, int key)
             lockScreen();
             return;
         case 4:	// Suspend To RAM (STR)
-            suspendToRAM();
+            m_Suspend->toRAM();
             return;
         case 5:	// Suspend To Disk (STD)
-            suspendToDisk();
+            m_Suspend->toDisk();
             return;
         case 9:	// Wireless On/Off
             toggleWireless();
@@ -145,306 +123,68 @@ void ToshibaFnActions::performFnAction(int action, int key)
         case 10:	// Enable/Disable MousePad
         case 11:	// Speaker Volume
         case 12:	// Fan On/Off
-            if (m_Popup == 0) {
-                QRect r = QApplication::desktop()->geometry();
-                m_StatusWidget->move(r.center() - 
-                    QPoint(m_StatusWidget->width()/2, m_StatusWidget->height()/2));
-                m_StatusWidget->show();
-                m_Popup = key & 0x17f;
-            }
-            if ((key & 0x17f) == m_Popup)
-                break;
+            showWidget(1, key);
+            break;
         case 3:	// Toggle Battery Save Mode
         case 6:	// Toggle Video
         case 13:	// Toggle Boot Method
         case 22:	// Show Battery Status
-            if (m_Popup == 0) {
-                QRect r = QApplication::desktop()->geometry();
-                m_SettingsWidget->move(r.center() - 
-                    QPoint(m_SettingsWidget->width()/2, m_SettingsWidget->height()/2));
-                m_SettingsWidget->show();
-                m_Popup = key & 0x17f;
-            }
-            if ((key & 0x17f) == m_Popup)
-                break;
+            showWidget(2, key);
+            break;
     }
 
-    if (action == 3 && m_SCIIface) {
-        toggleBSM();
-        m_SettingsWidget->wsSettings->raiseWidget(0);
-        m_SettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
-        switch (m_BatSave) {
-            case -1:
-                m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
-                break;
-            case 0:
-                (m_BatType == 3)? m_SettingsWidget->tlStatus->setText(i18n("Long Life"))
-                    : m_SettingsWidget->tlStatus->setText(i18n("User Settings"));
-                m_SettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
-                break;
-            case 1:
-                (m_BatType == 3)? m_SettingsWidget->tlStatus->setText(i18n("Normal Life"))
-                    : m_SettingsWidget->tlStatus->setText(i18n("Low Power"));
-                m_SettingsWidget->plMedium->setFrameShape(QLabel::PopupPanel);
-                break;
-            case 2:
-                (m_BatType == 3)? m_SettingsWidget->tlStatus->setText(i18n("Full Life"))
-                    : m_SettingsWidget->tlStatus->setText(i18n("Full Power"));
-                m_SettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
-                break;
-        }
-        return;
-    }
-    if (action == 6) {
-        toggleVideo();
-        m_SettingsWidget->wsSettings->raiseWidget(1);
-        m_SettingsWidget->plLCD->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plCRT->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plLCDCRT->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plTV->setFrameShape(QLabel::NoFrame);
-        switch (m_Video) {
-            case -1:
-                m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
-                m_SettingsWidget->plLCD->setEnabled(false);
-                m_SettingsWidget->plCRT->setEnabled(false);
-                m_SettingsWidget->plLCDCRT->setEnabled(false);
-                m_SettingsWidget->plTV->setEnabled(false);
-                break;
-            case 0:
-            case 1:
-                m_SettingsWidget->tlStatus->setText("LCD");
-                m_SettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
-                break;
-            case 2:
-                m_SettingsWidget->tlStatus->setText("CRT");
-                m_SettingsWidget->plCRT->setFrameShape(QLabel::PopupPanel);
-                break;
-            case 3:
-                m_SettingsWidget->tlStatus->setText("LCD/CRT");
-                m_SettingsWidget->plLCDCRT->setFrameShape(QLabel::PopupPanel);
-                break;
-            case 4:
-                m_SettingsWidget->tlStatus->setText("S-Video");
-                m_SettingsWidget->plTV->setFrameShape(QLabel::PopupPanel);
-                break;
-        }
-        return;
-    }
-    if (action == 13 && m_SCIIface) {
-        toggleBootMethod();
-        (m_BootType == 5)? m_SettingsWidget->wsSettings->raiseWidget(3)
-            : m_SettingsWidget->wsSettings->raiseWidget(2);
-        switch (m_BootType) {
-            case -1:
-                m_SettingsWidget->tlStatus->setText(i18n("Function Not Supported"));
-                break;
-            case 1:
-                m_SettingsWidget->pl1->setEnabled(false);
-                m_SettingsWidget->pl4->setEnabled(false);
-                if (!m_Boot) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> HDD");
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
-                }
-                else {
-                    m_SettingsWidget->tlStatus->setText("HDD -> FDD");
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
-                }
-                break;
-            case 3:
-                m_SettingsWidget->pl1->setEnabled(false);
-                m_SettingsWidget->pl4->setEnabled(false);
-                if (!m_Boot) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> Built-in HDD");
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
-                } else
-                if (m_Boot == 1) {
-                    m_SettingsWidget->tlStatus->setText("Built-in HDD -> FDD");
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
-                } else
-                if (m_Boot == 2) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> Second HDD");
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
-                }
-                else {
-                    m_SettingsWidget->tlStatus->setText("Second HDD -> FDD");
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
-                }
-                break;
-            case 5:
-                if (!m_Boot) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> HDD -> CD-ROM");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl2_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                } else
-                if (m_Boot == 1) {
-                    m_SettingsWidget->tlStatus->setText("HDD -> FDD -> CD-ROM");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl2_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                } else
-                if (m_Boot == 2) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> CD-ROM -> HDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl2_2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                } else
-                if (m_Boot == 3) {
-                    m_SettingsWidget->tlStatus->setText("HDD -> CD-ROM -> FDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl2_2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                } else
-                if (m_Boot == 4) {
-                    m_SettingsWidget->tlStatus->setText("CD-ROM -> FDD -> HDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl2_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                }
-                else {
-                    m_SettingsWidget->tlStatus->setText("CD-ROM -> HDD -> FDD");
-                    m_SettingsWidget->pl1_2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl2_2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3_2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                }
-                break;
-            case 6:
-                if (!m_Boot) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> HDD -> CD-ROM -> LAN");
-                    m_SettingsWidget->pl1->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl4->setPixmap(SmallIcon("nfs_unmount", 32));
-                } else
-                if (m_Boot == 1) {
-                    m_SettingsWidget->tlStatus->setText("HDD -> CD-ROM -> LAN -> FDD");
-                    m_SettingsWidget->pl1->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("nfs_unmount", 32));
-                    m_SettingsWidget->pl4->setPixmap(SmallIcon("3floppy_unmount", 32));
-                } else
-                if (m_Boot == 2) {
-                    m_SettingsWidget->tlStatus->setText("FDD -> CD-ROM -> LAN -> HDD");
-                    m_SettingsWidget->pl1->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("nfs_unmount", 32));
-                    m_SettingsWidget->pl4->setPixmap(SmallIcon("hdd_unmount", 32));
-                } else
-                if (m_Boot == 3) {
-                    m_SettingsWidget->tlStatus->setText("CD-ROM -> LAN -> HDD -> FDD");
-                    m_SettingsWidget->pl1->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("nfs_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl4->setPixmap(SmallIcon("3floppy_unmount", 32));
-                } else
-                if (m_Boot == 4) {
-                    m_SettingsWidget->tlStatus->setText("CD-ROM -> LAN -> FDD -> HDD");
-                    m_SettingsWidget->pl1->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("nfs_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl4->setPixmap(SmallIcon("hdd_unmount", 32));
-                }
-                else {
-                    m_SettingsWidget->tlStatus->setText("HDD -> FDD -> CD-ROM -> LAN");
-                    m_SettingsWidget->pl1->setPixmap(SmallIcon("hdd_unmount", 32));
-                    m_SettingsWidget->pl2->setPixmap(SmallIcon("3floppy_unmount", 32));
-                    m_SettingsWidget->pl3->setPixmap(SmallIcon("cdrom_unmount", 32));
-                    m_SettingsWidget->pl4->setPixmap(SmallIcon("nfs_unmount", 32));
-                }
-                break;
-        }
-        return;
-    }
-    if (action == 1) {
-        toggleMute();
-        m_StatusWidget->wsStatus->raiseWidget(m_Snd);
-        return;
-    }
-    if ((action == 7) || (action == 8)) {
-        (action == 7)? brightDown() : brightUp();
-        m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
-        return;
-    }
-    if (action == 10) {
-        if (m_Pad == -1)
-            m_StatusWidget->wsStatus->raiseWidget(3);
-        else {
+    if ((key & 0x17f) == m_Popup) {
+        int state = -1, extra = -1;
+        if (action == 3 && m_SCIIface) {
+            toggleBSM();
+            state = m_BatSave;
+            extra = m_BatType;
+        } else
+        if (action == 6) {
+            toggleVideo();
+            state = m_Video;
+        } else
+        if (action == 13 && m_SCIIface) {
+            toggleBootMethod();
+            state = m_BootType;
+            extra = m_Boot;
+        } else
+        if (action == 22 && m_SCIIface) {
+            int time = 0, perc = -1;
+            m_Driver->batteryStatus(&time, &perc);
+            state = perc;
+        } else
+        if (action == 1) {
+            toggleMute(&m_Snd);
+            state = m_Snd;
+        } else
+        if ((action == 7) || (action == 8)) {
+            (action == 7)? brightDown() : brightUp();
+            state = m_Bright;
+        } else
+        if (action == 10) {
             toggleMousePad();
-#ifdef ENABLE_SYNAPTICS
-            m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 2 : 3));
-#else // ENABLE_SYNAPTICS
-            m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 3 : 2));
-#endif // ENABLE_SYNAPTICS
-        }
-        return;
-    }
-    if (action == 11 && m_SCIIface) {
-        if (m_Vol == -1)
-            m_StatusWidget->wsStatus->raiseWidget(0);
-        else {
+            state = m_Pad;
+        } else
+        if (action == 11 && m_SCIIface) {
             toggleSpeakerVolume();
-            if (!m_Vol)
-                m_StatusWidget->wsStatus->raiseWidget(m_Vol);
-            else if (m_Vol == 3)
-                m_StatusWidget->wsStatus->raiseWidget(m_Vol - 2);
-            else
-                m_StatusWidget->wsStatus->raiseWidget(m_Vol + 13);
-        }
-        return;
-    }
-    if (action == 12) {
-        if (m_Fan == -1)
-            m_StatusWidget->wsStatus->raiseWidget(13);
-        else {
+            state = m_Vol;
+        } else
+        if (action == 12) {
             toggleFan();
-            if (m_Fan == -1)
-            (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
-                : m_StatusWidget->wsStatus->raiseWidget(13);
+            state = m_Fan;
         }
-        return;
+        updateWidget(action, state, extra);
     }
-    if (action == 22 && m_SCIIface) {
-        m_SettingsWidget->wsSettings->raiseWidget(4);
-        m_SettingsWidget->tlStatus->setText("Battery Status");
-        int time = 0, perc = -1;
-        m_Driver->batteryStatus(&time, &perc);
-        (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
-            : m_SettingsWidget->batteryKPB->setValue(perc);
-    }
-}
-
-void ToshibaFnActions::toggleMute()
-{
-    DCOPRef kmixClient("kmix", "Mixer0");
-    DCOPReply reply = kmixClient.call("mute", 0);
-    if (reply.isValid()) {
-        bool res = reply;
-        m_Snd = (res == true)? 1 : 0;
-    }
-
-    kmixClient.send("toggleMute", 0);
-}
-
-void ToshibaFnActions::lockScreen()
-{
-    DCOPRef kdesktopClient("kdesktop", "KScreensaverIface");
-    kdesktopClient.send("lock");
 }
 
 void ToshibaFnActions::toggleBSM()
 {
+    m_BatSave = m_Driver->getBatterySaveMode();
+    if (m_BatSave == -1) return;
     KConfig cfg("ktoshibarc");
     cfg.setGroup("BSM");
     m_BatSave = cfg.readNumEntry("Battery_Save_Mode", 2);
-    if (m_BatSave == -1) return;
 
     m_BatSave--;
     if (m_BatSave < 1 && m_BatType == 3)
@@ -455,16 +195,6 @@ void ToshibaFnActions::toggleBSM()
     m_Driver->setBatterySaveMode(m_BatSave);
     cfg.writeEntry("Battery_Save_Mode", m_BatSave);
     cfg.sync();
-}
-
-void ToshibaFnActions::suspendToRAM()
-{
-    m_Suspend->toRAM();
-}
-
-void ToshibaFnActions::suspendToDisk()
-{
-    m_Suspend->toDisk();
 }
 
 void ToshibaFnActions::toggleVideo()
@@ -509,10 +239,7 @@ void ToshibaFnActions::toggleWireless()
         if (m_Wireless < 0) m_Wireless = 1;
 
         m_Driver->setWirelessPower(m_Wireless);
-        QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
-        KPassivePopup::message(i18n("KToshiba"),
-			   i18n("Wireless interface %1").arg(w),
-			   SmallIcon("kwifimanager", 20), m_Parent, i18n("Wireless"), 4000);
+        showPassiveMsg(m_Wireless, 'w');
     }
 }
 
@@ -578,9 +305,7 @@ void ToshibaFnActions::toggleBluetooth()
 
     (bt == 1)? m_Driver->setBluetoothPower(0)
         : m_Driver->setBluetoothPower(1);
-    QString w = ((bt == 0)? i18n("activated") : i18n("deactivated"));
-    KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device %1").arg(w),
-			   SmallIcon("kdebluetooth", 20), m_Parent, i18n("Bluetooth"), 4000);
+    showPassiveMsg(((bt == 1)? 0: 1), 'b');
 }
 
 void ToshibaFnActions::toggleEthernet()
@@ -590,10 +315,5 @@ void ToshibaFnActions::toggleEthernet()
 
     (eth == 1)? m_Driver->setLANController(0)
         : m_Driver->setLANController(1);
-    QString w = ((eth == 0)? i18n("activated") : i18n("deactivated"));
-    KPassivePopup::message(i18n("KToshiba"), i18n("Ethernet device %1").arg(w),
-			   SmallIcon("messagebox_info", 20), m_Parent, i18n("Ethernet"), 4000);
+    showPassiveMsg(((eth == 1)? 0: 1), 'e');
 }
-
-
-#include "toshibafnactions.moc"

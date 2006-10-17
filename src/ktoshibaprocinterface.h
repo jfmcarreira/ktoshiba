@@ -56,10 +56,15 @@ public:
      */
     int acpiAC();
     /**
-     * Checks /proc entry for hotkeys.
+     * Checks /proc/toshiba entry for hotkeys.
      * @return @p value holding the Fn-Key combo id
      */
     int toshibaProcStatus();
+    /**
+     * Checks /proc/acpi/toshiba/keys entry for hotkeys.
+     * @return @p value holding the Fn-Key combo id
+     */
+    int toshibaACPIKey();
 private:
     FILE *str;
     int BatteryCap;

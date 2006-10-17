@@ -39,6 +39,7 @@ number provided by the kernel, and "keycode" is one of the following:
 153:		Play/Pause also Next with ectype=12
 159:		Fn-F7
 160:		Fn-Esc
+161:		Fn-F8
 162:		Next also Play/Pause with ectype=12
 164:		Stop
 178:		WWW

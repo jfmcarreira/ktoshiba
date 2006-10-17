@@ -22,16 +22,9 @@
 #include "ktoshibaomnibookinterface.h"
 #include "suspend.h"
 
-#include <qwidgetstack.h>
-#include <qapplication.h>
-#include <qlabel.h>
-
 #include <kdebug.h>
 #include <klocale.h>
-#include <dcopref.h>
 #include <kprogress.h>
-#include <kpassivepopup.h>
-#include <kiconloader.h>
 
 #ifdef ENABLE_SYNAPTICS
 #include <synaptics/synaptics.h>
@@ -40,20 +33,11 @@
 using namespace Synaptics;
 #endif // ENABLE_SYNAPTICS
 
-#include "settingswidget.h"
-#include "statuswidget.h"
-
 OmnibookFnActions::OmnibookFnActions(QWidget *parent)
-    : QObject( parent ),
+    : FnActions( parent ),
       m_Omni( 0 )
 {
-    m_Parent = parent;
-    m_Omni = new KToshibaOmnibookInterface(parent);
-    m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
-    m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
-    m_StatusWidget = new StatusWidget(0, "Screen Indicator", Qt::WX11BypassWM);
-    m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
-    m_Suspend = new Suspend(parent);
+    m_Omni = new KToshibaOmnibookInterface(0);
 
     m_OmnibookIface = m_Omni->checkOmnibook();
     if (m_OmnibookIface) {
@@ -75,23 +59,12 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
         m_Pad = -1;
         m_Fan = -1;
     }
-    m_Popup = 0;
     m_Snd = 1;
 }
 
 OmnibookFnActions::~OmnibookFnActions()
 {
-    delete m_SettingsWidget; m_SettingsWidget = NULL;
-    delete m_StatusWidget; m_StatusWidget = NULL;
-    delete m_Suspend; m_Suspend = NULL;
     delete m_Omni; m_Omni = NULL;
-}
-
-void OmnibookFnActions::hideWidgets()
-{
-    m_SettingsWidget->hide();
-    m_StatusWidget->hide();
-    m_Popup = 0;
 }
 
 void OmnibookFnActions::performFnAction(int action, int keycode)
@@ -103,10 +76,10 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
             lockScreen();
             return;
         case 4:	// Suspend To RAM (STR)
-            suspendToRAM();
+            m_Suspend->toRAM();
             return;
         case 5:	// Suspend To Disk (STD)
-            suspendToDisk();
+            m_Suspend->toDisk();
             return;
         case 9:	// Wireless On/Off
             toggleWireless();
@@ -114,87 +87,47 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
         case 14:	// LCD Backlight On/Off
             toogleBackLight();
             return;
+        case 15:	// Bluetooth On/Off
+            toggleBluetooth();
+            return;
         case 1:	// Mute/Unmute
         case 7:	// Brightness Down
         case 8:	// Brightness Up
         case 10:	// Enable/Disable MousePad
         case 12:	// Fan On/Off
-            if (m_Popup == 0) {
-                QRect r = QApplication::desktop()->geometry();
-                m_StatusWidget->move(r.center() - 
-                    QPoint(m_StatusWidget->width()/2, m_StatusWidget->height()/2));
-                m_StatusWidget->show();
-                m_Popup = 1;
-            }
-            if (m_Popup == 1)
-                break;
+            showWidget(1, keycode);
+            break;
+        case 22:	// Show Battery Status
+            showWidget(2, keycode);
+            break;
     }
 
-    if (action == 1) {
-        m_Snd--;
-        if (m_Snd < 0) m_Snd = 1;
-        toggleMute();
-        m_StatusWidget->wsStatus->raiseWidget(m_Snd);
-        return;
-    }
-    if (action == 7 || action == 8) {
-        if (m_Bright <= 7 && m_Bright >= 0)
-            m_StatusWidget->wsStatus->raiseWidget(m_Bright + 4);
-        return;
-    }
-    if (action == 10) {
-        if (m_Pad == -1)
-            m_StatusWidget->wsStatus->raiseWidget(3);
-        else {
+    if ((keycode & 0x17f) == m_Popup) {
+        int type = -1, extra = -1;
+        if (action == 22) {
+            int time = 0, perc = -1;
+            m_Omni->batteryStatus(&time, &perc);
+            type = perc;
+        } else
+        if (action == 1) {
+            toggleMute(&m_Snd);
+            type = m_Snd;
+        } else
+        if (action == 7 || action == 8) {
+            type = m_Bright;
+            extra = keycode;
+        } else
+        if (action == 10 && (keycode == 151 || keycode == 152)) {
             (keycode == 151)? mousePadOn() : mousePadOff();
-            m_StatusWidget->wsStatus->raiseWidget(((m_Pad == 0)? 3 : 2));
+            type = m_Pad;
+            extra = keycode;
+        } else
+        if (action == 12) {
+            toggleFan();
+            type = m_Fan;
         }
-        return;
+        updateWidget(action, type, extra);
     }
-    if (action == 12) {
-        toggleFan();
-        if (m_Fan == -1) return;
-
-        (m_Fan == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
-            : m_StatusWidget->wsStatus->raiseWidget(13);
-        return;
-    }
-    if (action == 22) {
-        m_SettingsWidget->wsSettings->raiseWidget(4);
-        m_SettingsWidget->tlStatus->setText("Battery Status");
-        int time = 0, perc = -1;
-        m_Omni->batteryStatus(&time, &perc);
-        (perc == -1)? m_SettingsWidget->batteryKPB->setValue(0)
-            : m_SettingsWidget->batteryKPB->setValue(perc);
-    }
-}
-
-void OmnibookFnActions::toggleMute()
-{
-    DCOPRef kmixClient("kmix", "Mixer0");
-    DCOPReply reply = kmixClient.call("mute", 0);
-    if (reply.isValid()) {
-        bool res = reply;
-        m_Snd = (res == true)? 1 : 0;
-    }
-
-    kmixClient.send("toggleMute", 0);
-}
-
-void OmnibookFnActions::lockScreen()
-{
-    DCOPRef kdesktopClient("kdesktop", "KScreensaverIface");
-    kdesktopClient.send("lock()", 0);
-}
-
-void OmnibookFnActions::suspendToRAM()
-{
-    m_Suspend->toRAM();
-}
-
-void OmnibookFnActions::suspendToDisk()
-{
-    m_Suspend->toDisk();
 }
 
 void OmnibookFnActions::toggleWireless()
@@ -206,14 +139,10 @@ void OmnibookFnActions::toggleWireless()
         return;
     else {
         m_Wireless = m_Omni->getWifi();
-        m_Wireless--;
-        if (m_Wireless < 0) m_Wireless = 1;
+        (m_Wireless == 1)? m_Omni->setWifi(0)
+            : m_Omni->setWifi(1);
 
-        m_Omni->setWifi(m_Wireless);
-        QString w = ((m_Wireless == 1)? i18n("activated") : i18n("deactivated"));
-        KPassivePopup::message(i18n("KToshiba"),
-			   i18n("Wireless interface %1").arg(w),
-			   SmallIcon("kwifimanager", 20), m_Parent, i18n("Wireless"), 4000);
+        showPassiveMsg((m_Wireless = (m_Wireless == 1)? 0: 1), 'w');
     }
 }
 
@@ -268,10 +197,5 @@ void OmnibookFnActions::toggleBluetooth()
 
     (bt == 1)? m_Omni->setBluetooth(0)
         : m_Omni->setBluetooth(1);
-    QString w = ((bt == 0)? i18n("activated") : i18n("deactivated"));
-    KPassivePopup::message(i18n("KToshiba"), i18n("Bluetooth device %1").arg(w),
-			   SmallIcon("kdebluetooth", 20), m_Parent, i18n("Bluetooth"), 4000);
+    showPassiveMsg(((bt == 1)? 0: 1), 'b');
 }
-
-
-#include "omnibookfnactions.moc"

@@ -856,6 +856,11 @@ void KToshibaSMMInterface::setRemoteBootProtocol(int mode)
  * (Hardware Configuration Interface) *
  **************************************/
 
+int KToshibaSMMInterface::machineBIOS()
+{
+	return HciGetBiosVersion();
+}
+
 int KToshibaSMMInterface::machineID()
 {
 	int id;

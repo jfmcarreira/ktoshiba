@@ -1,6 +1,6 @@
 #MIN_CONFIG(3.2.0)
 
-AM_INIT_AUTOMAKE(ktoshiba, 0.9, coproscefalo@gmail.com)
+AM_INIT_AUTOMAKE(ktoshiba, 0.10, coproscefalo@gmail.com)
 AC_C_BIGENDIAN
 AC_CHECK_KDEMAXPATHLEN
 
@@ -8,6 +8,9 @@ AC_CHECK_KDEMAXPATHLEN
 dnl === dbus support check - begin ===
 PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33], [have_dbus=yes],
     [have_dbus=no])
+
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
 
 if test "$have_dbus" = "yes"; then
     # get dbus system bus socket
@@ -21,6 +24,8 @@ if test "$have_dbus" = "yes"; then
         [D-BUS system bus socket path])
 
     # check for dbus qt bindings --> copied from KNetworkmanager
+    safe_CPPFLAGS=$CPPFLAGS
+    CPPFLAGS="$CPPFLAGS $DBUS_CFLAGS $all_includes"
     AC_LANG_SAVE
     AC_LANG_CPLUSPLUS
     AC_CHECK_HEADER(dbus/connection.h, [],
@@ -29,11 +34,8 @@ if test "$have_dbus" = "yes"; then
     AC_CHECK_HEADER(dbus/message.h, [],
         [AC_MSG_WARN(You need D-BUS/Qt3 bindings, [])
     ])
+    CPPFLAGS=$safe_CPPFLAGS
     AC_LANG_RESTORE
-
-    DBUS_LIBS="$DBUS_LIBS -ldbus-qt-1"
-    AC_SUBST(DBUS_CFLAGS)
-    AC_SUBST(DBUS_LIBS)
 fi
 dnl === dbus support check - end ===
 
