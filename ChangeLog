@@ -1,3 +1,25 @@
+2006-10-25 Azael Avalos <coproscefalo@gmail.com>
+	* Retouched and updated brightenss icons
+
+2006-10-23 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue where widget was not updating correctly
+	  as you pressed the hoykeys
+
+2006-10-20 Azael Avalos <coproscefalo@gmail.com>
+	* Some small changes to ktoshiba.cpp
+
+2006-10-17 Azael Avalos <coproscefalo@gmail.com>
+	* Updated README.omnibook about Wireless and Bluetooth
+	  support and removed the omke project link
+	* Added keycode 163 for Bluetooth toggling
+	* Fixed potential error when suspending to disk and using
+	  omnibook module
+	* Added some extra checks to the toshiba code to
+	  avoid errors just in case...
+	* Removed the long list of model IDs from the hci.h header
+	  since it is now contained and expanded a bit on modelid.h
+	  header file
+
 2006-10-16 Azael Avalos <coproscefalo@gmail.com>
 	* Modified ktoshiba.{h,cpp} so that if omnibook support
 	  is compiled in it can work on both, toshiba and

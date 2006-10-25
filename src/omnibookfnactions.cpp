@@ -102,32 +102,30 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
             break;
     }
 
-    if ((keycode & 0x17f) == m_Popup) {
-        int type = -1, extra = -1;
-        if (action == 22) {
-            int time = 0, perc = -1;
-            m_Omni->batteryStatus(&time, &perc);
-            type = perc;
-        } else
-        if (action == 1) {
-            toggleMute(&m_Snd);
-            type = m_Snd;
-        } else
-        if (action == 7 || action == 8) {
-            type = m_Bright;
-            extra = keycode;
-        } else
-        if (action == 10 && (keycode == 151 || keycode == 152)) {
-            (keycode == 151)? mousePadOn() : mousePadOff();
-            type = m_Pad;
-            extra = keycode;
-        } else
-        if (action == 12) {
-            toggleFan();
-            type = m_Fan;
-        }
-        updateWidget(action, type, extra);
+    int type = -1, extra = -1;
+    if (action == 22) {
+        int time = 0, perc = -1;
+        m_Omni->batteryStatus(&time, &perc);
+        type = perc;
+    } else
+    if (action == 1) {
+        toggleMute(&m_Snd);
+        type = m_Snd;
+    } else
+    if (action == 7 || action == 8) {
+        type = m_Bright;
+        extra = keycode;
+    } else
+    if (action == 10 && (keycode == 151 || keycode == 152)) {
+        (keycode == 151)? mousePadOn() : mousePadOff();
+        type = m_Pad;
+        extra = keycode;
+    } else
+    if (action == 12) {
+        toggleFan();
+        type = m_Fan;
     }
+    updateWidget(action, type, extra);
 }
 
 void OmnibookFnActions::toggleWireless()

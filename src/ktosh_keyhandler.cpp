@@ -84,6 +84,7 @@ void grabKeys()
     XGrabKey(mDisplay, 160, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-Esc
     XGrabKey(mDisplay, 161, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F8 (Wireless On/Off)
     XGrabKey(mDisplay, 162, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Next
+    XGrabKey(mDisplay, 163, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Bluetooth On/Off
     XGrabKey(mDisplay, 164, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Stop/Eject
     XGrabKey(mDisplay, 178, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// WWW
     XGrabKey(mDisplay, 236, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Console Direct Access

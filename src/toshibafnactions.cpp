@@ -133,49 +133,47 @@ void ToshibaFnActions::performFnAction(int action, int key)
             break;
     }
 
-    if ((key & 0x17f) == m_Popup) {
-        int state = -1, extra = -1;
-        if (action == 3 && m_SCIIface) {
-            toggleBSM();
-            state = m_BatSave;
-            extra = m_BatType;
-        } else
-        if (action == 6) {
-            toggleVideo();
-            state = m_Video;
-        } else
-        if (action == 13 && m_SCIIface) {
-            toggleBootMethod();
-            state = m_BootType;
-            extra = m_Boot;
-        } else
-        if (action == 22 && m_SCIIface) {
-            int time = 0, perc = -1;
-            m_Driver->batteryStatus(&time, &perc);
-            state = perc;
-        } else
-        if (action == 1) {
-            toggleMute(&m_Snd);
-            state = m_Snd;
-        } else
-        if ((action == 7) || (action == 8)) {
-            (action == 7)? brightDown() : brightUp();
-            state = m_Bright;
-        } else
-        if (action == 10) {
-            toggleMousePad();
-            state = m_Pad;
-        } else
-        if (action == 11 && m_SCIIface) {
-            toggleSpeakerVolume();
-            state = m_Vol;
-        } else
-        if (action == 12) {
-            toggleFan();
-            state = m_Fan;
-        }
-        updateWidget(action, state, extra);
+    int state = -1, extra = -1;
+    if (action == 3 && m_SCIIface) {
+        toggleBSM();
+        state = m_BatSave;
+        extra = m_BatType;
+    } else
+    if (action == 6) {
+        toggleVideo();
+        state = m_Video;
+    } else
+    if (action == 13 && m_SCIIface) {
+        toggleBootMethod();
+        state = m_BootType;
+        extra = m_Boot;
+    } else
+    if (action == 22 && m_SCIIface) {
+        int time = 0, perc = -1;
+        m_Driver->batteryStatus(&time, &perc);
+        state = perc;
+    } else
+    if (action == 1) {
+        toggleMute(&m_Snd);
+        state = m_Snd;
+    } else
+    if ((action == 7) || (action == 8)) {
+        (action == 7)? brightDown() : brightUp();
+        state = m_Bright;
+    } else
+    if (action == 10) {
+        toggleMousePad();
+        state = m_Pad;
+    } else
+    if (action == 11 && m_SCIIface) {
+        toggleSpeakerVolume();
+        state = m_Vol;
+    } else
+    if (action == 12) {
+        toggleFan();
+        state = m_Fan;
     }
+    updateWidget(action, state, extra);
 }
 
 void ToshibaFnActions::toggleBSM()
@@ -204,8 +202,7 @@ void ToshibaFnActions::toggleVideo()
 
     // ISSUE: Whenever you toogle video-out we receive
     // 129 code (for LCD) from the driver, strange indeed...
-    if (m_Video == 129)
-        m_Video = 1;
+    if (m_Video == 129) m_Video = 1;
 
     // TODO: Find out wich models change video-out automatically
     //m_Driver->setVideo(m_Video);
