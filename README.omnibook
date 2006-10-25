@@ -36,30 +36,32 @@ number provided by the kernel, and "keycode" is one of the following:
 150:		Fn-F1
 151:		Fn-F9 (MousePad On)
 152:		Fn-F9 (MousePad Off)
-153:		Play/Pause also Next with ectype=12
+153:		Play/Pause (also Next with ectype=12)
 159:		Fn-F7
 160:		Fn-Esc
 161:		Fn-F8
-162:		Next also Play/Pause with ectype=12
+162:		Next (also Play/Pause with ectype=12)
 164:		Stop
 178:		WWW
 236:		Console Direct Access
 239:		Fn-F6
 
-(NOTE: Fn-Esc and F1 can be configured to do something else
+(NOTE: Fn-Esc, F1 and F8 can be configured to do something else
  via the KCModule, the others are hard-coded)
 
 These are the availble options that you can choose to configure your Fn keys
 (all others shown on KCM will be ignored if selected):
 
 Mute/Unmute				(via DCOP and needs KMix to be running)
-Brightness Down			(via omnibook module)
-Brightness Up 			(via omnibook module)
-Fan On/Off				(via omnibook module)
 LockScreen				(via DCOP)
 Suspend To RAM (STR)	(via ACPI or powersave daemon)
-uspend To Disk (STD)	(via ACPI or powersave daemon)
+Suspend To Disk (STD)	(via ACPI or powersave daemon)
+Brightness Down			(via omnibook module)
+Brightness Up 			(via omnibook module)
+Wireless On/Off			(via omnibook module)
+Fan On/Off				(via omnibook module)
 LCD Backlight On/Off	(via omnibook module)
+Bluetooth On/Off		(via omnibook module)
 
 If your toshiba model produce different keycodes than the ones listed here,
 or does something different than the associated action, please send me an
@@ -69,10 +71,6 @@ e-mail to coproscefalo@gmail.com with the keycode and what it does.
 Kernel module
 =====
 You can get the sources for the omnibook kernel module from here:
-
-http://sourceforge.net/projects/omke
-
-or here:
 
 http://sourceforge.net/projects/omnibook
 

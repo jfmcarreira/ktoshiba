@@ -38,7 +38,9 @@ class DCOPRef;
 class KToshibaProcInterface;
 class KToshibaDCOPInterface;
 class ToshibaFnActions;
+#ifdef ENABLE_OMNIBOOK
 class OmnibookFnActions;
+#endif // ENABLE_OMNIBOOK
 class Suspend;
 
 #define CD_DVD  	0x80

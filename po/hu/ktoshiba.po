@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-05 13:21-0600\n"
+"POT-Creation-Date: 2006-10-25 02:31-0600\n"
 "PO-Revision-Date: 2005-06-15 21:15+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,7 +28,7 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: fnactions.cpp:47 ktoshiba.cpp:475 ktoshiba.cpp:744 main.cpp:40
+#: fnactions.cpp:47 ktoshiba.cpp:500 ktoshiba.cpp:758 main.cpp:40
 msgid "KToshiba"
 msgstr "KToshiba"
 
@@ -86,127 +86,122 @@ msgstr "Bluetooth eszköz aktiválva"
 msgid "Wireless interface %1"
 msgstr "Wireless csatoló %1"
 
-#: ktoshiba.cpp:114
+#: ktoshiba.cpp:159
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
 msgstr ""
 
-#: ktoshiba.cpp:116
+#: ktoshiba.cpp:161
 msgid "HotKeys"
 msgstr ""
 
-#: ktoshiba.cpp:339
+#: ktoshiba.cpp:363
 msgid "Suspend To &RAM"
 msgstr "Felfüggesztés RAM-ba"
 
-#: ktoshiba.cpp:341
+#: ktoshiba.cpp:365
 msgid "Suspend To &Disk"
 msgstr "Felfüggesztés lemezre"
 
-#: ktoshiba.cpp:360 ktoshiba.cpp:364 ktoshiba.cpp:388
+#: ktoshiba.cpp:383
+msgid "Enable &Bluetooth"
+msgstr "&Bluetooth bekapcsolása"
+
+#: ktoshiba.cpp:389 ktoshiba.cpp:409 ktoshiba.cpp:413
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:361 ktoshiba.cpp:365
+#: ktoshiba.cpp:390
+msgid "Enabled - PM aware"
+msgstr "Bekapcsolva - PM aware"
+
+#: ktoshiba.cpp:391
+msgid "Enabled - No PM aware"
+msgstr "Bekapcsolva - No PM aware"
+
+#: ktoshiba.cpp:392
+msgid "Hyper-Threading"
+msgstr "Hyper-Threading"
+
+#: ktoshiba.cpp:394
+msgid "Dynamic"
+msgstr "Dinamikus"
+
+#: ktoshiba.cpp:395
+msgid "Always High"
+msgstr "Mindig magas"
+
+#: ktoshiba.cpp:396
+msgid "Always Low"
+msgstr "Mindig alacsony"
+
+#: ktoshiba.cpp:397
+msgid "CPU Frequency"
+msgstr "CPU Frekvencia"
+
+#: ktoshiba.cpp:410 ktoshiba.cpp:414
 #, fuzzy
 msgid "Enabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:362
+#: ktoshiba.cpp:411
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:366
+#: ktoshiba.cpp:415
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:377
+#: ktoshiba.cpp:426
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:378
+#: ktoshiba.cpp:427
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:379
+#: ktoshiba.cpp:428
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:382
-msgid "Enable &Bluetooth"
-msgstr "&Bluetooth bekapcsolása"
-
-#: ktoshiba.cpp:389
-msgid "Enabled - PM aware"
-msgstr "Bekapcsolva - PM aware"
-
-#: ktoshiba.cpp:390
-msgid "Enabled - No PM aware"
-msgstr "Bekapcsolva - No PM aware"
-
-#: ktoshiba.cpp:391
-msgid "Hyper-Threading"
-msgstr "Hyper-Threading"
-
-#: ktoshiba.cpp:393
-msgid "Dynamic"
-msgstr "Dinamikus"
-
-#: ktoshiba.cpp:394
-msgid "Always High"
-msgstr "Mindig magas"
-
-#: ktoshiba.cpp:395
-msgid "Always Low"
-msgstr "Mindig alacsony"
-
-#: ktoshiba.cpp:396
-msgid "CPU Frequency"
-msgstr "CPU Frekvencia"
-
-#: ktoshiba.cpp:406
+#: ktoshiba.cpp:433
 msgid "&Configure KToshiba..."
 msgstr "KToshiba &beállításai"
 
-#: ktoshiba.cpp:409
+#: ktoshiba.cpp:436
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:412
+#: ktoshiba.cpp:439
 msgid "&About KToshiba"
 msgstr "KToshiba &névjegye"
 
-#: ktoshiba.cpp:414
+#: ktoshiba.cpp:441
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:475
+#: ktoshiba.cpp:500
 msgid "Bluetooth device activated"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: ktoshiba.cpp:476
-msgid "Bluetooth"
-msgstr "Bluetooth"
-
-#: ktoshiba.cpp:743
+#: ktoshiba.cpp:757
 msgid "on"
 msgstr "be"
 
-#: ktoshiba.cpp:743
+#: ktoshiba.cpp:757
 msgid "off"
 msgstr "ki"
 
-#: ktoshiba.cpp:744
+#: ktoshiba.cpp:758
 msgid "Wireless antenna turned %1"
 msgstr "Wireless antenna turned %1"
 
-#: ktoshiba.cpp:745
+#: ktoshiba.cpp:759
 msgid "Wireless"
 msgstr "Wireless"
 
-#: ktoshibaomnibookinterface.cpp:73 ktoshibaomnibookinterface.cpp:140
-#: omnibookfnactions.cpp:55
+#: ktoshibaomnibookinterface.cpp:40 omnibookfnactions.cpp:55
 msgid "UNKNOWN"
 msgstr ""
 
@@ -340,6 +335,9 @@ msgstr ""
 #: suspend.cpp:202
 msgid "D-BUS daemon not running."
 msgstr ""
+
+#~ msgid "Bluetooth"
+#~ msgstr "Bluetooth"
 
 #~ msgid "STR"
 #~ msgstr "STR"

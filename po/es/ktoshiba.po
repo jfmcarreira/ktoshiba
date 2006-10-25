@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-05 13:21-0600\n"
+"POT-Creation-Date: 2006-10-25 02:31-0600\n"
 "PO-Revision-Date: 2006-10-05 13:23-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
@@ -27,7 +27,7 @@ msgid ""
 "Your emails"
 msgstr "coproscefalo@gmail.com"
 
-#: fnactions.cpp:47 ktoshiba.cpp:475 ktoshiba.cpp:744 main.cpp:40
+#: fnactions.cpp:47 ktoshiba.cpp:500 ktoshiba.cpp:758 main.cpp:40
 msgid "KToshiba"
 msgstr "KToshiba"
 
@@ -83,7 +83,7 @@ msgstr "Dispositivo Ethernet %1"
 msgid "Wireless interface %1"
 msgstr "Interfaz inalámbrica %1"
 
-#: ktoshiba.cpp:114
+#: ktoshiba.cpp:159
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
@@ -91,120 +91,115 @@ msgstr ""
 "El programa ktosh_keyhandler no fue encontrado.\n"
 "El monitoreo de las teclas no sera activado."
 
-#: ktoshiba.cpp:116
+#: ktoshiba.cpp:161
 msgid "HotKeys"
 msgstr "HotKeys"
 
-#: ktoshiba.cpp:339
+#: ktoshiba.cpp:363
 msgid "Suspend To &RAM"
 msgstr "Suspender a &RAM"
 
-#: ktoshiba.cpp:341
+#: ktoshiba.cpp:365
 msgid "Suspend To &Disk"
 msgstr "Suspender a &Disco"
 
-#: ktoshiba.cpp:360 ktoshiba.cpp:364 ktoshiba.cpp:388
-msgid "Disabled"
-msgstr "Deshabilitado"
-
-#: ktoshiba.cpp:361 ktoshiba.cpp:365
-msgid "Enabled"
-msgstr "Activado"
-
-#: ktoshiba.cpp:362
-msgid "OneTouch Buttons"
-msgstr "Botones OneTouch"
-
-#: ktoshiba.cpp:366
-msgid "System Fan"
-msgstr "Abanico del Sistema"
-
-#: ktoshiba.cpp:377
-msgid "CD/DVD"
-msgstr "CD/DVD"
-
-#: ktoshiba.cpp:378
-msgid "Digital"
-msgstr "Digital"
-
-#: ktoshiba.cpp:379
-msgid "Multimedia MODE"
-msgstr "MODO Multimedia"
-
-#: ktoshiba.cpp:382
+#: ktoshiba.cpp:383
 msgid "Enable &Bluetooth"
 msgstr "Habilitar &Bluetooth"
 
-#: ktoshiba.cpp:389
+#: ktoshiba.cpp:389 ktoshiba.cpp:409 ktoshiba.cpp:413
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+#: ktoshiba.cpp:390
 msgid "Enabled - PM aware"
 msgstr "Habilitado - con MP"
 
-#: ktoshiba.cpp:390
+#: ktoshiba.cpp:391
 msgid "Enabled - No PM aware"
 msgstr "Habilitado - sin MP"
 
-#: ktoshiba.cpp:391
+#: ktoshiba.cpp:392
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:393
+#: ktoshiba.cpp:394
 msgid "Dynamic"
 msgstr "Dinámico"
 
-#: ktoshiba.cpp:394
+#: ktoshiba.cpp:395
 msgid "Always High"
 msgstr "Siempre Alto"
 
-#: ktoshiba.cpp:395
+#: ktoshiba.cpp:396
 msgid "Always Low"
 msgstr "Siempre Bajo"
 
-#: ktoshiba.cpp:396
+#: ktoshiba.cpp:397
 msgid "CPU Frequency"
 msgstr "Frecuencia del CPU"
 
-#: ktoshiba.cpp:406
+#: ktoshiba.cpp:410 ktoshiba.cpp:414
+msgid "Enabled"
+msgstr "Activado"
+
+#: ktoshiba.cpp:411
+msgid "OneTouch Buttons"
+msgstr "Botones OneTouch"
+
+#: ktoshiba.cpp:415
+msgid "System Fan"
+msgstr "Abanico del Sistema"
+
+#: ktoshiba.cpp:426
+msgid "CD/DVD"
+msgstr "CD/DVD"
+
+#: ktoshiba.cpp:427
+msgid "Digital"
+msgstr "Digital"
+
+#: ktoshiba.cpp:428
+msgid "Multimedia MODE"
+msgstr "MODO Multimedia"
+
+#: ktoshiba.cpp:433
 msgid "&Configure KToshiba..."
 msgstr "&Configurar KToshiba..."
 
-#: ktoshiba.cpp:409
+#: ktoshiba.cpp:436
 msgid "&Report Bug..."
 msgstr "&Reporta un error..."
 
-#: ktoshiba.cpp:412
+#: ktoshiba.cpp:439
 msgid "&About KToshiba"
 msgstr "&Acerca de KToshiba"
 
-#: ktoshiba.cpp:414
+#: ktoshiba.cpp:441
 msgid "About &KDE"
 msgstr "Acerca de &KDE"
 
-#: ktoshiba.cpp:475
+#: ktoshiba.cpp:500
 msgid "Bluetooth device activated"
 msgstr "Dispositivo Bluetooth activado"
 
-#: ktoshiba.cpp:476
-msgid "Bluetooth"
-msgstr "Bluetooth"
-
-#: ktoshiba.cpp:743
+#: ktoshiba.cpp:757
 msgid "on"
 msgstr "activada"
 
-#: ktoshiba.cpp:743
+#: ktoshiba.cpp:757
 msgid "off"
 msgstr "desactivada"
 
-#: ktoshiba.cpp:744
+#: ktoshiba.cpp:758
 msgid "Wireless antenna turned %1"
 msgstr "Antena inalámbrica %1"
 
-#: ktoshiba.cpp:745
+#: ktoshiba.cpp:759
 msgid "Wireless"
 msgstr "Inalámbrico"
 
-#: ktoshibaomnibookinterface.cpp:73 ktoshibaomnibookinterface.cpp:140
-#: omnibookfnactions.cpp:55
+#: ktoshibaomnibookinterface.cpp:40 omnibookfnactions.cpp:55
 msgid "UNKNOWN"
 msgstr "DESCONOIDO"
 
@@ -341,3 +336,6 @@ msgstr "El usuario no está autorizado para conectarse."
 #: suspend.cpp:202
 msgid "D-BUS daemon not running."
 msgstr "El servicio D-BUS no está corriendo."
+
+#~ msgid "Bluetooth"
+#~ msgstr "Bluetooth"
