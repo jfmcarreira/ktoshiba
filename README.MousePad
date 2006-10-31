@@ -2,9 +2,10 @@ MousePad
 =====
 KToshiba does two types of checks in order to get the MousePad enabling/disabling
 functionality, it first checks for built-in capabilities in BIOS using the
-Toshiba System Management Mode driver (toshiba kernel module), if it fails,
-it now checks for a synaptics MousePad (since most modern laptops now use)
-and does some checks to verify compatibility.
+Toshiba System Management Mode driver (toshiba kernel module), or if omnibook
+support is enabled, it checks the omnibook /proc entries for MousePad support,
+if it fails, it now checks for a synaptics MousePad (since most modern laptops
+now use) and does some checks to verify compatibility.
 
 If you are sure your laptop has a synaptics TouchPad, you will need to download
 and install the newest XOrg/XFree86 driver (0.14.4 or better) and the libsynaptics

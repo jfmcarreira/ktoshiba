@@ -70,9 +70,9 @@ dnl === powersave daemon support check - end ===
 
 dnl === libsynaptics support check - begin ===
 AC_ARG_WITH(libsynaptics,
-    AS_HELP_STRING([--without-libsynaptics], [build without libsynaptics support (default=no)]),
+    AS_HELP_STRING([--without-libsynaptics], [build without libsynaptics support (default=yes)]),
     [ac_cv_use_synaptics=$withval],
-    [ac_cv_use_synaptics=yes]
+    [ac_cv_use_synaptics=no]
 )
 
 if test "$ac_cv_use_synaptics" = "yes"; then
@@ -86,9 +86,9 @@ dnl === libsynaptics support check - end ===
 
 dnl === omnibook support check - begin ===
 AC_ARG_WITH(omnibook,
-    AS_HELP_STRING([--without-omnibook], [build without omnibook support (default=yes)]),
+    AS_HELP_STRING([--without-omnibook], [build without omnibook support (default=no)]),
     [ac_cv_use_omnibook=$withval],
-    [ac_cv_use_omnibook=no]
+    [ac_cv_use_omnibook=yes]
 )
 
 if test "$ac_cv_use_omnibook" = "yes"; then

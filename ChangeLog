@@ -1,3 +1,9 @@
+2006-10-30 Azael Avalos <coproscefalo@gmail.com>
+	* Some retouches to settingswidget.ui
+	* Small changes to configure.in.in, libsynaptics won't
+	  be enabled as default (same as --with-libsynaptics=no)
+	  and omnibook support will (same as --with-omnibook=yes)
+
 2006-10-25 Azael Avalos <coproscefalo@gmail.com>
 	* Retouched and updated brightenss icons
 

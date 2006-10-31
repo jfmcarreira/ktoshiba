@@ -8,311 +8,330 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>296</width>
-            <height>120</height>
+            <width>302</width>
+            <height>118</height>
         </rect>
     </property>
     <property name="caption">
         <string>KToshiba: Video, Power and Boot Status</string>
     </property>
-    <widget class="QLabel">
+    <vbox>
         <property name="name">
-            <cstring>tlStatus</cstring>
+            <cstring>unnamed</cstring>
         </property>
-        <property name="geometry">
-            <rect>
-                <x>15</x>
-                <y>90</y>
-                <width>260</width>
-                <height>20</height>
-            </rect>
-        </property>
-        <property name="text">
-            <string></string>
-        </property>
-        <property name="alignment">
-            <set>WordBreak|AlignCenter</set>
-        </property>
-    </widget>
-    <widget class="QWidgetStack">
-        <property name="name">
-            <cstring>wsSettings</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>8</x>
-                <y>10</y>
-                <width>280</width>
-                <height>70</height>
-            </rect>
-        </property>
-        <widget class="QWidget">
+        <widget class="QWidgetStack">
             <property name="name">
-                <cstring>wspPowerSave</cstring>
+                <cstring>wsSettings</cstring>
             </property>
-            <attribute name="id">
+            <property name="minimumSize">
+                <size>
+                    <width>280</width>
+                    <height>70</height>
+                </size>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>280</width>
+                    <height>70</height>
+                </size>
+            </property>
+            <property name="lineWidth">
                 <number>0</number>
-            </attribute>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>plFull</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image0</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>plMedium</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image1</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>plUser</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image2</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-            </hbox>
-        </widget>
-        <widget class="QWidget">
-            <property name="name">
-                <cstring>wspVideoOut</cstring>
             </property>
-            <attribute name="id">
-                <number>1</number>
-            </attribute>
-            <hbox>
+            <widget class="QWidget">
                 <property name="name">
-                    <cstring>unnamed</cstring>
+                    <cstring>wspPowerSave</cstring>
                 </property>
-                <widget class="QLabel">
+                <attribute name="id">
+                    <number>0</number>
+                </attribute>
+                <hbox>
                     <property name="name">
-                        <cstring>plLCD</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="pixmap">
-                        <pixmap>image3</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plFull</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image0</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plMedium</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image1</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plUser</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image2</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>wspVideoOut</cstring>
+                </property>
+                <attribute name="id">
+                    <number>1</number>
+                </attribute>
+                <hbox>
                     <property name="name">
-                        <cstring>plLCDCRT</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="pixmap">
-                        <pixmap>image4</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plLCD</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image3</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plLCDCRT</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image4</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plCRT</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image5</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>plTV</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image6</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>wspBootMethod</cstring>
+                </property>
+                <attribute name="id">
+                    <number>2</number>
+                </attribute>
+                <grid>
                     <property name="name">
-                        <cstring>plCRT</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="pixmap">
-                        <pixmap>image5</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>pl1</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="1">
+                        <property name="name">
+                            <cstring>pl2</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="2">
+                        <property name="name">
+                            <cstring>pl3</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="3">
+                        <property name="name">
+                            <cstring>pl4</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>wspBootMethod2</cstring>
+                </property>
+                <attribute name="id">
+                    <number>3</number>
+                </attribute>
+                <hbox>
                     <property name="name">
-                        <cstring>plTV</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="pixmap">
-                        <pixmap>image6</pixmap>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>pl1_2</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>pl2_2</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>pl3_2</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>image7</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignCenter</set>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>wspBattery</cstring>
+                </property>
+                <attribute name="id">
+                    <number>4</number>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-            </hbox>
+                    <widget class="KProgress">
+                        <property name="name">
+                            <cstring>batteryKPB</cstring>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
         </widget>
-        <widget class="QWidget">
+        <widget class="QLabel">
             <property name="name">
-                <cstring>wspBootMethod</cstring>
+                <cstring>tlStatus</cstring>
             </property>
-            <attribute name="id">
-                <number>2</number>
-            </attribute>
-            <grid>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLabel" row="0" column="0">
-                    <property name="name">
-                        <cstring>pl1</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="0" column="1">
-                    <property name="name">
-                        <cstring>pl2</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="0" column="2">
-                    <property name="name">
-                        <cstring>pl3</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="0" column="3">
-                    <property name="name">
-                        <cstring>pl4</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-            </grid>
-        </widget>
-        <widget class="QWidget">
-            <property name="name">
-                <cstring>wspBootMethod2</cstring>
+            <property name="minimumSize">
+                <size>
+                    <width>280</width>
+                    <height>20</height>
+                </size>
             </property>
-            <attribute name="id">
-                <number>3</number>
-            </attribute>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>pl1_2</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>pl2_2</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>pl3_2</cstring>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap>image7</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignCenter</set>
-                    </property>
-                </widget>
-            </hbox>
-        </widget>
-        <widget class="QWidget">
-            <property name="name">
-                <cstring>WStackPage</cstring>
+            <property name="maximumSize">
+                <size>
+                    <width>280</width>
+                    <height>20</height>
+                </size>
             </property>
-            <attribute name="id">
-                <number>4</number>
-            </attribute>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="KProgress">
-                    <property name="name">
-                        <cstring>batteryKPB</cstring>
-                    </property>
-                </widget>
-            </vbox>
+            <property name="lineWidth">
+                <number>0</number>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignCenter</set>
+            </property>
         </widget>
-    </widget>
+    </vbox>
 </widget>
 <images>
     <image name="image0">
