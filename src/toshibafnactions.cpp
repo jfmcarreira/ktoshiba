@@ -62,16 +62,14 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     m_Vol = 1;
     m_Fan = 1;
 
-    if (m_BIOS == -1 && !m_SCIIface) {
+    if (m_BIOS == -1 && !m_SCIIface)
         delete m_Driver; m_Driver = NULL;
-    }
 }
 
 ToshibaFnActions::~ToshibaFnActions()
 {
-    if (m_BIOS != -1 || m_SCIIface) {
+    if (m_BIOS != -1 || m_SCIIface)
         delete m_Driver; m_Driver = NULL;
-    }
 }
 
 void ToshibaFnActions::initSCI()
@@ -86,9 +84,6 @@ void ToshibaFnActions::initSCI()
     m_BootType = m_Driver->getBootType();
     m_LANCtrl = m_Driver->getLANController();
     m_Pad = m_Driver->getPointingDevice();
-
-    if (m_BootType == 5 && m_LANCtrl >= 0)
-        m_BootType = 6;
 }
 
 void ToshibaFnActions::performFnAction(int action, int key)
@@ -145,7 +140,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
     } else
     if (action == 13 && m_SCIIface) {
         toggleBootMethod();
-        state = m_BootType;
+        state = (m_BootType == 5 && m_LANCtrl >= 0)? 6 : m_BootType;
         extra = m_Boot;
     } else
     if (action == 22 && m_SCIIface) {

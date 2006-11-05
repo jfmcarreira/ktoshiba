@@ -281,6 +281,7 @@ void KCMToshibaModule::timeout()
 
     (perc == -1)? m_KCMKToshibaGeneral->mKPBattery->setValue(0)
         : m_KCMKToshibaGeneral->mKPBattery->setValue(perc);
-    m_KCMKToshibaGeneral->kledBat->setState((perc == -1)? KLed::Off : KLed::On);
+
+    m_KCMKToshibaGeneral->kledBat->setState((perc == -1 || perc == -2)? KLed::Off : KLed::On);
     m_KCMKToshibaGeneral->kledAC->setState((m_AC == 4)? KLed::On : KLed::Off);
 }

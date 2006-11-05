@@ -274,11 +274,13 @@ void FnActions::updateWidget(int action, int type, int extra)
     }
     if (action == 22) {
         m_SettingsWidget->wsSettings->raiseWidget(4);
-        (type == -1)? m_SettingsWidget->batteryKPB->setValue(0)
+        (type == -1 || type == -2)? m_SettingsWidget->batteryKPB->setValue(0)
             : m_SettingsWidget->batteryKPB->setValue(type);
-        (type == -1)? m_SettingsWidget->tlStatus->setText(m_NotSupported)
-            : m_SettingsWidget->tlStatus->setText(i18n("Battery Status"));
-         return;
+        if (type == -1) m_SettingsWidget->tlStatus->setText(m_NotSupported);
+        else if (type == -2)
+            m_SettingsWidget->tlStatus->setText(i18n("Battery Not Present"));
+        else m_SettingsWidget->tlStatus->setText(i18n("Battery Status"));
+        return;
     }
     if (action == 1) {
         m_StatusWidget->wsStatus->raiseWidget(type);

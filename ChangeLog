@@ -1,3 +1,10 @@
+2006-11-02 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed a bug where if you removed the battery, it caused
+	  the KCM to crash
+	* Reduced some code in ktoshibaprocinterface.cpp
+	* Fixed an issue where boot priority was not being updated
+	  correctly
+
 2006-10-30 Azael Avalos <coproscefalo@gmail.com>
 	* Some retouches to settingswidget.ui
 	* Small changes to configure.in.in, libsynaptics won't
