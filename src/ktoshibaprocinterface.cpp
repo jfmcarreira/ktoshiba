@@ -89,49 +89,51 @@ void KToshibaProcInterface::acpiBatteryStatus(int *time, int *percent)
 {
     int rate = 0;
 
-    if (BatteryCap == 0) {
-        QFile file(ACPI_ROOT"/battery/BAT1/info");
-        if (file.open(IO_ReadOnly)) {
-            QTextStream stream(&file);
-            QString line;
-            while (!stream.atEnd()) {
-                line = stream.readLine();
-                if (line.contains("last full capacity:", false)) {
-                    QRegExp rx("(\\d*)\\D*$");
-                    rx.search(line);
-                    BatteryCap = rx.cap(1).toInt();
-                    break;
-                }
-            }
-            file.close();
-        }
-    }
-
-    QFile file2(ACPI_ROOT"/battery/BAT1/state");
-    if (!file2.exists()) {
+    QFile file(ACPI_ROOT"/battery/BAT1/info");
+    if (!file.open(IO_ReadOnly)) {
         *percent = -1;
         *time = -1;
         return;
     }
-    if (file2.open(IO_ReadOnly)) {
-        QTextStream stream(&file2);
-        QString line;
+
+    QTextStream stream(&file);
+    QString line;
+    while (!stream.atEnd()) {
+        line = stream.readLine();
+        if (line.contains("present:", false)) {
+            QRegExp rx("(no)");
+            rx.search(line);
+            *percent = -2;
+            *time = -1;
+            return;
+        } else
+        if (line.contains("last full capacity:", false)) {
+            QRegExp rx("(\\d*)\\D*$");
+            rx.search(line);
+            BatteryCap = rx.cap(1).toInt();
+            break;
+        }
+    }
+    file.close();
+
+    file.setName(ACPI_ROOT"/battery/BAT1/state");
+    if (file.open(IO_ReadOnly)) {
+        stream.setDevice(&file);
         while (!stream.atEnd()) {
             line = stream.readLine();
+            QRegExp rx("(\\d*)\\D*$");
             if (line.contains("present rate:", false)) {
-                QRegExp rx("(\\d*)\\D*$");
                 rx.search(line);
                 rate = rx.cap(1).toInt();
                 continue;
             }
             if (line.contains("remaining capacity:", false)) {
-                QRegExp rx("(\\d*)\\D*$");
                 rx.search(line);
                 RemainingCap = rx.cap(1).toInt();
-                continue;
+                break;
             }
         }
-        file2.close();
+        file.close();
     }
 
     *percent = (RemainingCap * 100) / BatteryCap;
