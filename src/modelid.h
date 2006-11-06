@@ -330,7 +330,7 @@ QString modelID(int id)
 			mod = "Satellite Pro A10";
 			break;
 		case 0xfcf8:
-			mod = "Satellite A25";
+			mod = "Satellite A20 Series";
 			break;
 		case 0xfcff:
 			mod = "Tecra M2";
