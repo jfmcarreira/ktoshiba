@@ -1,4 +1,8 @@
 2006-11-02 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed the Satellite A25 string to Satellite A25 Series,
+	  thnaks to emre for providing the info
+
+2006-11-02 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed a bug where if you removed the battery, it caused
 	  the KCM to crash
 	* Reduced some code in ktoshibaprocinterface.cpp
