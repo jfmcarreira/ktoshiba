@@ -206,6 +206,7 @@ KToshiba::KToshiba()
         mHotKeysTimer->start(100);
     } else
     if (mOmnibook) {
+#ifdef ENABLE_OMNIBOOK
         mOmnibookTimer = new QTimer(this);
         connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
         mOmnibookTimer->start(100);
@@ -214,6 +215,7 @@ KToshiba::KToshiba()
             mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
             connect( mDCOPIFace, SIGNAL( signalHotKey(int) ), this, SLOT( omnibookHotKeys(int) ) );
         }
+#endif // ENABLE_OMNIBOOK
     }
 
 

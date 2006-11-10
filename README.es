@@ -19,11 +19,15 @@ Requisitos
 =====
 - Un portátil Toshiba (indispensable)
 - Compilador y utilerias (gcc, autoconf, automake, etc.)
-- KDE 3.2.x y librerias de desarrollo (-devel)
+- Librerias KDE >= 3.2.x y de desarrollo (-devel)
 
 
 Preparativos
 =====
+NOTA: En kernels recientes es posible cargar el modulo sin especificar el
+      número de puerto de la tecla Fn y un asi las "hotkeys" funcionaran
+      sin algun problema (probado en los kernels 2.6.16 y 2.6.18 en SUSE 10.1).
+
 Para que este programa funcione eficientemente se necesita especificar
 el puerto de la tecla Fn al momento de la carga del controlador del kernel
 ('insmod toshiba fn=0x62').
