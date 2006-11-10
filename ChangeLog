@@ -1,6 +1,14 @@
-2006-11-02 Azael Avalos <coproscefalo@gmail.com>
-	* Renamed the Satellite A25 string to Satellite A25 Series,
-	  thnaks to emre for providing the info
+2006-11-07 Azael Avalos <coproscefalo@gmail.com>
+	* Updted README and README.es files
+
+2006-11-05 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed the Satellite A25 string to Satellite A25 Series
+	  (thanks to Emre for providing the info)
+	* Fixed typos in ChangeLog last entry...
+	* Fixed a function calling on omnibookfnactions
+	  (thanks to Emre for providing the info)
+	* Fixed compilation problem if --with-omnibook=yes
+	  was enabled
 
 2006-11-02 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed a bug where if you removed the battery, it caused

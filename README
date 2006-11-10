@@ -18,15 +18,19 @@ Requirements
 =====
 - A Toshiba laptop (this is a must)
 - Compiler and utilities (gcc, autoconf, automake, etc.)
-- KDE 3.2.x and development libraries
+- KDE libraries >= 3.2.x and development package
 
 
 Preparatives
 =====
+NOTE: On recent kernels it is now possible to load the module without
+      specifying the Fn port number and hotkeys monitoring will work
+      out of the box (tested on kernels 2.6.16 and 2.6.18 on SUSE 10.1).
+
 For the program to function properly you need to specify the port for 
 the Fn key at the moment of kernel module insertion 
 ('insmod toshiba fn=0x62'). 
-Currently only two port locations are known for the Fn key 0x62 and 0x68, 
+Currently only two port locations are known for the Fn key 0x62 and 0x68,
 you can try these numbers until you find one that does work.
 
 If no problems arise when you do 'insmod toshiba fn=0x62'
@@ -42,7 +46,7 @@ depending on your running kernel, look for a line containing the following:
 
 	alias char-major-10-181 toshiba
 
-then just add the following "options toshiba tosh_fn=0x62"
+then just add the following "options toshiba fn=0x62"
 without the cuotes and it should look something like this:
 
 	alias char-major-10-181 toshiba

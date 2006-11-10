@@ -45,7 +45,7 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
         m_ModelName = m_Omni->modelName();
         m_ECType = m_Omni->ecType();
         kdDebug() << "KToshiba: Machine ECTYPE=" << m_ECType << endl;
-        //m_Video = m_Omni->omnibookGetVideo();
+        //m_Video = m_Omni->getVideo();
         m_Bright = m_Omni->getBrightness();
         m_Wireless = m_Omni->getWifi();
         m_Pad = m_Omni->getTouchPad();
@@ -153,7 +153,7 @@ void OmnibookFnActions::mousePadOn()
     Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
     m_Pad = 1;
-    m_Omni->omnibookSetTouchPad(m_Pad);
+    m_Omni->setTouchPad(m_Pad);
 #endif // ENABLE_SYNAPTICS
 }
 
@@ -166,7 +166,7 @@ void OmnibookFnActions::mousePadOff()
     Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
     m_Pad = 0;
-    m_Omni->omnibookSetTouchPad(m_Pad);
+    m_Omni->setTouchPad(m_Pad);
 #endif // ENABLE_SYNAPTICS
 }
 
