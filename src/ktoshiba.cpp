@@ -891,18 +891,6 @@ void KToshiba::checkHotKeys()
             return;
         case 0:		// FIFO empty
             return;
-        case 1:		// Failed accessing System Events
-            if (mHotkeys == false) {
-                mHotkeys = mTFn->m_Driver->enableSystemEvent();
-                mTFn->m_Driver->mHotkeys = mHotkeys;
-            }
-            if (!mHotkeys) {
-                kdError() << "KToshiba: Hotkeys monitoring will be disabled" << endl;
-                mTFn->m_Driver->mHotkeys = true;
-                mHotKeysTimer->stop();
-                disconnect(mHotKeysTimer);
-            }
-            return;
         case 0x101:	// Fn-Esc
             tmp = mConfig.readNumEntry("Fn_Esc");
             break;

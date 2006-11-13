@@ -199,6 +199,11 @@ void KToshibaOmnibookInterface::batteryStatus(int *time, int *percent)
             QString line;
             while (!stream.atEnd()) {
                 line = stream.readLine();
+                if (line.contains("No battery present", false)) {
+                    *percent = -2;
+                    *time = -1;
+                    return;
+                }
                 if (line.contains("Remaining Capacity:", false)) {
                     QRegExp rx("(\\d*)\\D*$");
                     rx.search(line);

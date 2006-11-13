@@ -18,14 +18,14 @@
  * 
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<fcntl.h>
-#include<sys/stat.h>
-#include<sys/ioctl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
 
-#include"sci.h"
+#include "sci.h"
 
 
 /*
@@ -36,7 +36,7 @@ int SciSupportCheck(int *version)
 	SMMRegisters regs;
 	int fd;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR)) < 0)
 		return SCI_FAILURE;
 
 	if (access(TOSH_PROC, R_OK)) {
@@ -49,7 +49,7 @@ int SciSupportCheck(int *version)
 	regs.ecx = 0x0000;
 	regs.edx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs)<0) {
+	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
 		close(fd);
 		return SCI_FAILURE;
 	}
@@ -71,14 +71,14 @@ int SciOpenInterface(void)
 	SMMRegisters regs;
 	int fd;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR ))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR )) <  0)
 		return SCI_FAILURE;
 
 	regs.eax = 0xf1f1;
 	regs.ebx = 0x0000;
 	regs.ecx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs)<0) {
+	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
 		close(fd);
 		return SCI_FAILURE;
 	}
@@ -96,14 +96,14 @@ int SciCloseInterface(void)
 	SMMRegisters regs;
 	int fd;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR ))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR )) < 0)
 		return SCI_FAILURE;
 
 	regs.eax = 0xf2f2;
 	regs.ebx = 0x0000;
 	regs.ecx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs)<0) {
+	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
 		close(fd);
 		return SCI_FAILURE;
 	}
@@ -120,15 +120,15 @@ int SciGet(SMMRegisters *regs)
 {
 	int fd;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR ))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR )) < 0)
 		return SCI_FAILURE;
 
 	/*regs->eax = 0xf3f3;*/
 	regs->eax = 0xf300;
 
-	if (ioctl(fd, TOSH_SMM, regs)<0) {
+	if (ioctl(fd, TOSH_SMM, regs) < 0) {
 		close(fd);
-		return SCI_FAILURE;
+		return (int) (regs->eax & 0xff00)>>8;
 	}
 	close(fd);
 
@@ -143,15 +143,15 @@ int SciSet(SMMRegisters *regs)
 {
 	int fd;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR ))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR )) < 0)
 		return SCI_FAILURE;
 
 	/*regs->eax = 0xf4f4;*/
 	regs->eax = 0xf400;
 
-	if (ioctl(fd, TOSH_SMM, regs)<0) {
+	if (ioctl(fd, TOSH_SMM, regs) < 0) {
 		close(fd);
-		return SCI_FAILURE;
+		return (int) (regs->eax & 0xff00)>>8;
 	}
 	close(fd);
 
@@ -170,7 +170,7 @@ int SciACPower(void)
 	if (access(TOSH_PROC, R_OK))
 		return SCI_FAILURE;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR)) < 0)
 		return SCI_FAILURE;
 
 	regs.eax = 0xfefe;
@@ -178,7 +178,7 @@ int SciACPower(void)
 	regs.ecx = 0x0000;
 	regs.edx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs)<0) {
+	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
 		close(fd);
 		return 0;
 	}
