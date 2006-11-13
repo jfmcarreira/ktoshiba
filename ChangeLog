@@ -1,3 +1,15 @@
+2006-11-12 Azael Avalos <coproscefalo@gmail.com>
+	* Removed some code that was causing KToshiba to crash
+	  (strange, it wasn't happening before...)
+	* Added two new functions to KToshibaSMMInterface to set
+	  the returned error code in case of failure
+	* Updated Desktop entry
+	* Updated ktoshibasmminterface.h function information
+	* Fixed an issue regarding Bluetooth enabling/disabling
+	  when there is no Bluetooth device present
+	* Fixed display of correct widget when Fan was turned On/Off
+	* Fixed tooltip display when LAN card was enabled/disabled
+
 2006-11-07 Azael Avalos <coproscefalo@gmail.com>
 	* Updted README and README.es files
 

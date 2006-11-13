@@ -316,13 +316,8 @@ void FnActions::updateWidget(int action, int type, int extra)
         return;
     }
     if (action == 12) {
-        if (type == -1)
-            m_StatusWidget->wsStatus->raiseWidget(13);
-        else {
-            if (type == -1)
-            (type == 1)? m_StatusWidget->wsStatus->raiseWidget(12)
-                : m_StatusWidget->wsStatus->raiseWidget(13);
-        }
+        (type != 1)? m_StatusWidget->wsStatus->raiseWidget(13)
+            : m_StatusWidget->wsStatus->raiseWidget(12);
     }
 }
 
@@ -362,6 +357,7 @@ void FnActions::showPassiveMsg(int state, char type)
         case 'e':	// Ethernet
             m_Text = i18n("Ethernet device %1").arg(w);
             m_Icon = SmallIcon("messagebox_info", 20);
+            break;
         case 'w':	// Wireless
             m_Text = i18n("Wireless interface %1").arg(w);
             m_Icon = SmallIcon("kwifimanager", 20);
