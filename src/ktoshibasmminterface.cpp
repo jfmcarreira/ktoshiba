@@ -48,22 +48,22 @@ QString KToshibaSMMInterface::sciError(int err)
 			mError = "(Funtion Not Supported)";
 			break;
 		case SCI_ALREADY_OPEN:
-			mError = "(Already Open)";
+			mError = "(Interface Already Opened)";
 			break;
 		case SCI_NOT_OPENED:
-			mError = "(Not Opened)";
+			mError = "(Interface Not Opened)";
 			break;
 		case SCI_INPUT_ERROR:
-			mError = "(Input Error)";
+			mError = "(Input Data Error)";
 			break;
 		case SCI_WRITE_PROTECTED:
-			mError = "(Write protected)";
+			mError = "(Write Protect Error)";
 			break;
 		case SCI_NOT_PRESENT:
-			mError = "(Not Present)";
+			mError = "(SCI Not Present)";
 			break;
 		case SCI_NOT_READY:
-			mError = "(Not Ready)";
+			mError = "(Function Failed)";
 			break;
 		case SCI_DEVICE_ERROR:
 			mError = "(Device Error)";
@@ -295,15 +295,17 @@ void KToshibaSMMInterface::batteryStatus(int *time, int *percent)
 	reg.ebx = SCI_BATTERY_PERCENT;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS)
-		*percent = -1;
+	int err = SciGet(&reg);
+	if (err != SCI_SUCCESS)
+		*percent = (err = SCI_NOT_INSTALLED)? -2 : -1;
 	else
 		*percent = ((100 * (reg.ecx & 0xffff)) / (reg.edx & 0xffff));
 
 	reg.ebx = SCI_BATTERY_TIME;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
-	if (SciGet(&reg) != SCI_SUCCESS) {
+	err = SciGet(&reg);
+	if (err != SCI_SUCCESS) {
 		int hours = *time/60;
 		int minutes = *time-(60*hours);
 		*time = SCI_TIME(hours, minutes);
@@ -472,8 +474,7 @@ int KToshibaSMMInterface::getLANController()
 	int err = SciGet(&reg);
 	if (err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getLANController(): "
-			  << "Could not get LAN controller mode "
-			  << "or system doesn't have one. "
+			  << "Could not get LAN controller mode. "
 			  << sciError(err) << endl;
 		return -1;
 	}
@@ -506,8 +507,7 @@ int KToshibaSMMInterface::getSpeedStep()
 	int err = SciGet(&reg);
 	if (err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getSpeedStep(): "
-			  << "Could not get SpeedStep mode "
-			  << "or system doesn't support it. "
+			  << "Could not get SpeedStep mode. "
 			  << sciError(err) << endl;
 		return -1;
 	}
@@ -540,8 +540,7 @@ int KToshibaSMMInterface::getSoundLogo()
 	int err = SciGet(&reg);
 	if (err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getSoundLogo(): "
-			  << "Could not get Sound Logo state "
-			  << "or system doesn't support it "
+			  << "Could not get Sound Logo state. "
 			  << sciError(err) << endl;
 		return -1;
 	}
@@ -642,8 +641,7 @@ int KToshibaSMMInterface::getHyperThreading()
 	int err = SciSet(&reg);
 	if (err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getHyperThreading(): "
-			  << "Could not get Hyper-Threading mode "
-			  << "or system doesn't support it. "
+			  << "Could not get Hyper-Threading mode. "
 			  << sciError(err) << endl;
 		return -1;
 	}
@@ -983,13 +981,13 @@ QString KToshibaSMMInterface::hciError(int err)
 			mError = "(HCI Failure)";
 			break;
 		case HCI_NOT_SUPPORTED:
-			mError = "(Not Supported)";
+			mError = "(Funtion Not Supported)";
 			break;
 		case HCI_INPUT_ERROR:
-			mError = "(Input Error)";
+			mError = "(Input Data Error)";
 			break;
 		case HCI_WRITE_PROTECTED:
-			mError = "(Write Protected)";
+			mError = "(Write Protect Error)";
 			break;
 		default:
 			mError = "(Unknown Error)";
@@ -1072,8 +1070,7 @@ int KToshibaSMMInterface::getFan()
 	int err = HciFunction(&reg);
 	if (err != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getFan(): "
-			  << "Could not get Fan status or laptop"
-			  << " doesn't have one. "
+			  << "Could not get Fan status. "
 			  << hciError(err) << endl;
 		return -1;
 	}
@@ -1115,8 +1112,7 @@ int KToshibaSMMInterface::getBayDevice(int bay)
 	int err = HciFunction(&reg);
 	if (err != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getBayDevice(): "
-			  << "Could not get Bay Device or "
-			  << "laptop doesn't have one. "
+			  << "Could not get Bay Device. "
 			  << hciError(err) << endl;
 		return -1;
 	}
@@ -1135,19 +1131,6 @@ int KToshibaSMMInterface::getSystemEvent()
 		kdError() << "KToshibaSMMInterface::getSystemEvent(): "
 			  << "System does not support Hotkeys" << endl;
 		return -1;
-	} else
-	if (ev == HCI_FAILURE) {
-		/**
-		 *	ISSUE: After enabling the hotkeys again, we receive
-		 *	HCI_FAILURE when 'no' events are present in the
-		 *	system. However, when events are entered into
-		 *	the system we receive HCI_SUCCESS.
-		 */
-		if (mHotkeys == false) {
-			kdWarning() << "KToshibaSMMInterface::getSystemEvent(): "
-				  << "Failed accessing System Events" << endl;
-		}
-		return 1;
 	} else
 	if (ev == HCI_FIFO_EMPTY)
 		return 0;
@@ -1311,8 +1294,7 @@ int KToshibaSMMInterface::getWirelessSwitch()
 	int err = HciFunction(&reg);
 	if (err != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getWirelessSwitch(): "
-			  << "Could not check wireless switch "
-			  << "or system doesn't have one. "
+			  << "Could not check Wireless Switch. "
 			  << hciError(err) << endl;
 		return -1;
 	}
@@ -1329,8 +1311,7 @@ int KToshibaSMMInterface::getWirelessPower()
 	int err = HciFunction(&reg);
 	if (err != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getWirelessPower(): "
-			  << "Could not get Wireless Power state "
-			  << "or system doesn't have wireless. "
+			  << "Could not get Wireless Power state. "
 			  << hciError(err) << endl;
 		return -1;
 	}
@@ -1350,9 +1331,8 @@ void KToshibaSMMInterface::setWirelessPower(int state)
 	int err = HciFunction(&reg);
 	if (err != HCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setWirelessPower(): "
-			  << "Could not set Wireless Power "
-			  << ((state == 1)? "On" : "Off") << ". "
-			  << hciError(err) << endl;
+			  << "Could not " << ((state == 1)? "enable" : "disable")
+			  << "Wireless Power. " << hciError(err) << endl;
 }
 
 int KToshibaSMMInterface::getBluetooth()
@@ -1364,8 +1344,7 @@ int KToshibaSMMInterface::getBluetooth()
 	int err = HciFunction(&reg);
 	if (err != HCI_SUCCESS) {
 		kdDebug() << "KToshibaSMMInterface::getBluetooth(): "
-			  << "Could not check Bluetooth device "
-			  << "or system doesn't have one. "
+			  << "Could not check Bluetooth device. "
 			  << hciError(err) << endl;
 		return -1;
 	}
@@ -1421,8 +1400,7 @@ void KToshibaSMMInterface::setBluetoothPower(int state)
 		setBluetoothControl(state);
 	}
 	kdDebug() << "KToshibaSMMInterface::setBluetoothPower(): "
-		  << "Bluetooth device "
-		  << ((state == 1)? "enabled" : "disabled")
+		  << "Bluetooth device " << ((state == 1)? "enabled" : "disabled")
 		  << " successfully" << endl;
 }
 

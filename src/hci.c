@@ -18,21 +18,21 @@
  * 
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<fcntl.h>
-#include<sys/stat.h>
-#include<sys/ioctl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
 
-#include"hci.h"
+#include "hci.h"
 
 
 int HciFunction(SMMRegisters *regs)
 {
 	int fd;
 
-	if ((fd=open(TOSH_DEVICE, O_RDWR))<0)
+	if ((fd = open(TOSH_DEVICE, O_RDWR)) < 0)
 		return HCI_FAILURE;
 
 	if (access(TOSH_PROC, R_OK)) {
@@ -40,11 +40,10 @@ int HciFunction(SMMRegisters *regs)
 		return HCI_FAILURE;
 	}
 
-	if (ioctl(fd, TOSH_SMM, regs)<0) {
+	if (ioctl(fd, TOSH_SMM, regs) < 0) {
 		close(fd);
-		return HCI_FAILURE;
+		return (int) (regs->eax & 0xff00)>>8;
 	}
-
 	close(fd);
 
 	return (int) (regs->eax & 0xff00)>>8;
@@ -64,20 +63,18 @@ int HciGetBiosVersion(void)
 		return -1;
 
 	/* open /proc/toshiba for reading */
-
 	if (!(str = fopen(TOSH_PROC, "r")))
 		return -1;
 
 	/* scan in the information */
-
-	fgets(buffer, sizeof(buffer)-1, str);
+	fgets(buffer, sizeof(buffer) - 1, str);
 	fclose(str);
-	buffer[sizeof(buffer)-1] = '\0';
+	buffer[sizeof(buffer) - 1] = '\0';
 	sscanf(buffer, "%*s %*x %*d.%*d %d.%d %*x %*x\n", &major, &minor);
 
 	/* return the information */
 
-	return (major*0x100)+minor;
+	return (major * 0x100) + minor;
 }
 
 
@@ -93,15 +90,13 @@ int HciGetMachineID(int *id)
 		return HCI_FAILURE;
 
 	/* open /proc/toshiba for reading */
-
 	if (!(str = fopen(TOSH_PROC, "r")))
 		return HCI_FAILURE;
 
 	/* scan in the information */
-
-	fgets(buffer, sizeof(buffer)-1, str);
+	fgets(buffer, sizeof(buffer) - 1, str);
 	fclose(str);
-	buffer[sizeof(buffer)-1] = '\0';
+	buffer[sizeof(buffer) - 1] = '\0';
 	sscanf(buffer, "%*s %x %*d.%*d %*d.%*d %*x %*x\n", id);
 
 	return HCI_SUCCESS;

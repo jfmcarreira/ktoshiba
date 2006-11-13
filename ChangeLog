@@ -1,3 +1,11 @@
+2006-11-13 Azael Avalos <coproscefalo@gmail.com>
+	* A little modification to sci.c and hci.c to return
+	  the correct error code instead of {S,H}CI_FAILURE
+	  all the time
+	* Some misc changes to KToshibaSMMInterface
+	* Small change to omnibook batteryStatus function to
+	  return a value when the battery is not present
+
 2006-11-12 Azael Avalos <coproscefalo@gmail.com>
 	* Removed some code that was causing KToshiba to crash
 	  (strange, it wasn't happening before...)
