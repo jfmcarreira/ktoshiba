@@ -140,11 +140,13 @@ public:
    */
   void setATAPriority(int index);
   /**
-   *
+   * Gets the Device Configuration.
+   * @return @p the int holding the device configuration
    */
   int getDeviceConfig();
   /**
-   *
+   * Gets the Device Configuration.
+   * @param mode the int holding the desired device config.
    */
   void setDeviceConfig(int mode);
   /**
@@ -173,27 +175,33 @@ public:
    */
   void setSpeedStep(int mode);
   /**
-   *
+   * Gets the Sound Logo mode.
+   * @return @p the int holding the current mode
    */
   int getSoundLogo();
   /**
-   *
+   * Sets the Sound Logo mode.
+   * @param mode the int holding the desired mode
    */
   void setSoundLogo(int state);
   /**
-   *
+   * Gets the Power Button Lamp state.
+   * @return @p the int holding the current state
    */
   int getPowerButtonLamp();
   /**
-   *
+   * Sets the Power Button Lamp state.
+   * @param mode the int holding the desired state
    */
   void setPowerButtonLamp(int mode);
   /**
-   *
+   * ets the Start Up Logo state.
+   * @return @p the int holding the current state
    */
   int getStartUpLogo();
   /**
-   *
+   * Sets the Start Up Logo state.
+   * @param mode the int holding the desired state
    */
   void setStartUpLogo(int mode);
   /**
@@ -207,35 +215,43 @@ public:
    */
   void setHyperThreading(int status);
   /**
-   *
+   * Gets the Power Switch state.
+   * @return @p the int holding the current status
    */
   int getPowerSW();
   /**
-   *
+   * Sets the Power Switch state.
+   * @param status the int holding the current state
    */
   void setPowerSW(int mode);
   /**
-   *
+   * Gets the Display Device mode.
+   * @return @p the int holding the current mode
    */
   int getDisplayDevice();
   /**
-   *
+   * Sets the Display Device mode.
+   * @param status the int holding the current status
    */
   void setDisplayDevice(int mode);
   /**
-   *
+   * Gets the Parallel Port mode.
+   * @return @p the int holding the current mode
    */
   int getParallelPort();
   /**
-   *
+   * Sets the Parallel Port mode.
+   * @param status the int holding the current mode
    */
   void setParallelPort(int mode);
   /**
-   *
+   * Gets the Keyboard Type state.
+   * @return @p the int holding the current status
    */
   int getKeyboardType();
   /**
-   *
+   * Sets the Keyboard Type state.
+   * @param status the int holding the current status
    */
   void setKeyboardType(int mode);
   /**
@@ -249,35 +265,43 @@ public:
    */
   void setPointingDevice(int status);
   /**
-   *
+   * Gets the USB Legacy Support state.
+   * @return @p the int holding the current state
    */
   int getUSBLegacySupport();
   /**
-   *
+   * Sets the USB Legacy Support state.
+   * @param status the int holding the current state
    */
   void setUSBLegacySupport(int state);
   /**
-   *
+   * Gets the USB Floppy Emulation state.
+   * @return @p the int holding the current state
    */
   int getUSBFDDEmulation();
   /**
-   *
+   * Sets the USB Floppy Emulation state.
+   * @param status the int holding the current state
    */
   void setUSBFDDEmulation(int state);
   /**
-   *
+   * Gets the Wake On LAN status.
+   * @return @p the int holding the current status
    */
   int getWOL();
   /**
-   *
+   * Sets the Wake On LAN status.
+   * @param status the int holding the current status
    */
   void setWOL(int state);
   /**
-   *
+   * Gets the Remote Boot Protocol mode.
+   * @return @p the int holding the current mode
    */
   int getRemoteBootProtocol();
   /**
-   *
+   * Sets the Remote Boot Protocol mode.
+   * @param status the int holding the current mode
    */
   void setRemoteBootProtocol(int mode);
 
@@ -410,8 +434,19 @@ private:
    * @return @p the int holding the maximum index
    */
   int getATAPriorityIndex();
+  /**
+   * Sets the SCI error string.
+   * @return @p the QString with the error
+   */
+   QString sciError(int err);
+  /**
+   * Sets the HCI error string.
+   * @return @p the QString with the error
+   */
+   QString hciError(int err);
 private:
   SMMRegisters reg;
+  QString mError;
   int mFd;
 };
 

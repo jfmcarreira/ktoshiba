@@ -61,15 +61,11 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     m_Snd = 1;
     m_Vol = 1;
     m_Fan = 1;
-
-    if (m_BIOS == -1 && !m_SCIIface)
-        delete m_Driver; m_Driver = NULL;
 }
 
 ToshibaFnActions::~ToshibaFnActions()
 {
-    if (m_BIOS != -1 || m_SCIIface)
-        delete m_Driver; m_Driver = NULL;
+    delete m_Driver; m_Driver = NULL;
 }
 
 void ToshibaFnActions::initSCI()
@@ -292,12 +288,14 @@ void ToshibaFnActions::toogleBackLight()
 
 void ToshibaFnActions::toggleBluetooth()
 {
-    int bt = m_Driver->getBluetoothPower();
-    if (bt == -1) return;
+    if (m_Driver->getBluetooth() != 0) {
+        int bt = m_Driver->getBluetoothPower();
+        if (bt == -1) return;
 
-    (bt == 1)? m_Driver->setBluetoothPower(0)
-        : m_Driver->setBluetoothPower(1);
-    showPassiveMsg(((bt == 1)? 0: 1), 'b');
+        (bt == 1)? m_Driver->setBluetoothPower(0)
+            : m_Driver->setBluetoothPower(1);
+        showPassiveMsg(((bt == 1)? 0: 1), 'b');
+    }
 }
 
 void ToshibaFnActions::toggleEthernet()
