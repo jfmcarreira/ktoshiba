@@ -38,7 +38,9 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
 {
     m_Driver = new KToshibaSMMInterface(0);
 
-    m_SCIIface = m_Driver->openSCIInterface();
+    m_SCIIface = m_Driver->openSCIInterface(&m_IFaceErr);
+    if (!m_SCIIface)
+        m_SCIIface = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
     if (m_SCIIface)
         initSCI();
     else if (!m_SCIIface) {
@@ -70,10 +72,10 @@ ToshibaFnActions::~ToshibaFnActions()
 
 void ToshibaFnActions::initSCI()
 {
-    kdDebug() << "KToshiba: SCI interface opened successfully." << endl;
-    int major = ((m_Driver->sciversion & 0xff00)>>8);
-    int minor = (m_Driver->sciversion & 0xff);
-    kdDebug() << "KToshiba: SCI version: " << major << "." << minor << endl;
+    if (m_IFaceErr != SCI_ALREADY_OPEN)
+        kdDebug() << "KToshiba: SCI interface opened successfully." << endl;
+    kdDebug() << "KToshiba: SCI version: " << ((m_Driver->sciversion & 0xff00)>>8)
+              << "." << (m_Driver->sciversion & 0xff) << endl;
     m_BatSave = m_Driver->getBatterySaveMode();
     m_BatType = m_Driver->getBatterySaveModeType();
     m_Boot = m_Driver->getBootMethod();

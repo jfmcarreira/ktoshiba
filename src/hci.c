@@ -2,6 +2,9 @@
  *
  * Copyright (c) 1998-2000  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
+ *   File taken from toshutils and modified by Azael Avalos
+ *   coproscefalo@gmail.com
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -73,7 +76,6 @@ int HciGetBiosVersion(void)
 	sscanf(buffer, "%*s %*x %*d.%*d %d.%d %*x %*x\n", &major, &minor);
 
 	/* return the information */
-
 	return (major * 0x100) + minor;
 }
 

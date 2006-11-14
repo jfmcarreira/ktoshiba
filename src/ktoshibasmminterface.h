@@ -58,7 +58,7 @@ public:
    * Opens an SCI interface.
    * @return @p true when opened interface
    */
-  bool openSCIInterface();
+  bool openSCIInterface(int *err);
   /**
    * Closes any opened SCI interface.
    */

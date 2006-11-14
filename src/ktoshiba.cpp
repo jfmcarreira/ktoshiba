@@ -103,13 +103,9 @@ KToshiba::KToshiba()
     if (mBIOS != -1) {
         kdDebug() << "KToshiba: BIOS version: "
                   << (mBIOS / 0x100) << "." << (mBIOS - 0x100) << endl;
-        QString modelid = QString("KToshiba: Machine ID: 0x%1").arg(mTFn->m_MachineID, 0, 16);
-        kdDebug() << modelid << endl;
+        kdDebug() << "KToshiba: Machine ID: "
+                  << QString("0x%1").arg(mTFn->m_MachineID, 0, 16) << endl;
         mHotkeys = mTFn->m_Driver->enableSystemEvent();
-        if (!mHotkeys) {
-            kdError() << "KToshiba: Could not enable hotkeys. Using toshiba_acpi module" << endl;
-            toshacpi = true;
-        }
         mTFn->m_Driver->mHotkeys = mHotkeys;
         mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
         mBluetooth = mTFn->m_Driver->getBluetooth();
@@ -128,9 +124,6 @@ KToshiba::KToshiba()
 
         mOmnibook = false;
     }
-    // Let's check if toshiba_acpi entry exist
-    if (mBIOS == -1 && (::access("/proc/acpi/toshiba/version", F_OK) != -1))
-        toshacpi = true;
 
 #ifdef ENABLE_OMNIBOOK
     if (!(mTFn->m_SCIIface) && (mBIOS == -1)) {
@@ -139,7 +132,7 @@ KToshiba::KToshiba()
         mOFn = new OmnibookFnActions(this);
         if (!mOFn->m_OmnibookIface) {
             kdError() << "KToshiba: Could not found a Toshiba model. "
-                      << " Quiting..." << endl;
+                      << "Quiting..." << endl;
             exit(-1);
         }
         int bios = mOFn->m_Omni->machineBIOS();
@@ -202,8 +195,10 @@ KToshiba::KToshiba()
 
     if (!mOmnibook || toshacpi) {
         mHotKeysTimer = new QTimer(this);
-        connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
-        mHotKeysTimer->start(100);
+        if (mHotkeys) {
+            connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
+            mHotKeysTimer->start(100);
+        }
     } else
     if (mOmnibook) {
 #ifdef ENABLE_OMNIBOOK
@@ -233,7 +228,8 @@ KToshiba::~KToshiba()
     if (!mOmnibook) {
         delete mHyper; mHyper = NULL;
         delete mSpeed; mSpeed = NULL;
-        delete mHotKeysTimer; mHotKeysTimer = NULL;
+        if (mHotkeys)
+            delete mHotKeysTimer; mHotKeysTimer = NULL;
     }
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook) {
@@ -260,7 +256,8 @@ void KToshiba::quit()
 {
     mSystemTimer->stop();
     if (!mOmnibook) {
-        mHotKeysTimer->stop();
+        if (mHotkeys)
+            mHotKeysTimer->stop();
         if (mTFn->m_SCIIface) {
             kdDebug() << "KToshiba: Closing SCI interface." << endl;
             mTFn->m_Driver->closeSCIInterface();
@@ -281,11 +278,11 @@ void KToshiba::resumedSTD()
 {
     if (!mTFn->m_SCIIface && !mOmnibook && suspended) {
         kdDebug() << "KToshiba: Opening SCI interface." << endl;
-        mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface();
+        mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface(&(mTFn->m_IFaceErr));
     }
     // Enable HotKeys
-    if (mBIOS != -1 && !mOmnibook && suspended)
-        mTFn->m_Driver->enableSystemEvent();
+    if (mHotkeys && !mOmnibook && suspended)
+        mHotkeys = mTFn->m_Driver->enableSystemEvent();
     suspended = false;
 }
 
@@ -297,7 +294,7 @@ void KToshiba::suspendToDisk()
         mTFn->m_SCIIface = false;
     }
     // Disable HotKeys
-    if (mBIOS != -1 && !mOmnibook && !suspended)
+    if (mHotkeys && !mOmnibook && !suspended)
         mTFn->m_Driver->disableSystemEvent();
     // 1.5 minutes grace time before we call resume slot
     QTimer::singleShot( 9000, this, SLOT( resumedSTD() ) );
@@ -874,11 +871,7 @@ void KToshiba::checkHotKeys()
     mConfig.setGroup("Fn_Key");
 
     int tmp = 0;
-    int key = 0;
-    if (mHotkeys)
-        key = mTFn->m_Driver->getSystemEvent();
-    else if (toshacpi)
-        key = mProcIFace->toshibaACPIKey();
+    int key = mTFn->m_Driver->getSystemEvent();
 
     if ((key == 0x100) && (mTFn->m_Popup != 0))
         mTFn->hideWidgets();

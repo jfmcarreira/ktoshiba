@@ -43,6 +43,7 @@ public:
     void performFnAction(int, int);
     KToshibaSMMInterface *m_Driver;
     bool m_SCIIface;
+    int m_IFaceErr;
     int m_MachineID;
     int m_BatType;
     int m_BatSave;

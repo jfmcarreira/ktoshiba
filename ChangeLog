@@ -1,3 +1,11 @@
+2006-11-14 Azael Avalos <coproscefalo@gmail.com>
+	* Removed toshiba_acpi module monitoring, it needs more
+	  implementation and also the support is limited
+	  (tho the experimental toshiba_acpi driver provides
+	  the same functionality as the toshiba module)
+	* Disabled Fn-Key tab on KCM if system does not support
+	  Hotkeys monitoring
+
 2006-11-13 Azael Avalos <coproscefalo@gmail.com>
 	* A little modification to sci.c and hci.c to return
 	  the correct error code instead of {S,H}CI_FAILURE
@@ -5,6 +13,10 @@
 	* Some misc changes to KToshibaSMMInterface
 	* Small change to omnibook batteryStatus function to
 	  return a value when the battery is not present
+	* Some more slight changes to KToshibaSMMInterface
+	  and {sci,hci}.c files
+	* Adapted KCM files, KToshiba and ToshibaFnActions classes
+	  to new changes in library
 
 2006-11-12 Azael Avalos <coproscefalo@gmail.com>
 	* Removed some code that was causing KToshiba to crash

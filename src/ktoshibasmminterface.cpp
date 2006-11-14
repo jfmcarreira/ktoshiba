@@ -41,6 +41,9 @@ KToshibaSMMInterface::~KToshibaSMMInterface()
 QString KToshibaSMMInterface::sciError(int err)
 {
 	switch (err) {
+		case SCI_SUCCESS:
+			mError = "(SCI Success)";
+			break;
 		case SCI_FAILURE:
 			mError = "(SCI Failure)";
 			break;
@@ -72,18 +75,20 @@ QString KToshibaSMMInterface::sciError(int err)
 			mError = "(Not Installed)";
 			break;
 		default:
-			mError = "(Unknown Error)";
+			mError = QString("(Unknown Error 0x%1)").arg(err, 0, 16);
 	}
 
 	return mError;
 }
 
-bool KToshibaSMMInterface::openSCIInterface()
+bool KToshibaSMMInterface::openSCIInterface(int *err)
 {
-	if (SciSupportCheck(&sciversion) == SCI_FAILURE) {
+	*err = SciSupportCheck(&sciversion);
+	if (*err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
 			  << "This computer is not supported or "
-			  << "the kernel module is not installed." << endl;
+			  << "the kernel module is not installed. "
+			  << sciError(*err) << endl;
 		return false;
 	}
 
@@ -93,11 +98,11 @@ bool KToshibaSMMInterface::openSCIInterface()
 		return false;
 	}
 
-	SciOpenInterface();
-	SciCloseInterface();
-	if (SciOpenInterface() == SCI_FAILURE) {
+	*err = SciOpenInterface();
+	if (*err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
-			  << "Failed to open SCI interface" << endl;
+			  << "Failed to open SCI interface. "
+			  << sciError(*err) << endl;
 		return false;
 	}
 
@@ -108,9 +113,12 @@ void KToshibaSMMInterface::closeSCIInterface()
 {
 	if (mFd)
 		close(mFd);
-	if (SciCloseInterface() == SCI_FAILURE)
+
+	int ret = SciCloseInterface();
+	if (ret != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::closeSCIInterface(): "
-			  << "Failed to close SCI interface" << endl;
+			  << "Failed to close SCI interface. "
+			  << sciError(ret) << endl;
 }
 
 int KToshibaSMMInterface::getBatterySaveMode()
@@ -977,6 +985,9 @@ void KToshibaSMMInterface::setRemoteBootProtocol(int mode)
 QString KToshibaSMMInterface::hciError(int err)
 {
 	switch (err) {
+		case HCI_SUCCESS:
+			mError = "(HCI Success)";
+			break;
 		case HCI_FAILURE:
 			mError = "(HCI Failure)";
 			break;
@@ -990,7 +1001,7 @@ QString KToshibaSMMInterface::hciError(int err)
 			mError = "(Write Protect Error)";
 			break;
 		default:
-			mError = "(Unknown Error)";
+			mError = QString("(Unknown Error 0x%1)").arg(err, 0, 16);
 	}
 
 	return mError;
@@ -1126,13 +1137,13 @@ int KToshibaSMMInterface::getSystemEvent()
 	reg.ebx = HCI_SYSTEM_EVENT;
 	reg.ecx = 0x0000;
 	reg.edx = 0x0000;
-	int ev = HciFunction(&reg);
-	if (ev == HCI_NOT_SUPPORTED) {
+	int err = HciFunction(&reg);
+	if (err == HCI_NOT_SUPPORTED) {
 		kdError() << "KToshibaSMMInterface::getSystemEvent(): "
-			  << "System does not support Hotkeys" << endl;
+			  << "System does not support Hotkeys." << endl;
 		return -1;
 	} else
-	if (ev == HCI_FIFO_EMPTY)
+	if (err == HCI_FIFO_EMPTY)
 		return 0;
 
 	return (int) (reg.ecx & 0xffff);
@@ -1144,16 +1155,15 @@ bool KToshibaSMMInterface::enableSystemEvent()
 	reg.ebx = HCI_SYSTEM_EVENT;
 	reg.ecx = HCI_ENABLE;
 	reg.edx = 0x0000;
-	int err = HciFunction(&reg);
-	if (err != HCI_SUCCESS) {
+	if (HciFunction(&reg) == HCI_NOT_SUPPORTED) {
 		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
-			  << "Could not enable Hotkeys. "
-			  << hciError(err) << endl;
+			  << "Could not enable Hokeys. "
+			  << "System does not support this function." << endl;
 		return false;
 	}
 
 	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
-		  << "Enabled Hotkeys" << endl;
+		  << "Enabled Hotkeys." << endl;
 
     return true;
 }
@@ -1164,14 +1174,13 @@ void KToshibaSMMInterface::disableSystemEvent()
 	reg.ebx = HCI_SYSTEM_EVENT;
 	reg.ecx = HCI_DISABLE;
 	reg.edx = 0x0000;
-	int err = HciFunction(&reg);
-	if (err != HCI_SUCCESS)
+	if (HciFunction(&reg) == HCI_NOT_SUPPORTED)
 		kdError() << "KToshibaSMMInterface::disableSystemEvent(): "
 			  << "Could not disable Hotkeys. "
-			  << hciError(err) << endl;
+			  << "System does not support this function." << endl;
 
 	kdDebug() << "KToshibaSMMInterface::disableSystemEvent(): "
-		  << "Disabled Hotkeys" << endl;
+		  << "Disabled Hotkeys." << endl;
 }
 
 int KToshibaSMMInterface::getVideo()
@@ -1414,7 +1423,7 @@ void KToshibaSMMInterface::setBluetoothControl(int state)
 		reg.ecx = HCI_ENABLE;
 	reg.edx = HCI_BLUETOOTH_CTRL;
 	int err = HciFunction(&reg);
-	if (HciFunction(&reg) != HCI_SUCCESS) {
+	if (err != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::setBluetoothControl(): "
 			  << "Could not " << ((state == 1)? "attach" : "detach")
 			  << " Bluetooth device. " << hciError(err) << endl;
@@ -1422,8 +1431,7 @@ void KToshibaSMMInterface::setBluetoothControl(int state)
 	}
 	
 	kdDebug() << "KToshibaSMMInterface::setBluetoothControl(): "
-		  << "Bluetooth device "
-		  << ((state == 1)? "attached" : "detached")
+		  << "Bluetooth device " << ((state == 1)? "attached" : "detached")
 		  << " successfully" << endl;
 }
 
