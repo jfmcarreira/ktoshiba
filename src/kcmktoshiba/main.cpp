@@ -72,16 +72,23 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_Omnibook = false;
     m_Init = false;
     m_AC = -1;
+    m_IFaceErr = 0;
+    m_Hotkeys = 0;
 
     m_ProcIFace = new KToshibaProcInterface(this);
     m_SMMIFace = new KToshibaSMMInterface(this);
-    m_SCIIFace = m_SMMIFace->openSCIInterface();
-    m_HCIIFace = (m_SMMIFace->machineBIOS() == -1)? false : true;
+    m_SCIIFace = m_SMMIFace->openSCIInterface(&m_IFaceErr);
     if (!m_SCIIFace)
-        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
-			m_KCMKToshibaGeneral->configTabWidget->page(2), false);
-    if (m_HCIIFace)
+        m_SCIIFace = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
+    m_HCIIFace = (m_SMMIFace->machineBIOS() == -1)? false : true;
+    if (m_HCIIFace) {
         m_AC = m_SMMIFace->acPowerStatus();
+        m_Hotkeys = m_SMMIFace->getSystemEvent();
+    }
+    m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+		m_KCMKToshibaGeneral->configTabWidget->page(1), ((m_Hotkeys == -1)? false : true));
+    m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+		m_KCMKToshibaGeneral->configTabWidget->page(2), m_SCIIFace);
 
     if (!m_HCIIFace && !m_SCIIFace) {
         delete m_SMMIFace; m_SMMIFace = NULL;
