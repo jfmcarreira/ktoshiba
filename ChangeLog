@@ -1,3 +1,6 @@
+2006-11-16 Azael Avalos <coproscefalo@gmail.com>
+	* Updated the handbook
+
 2006-11-14 Azael Avalos <coproscefalo@gmail.com>
 	* Removed toshiba_acpi module monitoring, it needs more
 	  implementation and also the support is limited
