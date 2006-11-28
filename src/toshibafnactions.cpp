@@ -74,10 +74,13 @@ void ToshibaFnActions::initSCI()
 {
     if (m_IFaceErr != SCI_ALREADY_OPEN)
         kdDebug() << "KToshiba: SCI interface opened successfully." << endl;
-    kdDebug() << "KToshiba: SCI version: " << ((m_Driver->sciversion & 0xff00)>>8)
-              << "." << (m_Driver->sciversion & 0xff) << endl;
-    m_BatSave = m_Driver->getBatterySaveMode();
+    kdDebug() << "KToshiba: SCI version: " << m_Driver->getSCIVersion() << endl;
     m_BatType = m_Driver->getBatterySaveModeType();
+    // Default to type 2 if we got a failure
+    if (m_BatType == -1) m_BatType = 2;
+    m_BatSave = m_Driver->getBatterySaveMode();
+    // Default to the highest mode if we got a failure
+    if (m_BatSave == -1) m_BatSave = (m_BatType == 3)? 3 : 2;
     m_Boot = m_Driver->getBootMethod();
     m_BootType = m_Driver->getBootType();
     m_LANCtrl = m_Driver->getLANController();
@@ -171,8 +174,9 @@ void ToshibaFnActions::performFnAction(int action, int key)
 
 void ToshibaFnActions::toggleBSM()
 {
-    m_BatSave = m_Driver->getBatterySaveMode();
-    if (m_BatSave == -1) return;
+    // ISSUE: Always returns the same value no matter what...
+    //m_BatSave = m_Driver->getBatterySaveMode();
+    //if (m_BatSave == -1) return;
     KConfig cfg("ktoshibarc");
     cfg.setGroup("BSM");
     m_BatSave = cfg.readNumEntry("Battery_Save_Mode", 2);

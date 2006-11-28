@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-25 02:31-0600\n"
+"POT-Creation-Date: 2006-11-27 16:17-0700\n"
 "PO-Revision-Date: 2005-06-15 21:15+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,7 +28,7 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: fnactions.cpp:47 ktoshiba.cpp:500 ktoshiba.cpp:758 main.cpp:40
+#: fnactions.cpp:47 ktoshiba.cpp:495 ktoshiba.cpp:764 main.cpp:40
 msgid "KToshiba"
 msgstr "KToshiba"
 
@@ -44,160 +44,164 @@ msgstr ""
 msgid "Function Not Supported"
 msgstr ""
 
-#: fnactions.cpp:94
-msgid "Long Life"
-msgstr "Hosszú élettartam"
-
-#: fnactions.cpp:95
+#: fnactions.cpp:101
 msgid "User Settings"
 msgstr "Felhasználói beállítások"
 
-#: fnactions.cpp:99
-msgid "Normal Life"
-msgstr "Normal élettartam"
+#: fnactions.cpp:105
+msgid "Long Life"
+msgstr "Hosszú élettartam"
 
-#: fnactions.cpp:100
+#: fnactions.cpp:106
 msgid "Low Power"
 msgstr "Alacsony töltöttség"
 
-#: fnactions.cpp:104
-msgid "Full Life"
-msgstr "Teljes élettartam"
+#: fnactions.cpp:111
+msgid "Normal Life"
+msgstr "Normal élettartam"
 
-#: fnactions.cpp:105
+#: fnactions.cpp:112
 msgid "Full Power"
 msgstr "Feltöltve"
 
-#: fnactions.cpp:280
+#: fnactions.cpp:117
+msgid "Full Life"
+msgstr "Teljes élettartam"
+
+#: fnactions.cpp:293
+msgid "Battery Not Present"
+msgstr ""
+
+#: fnactions.cpp:294
 msgid "Battery Status"
 msgstr ""
 
-#: fnactions.cpp:357
+#: fnactions.cpp:366
 #, fuzzy
 msgid "Bluetooth device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: fnactions.cpp:361
+#: fnactions.cpp:370
 #, fuzzy
 msgid "Ethernet device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: fnactions.cpp:364
+#: fnactions.cpp:374
 msgid "Wireless interface %1"
 msgstr "Wireless csatoló %1"
 
-#: ktoshiba.cpp:159
+#: ktoshiba.cpp:148
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
 msgstr ""
 
-#: ktoshiba.cpp:161
+#: ktoshiba.cpp:150
 msgid "HotKeys"
 msgstr ""
 
-#: ktoshiba.cpp:363
+#: ktoshiba.cpp:358
 msgid "Suspend To &RAM"
 msgstr "Felfüggesztés RAM-ba"
 
-#: ktoshiba.cpp:365
+#: ktoshiba.cpp:360
 msgid "Suspend To &Disk"
 msgstr "Felfüggesztés lemezre"
 
-#: ktoshiba.cpp:383
+#: ktoshiba.cpp:378
 msgid "Enable &Bluetooth"
 msgstr "&Bluetooth bekapcsolása"
 
-#: ktoshiba.cpp:389 ktoshiba.cpp:409 ktoshiba.cpp:413
+#: ktoshiba.cpp:384 ktoshiba.cpp:404 ktoshiba.cpp:408
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:390
+#: ktoshiba.cpp:385
 msgid "Enabled - PM aware"
 msgstr "Bekapcsolva - PM aware"
 
-#: ktoshiba.cpp:391
+#: ktoshiba.cpp:386
 msgid "Enabled - No PM aware"
 msgstr "Bekapcsolva - No PM aware"
 
-#: ktoshiba.cpp:392
+#: ktoshiba.cpp:387
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:394
+#: ktoshiba.cpp:389
 msgid "Dynamic"
 msgstr "Dinamikus"
 
-#: ktoshiba.cpp:395
+#: ktoshiba.cpp:390
 msgid "Always High"
 msgstr "Mindig magas"
 
-#: ktoshiba.cpp:396
+#: ktoshiba.cpp:391
 msgid "Always Low"
 msgstr "Mindig alacsony"
 
-#: ktoshiba.cpp:397
+#: ktoshiba.cpp:392
 msgid "CPU Frequency"
 msgstr "CPU Frekvencia"
 
-#: ktoshiba.cpp:410 ktoshiba.cpp:414
+#: ktoshiba.cpp:405 ktoshiba.cpp:409
 #, fuzzy
 msgid "Enabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:411
+#: ktoshiba.cpp:406
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:415
+#: ktoshiba.cpp:410
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:426
+#: ktoshiba.cpp:421
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:427
+#: ktoshiba.cpp:422
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:428
+#: ktoshiba.cpp:423
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:433
+#: ktoshiba.cpp:428
 msgid "&Configure KToshiba..."
 msgstr "KToshiba &beállításai"
 
-#: ktoshiba.cpp:436
+#: ktoshiba.cpp:431
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:439
+#: ktoshiba.cpp:434
 msgid "&About KToshiba"
 msgstr "KToshiba &névjegye"
 
-#: ktoshiba.cpp:441
+#: ktoshiba.cpp:436
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:500
+#: ktoshiba.cpp:495
 msgid "Bluetooth device activated"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: ktoshiba.cpp:757
+#: ktoshiba.cpp:763
 msgid "on"
 msgstr "be"
 
-#: ktoshiba.cpp:757
+#: ktoshiba.cpp:763
 msgid "off"
 msgstr "ki"
 
-#: ktoshiba.cpp:758
+#: ktoshiba.cpp:764
 msgid "Wireless antenna turned %1"
 msgstr "Wireless antenna turned %1"
 
-#: ktoshiba.cpp:759
+#: ktoshiba.cpp:765
 msgid "Wireless"
 msgstr "Wireless"
 

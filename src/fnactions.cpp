@@ -82,28 +82,40 @@ void FnActions::showWidget(int widget, int key)
 void FnActions::updateWidget(int action, int type, int extra)
 {
     if (action == 3) {
-        m_SettingsWidget->wsSettings->raiseWidget(0);
-        m_SettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plMedium->setFrameShape(QLabel::NoFrame);
-        m_SettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
+        if (extra == 3) {
+            m_SettingsWidget->wsSettings->raiseWidget(5);
+            m_SettingsWidget->plLongL->setFrameShape(QLabel::NoFrame);
+            m_SettingsWidget->plNormalL->setFrameShape(QLabel::NoFrame);
+            m_SettingsWidget->plFullL->setFrameShape(QLabel::NoFrame);
+        } else {
+            m_SettingsWidget->wsSettings->raiseWidget(0);
+            m_SettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
+            m_SettingsWidget->plLow->setFrameShape(QLabel::NoFrame);
+            m_SettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
+        }
         switch (type) {
             case -1:
                 m_SettingsWidget->tlStatus->setText(m_NotSupported);
                 break;
             case 0:
-                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Long Life"))
-                    : m_SettingsWidget->tlStatus->setText(i18n("User Settings"));
+                m_SettingsWidget->tlStatus->setText(i18n("User Settings"));
                 m_SettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
                 break;
             case 1:
-                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Normal Life"))
+                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Long Life"))
                     : m_SettingsWidget->tlStatus->setText(i18n("Low Power"));
-                m_SettingsWidget->plMedium->setFrameShape(QLabel::PopupPanel);
+                (extra == 3)? m_SettingsWidget->plLongL->setFrameShape(QLabel::PopupPanel)
+                    : m_SettingsWidget->plLow->setFrameShape(QLabel::PopupPanel);
                 break;
             case 2:
-                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Full Life"))
+                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Normal Life"))
                     : m_SettingsWidget->tlStatus->setText(i18n("Full Power"));
-                m_SettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
+                (extra == 3)? m_SettingsWidget->plNormalL->setFrameShape(QLabel::PopupPanel)
+                    : m_SettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
+                break;
+            case 3:
+                m_SettingsWidget->tlStatus->setText(i18n("Full Life"));
+                m_SettingsWidget->plFullL->setFrameShape(QLabel::PopupPanel);
                 break;
         }
         return;

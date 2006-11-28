@@ -22,9 +22,11 @@
 
 #include <kdebug.h>
 
+#include <cstdlib>
+#include <cstring>
+
 KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 	: QObject( parent ),
-	  mHotkeys( false ),
 	  mFd( 0 )
 {
 }
@@ -119,6 +121,11 @@ void KToshibaSMMInterface::closeSCIInterface()
 		kdError() << "KToshibaSMMInterface::closeSCIInterface(): "
 			  << "Failed to close SCI interface. "
 			  << sciError(ret) << endl;
+}
+
+QString KToshibaSMMInterface::getSCIVersion()
+{
+	return QString("%1.%2").arg((sciversion & 0xff00)>>8).arg(sciversion & 0xff);
 }
 
 int KToshibaSMMInterface::getBatterySaveMode()
@@ -1248,6 +1255,98 @@ void KToshibaSMMInterface::getSystemLocks(int *lock, int bay)
 		*lock = HCI_LOCKED;
 	kdDebug() << "KToshibaSMMInterface::systemLocks(): Bay is "
 		  << ((*lock == HCI_LOCKED)? "locked": "unlocked") << endl;
+}
+
+char *KToshibaSMMInterface::getOwnerString()
+{
+	SMMRegisters regs;
+	regs.eax = HCI_GET;
+	regs.ebx = HCI_OWNERSTRING;
+	regs.ecx = 0x0000;
+	regs.edx = 0x0000;
+	regs.esi = 0x0000;
+	int err = HciFunction(&regs);
+	if (err != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getOwnerString(): "
+			  << "Could not get Owner String. "
+			  << hciError(err) << endl;
+		return NULL;
+	}
+
+	int length = (regs.ecx & 0xffff0000) >> 16;
+
+	char *owner = (char*) calloc(length, sizeof(char));
+	if (owner == NULL) {
+		kdError() << "KToshibaSMMInterface::getOwnerString(): "
+			  << "Unable to calloc space" << endl;
+		return NULL;
+	}
+
+	// Read the current owner string four characters at a time
+	char *string = owner;
+	for (int i = 0; i < length; i += 4) {
+		regs.eax = HCI_GET;
+		regs.ebx = HCI_OWNERSTRING;
+		regs.ecx = 0x0000;
+		regs.edx = 0x0000;
+		regs.esi = (unsigned long) i;
+		err = HciFunction(&regs);
+		if (err != HCI_SUCCESS) {
+			kdError() << "KToshibaSMMInterface::getOwnerString(): "
+				  << "Could not read Owner String. "
+				  << hciError(err) << endl;
+			break;
+		}
+
+		// Add non NULL characters to the string
+		unsigned long characters = regs.edx;
+		for (int j = 0; j < 4; j++) {
+			int c = (char) characters & 0xff;
+			characters = characters >> 8;
+			if ((c >= 0x20) && (c <= 0x80))
+				*(string++) = c;
+			if (c == 0x0d)
+				*(string++) = c;
+			if (c == 0x00)
+				*(string++) = c;
+		}
+	}
+	*string = '\0';
+
+	return owner;
+}
+
+void KToshibaSMMInterface::setOwnerString(char *owner)
+{
+	char string[513];
+
+	// Copy at most 512 characters of the input string
+	memset(string, 0, sizeof(char));
+	strncpy(string, owner, 512);
+
+	// Set the new string
+	for (int i = 0; i < 512; i += 8) {
+		reg.eax = HCI_SET;
+		reg.ebx = HCI_OWNERSTRING;
+		reg.ecx = 8;
+		reg.esi = i;
+
+		reg.edx  = (int)  string[i];
+		reg.edx |= ((int) string[i + 1]) << 8;
+		reg.edx |= ((int) string[i + 2]) << 16;
+		reg.edx |= ((int) string[i + 3]) << 24;
+
+		reg.edi  = (int)  string[i + 4];
+		reg.edi |= ((int) string[i + 5]) << 8;
+		reg.edi |= ((int) string[i + 6]) << 16;
+		reg.edi |= ((int) string[i + 7]) << 24;
+
+		int err = HciFunction(&reg);
+		if (err != HCI_SUCCESS)
+			kdError() << "KToshibaSMMInterface::setOwnerString(): "
+				  << "Could not set Owner String. "
+				  << hciError(err) << endl;
+	}
 }
 
 int KToshibaSMMInterface::getBrightness()
