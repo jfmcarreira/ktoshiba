@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-25 02:31-0600\n"
+"POT-Creation-Date: 2006-11-27 16:17-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: fnactions.cpp:47 ktoshiba.cpp:500 ktoshiba.cpp:758 main.cpp:40
+#: fnactions.cpp:47 ktoshiba.cpp:495 ktoshiba.cpp:764 main.cpp:40
 msgid "KToshiba"
 msgstr ""
 
@@ -43,157 +43,161 @@ msgstr ""
 msgid "Function Not Supported"
 msgstr ""
 
-#: fnactions.cpp:94
-msgid "Long Life"
-msgstr ""
-
-#: fnactions.cpp:95
+#: fnactions.cpp:101
 msgid "User Settings"
 msgstr ""
 
-#: fnactions.cpp:99
-msgid "Normal Life"
+#: fnactions.cpp:105
+msgid "Long Life"
 msgstr ""
 
-#: fnactions.cpp:100
+#: fnactions.cpp:106
 msgid "Low Power"
 msgstr ""
 
-#: fnactions.cpp:104
-msgid "Full Life"
+#: fnactions.cpp:111
+msgid "Normal Life"
 msgstr ""
 
-#: fnactions.cpp:105
+#: fnactions.cpp:112
 msgid "Full Power"
 msgstr ""
 
-#: fnactions.cpp:280
+#: fnactions.cpp:117
+msgid "Full Life"
+msgstr ""
+
+#: fnactions.cpp:293
+msgid "Battery Not Present"
+msgstr ""
+
+#: fnactions.cpp:294
 msgid "Battery Status"
 msgstr ""
 
-#: fnactions.cpp:357
+#: fnactions.cpp:366
 msgid "Bluetooth device %1"
 msgstr ""
 
-#: fnactions.cpp:361
+#: fnactions.cpp:370
 msgid "Ethernet device %1"
 msgstr ""
 
-#: fnactions.cpp:364
+#: fnactions.cpp:374
 msgid "Wireless interface %1"
 msgstr ""
 
-#: ktoshiba.cpp:159
+#: ktoshiba.cpp:148
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
 msgstr ""
 
-#: ktoshiba.cpp:161
+#: ktoshiba.cpp:150
 msgid "HotKeys"
 msgstr ""
 
-#: ktoshiba.cpp:363
+#: ktoshiba.cpp:358
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:365
+#: ktoshiba.cpp:360
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:383
+#: ktoshiba.cpp:378
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:389 ktoshiba.cpp:409 ktoshiba.cpp:413
+#: ktoshiba.cpp:384 ktoshiba.cpp:404 ktoshiba.cpp:408
 msgid "Disabled"
 msgstr ""
 
-#: ktoshiba.cpp:390
+#: ktoshiba.cpp:385
 msgid "Enabled - PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:391
+#: ktoshiba.cpp:386
 msgid "Enabled - No PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:392
+#: ktoshiba.cpp:387
 msgid "Hyper-Threading"
 msgstr ""
 
-#: ktoshiba.cpp:394
+#: ktoshiba.cpp:389
 msgid "Dynamic"
 msgstr ""
 
-#: ktoshiba.cpp:395
+#: ktoshiba.cpp:390
 msgid "Always High"
 msgstr ""
 
-#: ktoshiba.cpp:396
+#: ktoshiba.cpp:391
 msgid "Always Low"
 msgstr ""
 
-#: ktoshiba.cpp:397
+#: ktoshiba.cpp:392
 msgid "CPU Frequency"
 msgstr ""
 
-#: ktoshiba.cpp:410 ktoshiba.cpp:414
+#: ktoshiba.cpp:405 ktoshiba.cpp:409
 msgid "Enabled"
 msgstr ""
 
-#: ktoshiba.cpp:411
+#: ktoshiba.cpp:406
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:415
+#: ktoshiba.cpp:410
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:426
+#: ktoshiba.cpp:421
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:427
+#: ktoshiba.cpp:422
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:428
+#: ktoshiba.cpp:423
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:433
+#: ktoshiba.cpp:428
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:436
+#: ktoshiba.cpp:431
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:439
+#: ktoshiba.cpp:434
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:441
+#: ktoshiba.cpp:436
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:500
+#: ktoshiba.cpp:495
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:757
+#: ktoshiba.cpp:763
 msgid "on"
 msgstr ""
 
-#: ktoshiba.cpp:757
+#: ktoshiba.cpp:763
 msgid "off"
 msgstr ""
 
-#: ktoshiba.cpp:758
+#: ktoshiba.cpp:764
 msgid "Wireless antenna turned %1"
 msgstr ""
 
-#: ktoshiba.cpp:759
+#: ktoshiba.cpp:765
 msgid "Wireless"
 msgstr ""
 

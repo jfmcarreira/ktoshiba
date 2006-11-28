@@ -106,19 +106,12 @@ KToshiba::KToshiba()
         kdDebug() << "KToshiba: Machine ID: "
                   << QString("0x%1").arg(mTFn->m_MachineID, 0, 16) << endl;
         mHotkeys = mTFn->m_Driver->enableSystemEvent();
-        mTFn->m_Driver->mHotkeys = mHotkeys;
         mWirelessSwitch = mTFn->m_Driver->getWirelessSwitch();
         mBluetooth = mTFn->m_Driver->getBluetooth();
         mAC = mTFn->m_Driver->acPowerStatus();
-        // Default to mode 2 if we got a failure
-        if (mTFn->m_BatType == -1)
-            mTFn->m_BatType = 2;
         mBatType = mTFn->m_BatType;
-        // Default to last value stored in config if we got a failure
-        if (mTFn->m_BatSave == -1)
-            mTFn->m_BatSave = mBatSave;
-        mBatSave = (mBatType == 3)? 3 : 2;
-        bsmtrig = (!mBatSave)? true : false;
+        mBatSave = mTFn->m_BatSave;
+        bsmtrig = (mBatSave == 0)? true : false;
         mSVideo = mTFn->m_Video;
         mPad = mTFn->m_Pad;
 
@@ -717,19 +710,30 @@ void KToshiba::checkSystem()
     if (mBatSave != mOldBatSave || mAC != mOldAC) {
         int bright = 0;
         switch (mBatSave) {
-            case 0:			// USER SETTINGS or LONG LIFE
-                if (mBatType == 3)
-                    bright = 0;	// Semi-Bright
-                if (mBatType == 2 && !bsmtrig && mTFn->m_SCIIface) {
+            // Brightness settings info:
+            //     7 - Super-Bright
+            //     3 - Bright
+            //     0 - Semi-Bright
+            case 0:							// USER SETTINGS
+                if (!bsmtrig && mTFn->m_SCIIface) {
                     bsmUserSettings(&bright);
                     bsmtrig = true;
                 }
                 break;
-            case 1:			// LOW POWER or NORMAL LIFE
-                bright = (mAC == 3)? 0 /*Semi-Bright*/ : 3 /*Bright*/;
+            case 1:
+                if (mBatType == 3)				// LONG LIFE
+                    bright = 0;
+                else if (mBatType == 2)		// LOW POWER
+                    bright = (mAC == 3)? 0 : 3;
                 break;
-            case 2:			// FULL POWER or FULL LIFE
-                bright = (mAC == 3)? 3 /*Bright*/ : 7 /*Super-Bright*/;
+            case 2:
+                if (mBatType == 3)				// NORMAL LIFE or ECONOMY
+                    bright = (mAC == 3)? 0 : 3;
+                else if (mBatType == 2)		// FULL POWER
+                    bright = (mAC == 3)? 3 : 7;
+                break;
+            case 3:							// FULL LIFE
+                bright = (mAC == 3)? 3 : 7;
                 break;
         }
         if (mTFn->m_BatType != 2 && mBIOS != -1 && !mOmnibook)

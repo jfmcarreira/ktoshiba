@@ -60,9 +60,9 @@ private:
     bool m_Omnibook;
     bool m_SCIIFace;
     bool m_HCIIFace;
+    bool m_Hotkeys;
     bool m_Init;
     int m_IFaceErr;
-    int m_Hotkeys;
     int m_AC;
 };
 

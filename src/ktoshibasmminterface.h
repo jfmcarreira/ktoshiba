@@ -64,6 +64,11 @@ public:
    */
   void closeSCIInterface();
   /**
+   * Gets the machine SCI version.
+   * @return @p the SCI version string
+   */
+  QString getSCIVersion();
+  /**
    * Gets the current battery save mode.
    * @return @p value holding the current save mode
    */
@@ -382,7 +387,7 @@ public:
   void getSystemLocks(int *lock, int bay);
   /**
    * Return the current display brightness.
-   * @return @p value the current brightness is
+   * @return @p the int holding the current brightness level
    */
   int getBrightness();
   /**
@@ -420,10 +425,17 @@ public:
    * @param state the int holding the desired state
    */
   void setBluetoothPower(int state);
-public:
-  bool mHotkeys;
-  int sciversion;
 private:
+  /**
+   * Gets the current owner string.
+   * @return @p the string containing the owner string
+   */
+  char *getOwnerString();
+  /**
+   * Sets the desired owner string.
+   * @param owner the string holding the new owner string
+   */
+  void setOwnerString(char *owner);
   /**
    * Attach/detach the Bluetooth device control.
    * @param state the int holding the desired state
@@ -448,6 +460,7 @@ private:
   SMMRegisters reg;
   QString mError;
   int mFd;
+  int sciversion;
 };
 
 #endif // KTOSHIBA_SMMINTERFACE_H

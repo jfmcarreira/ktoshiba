@@ -1,3 +1,25 @@
+2006-11-27 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed some BSM stuff (why didn't I noticed it before...?)
+	  and slightly changed some stuff
+	* Disabled Fn-Key Tab for omnibook users if ktosh_keyhandler
+	  program is not found
+	* Small modification to {sci,hci}.c files (removed some
+	  unneeded and duplicated code)
+	* Added new functions to set/get the owner string
+	  (implementation tken from toshutils), but they are
+	  disabled (need some testing first)
+	* Updated Setting widget and FnActions class to
+	  reflect changes in BSM
+	* Some small changes to KToshibaSMMInetraface class
+	  and removed an unused variable
+	* Added missing ktoshibaicons_DATA entry in icons makefile
+	  (now there will be no error reported on ~/.xsession-errors)
+
+2006-11-26 Azael Avalos <coproscefalo@gmail.com>
+	* Disabled the Fn-F5 combobox from the KCM, this is
+	  because it toggles the Video-Out, and the models
+	  I've seen have that function hardcoded.
+
 2006-11-16 Azael Avalos <coproscefalo@gmail.com>
 	* Updated the handbook
 

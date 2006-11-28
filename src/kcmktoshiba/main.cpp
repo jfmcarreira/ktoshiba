@@ -33,6 +33,7 @@
 
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
+#include <kstandarddirs.h>
 #include <kconfig.h>
 #include <kprogress.h>
 #include <kled.h>
@@ -70,10 +71,10 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_SCIIFace = false;
     m_HCIIFace = false;
     m_Omnibook = false;
+    m_Hotkeys = false;
     m_Init = false;
     m_AC = -1;
     m_IFaceErr = 0;
-    m_Hotkeys = 0;
 
     m_ProcIFace = new KToshibaProcInterface(this);
     m_SMMIFace = new KToshibaSMMInterface(this);
@@ -83,10 +84,8 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_HCIIFace = (m_SMMIFace->machineBIOS() == -1)? false : true;
     if (m_HCIIFace) {
         m_AC = m_SMMIFace->acPowerStatus();
-        m_Hotkeys = m_SMMIFace->getSystemEvent();
+        m_Hotkeys = ((m_SMMIFace->getSystemEvent() == -1)? false : true);
     }
-    m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
-		m_KCMKToshibaGeneral->configTabWidget->page(1), ((m_Hotkeys == -1)? false : true));
     m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 		m_KCMKToshibaGeneral->configTabWidget->page(2), m_SCIIFace);
 
@@ -101,11 +100,12 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_KCMKToshibaGeneral->fnComboBox_2->setEnabled(false);
         m_KCMKToshibaGeneral->fnComboBox_3->setEnabled(false);
         m_KCMKToshibaGeneral->fnComboBox_4->setEnabled(false);
-        m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);
         m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);
         m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);
         m_KCMKToshibaGeneral->fnComboBox_9->setEnabled(false);
         m_AC = m_OmniIFace->omnibookAC();
+        QString keyhandler = KStandardDirs::findExe("ktosh_keyhandler");
+        m_Hotkeys = (keyhandler.isEmpty())? false : true;
     }
 
     if (!m_SCIIFace && !m_HCIIFace && !m_Omnibook) {
@@ -116,6 +116,9 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     if (m_SCIIFace || m_HCIIFace || m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->hide();
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
+        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+			m_KCMKToshibaGeneral->configTabWidget->page(1), m_Hotkeys);
+        m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);
 
 #ifndef ENABLE_HELPER
         m_KCMKToshibaGeneral->helperPushButton->setEnabled(false);

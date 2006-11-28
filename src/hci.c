@@ -43,10 +43,7 @@ int HciFunction(SMMRegisters *regs)
 		return HCI_FAILURE;
 	}
 
-	if (ioctl(fd, TOSH_SMM, regs) < 0) {
-		close(fd);
-		return (int) (regs->eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, regs);
 	close(fd);
 
 	return (int) (regs->eax & 0xff00)>>8;

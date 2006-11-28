@@ -52,10 +52,7 @@ int SciSupportCheck(int *version)
 	regs.ecx = 0x0000;
 	regs.edx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
-		close(fd);
-		return (int) (regs.eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, &regs);
 	close(fd);
 
 	*version = (int) regs.edx;
@@ -81,10 +78,7 @@ int SciOpenInterface(void)
 	regs.ebx = 0x0000;
 	regs.ecx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
-		close(fd);
-		return (int) (regs.eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, &regs);
 	close(fd);
 
 	return (int) (regs.eax & 0xff00)>>8;
@@ -106,10 +100,7 @@ int SciCloseInterface(void)
 	regs.ebx = 0x0000;
 	regs.ecx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
-		close(fd);
-		return (int) (regs.eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, &regs);
 	close(fd);
 
 	return (int) (regs.eax & 0xff00)>>8;
@@ -128,10 +119,7 @@ int SciGet(SMMRegisters *regs)
 
 	regs->eax = 0xf300;
 
-	if (ioctl(fd, TOSH_SMM, regs) < 0) {
-		close(fd);
-		return (int) (regs->eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, regs);
 	close(fd);
 
 	return (int) (regs->eax & 0xff00)>>8;
@@ -150,10 +138,7 @@ int SciSet(SMMRegisters *regs)
 
 	regs->eax = 0xf400;
 
-	if (ioctl(fd, TOSH_SMM, regs) < 0) {
-		close(fd);
-		return (int) (regs->eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, regs);
 	close(fd);
 
 	return (int) (regs->eax & 0xff00)>>8;
@@ -179,10 +164,7 @@ int SciACPower(void)
 	regs.ecx = 0x0000;
 	regs.edx = 0x0000;
 
-	if (ioctl(fd, TOSH_SMM, &regs) < 0) {
-		close(fd);
-		return (int) (regs.eax & 0xff00)>>8;
-	}
+	ioctl(fd, TOSH_SMM, &regs);
 	close(fd);
 
 	return (int) regs.ecx;
