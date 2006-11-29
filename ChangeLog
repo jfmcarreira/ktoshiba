@@ -1,3 +1,10 @@
+2006-11-28 Azael Avalos <coproscefalo@gmail.com>
+	* Added a missing exit(0) call whenever we receive a
+	  quit signal to ktosh_keyhandler program
+	* Added a usleep(100000) (so we match the QTimer from the
+	  toshiba module) to ktosh_keyhandler program
+	* Some small changes here and there
+
 2006-11-27 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed some BSM stuff (why didn't I noticed it before...?)
 	  and slightly changed some stuff

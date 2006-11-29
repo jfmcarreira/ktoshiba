@@ -288,8 +288,7 @@ void ToshibaFnActions::toogleBackLight()
     int bl = m_Driver->getBackLight();
 
     if (bl == -1) return;
-    (bl == 1)? m_Driver->setBackLight(0)
-        : m_Driver->setBackLight(1);
+    m_Driver->setBackLight((bl == 1)? 0 : 1);
 }
 
 void ToshibaFnActions::toggleBluetooth()
@@ -298,8 +297,7 @@ void ToshibaFnActions::toggleBluetooth()
         int bt = m_Driver->getBluetoothPower();
         if (bt == -1) return;
 
-        (bt == 1)? m_Driver->setBluetoothPower(0)
-            : m_Driver->setBluetoothPower(1);
+        m_Driver->setBluetoothPower((bt == 1)? 0 : 1);
         showPassiveMsg(((bt == 1)? 0: 1), 'b');
     }
 }
@@ -309,7 +307,6 @@ void ToshibaFnActions::toggleEthernet()
     int eth = m_Driver->getLANController();
     if (eth == -1) return;
 
-    (eth == 1)? m_Driver->setLANController(0)
-        : m_Driver->setLANController(1);
+    m_Driver->setLANController((eth == 1)? 0 : 1);
     showPassiveMsg(((eth == 1)? 0: 1), 'e');
 }
