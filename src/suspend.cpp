@@ -45,7 +45,9 @@ Suspend::Suspend(QWidget *parent)
 
     m_DBUSIFace = new KToshibaDBUSInterface();
 
+#ifdef ENABLE_POWERSAVE
     powersaved_terminated = false;
+#endif // ENABLE_POWERSAVE
     dbus_terminated =  false;
 
     connect( m_DBUSIFace, SIGNAL( msgReceived(msg_type, QString) ), this,

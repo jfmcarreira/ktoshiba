@@ -102,14 +102,14 @@ void FnActions::updateWidget(int action, int type, int extra)
                 m_SettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
                 break;
             case 1:
-                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Long Life"))
-                    : m_SettingsWidget->tlStatus->setText(i18n("Low Power"));
+                m_SettingsWidget->tlStatus->setText( (extra == 3)? i18n("Long Life")
+                    : i18n("Low Power") );
                 (extra == 3)? m_SettingsWidget->plLongL->setFrameShape(QLabel::PopupPanel)
                     : m_SettingsWidget->plLow->setFrameShape(QLabel::PopupPanel);
                 break;
             case 2:
-                (extra == 3)? m_SettingsWidget->tlStatus->setText(i18n("Normal Life"))
-                    : m_SettingsWidget->tlStatus->setText(i18n("Full Power"));
+                m_SettingsWidget->tlStatus->setText( (extra == 3)? i18n("Normal Life")
+                    : i18n("Full Power") );
                 (extra == 3)? m_SettingsWidget->plNormalL->setFrameShape(QLabel::PopupPanel)
                     : m_SettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
                 break;
@@ -134,7 +134,6 @@ void FnActions::updateWidget(int action, int type, int extra)
                 m_SettingsWidget->plLCDCRT->setEnabled(false);
                 m_SettingsWidget->plTV->setEnabled(false);
                 break;
-            case 0:
             case 1:
                 m_SettingsWidget->tlStatus->setText("LCD");
                 m_SettingsWidget->plLCD->setFrameShape(QLabel::PopupPanel);
@@ -155,8 +154,7 @@ void FnActions::updateWidget(int action, int type, int extra)
         return;
     }
     if (action == 13) {
-        (type == 5)? m_SettingsWidget->wsSettings->raiseWidget(3)
-            : m_SettingsWidget->wsSettings->raiseWidget(2);
+        m_SettingsWidget->wsSettings->raiseWidget((type == 5)? 3 : 2);
         switch (type) {
             case -1:
                 m_SettingsWidget->tlStatus->setText(m_NotSupported);
@@ -286,12 +284,13 @@ void FnActions::updateWidget(int action, int type, int extra)
     }
     if (action == 22) {
         m_SettingsWidget->wsSettings->raiseWidget(4);
-        (type == -1 || type == -2)? m_SettingsWidget->batteryKPB->setValue(0)
-            : m_SettingsWidget->batteryKPB->setValue(type);
-        if (type == -1) m_SettingsWidget->tlStatus->setText(m_NotSupported);
+        m_SettingsWidget->batteryKPB->setValue((type == -1 || type == -2)? 0 : type);
+        if (type == -1)
+            m_SettingsWidget->tlStatus->setText(m_NotSupported);
         else if (type == -2)
             m_SettingsWidget->tlStatus->setText(i18n("Battery Not Present"));
-        else m_SettingsWidget->tlStatus->setText(i18n("Battery Status"));
+        else
+            m_SettingsWidget->tlStatus->setText(i18n("Battery Status"));
         return;
     }
     if (action == 1) {
@@ -317,20 +316,16 @@ void FnActions::updateWidget(int action, int type, int extra)
     if (action == 11) {
         if (type == -1)
             m_StatusWidget->wsStatus->raiseWidget(0);
-        else {
-            if (!type)
-                m_StatusWidget->wsStatus->raiseWidget(type);
-            else if (type == 3)
-                m_StatusWidget->wsStatus->raiseWidget(type - 2);
-            else
-                m_StatusWidget->wsStatus->raiseWidget(type + 13);
-        }
+        else if (!type)
+            m_StatusWidget->wsStatus->raiseWidget(type);
+        else if (type == 3)
+            m_StatusWidget->wsStatus->raiseWidget(type - 2);
+        else
+            m_StatusWidget->wsStatus->raiseWidget(type + 13);
         return;
     }
-    if (action == 12) {
-        (type != 1)? m_StatusWidget->wsStatus->raiseWidget(13)
-            : m_StatusWidget->wsStatus->raiseWidget(12);
-    }
+    if (action == 12)
+        m_StatusWidget->wsStatus->raiseWidget((type != 1)? 13 : 12);
 }
 
 void FnActions::hideWidgets()

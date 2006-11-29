@@ -50,6 +50,8 @@ static void signal_handler(int signal)
         XCloseDisplay(mDisplay);
         mDisplay = NULL;
     }
+
+    exit(0);
 }
 
 static int XErrHandler(Display *display, XErrorEvent *XErrEv)
@@ -196,7 +198,7 @@ int main(void)
 
         switch (event.type) {
             case KeyPress:
-                //kdDebug() << "ktosh_keyhandler: Key pressed " << (int)event.xkey.keycode << endl;
+                kdDebug() << "ktosh_keyhandler: Key pressed " << (int)event.xkey.keycode << endl;
                 arg << event.xkey.keycode;
                 mClient.send("ktoshiba", "actions", "hotkey(int)", data);
                 break;
@@ -207,6 +209,8 @@ int main(void)
                 //mClient.send("ktoshiba", "actions", "hotkey(int)", data);
                 //break;
         }
+
+        usleep(100000);
     }
 
     // We are not supposed to get here...

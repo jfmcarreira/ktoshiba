@@ -212,13 +212,19 @@ void KCMToshibaModule::save()
     kdDebug() << "KCMToshibaModule: saving." << endl;
     KConfig config(CONFIG_FILE);
 
-    config.setGroup("KToshiba");
-    config.writeEntry("Audio_Player",
-		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
-    config.writeEntry("Bluetooth_Startup",
-		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
-    config.writeEntry("AutoStart",
-		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
+    config.setGroup("BSM");
+    config.writeEntry("Processing_Speed",
+		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
+    config.writeEntry("CPU_Sleep_Mode",
+		  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
+    config.writeEntry("Display_Auto_Off",
+		  m_KCMKToshibaGeneral->displayComboBox->currentItem());
+    config.writeEntry("HDD_Auto_Off",
+		  m_KCMKToshibaGeneral->hddComboBox->currentItem());
+    config.writeEntry("LCD_Brightness",
+		  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
+    config.writeEntry("Cooling_Method",
+		  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
     config.sync();
 
     config.setGroup("Fn_Key");
@@ -244,19 +250,13 @@ void KCMToshibaModule::save()
 		  m_KCMKToshibaGeneral->fnComboBox_9->currentItem());
     config.sync();
 
-    config.setGroup("BSM");
-    config.writeEntry("Processing_Speed",
-		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
-    config.writeEntry("CPU_Sleep_Mode",
-		  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
-    config.writeEntry("Display_Auto_Off",
-		  m_KCMKToshibaGeneral->displayComboBox->currentItem());
-    config.writeEntry("HDD_Auto_Off",
-		  m_KCMKToshibaGeneral->hddComboBox->currentItem());
-    config.writeEntry("LCD_Brightness",
-		  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
-    config.writeEntry("Cooling_Method",
-		  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
+    config.setGroup("KToshiba");
+    config.writeEntry("Audio_Player",
+		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
+    config.writeEntry("Bluetooth_Startup",
+		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
+    config.writeEntry("AutoStart",
+		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
     config.sync();
 }
 
@@ -289,8 +289,7 @@ void KCMToshibaModule::timeout()
 
     if (perc == -1) m_ProcIFace->acpiBatteryStatus(&time, &perc);
 
-    (perc == -1)? m_KCMKToshibaGeneral->mKPBattery->setValue(0)
-        : m_KCMKToshibaGeneral->mKPBattery->setValue(perc);
+    m_KCMKToshibaGeneral->mKPBattery->setValue((perc == -1)? 0 : perc);
 
     m_KCMKToshibaGeneral->kledBat->setState((perc == -1 || perc == -2)? KLed::Off : KLed::On);
     m_KCMKToshibaGeneral->kledAC->setState((m_AC == 4)? KLed::On : KLed::Off);

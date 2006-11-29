@@ -137,10 +137,9 @@ void OmnibookFnActions::toggleWireless()
         return;
     else {
         m_Wireless = m_Omni->getWifi();
-        (m_Wireless == 1)? m_Omni->setWifi(0)
-            : m_Omni->setWifi(1);
+        m_Omni->setWifi((m_Wireless == 1)? 0 : 1);
 
-        showPassiveMsg((m_Wireless = (m_Wireless == 1)? 0: 1), 'w');
+        showPassiveMsg((m_Wireless = (m_Wireless == 1)? 0 : 1), 'w');
     }
 }
 
@@ -184,8 +183,7 @@ void OmnibookFnActions::toogleBackLight()
     int bl = m_Omni->getLCDBackLight();
     if (bl == -1) return;
 
-    (bl == 1)? m_Omni->setLCDBackLight(0)
-        : m_Omni->setLCDBackLight(1);
+    m_Omni->setLCDBackLight((bl == 1)? 0 : 1);
 }
 
 void OmnibookFnActions::toggleBluetooth()
@@ -193,7 +191,6 @@ void OmnibookFnActions::toggleBluetooth()
     int bt = m_Omni->getBluetooth();
     if (bt == -1) return;
 
-    (bt == 1)? m_Omni->setBluetooth(0)
-        : m_Omni->setBluetooth(1);
-    showPassiveMsg(((bt == 1)? 0: 1), 'b');
+    m_Omni->setBluetooth((bt == 1)? 0 : 1);
+    showPassiveMsg(((bt == 1)? 0 : 1), 'b');
 }

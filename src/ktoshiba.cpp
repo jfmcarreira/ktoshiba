@@ -206,7 +206,6 @@ KToshiba::KToshiba()
 #endif // ENABLE_OMNIBOOK
     }
 
-
 #ifdef ENABLE_SYNAPTICS
     if (mPad == -1)
         checkSynaptics();
@@ -537,9 +536,9 @@ void KToshiba::bsmUserSettings(int *bright)
     cooling = mConfig.readNumEntry("Cooling_Method", 2);
 
     kdDebug() << "Enabling User Settings..." << endl;
-    (processor == 0)? tmp = 1 : tmp = 0;
+    tmp = (processor == 0)? 1 : 0;
     mTFn->m_Driver->setProcessingSpeed(tmp);
-    (cpu == 0)? tmp = 1 : tmp = 0;
+    tmp = (cpu == 0)? 1 : 0;
     mTFn->m_Driver->setCPUSleepMode(tmp);
     if (lcd == 0) *bright = 7;		// Super-Bright
     else if (lcd == 1) *bright = 3;	// Bright
@@ -757,7 +756,7 @@ void KToshiba::checkSystem()
         if (mOmnibook) ws = mOFn->m_Omni->getWifiSwitch();
 #endif // ENABLE_OMNIBOOK
         if (mWirelessSwitch != ws) {
-            QString s = ((ws == 1)? i18n("on") : i18n("off"));
+            QString s = (ws == 1)? i18n("on") : i18n("off");
             KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
 				   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
         }
@@ -955,7 +954,7 @@ void KToshiba::checkHotKeys()
             mSVideo = mTFn->m_Driver->getVideo();
             // If the user changed the video out, we receive 129 for LCD
             if (mSVideo == 129) mSVideo = 1;
-            (mSVideo != 4)? mTFn->m_Driver->setVideo(4) : mTFn->m_Driver->setVideo(mSVideo);
+            mTFn->m_Driver->setVideo((mSVideo != 4)? 4 : mSVideo);
             return;
         case 0xb86:	// E-Button
         case 0x006:
