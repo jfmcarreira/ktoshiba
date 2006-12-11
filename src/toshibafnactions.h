@@ -44,6 +44,7 @@ public:
     KToshibaSMMInterface *m_Driver;
     bool m_SCIIface;
     int m_IFaceErr;
+    int m_BIOS;
     int m_MachineID;
     int m_BatType;
     int m_BatSave;
@@ -63,7 +64,6 @@ private:
     void toggleBluetooth();
     void toggleEthernet();
     void initSCI();
-    int m_BIOS;
     int m_Snd;
     int m_Bright;
     int m_Wireless;

@@ -34,7 +34,7 @@ class QWidget;
 /**
  * @short Suspend to RAM/Disk
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.1
+ * @version 0.2
  */
 class Suspend : public QObject
 {
@@ -45,6 +45,8 @@ public:
 
     void toRAM();
     void toDisk();
+    bool suspended;
+    bool resumed;
 signals:
     void resumedFromSTD();
     void setSuspendToDisk();

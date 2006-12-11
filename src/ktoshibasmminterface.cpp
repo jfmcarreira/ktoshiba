@@ -312,7 +312,7 @@ void KToshibaSMMInterface::batteryStatus(int *time, int *percent)
 	reg.edx = 0x0000;
 	int err = SciGet(&reg);
 	if (err != SCI_SUCCESS)
-		*percent = (err = SCI_NOT_INSTALLED)? -2 : -1;
+		*percent = (err == SCI_NOT_INSTALLED)? -2 : -1;
 	else
 		*percent = ((100 * (reg.ecx & 0xffff)) / (reg.edx & 0xffff));
 
@@ -321,8 +321,8 @@ void KToshibaSMMInterface::batteryStatus(int *time, int *percent)
 	reg.edx = 0x0000;
 	err = SciGet(&reg);
 	if (err != SCI_SUCCESS) {
-		int hours = *time/60;
-		int minutes = *time-(60*hours);
+		int hours = *time / 60;
+		int minutes = *time - (60 * hours);
 		*time = SCI_TIME(hours, minutes);
 	} else
 		*time = (reg.ecx & 0xffff);
@@ -736,15 +736,15 @@ void KToshibaSMMInterface::setDisplayDevice(int mode)
 {
 	reg.ebx = SCI_DISPLAY_DEVICE;
 	if (mode == 0)
-		reg.ecx = SCI_DISPLAY_DEV_DV;
+		reg.ecx = SCI_DISP_DEV_MODE1;
 	else if (mode == 1)
-		reg.ecx = SCI_DISPLAY_DEV_DO;
+		reg.ecx = SCI_DISP_DEV_MODE2;
 	else if (mode == 2)
-		reg.ecx = SCI_DISPLAY_DEV_DI;
+		reg.ecx = SCI_DISP_DEV_MODE3;
 	else if (mode == 3)
-		reg.ecx = SCI_DISPLAY_DEV_DE;
+		reg.ecx = SCI_DISP_DEV_MODE4;
 	else if (mode == 4)
-		reg.ecx = SCI_DISPLAY_DEV_DS;
+		reg.ecx = SCI_DISP_DEV_MODE5;
 	reg.edx = 0x0000;
 	int err = SciSet(&reg);
 	if (err != SCI_SUCCESS) {
@@ -1162,17 +1162,18 @@ bool KToshibaSMMInterface::enableSystemEvent()
 	reg.ebx = HCI_SYSTEM_EVENT;
 	reg.ecx = HCI_ENABLE;
 	reg.edx = 0x0000;
-	if (HciFunction(&reg) == HCI_NOT_SUPPORTED) {
+	int err = HciFunction(&reg);
+	if (err != HCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
 			  << "Could not enable Hokeys. "
-			  << "System does not support this function." << endl;
+			  << hciError(err) << endl;
 		return false;
 	}
 
 	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
 		  << "Enabled Hotkeys." << endl;
 
-    return true;
+	return true;
 }
 
 void KToshibaSMMInterface::disableSystemEvent()

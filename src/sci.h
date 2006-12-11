@@ -2,6 +2,9 @@
  *
  * Copyright (c) 1998  Jonathan A. Buzzard (jonathan@buzzard.org.uk)
  *
+ *   File taken from toshutils and modified by Azael Avalos
+ *   coproscefalo@gmail.com
+ *
  * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
  *
  *   This code is covered by the GNU GPL and you are free to make any
@@ -269,11 +272,11 @@ enum {
 };
 
 enum {
-	SCI_DISPLAY_DEV_DV  = 0x3210, /* NOTE: These parameters   */
-	SCI_DISPLAY_DEV_DO  = 0x4210, /* are not yet tested       */
-	SCI_DISPLAY_DEV_DI  = 0x5210, /* so it may or may not     */
-	SCI_DISPLAY_DEV_DE  = 0x6210, /* work, also it is unclear */
-	SCI_DISPLAY_DEV_DS  = 0x7210  /* what exactly they do...  */
+	SCI_DISP_DEV_MODE1  = 0x3210, /* NOTE: These parameters   */
+	SCI_DISP_DEV_MODE2  = 0x4210, /* are not yet tested       */
+	SCI_DISP_DEV_MODE3  = 0x5210, /* so it may or may not     */
+	SCI_DISP_DEV_MODE4  = 0x6210, /* work, also it is unclear */
+	SCI_DISP_DEV_MODE5  = 0x7210  /* what exactly they do...  */
 };
 
 

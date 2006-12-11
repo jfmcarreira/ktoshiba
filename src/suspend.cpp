@@ -49,6 +49,8 @@ Suspend::Suspend(QWidget *parent)
     powersaved_terminated = false;
 #endif // ENABLE_POWERSAVE
     dbus_terminated =  false;
+    suspended = false;
+    resumed = false;
 
     connect( m_DBUSIFace, SIGNAL( msgReceived(msg_type, QString) ), this,
               SLOT( processMessage(msg_type, QString) ) );
@@ -124,6 +126,7 @@ void Suspend::toDisk()
 
     switch (res) {
         case REPLY_SUCCESS:
+            suspended = true;
             kdDebug() << "Suspend::toDisk(): Suspending To Disk (using powersave)" << endl;
             emit setSuspendToDisk();
             return;
@@ -218,15 +221,20 @@ void Suspend::processMessage(msg_type type, QString signal)
             break;
         case POWERSAVE_EVENT:
 #ifdef ENABLE_POWERSAVE
-            //kdDebug() << "Suspend::processMessage(): Powersave Event: " << signal.ascii() << endl;
             if (signal.startsWith("daemon.terminate")) {
+                kdDebug() << "Suspend::processMessage(): Powersave Event: "
+                          << signal.ascii() << endl;
                 powersaved_terminated = true;
-            }
-            else if (signal.startsWith("global.suspend2disk")) {
+            } else
+            if (signal.startsWith("global.suspend2disk")) {
                 emit setSuspendToDisk();
-            }
-            else if (signal.startsWith("global.resume.suspend2disk")) {
+                suspended = true;
+                resumed = false;
+            } else
+            if (signal.startsWith("global.resume.suspend2disk")) {
                 emit resumedFromSTD();
+                resumed = true;
+                suspended = false;
             }
 #endif // ENABLE_POWERSAVE
             break;

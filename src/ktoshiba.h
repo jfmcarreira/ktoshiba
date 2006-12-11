@@ -75,6 +75,8 @@ private slots:
     void displayAbout();
     void displayAboutKDE();
     void quit();
+    void suspendToDisk();
+    void resumedSTD();
     /** omnibook slots */
     void checkOmnibook();
     void omnibookHotKeys(int);
@@ -85,8 +87,6 @@ private slots:
     void checkHotKeys();
     void doSetFreq(int);
     void doSetHyper(int);
-    void resumedSTD();
-    void suspendToDisk();
 private:
     void doMenu();
     void bsmUserSettings(int *);
@@ -110,8 +110,6 @@ private:
     bool mACPI;
     bool mHotkeys;
     bool mBtstart;
-    bool suspended;
-    int mBIOS;
     int mAC;
     int mOldAC;
     int mBatSave;
@@ -128,7 +126,6 @@ private:
     QPopupMenu *mHyper;
     QTimer *mHotKeysTimer;
     bool bsmtrig;
-    bool toshacpi;
     int mHT;
     int mSS;
     int mSVideo;
