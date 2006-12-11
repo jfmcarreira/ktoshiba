@@ -53,7 +53,14 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
         m_Pad = -1;
     }
 
-    m_BIOS = m_Driver->machineBIOS();
+    if (::access("/dev/toshiba", F_OK | R_OK | W_OK) == -1) {
+        kdError() << "KToshiba: Could not access " << TOSH_DEVICE
+                  << " for read-write operations."<< endl;
+        m_BIOS = -1;
+    } else {
+        // check the BIOS version
+        m_BIOS = m_Driver->machineBIOS();
+    }
     if (m_BIOS != -1) {
         m_MachineID = m_Driver->machineID();
         m_Video = m_Driver->getVideo();

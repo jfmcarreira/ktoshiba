@@ -1,3 +1,24 @@
+2006-12-10 Azael Avalos <coproscefalo@gmail.com>
+	* Added a check to ToshibaFnActions class constructor to
+	  verify existence, read and write operations on /dev/toshiba
+	* Added some extra checks to KToshiba class destructor
+
+2006-12-09 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed enableSystemEvent function, it was returning
+	  success when no write permissions are set on /dev/toshiba
+
+2006-12-04 Azael Avalos <coproscefalo@gmail.com>
+	* Some more small changes in STD code
+	* Fixed an if statement in KToshibaSMMInterface
+
+2006-11-29 Azael Avalos <coproscefalo@gmail.com>
+	* Some small changes in KToshibaSMMInterface and
+	  {h,s}ci.h headers
+	* Fixed STD timer, insted of waiting 1.5 minutes
+	  (90 seconds), it was only witing 0.15 minutes (9 seconds),
+	  now it's waiting 1 minute instead
+	* Some changes in STD code
+
 2006-11-28 Azael Avalos <coproscefalo@gmail.com>
 	* Added a missing exit(0) call whenever we receive a
 	  quit signal to ktosh_keyhandler program
