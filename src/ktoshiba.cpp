@@ -55,7 +55,7 @@ using namespace Synaptics;
 #endif // ENABLE_SYNAPTICS
 
 #ifdef ENABLE_POWERSAVE
-#include <powersave_dbus.h>
+#include <powerlib.h>
 #endif // ENABLE_POWERSAVE
 
 #define CONFIG_FILE "ktoshibarc"
@@ -120,50 +120,53 @@ KToshiba::KToshiba()
         kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
         // check whether omnibook module is loaded
         mOFn = new OmnibookFnActions(this);
-        if (!mOFn->m_OmnibookIface) {
-            kdError() << "KToshiba: Could not found a Toshiba model. "
-                      << "Exiting..." << endl;
-            if (kapp->dcopClient()->isAttached())
-                kapp->dcopClient()->detach();
-            exit(-1);
-        }
-        int bios = mOFn->m_Omni->machineBIOS();
-        kdDebug() << "KToshiba: BIOS version: "
-                  << (bios / 0x100) << "." << (bios - 0x100) << endl;
-        mAC = mOFn->m_Omni->omnibookAC();
-        mPad = mOFn->m_Pad;
-        mWirelessSwitch = mOFn->m_Omni->getWifiSwitch();
-        mBluetooth = mOFn->m_Omni->getBluetooth();
-        mBatSave = 2;
-        mBatType = 3;
+        if (mOFn->m_OmnibookIface) {
+            int bios = mOFn->m_Omni->machineBIOS();
+            kdDebug() << "KToshiba: BIOS version: "
+                      << (bios / 0x100) << "." << (bios - 0x100) << endl;
+            mAC = mOFn->m_Omni->omnibookAC();
+            mPad = mOFn->m_Pad;
+            mWirelessSwitch = mOFn->m_Omni->getWifiSwitch();
+            mBluetooth = mOFn->m_Omni->getBluetooth();
+            mBatSave = 2;
+            mBatType = 3;
 
-        // keyhandler program process
-        mKeyProc = new KProcess(this);
-        QString keyhandler = KStandardDirs::findExe("ktosh_keyhandler");
-        if (keyhandler.isEmpty()) {
-            KMessageBox::sorry(this, i18n("The program ktosh_keyhandler cannot be found.\n"
-                               " HotKeys monitoring will no be enabled."),
-                               i18n("HotKeys"));
-            mHotkeys = false;
-        } else {
-            *mKeyProc << keyhandler;
-            bool start;
-            start = mKeyProc->start(KProcess::OwnGroup);
-            if (start) {
-                kdDebug() << "KToshiba: Key handler program PID: "
-                          << mKeyProc->pid() << endl;
-                if (mKeyProc->exitStatus() == -1) {
-                    kdError() << "KToshiba: ktosh_keyhandler exited."
-                              << " HotKeys monitoring will no be enabled." << endl;
-                    mHotkeys = false;
-                } else
-                    mHotkeys = true;
-            } else
+            // keyhandler program process
+            mKeyProc = new KProcess(this);
+            QString keyhandler = KStandardDirs::findExe("ktosh_keyhandler");
+            if (keyhandler.isEmpty()) {
+                KMessageBox::sorry(this, i18n("The program ktosh_keyhandler cannot be found.\n"
+                                   " HotKeys monitoring will no be enabled."),
+                                   i18n("HotKeys"));
                 mHotkeys = false;
+            } else {
+                *mKeyProc << keyhandler;
+                bool start;
+                start = mKeyProc->start(KProcess::OwnGroup);
+                if (start) {
+                    kdDebug() << "KToshiba: Key handler program PID: "
+                              << mKeyProc->pid() << endl;
+                    if (mKeyProc->exitStatus() == -1) {
+                        kdError() << "KToshiba: ktosh_keyhandler exited."
+                                  << " HotKeys monitoring will no be enabled." << endl;
+                        mHotkeys = false;
+                    } else
+                        mHotkeys = true;
+                } else
+                    mHotkeys = false;
+            }
+            mOmnibook = true;
         }
-        mOmnibook = true;
     }
 #endif // ENABLE_OMNIBOOK
+
+    if (!mOmnibook && (!mTFn->m_SCIIface || (mTFn->m_BIOS == -1))) {
+        kdError() << "KToshiba: Could not found a Toshiba model. "
+                  << "Exiting..." << endl;
+        if (kapp->dcopClient()->isAttached())
+            kapp->dcopClient()->detach();
+        exit(0);
+    }
 
     mACPI = (mAC == -1)? true : false;
     mOldAC = mAC;
@@ -180,9 +183,7 @@ KToshiba::KToshiba()
     connect( this, SIGNAL( quitSelected() ), this, SLOT( quit() ) );
 
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
-#ifdef ENABLE_POWERSAVE
     connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
-#endif // ENABLE_POWERSAVE
 
     if (!mOmnibook) {
         mHotKeysTimer = new QTimer(this);
@@ -346,10 +347,10 @@ void KToshiba::doMenu()
                               SLOT( doSuspendToDisk() ), 0, 2, 2 );
 #ifdef ENABLE_POWERSAVE
     static int res;
-    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToRam");
+    res = mSuspend->dbusSendMessage(REQUEST, "AllowedSuspendToRam");
     if (res == REPLY_DISABLED)
         contextMenu()->setItemEnabled( 1, FALSE );
-    res = dbusSendSimpleMessage(REQUEST_MESSAGE, "AllowedSuspendToDisk");
+    res = mSuspend->dbusSendMessage(REQUEST, "AllowedSuspendToDisk");
     if (res == REPLY_DISABLED)
         contextMenu()->setItemEnabled( 2, FALSE );
 #else // ENABLE_POWERSAVE

@@ -1,3 +1,17 @@
+2006-12-11 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed issue that caused KToshiba to keep running even
+	  if there was no toshiba module available when omnibook
+	  support was not enabled
+	* Removed Alpha from version since 0.10 will be released
+	  on wednesday the 13th
+	* Reverted some changes made to main.cpp file, somehow was
+	  causing KToshiba to crash at exit
+	* Do some reordering of DBUS calls in the KToshibaDBUSInterface
+	  class
+	* Removed some unused fuctions from KToshibaDBUSInterface class
+	* Suspend class was cleaned and needs to be updated to use new
+	  powersave (0.15.10) since it changed a lot
+
 2006-12-10 Azael Avalos <coproscefalo@gmail.com>
 	* Added a check to ToshibaFnActions class constructor to
 	  verify existence, read and write operations on /dev/toshiba

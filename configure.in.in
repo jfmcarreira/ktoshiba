@@ -48,20 +48,16 @@ AC_ARG_WITH(powersave,
 )
 
 if test "$ac_cv_use_powersave" = "yes"; then
-    AC_CHECK_LIB(powersave_dbus, dbusSendSimpleMessage, [
-        PKG_CHECK_MODULES(POWERSAVE, [powersave >= 0.12.2])
-        PKG_CHECK_MODULES(POWERSAVE_DBUS, [powersave-dbus >= 0.12.2])
-        have_powersave=true
-    ], [have_powersave=false])
+PKG_CHECK_MODULES(POWERSAVE, [powersave >= 0.14.0], [have_powersave=yes],
+    [have_powersave=no])
 
-    if test "$have_powersave" = "true"; then
+    if test "$have_powersave" = "yes"; then
         AC_DEFINE(ENABLE_POWERSAVE, 1, [defined if you have powersave headers and libraries])
     else
         AC_MSG_WARN([You are missing the powersave headers and libraries. The powersave support won't be compiled])
     fi
 
     AC_SUBST(POWERSAVE_LIBS)
-    AC_SUBST(POWERSAVE_DBUS_LIBS)
 fi
 
 AM_CONDITIONAL(with_helper, [test x$ac_cv_use_powersave = xno])

@@ -49,8 +49,7 @@ ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) -ldbus-qt-1 \
 		 libktoshibaomnibookinterface.la \
 		 @DBUS_LIBS@ \
 		 @SYNAPTICS@ \
-		 @POWERSAVE_LIBS@ \
-		 @POWERSAVE_DBUS_LIBS@
+		 @POWERSAVE_LIBS@
 
 # this is where the desktop file will go
 xdg_apps_DATA     = ktoshiba.desktop

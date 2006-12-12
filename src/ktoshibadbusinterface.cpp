@@ -27,7 +27,7 @@
 #include <kdebug.h>
 
 #ifdef ENABLE_POWERSAVE
-#include <powersave_dbus.h>
+#include <powerlib.h>
 #endif // ENABLE_POWERSAVE
 
 static void *myInstance = 0;
@@ -35,7 +35,6 @@ static void *myInstance = 0;
 KToshibaDBUSInterface::KToshibaDBUSInterface()
 {
     is_connected = false;
-    no_rights = false;
 
     myInstance = this;
 
@@ -53,10 +52,12 @@ KToshibaDBUSInterface::~KToshibaDBUSInterface()
 
 bool KToshibaDBUSInterface::initDBUS()
 {
+    is_connected = false;
+
     DBusError error;
     dbus_error_init(&error);
 
-    DBusConnection *dbus_connection = dbus_connection_open_private(DBUS_SYSTEM_BUS_SOCKET, &error);
+    dbus_connection = dbus_connection_open_private(DBUS_SYSTEM_BUS_SOCKET, &error);
 
     if (dbus_connection == NULL) {
         kdError() << "KToshibaDBUSInterface::initDBUS(): "
@@ -65,13 +66,12 @@ bool KToshibaDBUSInterface::initDBUS()
         return false;
     }
 
-    dbus_bus_register(dbus_connection, &error);
-
     if (dbus_error_is_set(&error)) {
         kdError() << "KToshibaDBUSInterface::initDBUS(): "
                   << "Failed to register connection with system message bus: " << error.message << endl;
         return false;
     }
+
     dbus_connection_set_exit_on_disconnect(dbus_connection, false);
 
     /* add the filter function which should be executed on events on the bus */
@@ -81,39 +81,22 @@ bool KToshibaDBUSInterface::initDBUS()
         exit(EXIT_FAILURE);
     }
 
-#ifdef ENABLE_POWERSAVE
-    /* connect to the daemon ( from powersave_dbus )*/
-    int capabilities = CAPABILITY_NOTIFICATIONS;
-    int reply = establishConnection(capabilities, dbus_connection);
-    if (reply != REPLY_SUCCESS) {
-        // send a ping to find out if the user has not the correct rights
-        reply = dbusSendSimpleMessage(ACTION_MESSAGE, "Ping");
-        if (reply == REPLY_NO_RIGHTS) {
-            kdError() << "KToshibaDBUSInterface::initDBUS(): "
-                      << "User is not permitted to connect to daemon" << endl;
-            no_rights = true;
-        }
-
-        is_connected = false;
-        return false;
-    }
-
-    /* add a match rule to catch all signals going through the bus with
-     * powersave manager interface */
-    dbus_bus_add_match(dbus_connection, "type='signal',"
-                       "interface='com.novell.powersave.manager',"
-                       "path='/com/novell/powersave',", NULL);
-#endif // ENABLE_POWERSAVE
-
     dbus_bus_add_match(dbus_connection, "type='signal',"
                        "interface='org.freedesktop.DBus'," 
                        "member='NameOwnerChanged'", NULL);
+
+#ifdef ENABLE_POWERSAVE
+    /* add a match rule to catch all signals going through the bus with
+     * powersave manager interface */
+    dbus_bus_add_match(dbus_connection, "type='signal',"
+                       "interface='com.novell.powersave',"
+                       "path='/com/novell/powersave',", NULL);
+#endif // ENABLE_POWERSAVE
 
     m_DBUSQtConnection = new DBusQt::Connection(this);
     m_DBUSQtConnection->dbus_connection_setup_with_qt_main(dbus_connection);
 
     is_connected = true;
-    no_rights = false;
 
     return true;
 }
@@ -128,13 +111,10 @@ bool KToshibaDBUSInterface::isConnected()
     return is_connected;
 }
 
-bool KToshibaDBUSInterface::noRights()
-{
-    return no_rights;
-}
-
 bool KToshibaDBUSInterface::reconnect()
 {
+    close();
+
     return initDBUS();
 }
 
@@ -149,22 +129,27 @@ bool KToshibaDBUSInterface::close()
     return true;
 }
 
+DBusConnection *KToshibaDBUSInterface::getDBUSConnection()
+{
+    return dbus_connection;
+}
+
 DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *message, void *data)
 {
     if(connection == NULL || data == NULL) ; // to prevent compiler warning
 
     char *value;
     DBusError error;
-        dbus_error_init(&error);
+    dbus_error_init(&error);
 
     if (dbus_message_is_signal(message, DBUS_INTERFACE_LOCAL, "Disconnected")) {
         ((KToshibaDBUSInterface *)myInstance)->emitMsgReceived(DBUS_EVENT, "dbus.terminate");
+        dbus_connection_unref(connection);
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     }
 
-    if (dbus_message_get_type(message) != DBUS_MESSAGE_TYPE_SIGNAL) {
+    if (dbus_message_get_type(message) != DBUS_MESSAGE_TYPE_SIGNAL)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-    }
 
     /* get the name of the signal */
     const char *signal = dbus_message_get_member(message);
@@ -182,29 +167,11 @@ DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *messa
     /* our name is... */
     if (!strcmp(signal, "NameAcquired")) {
         return DBUS_HANDLER_RESULT_HANDLED;
-    }
-#ifdef ENABLE_POWERSAVE
-    else if (!strcmp(signal, "NameOwnerChanged")) {
-        char *old_owner;
-        char *new_owner;
-
-        if (!dbusGetMessageString(message, &old_owner, 0) && !dbusGetMessageString(message, &new_owner, 2) &&
-             old_owner != NULL && new_owner != NULL) {
-            if (!strcmp(new_owner, "")) {
-                // test if hal broke away
-                if (!strcmp(old_owner, "org.freedesktop.Hal")) {
-                    // Hal service stopped.
-                    ((KToshibaDBUSInterface *)myInstance)->emitMsgReceived(DBUS_EVENT, "hal.terminate");
-                }
-            }
-            // okay this is ugly, but we reuse the code from above ;-)
-            else if (!strcmp(old_owner, "org.freedesktop.Hal")) {
-                // Hal service started.
-                ((KToshibaDBUSInterface *)myInstance)->emitMsgReceived(DBUS_EVENT, "hal.started");
-            }
-        }
+    } else
+    if (!strcmp(signal, "NameOwnerChanged")) {
         return DBUS_HANDLER_RESULT_HANDLED;
     }
+#ifdef ENABLE_POWERSAVE
     /* powersave event received */
     else if (!strcmp(signal, "PowersaveEvent")) {
         ((KToshibaDBUSInterface *)myInstance)->emitMsgReceived(POWERSAVE_EVENT, value);

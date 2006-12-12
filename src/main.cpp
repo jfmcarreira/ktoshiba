@@ -33,7 +33,7 @@
 static const char description[] =
     I18N_NOOP("Hotkeys monitoring for Toshiba laptops.");
 
-static const char version[] = "0.10Alpha";
+static const char version[] = "0.10";
 
 int main(int argc, char *argv[])
 {
@@ -75,7 +75,5 @@ int main(int argc, char *argv[])
     app.setMainWidget( mainWin );
     mainWin->show();
 
-    int res = app.exec();
-    delete mainWin; mainWin = NULL;
-    return res;
+    return app.exec();
 }
