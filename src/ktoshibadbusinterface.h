@@ -55,19 +55,19 @@ public:
     KToshibaDBUSInterface();
     ~KToshibaDBUSInterface();
 
+    DBusConnection *getDBUSConnection();
     void emitMsgReceived(msg_type, QString);
     bool isConnected();
-    bool noRights();
     bool reconnect();
     bool close();
 
 signals:
     void msgReceived(msg_type, QString);
 private:
-    DBusQt::Connection* m_DBUSQtConnection;
+    DBusQt::Connection *m_DBUSQtConnection;
+    DBusConnection *dbus_connection;
     bool initDBUS();
     bool is_connected;
-    bool no_rights;
 };
 
 DBusHandlerResult filter_function(DBusConnection *, DBusMessage *, void *);

@@ -32,7 +32,7 @@
 #include <kprocess.h>
 
 #ifdef ENABLE_POWERSAVE
-#include <powersave_dbus.h>
+#include <powerlib.h>
 #endif // ENABLE_POWERSAVE
 
 Suspend::Suspend(QWidget *parent)
@@ -70,7 +70,7 @@ void Suspend::toRAM()
         return;
 #ifdef ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToRAM");
+        res = dbusSendMessage(ACTION, "SuspendToRAM");
 
     switch (res) {
         case REPLY_SUCCESS:
@@ -122,7 +122,7 @@ void Suspend::toDisk()
         return;
 #ifdef ENABLE_POWERSAVE
     if (res == KMessageBox::Continue)
-        res = dbusSendSimpleMessage(ACTION_MESSAGE, "SuspendToDisk");
+        res = dbusSendMessage(ACTION, "SuspendToDisk");
 
     switch (res) {
         case REPLY_SUCCESS:
@@ -169,43 +169,33 @@ void Suspend::toDisk()
 #endif // ENABLE_POWERSAVE
 }
 
-bool Suspend::checkDaemon()
+int Suspend::dbusSendMessage(type, QString)
 {
 #ifdef ENABLE_POWERSAVE
-    DBusMessage *reply;
-    int err_code = dbusSendMessageWithReply(REQUEST_MESSAGE, &reply, "AcPower", DBUS_TYPE_INVALID);
+    /** IMPLEMENT ME */
+    // TODO: Implement this function so we can talk to the powersave IFace
+    // and propperly do a Suspend To RAM/Disk.
+    // So much to do, in so little time... Scheiße...
 
-    if (err_code != REPLY_SUCCESS)
-        return false;
-    else {
-        dbus_message_unref(reply);
-        if (m_DBUSIFace->isConnected() || m_DBUSIFace->reconnect())
-            return true;
-    }
+    return REPLY_DISABLED;
 #endif // ENABLE_POWERSAVE
 
-    return false;
+    return 0;
 }
 
-void Suspend::recheckDaemon()
+void Suspend::checkDaemon()
 {
-    if (!checkDaemon() || !m_DBUSIFace->isConnected() && (!m_DBUSIFace->reconnect())) {
+    if (!m_DBUSIFace->isConnected() && !m_DBUSIFace->reconnect()) {
 #ifdef ENABLE_POWERSAVE
-        // daemon is not running for at least xx seconds 
-        if (powersaved_terminated)
+        if (powersaved_terminated) {
             KPassivePopup::message(i18n("WARNING"),
                 i18n("The powersave daemon must be running in the background."),
                 SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
-        else if (m_DBUSIFace->noRights()) {
-            dbus_terminated = false;
-            KPassivePopup::message(i18n("WARNING"),
-                i18n("The user is not permitted to connect to daemon."),
-                SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
         } else
 #endif // ENABLE_POWERSAVE
-        KPassivePopup::message(i18n("WARNING"),
-            i18n("D-BUS daemon not running."),
-            SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
+            KPassivePopup::message(i18n("WARNING"),
+                i18n("D-BUS daemon not running."),
+                SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
     }
 }
 
@@ -215,7 +205,7 @@ void Suspend::processMessage(msg_type type, QString signal)
         case DBUS_EVENT:
             kdDebug() << "Suspend::processMessage(): D-BUS Event: " << signal.ascii() << endl;
             if (signal.startsWith("dbus.terminate")) {
-                QTimer::singleShot( 4000, this, SLOT( recheckDaemon() ) );
+                QTimer::singleShot( 4000, this, SLOT( checkDaemon() ) );
                 dbus_terminated = true;
             }
             break;

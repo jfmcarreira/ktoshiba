@@ -31,6 +31,11 @@
 
 class QWidget;
 
+enum type {
+	REQUEST,
+	ACTION
+};
+
 /**
  * @short Suspend to RAM/Disk
  * @author Azael Avalos <coproscefalo@gmail.com>
@@ -45,6 +50,7 @@ public:
 
     void toRAM();
     void toDisk();
+    int dbusSendMessage(type, QString);
     bool suspended;
     bool resumed;
 signals:
@@ -52,8 +58,7 @@ signals:
     void setSuspendToDisk();
 protected slots:
     void processMessage(msg_type, QString);
-    void recheckDaemon();
-    bool checkDaemon();
+    void checkDaemon();
 private:
     KToshibaDBUSInterface *m_DBUSIFace;
     QWidget *m_Parent;
