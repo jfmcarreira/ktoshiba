@@ -1,3 +1,7 @@
+2006-12-12 Azael Avalos <coproscefalo@gmail.com>
+	* Suepend and KToshibaDBUSInterface classes updated to use
+	  new powersave and DBUS method calls (code taken from KPowersave)
+
 2006-12-11 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed issue that caused KToshiba to keep running even
 	  if there was no toshiba module available when omnibook

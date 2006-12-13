@@ -134,6 +134,152 @@ DBusConnection *KToshibaDBUSInterface::getDBUSConnection()
     return dbus_connection;
 }
 
+bool KToshibaDBUSInterface::methodCall(QString service, QString path, QString interface,
+                                       QString method, void *retval, int rettype, int arg1type, ...)
+{
+    DBusMessage *message;
+    DBusMessage *reply;
+    DBusError error;
+    va_list var_args;
+
+    va_start(var_args, arg1type);
+
+    dbus_error_init(&error);
+
+    dbus_connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
+
+    if (dbus_error_is_set(&error)) {
+        kdError() << "KToshibaDBUSInterface::methodCall(): "
+                  << "Could not get DBUS connection. "
+                  << error.message << endl;
+        dbus_error_free(&error);
+        return false;
+    }
+
+    message = dbus_message_new_method_call(service, path, interface, method);
+    dbus_message_append_args_valist(message, arg1type, var_args);
+
+    if (retval == NULL) {
+        if (!dbus_connection_send(dbus_connection, message, NULL)) {
+            kdError() << "KToshibaDBUSInterface::methodCall(): "
+                      << "Could not send method call." << endl;
+            dbus_message_unref(message);
+
+            return false;
+        }
+    } else {
+        reply = dbus_connection_send_with_reply_and_block(dbus_connection, message, -1, &error);
+
+        if (dbus_error_is_set(&error)) {
+            kdError() << "KToshibaDBUSInterface::methodCall(): "
+                      << "Could not send dbus message. "
+                      << error.message << endl;
+            dbus_message_unref(message);
+            dbus_error_free(&error);
+
+            return false;
+        }
+        if (!dbus_message_get_args(reply, &error, rettype, retval, DBUS_TYPE_INVALID)) {
+            if (dbus_error_is_set(&error)) {
+                kdError() << "KToshibaDBUSInterface::methodCall(): "
+                          << "Could not get argument from reply. "
+                          << error.message << endl;
+                dbus_error_free(&error);
+            }
+
+            dbus_message_unref(reply);
+            dbus_message_unref(message);
+
+            return false;
+        }
+    }
+
+    dbus_message_unref(message);
+    dbus_connection_flush(dbus_connection);
+    va_end(var_args);
+
+    return true;
+}
+
+#ifdef ENABLE_POWERSAVE
+bool KToshibaDBUSInterface::psMethodCall(QString method, void *retval, int rettype, int arg1type, ...)
+{
+    va_list var_args;
+    bool ret = false;
+
+    va_start(var_args, arg1type);
+    ret = psDBUSMethodCall(method, retval, rettype, arg1type, var_args);
+    va_end(var_args);
+
+    return ret;
+}
+
+bool KToshibaDBUSInterface::psDBUSMethodCall(QString method, void *retval, int rettype, int arg1type, va_list var_args)
+{
+    DBusMessage *message;
+    DBusMessage *reply;
+    DBusError error;
+
+
+    dbus_error_init(&error);
+
+    dbus_connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
+
+    if (dbus_error_is_set(&error)) {
+        kdError() << "KToshibaDBUSInterface::psMethodCall(): "
+                  << "Could not get DBUS connection. "
+                  << error.message << endl;
+        dbus_error_free(&error);
+        return false;
+    }
+
+    message = dbus_message_new_method_call(PS_DBUS_SERVICE, PS_DBUS_PATH,
+                                           PS_DBUS_INTERFACE, method);
+    dbus_message_append_args_valist(message, arg1type, var_args);
+
+    if (retval == NULL) {
+        if (!dbus_connection_send(dbus_connection, message, NULL)) {
+            kdError() << "KToshibaDBUSInterface::psMethodCall(): "
+                      << "Could not send method call." << endl;
+            dbus_message_unref(message);
+
+            return false;
+        }
+    } else {
+        reply = dbus_connection_send_with_reply_and_block(dbus_connection, message, -1, &error);
+
+        if (dbus_error_is_set(&error)) {
+            kdError() << "KToshibaDBUSInterface::psMethodCall(): "
+                      << "Could not send dbus message. "
+                      << error.message << endl;
+            dbus_message_unref(message);
+            dbus_error_free(&error);
+
+            return false;
+        }
+        if (!dbus_message_get_args(reply, &error, rettype, retval, DBUS_TYPE_INVALID)) {
+            if (dbus_error_is_set(&error)) {
+                kdError() << "KToshibaDBUSInterface::psMethodCall(): "
+                          << "Could not get argument from reply. "
+                          << error.message << endl;
+                dbus_error_free(&error);
+            }
+
+            dbus_message_unref(reply);
+            dbus_message_unref(message);
+
+            return false;
+        }
+    }
+
+    dbus_message_unref(message);
+    dbus_connection_flush(dbus_connection);
+
+    return true;
+}
+
+#endif // ENABLE_POWERSAVE
+
 DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *message, void *data)
 {
     if(connection == NULL || data == NULL) ; // to prevent compiler warning

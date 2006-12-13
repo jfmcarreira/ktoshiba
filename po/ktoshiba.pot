@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-27 16:17-0700\n"
+"POT-Creation-Date: 2006-12-12 02:25-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgid ""
 "Your emails"
 msgstr ""
 
-#: fnactions.cpp:47 ktoshiba.cpp:495 ktoshiba.cpp:764 main.cpp:40
+#: fnactions.cpp:47 ktoshiba.cpp:481 ktoshiba.cpp:750 main.cpp:40
 msgid "KToshiba"
 msgstr ""
 
@@ -67,137 +67,137 @@ msgstr ""
 msgid "Full Life"
 msgstr ""
 
-#: fnactions.cpp:293
+#: fnactions.cpp:291
 msgid "Battery Not Present"
 msgstr ""
 
-#: fnactions.cpp:294
+#: fnactions.cpp:293
 msgid "Battery Status"
 msgstr ""
 
-#: fnactions.cpp:366
+#: fnactions.cpp:361
 msgid "Bluetooth device %1"
 msgstr ""
 
-#: fnactions.cpp:370
+#: fnactions.cpp:365
 msgid "Ethernet device %1"
 msgstr ""
 
-#: fnactions.cpp:374
+#: fnactions.cpp:369
 msgid "Wireless interface %1"
 msgstr ""
 
-#: ktoshiba.cpp:148
+#: ktoshiba.cpp:138
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
 msgstr ""
 
-#: ktoshiba.cpp:150
+#: ktoshiba.cpp:140
 msgid "HotKeys"
 msgstr ""
 
-#: ktoshiba.cpp:358
+#: ktoshiba.cpp:344
 msgid "Suspend To &RAM"
 msgstr ""
 
-#: ktoshiba.cpp:360
+#: ktoshiba.cpp:346
 msgid "Suspend To &Disk"
 msgstr ""
 
-#: ktoshiba.cpp:378
+#: ktoshiba.cpp:364
 msgid "Enable &Bluetooth"
 msgstr ""
 
-#: ktoshiba.cpp:384 ktoshiba.cpp:404 ktoshiba.cpp:408
+#: ktoshiba.cpp:370 ktoshiba.cpp:390 ktoshiba.cpp:394
 msgid "Disabled"
 msgstr ""
 
-#: ktoshiba.cpp:385
+#: ktoshiba.cpp:371
 msgid "Enabled - PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:386
+#: ktoshiba.cpp:372
 msgid "Enabled - No PM aware"
 msgstr ""
 
-#: ktoshiba.cpp:387
+#: ktoshiba.cpp:373
 msgid "Hyper-Threading"
 msgstr ""
 
-#: ktoshiba.cpp:389
+#: ktoshiba.cpp:375
 msgid "Dynamic"
 msgstr ""
 
-#: ktoshiba.cpp:390
+#: ktoshiba.cpp:376
 msgid "Always High"
 msgstr ""
 
-#: ktoshiba.cpp:391
+#: ktoshiba.cpp:377
 msgid "Always Low"
 msgstr ""
 
-#: ktoshiba.cpp:392
+#: ktoshiba.cpp:378
 msgid "CPU Frequency"
 msgstr ""
 
-#: ktoshiba.cpp:405 ktoshiba.cpp:409
+#: ktoshiba.cpp:391 ktoshiba.cpp:395
 msgid "Enabled"
 msgstr ""
 
-#: ktoshiba.cpp:406
+#: ktoshiba.cpp:392
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:410
+#: ktoshiba.cpp:396
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:421
+#: ktoshiba.cpp:407
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:422
+#: ktoshiba.cpp:408
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:423
+#: ktoshiba.cpp:409
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:428
+#: ktoshiba.cpp:414
 msgid "&Configure KToshiba..."
 msgstr ""
 
-#: ktoshiba.cpp:431
+#: ktoshiba.cpp:417
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:434
+#: ktoshiba.cpp:420
 msgid "&About KToshiba"
 msgstr ""
 
-#: ktoshiba.cpp:436
+#: ktoshiba.cpp:422
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:495
+#: ktoshiba.cpp:481
 msgid "Bluetooth device activated"
 msgstr ""
 
-#: ktoshiba.cpp:763
+#: ktoshiba.cpp:749
 msgid "on"
 msgstr ""
 
-#: ktoshiba.cpp:763
+#: ktoshiba.cpp:749
 msgid "off"
 msgstr ""
 
-#: ktoshiba.cpp:764
+#: ktoshiba.cpp:750
 msgid "Wireless antenna turned %1"
 msgstr ""
 
-#: ktoshiba.cpp:765
+#: ktoshiba.cpp:751
 msgid "Wireless"
 msgstr ""
 
@@ -266,67 +266,63 @@ msgid ""
 "Also make sure to unload problematic modules"
 msgstr ""
 
-#: suspend.cpp:63 suspend.cpp:76 suspend.cpp:78 suspend.cpp:81 suspend.cpp:83
-#: suspend.cpp:115 suspend.cpp:129 suspend.cpp:131 suspend.cpp:134
-#: suspend.cpp:136 suspend.cpp:191 suspend.cpp:193 suspend.cpp:196
-#: suspend.cpp:198 suspend.cpp:201 suspend.cpp:203
+#: suspend.cpp:67 suspend.cpp:84 suspend.cpp:86 suspend.cpp:89 suspend.cpp:91
+#: suspend.cpp:123 suspend.cpp:138 suspend.cpp:140 suspend.cpp:143
+#: suspend.cpp:145 suspend.cpp:207 suspend.cpp:209 suspend.cpp:212
+#: suspend.cpp:214
 msgid "WARNING"
 msgstr ""
 
-#: suspend.cpp:77
+#: suspend.cpp:85
 msgid "Suspend To RAM disabled by administrator."
 msgstr ""
 
-#: suspend.cpp:82
+#: suspend.cpp:90
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To RAM."
 msgstr ""
 
-#: suspend.cpp:92
+#: suspend.cpp:100
 msgid ""
 "Could not Suspend To RAM because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: suspend.cpp:94 suspend.cpp:109
+#: suspend.cpp:102 suspend.cpp:117
 msgid "Suspend To RAM"
 msgstr ""
 
-#: suspend.cpp:108
+#: suspend.cpp:116
 msgid "No Suspend To RAM support was enabled."
 msgstr ""
 
-#: suspend.cpp:130
+#: suspend.cpp:139
 msgid "Suspend To Disk disabled by administrator."
 msgstr ""
 
-#: suspend.cpp:135
+#: suspend.cpp:144
 msgid ""
 "The powersave daemon must be running in the background for a Suspend To Disk."
 msgstr ""
 
-#: suspend.cpp:145
+#: suspend.cpp:154
 msgid ""
 "Could not Suspend To Disk because ktosh_helper cannot be found.\n"
 "Please make sure that it is installed correctly."
 msgstr ""
 
-#: suspend.cpp:147 suspend.cpp:163
+#: suspend.cpp:156 suspend.cpp:172
 msgid "Suspend To Disk"
 msgstr ""
 
-#: suspend.cpp:162
+#: suspend.cpp:171
 msgid "No Suspend To Disk support was enabled."
 msgstr ""
 
-#: suspend.cpp:192
-msgid "The powersave daemon must be running in the background."
-msgstr ""
-
-#: suspend.cpp:197
-msgid "The user is not permitted to connect to daemon."
-msgstr ""
-
-#: suspend.cpp:202
+#: suspend.cpp:208
 msgid "D-BUS daemon not running."
+msgstr ""
+
+#: suspend.cpp:213
+msgid "The powersave daemon must be running in the background."
 msgstr ""

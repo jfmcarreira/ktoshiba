@@ -31,7 +31,7 @@
 
 class QWidget;
 
-enum type {
+enum msgtype {
 	REQUEST,
 	ACTION
 };
@@ -50,7 +50,7 @@ public:
 
     void toRAM();
     void toDisk();
-    int dbusSendMessage(type, QString);
+    int dbusSendMessage(msgtype, QString);
     bool suspended;
     bool resumed;
 signals:
@@ -59,12 +59,16 @@ signals:
 protected slots:
     void processMessage(msg_type, QString);
     void checkDaemon();
+    void emitSTD();
+    void emitResumedSTD();
 private:
     KToshibaDBUSInterface *m_DBUSIFace;
     QWidget *m_Parent;
     QString m_Info;
     bool powersaved_terminated;
     bool dbus_terminated;
+    bool str_not_allowed;
+    bool std_not_allowed;
 };
 
 #endif // SUSPEND_H
