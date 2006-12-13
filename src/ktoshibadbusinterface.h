@@ -46,7 +46,7 @@ enum msg_type {
 /**
  * @short KToshiba D-BUS Interafce
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.1
+ * @version 0.2
  */
 class KToshibaDBUSInterface : public QObject
 {
@@ -57,6 +57,7 @@ public:
 
     DBusConnection *getDBUSConnection();
     void emitMsgReceived(msg_type, QString);
+    bool psMethodCall(QString, void *, int, int, ...);
     bool isConnected();
     bool reconnect();
     bool close();
@@ -67,6 +68,8 @@ private:
     DBusQt::Connection *m_DBUSQtConnection;
     DBusConnection *dbus_connection;
     bool initDBUS();
+    bool methodCall(QString, QString, QString, QString, void *, int, int, ...);
+    bool psDBUSMethodCall(QString, void *, int, int, va_list);
     bool is_connected;
 };
 

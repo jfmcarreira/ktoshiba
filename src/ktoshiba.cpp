@@ -184,6 +184,9 @@ KToshiba::KToshiba()
 
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
     connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
+//#ifdef ENABLE_POWERSAVE
+//    connect( mSuspend, SIGNAL( () ), this, SLOT(  ) );
+//#endif // ENABLE_POWERSAVE
 
     if (!mOmnibook) {
         mHotKeysTimer = new QTimer(this);
@@ -268,7 +271,7 @@ void KToshiba::quit()
 void KToshiba::resumedSTD()
 {
     kdDebug() << "KToshiba: Resuming from Suspend To Disk..." << endl;
-    if (!mOmnibook) {
+    if (!mOmnibook && mTFn->m_SCIIface) {
         kdDebug() << "KToshiba: Opening SCI interface." << endl;
         mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface(&(mTFn->m_IFaceErr));
     }
@@ -277,10 +280,10 @@ void KToshiba::resumedSTD()
 void KToshiba::suspendToDisk()
 {
     kdDebug() << "KToshiba: Suspending To Disk..." << endl;
-#ifndef ENABLE_POWERSAVE
-    // 1 minute grace time before we call resume slot
-    QTimer::singleShot( 60000, this, SLOT( resumedSTD() ) );
-#endif // ENABLE_POWERSAVE
+    if (!mOmnibook && mTFn->m_SCIIface) {
+        kdDebug() << "KToshiba: Closing SCI interface." << endl;
+        mTFn->m_Driver->closeSCIInterface();
+    }
 }
 
 bool KToshiba::checkConfiguration()

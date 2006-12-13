@@ -85,6 +85,7 @@ void Suspend::toRAM()
             KPassivePopup::message(i18n("WARNING"),
 			i18n("The powersave daemon must be running in the background for a Suspend To RAM."),
 			SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
+            kdDebug() << res << endl;
             return;
     }
 #else // ENABLE_POWERSAVE
@@ -128,7 +129,6 @@ void Suspend::toDisk()
         case REPLY_SUCCESS:
             suspended = true;
             kdDebug() << "Suspend::toDisk(): Suspending To Disk (using powersave)" << endl;
-            emit setSuspendToDisk();
             return;
         case REPLY_DISABLED:
             KPassivePopup::message(i18n("WARNING"),
@@ -159,7 +159,7 @@ void Suspend::toDisk()
         proc << helper << "--hibernate";
         proc.start(KProcess::DontCare);
         proc.detach();
-        emit setSuspendToDisk();
+        QTimer::singleShot( 1000, this, SLOT( emitSTD() ) );
     }
 
     return;
@@ -169,33 +169,58 @@ void Suspend::toDisk()
 #endif // ENABLE_POWERSAVE
 }
 
-int Suspend::dbusSendMessage(type, QString)
+int Suspend::dbusSendMessage(msgtype msg, QString type)
 {
+    if (m_DBUSIFace->isConnected()) {
+        if (!dbus_terminated) {
+            // TODO: Implement me...
+            // Dummy entry to avoid compiler warnings
+            if (msg) return 1; if (type) return 1;
+        }
 #ifdef ENABLE_POWERSAVE
-    /** IMPLEMENT ME */
-    // TODO: Implement this function so we can talk to the powersave IFace
-    // and propperly do a Suspend To RAM/Disk.
-    // So much to do, in so little time... Scheiße...
-
-    return REPLY_DISABLED;
+        if (!powersaved_terminated) {
+            char *ret = NULL;
+            switch (msg) {
+                case REQUEST:
+                    if (type == "AllowedSuspendToRam" || type == "AllowedSuspendToDisk") {
+                        if (m_DBUSIFace->psMethodCall(type, &ret, DBUS_TYPE_UINT16, DBUS_TYPE_INVALID))
+                            return REPLY_SUCCESS;
+                    } else
+                    if (type == "Ping") {
+                        if (m_DBUSIFace->psMethodCall(type, &ret, DBUS_TYPE_UINT16, DBUS_TYPE_INVALID))
+                            return REPLY_SUCCESS;
+                    } else
+                        return REPLY_DISABLED;
+                    break;
+                case ACTION:
+                    if (type == "SuspendToRAM" || type == "SuspendToDisk") {
+                        if (m_DBUSIFace->psMethodCall(type, &ret, DBUS_TYPE_UINT16, DBUS_TYPE_INVALID))
+                            return REPLY_SUCCESS;
+                        else
+                            return REPLY_DISABLED;
+                    }
+                    break;
+            }
+        }
 #endif // ENABLE_POWERSAVE
+    }
 
-    return 0;
+    return -1;
 }
 
 void Suspend::checkDaemon()
 {
     if (!m_DBUSIFace->isConnected() && !m_DBUSIFace->reconnect()) {
+        KPassivePopup::message(i18n("WARNING"),
+            i18n("D-BUS daemon not running."),
+            SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
 #ifdef ENABLE_POWERSAVE
         if (powersaved_terminated) {
             KPassivePopup::message(i18n("WARNING"),
                 i18n("The powersave daemon must be running in the background."),
                 SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
-        } else
+        }
 #endif // ENABLE_POWERSAVE
-            KPassivePopup::message(i18n("WARNING"),
-                i18n("D-BUS daemon not running."),
-                SmallIcon("messagebox_warning", 20), m_Parent, i18n("WARNING"), 5000);
     }
 }
 
@@ -217,18 +242,32 @@ void Suspend::processMessage(msg_type type, QString signal)
                 powersaved_terminated = true;
             } else
             if (signal.startsWith("global.suspend2disk")) {
-                emit setSuspendToDisk();
+                QTimer::singleShot( 1000, this, SLOT( emitSTD() ) );
                 suspended = true;
                 resumed = false;
             } else
             if (signal.startsWith("global.resume.suspend2disk")) {
-                emit resumedFromSTD();
+                QTimer::singleShot( 60000, this, SLOT( emitResumedSTD() ) );
                 resumed = true;
                 suspended = false;
             }
 #endif // ENABLE_POWERSAVE
             break;
     }
+}
+
+void Suspend::emitSTD()
+{
+    emit setSuspendToDisk();
+    suspended = true;
+    resumed = false;
+}
+
+void Suspend::emitResumedSTD()
+{
+    emit resumedFromSTD();
+    resumed = true;
+    suspended = false;
 }
 
 
