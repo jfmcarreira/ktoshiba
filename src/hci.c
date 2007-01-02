@@ -9,16 +9,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software 
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- * 
+ *
  */
 
 #include <stdio.h>
@@ -30,23 +30,22 @@
 
 #include "hci.h"
 
-
 int HciFunction(SMMRegisters *regs)
 {
-	int fd;
+    int fd;
 
-	if ((fd = open(TOSH_DEVICE, O_RDWR)) < 0)
-		return HCI_FAILURE;
+    if ((fd = open(TOSH_DEVICE, O_RDWR)) < 0)
+        return HCI_FAILURE;
 
-	if (access(TOSH_PROC, R_OK)) {
-		close(fd);
-		return HCI_FAILURE;
-	}
+    if (access(TOSH_PROC, R_OK)) {
+        close(fd);
+        return HCI_FAILURE;
+    }
 
-	ioctl(fd, TOSH_SMM, regs);
-	close(fd);
+    ioctl(fd, TOSH_SMM, regs);
+    close(fd);
 
-	return (int) (regs->eax & 0xff00)>>8;
+    return (int) (regs->eax & 0xff00)>>8;
 }
 
 
@@ -55,25 +54,25 @@ int HciFunction(SMMRegisters *regs)
  */
 int HciGetBiosVersion(void)
 {
-	FILE *str;
-	int major,minor;
-	char buffer[64];
+    FILE *str;
+    int major,minor;
+    char buffer[64];
 
-	if (access(TOSH_PROC, R_OK))
-		return -1;
+    if (access(TOSH_PROC, R_OK))
+    return -1;
 
-	/* open /proc/toshiba for reading */
-	if (!(str = fopen(TOSH_PROC, "r")))
-		return -1;
+    /* open /proc/toshiba for reading */
+    if (!(str = fopen(TOSH_PROC, "r")))
+    return -1;
 
-	/* scan in the information */
-	fgets(buffer, sizeof(buffer) - 1, str);
-	fclose(str);
-	buffer[sizeof(buffer) - 1] = '\0';
-	sscanf(buffer, "%*s %*x %*d.%*d %d.%d %*x %*x\n", &major, &minor);
+    /* scan in the information */
+    fgets(buffer, sizeof(buffer) - 1, str);
+    fclose(str);
+    buffer[sizeof(buffer) - 1] = '\0';
+    sscanf(buffer, "%*s %*x %*d.%*d %d.%d %*x %*x\n", &major, &minor);
 
-	/* return the information */
-	return (major * 0x100) + minor;
+    /* return the information */
+    return (major * 0x100) + minor;
 }
 
 
@@ -82,23 +81,23 @@ int HciGetBiosVersion(void)
  */
 int HciGetMachineID(int *id)
 {
-	FILE *str;
-	char buffer[64];
+    FILE *str;
+    char buffer[64];
 
-	if (access(TOSH_PROC, R_OK))
-		return HCI_FAILURE;
+    if (access(TOSH_PROC, R_OK))
+    return HCI_FAILURE;
 
-	/* open /proc/toshiba for reading */
-	if (!(str = fopen(TOSH_PROC, "r")))
-		return HCI_FAILURE;
+    /* open /proc/toshiba for reading */
+    if (!(str = fopen(TOSH_PROC, "r")))
+    return HCI_FAILURE;
 
-	/* scan in the information */
-	fgets(buffer, sizeof(buffer) - 1, str);
-	fclose(str);
-	buffer[sizeof(buffer) - 1] = '\0';
-	sscanf(buffer, "%*s %x %*d.%*d %*d.%*d %*x %*x\n", id);
+    /* scan in the information */
+    fgets(buffer, sizeof(buffer) - 1, str);
+    fclose(str);
+    buffer[sizeof(buffer) - 1] = '\0';
+    sscanf(buffer, "%*s %x %*d.%*d %*d.%*d %*x %*x\n", id);
 
-	return HCI_SUCCESS;
+    return HCI_SUCCESS;
 }
 
 
@@ -107,14 +106,14 @@ int HciGetMachineID(int *id)
  */
 int HciGetLCDPanelType(int *resolution, int *type)
 {
-	SMMRegisters regs;
+    SMMRegisters regs;
 
-	regs.eax = HCI_GET;
-	regs.ebx = HCI_FLAT_PANEL;
-	HciFunction(&regs);
+    regs.eax = HCI_GET;
+    regs.ebx = HCI_FLAT_PANEL;
+    HciFunction(&regs);
 
-	*resolution = (regs.ecx & 0xff00)>>8;	
-	*type = regs.ecx & 0xff;	
+    *resolution = (regs.ecx & 0xff00)>>8;	
+    *type = regs.ecx & 0xff;
 
-	return HCI_SUCCESS;
+    return HCI_SUCCESS;
 }

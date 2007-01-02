@@ -50,8 +50,7 @@ public:
     int m_Pad;
 private:
     void toggleWireless();
-    void mousePadOn();
-    void mousePadOff();
+    void toggleMousePad();
     void toggleFan();
     void toogleBackLight();
     void toggleBluetooth();

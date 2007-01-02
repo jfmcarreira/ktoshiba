@@ -72,25 +72,33 @@ static int XErrHandler(Display *display, XErrorEvent *XErrEv)
 
 void grabKeys()
 {
-    XGrabKey(mDisplay, 144, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Previous
-    XGrabKey(mDisplay, 145, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-1 (Volume Down)
-    XGrabKey(mDisplay, 146, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-2 (Volume Up)
-    XGrabKey(mDisplay, 147, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Media Player
-    XGrabKey(mDisplay, 148, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Toggle Mode
-    XGrabKey(mDisplay, 149, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Battery Status
-    XGrabKey(mDisplay, 150, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F1
-    XGrabKey(mDisplay, 151, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F9 (MousePad On)
-    XGrabKey(mDisplay, 152, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F9 (MousePad Off)
-    XGrabKey(mDisplay, 153, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Play/Pause
-    XGrabKey(mDisplay, 159, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F7
-    XGrabKey(mDisplay, 160, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-Esc
-    XGrabKey(mDisplay, 161, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F8 (Wireless On/Off)
-    XGrabKey(mDisplay, 162, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Next
-    XGrabKey(mDisplay, 163, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Bluetooth On/Off
-    XGrabKey(mDisplay, 164, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Stop/Eject
-    XGrabKey(mDisplay, 178, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// WWW
-    XGrabKey(mDisplay, 236, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Console Direct Access
-    XGrabKey(mDisplay, 239, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);	// Fn-F6
+    // Fn-Key Combos
+    XGrabKey(mDisplay, 113, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-Esc   (KEY_MUTE)
+    XGrabKey(mDisplay, 0x1d2, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync); // Fn-F1    (KEY_FN_F1)
+    XGrabKey(mDisplay, 148, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F2    (KEY_PROG1)
+    XGrabKey(mDisplay, 142, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F3    (KEY_SLEEP)
+    XGrabKey(mDisplay, 205, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F4    (KEY_SUSPEND)
+    XGrabKey(mDisplay, 227, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F5    (KEY_SWITCHVIDEOMODE)
+    XGrabKey(mDisplay, 224, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F6    (KEY_BRIGHTNESSDOWN)
+    XGrabKey(mDisplay, 225, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F7    (KEY_BRIGHTNESSUP)
+    XGrabKey(mDisplay, 238, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Fn-F8    (KEY_WLAN)
+    XGrabKey(mDisplay, 0x1da, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync); // Fn-F9    (KEY_FN_F9)
+    XGrabKey(mDisplay, 0x174, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync); // Fn-Space (KEY_ZOOM)
+
+    // Multimedia Keys
+    XGrabKey(mDisplay, 226, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Media Player (KEY_MEDIA)
+    XGrabKey(mDisplay, 165, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Previous     (KEY_PREVIOUSSONG)
+    XGrabKey(mDisplay, 163, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Next         (KEY_NEXTSONG)
+    XGrabKey(mDisplay, 164, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Play/Pause   (KEY_PLAYPAUSE)
+    XGrabKey(mDisplay, 128, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Stop         (KEY_STOP)
+    XGrabKey(mDisplay, 114, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Volume Down  (KEY_VOLUMEDOWN)
+    XGrabKey(mDisplay, 115, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Volume Up    (KEY_VOLUMEUP)
+    XGrabKey(mDisplay, 149, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Toggle Mode  (KEY_PROG2)
+
+    // Misc. Keys
+    XGrabKey(mDisplay, 150, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // WWW                   (KEY_WWW)
+    XGrabKey(mDisplay, 202, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync);   // Console Direct Access (KEY_PROG3)
+    XGrabKey(mDisplay, 0x1e4, AnyModifier, mWindow, False, GrabModeAsync, GrabModeAsync); // Battery Status        (KEY_FN_B)
 }
 
 int main(void)

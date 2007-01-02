@@ -54,10 +54,6 @@
 using namespace Synaptics;
 #endif // ENABLE_SYNAPTICS
 
-#ifdef ENABLE_POWERSAVE
-#include <powerlib.h>
-#endif // ENABLE_POWERSAVE
-
 #define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
@@ -184,9 +180,6 @@ KToshiba::KToshiba()
 
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
     connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
-//#ifdef ENABLE_POWERSAVE
-//    connect( mSuspend, SIGNAL( () ), this, SLOT(  ) );
-//#endif // ENABLE_POWERSAVE
 
     if (!mOmnibook) {
         mHotKeysTimer = new QTimer(this);
@@ -348,20 +341,10 @@ void KToshiba::doMenu()
                               SLOT( doSuspendToRAM() ), 0, 1, 1 );
     contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
                               SLOT( doSuspendToDisk() ), 0, 2, 2 );
-#ifdef ENABLE_POWERSAVE
-    static int res;
-    res = mSuspend->dbusSendMessage(REQUEST, "AllowedSuspendToRam");
-    if (res == REPLY_DISABLED)
-        contextMenu()->setItemEnabled( 1, FALSE );
-    res = mSuspend->dbusSendMessage(REQUEST, "AllowedSuspendToDisk");
-    if (res == REPLY_DISABLED)
-        contextMenu()->setItemEnabled( 2, FALSE );
-#else // ENABLE_POWERSAVE
     if (::access("/proc/acpi/sleep", F_OK) == -1) {
         contextMenu()->setItemEnabled( 1, FALSE );
         contextMenu()->setItemEnabled( 2, FALSE );
     }
-#endif // ENABLE_POWERSAVE
     contextMenu()->insertSeparator( 3 );
     if (!mOmnibook) {
         contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
@@ -770,73 +753,83 @@ void KToshiba::omnibookHotKeys(int keycode)
         mOFn->hideWidgets();
 
     switch (keycode) {
-        case 144:	// Previous
-            multimediaPrevious();
-            return;
-        case 145:	// Fn-1 (Volume Down)
-            multimediaVolumeDown();
-            return;
-        case 146:	// Fn-2 (Volume Up)
-            multimediaVolumeUp();
-            return;
-        case 147:	// Media Player
-            multimediaPlayer();
-            return;
-        case 148:	// Toggle Mode
-            MODE = (MODE == CD_DVD)? DIGITAL : CD_DVD;
-            return;
-        case 149:	// Battery Status
-            tmp = 22;
-            break;
-        case 150:	// Fn-F1
-            tmp = mConfig.readNumEntry("Fn_F1");
-            break;
-        case 151:	// Fn-F9 (MousePad On/Off)
-        case 152:
-            tmp = 10;
-            break;
-        case 153:	// Play/Pause also Next with ecype=12 (TSM30X)
-            (mOFn->m_ECType == TSM30X)? multimediaNext()
-                : multimediaPlayPause();
-            return;
-        case 159:	// Fn-F7
-            tmp = 8;
-            break;
-        case 160:	// Fn-Esc
+        case 113:	// Fn-Esc
             tmp = mConfig.readNumEntry("Fn_Esc");
             break;
-        case 161:	// Fn-F8
+        case 0x1d2:	// Fn-F1
+            tmp = mConfig.readNumEntry("Fn_F1");
+            break;
+        case 148:	// Fn-F2
+            tmp = mConfig.readNumEntry("Fn_F2");
+            break;
+        case 142:	// Fn-F3
+            tmp = mConfig.readNumEntry("Fn_F3");
+            break;
+        case 205:	// Fn-F4
+            tmp = mConfig.readNumEntry("Fn_F4");
+            break;
+        case 227:	// Fn-F5
+            tmp = mConfig.readNumEntry("Fn_F5");
+            break;
+        case 224:	// Fn-F6
+            tmp = 7;	// Brightness Down
+            break;
+        case 225:	// Fn-F7
+            tmp = 8;	// Brightness Up
+            break;
+        case 238:	// Fn-F8
             tmp = mConfig.readNumEntry("Fn_F8");
             break;
-        case 162:	// Next also Play/Pause with ectype=12 (TSM30X)
-            (mOFn->m_ECType == TSM30X)? multimediaPlayPause()
-                : multimediaNext();
+        case 151:	// Fn-F9
+            tmp = mConfig.readNumEntry("Fn_F9");
+            break;
+        case 0x174:	// Fn-Space
+            // TODO: Implement me...
+            break;
+        /** Multimedia & Extra Buttons */
+        case 0x1e4:	// Fn-B (Battery Status)
+            tmp = 22;
+            break;
+        case 226:	// Media Player
+            multimediaPlayer();
             return;
-        case 163:	// Bluetooth On/Off
-            tmp = 15;
+        case 165:	// Previous
+            multimediaPrevious();
             return;
-        case 164:	// Stop
+        case 163:	// Next
+            multimediaNext();
+            return;
+        case 164:	// Play/Pause
+            multimediaPlayPause();
+            return;
+        case 128:	// Stop
             multimediaStop();
             return;
-        case 178:	// WWW
+        case 114:	// Fn-1 (Volume Down)
+            multimediaVolumeDown();
+            return;
+        case 115:	// Fn-2 (Volume Up)
+            multimediaVolumeUp();
+            return;
+        case 149:	// Toggle Mode
+            MODE = (MODE == CD_DVD)? DIGITAL : CD_DVD;
+            return;
+        case 150:	// WWW
             konqueror = KStandardDirs::findExe("kfmclient");
             if (konqueror.isEmpty())
                 *mKProc << "firefox";
             else
                 *mKProc << konqueror << "openProfile" << "webbrowsing";
             break;
-        case 236:	// Console Direct Access
+        case 202:	// Console Direct Access
             konsole = KStandardDirs::findExe("konsole");
             if (konsole.isEmpty())
                 *mKProc << "xterm";
             else
                 *mKProc << konsole;
             break;
-        case 239:	// Fn-F6
-            tmp = 7;
-            break;
     }
-    if (keycode == 178 || keycode == 236) {
+    if (keycode == 150 || keycode == 202) {
         mKProc->start(KProcess::DontCare);
         mKProc->detach();
         return;
@@ -918,7 +911,7 @@ void KToshiba::checkHotKeys()
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
         /** Multimedia & Extra Buttons */
-        case 0x130:	// Fn-b (Battery Status)
+        case 0x130:	// Fn-B (Battery Status)
             tmp = 22;
             break;
         case 0xb25:	// CD/DVD Mode

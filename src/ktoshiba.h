@@ -53,9 +53,9 @@ class Suspend;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.10
+ * @version 0.11
  */
-class KToshiba :  public KSystemTray
+class KToshiba : public KSystemTray
 {
     Q_OBJECT
 public:

@@ -39,8 +39,8 @@
 #include <dbus/connection.h>
 
 enum msg_type {
-	POWERSAVE_EVENT,
-	DBUS_EVENT
+    DBUS_EVENT,
+    HAL_EVENT
 };
 
 /**
@@ -57,10 +57,9 @@ public:
 
     DBusConnection *getDBUSConnection();
     void emitMsgReceived(msg_type, QString);
-    bool psMethodCall(QString, void *, int, int, ...);
+    bool methodCall(QString, QString, QString, QString, void *, int, int, ...);
     bool isConnected();
     bool reconnect();
-    bool close();
 
 signals:
     void msgReceived(msg_type, QString);
@@ -68,8 +67,7 @@ private:
     DBusQt::Connection *m_DBUSQtConnection;
     DBusConnection *dbus_connection;
     bool initDBUS();
-    bool methodCall(QString, QString, QString, QString, void *, int, int, ...);
-    bool psDBUSMethodCall(QString, void *, int, int, va_list);
+    bool close();
     bool is_connected;
 };
 
