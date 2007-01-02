@@ -65,7 +65,6 @@ private:
     KToshibaDBUSInterface *m_DBUSIFace;
     QWidget *m_Parent;
     QString m_Info;
-    bool powersaved_terminated;
     bool dbus_terminated;
     bool str_not_allowed;
     bool std_not_allowed;

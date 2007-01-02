@@ -116,10 +116,9 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
         type = m_Bright;
         extra = keycode;
     } else
-    if (action == 10 && (keycode == 151 || keycode == 152)) {
-        (keycode == 151)? mousePadOn() : mousePadOff();
+    if (action == 10) {
+        toggleMousePad();
         type = m_Pad;
-        extra = keycode;
     } else
     if (action == 12) {
         toggleFan();
@@ -143,28 +142,17 @@ void OmnibookFnActions::toggleWireless()
     }
 }
 
-void OmnibookFnActions::mousePadOn()
+void OmnibookFnActions::toggleMousePad()
 {
     if (m_Pad == -1) return;
 
 #ifdef ENABLE_SYNAPTICS
-    m_Pad = 0;
+    m_Pad = (m_Pad == 0)? 1 : 0;
     Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
-    m_Pad = 1;
-    m_Omni->setTouchPad(m_Pad);
-#endif // ENABLE_SYNAPTICS
-}
+    m_Pad = m_Omni->getTouchPad();
 
-void OmnibookFnActions::mousePadOff()
-{
-    if (m_Pad == -1) return;
-
-#ifdef ENABLE_SYNAPTICS
-    m_Pad = 1;
-    Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
-#else // ENABLE_SYNAPTICS
-    m_Pad = 0;
+    m_Pad = (m_Pad == 0)? 1 : 0;
     m_Omni->setTouchPad(m_Pad);
 #endif // ENABLE_SYNAPTICS
 }

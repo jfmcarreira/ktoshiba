@@ -1,10 +1,5 @@
 SUBDIRS = . kcmktoshiba images
 
-if with_helper
-  HELPER = ktosh_helper
-  ktosh_helper_SOURCES = ktosh_helper.cpp
-endif
-
 if with_keyhandler
    KEYHANDLER = ktosh_keyhandler
    ktosh_keyhandler_SOURCES = ktosh_keyhandler.cpp
@@ -48,8 +43,7 @@ ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) -ldbus-qt-1 \
 		 libktoshibasmminterface.la \
 		 libktoshibaomnibookinterface.la \
 		 @DBUS_LIBS@ \
-		 @SYNAPTICS@ \
-		 @POWERSAVE_LIBS@
+		 @SYNAPTICS@
 
 # this is where the desktop file will go
 xdg_apps_DATA     = ktoshiba.desktop

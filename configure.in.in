@@ -1,6 +1,6 @@
 #MIN_CONFIG(3.2.0)
 
-AM_INIT_AUTOMAKE(ktoshiba, 0.10, coproscefalo@gmail.com)
+AM_INIT_AUTOMAKE(ktoshiba, 0.11, coproscefalo@gmail.com)
 AC_C_BIGENDIAN
 AC_CHECK_KDEMAXPATHLEN
 
@@ -29,39 +29,15 @@ if test "$have_dbus" = "yes"; then
     AC_LANG_SAVE
     AC_LANG_CPLUSPLUS
     AC_CHECK_HEADER(dbus/connection.h, [],
-        [AC_MSG_WARN(You need D-BUS/Qt3 bindings, [])
-    ])
+        [AC_MSG_ERROR(You need D-BUS/Qt3 bindings, [])
+    ], [])
     AC_CHECK_HEADER(dbus/message.h, [],
-        [AC_MSG_WARN(You need D-BUS/Qt3 bindings, [])
-    ])
+        [AC_MSG_ERROR(You need D-BUS/Qt3 bindings, [])
+    ], [])
     CPPFLAGS=$safe_CPPFLAGS
     AC_LANG_RESTORE
 fi
 dnl === dbus support check - end ===
-
-
-dnl === powersave daemon support check - begin ===
-AC_ARG_WITH(powersave,
-    AS_HELP_STRING([--without-powersave], [build without powersave daemon support (default=yes)]),
-    [ac_cv_use_powersave=$withval],
-    [ac_cv_use_powersave=no]
-)
-
-if test "$ac_cv_use_powersave" = "yes"; then
-PKG_CHECK_MODULES(POWERSAVE, [powersave >= 0.14.0], [have_powersave=yes],
-    [have_powersave=no])
-
-    if test "$have_powersave" = "yes"; then
-        AC_DEFINE(ENABLE_POWERSAVE, 1, [defined if you have powersave headers and libraries])
-    else
-        AC_MSG_WARN([You are missing the powersave headers and libraries. The powersave support won't be compiled])
-    fi
-
-    AC_SUBST(POWERSAVE_LIBS)
-fi
-
-AM_CONDITIONAL(with_helper, [test x$ac_cv_use_powersave = xno])
-dnl === powersave daemon support check - end ===
 
 
 dnl === libsynaptics support check - begin ===

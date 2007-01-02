@@ -26,10 +26,6 @@
 
 #include <kdebug.h>
 
-#ifdef ENABLE_POWERSAVE
-#include <powerlib.h>
-#endif // ENABLE_POWERSAVE
-
 static void *myInstance = 0;
 
 KToshibaDBUSInterface::KToshibaDBUSInterface()
@@ -38,7 +34,7 @@ KToshibaDBUSInterface::KToshibaDBUSInterface()
 
     myInstance = this;
 
-    if(!initDBUS()) {
+    if (!initDBUS()) {
         kdError() << "KToshibaDBUSInterface::KToshibaDBUSInterface(): "
                   << "Could not connect to D-BUS" << endl;
         m_DBUSQtConnection = NULL;
@@ -48,12 +44,11 @@ KToshibaDBUSInterface::KToshibaDBUSInterface()
 KToshibaDBUSInterface::~KToshibaDBUSInterface()
 {
     myInstance = NULL;
+    m_DBUSQtConnection = NULL;
 }
 
 bool KToshibaDBUSInterface::initDBUS()
 {
-    is_connected = false;
-
     DBusError error;
     dbus_error_init(&error);
 
@@ -65,6 +60,8 @@ bool KToshibaDBUSInterface::initDBUS()
         dbus_error_free(&error);
         return false;
     }
+
+    dbus_bus_register(dbus_connection, &error);
 
     if (dbus_error_is_set(&error)) {
         kdError() << "KToshibaDBUSInterface::initDBUS(): "
@@ -84,14 +81,6 @@ bool KToshibaDBUSInterface::initDBUS()
     dbus_bus_add_match(dbus_connection, "type='signal',"
                        "interface='org.freedesktop.DBus'," 
                        "member='NameOwnerChanged'", NULL);
-
-#ifdef ENABLE_POWERSAVE
-    /* add a match rule to catch all signals going through the bus with
-     * powersave manager interface */
-    dbus_bus_add_match(dbus_connection, "type='signal',"
-                       "interface='com.novell.powersave',"
-                       "path='/com/novell/powersave',", NULL);
-#endif // ENABLE_POWERSAVE
 
     m_DBUSQtConnection = new DBusQt::Connection(this);
     m_DBUSQtConnection->dbus_connection_setup_with_qt_main(dbus_connection);
@@ -120,7 +109,7 @@ bool KToshibaDBUSInterface::reconnect()
 
 bool KToshibaDBUSInterface::close()
 {
-    if ( m_DBUSQtConnection != NULL ) {
+    if (m_DBUSQtConnection != NULL) {
         m_DBUSQtConnection->close();
         m_DBUSQtConnection = NULL;
     }
@@ -201,88 +190,9 @@ bool KToshibaDBUSInterface::methodCall(QString service, QString path, QString in
     return true;
 }
 
-#ifdef ENABLE_POWERSAVE
-bool KToshibaDBUSInterface::psMethodCall(QString method, void *retval, int rettype, int arg1type, ...)
-{
-    va_list var_args;
-    bool ret = false;
-
-    va_start(var_args, arg1type);
-    ret = psDBUSMethodCall(method, retval, rettype, arg1type, var_args);
-    va_end(var_args);
-
-    return ret;
-}
-
-bool KToshibaDBUSInterface::psDBUSMethodCall(QString method, void *retval, int rettype, int arg1type, va_list var_args)
-{
-    DBusMessage *message;
-    DBusMessage *reply;
-    DBusError error;
-
-
-    dbus_error_init(&error);
-
-    dbus_connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
-
-    if (dbus_error_is_set(&error)) {
-        kdError() << "KToshibaDBUSInterface::psMethodCall(): "
-                  << "Could not get DBUS connection. "
-                  << error.message << endl;
-        dbus_error_free(&error);
-        return false;
-    }
-
-    message = dbus_message_new_method_call(PS_DBUS_SERVICE, PS_DBUS_PATH,
-                                           PS_DBUS_INTERFACE, method);
-    dbus_message_append_args_valist(message, arg1type, var_args);
-
-    if (retval == NULL) {
-        if (!dbus_connection_send(dbus_connection, message, NULL)) {
-            kdError() << "KToshibaDBUSInterface::psMethodCall(): "
-                      << "Could not send method call." << endl;
-            dbus_message_unref(message);
-
-            return false;
-        }
-    } else {
-        reply = dbus_connection_send_with_reply_and_block(dbus_connection, message, -1, &error);
-
-        if (dbus_error_is_set(&error)) {
-            kdError() << "KToshibaDBUSInterface::psMethodCall(): "
-                      << "Could not send dbus message. "
-                      << error.message << endl;
-            dbus_message_unref(message);
-            dbus_error_free(&error);
-
-            return false;
-        }
-        if (!dbus_message_get_args(reply, &error, rettype, retval, DBUS_TYPE_INVALID)) {
-            if (dbus_error_is_set(&error)) {
-                kdError() << "KToshibaDBUSInterface::psMethodCall(): "
-                          << "Could not get argument from reply. "
-                          << error.message << endl;
-                dbus_error_free(&error);
-            }
-
-            dbus_message_unref(reply);
-            dbus_message_unref(message);
-
-            return false;
-        }
-    }
-
-    dbus_message_unref(message);
-    dbus_connection_flush(dbus_connection);
-
-    return true;
-}
-
-#endif // ENABLE_POWERSAVE
-
 DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *message, void *data)
 {
-    if(connection == NULL || data == NULL) ; // to prevent compiler warning
+    if (connection == NULL || data == NULL) ; // to prevent compiler warning
 
     char *value;
     DBusError error;
@@ -317,13 +227,6 @@ DBusHandlerResult filter_function(DBusConnection *connection, DBusMessage *messa
     if (!strcmp(signal, "NameOwnerChanged")) {
         return DBUS_HANDLER_RESULT_HANDLED;
     }
-#ifdef ENABLE_POWERSAVE
-    /* powersave event received */
-    else if (!strcmp(signal, "PowersaveEvent")) {
-        ((KToshibaDBUSInterface *)myInstance)->emitMsgReceived(POWERSAVE_EVENT, value);
-        return DBUS_HANDLER_RESULT_HANDLED;
-    }
-#endif // ENABLE_POWERSAVE
     else
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }

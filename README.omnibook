@@ -27,40 +27,34 @@ keycodes, some keys already produce keycodes, but those that don't need to
 be set by the command `setkeycodes scancode keycode` where "scancode" is the
 number provided by the kernel, and "keycode" is one of the following:
 
-144:		Previous
-145:		Fn-1 (Volume Down)
-146:		Fn-2 (Volume Up)
-147:		Media Player
-148:		Toggle Mode
-149:		Battery Status
-150:		Fn-F1
-151:		Fn-F9 (MousePad On)
-152:		Fn-F9 (MousePad Off)
-153:		Play/Pause (also Next with ectype=12)
-159:		Fn-F7
-160:		Fn-Esc
-161:		Fn-F8
-162:		Next (also Play/Pause with ectype=12)
-164:		Stop
-178:		WWW
-236:		Console Direct Access
-239:		Fn-F6
 
-(NOTE: Fn-Esc, F1 and F8 can be configured to do something else
- via the KCModule, the others are hard-coded)
+226:		Media Player
+165:		Previous
+163:		Next
+164:		Play/Pause
+128:		Stop
+114:		Fn-1 (Volume Down)
+114:		Fn-2 (Volume Up)
+149:		Toggle Mode
+150:		WWW
+202:		Console Direct Access
+0x1e4:		Battery Status
+
+(NOTE: Fn-F6 and Fn-F7 are hard-coded, all others can be configured to do
+something else)
 
 These are the availble options that you can choose to configure your Fn keys
 (all others shown on KCM will be ignored if selected):
 
-Mute/Unmute				(via DCOP and needs KMix to be running)
-LockScreen				(via DCOP)
-Suspend To RAM (STR)	(via ACPI or powersave daemon)
-Suspend To Disk (STD)	(via ACPI or powersave daemon)
+Mute/Unmute			(via DCOP and needs KMix to be running)
+LockScreen			(via DCOP)
+Suspend To RAM (STR)		(via ACPI or powersave daemon)
+Suspend To Disk (STD)		(via ACPI or powersave daemon)
 Brightness Down			(via omnibook module)
 Brightness Up 			(via omnibook module)
 Wireless On/Off			(via omnibook module)
-Fan On/Off				(via omnibook module)
-LCD Backlight On/Off	(via omnibook module)
+Fan On/Off			(via omnibook module)
+LCD Backlight On/Off		(via omnibook module)
 Bluetooth On/Off		(via omnibook module)
 
 If your toshiba model produce different keycodes than the ones listed here,

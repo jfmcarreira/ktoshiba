@@ -223,21 +223,35 @@
                                     <property name="name">
                                         <cstring>unnamed</cstring>
                                     </property>
-                                    <widget class="QPushButton" row="0" column="0">
+                                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
                                         <property name="name">
-                                            <cstring>helperPushButton</cstring>
+                                            <cstring>btstartCheckBox</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>Setup &amp;Helper Application</string>
+                                            <string>&amp;Enable Bluetooth device at program startup</string>
                                         </property>
                                         <property name="accel">
-                                            <string>Alt+H</string>
+                                            <string>Alt+E</string>
                                         </property>
                                         <property name="toolTip" stdset="0">
-                                            <string>This button can be used to enable the helper application</string>
+                                            <string>Check this if you want the Bluetooth device activated at program startup</string>
                                         </property>
                                     </widget>
-                                    <widget class="QLabel" row="0" column="1">
+                                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                                        <property name="name">
+                                            <cstring>autostartCheckBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Automatically &amp;start KToshiba at startup</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Alt+S</string>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Check this if you want KToshiba to start automatically at KDE login</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="0" column="0">
                                         <property name="name">
                                             <cstring>audioAppTextLabel</cstring>
                                         </property>
@@ -245,13 +259,13 @@
                                             <string>Select &amp;Audio Application:</string>
                                         </property>
                                         <property name="alignment">
-                                            <set>AlignVCenter|AlignRight</set>
+                                            <set>AlignVCenter|AlignLeft</set>
                                         </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>audioComboBox</cstring>
                                         </property>
                                     </widget>
-                                    <widget class="QComboBox" row="0" column="2">
+                                    <widget class="QComboBox" row="0" column="1">
                                         <item>
                                             <property name="text">
                                                 <string>Amarok</string>
@@ -281,34 +295,6 @@
                                         </property>
                                         <property name="toolTip" stdset="0">
                                             <string>This can be used to select prefered audio application to use with front panel buttons</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-                                        <property name="name">
-                                            <cstring>btstartCheckBox</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Enable Bluetooth device at program startup</string>
-                                        </property>
-                                        <property name="accel">
-                                            <string>Alt+E</string>
-                                        </property>
-                                        <property name="toolTip" stdset="0">
-                                            <string>Check this if you want the Bluetooth device activated at program startup</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
-                                        <property name="name">
-                                            <cstring>autostartCheckBox</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Automatically &amp;start KToshiba at startup</string>
-                                        </property>
-                                        <property name="accel">
-                                            <string>Alt+S</string>
-                                        </property>
-                                        <property name="toolTip" stdset="0">
-                                            <string>Check this if you want KToshiba to start automatically at KDE login</string>
                                         </property>
                                     </widget>
                                 </grid>
@@ -2619,12 +2605,6 @@
 </images>
 <connections>
     <connection>
-        <sender>helperPushButton</sender>
-        <signal>clicked()</signal>
-        <receiver>KCMKToshibaGeneral</receiver>
-        <slot>setupHelperSlot()</slot>
-    </connection>
-    <connection>
         <sender>audioComboBox</sender>
         <signal>activated(int)</signal>
         <receiver>KCMKToshibaGeneral</receiver>
@@ -2741,7 +2721,6 @@
 </connections>
 <tabstops>
     <tabstop>configTabWidget</tabstop>
-    <tabstop>helperPushButton</tabstop>
     <tabstop>audioComboBox</tabstop>
     <tabstop>btstartCheckBox</tabstop>
     <tabstop>fnComboBox</tabstop>
@@ -2769,7 +2748,6 @@
 </signals>
 <slots>
     <slot>changedSlot()</slot>
-    <slot>setupHelperSlot()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

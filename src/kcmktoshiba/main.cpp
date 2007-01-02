@@ -27,7 +27,6 @@
 #include <qtabwidget.h>
 #include <qcombobox.h>
 #include <qlabel.h>
-#include <qpushbutton.h>
 #include <qtimer.h>
 #include <qcheckbox.h>
 
@@ -85,6 +84,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     if (m_HCIIFace) {
         m_AC = m_SMMIFace->acPowerStatus();
         m_Hotkeys = ((m_SMMIFace->getSystemEvent() == -1)? false : true);
+        m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);	// Fn-F5
     }
     m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 		m_KCMKToshibaGeneral->configTabWidget->page(2), m_SCIIFace);
@@ -97,12 +97,8 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     if (m_Omnibook) {
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 		    m_KCMKToshibaGeneral->configTabWidget->page(2), false);
-        m_KCMKToshibaGeneral->fnComboBox_2->setEnabled(false);
-        m_KCMKToshibaGeneral->fnComboBox_3->setEnabled(false);
-        m_KCMKToshibaGeneral->fnComboBox_4->setEnabled(false);
-        m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);
-        m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);
-        m_KCMKToshibaGeneral->fnComboBox_9->setEnabled(false);
+        m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);	// Fn-F6
+        m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);	// Fn-F7
         m_AC = m_OmniIFace->omnibookAC();
         QString keyhandler = KStandardDirs::findExe("ktosh_keyhandler");
         m_Hotkeys = (keyhandler.isEmpty())? false : true;
@@ -118,11 +114,6 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(1), m_Hotkeys);
-        m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);
-
-#ifndef ENABLE_HELPER
-        m_KCMKToshibaGeneral->helperPushButton->setEnabled(false);
-#endif // ENABLE_HELPER
 
         connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
         m_Timer = new QTimer(this);
@@ -134,7 +125,6 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 
 void KCMToshibaModule::load()
 {
-    kdDebug() << "KCMToshibaModule: loading." << endl;
     KConfig config(CONFIG_FILE);
 
     config.setGroup("KToshiba");
@@ -185,9 +175,11 @@ void KCMToshibaModule::load()
 
 void KCMToshibaModule::defaults()
 {
+    // General Options Tab
     m_KCMKToshibaGeneral->audioComboBox->setCurrentItem( 0 );
     m_KCMKToshibaGeneral->btstartCheckBox->setChecked( true );
     m_KCMKToshibaGeneral->autostartCheckBox->setChecked( true );
+    // Fn-Key Tab
     m_KCMKToshibaGeneral->fnComboBox->setCurrentItem( 1 );
     m_KCMKToshibaGeneral->fnComboBox_1->setCurrentItem( 2 );
     m_KCMKToshibaGeneral->fnComboBox_2->setCurrentItem( 3 );
@@ -198,6 +190,7 @@ void KCMToshibaModule::defaults()
     m_KCMKToshibaGeneral->fnComboBox_7->setCurrentItem( 8 );
     m_KCMKToshibaGeneral->fnComboBox_8->setCurrentItem( 9 );
     m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem( 10 );
+    // Battery Save Mode Tab
     m_KCMKToshibaGeneral->processorComboBox->setCurrentItem( 1 );
     m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem( 0 );
     m_KCMKToshibaGeneral->displayComboBox->setCurrentItem( 5 );
@@ -209,7 +202,6 @@ void KCMToshibaModule::defaults()
 
 void KCMToshibaModule::save()
 {
-    kdDebug() << "KCMToshibaModule: saving." << endl;
     KConfig config(CONFIG_FILE);
 
     config.setGroup("BSM");
