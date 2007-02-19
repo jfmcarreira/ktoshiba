@@ -29,6 +29,7 @@
 #include <qlabel.h>
 #include <qtimer.h>
 #include <qcheckbox.h>
+#include <qlineedit.h>
 
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
@@ -114,6 +115,18 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(1), m_Hotkeys);
+        if (m_Hotkeys) {
+            m_KCMKToshibaGeneral->FnEscle->hide();
+            //m_KCMKToshibaGeneral->FnF1le->hide();
+            //m_KCMKToshibaGeneral->FnF2le->hide();
+            //m_KCMKToshibaGeneral->FnF3le->hide();
+            //m_KCMKToshibaGeneral->FnF4le->hide();
+            //m_KCMKToshibaGeneral->FnF5le->hide();
+            //m_KCMKToshibaGeneral->FnF6le->hide();
+            //m_KCMKToshibaGeneral->FnF7le->hide();
+            //m_KCMKToshibaGeneral->FnF8le->hide();
+            //m_KCMKToshibaGeneral->FnF9le->hide();
+        }
 
         connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
         m_Timer = new QTimer(this);
@@ -126,7 +139,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 void KCMToshibaModule::load()
 {
     KConfig config(CONFIG_FILE);
-
+    // General Options Tab
     config.setGroup("KToshiba");
     m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
 		( config.readNumEntry("Audio_Player", 0) );
@@ -134,7 +147,7 @@ void KCMToshibaModule::load()
 		( config.readBoolEntry("Bluetooth_Startup", true) );
     m_KCMKToshibaGeneral->autostartCheckBox->setChecked
 		( config.readBoolEntry("AutoStart", true) );
-
+    // Fn-Key Tab
     config.setGroup("Fn_Key");
     m_KCMKToshibaGeneral->fnComboBox->setCurrentItem
 		( config.readNumEntry("Fn_Esc", 1) );
@@ -156,7 +169,9 @@ void KCMToshibaModule::load()
 		( config.readNumEntry("Fn_F8", 9) );
     m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem
 		( config.readNumEntry("Fn_F9", 10) );
-
+    m_KCMKToshibaGeneral->FnEscle->setText
+		( config.readEntry("Fn_Esc_Cmd") );
+    // Battery Save Mode Tab
     config.setGroup("BSM");
     m_KCMKToshibaGeneral->processorComboBox->setCurrentItem
 		( config.readNumEntry("Processing_Speed", 1) );
@@ -203,22 +218,16 @@ void KCMToshibaModule::defaults()
 void KCMToshibaModule::save()
 {
     KConfig config(CONFIG_FILE);
-
-    config.setGroup("BSM");
-    config.writeEntry("Processing_Speed",
-		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
-    config.writeEntry("CPU_Sleep_Mode",
-		  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
-    config.writeEntry("Display_Auto_Off",
-		  m_KCMKToshibaGeneral->displayComboBox->currentItem());
-    config.writeEntry("HDD_Auto_Off",
-		  m_KCMKToshibaGeneral->hddComboBox->currentItem());
-    config.writeEntry("LCD_Brightness",
-		  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
-    config.writeEntry("Cooling_Method",
-		  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
+    // General Options Tab
+    config.setGroup("KToshiba");
+    config.writeEntry("Audio_Player",
+		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
+    config.writeEntry("Bluetooth_Startup",
+		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
+    config.writeEntry("AutoStart",
+		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
     config.sync();
-
+    // Fn-Key Tab
     config.setGroup("Fn_Key");
     config.writeEntry("Fn_Esc",
 		  m_KCMKToshibaGeneral->fnComboBox->currentItem());
@@ -240,15 +249,23 @@ void KCMToshibaModule::save()
 		  m_KCMKToshibaGeneral->fnComboBox_8->currentItem());
     config.writeEntry("Fn_F9",
 		  m_KCMKToshibaGeneral->fnComboBox_9->currentItem());
+    config.writeEntry("Fn_Esc_Cmd",
+		  m_KCMKToshibaGeneral->FnEscle->text());
     config.sync();
-
-    config.setGroup("KToshiba");
-    config.writeEntry("Audio_Player",
-		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
-    config.writeEntry("Bluetooth_Startup",
-		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
-    config.writeEntry("AutoStart",
-		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
+    // Battery Save Mode Tab
+    config.setGroup("BSM");
+    config.writeEntry("Processing_Speed",
+		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
+    config.writeEntry("CPU_Sleep_Mode",
+		  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
+    config.writeEntry("Display_Auto_Off",
+		  m_KCMKToshibaGeneral->displayComboBox->currentItem());
+    config.writeEntry("HDD_Auto_Off",
+		  m_KCMKToshibaGeneral->hddComboBox->currentItem());
+    config.writeEntry("LCD_Brightness",
+		  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
+    config.writeEntry("Cooling_Method",
+		  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
     config.sync();
 }
 

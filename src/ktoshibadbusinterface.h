@@ -44,7 +44,7 @@ enum msg_type {
 };
 
 /**
- * @short KToshiba D-BUS Interafce
+ * @short KToshiba D-Bus Interafce
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 0.2
  */

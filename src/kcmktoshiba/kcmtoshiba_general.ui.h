@@ -10,11 +10,19 @@
 ** destructor.
 *****************************************************************************/
 
-#include <kstandarddirs.h>
-#include <kprocess.h>
-#include <kmessagebox.h>
+#include <qlineedit.h>
 
 void KCMKToshibaGeneral::changedSlot()
 {
     emit(changed());
+}
+
+
+void KCMKToshibaGeneral::commandselectedSlot( int slot )
+{
+    if (slot == 17)
+        FnEscle->show();
+        FnEscle->
+    else
+        FnEscle->hide();
 }

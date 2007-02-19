@@ -120,6 +120,9 @@ void ToshibaFnActions::performFnAction(int action, int key)
         case 16:	// Ethernet On/Off
             toggleEthernet();
             return;
+        case 17:	// Run Command
+            runCommand(key);
+            return;
         case 1:	// Mute/Unmute
         case 7:	// Brightness Down
         case 8:	// Brightness Up
@@ -240,7 +243,7 @@ void ToshibaFnActions::toggleWireless()
         if (m_Wireless < 0) m_Wireless = 1;
 
         m_Driver->setWirelessPower(m_Wireless);
-        showPassiveMsg(m_Wireless, 'w');
+        showPassiveMsg(m_Wireless, Wireless);
     }
 }
 
@@ -305,7 +308,7 @@ void ToshibaFnActions::toggleBluetooth()
         if (bt == -1) return;
 
         m_Driver->setBluetoothPower((bt == 1)? 0 : 1);
-        showPassiveMsg(((bt == 1)? 0: 1), 'b');
+        showPassiveMsg(((bt == 1)? 0: 1), Bluetooth);
     }
 }
 
@@ -315,5 +318,5 @@ void ToshibaFnActions::toggleEthernet()
     if (eth == -1) return;
 
     m_Driver->setLANController((eth == 1)? 0 : 1);
-    showPassiveMsg(((eth == 1)? 0: 1), 'e');
+    showPassiveMsg(((eth == 1)? 0: 1), Ethernet);
 }

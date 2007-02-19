@@ -136,15 +136,15 @@ QString KToshibaOmnibookInterface::modelName()
                         ectype = TSP10;
                         break;
                     } else
-                    if (tmp == "A70" || tmp == "M70" || tmp == "M100" || tmp == "S2") {
+                    if (tmp == "A70" || tmp == "A75" || tmp == "A80" || tmp == "M70" || tmp == "M100" || tmp == "S2") {
                         ectype = TSM30X;
                         break;
                     } else
-                    if (tmp == "M40" || tmp == "M45" || tmp == "S1") {
+                    if (tmp == "A4" || tmp == "M40" || tmp == "M45" || tmp == "S1") {
                         ectype = TSM40;
                         break;
                     } else
-                    if (tmp == "A105") {
+                    if (tmp == "A105" || tmp == "P100") {
                         ectype = TSA105;
                         break;
                     }

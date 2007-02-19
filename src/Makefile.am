@@ -8,7 +8,7 @@ if with_keyhandler
 endif
 
 # set the include path for X, qt and KDE
-INCLUDES = @DBUS_CFLAGS@ $(all_includes)
+INCLUDES = @DBUS_CFLAGS@ @HAL_CFLAGS@ $(all_includes)
 
 # these are the headers for your project
 noinst_HEADERS = ktoshiba.h hci.h ktoshibasmminterface.h sci.h modelid.h \
@@ -43,6 +43,7 @@ ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) -ldbus-qt-1 \
 		 libktoshibasmminterface.la \
 		 libktoshibaomnibookinterface.la \
 		 @DBUS_LIBS@ \
+		 @HAL_LIBS@ \
 		 @SYNAPTICS@
 
 # this is where the desktop file will go

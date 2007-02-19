@@ -1,3 +1,40 @@
+2007-02-13 Azael Avalos <coproscefalo@gmail.com>
+	* Added new model strings to omnibook interface
+
+2007-02-10 Azael Avalos <coproscefalo@gmail.com>
+	* Removed some unneeded includes from
+	  kcmtoshiba_general.iu file
+	* Added initial implementation for running commands
+	  using the Fn-Esc/F{1,2,3,4,5,6,7,8,9} keys
+	  (being reviewed, it may be kept or removed...)
+	* Used enums instead of char in FnActions class and
+	  adapted accordingly
+
+2007-01-29 Azael Avalos <coproscefalo@gmail.com>
+	* Added some enums to Suspend class
+	* Removed some unneeded code from hotkeys monitoring
+	  function
+
+2007-01-20 Azael Avalos <coproscefalo@gmail.com>
+	* Use LIBHAL_FREE_DBUS_ERROR macro on Suspend.cpp
+	* Removed deprecated calls to HAL
+	* Changed resume slot call from 10 to 4 seconds
+
+2007-01-15 Azael Avalos <coproscefalo@gmail.com>
+	* Updated ktoshiba.desktop file
+
+2007-01-05 Azael Avalos <coproscefalo@gmail.com>
+	* Removed some unneccesary stuff
+
+2007-01-04 Azael Avalos <coproscefalo@gmail.com>
+	* Completed suspend support using HAL
+	  (let the testing begins...)
+	* Added missing argument to avoid:
+	  "QString::arg(): Argument missing: ..."
+
+2007-01-03 Azael Avalos <coproscefalo@gmail.com>
+	* Added initial HAL support
+
 2007-01-01 Azael Avalos <coproscefalo@gmail.com>
 	* Updated keycodes definitions all over the place
 	  (we now need omnibook module from SVN trunk)

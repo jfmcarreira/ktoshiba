@@ -43,6 +43,8 @@ KToshibaDBUSInterface::KToshibaDBUSInterface()
 
 KToshibaDBUSInterface::~KToshibaDBUSInterface()
 {
+    close();
+
     myInstance = NULL;
     m_DBUSQtConnection = NULL;
 }
@@ -74,12 +76,12 @@ bool KToshibaDBUSInterface::initDBUS()
     /* add the filter function which should be executed on events on the bus */
     if (!dbus_connection_add_filter(dbus_connection, filter_function, this, NULL)) {
         kdError() << "KToshibaDBUSInterface::initDBUS(): "
-                  << "Not enough memory to add filter to dbus connection" << endl;
+                  << "Not enough memory to add filter to D-Bus connection" << endl;
         exit(EXIT_FAILURE);
     }
 
     dbus_bus_add_match(dbus_connection, "type='signal',"
-                       "interface='org.freedesktop.DBus'," 
+                       "interface='org.freedesktop.DBus',"
                        "member='NameOwnerChanged'", NULL);
 
     m_DBUSQtConnection = new DBusQt::Connection(this);
@@ -87,7 +89,7 @@ bool KToshibaDBUSInterface::initDBUS()
 
     is_connected = true;
 
-    return true;
+    return is_connected;
 }
 
 void KToshibaDBUSInterface::emitMsgReceived(msg_type type, QString _string)
@@ -139,7 +141,7 @@ bool KToshibaDBUSInterface::methodCall(QString service, QString path, QString in
 
     if (dbus_error_is_set(&error)) {
         kdError() << "KToshibaDBUSInterface::methodCall(): "
-                  << "Could not get DBUS connection. "
+                  << "Could not get D-Bus connection. "
                   << error.message << endl;
         dbus_error_free(&error);
         return false;
@@ -157,11 +159,11 @@ bool KToshibaDBUSInterface::methodCall(QString service, QString path, QString in
             return false;
         }
     } else {
-        reply = dbus_connection_send_with_reply_and_block(dbus_connection, message, -1, &error);
+        reply = dbus_connection_send_with_reply_and_block(dbus_connection, message, INT_MAX, &error);
 
         if (dbus_error_is_set(&error)) {
             kdError() << "KToshibaDBUSInterface::methodCall(): "
-                      << "Could not send dbus message. "
+                      << "Could not send D-Bus message. "
                       << error.message << endl;
             dbus_message_unref(message);
             dbus_error_free(&error);

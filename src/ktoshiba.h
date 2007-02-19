@@ -60,7 +60,7 @@ class KToshiba : public KSystemTray
     Q_OBJECT
 public:
     KToshiba();
-    ~KToshiba();
+    virtual ~KToshiba();
 
     void loadConfiguration();
     void createConfiguration();
@@ -119,6 +119,7 @@ private:
     int mPad;
     int mBluetooth;
     int mAudioPlayer;
+    int mBright;
     int MODE;
     /** toshiba stuff */
     ToshibaFnActions *mTFn;
