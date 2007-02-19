@@ -5,7 +5,7 @@ AC_C_BIGENDIAN
 AC_CHECK_KDEMAXPATHLEN
 
 
-dnl === dbus support check - begin ===
+dnl === D-Bus support check - begin ===
 PKG_CHECK_MODULES(DBUS, [dbus-1 >= 0.33], [have_dbus=yes],
     [have_dbus=no])
 
@@ -13,6 +13,7 @@ AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
 
 if test "$have_dbus" = "yes"; then
+
     # get dbus system bus socket
     DBUS_SYSTEM_BUS_SOCKET="`pkg-config --variable=system_bus_default_address dbus-1`"
     if test -z "$DBUS_SYSTEM_BUS_SOCKET"; then
@@ -37,7 +38,16 @@ if test "$have_dbus" = "yes"; then
     CPPFLAGS=$safe_CPPFLAGS
     AC_LANG_RESTORE
 fi
-dnl === dbus support check - end ===
+dnl === D-Bus support check - end ===
+
+
+dnl === HAL support check - begin ===
+PKG_CHECK_MODULES(HAL, [hal >= 0.5.6], [have_hal=yes],
+    [have_hal=no])
+
+AC_SUBST(HAL_CFLAGS)
+AC_SUBST(HAL_LIBS)
+dnl === HAL support check - end ===
 
 
 dnl === libsynaptics support check - begin ===

@@ -159,9 +159,10 @@ KToshiba::KToshiba()
     if (!mOmnibook && (!mTFn->m_SCIIface || (mTFn->m_BIOS == -1))) {
         kdError() << "KToshiba: Could not found a Toshiba model. "
                   << "Exiting..." << endl;
-        if (kapp->dcopClient()->isAttached())
-            kapp->dcopClient()->detach();
-        exit(0);
+        //if (kapp->dcopClient()->isAttached())
+        //    kapp->dcopClient()->detach();
+        delete this;
+        exit(EXIT_FAILURE);
     }
 
     mACPI = (mAC == -1)? true : false;
@@ -179,7 +180,6 @@ KToshiba::KToshiba()
     connect( this, SIGNAL( quitSelected() ), this, SLOT( quit() ) );
 
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
-    connect( mSuspend, SIGNAL( resumedFromSTD() ), this, SLOT( resumedSTD() ) );
 
     if (!mOmnibook) {
         mHotKeysTimer = new QTimer(this);
@@ -187,9 +187,9 @@ KToshiba::KToshiba()
             connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
             mHotKeysTimer->start(100);
         }
-    } else
-    if (mOmnibook) {
+    }
 #ifdef ENABLE_OMNIBOOK
+    else if (mOmnibook) {
         mOmnibookTimer = new QTimer(this);
         connect( mOmnibookTimer, SIGNAL( timeout() ), this, SLOT( checkOmnibook() ) );
         mOmnibookTimer->start(100);
@@ -198,8 +198,8 @@ KToshiba::KToshiba()
             mDCOPIFace = new KToshibaDCOPInterface(this, "actions");
             connect( mDCOPIFace, SIGNAL( signalHotKey(int) ), this, SLOT( omnibookHotKeys(int) ) );
         }
-#endif // ENABLE_OMNIBOOK
     }
+#endif // ENABLE_OMNIBOOK
 
 #ifdef ENABLE_SYNAPTICS
     if (mPad == -1)
@@ -227,8 +227,8 @@ KToshiba::~KToshiba()
             delete mDCOPIFace; mDCOPIFace = NULL;
         delete mOmnibookTimer; mOmnibookTimer = NULL;
         delete mKeyProc; mKeyProc = NULL;
+        delete mOFn; mOFn = NULL;
     }
-    delete mOFn; mOFn = NULL;
 #endif
     delete mHelp; mHelp = NULL;
     delete mKProc; mKProc = NULL;
@@ -263,20 +263,26 @@ void KToshiba::quit()
 
 void KToshiba::resumedSTD()
 {
+    mSuspend->resumed = true;
+    mSuspend->suspended = false;
     kdDebug() << "KToshiba: Resuming from Suspend To Disk..." << endl;
     if (!mOmnibook && mTFn->m_SCIIface) {
         kdDebug() << "KToshiba: Opening SCI interface." << endl;
         mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface(&(mTFn->m_IFaceErr));
+        // Set the brightness to its original state before STD
+        mTFn->m_Driver->setBrightness(mTFn->m_Bright);
     }
+#ifdef ENABLE_OMNIBOOK
+    if (mOmnibook)
+        mOFn->m_Omni->setBrightness(mOFn->m_Bright);
+#endif // ENABLE_OMNIBOOK
 }
 
 void KToshiba::suspendToDisk()
 {
     kdDebug() << "KToshiba: Suspending To Disk..." << endl;
-    if (!mOmnibook && mTFn->m_SCIIface) {
-        kdDebug() << "KToshiba: Closing SCI interface." << endl;
-        mTFn->m_Driver->closeSCIInterface();
-    }
+    // 4 seconds for timer to start
+    QTimer::singleShot( 3000, this, SLOT( resumedSTD() ) );
 }
 
 bool KToshiba::checkConfiguration()
@@ -341,10 +347,10 @@ void KToshiba::doMenu()
                               SLOT( doSuspendToRAM() ), 0, 1, 1 );
     contextMenu()->insertItem( SmallIcon("hdd_unmount"), i18n("Suspend To &Disk"), this,
                               SLOT( doSuspendToDisk() ), 0, 2, 2 );
-    if (::access("/proc/acpi/sleep", F_OK) == -1) {
+    if (!mSuspend->getAllowedSuspend("Suspend"))
         contextMenu()->setItemEnabled( 1, FALSE );
+    if (!mSuspend->getAllowedSuspend("Hibernate"))
         contextMenu()->setItemEnabled( 2, FALSE );
-    }
     contextMenu()->insertSeparator( 3 );
     if (!mOmnibook) {
         contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
@@ -733,7 +739,7 @@ void KToshiba::checkSystem()
 #endif // ENABLE_OMNIBOOK
         if (mWirelessSwitch != ws) {
             QString s = (ws == 1)? i18n("on") : i18n("off");
-            KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s),
+            KPassivePopup::message(i18n("KToshiba"), i18n("Wireless antenna turned %1").arg(s, 0),
 				   SmallIcon("kwifimanager", 20), this, i18n("Wireless"), 4000);
         }
         mWirelessSwitch = ws;
@@ -867,11 +873,9 @@ void KToshiba::checkHotKeys()
         mTFn->hideWidgets();
 
     switch (key) {
-        case -1:		// Not Supported
+        case -1:	// Not Supported
             if (mHotkeys) {
-                if (mTFn->m_SCIIface)
-                    mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface(&(mTFn->m_IFaceErr));
-                mHotkeys = mTFn->m_Driver->enableSystemEvent();
+                mTFn->m_Driver->enableSystemEvent();
                 return;
             }
             kdError() << "KToshiba: Hotkeys monitoring will be disabled" << endl;

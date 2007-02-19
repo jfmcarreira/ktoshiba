@@ -138,7 +138,7 @@ void OmnibookFnActions::toggleWireless()
         m_Wireless = m_Omni->getWifi();
         m_Omni->setWifi((m_Wireless == 1)? 0 : 1);
 
-        showPassiveMsg((m_Wireless = (m_Wireless == 1)? 0 : 1), 'w');
+        showPassiveMsg((m_Wireless = (m_Wireless == 1)? 0 : 1), Wireless);
     }
 }
 
@@ -180,5 +180,5 @@ void OmnibookFnActions::toggleBluetooth()
     if (bt == -1) return;
 
     m_Omni->setBluetooth((bt == 1)? 0 : 1);
-    showPassiveMsg(((bt == 1)? 0 : 1), 'b');
+    showPassiveMsg(((bt == 1)? 0 : 1), Bluetooth);
 }

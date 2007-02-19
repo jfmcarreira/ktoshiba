@@ -27,26 +27,27 @@
 #define OMNI_ROOT		"/proc/omnibook"
 #define OMNI_DMI		"/proc/omnibook/dmi"
 #define OMNI_LCD		"/proc/omnibook/lcd"
-#define OMNI_ONETOUCH	"/proc/omnibook/onetouch"
+#define OMNI_ONETOUCH		"/proc/omnibook/onetouch"
 #define OMNI_FAN		"/proc/omnibook/fan"
 #define OMNI_BLANK		"/proc/omnibook/blank"
-#define OMNI_TOUCHPAD 	"/proc/omnibook/touchpad"
+#define OMNI_TOUCHPAD 		"/proc/omnibook/touchpad"
 #define OMNI_WIFI		"/proc/omnibook/wifi"
-#define OMNI_BLUETOOTH	"/proc/omnibook/bluetooth"
+#define OMNI_BLUETOOTH		"/proc/omnibook/bluetooth"
 
 // ECTYPE
 #define NONE			0
 #define XE3GF			1
 #define TSP10			11
 #define AMILOD			10
-#define TSM30X			12
+#define TSM70			12
 #define TSM40			13
 #define TSA105			14
+#define TSM30X			15
 
 /**
  * @short Provides access to /proc/omnibook files
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.1
+ * @version 0.2
  */
 class KToshibaOmnibookInterface : public QObject
 {

@@ -32,6 +32,12 @@ class SettingsWidget;
 class StatusWidget;
 class Suspend;
 
+enum popuptype {
+	Bluetooth,
+	Ethernet,
+	Wireless
+};
+
 /**
  * @short Shared Fn action class
  * @author Azael Avalos <coproscefalo@gmail.com>
@@ -49,7 +55,8 @@ public:
     void hideWidgets();
     void toggleMute(int *);
     void lockScreen();
-    void showPassiveMsg(int state, char type);
+    void runCommand(int);
+    void showPassiveMsg(int, popuptype);
     SettingsWidget *m_SettingsWidget;
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;

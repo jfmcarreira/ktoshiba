@@ -21,19 +21,29 @@
 #ifndef SUSPEND_H
 #define SUSPEND_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <qobject.h>
 
+#include <hal/libhal.h>
+
 #include "ktoshibadbusinterface.h"
+
+#define HAL_SERVICE         "org.freedesktop.Hal"
+#define HAL_INTERFACE       "org.freedesktop.Hal.Device.SystemPowerManagement"
+#define HAL_PATH            "/org/freedesktop/Hal/devices/computer"
 
 class QWidget;
 
 enum msgtype {
 	REQUEST,
 	ACTION
+};
+
+enum retmsg {
+	SUCCESS,
+	FAILURE,
+	NO_RIGTHS,
+	NO_CONNECTION,
+	UNKNOWN
 };
 
 /**
@@ -50,6 +60,7 @@ public:
 
     void toRAM();
     void toDisk();
+    bool getAllowedSuspend(QString);
     int dbusSendMessage(msgtype, QString);
     bool suspended;
     bool resumed;
@@ -59,15 +70,19 @@ signals:
 protected slots:
     void processMessage(msg_type, QString);
     void checkDaemon();
-    void emitSTD();
-    void emitResumedSTD();
 private:
+    void closeHAL();
+    bool initHAL();
+    bool reconnectHAL();
+    bool getHALProperty(QString, QString, bool *);
     KToshibaDBUSInterface *m_DBUSIFace;
+    LibHalContext *m_HALContext;
     QWidget *m_Parent;
     QString m_Info;
     bool dbus_terminated;
-    bool str_not_allowed;
-    bool std_not_allowed;
+    bool hal_is_connected;
+    bool str_allowed;
+    bool std_allowed;
 };
 
 #endif // SUSPEND_H

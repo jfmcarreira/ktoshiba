@@ -49,6 +49,7 @@ public:
     int m_BatType;
     int m_BatSave;
     int m_Video;
+    int m_Bright;
     int m_Pad;
 private:
     void toggleBSM();
@@ -65,7 +66,6 @@ private:
     void toggleEthernet();
     void initSCI();
     int m_Snd;
-    int m_Bright;
     int m_Wireless;
     int m_BootType;
     int m_Vol;

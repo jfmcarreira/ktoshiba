@@ -30,6 +30,8 @@
 #include <kiconloader.h>
 #include <kprogress.h>
 #include <kpassivepopup.h>
+#include <kconfig.h>
+#include <kprocess.h>
 
 #include "settingswidget.h"
 #include "statuswidget.h"
@@ -55,7 +57,7 @@ FnActions::FnActions(QWidget *parent)
 
 FnActions::~FnActions()
 {
-    delete m_Parent; m_Parent = NULL;
+    m_Parent = NULL;
     delete m_Suspend; m_Suspend = NULL;
     delete m_SettingsWidget; m_SettingsWidget = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
@@ -353,20 +355,36 @@ void FnActions::lockScreen()
     kdesktopClient.send("lock()", 0);
 }
 
-void FnActions::showPassiveMsg(int state, char type)
+void FnActions::runCommand(int key)
+{
+    KConfig cfg("ktoshibarc");
+    cfg.setGroup("Fn_Key");
+    QString cmd;
+    switch (key) {
+        case 0x101:
+            cmd = cfg.readEntry("Fn_Esc_Cmd");
+            break;
+    }
+    KProcess proc;
+    proc << cmd;
+    proc.start(KProcess::DontCare);
+    proc.detach();
+}
+
+void FnActions::showPassiveMsg(int state, popuptype type)
 {
     QString w = (state == 1)? m_Activated : m_Deactivated;
     switch (type) {
-        case 'b':	// Bluetooth
-            m_Text = i18n("Bluetooth device %1").arg(w);
+        case Bluetooth:
+            m_Text = i18n("Bluetooth device %1").arg(w, 0);
             m_Icon = SmallIcon("kdebluetooth", 20);
             break;
-        case 'e':	// Ethernet
-            m_Text = i18n("Ethernet device %1").arg(w);
+        case Ethernet:
+            m_Text = i18n("Ethernet device %1").arg(w, 0);
             m_Icon = SmallIcon("messagebox_info", 20);
             break;
-        case 'w':	// Wireless
-            m_Text = i18n("Wireless interface %1").arg(w);
+        case Wireless:
+            m_Text = i18n("Wireless interface %1").arg(w, 0);
             m_Icon = SmallIcon("kwifimanager", 20);
             break;
         default:
