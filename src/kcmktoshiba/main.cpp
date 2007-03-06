@@ -81,6 +81,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     m_SCIIFace = m_SMMIFace->openSCIInterface(&m_IFaceErr);
     if (!m_SCIIFace)
         m_SCIIFace = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
+    // FIXME: We should not rely on BIOS version for HCI access...
     m_HCIIFace = (m_SMMIFace->machineBIOS() == -1)? false : true;
     if (m_HCIIFace) {
         m_AC = m_SMMIFace->acPowerStatus();
@@ -115,18 +116,8 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(1), m_Hotkeys);
-        if (m_Hotkeys) {
-            m_KCMKToshibaGeneral->FnEscle->hide();
-            //m_KCMKToshibaGeneral->FnF1le->hide();
-            //m_KCMKToshibaGeneral->FnF2le->hide();
-            //m_KCMKToshibaGeneral->FnF3le->hide();
-            //m_KCMKToshibaGeneral->FnF4le->hide();
-            //m_KCMKToshibaGeneral->FnF5le->hide();
-            //m_KCMKToshibaGeneral->FnF6le->hide();
-            //m_KCMKToshibaGeneral->FnF7le->hide();
-            //m_KCMKToshibaGeneral->FnF8le->hide();
-            //m_KCMKToshibaGeneral->FnF9le->hide();
-        }
+        // Lets hide Fn-F5 Line Edit box
+        m_KCMKToshibaGeneral->FnF5le->hide();
 
         connect( m_KCMKToshibaGeneral, SIGNAL( changed() ), SLOT( configChanged() ) );
         m_Timer = new QTimer(this);
@@ -138,6 +129,7 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 
 void KCMToshibaModule::load()
 {
+    int tmp = -1;
     KConfig config(CONFIG_FILE);
     // General Options Tab
     config.setGroup("KToshiba");
@@ -149,28 +141,70 @@ void KCMToshibaModule::load()
 		( config.readBoolEntry("AutoStart", true) );
     // Fn-Key Tab
     config.setGroup("Fn_Key");
-    m_KCMKToshibaGeneral->fnComboBox->setCurrentItem
-		( config.readNumEntry("Fn_Esc", 1) );
-    m_KCMKToshibaGeneral->fnComboBox_1->setCurrentItem
-		( config.readNumEntry("Fn_F1", 2) );
-    m_KCMKToshibaGeneral->fnComboBox_2->setCurrentItem
-		( config.readNumEntry("Fn_F2", 3) );
-    m_KCMKToshibaGeneral->fnComboBox_3->setCurrentItem
-		( config.readNumEntry("Fn_F3", 4) );
-    m_KCMKToshibaGeneral->fnComboBox_4->setCurrentItem
-		( config.readNumEntry("Fn_F4", 5) );
-    m_KCMKToshibaGeneral->fnComboBox_5->setCurrentItem
-		( config.readNumEntry("Fn_F5", 6) );
-    m_KCMKToshibaGeneral->fnComboBox_6->setCurrentItem
-		( config.readNumEntry("Fn_F6", 7) );
-    m_KCMKToshibaGeneral->fnComboBox_7->setCurrentItem
-		( config.readNumEntry("Fn_F7", 8) );
-    m_KCMKToshibaGeneral->fnComboBox_8->setCurrentItem
-		( config.readNumEntry("Fn_F8", 9) );
-    m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem
-		( config.readNumEntry("Fn_F9", 10) );
-    m_KCMKToshibaGeneral->FnEscle->setText
-		( config.readEntry("Fn_Esc_Cmd") );
+    // Rudimentary way of acquiring the command... I don't like it...
+    tmp = config.readNumEntry("Fn_Esc", 1);
+    m_KCMKToshibaGeneral->fnComboBox->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnEscle->setText( config.readEntry("Fn_Esc_Cmd") );
+        m_KCMKToshibaGeneral->FnEscle->show();
+    } else
+        m_KCMKToshibaGeneral->FnEscle->hide();
+    tmp = config.readNumEntry("Fn_F1", 2);
+    m_KCMKToshibaGeneral->fnComboBox_1->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF1le->setText( config.readEntry("Fn_F1_Cmd") );
+        m_KCMKToshibaGeneral->FnF1le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF1le->hide();
+    tmp = config.readNumEntry("Fn_F2", 3);
+    m_KCMKToshibaGeneral->fnComboBox_2->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF2le->setText( config.readEntry("Fn_F2_Cmd") );
+        m_KCMKToshibaGeneral->FnF2le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF2le->hide();
+    tmp = config.readNumEntry("Fn_F3", 4);
+    m_KCMKToshibaGeneral->fnComboBox_3->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF3le->setText( config.readEntry("Fn_F3_Cmd") );
+        m_KCMKToshibaGeneral->FnF3le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF3le->hide();
+    tmp = config.readNumEntry("Fn_F4", 5);
+    m_KCMKToshibaGeneral->fnComboBox_4->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF4le->setText( config.readEntry("Fn_F4_Cmd") );
+        m_KCMKToshibaGeneral->FnF4le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF4le->hide();
+    tmp = config.readNumEntry("Fn_F6", 7);
+    m_KCMKToshibaGeneral->fnComboBox_6->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF6le->setText( config.readEntry("Fn_F6_Cmd") );
+        m_KCMKToshibaGeneral->FnF6le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF6le->hide();
+    tmp = config.readNumEntry("Fn_F7", 8);
+    m_KCMKToshibaGeneral->fnComboBox_7->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF7le->setText( config.readEntry("Fn_F7_Cmd") );
+        m_KCMKToshibaGeneral->FnF7le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF7le->hide();
+    tmp = config.readNumEntry("Fn_F8", 9);
+    m_KCMKToshibaGeneral->fnComboBox_8->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF8le->setText( config.readEntry("Fn_F8_Cmd") );
+        m_KCMKToshibaGeneral->FnF8le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF8le->hide();
+    tmp = config.readNumEntry("Fn_F9", 10);
+    m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem( tmp );
+    if (tmp == 17) {
+        m_KCMKToshibaGeneral->FnF9le->setText( config.readEntry("Fn_F9_Cmd") );
+        m_KCMKToshibaGeneral->FnF9le->show();
+    } else
+        m_KCMKToshibaGeneral->FnF9le->hide();
     // Battery Save Mode Tab
     config.setGroup("BSM");
     m_KCMKToshibaGeneral->processorComboBox->setCurrentItem
@@ -217,6 +251,7 @@ void KCMToshibaModule::defaults()
 
 void KCMToshibaModule::save()
 {
+    int tmp = -1;
     KConfig config(CONFIG_FILE);
     // General Options Tab
     config.setGroup("KToshiba");
@@ -229,28 +264,42 @@ void KCMToshibaModule::save()
     config.sync();
     // Fn-Key Tab
     config.setGroup("Fn_Key");
-    config.writeEntry("Fn_Esc",
-		  m_KCMKToshibaGeneral->fnComboBox->currentItem());
-    config.writeEntry("Fn_F1",
-		  m_KCMKToshibaGeneral->fnComboBox_1->currentItem());
-    config.writeEntry("Fn_F2",
-		  m_KCMKToshibaGeneral->fnComboBox_2->currentItem());
-    config.writeEntry("Fn_F3",
-		  m_KCMKToshibaGeneral->fnComboBox_3->currentItem());
-    config.writeEntry("Fn_F4",
-		  m_KCMKToshibaGeneral->fnComboBox_4->currentItem());
-    config.writeEntry("Fn_F5",
-		  m_KCMKToshibaGeneral->fnComboBox_5->currentItem());
-    config.writeEntry("Fn_F6",
-		  m_KCMKToshibaGeneral->fnComboBox_6->currentItem());
-    config.writeEntry("Fn_F7",
-		  m_KCMKToshibaGeneral->fnComboBox_7->currentItem());
-    config.writeEntry("Fn_F8",
-		  m_KCMKToshibaGeneral->fnComboBox_8->currentItem());
-    config.writeEntry("Fn_F9",
-		  m_KCMKToshibaGeneral->fnComboBox_9->currentItem());
-    config.writeEntry("Fn_Esc_Cmd",
-		  m_KCMKToshibaGeneral->FnEscle->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox->currentItem();
+    config.writeEntry("Fn_Esc", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_Esc_Cmd", m_KCMKToshibaGeneral->FnEscle->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_1->currentItem();
+    config.writeEntry("Fn_F1", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F1_Cmd", m_KCMKToshibaGeneral->FnF1le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_2->currentItem();
+    config.writeEntry("Fn_F2", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F2_Cmd", m_KCMKToshibaGeneral->FnF2le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_3->currentItem();
+    config.writeEntry("Fn_F3", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F3_Cmd", m_KCMKToshibaGeneral->FnF3le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_4->currentItem();
+    config.writeEntry("Fn_F4", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F4_Cmd", m_KCMKToshibaGeneral->FnF4le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_6->currentItem();
+    config.writeEntry("Fn_F6", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F6_Cmd", m_KCMKToshibaGeneral->FnF6le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_7->currentItem();
+    config.writeEntry("Fn_F7", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F7_Cmd", m_KCMKToshibaGeneral->FnF7le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_8->currentItem();
+    config.writeEntry("Fn_F8", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F8_Cmd", m_KCMKToshibaGeneral->FnF8le->text());
+    tmp = m_KCMKToshibaGeneral->fnComboBox_9->currentItem();
+    config.writeEntry("Fn_F9", tmp);
+    if (tmp == 17)
+        config.writeEntry("Fn_F9_Cmd", m_KCMKToshibaGeneral->FnF9le->text());
     config.sync();
     // Battery Save Mode Tab
     config.setGroup("BSM");

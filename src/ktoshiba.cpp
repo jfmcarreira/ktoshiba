@@ -76,9 +76,9 @@ KToshiba::KToshiba()
                   << appID << endl;
     }
 
-    if (checkConfiguration()) {
+    if (checkConfiguration())
         loadConfiguration();
-    } else
+    else
         createConfiguration();
 
     mOmnibook = false;
@@ -159,9 +159,7 @@ KToshiba::KToshiba()
     if (!mOmnibook && (!mTFn->m_SCIIface || (mTFn->m_BIOS == -1))) {
         kdError() << "KToshiba: Could not found a Toshiba model. "
                   << "Exiting..." << endl;
-        //if (kapp->dcopClient()->isAttached())
-        //    kapp->dcopClient()->detach();
-        delete this;
+        //quit();
         exit(EXIT_FAILURE);
     }
 
@@ -241,7 +239,7 @@ KToshiba::~KToshiba()
 
 void KToshiba::quit()
 {
-    mSystemTimer->stop();
+    if (mSystemTimer) mSystemTimer->stop();
     if (!mOmnibook) {
         if (mHotkeys)
             mHotKeysTimer->stop();
@@ -354,7 +352,7 @@ void KToshiba::doMenu()
     contextMenu()->insertSeparator( 3 );
     if (!mOmnibook) {
         contextMenu()->insertItem( SmallIcon("kdebluetooth"), i18n("Enable &Bluetooth"), this,
-                                     SLOT( doBluetooth() ), 0, 4, 4 );
+                                  SLOT( doBluetooth() ), 0, 4, 4 );
         if (!mBluetooth)
             contextMenu()->setItemEnabled( 4, FALSE );
         contextMenu()->insertSeparator( 5 );
@@ -786,7 +784,7 @@ void KToshiba::omnibookHotKeys(int keycode)
         case 238:	// Fn-F8
             tmp = mConfig.readNumEntry("Fn_F8");
             break;
-        case 151:	// Fn-F9
+        case 0x1da:	// Fn-F9
             tmp = mConfig.readNumEntry("Fn_F9");
             break;
         case 0x174:	// Fn-Space

@@ -24,6 +24,7 @@
 #include <qapplication.h>
 #include <qwidgetstack.h>
 #include <qlabel.h>
+#include <qlineedit.h>
 
 #include <klocale.h>
 #include <dcopref.h>
@@ -35,6 +36,7 @@
 
 #include "settingswidget.h"
 #include "statuswidget.h"
+#include "cmdwidget.h"
 
 FnActions::FnActions(QWidget *parent)
     : QObject( parent ),
@@ -44,6 +46,7 @@ FnActions::FnActions(QWidget *parent)
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
     m_StatusWidget = new StatusWidget(0, "Screen Indicator Two", Qt::WX11BypassWM);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
+    m_CmdWidget = new CmdWidget(0, "Run Command Indicator");
     m_Suspend = new Suspend(parent);
 
     m_Title = i18n("KToshiba");
@@ -53,6 +56,9 @@ FnActions::FnActions(QWidget *parent)
 
     m_Popup = 0;
     m_Duration = 4000;
+    m_FnKey = -1;
+
+    connect( m_CmdWidget, SIGNAL( saved() ), SLOT( saveCmd() ) );
 }
 
 FnActions::~FnActions()
@@ -361,14 +367,102 @@ void FnActions::runCommand(int key)
     cfg.setGroup("Fn_Key");
     QString cmd;
     switch (key) {
-        case 0x101:
+        case 0x101:	// Fn-Esc
+        case 113:
             cmd = cfg.readEntry("Fn_Esc_Cmd");
+            m_FnKey = 0;
             break;
+        case 0x13b:	// Fn-F1
+        case 0x1d2:
+            cmd = cfg.readEntry("Fn_F1_Cmd");
+            m_FnKey = 1;
+            break;
+        case 0x13c:	// Fn-F2
+        case 148:
+            cmd = cfg.readEntry("Fn_F2_Cmd");
+            m_FnKey = 2;
+            break;
+        case 0x13d:	// Fn-F3
+        case 142:
+            cmd = cfg.readEntry("Fn_F3_Cmd");
+            m_FnKey = 3;
+            break;
+        case 0x13e:	// Fn-F4
+        case 205:
+            cmd = cfg.readEntry("Fn_F4_Cmd");
+            m_FnKey = 4;
+            break;
+        case 0x13f:	// Fn-F5
+        case 227:
+            cmd = cfg.readEntry("Fn_F5_Cmd");
+            m_FnKey = 5;
+            break;
+        case 0x140:	// Fn-F6
+        case 224:
+            cmd = cfg.readEntry("Fn_F6_Cmd");
+            m_FnKey = 6;
+            break;
+        case 0x141:	// Fn-F7
+        case 225:
+            cmd = cfg.readEntry("Fn_F7_Cmd");
+            m_FnKey = 7;
+            break;
+        case 0x142:	// Fn-F8
+        case 238:
+            cmd = cfg.readEntry("Fn_F8_Cmd");
+            m_FnKey = 8;
+            break;
+        case 0x143:	// Fn-F9
+        case 0x1da:
+            cmd = cfg.readEntry("Fn_F9_Cmd");
+            m_FnKey = 9;
     }
+    if (cmd.isEmpty())
+        m_CmdWidget->show();
     KProcess proc;
     proc << cmd;
     proc.start(KProcess::DontCare);
     proc.detach();
+}
+
+void FnActions::saveCmd()
+{
+    QString cmd = m_CmdWidget->Commandle->text();
+    KConfig cfg("ktoshibarc");
+    cfg.setGroup("Fn_Key");
+    switch (m_FnKey) {
+        case 0:
+            cfg.writeEntry("Fn_Esc_Cmd", cmd);
+            break;
+        case 1:
+            cfg.writeEntry("Fn_F1_Cmd", cmd);
+            break;
+        case 2:
+            cfg.writeEntry("Fn_F2_Cmd", cmd);
+            break;
+        case 3:
+            cfg.writeEntry("Fn_F3_Cmd", cmd);
+            break;
+        case 4:
+            cfg.writeEntry("Fn_F4_Cmd", cmd);
+            break;
+        case 5:
+            cfg.writeEntry("Fn_F5_Cmd", cmd);
+            break;
+        case 6:
+            cfg.writeEntry("Fn_F6_Cmd", cmd);
+            break;
+        case 7:
+            cfg.writeEntry("Fn_F7_Cmd", cmd);
+            break;
+        case 8:
+            cfg.writeEntry("Fn_F8_Cmd", cmd);
+            break;
+        case 9:
+            cfg.writeEntry("Fn_F9_Cmd", cmd);
+            break;
+    }
+    cfg.sync();
 }
 
 void FnActions::showPassiveMsg(int state, popuptype type)

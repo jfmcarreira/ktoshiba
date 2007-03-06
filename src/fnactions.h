@@ -30,6 +30,7 @@
 
 class SettingsWidget;
 class StatusWidget;
+class CmdWidget;
 class Suspend;
 
 enum popuptype {
@@ -61,7 +62,10 @@ public:
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;
     int m_Popup;
+private slots:
+    void saveCmd();
 private:
+    CmdWidget *m_CmdWidget;
     QWidget *m_Parent;
     QString m_Title;
     QString m_Text;
@@ -70,6 +74,7 @@ private:
     QString m_NotSupported;
     QPixmap m_Icon;
     int m_Duration;
+    int m_FnKey;
 };
 
 #endif // FN_ACTIONS_H

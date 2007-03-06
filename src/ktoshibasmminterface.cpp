@@ -86,7 +86,7 @@ QString KToshibaSMMInterface::sciError(int err)
 bool KToshibaSMMInterface::openSCIInterface(int *err)
 {
 	*err = SciSupportCheck(&sciversion);
-	if (*err != SCI_SUCCESS) {
+	if (*err == SCI_FAILURE) {
 		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
 			  << "This computer is not supported or "
 			  << "the kernel module is not installed. "
@@ -101,7 +101,7 @@ bool KToshibaSMMInterface::openSCIInterface(int *err)
 	}
 
 	*err = SciOpenInterface();
-	if (*err != SCI_SUCCESS) {
+	if (*err == SCI_FAILURE) {
 		kdError() << "KToshibaSMMInterface::openSCIInterface(): "
 			  << "Failed to open SCI interface. "
 			  << sciError(*err) << endl;
@@ -117,7 +117,7 @@ void KToshibaSMMInterface::closeSCIInterface()
 		close(mFd);
 
 	int ret = SciCloseInterface();
-	if (ret != SCI_SUCCESS)
+	if (ret == SCI_FAILURE)
 		kdError() << "KToshibaSMMInterface::closeSCIInterface(): "
 			  << "Failed to close SCI interface. "
 			  << sciError(ret) << endl;
@@ -1163,12 +1163,12 @@ bool KToshibaSMMInterface::enableSystemEvent()
 	reg.ecx = HCI_ENABLE;
 	reg.edx = 0x0000;
 	int err = HciFunction(&reg);
-	if (err != HCI_SUCCESS) {
-		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
-			  << "Could not enable Hokeys. "
-			  << hciError(err) << endl;
-		return false;
-	}
+	//if (err != HCI_SUCCESS) {
+	//	kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
+	//		  << "Could not enable Hokeys. "
+	//		  << hciError(err) << endl;
+	//	return false;
+	//}
 
 	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
 		  << "Enabled Hotkeys." << endl;
