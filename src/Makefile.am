@@ -34,7 +34,7 @@ libktoshibaomnibookinterface_la_SOURCES = ktoshibaomnibookinterface.cpp
 libktoshibaprocinterface_la_LDFLAGS = $(all_libraries)
 libktoshibaprocinterface_la_SOURCES = ktoshibaprocinterface.cpp
 
-ktoshiba_SOURCES = settingswidget.ui statuswidget.ui ktoshiba.cpp main.cpp \
+ktoshiba_SOURCES = settingswidget.ui statuswidget.ui cmdwidget.ui ktoshiba.cpp main.cpp \
 				toshibafnactions.cpp omnibookfnactions.cpp ktoshibadcopinterface.cpp \
 				ktoshibadcopinterface.skel suspend.cpp ktoshibadbusinterface.cpp fnactions.cpp
 ktoshiba_LDFLAGS = $(KDE_RPATH) $(all_libraries)

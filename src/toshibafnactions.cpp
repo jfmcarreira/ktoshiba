@@ -38,35 +38,40 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
 {
     m_Driver = new KToshibaSMMInterface(0);
 
-    m_SCIIface = m_Driver->openSCIInterface(&m_IFaceErr);
-    if (!m_SCIIface)
-        m_SCIIface = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
-    if (m_SCIIface)
-        initSCI();
-    else if (!m_SCIIface) {
-        kdError() << "KToshiba: Could not open SCI interface." << endl;
-        m_BatSave = 2;
-        m_BatType = 3;
-        m_Boot = -1;
-        m_BootType = -1;
-        m_LANCtrl = -1;
-        m_Pad = -1;
-    }
-
-    if (::access("/dev/toshiba", F_OK | R_OK | W_OK) == -1) {
+    // Lets check for /dev/toshiba existence, read and write operations
+    if (::access(TOSH_DEVICE, F_OK | R_OK | W_OK) == -1) {
         kdError() << "KToshiba: Could not access " << TOSH_DEVICE
-                  << " for read-write operations."<< endl;
+                  << " for read-write operations." << endl;
         m_BIOS = -1;
+        m_SCIIface = false;
     } else {
+        m_SCIIface = m_Driver->openSCIInterface(&m_IFaceErr);
+        if (!m_SCIIface)
+            m_SCIIface = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
+        if (m_SCIIface)
+            initSCI();
+        else if (!m_SCIIface) {
+           kdError() << "KToshiba: Could not open SCI interface." << endl;
+            m_BatSave = 2;
+            m_BatType = 3;
+            m_Boot = -1;
+            m_BootType = -1;
+            m_LANCtrl = -1;
+            m_Pad = -1;
+        }
+
         // check the BIOS version
         m_BIOS = m_Driver->machineBIOS();
+
+        // FIXME: We should not rely on BIOS version for HCI access...
+        if (m_BIOS != -1) {
+            m_MachineID = m_Driver->machineID();
+            m_Video = m_Driver->getVideo();
+            m_Bright = m_Driver->getBrightness();
+            m_Wireless = m_Driver->getWirelessPower();
+        }
     }
-    if (m_BIOS != -1) {
-        m_MachineID = m_Driver->machineID();
-        m_Video = m_Driver->getVideo();
-        m_Bright = m_Driver->getBrightness();
-        m_Wireless = m_Driver->getWirelessPower();
-    }
+
     m_Snd = 1;
     m_Vol = 1;
     m_Fan = 1;

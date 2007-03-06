@@ -90,6 +90,9 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
         case 15:	// Bluetooth On/Off
             toggleBluetooth();
             return;
+        case 17:	// Run Command
+            runCommand(keycode);
+            return;
         case 1:	// Mute/Unmute
         case 7:	// Brightness Down
         case 8:	// Brightness Up

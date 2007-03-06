@@ -163,7 +163,10 @@ int SciACPower(void)
     regs.ecx = 0x0000;
     regs.edx = 0x0000;
 
-    ioctl(fd, TOSH_SMM, &regs);
+    if (ioctl(fd, TOSH_SMM, &regs) < 0) {
+        close(fd);
+        return SCI_FAILURE;
+    }
     close(fd);
 
     return (int) regs.ecx;
