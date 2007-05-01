@@ -10,6 +10,8 @@
 ** destructor.
 *****************************************************************************/
 
+#include <klocale.h>
+
 void KCMKToshibaGeneral::changedSlot()
 {
     emit(changed());
@@ -113,4 +115,47 @@ void KCMKToshibaGeneral::cmdFnF9Slot( int slot )
         FnF9le->setFocus();
     } else
         FnF9le->hide();
+}
+
+
+void KCMKToshibaGeneral::brightSliderSlot( int bright )
+{
+    if (!bright)
+        hpbright100tl->setNum(7);
+}
+
+
+void KCMKToshibaGeneral::proc100SliderSlot( int speed )
+{
+    if (speed == 1)
+        hpproc100tl->setText(i18n("Low"));
+    else
+        hpproc100tl->setText(i18n("High"));
+}
+
+
+void KCMKToshibaGeneral::proc75SliderSlot( int speed )
+{
+    if (speed == 1)
+        hpproc75tl->setText(i18n("Low"));
+    else
+        hpproc75tl->setText(i18n("High"));
+}
+
+
+void KCMKToshibaGeneral::proc50SliderSlot( int speed )
+{
+    if (speed == 1)
+        hpproc50tl->setText(i18n("Low"));
+    else
+        hpproc50tl->setText(i18n("High"));
+}
+
+
+void KCMKToshibaGeneral::proc25SliderSlot( int speed )
+{
+    if (speed == 1)
+        hpproc25tl->setText(i18n("Low"));
+    else
+        hpproc25tl->setText(i18n("High"));
 }

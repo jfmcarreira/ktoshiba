@@ -21,10 +21,6 @@
 #ifndef TOSHIBA_FN_ACTIONS_H
 #define TOSHIBA_FN_ACTIONS_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "fnactions.h"
 
 class KToshibaSMMInterface;
@@ -42,15 +38,13 @@ public:
 
     void performFnAction(int, int);
     KToshibaSMMInterface *m_Driver;
-    bool m_SCIIface;
+    bool m_SCIface;
+    bool m_HCIface;
     int m_IFaceErr;
     int m_BIOS;
+    int m_BIOSDate;
     int m_MachineID;
     int m_BatType;
-    int m_BatSave;
-    int m_Video;
-    int m_Bright;
-    int m_Pad;
 private:
     void toggleBSM();
     void toggleVideo();
@@ -65,11 +59,8 @@ private:
     void toggleBluetooth();
     void toggleEthernet();
     void initSCI();
-    int m_Snd;
-    int m_Wireless;
     int m_BootType;
     int m_Vol;
-    int m_Fan;
     int m_Boot;
     int m_LANCtrl;
 };

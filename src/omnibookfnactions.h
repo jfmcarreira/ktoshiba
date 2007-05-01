@@ -21,10 +21,6 @@
 #ifndef OMNIBOOK_FN_ACTIONS_H
 #define OMNIBOOK_FN_ACTIONS_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "fnactions.h"
 
 class KToshibaOmnibookInterface;
@@ -45,18 +41,13 @@ public:
     QString m_ModelName;
     bool m_OmnibookIface;
     int m_ECType;
-    int m_Video;
-    int m_Bright;
-    int m_Pad;
 private:
+    void toggleBSM();
     void toggleWireless();
     void toggleMousePad();
     void toggleFan();
     void toogleBackLight();
     void toggleBluetooth();
-    int m_Snd;
-    int m_Wireless;
-    int m_Fan;
 };
 
 #endif // OMNIBOOK_FN_ACTIONS_H

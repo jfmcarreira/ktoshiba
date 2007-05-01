@@ -23,7 +23,7 @@ METASOURCES = AUTO
 #########################################################################
 # this is the program that gets installed.  it's name is used for all
 # of the other Makefile.am variables
-bin_PROGRAMS = ktoshiba $(HELPER) $(KEYHANDLER)
+bin_PROGRAMS = ktoshiba $(KEYHANDLER)
 
 # the application source, library search path, and link libraries
 lib_LTLIBRARIES = libktoshibasmminterface.la libktoshibaomnibookinterface.la libktoshibaprocinterface.la
@@ -44,7 +44,7 @@ ktoshiba_LDADD = $(LIB_KDEUI) $(LIB_KIO) -ldbus-qt-1 \
 		 libktoshibaomnibookinterface.la \
 		 @DBUS_LIBS@ \
 		 @HAL_LIBS@ \
-		 @SYNAPTICS@
+		 @LIBSYNAPTICS@
 
 # this is where the desktop file will go
 xdg_apps_DATA     = ktoshiba.desktop

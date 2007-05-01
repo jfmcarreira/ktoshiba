@@ -30,6 +30,7 @@
 #include <qtimer.h>
 #include <qcheckbox.h>
 #include <qlineedit.h>
+#include <qbuttongroup.h>
 
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
@@ -68,30 +69,31 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
 
     load();
 
-    m_SCIIFace = false;
-    m_HCIIFace = false;
+    m_SCIFace = false;
+    m_HCIFace = false;
     m_Omnibook = false;
     m_Hotkeys = false;
+    m_Hardware = false;
     m_Init = false;
     m_AC = -1;
     m_IFaceErr = 0;
 
     m_ProcIFace = new KToshibaProcInterface(this);
     m_SMMIFace = new KToshibaSMMInterface(this);
-    m_SCIIFace = m_SMMIFace->openSCIInterface(&m_IFaceErr);
-    if (!m_SCIIFace)
-        m_SCIIFace = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
-    // FIXME: We should not rely on BIOS version for HCI access...
-    m_HCIIFace = (m_SMMIFace->machineBIOS() == -1)? false : true;
-    if (m_HCIIFace) {
+    m_SCIFace = m_SMMIFace->openSCInterface(&m_IFaceErr);
+    if (!m_SCIFace)
+        m_SCIFace = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
+    m_Hardware = (m_SCIFace)? true : false;
+    m_HCIFace = (m_SMMIFace->getBrightness() == -1)? false : true;
+    if (m_HCIFace) {
         m_AC = m_SMMIFace->acPowerStatus();
         m_Hotkeys = ((m_SMMIFace->getSystemEvent() == -1)? false : true);
         m_KCMKToshibaGeneral->fnComboBox_5->setEnabled(false);	// Fn-F5
     }
     m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
-		m_KCMKToshibaGeneral->configTabWidget->page(2), m_SCIIFace);
+		m_KCMKToshibaGeneral->configTabWidget->page(2), m_SCIFace);
 
-    if (!m_HCIIFace && !m_SCIIFace) {
+    if (!m_HCIFace && !m_SCIFace) {
         delete m_SMMIFace; m_SMMIFace = NULL;
         m_OmniIFace = new KToshibaOmnibookInterface(this);
         m_Omnibook = m_OmniIFace->checkOmnibook();
@@ -99,6 +101,8 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
     if (m_Omnibook) {
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 		    m_KCMKToshibaGeneral->configTabWidget->page(2), false);
+        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+		    m_KCMKToshibaGeneral->configTabWidget->page(3), false);
         m_KCMKToshibaGeneral->fnComboBox_6->setEnabled(false);	// Fn-F6
         m_KCMKToshibaGeneral->fnComboBox_7->setEnabled(false);	// Fn-F7
         m_AC = m_OmniIFace->omnibookAC();
@@ -106,16 +110,18 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_Hotkeys = (keyhandler.isEmpty())? false : true;
     }
 
-    if (!m_SCIIFace && !m_HCIIFace && !m_Omnibook) {
+    if (!m_SCIFace && !m_HCIFace && !m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->show();
         m_KCMKToshibaGeneral->frameMain->setEnabled(false);
         setButtons(buttons() & ~Default);
     } else
-    if (m_SCIIFace || m_HCIIFace || m_Omnibook) {
+    if (m_SCIFace || m_HCIFace || m_Omnibook) {
         m_KCMKToshibaGeneral->tlOff->hide();
         m_KCMKToshibaGeneral->frameMain->setEnabled(true);
         m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
 			m_KCMKToshibaGeneral->configTabWidget->page(1), m_Hotkeys);
+        m_KCMKToshibaGeneral->configTabWidget->setTabEnabled(
+			m_KCMKToshibaGeneral->configTabWidget->page(3), m_Hardware);
         // Lets hide Fn-F5 Line Edit box
         m_KCMKToshibaGeneral->FnF5le->hide();
 
@@ -131,14 +137,20 @@ void KCMToshibaModule::load()
 {
     int tmp = -1;
     KConfig config(CONFIG_FILE);
-    // General Options Tab
-    config.setGroup("KToshiba");
-    m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
-		( config.readNumEntry("Audio_Player", 0) );
-    m_KCMKToshibaGeneral->btstartCheckBox->setChecked
-		( config.readBoolEntry("Bluetooth_Startup", true) );
-    m_KCMKToshibaGeneral->autostartCheckBox->setChecked
-		( config.readBoolEntry("AutoStart", true) );
+    // Battery Save Mode Tab
+//    config.setGroup("BSM");
+//    m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem
+//		( config.readNumEntry("CPU_Sleep_Mode", 0) );
+//    m_KCMKToshibaGeneral->coolingComboBox->setCurrentItem
+//		( config.readNumEntry("Cooling_Method", 2) );
+//    m_KCMKToshibaGeneral->displayComboBox->setCurrentItem
+//		( config.readNumEntry("Display_Auto_Off", 5) );
+//    m_KCMKToshibaGeneral->hddComboBox->setCurrentItem
+//		( config.readNumEntry("HDD_Auto_Off", 5) );
+//    m_KCMKToshibaGeneral->lcdComboBox->setCurrentItem
+//		( config.readNumEntry("LCD_Brightness", 2) );
+//    m_KCMKToshibaGeneral->processorComboBox->setCurrentItem
+//		( config.readNumEntry("Processing_Speed", 1) );
     // Fn-Key Tab
     config.setGroup("Fn_Key");
     // Rudimentary way of acquiring the command... I don't like it...
@@ -205,20 +217,30 @@ void KCMToshibaModule::load()
         m_KCMKToshibaGeneral->FnF9le->show();
     } else
         m_KCMKToshibaGeneral->FnF9le->hide();
-    // Battery Save Mode Tab
-    config.setGroup("BSM");
-    m_KCMKToshibaGeneral->processorComboBox->setCurrentItem
-		( config.readNumEntry("Processing_Speed", 1) );
-    m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem
-		( config.readNumEntry("CPU_Sleep_Mode", 0) );
-    m_KCMKToshibaGeneral->displayComboBox->setCurrentItem
-		( config.readNumEntry("Display_Auto_Off", 5) );
-    m_KCMKToshibaGeneral->hddComboBox->setCurrentItem
-		( config.readNumEntry("HDD_Auto_Off", 5) );
-    m_KCMKToshibaGeneral->lcdComboBox->setCurrentItem
-		( config.readNumEntry("LCD_Brightness", 2) );
-    m_KCMKToshibaGeneral->coolingComboBox->setCurrentItem
-		( config.readNumEntry("Cooling_Method", 2) );
+    // Hardware Tab
+    config.setGroup("Hardware");
+    m_KCMKToshibaGeneral->bgDeviceConfig->setButton
+		( config.readNumEntry("Device_Config", 1) );
+    m_KCMKToshibaGeneral->bgNetBoot->setButton
+		( config.readNumEntry("Network_Boot_Protocol", 0) );
+    m_KCMKToshibaGeneral->bgParrallelPortMode->setButton
+		( config.readNumEntry("Parallel_Port_Mode", 0) );
+    m_KCMKToshibaGeneral->bgUSBFDDEmul->setButton
+		( config.readNumEntry("USB_FDD_Emul", 0) );
+    m_KCMKToshibaGeneral->bgUSBEmul->setButton
+		( config.readNumEntry("USB_KBMouse_Emul", 0) );
+    m_KCMKToshibaGeneral->bgWakeKeyboard->setButton
+		( config.readNumEntry("Wake_on_KB", 1) );
+    m_KCMKToshibaGeneral->bgWakeonLAN->setButton
+		( config.readNumEntry("Wake_on_LAN", 0) );
+    // General Options Tab
+    config.setGroup("KToshiba");
+    m_KCMKToshibaGeneral->audioComboBox->setCurrentItem
+		( config.readNumEntry("Audio_Player", 0) );
+    m_KCMKToshibaGeneral->autostartCheckBox->setChecked
+		( config.readBoolEntry("AutoStart", true) );
+    m_KCMKToshibaGeneral->btstartCheckBox->setChecked
+		( config.readBoolEntry("Bluetooth_Startup", true) );
 }
 
 
@@ -240,12 +262,20 @@ void KCMToshibaModule::defaults()
     m_KCMKToshibaGeneral->fnComboBox_8->setCurrentItem( 9 );
     m_KCMKToshibaGeneral->fnComboBox_9->setCurrentItem( 10 );
     // Battery Save Mode Tab
-    m_KCMKToshibaGeneral->processorComboBox->setCurrentItem( 1 );
-    m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem( 0 );
-    m_KCMKToshibaGeneral->displayComboBox->setCurrentItem( 5 );
-    m_KCMKToshibaGeneral->hddComboBox->setCurrentItem( 5 );
-    m_KCMKToshibaGeneral->lcdComboBox->setCurrentItem( 2 );
-    m_KCMKToshibaGeneral->coolingComboBox->setCurrentItem( 2 );
+//    m_KCMKToshibaGeneral->processorComboBox->setCurrentItem( 1 );
+//    m_KCMKToshibaGeneral->cpuComboBox->setCurrentItem( 0 );
+//    m_KCMKToshibaGeneral->displayComboBox->setCurrentItem( 5 );
+//    m_KCMKToshibaGeneral->hddComboBox->setCurrentItem( 5 );
+//    m_KCMKToshibaGeneral->lcdComboBox->setCurrentItem( 2 );
+//    m_KCMKToshibaGeneral->coolingComboBox->setCurrentItem( 2 );
+    // Hardware Tab
+    m_KCMKToshibaGeneral->bgDeviceConfig->setButton( 1 );
+    m_KCMKToshibaGeneral->bgParrallelPortMode->setButton( 0 );
+    m_KCMKToshibaGeneral->bgWakeKeyboard->setButton( 1 );
+    m_KCMKToshibaGeneral->bgUSBEmul->setButton( 0 );
+    m_KCMKToshibaGeneral->bgUSBFDDEmul->setButton( 0 );
+    m_KCMKToshibaGeneral->bgWakeonLAN->setButton( 0 );
+    m_KCMKToshibaGeneral->bgNetBoot->setButton( 0 );
 }
 
 
@@ -253,15 +283,21 @@ void KCMToshibaModule::save()
 {
     int tmp = -1;
     KConfig config(CONFIG_FILE);
-    // General Options Tab
-    config.setGroup("KToshiba");
-    config.writeEntry("Audio_Player",
-		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
-    config.writeEntry("Bluetooth_Startup",
-		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
-    config.writeEntry("AutoStart",
-		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
-    config.sync();
+    // Battery Save Mode Tab
+//    config.setGroup("BSM");
+//    config.writeEntry("CPU_Sleep_Mode",
+//		  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
+//    config.writeEntry("Cooling_Method",
+//		  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
+//    config.writeEntry("Display_Auto_Off",
+//		  m_KCMKToshibaGeneral->displayComboBox->currentItem());
+//    config.writeEntry("HDD_Auto_Off",
+//		  m_KCMKToshibaGeneral->hddComboBox->currentItem());
+//    config.writeEntry("LCD_Brightness",
+//		  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
+//    config.writeEntry("Processing_Speed",
+//		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
+//    config.sync();
     // Fn-Key Tab
     config.setGroup("Fn_Key");
     tmp = m_KCMKToshibaGeneral->fnComboBox->currentItem();
@@ -301,20 +337,31 @@ void KCMToshibaModule::save()
     if (tmp == 17)
         config.writeEntry("Fn_F9_Cmd", m_KCMKToshibaGeneral->FnF9le->text());
     config.sync();
-    // Battery Save Mode Tab
-    config.setGroup("BSM");
-    config.writeEntry("Processing_Speed",
-		  m_KCMKToshibaGeneral->processorComboBox->currentItem());
-    config.writeEntry("CPU_Sleep_Mode",
-		  m_KCMKToshibaGeneral->cpuComboBox->currentItem());
-    config.writeEntry("Display_Auto_Off",
-		  m_KCMKToshibaGeneral->displayComboBox->currentItem());
-    config.writeEntry("HDD_Auto_Off",
-		  m_KCMKToshibaGeneral->hddComboBox->currentItem());
-    config.writeEntry("LCD_Brightness",
-		  m_KCMKToshibaGeneral->lcdComboBox->currentItem());
-    config.writeEntry("Cooling_Method",
-		  m_KCMKToshibaGeneral->coolingComboBox->currentItem());
+    // Hardware Tab
+    config.setGroup("Hardware");
+    config.writeEntry("Device_Config",
+		  m_KCMKToshibaGeneral->bgDeviceConfig->selectedId());
+    config.writeEntry("Parallel_Port_Mode",
+		  m_KCMKToshibaGeneral->bgParrallelPortMode->selectedId());
+    config.writeEntry("Wake_on_KB",
+		  m_KCMKToshibaGeneral->bgWakeKeyboard->selectedId());
+    config.writeEntry("USB_KBMouse_Emul",
+		  m_KCMKToshibaGeneral->bgUSBEmul->selectedId());
+    config.writeEntry("USB_FDD_Emul",
+		  m_KCMKToshibaGeneral->bgUSBFDDEmul->selectedId());
+    config.writeEntry("Wake_on_LAN",
+		  m_KCMKToshibaGeneral->bgWakeonLAN->selectedId());
+    config.writeEntry("Network_Boot_Protocol",
+		  m_KCMKToshibaGeneral->bgNetBoot->selectedId());
+    config.sync();
+    // General Options Tab
+    config.setGroup("KToshiba");
+    config.writeEntry("Audio_Player",
+		  m_KCMKToshibaGeneral->audioComboBox->currentItem());
+    config.writeEntry("AutoStart",
+		  m_KCMKToshibaGeneral->autostartCheckBox->isChecked());
+    config.writeEntry("Bluetooth_Startup",
+		  m_KCMKToshibaGeneral->btstartCheckBox->isChecked());
     config.sync();
 }
 
@@ -334,9 +381,9 @@ void KCMToshibaModule::timeout()
 
     int time = 0, perc = -1;
 
-    if (m_SCIIFace) m_SMMIFace->batteryStatus(&time, &perc);
+    if (m_SCIFace) m_SMMIFace->batteryStatus(&time, &perc);
 
-    if (m_HCIIFace) m_AC = m_SMMIFace->acPowerStatus();
+    if (m_HCIFace) m_AC = m_SMMIFace->acPowerStatus();
 
     if (m_Omnibook) {
         m_OmniIFace->batteryStatus(&time, &perc);

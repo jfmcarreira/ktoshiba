@@ -77,6 +77,33 @@ int HciGetBiosVersion(void)
 
 
 /*
+ * Return the BIOS date
+ */
+int HciGetBiosDate(void)
+{
+    FILE *str;
+    int date;
+    char buffer[64];
+
+    if (access(TOSH_PROC, R_OK))
+    return -1;
+
+    /* open /proc/toshiba for reading */
+    if (!(str = fopen(TOSH_PROC, "r")))
+    return -1;
+
+    /* scan in the information */
+    fgets(buffer, sizeof(buffer) - 1, str);
+    fclose(str);
+    buffer[sizeof(buffer) - 1] = '\0';
+    sscanf(buffer, "%*s %*x %*d.%*d %*d.%*d %x %*x\n", &date);
+
+    /* return the information */
+    return date;
+}
+
+
+/*
  * Get the Toshiba machine identification number
  */
 int HciGetMachineID(int *id)

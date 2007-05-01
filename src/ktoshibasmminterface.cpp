@@ -83,7 +83,7 @@ QString KToshibaSMMInterface::sciError(int err)
 	return mError;
 }
 
-bool KToshibaSMMInterface::openSCIInterface(int *err)
+bool KToshibaSMMInterface::openSCInterface(int *err)
 {
 	*err = SciSupportCheck(&sciversion);
 	if (*err == SCI_FAILURE) {
@@ -111,7 +111,7 @@ bool KToshibaSMMInterface::openSCIInterface(int *err)
 	return true;
 }
 
-void KToshibaSMMInterface::closeSCIInterface()
+void KToshibaSMMInterface::closeSCInterface()
 {
 	if (mFd)
 		close(mFd);
@@ -172,6 +172,22 @@ int KToshibaSMMInterface::getBatterySaveModeType()
 	if (err != SCI_SUCCESS) {
 		kdError() << "KToshibaSMMInterface::getBatterySaveModeType(): "
 			  << "Could not get Battery Save Mode Type. "
+			  << sciError(err) << endl;
+		return -1;
+	}
+
+	return (int) (reg.edx & 0xffff);
+}
+
+int KToshibaSMMInterface::getProcessingSpeed()
+{
+	reg.ebx = SCI_PROCESSING;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	int err = SciSet(&reg);
+	if (err != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getProcessingSpeed(): "
+			  << "Could not get processor speed. "
 			  << sciError(err) << endl;
 		return -1;
 	}
@@ -544,6 +560,37 @@ void KToshibaSMMInterface::setSpeedStep(int mode)
 	if (err != SCI_SUCCESS)
 		kdError() << "KToshibaSMMInterface::setSpeedStep(): "
 			  << "Could not set SpeedStep mode. "
+			  << sciError(err) << endl;
+}
+
+int KToshibaSMMInterface::getWakeonKeyboard()
+{
+	reg.ebx = SCI_INT_KB_WAKEUP;
+	reg.ecx = 0x0000;
+	reg.edx = 0x0000;
+	int err = SciGet(&reg);
+	if (err != SCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::getWakeonKeyboard(): "
+			  << "Could not get Wake on Keyboard status. "
+			  << sciError(err) << endl;
+		return -1;
+	}
+
+	return (int) (reg.ecx & 0xffff);
+}
+
+void KToshibaSMMInterface::setWakeonKeyboard(int mode)
+{
+	reg.ebx = SCI_INT_KB_WAKEUP;
+	if (mode == 0)
+		reg.ecx = SCI_DISABLED;
+	else if (mode == 1)
+		reg.ecx = SCI_ENABLED;
+	reg.edx = 0x0000;
+	int err = SciSet(&reg);
+	if (err != SCI_SUCCESS)
+		kdError() << "KToshibaSMMInterface::setWakeonKeyboard(): "
+			  << "Could not set Wake on Keyboard status. "
 			  << sciError(err) << endl;
 }
 
@@ -1019,6 +1066,11 @@ int KToshibaSMMInterface::machineBIOS()
 	return HciGetBiosVersion();
 }
 
+int KToshibaSMMInterface::machineBIOSDate()
+{
+	return HciGetBiosDate();
+}
+
 int KToshibaSMMInterface::machineID()
 {
 	int id;
@@ -1062,7 +1114,7 @@ void KToshibaSMMInterface::setBackLight(int state)
 			  << "the Backlight. " << hciError(err) << endl;
 }
 
-int KToshibaSMMInterface::acPowerStatus()
+int KToshibaSMMInterface::getAC()
 {
 	reg.eax = HCI_GET;
 	reg.ebx = HCI_AC_ADAPTOR;
@@ -1163,12 +1215,12 @@ bool KToshibaSMMInterface::enableSystemEvent()
 	reg.ecx = HCI_ENABLE;
 	reg.edx = 0x0000;
 	int err = HciFunction(&reg);
-	//if (err != HCI_SUCCESS) {
-	//	kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
-	//		  << "Could not enable Hokeys. "
-	//		  << hciError(err) << endl;
-	//	return false;
-	//}
+	if (err != HCI_SUCCESS) {
+		kdError() << "KToshibaSMMInterface::enableSystemEvent(): "
+			  << "Could not enable Hokeys. "
+			  << hciError(err) << endl;
+		return false;
+	}
 
 	kdDebug() << "KToshibaSMMInterface::enableSystemEvent(): "
 		  << "Enabled Hotkeys." << endl;
@@ -1533,6 +1585,21 @@ void KToshibaSMMInterface::setBluetoothControl(int state)
 	kdDebug() << "KToshibaSMMInterface::setBluetoothControl(): "
 		  << "Bluetooth device " << ((state == 1)? "attached" : "detached")
 		  << " successfully" << endl;
+}
+
+int KToshibaSMMInterface::acPowerStatus()
+{
+	int ac = -1;
+	// Lets try the HCI first
+	ac = getAC();
+        // If we fail, then lets try the SCI
+	if (ac == -1)
+		ac = SciACPower();
+
+	if (ac == SCI_FAILURE)
+		return -1;
+
+	return ac;
 }
 
 

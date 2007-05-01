@@ -161,7 +161,7 @@ void Suspend::toDisk()
         case SUCCESS:
             suspended = true;
             resumed = false;
-            kdDebug() << "Suspend::toDisk(): Suspending To Disk..." << endl;
+            //kdDebug() << "Suspend::toDisk(): Suspending To Disk..." << endl;
             emit setSuspendToDisk();
             return;
         case FAILURE:

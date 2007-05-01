@@ -47,13 +47,6 @@
 #include <kaboutapplication.h>
 #include <kaboutkde.h>
 
-#ifdef ENABLE_SYNAPTICS
-#include <synaptics/synaptics.h>
-#include <synaptics/synparams.h>
-
-using namespace Synaptics;
-#endif // ENABLE_SYNAPTICS
-
 #define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
@@ -69,12 +62,13 @@ KToshiba::KToshiba()
 
     mProcIFace = new KToshibaProcInterface(0);
     mSuspend = new Suspend(this);
+#ifdef ENABLE_SYNAPTICS
+    mSynPad = Pad::getInstance();
+#endif // ENABLE_SYNAPTICS
 
-    if (!kapp->dcopClient()->isRegistered()) {
-        QCString appID = kapp->dcopClient()->registerAs("ktoshiba", false);
+    if (!kapp->dcopClient()->isRegistered())
         kdDebug() << "KToshiba: Registered with DCOP server as: "
-                  << appID << endl;
-    }
+                  << kapp->dcopClient()->registerAs("ktoshiba", false) << endl;
 
     if (checkConfiguration())
         loadConfiguration();
@@ -85,7 +79,7 @@ KToshiba::KToshiba()
 
     // check whether toshiba module is loaded and we got an opened SCI interface
     mTFn = new ToshibaFnActions(this);
-    if (mTFn->m_SCIIface) {
+    if (mTFn->m_SCIface) {
         mSS = mTFn->m_Driver->getSpeedStep();
         mHT = mTFn->m_Driver->getHyperThreading();
     } else {
@@ -93,9 +87,12 @@ KToshiba::KToshiba()
         mHT = -1;
     }
 
-    if (mTFn->m_BIOS != -1) {
+    if (mTFn->m_HCIface) {
         kdDebug() << "KToshiba: BIOS version: "
-                  << (mTFn->m_BIOS / 0x100) << "." << (mTFn->m_BIOS - 0x100) << endl;
+                  << (mTFn->m_BIOS / 0x100) << "." << (mTFn->m_BIOS - 0x100)
+                  << " " << (SCI_MONTH(mTFn->m_BIOSDate))
+                  << "/" << (SCI_DAY(mTFn->m_BIOSDate))
+                  << "/" << (SCI_YEAR(mTFn->m_BIOSDate)) << endl;
         kdDebug() << "KToshiba: Machine ID: "
                   << QString("0x%1").arg(mTFn->m_MachineID, 0, 16) << endl;
         mHotkeys = mTFn->m_Driver->enableSystemEvent();
@@ -104,15 +101,12 @@ KToshiba::KToshiba()
         mAC = mTFn->m_Driver->acPowerStatus();
         mBatType = mTFn->m_BatType;
         mBatSave = mTFn->m_BatSave;
-        bsmtrig = (mBatSave == 0)? true : false;
         mSVideo = mTFn->m_Video;
         mPad = mTFn->m_Pad;
-
-        mOmnibook = false;
     }
 
 #ifdef ENABLE_OMNIBOOK
-    if (!mTFn->m_SCIIface && (mTFn->m_BIOS == -1)) {
+    if (!mTFn->m_SCIface && !mTFn->m_HCIface) {
         kdDebug() << "KToshiba: Checking for omnibook module..." << endl;
         // check whether omnibook module is loaded
         mOFn = new OmnibookFnActions(this);
@@ -137,8 +131,7 @@ KToshiba::KToshiba()
                 mHotkeys = false;
             } else {
                 *mKeyProc << keyhandler;
-                bool start;
-                start = mKeyProc->start(KProcess::OwnGroup);
+                bool start = mKeyProc->start(KProcess::OwnGroup);
                 if (start) {
                     kdDebug() << "KToshiba: Key handler program PID: "
                               << mKeyProc->pid() << endl;
@@ -156,10 +149,12 @@ KToshiba::KToshiba()
     }
 #endif // ENABLE_OMNIBOOK
 
-    if (!mOmnibook && (!mTFn->m_SCIIface || (mTFn->m_BIOS == -1))) {
-        kdError() << "KToshiba: Could not found a Toshiba model. "
-                  << "Exiting..." << endl;
-        //quit();
+    if (!mOmnibook && (!mTFn->m_SCIface || !mTFn->m_HCIface)) {
+        kdDebug() << "KToshiba: Could not found a Toshiba model." << endl;
+        kdDebug() << "KToshiba: Detaching from DCOP server:"
+                  << ((!kapp->dcopClient()->detach())? " un" : " ") << "sucessful" << endl;
+        kdDebug() << "KToshiba: Exiting..." << endl;
+        quit();
         exit(EXIT_FAILURE);
     }
 
@@ -210,11 +205,12 @@ KToshiba::KToshiba()
 
 KToshiba::~KToshiba()
 {
-    if (!mOmnibook && (mTFn->m_SCIIface || (mTFn->m_BIOS != -1))) {
+    if (!mOmnibook && (mTFn->m_SCIface || mTFn->m_HCIface)) {
         delete mHyper; mHyper = NULL;
         delete mSpeed; mSpeed = NULL;
         if (mHotkeys)
             delete mHotKeysTimer; mHotKeysTimer = NULL;
+        delete mTFn; mTFn = NULL;
     }
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook) {
@@ -228,11 +224,13 @@ KToshiba::~KToshiba()
         delete mOFn; mOFn = NULL;
     }
 #endif
+#ifdef ENABLE_SYNAPTICS
+    mSynPad = NULL;
+#endif // ENABLE_SYNAPTICS
     delete mHelp; mHelp = NULL;
     delete mKProc; mKProc = NULL;
     delete mSystemTimer; mSystemTimer = NULL;
     delete mKaffeine; mKaffeine = NULL;
-    delete mTFn; mTFn = NULL;
     delete mSuspend; mSuspend = NULL;
     delete mProcIFace; mProcIFace = NULL;
 }
@@ -243,9 +241,9 @@ void KToshiba::quit()
     if (!mOmnibook) {
         if (mHotkeys)
             mHotKeysTimer->stop();
-        if (mTFn->m_SCIIface) {
-            kdDebug() << "KToshiba: Closing SCI interface." << endl;
-            mTFn->m_Driver->closeSCIInterface();
+        if (mTFn->m_SCIface) {
+            kdDebug() << "KToshiba: Closing SCI (Software Configuration Interface)." << endl;
+            mTFn->m_Driver->closeSCInterface();
         }
     }
 #ifdef ENABLE_OMNIBOOK
@@ -264,9 +262,9 @@ void KToshiba::resumedSTD()
     mSuspend->resumed = true;
     mSuspend->suspended = false;
     kdDebug() << "KToshiba: Resuming from Suspend To Disk..." << endl;
-    if (!mOmnibook && mTFn->m_SCIIface) {
-        kdDebug() << "KToshiba: Opening SCI interface." << endl;
-        mTFn->m_SCIIface = mTFn->m_Driver->openSCIInterface(&(mTFn->m_IFaceErr));
+    if (!mOmnibook && mTFn->m_SCIface) {
+        kdDebug() << "KToshiba: Opening SCI (Software Configuration Interface)." << endl;
+        mTFn->m_SCIface = mTFn->m_Driver->openSCInterface(&(mTFn->m_IFaceErr));
         // Set the brightness to its original state before STD
         mTFn->m_Driver->setBrightness(mTFn->m_Bright);
     }
@@ -279,7 +277,7 @@ void KToshiba::resumedSTD()
 void KToshiba::suspendToDisk()
 {
     kdDebug() << "KToshiba: Suspending To Disk..." << endl;
-    // 4 seconds for timer to start
+    // 3 seconds for timer to start
     QTimer::singleShot( 3000, this, SLOT( resumedSTD() ) );
 }
 
@@ -302,8 +300,6 @@ void KToshiba::loadConfiguration()
     mConfig.setGroup("KToshiba");
     mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
     mBtstart = mConfig.readBoolEntry("Bluetooth_Startup", true);
-    mConfig.setGroup("BSM");
-    mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
 }
 
 void KToshiba::createConfiguration()
@@ -312,7 +308,6 @@ void KToshiba::createConfiguration()
     KConfig config(CONFIG_FILE);
 
     config.setGroup("BSM");
-    config.writeEntry("Battery_Save_Mode", 2);
     config.writeEntry("CPU_Sleep_Mode", 0);
     config.writeEntry("Cooling_Method", 2);
     config.writeEntry("Display_Auto_Off", 5);
@@ -331,6 +326,15 @@ void KToshiba::createConfiguration()
     config.writeEntry("Fn_F7", 8);
     config.writeEntry("Fn_F8", 9);
     config.writeEntry("Fn_F9", 10);
+    config.sync();
+    config.setGroup("Hardware");
+    config.writeEntry("Device_Config", 1);
+    config.writeEntry("Network_Boot_Protocol", 0);
+    config.writeEntry("Parallel_Port_Mode", 0);
+    config.writeEntry("USB_FDD_Emul", 0);
+    config.writeEntry("USB_KBMouse_Emul", 0);
+    config.writeEntry("Wake_on_KB", 1);
+    config.writeEntry("Wake_on_LAN", 0);
     config.sync();
     config.setGroup("KToshiba");
     config.writeEntry("Audio_Player", 0);
@@ -366,7 +370,7 @@ void KToshiba::doMenu()
         mSpeed->insertItem( SmallIcon("cpu_high"), i18n("Always High"), 1 );
         mSpeed->insertItem( SmallIcon("cpu_low"), i18n("Always Low"), 2 );
         contextMenu()->insertItem( SmallIcon("kcmprocessor"), i18n("CPU Frequency"), mSpeed, 7, 7 );
-        if (mTFn->m_SCIIface && (mHT >= 0 || mSS >= 0)) {
+        if (mTFn->m_SCIface && (mHT >= 0 || mSS >= 0)) {
             connect( mHyper, SIGNAL( activated(int) ), this, SLOT( doSetHyper(int) ) );
             connect( mSpeed, SIGNAL( activated(int) ), this, SLOT( doSetFreq(int) ) );
         } else {
@@ -464,7 +468,7 @@ void KToshiba::doBluetooth()
     if (mBluetooth == -1) return;
 
     if (mBtstart && (mBluetooth != 0)) {
-        if (mTFn->m_BIOS != -1 && !mOmnibook) mTFn->m_Driver->setBluetoothPower(1);
+        if (mTFn->m_HCIface && !mOmnibook) mTFn->m_Driver->setBluetoothPower(1);
 #ifdef ENABLE_OMNIBOOK
         if (mOmnibook) mOFn->m_Omni->setBluetooth(1);
 #endif // ENABLE_OMNIBOOK
@@ -502,53 +506,105 @@ void KToshiba::displayAboutKDE()
     aboutKDE.exec();
 }
 
-void KToshiba::bsmUserSettings(int *bright)
+void KToshiba::bsmUserSettings(int *bright, bsmmode mode)
 {
-    int processor, cpu, display, hdd, lcd, cooling, tmp;
+    int processor = -1, display = -1, hdd = -1, lcd = -1, cooling = -1, tmp = -1;
+    QString modetxt;
 
-    KConfig mConfig(CONFIG_FILE);
+    // kets avoid compiler warnings for now...
+    lcd = tmp = -1;
+    /*KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("BSM");
     processor = mConfig.readNumEntry("Processing_Speed", 1);
     cpu = mConfig.readNumEntry("CPU_Sleep_Mode", 0);
     display = mConfig.readNumEntry("Display_Auto_Off", 5);
     hdd = mConfig.readNumEntry("HDD_Auto_Off", 5);
     lcd = mConfig.readNumEntry("LCD_Brightness", 2);
-    cooling = mConfig.readNumEntry("Cooling_Method", 2);
+    cooling = mConfig.readNumEntry("Cooling_Method", 2);*/
 
-    kdDebug() << "Enabling User Settings..." << endl;
-    tmp = (processor == 0)? 1 : 0;
-    mTFn->m_Driver->setProcessingSpeed(tmp);
-    tmp = (cpu == 0)? 1 : 0;
-    mTFn->m_Driver->setCPUSleepMode(tmp);
-    if (lcd == 0) *bright = 7;		// Super-Bright
-    else if (lcd == 1) *bright = 3;	// Bright
-    else if (lcd == 2) *bright = 0;	// Semi-Bright
+    // TODO: These parameters must be configurable...
+    switch (mode) {
+        case HighPower:
+            cooling = 0;	// Max
+            processor = 1;	// Full
+            *bright = 3;	// Bright
+            display = 3;	// 10 min
+            hdd = 3;		// 10 min
+            modetxt = "High Power";
+            break;
+        case DVDPlayback:
+            cooling = 0;	// Max
+            processor = 1;	// Full
+            *bright = 4;	// Brighter
+            display = 0;	// 30 min (broken, _never_ sould be here)
+            hdd = 0;		// 30 min (broken, _never_ sould be here)
+            modetxt = "DVD Playback";
+            break;
+        case Presentation:
+            cooling = 2;	// Peformance
+            processor = 1;	// Full
+            *bright = 0;	// Semi-Bright
+            display = 0;	// 30 min (broken, _never_ sould be here)
+            hdd = 0;		// 30 min (broken, _never_ sould be here)
+            modetxt = "Presentation";
+            break;
+    }
+
+    kdDebug() << "User Settings: " << modetxt << " mode..." << endl;
+
+    //tmp = (processor == 0)? 1 : 0;
+    //mTFn->m_Driver->setProcessingSpeed(tmp);
+    //tmp = (cpu == 0)? 1 : 0;
     mTFn->m_Driver->setCoolingMethod(cooling);
+    mTFn->m_Driver->setProcessingSpeed(processor);
     mTFn->m_Driver->setDisplayAutoOff(display);
     mTFn->m_Driver->setHDDAutoOff(hdd);
+}
+
+void KToshiba::checkHardwareSettings()
+{
+    int devconf, parallel, wonkb, usbemu, usbfdd, wol, nbp;
+
+    KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("Hardware");
+    devconf = mConfig.readNumEntry("Device_Config", 1);
+    parallel = mConfig.readNumEntry("Parallel_Port_Mode", 0);
+    wonkb = mConfig.readNumEntry("Wake_on_KB", 1);
+    usbemu = mConfig.readNumEntry("USB_KBMouse_Emul", 0);
+    usbfdd = mConfig.readNumEntry("USB_FDD_Emul", 0);
+    wol = mConfig.readNumEntry("Wake_on_LAN", 0);
+    nbp = mConfig.readNumEntry("Network_Boot_Protocol", 0);
+
+    mTFn->m_Driver->setDeviceConfig(devconf);
+    mTFn->m_Driver->setParallelPort((!parallel)? parallel : 2);
+    mTFn->m_Driver->setWakeonKeyboard((!wonkb)? 1 : 0);
+    mTFn->m_Driver->setUSBLegacySupport((!usbemu)? 1 : 0);
+    mTFn->m_Driver->setUSBFDDEmulation((!usbfdd)? 1 : 0);
+    mTFn->m_Driver->setWOL((!wol)? 1 : 0);
+    mTFn->m_Driver->setRemoteBootProtocol(nbp);
 }
 
 #ifdef ENABLE_SYNAPTICS
 void KToshiba::checkSynaptics()
 {
     static bool err = false;
-    if (!Pad::hasDriver()) {
+    if (!mSynPad->hasDriver()) {
         kdError() << "KToshiba: Incompatible synaptics driver version " << endl;
         err = true;
     }
 
-    if (!err && !Pad::hasShm()) {
+    if (!err && !mSynPad->hasShm()) {
         kdError() << "KToshiba: Access denied to driver shared memory area" << endl;
         err = true;
     }
 
-    if (!err && !Pad::hasParam(TOUCHPADOFF)) {
+    if (!err && !mSynPad->hasParam(TOUCHPADOFF)) {
         kdError() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
         err = true;
     }
 
     if (!err) {
-        int pad = (int)Pad::getParam(TOUCHPADOFF);
+        int pad = (int) mSynPad->getParam(TOUCHPADOFF);
         if (!mOmnibook) mTFn->m_Pad = pad;
 #ifdef ENABLE_OMNIBOOK
         if (mOmnibook) mOFn->m_Pad = pad;
@@ -675,50 +731,65 @@ void KToshiba::multimediaVolumeUp()
 
 void KToshiba::checkSystem()
 {
-    if (!mOmnibook) {
+    int time = 0, perc = -1;
+
+    if (!mOmnibook && mTFn->m_SCIface) {
         mAC = (mACPI)? mProcIFace->acpiAC() : mTFn->m_Driver->acPowerStatus();
-        KConfig mConfig(CONFIG_FILE);
-        mConfig.setGroup("BSM");
-        mBatSave = mConfig.readNumEntry("Battery_Save_Mode", 2);
+        (mACPI)? mProcIFace->acpiBatteryStatus(&time, &perc) : mTFn->m_Driver->batteryStatus(&time, &perc);
+        mBatSave = mTFn->m_BatSave;
+        //checkHardwareSettings();
     }
 #ifdef ENABLE_OMNIBOOK
-    if (mOmnibook)
+    if (mOmnibook) {
         mAC = (mACPI)? mProcIFace->acpiAC() : mOFn->m_Omni->omnibookAC();
+        (mACPI)? mProcIFace->acpiBatteryStatus(&time, &perc) : mOFn->m_Omni->batteryStatus(&time, &perc) ;
+    }
 #endif // ENABLE_OMNIBOOK
 
-    if (mBatSave != mOldBatSave || mAC != mOldAC) {
+    // Only go there if we have a battery present...
+    if (perc != -2 && (mBatSave != mOldBatSave || mAC != mOldAC)) {
+        // Brightness settings info:
+        //     7 - Super-Bright
+        //     3 - Bright
+        //     0 - Semi-Bright
         int bright = 0;
-        switch (mBatSave) {
-            // Brightness settings info:
-            //     7 - Super-Bright
-            //     3 - Bright
-            //     0 - Semi-Bright
-            case 0:							// USER SETTINGS
-                if (!bsmtrig && mTFn->m_SCIIface) {
-                    bsmUserSettings(&bright);
-                    bsmtrig = true;
-                }
-                break;
-            case 1:
-                if (mBatType == 3)				// LONG LIFE
+        if (mAC == 4)
+            bright = 7;
+        // BSM changes are only applicable only when we're running on batteries...
+        else if (mAC == 3) {
+            switch (mBatSave) {
+                case -2:
+                    bsmUserSettings(&bright, Presentation);
+                    break;
+                case -1:
+                    bsmUserSettings(&bright, DVDPlayback);
+                    break;
+                case 0:
+                    if (mOmnibook)
+                        bright = 3;
+                    else
+                        bsmUserSettings(&bright, HighPower);
+                    break;
+                case 1:						// LONG LIFE
                     bright = 0;
-                else if (mBatType == 2)		// LOW POWER
-                    bright = (mAC == 3)? 0 : 3;
-                break;
-            case 2:
-                if (mBatType == 3)				// NORMAL LIFE or ECONOMY
-                    bright = (mAC == 3)? 0 : 3;
-                else if (mBatType == 2)		// FULL POWER
-                    bright = (mAC == 3)? 3 : 7;
-                break;
-            case 3:							// FULL LIFE
-                bright = (mAC == 3)? 3 : 7;
-                break;
+                    break;
+                case 2:						// NORMAL LIFE
+                    if (100 >= perc > 75)
+                        bright = 3;
+                    else if (75 >= perc > 50)
+                        bright = 3;
+                    else if (50 >= perc > 25)
+                        bright = 1;
+                    else if (25 >= perc > 0)
+                        bright = 1;
+                    break;
+                case 3:						// FULL LIFE
+                    bright = 3;
+                    break;
+            }
         }
-        if (mTFn->m_BatType != 2 && mTFn->m_BIOS != -1 && !mOmnibook)
+        if (mTFn->m_HCIface && !mOmnibook)
             mTFn->m_Driver->setBrightness(bright);
-        if (mBatSave != 0 && bsmtrig == true && !mOmnibook)
-            bsmtrig = false;
 #ifdef ENABLE_OMNIBOOK
         if (mOmnibook)
             mOFn->m_Omni->setBrightness(bright);
@@ -731,7 +802,7 @@ void KToshiba::checkSystem()
     if (mWirelessSwitch == -1) return;
     else {
         int ws = 0;
-        if (mTFn->m_BIOS != -1 && !mOmnibook) ws = mTFn->m_Driver->getWirelessSwitch();
+        if (mTFn->m_HCIface && !mOmnibook) ws = mTFn->m_Driver->getWirelessSwitch();
 #ifdef ENABLE_OMNIBOOK
         if (mOmnibook) ws = mOFn->m_Omni->getWifiSwitch();
 #endif // ENABLE_OMNIBOOK

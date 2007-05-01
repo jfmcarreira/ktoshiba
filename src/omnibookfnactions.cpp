@@ -26,13 +26,6 @@
 #include <klocale.h>
 #include <kprogress.h>
 
-#ifdef ENABLE_SYNAPTICS
-#include <synaptics/synaptics.h>
-#include <synaptics/synparams.h>
-
-using namespace Synaptics;
-#endif // ENABLE_SYNAPTICS
-
 OmnibookFnActions::OmnibookFnActions(QWidget *parent)
     : FnActions( parent ),
       m_Omni( 0 )
@@ -100,12 +93,24 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
         case 12:	// Fan On/Off
             showWidget(1, keycode);
             break;
+        case 3:	// Toggle Battery Save Mode
         case 22:	// Show Battery Status
             showWidget(2, keycode);
             break;
     }
 
     int type = -1, extra = -1;
+    if (action == 3) {
+        // Only toggle BSM if we're running on batteries...
+        int m_AC = m_Omni->omnibookAC();
+        if (m_AC == 3) {
+            toggleBSM();
+            type = m_BatSave;
+        } else {
+            m_BatSave = 2;
+            type = extra = 4;
+        }
+    } else
     if (action == 22) {
         int time = 0, perc = -1;
         m_Omni->batteryStatus(&time, &perc);
@@ -130,6 +135,13 @@ void OmnibookFnActions::performFnAction(int action, int keycode)
     updateWidget(action, type, extra);
 }
 
+void OmnibookFnActions::toggleBSM()
+{
+    m_BatSave--;
+    if (m_BatSave < 0)
+        m_BatSave = 2;
+}
+
 void OmnibookFnActions::toggleWireless()
 {
     if (m_Wireless == -1) return;
@@ -151,7 +163,7 @@ void OmnibookFnActions::toggleMousePad()
 
 #ifdef ENABLE_SYNAPTICS
     m_Pad = (m_Pad == 0)? 1 : 0;
-    Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
+    mSynPad->setParam(TOUCHPADOFF, ((double) m_Pad));
 #else // ENABLE_SYNAPTICS
     m_Pad = m_Omni->getTouchPad();
 
