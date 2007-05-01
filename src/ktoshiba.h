@@ -36,12 +36,20 @@ class KProcess;
 class DCOPRef;
 
 class KToshibaProcInterface;
-class KToshibaDCOPInterface;
 class ToshibaFnActions;
 #ifdef ENABLE_OMNIBOOK
+class KToshibaDCOPInterface;
 class OmnibookFnActions;
 #endif // ENABLE_OMNIBOOK
 class Suspend;
+
+#ifdef ENABLE_SYNAPTICS
+#include <synaptics/synaptics.h>
+
+class Synaptics::Pad;
+
+using namespace Synaptics;
+#endif // ENABLE_SYNAPTICS
 
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
@@ -49,6 +57,12 @@ class Suspend;
 #define Amarok  	0
 #define JuK 		1
 #define XMMS		2
+
+enum bsmmode {
+	HighPower,
+	DVDPlayback,
+	Presentation
+};
 
 /**
  * @short Hotkeys monitoring for Toshiba laptops
@@ -89,7 +103,8 @@ private slots:
     void doSetHyper(int);
 private:
     void doMenu();
-    void bsmUserSettings(int *);
+    void bsmUserSettings(int *, bsmmode);
+    void checkHardwareSettings();
     void checkSynaptics();
     void multimediaStop();
     void multimediaPrevious();
@@ -100,6 +115,9 @@ private:
     void multimediaVolumeUp();
     KToshibaProcInterface *mProcIFace;
     Suspend *mSuspend;
+#ifdef ENABLE_SYNAPTICS
+    Pad *mSynPad;
+#endif // ENABLE_SYNAPTICS
     QPopupMenu *mHelp;
     QTimer *mSystemTimer;
     QString konqueror;
@@ -115,6 +133,7 @@ private:
     int mBatSave;
     int mOldBatSave;
     int mBatType;
+    int mBSMMode;
     int mWirelessSwitch;
     int mPad;
     int mBluetooth;
@@ -126,7 +145,6 @@ private:
     QPopupMenu *mSpeed;
     QPopupMenu *mHyper;
     QTimer *mHotKeysTimer;
-    bool bsmtrig;
     int mHT;
     int mSS;
     int mSVideo;

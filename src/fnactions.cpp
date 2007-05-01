@@ -48,6 +48,9 @@ FnActions::FnActions(QWidget *parent)
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
     m_CmdWidget = new CmdWidget(0, "Run Command Indicator");
     m_Suspend = new Suspend(parent);
+#ifdef ENABLE_SYNAPTICS
+    mSynPad = Pad::getInstance();
+#endif // ENABLE_SYNAPTICS
 
     m_Title = i18n("KToshiba");
     m_Activated = i18n("activated");
@@ -64,6 +67,9 @@ FnActions::FnActions(QWidget *parent)
 FnActions::~FnActions()
 {
     m_Parent = NULL;
+#ifdef ENABLE_SYNAPTICS
+    mSynPad = NULL;
+#endif // ENABLE_SYNAPTICS
     delete m_Suspend; m_Suspend = NULL;
     delete m_SettingsWidget; m_SettingsWidget = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
@@ -90,40 +96,42 @@ void FnActions::showWidget(int widget, int key)
 void FnActions::updateWidget(int action, int type, int extra)
 {
     if (action == 3) {
-        if (extra == 3) {
-            m_SettingsWidget->wsSettings->raiseWidget(5);
-            m_SettingsWidget->plLongL->setFrameShape(QLabel::NoFrame);
-            m_SettingsWidget->plNormalL->setFrameShape(QLabel::NoFrame);
-            m_SettingsWidget->plFullL->setFrameShape(QLabel::NoFrame);
-        } else {
+        if (type ==  4 && extra == 4) {
             m_SettingsWidget->wsSettings->raiseWidget(0);
-            m_SettingsWidget->plUser->setFrameShape(QLabel::NoFrame);
-            m_SettingsWidget->plLow->setFrameShape(QLabel::NoFrame);
-            m_SettingsWidget->plFull->setFrameShape(QLabel::NoFrame);
+            m_SettingsWidget->plFullPower->setFrameShape(QLabel::NoFrame);
+            m_SettingsWidget->tlStatus->setText(i18n("Full Power"));
+            return;
         }
+        m_SettingsWidget->wsSettings->raiseWidget(5);
+        m_SettingsWidget->plNormal->setFrameShape(QLabel::NoFrame);
+        m_SettingsWidget->plLongLife->setFrameShape(QLabel::NoFrame);
+        m_SettingsWidget->plHighPower->setFrameShape(QLabel::NoFrame);
+        m_SettingsWidget->plDVD->setFrameShape(QLabel::NoFrame);
+        m_SettingsWidget->plPresentation->setFrameShape(QLabel::NoFrame);
         switch (type) {
+            case -2:
+                m_SettingsWidget->tlStatus->setText(i18n("Presentation"));
+                m_SettingsWidget->plPresentation->setFrameShape(QLabel::PopupPanel);
+                break;
             case -1:
-                m_SettingsWidget->tlStatus->setText(m_NotSupported);
+                m_SettingsWidget->tlStatus->setText(i18n("DVD Playback"));
+                m_SettingsWidget->plDVD->setFrameShape(QLabel::PopupPanel);
                 break;
             case 0:
-                m_SettingsWidget->tlStatus->setText(i18n("User Settings"));
-                m_SettingsWidget->plUser->setFrameShape(QLabel::PopupPanel);
+                m_SettingsWidget->tlStatus->setText(i18n("High Power"));
+                m_SettingsWidget->plHighPower->setFrameShape(QLabel::PopupPanel);
                 break;
             case 1:
-                m_SettingsWidget->tlStatus->setText( (extra == 3)? i18n("Long Life")
-                    : i18n("Low Power") );
-                (extra == 3)? m_SettingsWidget->plLongL->setFrameShape(QLabel::PopupPanel)
-                    : m_SettingsWidget->plLow->setFrameShape(QLabel::PopupPanel);
+                m_SettingsWidget->tlStatus->setText(i18n("Long Life"));
+                m_SettingsWidget->plLongLife->setFrameShape(QLabel::PopupPanel);
                 break;
             case 2:
-                m_SettingsWidget->tlStatus->setText( (extra == 3)? i18n("Normal Life")
-                    : i18n("Full Power") );
-                (extra == 3)? m_SettingsWidget->plNormalL->setFrameShape(QLabel::PopupPanel)
-                    : m_SettingsWidget->plFull->setFrameShape(QLabel::PopupPanel);
+                m_SettingsWidget->tlStatus->setText(i18n("Normal Life"));
+                m_SettingsWidget->plNormal->setFrameShape(QLabel::PopupPanel);
                 break;
             case 3:
                 m_SettingsWidget->tlStatus->setText(i18n("Full Life"));
-                m_SettingsWidget->plFullL->setFrameShape(QLabel::PopupPanel);
+                //m_SettingsWidget->plFullLife->setFrameShape(QLabel::PopupPanel);
                 break;
         }
         return;
@@ -346,19 +354,18 @@ void FnActions::hideWidgets()
 void FnActions::toggleMute(int *snd)
 {
     DCOPRef kmixClient("kmix", "Mixer0");
-    DCOPReply reply = kmixClient.call("mute", 0);
+    kmixClient.send("toggleMasterMute()");
+    DCOPReply reply = kmixClient.call("masterMute()");
     if (reply.isValid()) {
         bool res = reply;
-        *snd = (res == true)? 1 : 0;
+        *snd = (res == true)? 0 : 1;
     }
-
-    kmixClient.send("toggleMute", 0);
 }
 
 void FnActions::lockScreen()
 {
     DCOPRef kdesktopClient("kdesktop", "KScreensaverIface");
-    kdesktopClient.send("lock()", 0);
+    kdesktopClient.send("lock()");
 }
 
 void FnActions::runCommand(int key)
@@ -417,8 +424,12 @@ void FnActions::runCommand(int key)
             cmd = cfg.readEntry("Fn_F9_Cmd");
             m_FnKey = 9;
     }
-    if (cmd.isEmpty())
+    if (cmd.isEmpty()) {
+        QRect r = QApplication::desktop()->geometry();
+        m_CmdWidget->move(r.center() -
+            QPoint(m_CmdWidget->width() / 2, m_CmdWidget->height() / 2));
         m_CmdWidget->show();
+    }
     KProcess proc;
     proc << cmd;
     proc.start(KProcess::DontCare);

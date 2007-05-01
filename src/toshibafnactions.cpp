@@ -25,13 +25,6 @@
 #include <kdebug.h>
 #include <kconfig.h>
 
-#ifdef ENABLE_SYNAPTICS
-#include <synaptics/synaptics.h>
-#include <synaptics/synparams.h>
-
-using namespace Synaptics;
-#endif // ENABLE_SYNAPTICS
-
 ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     : FnActions( parent ),
       m_Driver( 0 )
@@ -42,16 +35,16 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
     if (::access(TOSH_DEVICE, F_OK | R_OK | W_OK) == -1) {
         kdError() << "KToshiba: Could not access " << TOSH_DEVICE
                   << " for read-write operations." << endl;
-        m_BIOS = -1;
-        m_SCIIface = false;
+        m_SCIface = false;
+        m_HCIface = false;
     } else {
-        m_SCIIface = m_Driver->openSCIInterface(&m_IFaceErr);
-        if (!m_SCIIface)
-            m_SCIIface = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
-        if (m_SCIIface)
+        m_SCIface = m_Driver->openSCInterface(&m_IFaceErr);
+        if (!m_SCIface)
+            m_SCIface = (m_IFaceErr == SCI_ALREADY_OPEN)? true : false;
+        if (m_SCIface)
             initSCI();
-        else if (!m_SCIIface) {
-           kdError() << "KToshiba: Could not open SCI interface." << endl;
+        else if (!m_SCIface) {
+            kdError() << "KToshiba: Could not open SCI interface." << endl;
             m_BatSave = 2;
             m_BatType = 3;
             m_Boot = -1;
@@ -60,21 +53,31 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
             m_Pad = -1;
         }
 
-        // check the BIOS version
+        // check the BIOS version, date and machine ID
         m_BIOS = m_Driver->machineBIOS();
+        m_BIOSDate = m_Driver->machineBIOSDate();
+        m_MachineID = m_Driver->machineID();
 
-        // FIXME: We should not rely on BIOS version for HCI access...
-        if (m_BIOS != -1) {
-            m_MachineID = m_Driver->machineID();
+        // Let's check for HCI access doing a call to it, if we fail
+        // then all subsecuent calls will fail...
+        m_HCIface = (m_Driver->getBackLight() == -1)? false : true;
+        // If we succeded let's do the rest of the calls...
+        if (m_HCIface) {
             m_Video = m_Driver->getVideo();
             m_Bright = m_Driver->getBrightness();
             m_Wireless = m_Driver->getWirelessPower();
+        } else
+        if (!m_HCIface) {
+            kdError() << "KToshiba: Could not open HCI interface." << endl;
+            m_Video = -1;
+            m_Bright = -1;
+            m_Wireless = -1;
         }
     }
 
-    m_Snd = 1;
-    m_Vol = 1;
-    m_Fan = 1;
+    m_Snd = -1;
+    m_Vol = -1;
+    m_Fan = -1;
 }
 
 ToshibaFnActions::~ToshibaFnActions()
@@ -145,21 +148,28 @@ void ToshibaFnActions::performFnAction(int action, int key)
     }
 
     int state = -1, extra = -1;
-    if (action == 3 && m_SCIIface) {
-        toggleBSM();
-        state = m_BatSave;
-        extra = m_BatType;
+    if (action == 3 && m_SCIface) {
+        // Only toggle BSM if we're running on batteries...
+        int m_AC = m_Driver->acPowerStatus();
+        if (m_AC == 3) {
+            toggleBSM();
+            state = m_BatSave;
+        } else {
+            m_BatSave = 2;
+            m_Driver->setBatterySaveMode(m_BatSave);
+            state = extra = 4;
+        }
     } else
     if (action == 6) {
         toggleVideo();
         state = m_Video;
     } else
-    if (action == 13 && m_SCIIface) {
+    if (action == 13 && m_SCIface) {
         toggleBootMethod();
         state = (m_BootType == 5 && m_LANCtrl >= 0)? 6 : m_BootType;
         extra = m_Boot;
     } else
-    if (action == 22 && m_SCIIface) {
+    if (action == 22 && m_SCIface) {
         int time = 0, perc = -1;
         m_Driver->batteryStatus(&time, &perc);
         state = perc;
@@ -176,7 +186,7 @@ void ToshibaFnActions::performFnAction(int action, int key)
         toggleMousePad();
         state = m_Pad;
     } else
-    if (action == 11 && m_SCIIface) {
+    if (action == 11 && m_SCIface) {
         toggleSpeakerVolume();
         state = m_Vol;
     } else
@@ -192,19 +202,16 @@ void ToshibaFnActions::toggleBSM()
     // ISSUE: Always returns the same value no matter what...
     //m_BatSave = m_Driver->getBatterySaveMode();
     //if (m_BatSave == -1) return;
-    KConfig cfg("ktoshibarc");
-    cfg.setGroup("BSM");
-    m_BatSave = cfg.readNumEntry("Battery_Save_Mode", 2);
 
     m_BatSave--;
     if (m_BatSave < 1 && m_BatType == 3)
         m_BatSave = 3;
-    else if (m_BatSave < 0)
+    else if (m_BatSave < -2)
         m_BatSave = 2;
 
-    m_Driver->setBatterySaveMode(m_BatSave);
-    cfg.writeEntry("Battery_Save_Mode", m_BatSave);
-    cfg.sync();
+    if (m_BatSave <= 0 && m_BatType == 2) ;
+    else
+        m_Driver->setBatterySaveMode(m_BatSave);
 }
 
 void ToshibaFnActions::toggleVideo()
@@ -258,7 +265,7 @@ void ToshibaFnActions::toggleMousePad()
 
 #ifdef ENABLE_SYNAPTICS
     m_Pad = (m_Pad == 0)? 1 : 0;
-    Pad::setParam(TOUCHPADOFF, ((double)m_Pad));
+    mSynPad->setParam(TOUCHPADOFF, ((double)m_Pad));
 #else // ENABLE_SYNAPTICS
     if (m_SCIIface) {
         m_Pad = m_Driver->getPointingDevice();

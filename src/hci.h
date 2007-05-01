@@ -153,6 +153,7 @@ enum {
  */
 int HciFunction(SMMRegisters *reg);
 int HciGetBiosVersion(void);
+int HciGetBiosDate(void);
 int HciGetMachineID(int *id);
 int HciGetLCDPanelType(int *resolution, int *type);
 

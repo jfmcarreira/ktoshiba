@@ -1,3 +1,49 @@
+2007-04-30 Azael Avalos <coproscefalo@gmail.com>
+	* More advances to the KCM BSM code
+
+2007-04-28 Azael Avalos <coproscefalo@gmail.com>
+	* Disabled BSM stuff from KCM for now
+	* Some small changes here and there
+
+2007-04-24 Azael Avalos <coproscefalo@gmail.com>
+	* Added new functions to KToshibaSMMInterface class
+	  (Wake on Keyboard)
+	* "Implemented" BSM for omnibook users, 'tho it will
+	  only change bright levels...
+	* Removed some config stuff since we don't need it
+	* Aded new function to get the BIOS date
+	* Some small changes here and there
+
+2007-04-23 Azael Avalos <coproscefalo@gmail.com>
+	* Finished adding new configuration tab for
+	  hardware related stuff to the KCModule
+
+2007-04-22 Azael Avalos <coproscefalo@gmail.com>
+	* Some small changes to FnActions class
+
+2007-04-21 Azael Avalos <coproscefalo@gmail.com>
+	* Aplied changes needed to make use of new
+	  libsynaptics version (0.14.6c)
+
+2007-04-18 Azael Avalos <coproscefalo@gmail.com>
+	* Started some changes to the BSM code (again...)
+
+2007-04-14 Azael Avalos <coproscefalo@gmail.com>
+	* Some small changes here and there
+
+2007-03-15 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the DOP call to KMix to set mute/unmute
+	  to the master volume (and I thought I had it that way...)
+	* Some misc changes here and there
+
+2007-03-13 Azael Avalos <coproscefalo@gmail.com>
+	* Run Command Widget will now appear on the center
+	  of the screen
+
+2007-03-06 Azael Avalos <coproscefalo@gmail.com>
+	* Removed ktosh_helper.cpp and also removed it from
+	  Makefile.am (somehow I forgot to remove this earlier...)
+
 2007-03-05 Azael Avalos <coproscefalo@gmail.com>
 	* The Run Command options is now implemented on all
 	  Fn-Esc/F{1,2,3,4,5,6,7,8,9} keys

@@ -33,6 +33,14 @@ class StatusWidget;
 class CmdWidget;
 class Suspend;
 
+#ifdef ENABLE_SYNAPTICS
+#include <synaptics/synaptics.h>
+
+class Synaptics::Pad;
+
+using namespace Synaptics;
+#endif // ENABLE_SYNAPTICS
+
 enum popuptype {
 	Bluetooth,
 	Ethernet,
@@ -61,7 +69,18 @@ public:
     SettingsWidget *m_SettingsWidget;
     StatusWidget *m_StatusWidget;
     Suspend *m_Suspend;
+#ifdef ENABLE_SYNAPTICS
+    Pad *mSynPad;
+#endif // ENABLE_SYNAPTICS
     int m_Popup;
+    int m_BatSave;
+    int m_Video;
+    int m_Bright;
+    int m_Pad;
+protected:
+    int m_Snd;
+    int m_Wireless;
+    int m_Fan;
 private slots:
     void saveCmd();
 private:

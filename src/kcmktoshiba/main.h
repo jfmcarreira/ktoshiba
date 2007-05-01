@@ -58,9 +58,10 @@ private:
     KToshibaOmnibookInterface *m_OmniIFace;
     QTimer *m_Timer;
     bool m_Omnibook;
-    bool m_SCIIFace;
-    bool m_HCIIFace;
+    bool m_SCIFace;
+    bool m_HCIFace;
     bool m_Hotkeys;
+    bool m_Hardware;
     bool m_Init;
     int m_IFaceErr;
     int m_AC;

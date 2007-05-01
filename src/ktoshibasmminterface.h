@@ -41,7 +41,7 @@ extern "C"
 /**
  * @short Provides access to the SMM functions
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.10
+ * @version 0.11
  */
 class KToshibaSMMInterface : public QObject
 {
@@ -49,6 +49,12 @@ class KToshibaSMMInterface : public QObject
 public:
   KToshibaSMMInterface(QObject *parent = 0);
   ~KToshibaSMMInterface();
+
+  /**
+   * Gets AC status
+   * @return @p the int holding the AC status
+   */
+  int acPowerStatus();
 
   /**************************************
    *           SCI Functions            *
@@ -58,11 +64,11 @@ public:
    * Opens an SCI interface.
    * @return @p true when opened interface
    */
-  bool openSCIInterface(int *err);
+  bool openSCInterface(int *err);
   /**
    * Closes any opened SCI interface.
    */
-  void closeSCIInterface();
+  void closeSCInterface();
   /**
    * Gets the machine SCI version.
    * @return @p the SCI version string
@@ -84,10 +90,27 @@ public:
    */
   int getBatterySaveModeType();
   /**
-   * Sets the Processor to the desired speed (high/low).
+   * Gets the Processor Speed.
+   * @return @p the int holding the current speed
+   */
+  int getProcessingSpeed();
+  /**
+   * Sets the Processor to the desired speed.
    * @param speed the int holding the desired speed
    */
   void setProcessingSpeed(int speed);
+  /**
+   * Gets the Wake on Keyboard status.
+   * @return @p the int holding the cuent status
+   */
+  int getWakeonKeyboard();
+
+  /**
+   * Sets the Wake on Keyboard status.
+   * @param mode the int holding the desired status
+   */
+  void setWakeonKeyboard(int mode);
+
   /**
    * Sets the CPU Sleep Mode to the desired status (on/off).
    * @param mode the int holding the desired status
@@ -200,7 +223,7 @@ public:
    */
   void setPowerButtonLamp(int mode);
   /**
-   * ets the Start Up Logo state.
+   * Gets the Start Up Logo state.
    * @return @p the int holding the current state
    */
   int getStartUpLogo();
@@ -320,6 +343,11 @@ public:
    */
   int machineBIOS();
   /**
+   * Gets the machine BIOS date.
+   * @return @p value holding the BIOS date
+   */
+  int machineBIOSDate();
+  /**
    * Gets the machine ID number.
    * @return @p value holding the machine id
    */
@@ -338,7 +366,7 @@ public:
    * Get the AC status.
    * @return @p four when connected, three disconnected
    */
-  int acPowerStatus();
+  int getAC();
   /**
    * Gets the current fan status.
    * @return @p the int holdint the current fan state
