@@ -3,6 +3,7 @@
 	* Finished the BSM widget...
 	* Added two new functions to deal with BSM config file
 	* Finally finished with the new changes made to the BSM
+	* Updated Spanish translation
 
 2007-05-07 Azael Avalos <coproscefalo@gmail.com>
 	* Now the Hardware tab items send the signal correctly

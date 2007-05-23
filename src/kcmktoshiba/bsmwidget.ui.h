@@ -15,13 +15,13 @@ void BSMWidget::init()
     High = i18n("High");
     Low = i18n("Low");
     Never = i18n("Never");
-    min30 = i18n("30 min");
-    min20 = i18n("20 min");
-    min15 = i18n("15 min");
-    min10 = i18n("10 min");
-    min05 = i18n("5 min");
-    min03 = i18n("3 min");
-    min01 = i18n("1 min");
+    min30 = "30 min";
+    min20 = "20 min";
+    min15 = "15 min";
+    min10 = "10 min";
+    min05 = "5 min";
+    min03 = "3 min";
+    min01 = "1 min";
 }
 
 

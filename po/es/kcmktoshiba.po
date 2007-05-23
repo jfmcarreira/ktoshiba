@@ -1,12 +1,12 @@
 # translation of kcmktoshiba.po to Español
 #
-# Azael Avalos <coproscefalo@gmail.com>, 2005, 2006.
+# Azael Avalos <coproscefalo@gmail.com>, 2005, 2006, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-23 02:26-0600\n"
-"PO-Revision-Date: 2006-08-20 19:31-0600\n"
+"PO-Revision-Date: 2007-05-23 03:16-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "coproscefalo@gmail.com"
 #: bsmwidget.cpp:2003 rc.cpp:3
 #, no-c-format
 msgid "BSMWidget"
-msgstr ""
+msgstr "BSMWidget"
 
 #. i18n: file bsmwidget.ui line 82
 #: bsmwidget.cpp:2004 rc.cpp:6
@@ -40,22 +40,28 @@ msgid ""
 "Here you can configure the different options for the selected Battery Save "
 "Mode."
 msgstr ""
+"Aquí tu podras configurar las diferentes opciones\n"
+"para el Modo de Ahorro de Batería seleccionado."
 
 #. i18n: file bsmwidget.ui line 189
 #: bsmwidget.cpp:2008 rc.cpp:12
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Display\n"
 "Auto Off:"
-msgstr "Auto Apagado de la Pantalla:"
+msgstr ""
+"Auto Apagado\n"
+"de la Pantalla:"
 
 #. i18n: file bsmwidget.ui line 486
 #: bsmwidget.cpp:2017 rc.cpp:23
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "Processor\n"
 "Speed:"
-msgstr "Velocidad de &Procesamiento:"
+msgstr ""
+"Velocidad de\n"
+"Procesamiento:"
 
 #. i18n: file bsmwidget.ui line 492
 #: bsmwidget.cpp:2020 rc.cpp:27
@@ -65,9 +71,9 @@ msgstr "Rendimiento"
 
 #. i18n: file bsmwidget.ui line 497
 #: bsmwidget.cpp:2021 rc.cpp:30
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Max. Performance"
-msgstr "Maximo Rendimiento"
+msgstr "Máximo Rendimiento"
 
 #. i18n: file bsmwidget.ui line 502
 #: bsmwidget.cpp:2022 rc.cpp:33
@@ -77,25 +83,31 @@ msgstr "Optimizado para Batería"
 
 #. i18n: file bsmwidget.ui line 656
 #: bsmwidget.cpp:2024 rc.cpp:37
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "HDD\n"
 "Auto Off:"
-msgstr "Au&to Apagado del Disco Duro:"
+msgstr ""
+"Auto Apagado\n"
+"del Disco Duro:"
 
 #. i18n: file bsmwidget.ui line 776
 #: bsmwidget.cpp:2028 rc.cpp:43
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "LCD\n"
 "Brightness:"
-msgstr "&Brillo del LCD:"
+msgstr ""
+"Brillo\n"
+"del LCD:"
 
 #. i18n: file bsmwidget.ui line 1014
 #: bsmwidget.cpp:2033 rc.cpp:50
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "Cooling Method:"
-msgstr "Método de Enfriamiento:"
+msgstr ""
+"Método de\n"
+"Enfriamiento:"
 
 #. i18n: file kcmtoshiba_general.ui line 31
 #: kcmtoshiba_general.cpp:2550 rc.cpp:61
@@ -105,15 +117,15 @@ msgstr "KToshiba: Opciones de Configuración"
 
 #. i18n: file kcmtoshiba_general.ui line 65
 #: kcmtoshiba_general.cpp:2551 rc.cpp:64
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "The required <i>Kernel Drivers</i> could not be found. If this is a Toshiba "
 "Laptop, make sure the <b>toshiba</b> or the <b>omnibook</b> driver module "
 "load without failures."
 msgstr ""
-"No se pudo encontrar el <i>Controlador de Modo de Manejo del Sistema de "
-"Toshiba</i>. Sí esta es un portátil Toshiba verifique que el controlador "
-"<b>toshiba</b> sea cargado sin problemas."
+"No se pudo encontrar los <i>Controladores</i>. Sí esta es un portátil "
+"Toshiba verifique que el controlador <b>toshiba</b> ó el controldor "
+"<b>omnibook</b>sea cargado sin problemas."
 
 #. i18n: file kcmtoshiba_general.ui line 152
 #: kcmtoshiba_general.cpp:2552 rc.cpp:70
@@ -149,7 +161,7 @@ msgstr "Otras Opciones"
 #: kcmtoshiba_general.cpp:2557 rc.cpp:85
 #, no-c-format
 msgid "&Enable Bluetooth device at program startup"
-msgstr "Habilitar dispositivo &Bluetooth al comienzo del programa"
+msgstr "Habilitar dispositivo Bluetooth al comienzo del programa"
 
 #. i18n: file kcmtoshiba_general.ui line 263
 #: kcmtoshiba_general.cpp:2558 rc.cpp:88
@@ -668,7 +680,7 @@ msgstr "Encendido/Apagado del Ethernet"
 #: rc.cpp:601 rc.cpp:658 rc.cpp:715
 #, no-c-format
 msgid "Run Command"
-msgstr ""
+msgstr "Ejecutar Comando"
 
 #. i18n: file kcmtoshiba_general.ui line 962
 #. i18n: file kcmtoshiba_general.ui line 1125
@@ -701,30 +713,30 @@ msgstr "Tecla-Fn"
 
 #. i18n: file kcmtoshiba_general.ui line 2762
 #: kcmtoshiba_general.cpp:2791 rc.cpp:724
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "These are the different <b>Battery Save Modes</b> that can be configured."
 msgstr ""
-"Estas son las diferentes opciones que puedes usar para configurar el Modo de "
-"Ahorro de Batería cuando este cambia al modo de Usuario"
+"Estas son los diferentes <b>Modos de Ahorro de Batería</b> que pueden ser "
+"configurados."
 
 #. i18n: file kcmtoshiba_general.ui line 2787
 #: kcmtoshiba_general.cpp:2793 rc.cpp:728
 #, no-c-format
 msgid "High Power"
-msgstr ""
+msgstr "Alto Poder"
 
 #. i18n: file kcmtoshiba_general.ui line 2832
 #: kcmtoshiba_general.cpp:2795 rc.cpp:732
 #, no-c-format
 msgid "DVD Playback"
-msgstr ""
+msgstr "Reproducción de DVD"
 
 #. i18n: file kcmtoshiba_general.ui line 2894
 #: kcmtoshiba_general.cpp:2797 rc.cpp:736
 #, no-c-format
 msgid "Presentation"
-msgstr ""
+msgstr "Presentación"
 
 #. i18n: file kcmtoshiba_general.ui line 2745
 #: kcmtoshiba_general.cpp:2798 rc.cpp:721
@@ -736,7 +748,7 @@ msgstr "Modo de Ahorro de &Batería"
 #: kcmtoshiba_general.cpp:2799 rc.cpp:742
 #, no-c-format
 msgid "&Device Configuration"
-msgstr ""
+msgstr "Configuración de Dispositivos"
 
 #. i18n: file kcmtoshiba_general.ui line 2921
 #: kcmtoshiba_general.cpp:2800 rc.cpp:745
@@ -754,7 +766,7 @@ msgstr "Todos los Dispositivos"
 #: kcmtoshiba_general.cpp:2802 rc.cpp:751
 #, no-c-format
 msgid "Setup by OS"
-msgstr ""
+msgstr "Configurado por el Sistema Operativo"
 
 #. i18n: file kcmtoshiba_general.ui line 2950
 #: kcmtoshiba_general.cpp:2803 rc.cpp:754
@@ -784,7 +796,7 @@ msgstr "Bi-direccional Estandard"
 #: kcmtoshiba_general.cpp:2807 rc.cpp:766
 #, no-c-format
 msgid "&Wake-up on Keyboard"
-msgstr ""
+msgstr "Despertar por Teclado"
 
 #. i18n: file kcmtoshiba_general.ui line 2985
 #: kcmtoshiba_general.cpp:2808 rc.cpp:769
@@ -807,19 +819,19 @@ msgstr "Habilitado"
 #: kcmtoshiba_general.cpp:2811 rc.cpp:778
 #, no-c-format
 msgid "&USB KB/Mouse Legacy Emulation"
-msgstr ""
+msgstr "Emulación de Herencia del Teclado/Raton USB"
 
 #. i18n: file kcmtoshiba_general.ui line 3017
 #: kcmtoshiba_general.cpp:2812 rc.cpp:781
 #, no-c-format
 msgid "This lets you set conditions for the USB Mouse Legacy"
-msgstr ""
+msgstr "Esto te permite poner las condiciones para la Herencia del Ratón USB"
 
 #. i18n: file kcmtoshiba_general.ui line 3046
 #: kcmtoshiba_general.cpp:2815 rc.cpp:790
 #, no-c-format
 msgid "USB-&FDD Legacy Emulation"
-msgstr ""
+msgstr "Emulación de Herencia del Floppy USB"
 
 #. i18n: file kcmtoshiba_general.ui line 3049
 #: kcmtoshiba_general.cpp:2816 rc.cpp:793
@@ -831,7 +843,7 @@ msgstr "Esto permite modificar condiciones para el teclado USB"
 #: kcmtoshiba_general.cpp:2819 rc.cpp:802
 #, no-c-format
 msgid "Wake-up on &LAN"
-msgstr ""
+msgstr "Despertar por LAN"
 
 #. i18n: file kcmtoshiba_general.ui line 3081
 #: kcmtoshiba_general.cpp:2820 rc.cpp:805
@@ -861,7 +873,7 @@ msgstr "RPL"
 #: kcmtoshiba_general.cpp:2826 rc.cpp:739
 #, no-c-format
 msgid "&Hardware"
-msgstr ""
+msgstr "Hardware"
 
 #: main.cpp:62
 msgid "kcmktoshiba"
@@ -877,62 +889,12 @@ msgstr "Autor Original"
 
 #: main.cpp:367
 msgid "High Power - KToshiba"
-msgstr ""
+msgstr "Alto Poder - KToshiba"
 
 #: main.cpp:414
 msgid "DVD Playback - KToshiba"
-msgstr ""
+msgstr "Reproducción de DVD - KToshiba"
 
 #: main.cpp:461
 msgid "Presentation - KToshiba"
-msgstr ""
-
-#~ msgid "Cooling &Method:"
-#~ msgstr "Método de Enfriamiento:"
-
-#~ msgid "30 min"
-#~ msgstr "30 min"
-
-#~ msgid "20 min"
-#~ msgstr "20 min"
-
-#~ msgid "15 min"
-#~ msgstr "15 min"
-
-#~ msgid "10 min"
-#~ msgstr "10 min"
-
-#~ msgid "05 min"
-#~ msgstr "05 min"
-
-#~ msgid "03 min"
-#~ msgstr "03 min"
-
-#~ msgid "01 min"
-#~ msgstr "01 min"
-
-#~ msgid "High"
-#~ msgstr "Alta"
-
-#~ msgid "Low"
-#~ msgstr "Baja"
-
-#~ msgid "Super Bright"
-#~ msgstr "Super Brilloso"
-
-#~ msgid "Bright"
-#~ msgstr "Brilloso"
-
-#~ msgid "Semi Bright"
-#~ msgstr "Semi Brilloso"
-
-#~ msgid "CP&U Sleep Mode:"
-#~ msgstr "Modo de Espera del CP&U:"
-
-#~ msgid ""
-#~ "The options shown here are only applicable when the <b>Battery Save Mode</"
-#~ "b> is set to <i>User Settings</i>."
-#~ msgstr ""
-#~ "Las opciones que aquí se muestran tomaran efecto solamente si están "
-#~ "activadas las <i>Opciones del Usuario</i> del <b>Modo de Ahorro de "
-#~ "Batería</b>."
+msgstr "Presentación - KToshiba"

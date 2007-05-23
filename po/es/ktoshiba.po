@@ -1,12 +1,12 @@
 # translation of ktoshiba.po to Español
 #
-# Azael Avalos <coproscefalo@gmail.com>, 2005, 2006.
+# Azael Avalos <coproscefalo@gmail.com>, 2005, 2006, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-23 02:26-0600\n"
-"PO-Revision-Date: 2006-11-27 16:21-0700\n"
+"PO-Revision-Date: 2007-05-23 02:46-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgstr "Presentación"
 
 #: fnactions.cpp:147
 msgid "DVD Playback"
-msgstr ""
+msgstr "Reproducción de DVD"
 
 #: fnactions.cpp:151
 msgid "High Power"
@@ -300,7 +300,7 @@ msgstr "ADVERTENCIA"
 
 #: suspend.cpp:129 suspend.cpp:158
 msgid "No connection to the D-Bus daemon available."
-msgstr ""
+msgstr "Conexión con el servicio D-Bus no disponible."
 
 #: suspend.cpp:137
 msgid "Could not Suspend To RAM."
@@ -312,7 +312,7 @@ msgstr "Suspender a RAM esta deshabilitado por el administrador."
 
 #: suspend.cpp:147 suspend.cpp:179
 msgid "An unknown event was requested, ignoring..."
-msgstr ""
+msgstr "Un evento desconocido fue solicitado, ignorando..."
 
 #: suspend.cpp:169
 msgid "Could not Suspend To Disk."
