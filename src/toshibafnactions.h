@@ -28,7 +28,7 @@ class KToshibaSMMInterface;
 /**
  * @short Performs the Fn assosiated action
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.3
+ * @version 0.4
  */
 class ToshibaFnActions : public FnActions
 {

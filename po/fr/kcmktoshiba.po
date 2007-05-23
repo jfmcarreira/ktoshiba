@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-23 02:26-0600\n"
+"POT-Creation-Date: 2007-05-23 14:24-0600\n"
 "PO-Revision-Date: 2005-06-03 17:45+0200\n"
 "Last-Translator: Nicolas Ternisien <nicolas.ternisien@gmail.com>\n"
 "Language-Team:  <kde-francophone@kde.org>\n"
@@ -27,13 +27,13 @@ msgid ""
 msgstr "nicolas.ternisien@gmail.com"
 
 #. i18n: file bsmwidget.ui line 28
-#: bsmwidget.cpp:2003 rc.cpp:3
+#: bsmwidget.cpp:2002 rc.cpp:3
 #, no-c-format
 msgid "BSMWidget"
 msgstr ""
 
 #. i18n: file bsmwidget.ui line 82
-#: bsmwidget.cpp:2004 rc.cpp:6
+#: bsmwidget.cpp:2003 rc.cpp:6
 #, no-c-format
 msgid ""
 "Here you can configure the different options for the selected Battery Save "
@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 
 #. i18n: file bsmwidget.ui line 189
-#: bsmwidget.cpp:2008 rc.cpp:12
+#: bsmwidget.cpp:2007 rc.cpp:12
 #, fuzzy, no-c-format
 msgid ""
 "Display\n"
@@ -49,7 +49,7 @@ msgid ""
 msgstr "A&ffichage éteint auto. :"
 
 #. i18n: file bsmwidget.ui line 486
-#: bsmwidget.cpp:2017 rc.cpp:23
+#: bsmwidget.cpp:2016 rc.cpp:23
 #, fuzzy, no-c-format
 msgid ""
 "Processor\n"
@@ -57,25 +57,25 @@ msgid ""
 msgstr "Vitesse de &traitement :"
 
 #. i18n: file bsmwidget.ui line 492
-#: bsmwidget.cpp:2020 rc.cpp:27
+#: bsmwidget.cpp:2019 rc.cpp:27
 #, no-c-format
 msgid "Performance"
 msgstr "Performance"
 
 #. i18n: file bsmwidget.ui line 497
-#: bsmwidget.cpp:2021 rc.cpp:30
+#: bsmwidget.cpp:2020 rc.cpp:30
 #, fuzzy, no-c-format
 msgid "Max. Performance"
 msgstr "Performance maximale"
 
 #. i18n: file bsmwidget.ui line 502
-#: bsmwidget.cpp:2022 rc.cpp:33
+#: bsmwidget.cpp:2021 rc.cpp:33
 #, no-c-format
 msgid "Battery Optimized"
 msgstr "Optimisation de la batterie"
 
 #. i18n: file bsmwidget.ui line 656
-#: bsmwidget.cpp:2024 rc.cpp:37
+#: bsmwidget.cpp:2023 rc.cpp:37
 #, fuzzy, no-c-format
 msgid ""
 "HDD\n"
@@ -83,7 +83,7 @@ msgid ""
 msgstr "&Disque dur éteint auto. :"
 
 #. i18n: file bsmwidget.ui line 776
-#: bsmwidget.cpp:2028 rc.cpp:43
+#: bsmwidget.cpp:2027 rc.cpp:43
 #, fuzzy, no-c-format
 msgid ""
 "LCD\n"
@@ -91,7 +91,7 @@ msgid ""
 msgstr "Luminosi&té de l'écran :"
 
 #. i18n: file bsmwidget.ui line 1014
-#: bsmwidget.cpp:2033 rc.cpp:50
+#: bsmwidget.cpp:2032 rc.cpp:50
 #, fuzzy, no-c-format
 msgid "Cooling Method:"
 msgstr "Méthode de refr&oidissement :"
@@ -855,27 +855,39 @@ msgstr ""
 msgid "&Hardware"
 msgstr ""
 
-#: main.cpp:62
+#: main.cpp:63
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:63
+#: main.cpp:64
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "Module de configuration KDE pour les portables Toshiba"
 
-#: main.cpp:67
+#: main.cpp:68
 msgid "Original author"
 msgstr "Auteur original"
 
-#: main.cpp:367
+#: main.cpp:108
+msgid "High"
+msgstr "Haut"
+
+#: main.cpp:109
+msgid "Low"
+msgstr "Bas"
+
+#: main.cpp:110
+msgid "Never"
+msgstr ""
+
+#: main.cpp:372
 msgid "High Power - KToshiba"
 msgstr ""
 
-#: main.cpp:414
+#: main.cpp:419
 msgid "DVD Playback - KToshiba"
 msgstr ""
 
-#: main.cpp:461
+#: main.cpp:466
 msgid "Presentation - KToshiba"
 msgstr ""
 
@@ -903,12 +915,6 @@ msgstr ""
 
 #~ msgid "01 min"
 #~ msgstr "01 min"
-
-#~ msgid "High"
-#~ msgstr "Haut"
-
-#~ msgid "Low"
-#~ msgstr "Bas"
 
 #~ msgid "Super Bright"
 #~ msgstr "Super lumineux"

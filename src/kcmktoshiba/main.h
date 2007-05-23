@@ -38,7 +38,7 @@ class BSMWidget;
 
 /**
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.4
+ * @version 0.5
  */
 class KCMToshibaModule: public KCModule
 {

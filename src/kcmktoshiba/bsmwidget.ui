@@ -1278,7 +1278,6 @@ Brightness:</string>
     </connection>
 </connections>
 <includes>
-    <include location="global" impldecl="in implementation">klocale.h</include>
     <include location="global" impldecl="in declaration">qstring.h</include>
     <include location="local" impldecl="in implementation">bsmwidget.ui.h</include>
 </includes>

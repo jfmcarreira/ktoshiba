@@ -40,6 +40,7 @@
 #include <kprogress.h>
 #include <kled.h>
 #include <kiconloader.h>
+#include <klocale.h>
 
 #include "../ktoshibasmminterface.h"
 #include "../ktoshibaomnibookinterface.h"
@@ -103,6 +104,10 @@ KCMToshibaModule::KCMToshibaModule(QWidget *parent, const char *name, const QStr
         m_KCMKToshibaGeneral->FnF7le->hide();
         m_KCMKToshibaGeneral->FnF8le->hide();
         m_KCMKToshibaGeneral->FnF9le->hide();
+        // Deal with translations here...
+        m_BSMWidget->High = i18n("High");
+        m_BSMWidget->Low = i18n("Low");
+        m_BSMWidget->Never = i18n("Never");
     }
     m_HCIFace = (m_SMMIFace->getBrightness() == -1)? false : true;
     if (m_HCIFace) {
