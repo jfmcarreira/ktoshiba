@@ -22,11 +22,9 @@
 
 #include <kdebug.h>
 
-#include <cstdlib>
-#include <cstring>
-
 KToshibaSMMInterface::KToshibaSMMInterface(QObject *parent)
 	: QObject( parent ),
+	  mHWChanged( false ),
 	  mFd( 0 )
 {
 }
@@ -241,18 +239,20 @@ void KToshibaSMMInterface::setDisplayAutoOff(int time)
 {
 	reg.ebx = SCI_DISPLAY_AUTO;
 	if (time == 0)
-		reg.ecx = SCI_TIME_30;
+		reg.ecx = SCI_TIME_DISABLED;
 	else if (time == 1)
-		reg.ecx = SCI_TIME_20;
+		reg.ecx = SCI_TIME_30;
 	else if (time == 2)
-		reg.ecx = SCI_TIME_15;
+		reg.ecx = SCI_TIME_20;
 	else if (time == 3)
-		reg.ecx = SCI_TIME_10;
+		reg.ecx = SCI_TIME_15;
 	else if (time == 4)
-		reg.ecx = SCI_TIME_05;
+		reg.ecx = SCI_TIME_10;
 	else if (time == 5)
-		reg.ecx = SCI_TIME_03;
+		reg.ecx = SCI_TIME_05;
 	else if (time == 6)
+		reg.ecx = SCI_TIME_03;
+	else if (time == 7)
 		reg.ecx = SCI_TIME_01;
 	reg.edx = 0x0000;
 	int err = SciSet(&reg);
@@ -266,18 +266,20 @@ void KToshibaSMMInterface::setHDDAutoOff(int time)
 {
 	reg.ebx = SCI_HDD_AUTO_OFF;
 	if (time == 0)
-		reg.ecx = SCI_TIME_30;
+		reg.ecx = SCI_TIME_DISABLED;
 	else if (time == 1)
-		reg.ecx = SCI_TIME_20;
+		reg.ecx = SCI_TIME_30;
 	else if (time == 2)
-		reg.ecx = SCI_TIME_15;
+		reg.ecx = SCI_TIME_20;
 	else if (time == 3)
-		reg.ecx = SCI_TIME_10;
+		reg.ecx = SCI_TIME_15;
 	else if (time == 4)
-		reg.ecx = SCI_TIME_05;
+		reg.ecx = SCI_TIME_10;
 	else if (time == 5)
-		reg.ecx = SCI_TIME_03;
+		reg.ecx = SCI_TIME_05;
 	else if (time == 6)
+		reg.ecx = SCI_TIME_03;
+	else if (time == 7)
 		reg.ecx = SCI_TIME_01;
 	reg.edx = 0x0000;
 	int err = SciSet(&reg);

@@ -43,14 +43,6 @@ class OmnibookFnActions;
 #endif // ENABLE_OMNIBOOK
 class Suspend;
 
-#ifdef ENABLE_SYNAPTICS
-#include <synaptics/synaptics.h>
-
-class Synaptics::Pad;
-
-using namespace Synaptics;
-#endif // ENABLE_SYNAPTICS
-
 #define CD_DVD  	0x80
 #define DIGITAL 	0x40
 
@@ -79,6 +71,8 @@ public:
     void loadConfiguration();
     void createConfiguration();
     bool checkConfiguration();
+    void createBSMConfig();
+    bool checkBSMConfig();
 private slots:
     void doConfig();
     void checkSystem();
@@ -103,9 +97,7 @@ private slots:
     void doSetHyper(int);
 private:
     void doMenu();
-    void bsmUserSettings(int *, bsmmode);
-    void checkHardwareSettings();
-    void checkSynaptics();
+    void bsmUserSettings(int *, int *, bsmmode);
     void multimediaStop();
     void multimediaPrevious();
     void multimediaNext();
@@ -113,11 +105,9 @@ private:
     void multimediaPlayer();
     void multimediaVolumeDown();
     void multimediaVolumeUp();
+    void checkHardwareSettings();
     KToshibaProcInterface *mProcIFace;
     Suspend *mSuspend;
-#ifdef ENABLE_SYNAPTICS
-    Pad *mSynPad;
-#endif // ENABLE_SYNAPTICS
     QPopupMenu *mHelp;
     QTimer *mSystemTimer;
     QString konqueror;
@@ -148,6 +138,13 @@ private:
     int mHT;
     int mSS;
     int mSVideo;
+    int olddevconf;
+    int oldparallel;
+    int oldwokb;
+    int oldusbemu;
+    int oldusbfdd;
+    int oldwol;
+    int oldnbp;
     /** omnibook stuff */
 #ifdef ENABLE_OMNIBOOK
     KToshibaDCOPInterface *mDCOPIFace;

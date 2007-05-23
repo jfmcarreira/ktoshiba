@@ -52,7 +52,7 @@ Suspend::~Suspend()
     closeHAL();
 
     m_Parent = NULL;
-    //delete m_DBUSIFace; m_DBUSIFace = NULL;
+    delete m_DBUSIFace; m_DBUSIFace = NULL;
 }
 
 bool Suspend::initHAL()

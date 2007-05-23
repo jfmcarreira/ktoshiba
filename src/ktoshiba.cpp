@@ -48,6 +48,7 @@
 #include <kaboutkde.h>
 
 #define CONFIG_FILE "ktoshibarc"
+#define BSM_CONFIG "ktoshibabsmrc"
 
 KToshiba::KToshiba()
     : KSystemTray( 0, "KToshiba" ),
@@ -62,9 +63,6 @@ KToshiba::KToshiba()
 
     mProcIFace = new KToshibaProcInterface(0);
     mSuspend = new Suspend(this);
-#ifdef ENABLE_SYNAPTICS
-    mSynPad = Pad::getInstance();
-#endif // ENABLE_SYNAPTICS
 
     if (!kapp->dcopClient()->isRegistered())
         kdDebug() << "KToshiba: Registered with DCOP server as: "
@@ -102,7 +100,6 @@ KToshiba::KToshiba()
         mBatType = mTFn->m_BatType;
         mBatSave = mTFn->m_BatSave;
         mSVideo = mTFn->m_Video;
-        mPad = mTFn->m_Pad;
     }
 
 #ifdef ENABLE_OMNIBOOK
@@ -115,7 +112,6 @@ KToshiba::KToshiba()
             kdDebug() << "KToshiba: BIOS version: "
                       << (bios / 0x100) << "." << (bios - 0x100) << endl;
             mAC = mOFn->m_Omni->omnibookAC();
-            mPad = mOFn->m_Pad;
             mWirelessSwitch = mOFn->m_Omni->getWifiSwitch();
             mBluetooth = mOFn->m_Omni->getBluetooth();
             mBatSave = 2;
@@ -174,7 +170,7 @@ KToshiba::KToshiba()
 
     connect( mSuspend, SIGNAL( setSuspendToDisk() ), this, SLOT( suspendToDisk() ) );
 
-    if (!mOmnibook) {
+    if (!mOmnibook && mTFn->m_HCIface) {
         mHotKeysTimer = new QTimer(this);
         if (mHotkeys) {
             connect( mHotKeysTimer, SIGNAL( timeout() ), this, SLOT( checkHotKeys() ) );
@@ -193,11 +189,6 @@ KToshiba::KToshiba()
         }
     }
 #endif // ENABLE_OMNIBOOK
-
-#ifdef ENABLE_SYNAPTICS
-    if (mPad == -1)
-        checkSynaptics();
-#endif // ENABLE_SYNAPTICS
 
     if (mBtstart)
         doBluetooth();
@@ -224,9 +215,6 @@ KToshiba::~KToshiba()
         delete mOFn; mOFn = NULL;
     }
 #endif
-#ifdef ENABLE_SYNAPTICS
-    mSynPad = NULL;
-#endif // ENABLE_SYNAPTICS
     delete mHelp; mHelp = NULL;
     delete mKProc; mKProc = NULL;
     delete mSystemTimer; mSystemTimer = NULL;
@@ -284,7 +272,7 @@ void KToshiba::suspendToDisk()
 bool KToshiba::checkConfiguration()
 {
     KStandardDirs kstd;
-    QString config = kstd.findResource("config", "ktoshibarc");
+    QString config = kstd.findResource("config", CONFIG_FILE);
 
     if (config.isEmpty()) {
         kdDebug() << "KToshiba: Configuration file not found" << endl;
@@ -297,6 +285,14 @@ bool KToshiba::checkConfiguration()
 void KToshiba::loadConfiguration()
 {
     KConfig mConfig(CONFIG_FILE);
+    mConfig.setGroup("Hardware");
+    olddevconf = mConfig.readNumEntry("Device_Config", 1);
+    oldnbp = mConfig.readNumEntry("Network_Boot_Protocol", 0);
+    oldparallel = mConfig.readNumEntry("Parallel_Port_Mode", 0);
+    oldusbfdd = mConfig.readNumEntry("USB_FDD_Emul", 0);
+    oldusbemu = mConfig.readNumEntry("USB_KBMouse_Emul", 0);
+    oldwokb = mConfig.readNumEntry("Wake_on_KB", 1);
+    oldwol = mConfig.readNumEntry("Wake_on_LAN", 0);
     mConfig.setGroup("KToshiba");
     mAudioPlayer = mConfig.readNumEntry("Audio_Player", 0);
     mBtstart = mConfig.readBoolEntry("Bluetooth_Startup", true);
@@ -307,14 +303,6 @@ void KToshiba::createConfiguration()
     kdDebug() << "KToshiba: Creating configuration file..." << endl;
     KConfig config(CONFIG_FILE);
 
-    config.setGroup("BSM");
-    config.writeEntry("CPU_Sleep_Mode", 0);
-    config.writeEntry("Cooling_Method", 2);
-    config.writeEntry("Display_Auto_Off", 5);
-    config.writeEntry("HDD_Auto_Off", 5);
-    config.writeEntry("LCD_Brightness", 2);
-    config.writeEntry("Processing_Speed", 1);
-    config.sync();
     config.setGroup("Fn_Key");
     config.writeEntry("Fn_Esc", 1);
     config.writeEntry("Fn_F1", 2);
@@ -506,112 +494,194 @@ void KToshiba::displayAboutKDE()
     aboutKDE.exec();
 }
 
-void KToshiba::bsmUserSettings(int *bright, bsmmode mode)
+bool KToshiba::checkBSMConfig()
 {
-    int processor = -1, display = -1, hdd = -1, lcd = -1, cooling = -1, tmp = -1;
+    KStandardDirs kstd;
+    QString config = kstd.findResource("config", BSM_CONFIG);
+
+    if (config.isEmpty()) {
+        kdDebug() << "KToshiba: BSM configuration file not found" << endl;
+        return false;
+    }
+
+    return true;
+}
+
+void KToshiba::createBSMConfig()
+{
+    kdDebug() << "KToshiba: Creating BSM configuration file..." << endl;
+    KConfig config(BSM_CONFIG);
+
+    config.setGroup("High_Power");
+    config.writeEntry("Bright1", 4);
+    config.writeEntry("Bright2", 4);
+    config.writeEntry("Bright3", 4);
+    config.writeEntry("Bright4", 4);
+    config.writeEntry("Cooling", 1);
+    config.writeEntry("Disp1", 4);
+    config.writeEntry("Disp2", 5);
+    config.writeEntry("Disp3", 6);
+    config.writeEntry("Disp4", 7);
+    config.writeEntry("HDD1", 4);
+    config.writeEntry("HDD2", 5);
+    config.writeEntry("HDD3", 6);
+    config.writeEntry("HDD4", 7);
+    config.writeEntry("Proc1", 0);
+    config.writeEntry("Proc2", 0);
+    config.writeEntry("Proc3", 0);
+    config.writeEntry("Proc4", 0);
+    config.sync();
+    config.setGroup("DVD_Playback");
+    config.writeEntry("Bright1", 3);
+    config.writeEntry("Bright2", 3);
+    config.writeEntry("Bright3", 3);
+    config.writeEntry("Bright4", 3);
+    config.writeEntry("Cooling", 1);
+    config.writeEntry("Disp1", 0);
+    config.writeEntry("Disp2", 0);
+    config.writeEntry("Disp3", 0);
+    config.writeEntry("Disp4", 0);
+    config.writeEntry("HDD1", 0);
+    config.writeEntry("HDD2", 0);
+    config.writeEntry("HDD3", 0);
+    config.writeEntry("HDD4", 0);
+    config.writeEntry("Proc1", 0);
+    config.writeEntry("Proc2", 0);
+    config.writeEntry("Proc3", 0);
+    config.writeEntry("Proc4", 0);
+    config.sync();
+    config.setGroup("Presentation");
+    config.writeEntry("Bright1", 7);
+    config.writeEntry("Bright2", 7);
+    config.writeEntry("Bright3", 7);
+    config.writeEntry("Bright4", 7);
+    config.writeEntry("Cooling", 2);
+    config.writeEntry("Disp1", 0);
+    config.writeEntry("Disp2", 0);
+    config.writeEntry("Disp3", 0);
+    config.writeEntry("Disp4", 0);
+    config.writeEntry("HDD1", 0);
+    config.writeEntry("HDD2", 0);
+    config.writeEntry("HDD3", 0);
+    config.writeEntry("HDD4", 0);
+    config.writeEntry("Proc1", 0);
+    config.writeEntry("Proc2", 0);
+    config.writeEntry("Proc3", 0);
+    config.writeEntry("Proc4", 0);
+    config.sync();
+}
+
+void KToshiba::bsmUserSettings(int *bright, int *perc, bsmmode mode)
+{
+    int proc100, proc75, proc50, proc25;
+    int bright100, bright75, bright50, bright25;
+    int disp100, disp75, disp50, disp25;
+    int hdd100, hdd75, hdd50, hdd25;
+    int cooling, tmpproc = -1, tmpdisp = -1, tmphdd = -1;
     QString modetxt;
 
-    // kets avoid compiler warnings for now...
-    lcd = tmp = -1;
-    /*KConfig mConfig(CONFIG_FILE);
-    mConfig.setGroup("BSM");
-    processor = mConfig.readNumEntry("Processing_Speed", 1);
-    cpu = mConfig.readNumEntry("CPU_Sleep_Mode", 0);
-    display = mConfig.readNumEntry("Display_Auto_Off", 5);
-    hdd = mConfig.readNumEntry("HDD_Auto_Off", 5);
-    lcd = mConfig.readNumEntry("LCD_Brightness", 2);
-    cooling = mConfig.readNumEntry("Cooling_Method", 2);*/
+    // Since we don't care about defaults here,
+    // let's make sure the config file exists,
+    // if not, let's create it...
+    if (!checkBSMConfig())
+        createBSMConfig();
 
-    // TODO: These parameters must be configurable...
+    KConfig mConfig(BSM_CONFIG);
     switch (mode) {
         case HighPower:
-            cooling = 0;	// Max
-            processor = 1;	// Full
-            *bright = 3;	// Bright
-            display = 3;	// 10 min
-            hdd = 3;		// 10 min
+            mConfig.setGroup("High_Power");
             modetxt = "High Power";
             break;
         case DVDPlayback:
-            cooling = 0;	// Max
-            processor = 1;	// Full
-            *bright = 4;	// Brighter
-            display = 0;	// 30 min (broken, _never_ sould be here)
-            hdd = 0;		// 30 min (broken, _never_ sould be here)
+            mConfig.setGroup("DVD_Playback");
             modetxt = "DVD Playback";
             break;
         case Presentation:
-            cooling = 2;	// Peformance
-            processor = 1;	// Full
-            *bright = 0;	// Semi-Bright
-            display = 0;	// 30 min (broken, _never_ sould be here)
-            hdd = 0;		// 30 min (broken, _never_ sould be here)
+            mConfig.setGroup("Presentation");
             modetxt = "Presentation";
             break;
     }
 
+    bright100 = mConfig.readNumEntry("Bright1");
+    bright75 = mConfig.readNumEntry("Bright2");
+    bright50 = mConfig.readNumEntry("Bright3");
+    bright25 = mConfig.readNumEntry("Bright4");
+    cooling = mConfig.readNumEntry("Cooling");
+    disp100 = mConfig.readNumEntry("Disp1");
+    disp75 = mConfig.readNumEntry("Disp2");
+    disp50 = mConfig.readNumEntry("Disp3");
+    disp25 = mConfig.readNumEntry("Disp4");
+    hdd100 = mConfig.readNumEntry("HDD1");
+    hdd75 = mConfig.readNumEntry("HDD2");
+    hdd50 = mConfig.readNumEntry("HDD3");
+    hdd25 = mConfig.readNumEntry("HDD4");
+    proc100 = mConfig.readNumEntry("Proc1");
+    proc75 = mConfig.readNumEntry("Proc2");
+    proc50 = mConfig.readNumEntry("Proc3");
+    proc25 = mConfig.readNumEntry("Proc4");
+
     kdDebug() << "User Settings: " << modetxt << " mode..." << endl;
 
-    //tmp = (processor == 0)? 1 : 0;
-    //mTFn->m_Driver->setProcessingSpeed(tmp);
-    //tmp = (cpu == 0)? 1 : 0;
+    // TODO: Check that this stuff is correct...
+    if (100 <= *perc > 75) { // (perc <= 100 && perc > 75) ???
+        tmpproc = proc100;
+        *bright = bright100;
+        tmpdisp = disp100;
+        tmphdd = hdd100;
+    } else
+    if (75 <= *perc > 50) {
+        tmpproc = proc75;
+        *bright = bright75;
+        tmpdisp = disp75;
+        tmphdd = hdd75;
+    } else
+    if (50 <= *perc > 25) {
+        tmpproc = proc50;
+        *bright = bright50;
+        tmpdisp = disp50;
+        tmphdd = hdd50;
+    } else
+    if (25 <= *perc > 0) {
+        tmpproc = proc25;
+        *bright = bright25;
+        tmpdisp = disp25;
+        tmphdd = hdd25;
+    }
+
+    mTFn->m_Driver->setProcessingSpeed((!tmpproc)? 1 : 0);
     mTFn->m_Driver->setCoolingMethod(cooling);
-    mTFn->m_Driver->setProcessingSpeed(processor);
-    mTFn->m_Driver->setDisplayAutoOff(display);
-    mTFn->m_Driver->setHDDAutoOff(hdd);
+    mTFn->m_Driver->setDisplayAutoOff(tmpdisp);
+    mTFn->m_Driver->setHDDAutoOff(tmphdd);
+
 }
 
 void KToshiba::checkHardwareSettings()
 {
-    int devconf, parallel, wonkb, usbemu, usbfdd, wol, nbp;
+    int devconf, parallel, wokb, usbemu, usbfdd, wol, nbp;
 
     KConfig mConfig(CONFIG_FILE);
     mConfig.setGroup("Hardware");
     devconf = mConfig.readNumEntry("Device_Config", 1);
-    parallel = mConfig.readNumEntry("Parallel_Port_Mode", 0);
-    wonkb = mConfig.readNumEntry("Wake_on_KB", 1);
-    usbemu = mConfig.readNumEntry("USB_KBMouse_Emul", 0);
-    usbfdd = mConfig.readNumEntry("USB_FDD_Emul", 0);
-    wol = mConfig.readNumEntry("Wake_on_LAN", 0);
     nbp = mConfig.readNumEntry("Network_Boot_Protocol", 0);
+    parallel = mConfig.readNumEntry("Parallel_Port_Mode", 0);
+    usbfdd = mConfig.readNumEntry("USB_FDD_Emul", 0);
+    usbemu = mConfig.readNumEntry("USB_KBMouse_Emul", 0);
+    wokb = mConfig.readNumEntry("Wake_on_KB", 1);
+    wol = mConfig.readNumEntry("Wake_on_LAN", 0);
 
-    mTFn->m_Driver->setDeviceConfig(devconf);
-    mTFn->m_Driver->setParallelPort((!parallel)? parallel : 2);
-    mTFn->m_Driver->setWakeonKeyboard((!wonkb)? 1 : 0);
-    mTFn->m_Driver->setUSBLegacySupport((!usbemu)? 1 : 0);
-    mTFn->m_Driver->setUSBFDDEmulation((!usbfdd)? 1 : 0);
-    mTFn->m_Driver->setWOL((!wol)? 1 : 0);
-    mTFn->m_Driver->setRemoteBootProtocol(nbp);
+    if (olddevconf != devconf) mTFn->m_Driver->setDeviceConfig(devconf);
+    if (oldparallel != parallel) mTFn->m_Driver->setParallelPort((!parallel)? 0 : 2);
+    if (oldwokb != wokb) mTFn->m_Driver->setWakeonKeyboard((!wokb)? 1 : 0);
+    if (oldusbemu != usbemu) mTFn->m_Driver->setUSBLegacySupport((!usbemu)? 1 : 0);
+    if (oldusbfdd != usbfdd) mTFn->m_Driver->setUSBFDDEmulation((!usbfdd)? 1 : 0);
+    if (oldwol != wol) mTFn->m_Driver->setWOL((!wol)? 1 : 0);
+    if (oldnbp != nbp) mTFn->m_Driver->setRemoteBootProtocol(nbp);
+    mTFn->m_Driver->mHWChanged = false;
+
+    olddevconf = devconf; oldparallel = parallel;
+    oldwokb = wokb; oldusbemu = usbemu;
+    oldusbfdd = usbfdd; oldwol = wol; oldnbp = nbp;
 }
-
-#ifdef ENABLE_SYNAPTICS
-void KToshiba::checkSynaptics()
-{
-    static bool err = false;
-    if (!mSynPad->hasDriver()) {
-        kdError() << "KToshiba: Incompatible synaptics driver version " << endl;
-        err = true;
-    }
-
-    if (!err && !mSynPad->hasShm()) {
-        kdError() << "KToshiba: Access denied to driver shared memory area" << endl;
-        err = true;
-    }
-
-    if (!err && !mSynPad->hasParam(TOUCHPADOFF)) {
-        kdError() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
-        err = true;
-    }
-
-    if (!err) {
-        int pad = (int) mSynPad->getParam(TOUCHPADOFF);
-        if (!mOmnibook) mTFn->m_Pad = pad;
-#ifdef ENABLE_OMNIBOOK
-        if (mOmnibook) mOFn->m_Pad = pad;
-#endif // ENABLE_OMNIBOOK
-    }
-}
-#endif // ENABLE_SYNAPTICS
 
 void KToshiba::multimediaStop()
 {
@@ -737,7 +807,7 @@ void KToshiba::checkSystem()
         mAC = (mACPI)? mProcIFace->acpiAC() : mTFn->m_Driver->acPowerStatus();
         (mACPI)? mProcIFace->acpiBatteryStatus(&time, &perc) : mTFn->m_Driver->batteryStatus(&time, &perc);
         mBatSave = mTFn->m_BatSave;
-        //checkHardwareSettings();
+        if (mTFn->m_Driver->mHWChanged) checkHardwareSettings();
     }
 #ifdef ENABLE_OMNIBOOK
     if (mOmnibook) {
@@ -755,32 +825,32 @@ void KToshiba::checkSystem()
         int bright = 0;
         if (mAC == 4)
             bright = 7;
-        // BSM changes are only applicable only when we're running on batteries...
+        // BSM changes are only applicable when we're running on batteries...
         else if (mAC == 3) {
             switch (mBatSave) {
                 case -2:
-                    bsmUserSettings(&bright, Presentation);
+                    bsmUserSettings(&bright, &perc, Presentation);
                     break;
                 case -1:
-                    bsmUserSettings(&bright, DVDPlayback);
+                    bsmUserSettings(&bright, &perc, DVDPlayback);
                     break;
                 case 0:
                     if (mOmnibook)
                         bright = 3;
                     else
-                        bsmUserSettings(&bright, HighPower);
+                        bsmUserSettings(&bright, &perc, HighPower);
                     break;
                 case 1:						// LONG LIFE
                     bright = 0;
                     break;
                 case 2:						// NORMAL LIFE
-                    if (100 >= perc > 75)
+                    if (100 <= perc > 75)
                         bright = 3;
-                    else if (75 >= perc > 50)
+                    else if (75 <= perc > 50)
                         bright = 3;
-                    else if (50 >= perc > 25)
+                    else if (50 <= perc > 25)
                         bright = 1;
-                    else if (25 >= perc > 0)
+                    else if (25 <= perc > 0)
                         bright = 1;
                     break;
                 case 3:						// FULL LIFE

@@ -1,3 +1,20 @@
+2007-05-23 Azael Avalos <coproscefalo@gmail.com>
+	* Set the default (loading) values of the BSM widget
+	* Finished the BSM widget...
+	* Added two new functions to deal with BSM config file
+	* Finally finished with the new changes made to the BSM
+
+2007-05-07 Azael Avalos <coproscefalo@gmail.com>
+	* Now the Hardware tab items send the signal correctly
+	* Removed old BSM stuff from KCM and cleaned up a bit
+	* More advances to the BSM stuff, it is semi-functional now
+	* Got the Hardware stuff working now (getting closer to a
+	  release, once I finish the BSM stuff...)
+
+2007-05-02 Azael Avalos <coproscefalo@gmail.com>
+	* Moved checkSynaptics function to FnActions class
+	  (it should have been there since the beginning...)
+
 2007-04-30 Azael Avalos <coproscefalo@gmail.com>
 	* More advances to the KCM BSM code
 
