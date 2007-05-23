@@ -1,0 +1,1323 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>BSMWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>BSMWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>500</width>
+            <height>500</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>500</width>
+            <height>500</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>500</width>
+            <height>500</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>BSMWidget</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>toplayout</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>bsmpl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>32</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image0</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>infotl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>440</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>440</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Here you can configure the different options for the selected Battery Save Mode.</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>stufflayout</cstring>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="9" column="4">
+                    <property name="name">
+                        <cstring>hdd100tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>hdd100s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="8" column="7">
+                    <property name="name">
+                        <cstring>hdd25s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="5" column="7">
+                    <property name="name">
+                        <cstring>bright25tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>bright25s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="1" column="5" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>proc75s</cstring>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>1</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="7" column="6">
+                    <property name="name">
+                        <cstring>display50tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>display50s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="6" column="2" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>displaytl</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Display
+Auto Off:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="6">
+                    <property name="name">
+                        <cstring>proc50tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>proc50s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="9" column="5">
+                    <property name="name">
+                        <cstring>hdd75tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>hdd75s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="6" column="3">
+                    <property name="name">
+                        <cstring>displaypl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image1</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="8" column="5">
+                    <property name="name">
+                        <cstring>hdd75s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="7" column="4">
+                    <property name="name">
+                        <cstring>display100tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>display100s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="3">
+                    <property name="name">
+                        <cstring>brightpl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image2</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="5" column="4">
+                    <property name="name">
+                        <cstring>bright100tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>bright100s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="4">
+                    <property name="name">
+                        <cstring>proc100tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>proc100s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0" rowspan="3" colspan="1">
+                    <property name="name">
+                        <cstring>coolingpl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image3</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="9" column="7">
+                    <property name="name">
+                        <cstring>hdd25tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>hdd25s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="8" column="4">
+                    <property name="name">
+                        <cstring>hdd100s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="7" column="5">
+                    <property name="name">
+                        <cstring>display75tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>display75s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="6" column="4">
+                    <property name="name">
+                        <cstring>display100s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="1" column="7" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>proc25s</cstring>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>1</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="4">
+                    <property name="name">
+                        <cstring>battery100pl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image4</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="2" rowspan="3" colspan="1">
+                    <property name="name">
+                        <cstring>processortl</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Processor
+Speed:</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="2" column="1">
+                    <item>
+                        <property name="text">
+                            <string>Performance</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Max. Performance</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Battery Optimized</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>coolingcb</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="8" column="6">
+                    <property name="name">
+                        <cstring>hdd50s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="6" column="5">
+                    <property name="name">
+                        <cstring>display75s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="4" column="7">
+                    <property name="name">
+                        <cstring>bright25s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="6" column="6">
+                    <property name="name">
+                        <cstring>display50s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="6">
+                    <property name="name">
+                        <cstring>battery50pl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image5</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="7" column="7">
+                    <property name="name">
+                        <cstring>display25tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>display25s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="8" column="2" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>hddtl</cstring>
+                    </property>
+                    <property name="text">
+                        <string>HDD
+Auto Off:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="5" column="6">
+                    <property name="name">
+                        <cstring>bright50tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>bright50s</cstring>
+                    </property>
+                </widget>
+                <spacer row="4" column="1" rowspan="6" colspan="1">
+                    <property name="name">
+                        <cstring>coolspacer</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>240</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QSlider" row="1" column="6" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>proc50s</cstring>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>1</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="7">
+                    <property name="name">
+                        <cstring>battery25pl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image6</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="3" rowspan="3" colspan="1">
+                    <property name="name">
+                        <cstring>procpl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image7</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="5" column="5">
+                    <property name="name">
+                        <cstring>bright75tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>bright75s</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="2" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>brighttl</cstring>
+                    </property>
+                    <property name="text">
+                        <string>LCD
+Brightness:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="8" column="3">
+                    <property name="name">
+                        <cstring>hddpl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>48</width>
+                            <height>48</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image8</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="4" column="5">
+                    <property name="name">
+                        <cstring>bright75s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="5">
+                    <property name="name">
+                        <cstring>proc75tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>proc75s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="1" column="4" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>proc100s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>1</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="5">
+                    <property name="name">
+                        <cstring>battery75pl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>30</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image9</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="7">
+                    <property name="name">
+                        <cstring>proc25tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>proc25s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="4" column="6">
+                    <property name="name">
+                        <cstring>bright50s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="4" column="4">
+                    <property name="name">
+                        <cstring>bright100s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="9" column="6">
+                    <property name="name">
+                        <cstring>hdd50tl</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignCenter</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>hdd50s</cstring>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="6" column="7">
+                    <property name="name">
+                        <cstring>display25s</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>32767</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="maxValue">
+                        <number>7</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="1">
+                    <property name="name">
+                        <cstring>coolingtl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>110</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>110</width>
+                            <height>32</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Cooling Method:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>coolingcb</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>buttonlayout</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>ktoshibapl</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>139</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>139</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image10</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>bottomspacer</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>203</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonOk</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>50</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>50</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;OK</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonCancel</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>70</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>70</width>
+                            <height>24</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="443">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af400000182494441545885c556d1b183300c937a8c92297c0cc267876134ce536497bc9f864b830d01c2abeefa41214828726ca20354f5f2da570f0116440422f23b01ad784480f7e5962bbcf0fee4dd50559602ca6c58ff9d1590002025971f24bf841c9103c0d083787df0f30cc9540bf12ae5c88166f2cd8b1d37ce08b84cbe27a20ca1aaee57c11d726b7d5d0122e26620dd252f45904c5e1e5a42d80d5610ad0c74fbfa2f22d20ce450ab6a39bf7be2e7bdc0427a02009295819f3b300076d3780ab50baf3bd34c0f6cce015525c9aea54812d334414412aad2ffb70cccf38c182350cd135f0e147dbb9b0b2433319665418c112184d589a124b616f7e886993ca314b1d9821cca7c6c962fb9421e635cc9c7715cc5e4edd8946125862292ce3a71445ec2ec86e50c5738d13c13967b6e91e76bc0a8026f8054557ec209ef374d533379bef6aae0d0110b2292e6796e26df08d8237708eb350c21a4ecc21ef9fbfd06506dc1deb17ce2c86608a1891c786e24739d28c901f050c08d66c5cf61e3de07803f2efb5e14f44edf690000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="1267">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f987000004ba494441546881ed5abf6fdb4614fe8e47f12851a468a34e63a83050388b5dc01d02643254c05e321605ba67683b776fd7fc03fd2b8a8e9d021830ea0e9e82d4b5d14e8d62d8aed30cb664fd204df278d7c13e96a4a8d8b19a4a4afd010f77f7de13f53dbefbf1448a6c1e484c33b471131815531f809e1eac2d90f7cbe5f2878ee3c0b66d542a15d8b60dc771502e979336af2bf2dddede7e8f735eaad7ebc1fafafaa9effbe8743ae8743af07d1fdd6e37e9bf4ed7e974d0ed7693bee7792fbe7ffaead540006b0be423d7757f5d5e5ea6711c833106c330502a95c01883aeebe09c2308024829e1fb3e186338393981611803b2b5b5856eb78b7abd8e4ea783300c33120401a2281ae82be19c434a09c61800c0344dcccdcda1d96cc60fefb18f9ffc11fc0600d83c90b85cc88f565757a5a66912c0448aa669727d7d5d9aa6f948f1ceac01dff721e5e4ee4a4208f4fbfd8c6e60115b96f59f117a53188631a09bfa5d682080499e424598aa008ab8bd7b5368da305553a808531500e77c40375553e8ffb18827790a15e13603e3c68d32502e97a1699391bc6b65a05aad6608fbbe0f21c4db65764de857bb00bd5eef6df3b8310632302977f6ba1808208ee371f0b8312663258e80db00c68d772a80a9388229a5408a6bfa1cf8696f6fafbdb8b8e84a29512a95324fe5d4533ac3309271ba9fb7f5fb7d1c1e1e42d3342c2d2d41d7754451947902c739471886898e739eb12b7f259452349bcd3680ad81006cdbeeebbafee9f1f1f11794d23aa514baae27a2c6f976985dd3344a08a19452eceeee46420819c731a2288210025114218e6370ce33adea2bc9d95ad56af53bcbb27a4519f89a52facdecec2c3ccf8310028410689a064a699291b4a8bbadeb7aa15df9a83b9b97617a4208808bb246f1300c03954a0541107c06e031806ff3013454e7ecec0c8ee3404a99a4739c08c310e7e7e7a8542a4a9570259b07120fef319331d6668c314208a49468341ac5571b03a494d8d8d880ebba104220b880fbe3efdd73958107001800789e875aad86fdfdfdb1112e826ddbc9237d5c707d00e06715c027ca310802f47a3d349bcd31d01c0e21048410c9fb025c704e026800fffc1688a208a669823196487e9cd71b8631d44fcd61d506413020ca9e1ee77dd44b8f34670240370ca3cd18b38a082a72a6692624af92b4bf611885848320c80436cc27ef9f1af78320707500f7018cfc52c0b22cdc9d9f47ad568353abc19d99813b3303ab5a45c4395a272768b75a68b75af8ebf818474747237f2580fb3a525bd24de1ba2e56565650b62c5896854a4ea8aec3344dd45c177377eea05eafa36adbf8e5d9b351bfbaf1af04d06eb7b1b3b383bbf3f3705d174ead869aeb82c731841008c310ed560badd3d38b0cbc7c893f47cf00003408801f007ca06a9974abfae971dece182bb4a57d5410e9d356bd994cd747f95ae91ab6431dc073009f4b29a1446d594288a43ed1342d11ce39082149a9a1e0fb3ec230ccd4479452482933358de338f03c0f9ee765ea9e2289e338d9790821495973594f3da100ce007ca5c8689a96d422aa5550c10d0b32be9c32e9cfaa935dd938e7ea344d2ad06192ae97f275d3e575bed4370fe4d3b505f2580841d5c5a328cadcf1d709a5f44a7b3e6015745ef72676214477e3057f4e6effad3266fc0d25f822f8fbeee8c00000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="4953">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f98700001320494441546881b55a6b705cc595fefabe67eebcf5f048f243b265d9c642b225d9c6c8d8de0403668d81106a8bf0c8520b2481dada84cda6486543c863b35b4036244048d82561210e2109606288310e241861636c6319f92d5b9625cd6824cd7be6ce7d77ef8f91c00fc986657daa6ed59d99ee3edfd77dfaf439a78730c6f0ff2d0b172e6c5014e55e45518200601846ce308cff3c70e0c08933db12423e952ee153f53e87a8aada525757b7120062b1d836c3302e889e0b46a0542a7d38bba552e913f79f7df36bff68407a909a16f862e11bb1d76e7c74b276dca78339b930c60441109489cf8220288cb18f3d59736e7eed0653f03cb46add52e56faebf543125cf43d59dbfba61b2b6e724b062c50a65e9d2a5a18f0f7d7c508e33044138904c26f72493c93d82201ce438ee63d9d0dc5bb77414a9f8f8d29517cb0fad57f1f0f57e745ebd44d698f878c5e2273a3e3681952b574a994c6679b158fc427b7b7be49310686b6b8b158bc56fc6e3f12fc4e3f12f148bc5fbdadada62e7057ffb9fe7ea2eb7a1a1fda2697fbf3a8c8134703205fcc395d598bf66f934ddc68650d38fe79eda874ce685d6ac5923a5d3e96beaeaeaee771ce7e2582cf62063ec178b162d3af9cc33cfd053db3efbecb364f3e6cdfcc18307c38ee34429a57318632d00ea1963b584109e529a628c0d023800e03021241e0c0647afbaea2aebfbdfff3e0580a6dbff1cb61dfa9238ab71d52d6b1bd0180034bbac439580e345e0c9ffde8dd41b6fbd452cfb7a2df6cd0c30c5264e2693114110aef5783c2d8140008cb12f271209aebbbbfb09001fbac2b56bd72af1787ca6e338cb08215789a2d82acbf24c45513ca228723ccf1300705d97398e43755db70dc318334df3702a957a63c3860d5d0b172e3cf8d8638fe5eef8a5fd885b397dd592f67a500a7c300ad80c0003440ef0c840e7ba36bc9648afd277ec7804c017a724505959994e24122fc762b11649925a6b6a6a828ee35c1b8fc7b70238b165cb16f2ed6f7fbba2582c5ecbf3fc0daaaab68542a1aa4020c079bd5e4892048ee33ef4428c314229e56cdb16745d9f59281466a452a9e58542e158b1587cf5ae9fc7ab4a1517dd165d300f8411f4248071ec702920708043018b71f07ce63328c4c66e130b5f1fb4ad87ff75521302ca7b20954a757abddeef363434342793c9b7c7c6c61ea8acac3c924c269703b8c3e7f35d1b89443ce170188aa280520ac330502a956059161cc701630c3ccf43922478bd5e288a024110605916b2d92c62a5304d4dff22b2732ee1a2d55e70a7c0610008030c1b18d500cd042002646414d8f0a4c1d263374c4900287ba14c267329a57421c771ef353535ededededfd9c2008ff140a85164d9b364df17abd701c07b95c0eb95c1ef98263a7b5199a63bb608c8e0f4e08c77108ab2715bf8f9783c100894422902409ef631d866b2e8315aa0623e599a60ce049f9e118608eef056ee2d01601dab31fc60b1bbacf4900286f68c771385996313434d42908c2afaaaaaaeaaaaaaa38511491cfe73136966589a4504a162e2a9a8eeadab45a1105c16bdb4e1a00445188d88e5312c9a82ef2052eeced51abc296afba3ac41d9ffd3df00b3bc05c8052c0c11904009c156d70002701271e7ac23defe1b275eb56ebf2cb2f9762b1d867398e7bb0b6b67646381c86ebbae83f19a7b111b534965b58d2ec05cc1f50fd175f3ccb5b37238c62c9c18eaddd1c002c5fb348f17905253698416fcfc9522c3fbf902a1c288da4fb55b562d85fe9e4e0af0e02140001c8b8f97c286710e00460ec701c6e3299fc58a76332996ce438ee8e5028d4140c06619a2692c924fa6391e270a6bde409d4f85a3bea3d8b9736f01d1db5a8af95f1fc0b473fec3f7d7a007f774313fae32676efaef7ee7def847c6cbf474fe46b8ad587dfe11dddf112c2819a2ea86dc1316d466dea509bbad4b2e15a36a8e5941fbb6c4f5651a766bef8bdf312b8f3ce3b05c771d6a9aaba3a180c4aaeeb22954a6130e1d586b31d79c95b55d979d512e5baf58d689a29231ce0e0b88074cac892005405819a888cf9336761694794dff8c72adfb6575c61f4c4e8d8b4b1c78cba69c5506d6d2dc74b3c06d3836e3c1edfa16bda3dab56ad3ab471e346772a7ce70c255e7ffd75b27bf7ee4651146f0f0683114551904c15587fbc3a37905c990517ae281574b3e7dd43eeb101030e25a7013f5324017028c1b101033def1e724b05dd247ca43251b85c3f9988164646328c1082482422040281e51cc75dbf63c78ec833cf3c3365cc7d4e023ffde94f45dbb6af501465aea228304d132349c988a75b0cafbfaaa263758bc7175495a1be84bee9b7dbe9eb5d29c453533b85788ae1f5ae1436fd763b1dea4be8bea0aa74ac6ef1a881ea8a54b1c3888f8986a669906519c160509465f90ac330e66cd8b041608c61b2e79c26343c3c1c21845cedf17878420834adc486d30b0a8abfd673e995edca67af68822fe095dfd9bc8bf5f6f4173731f864cf4a6e459bffacb19279a0ebfd22363dbf93f6eeef2f7a7d8a74c99a36f98aab172018f12bdbb7ecb152f9c64236dba354555510bfdf0f45519a745def3870e0c02100b9c9304e49a0afaf0fa6692e9624a9599665d8b68d5496d879639e3b7f7ed4f7b757cfc18a450aaa232d0886bccaabcfbd458eee3baefdcfa3baaadf752597ca7fb412a93cc3d61d05fceec92d34d617d764af225f7dd32af99a758d6899cd4311e660f058cc77b8bb594ba63fb0bd5e4d521405aaaa860b85c2f25c2ef7fa5404a634a1af7ded6b028085a2288601c0344d0c6716647c7e4f7049671337afc10b8f04b4cee671ddfa46ac5ebf4cf6077dd250dfb0f6ea73db58623005ca182863480ca6f0ea73dbd850dfb0e60ffaa4d5eb97c9d7ad6f44eb6c1e1e0998d7e0c592ce26cee7f70453a5968caeeba094c2ebf50a8220cc0530f3965b6ee13fd10a0c0d0da98490398220c8945298a609db66ac6eee346fc7d23a548708082907592db37968d75f0402c87ffde34ef4eeef2f0e1c8da9a6690100f6bebd9f9a96ad79bcb2d4b9b65dbef6fa8bd0329b872c96755587083a96d6e1bdb7a779878f0a794a295cd785288a4410844ac658dd071f7c200038cb1b09130938632ce8ba2e24490280676ddb3e00a08610425cd71d8f6b28c018868735fc29a39d36906903331a6bb17845b3fcce6bbb59c9763590b2c292666800c4c59f5d2ccf68ac453c96c72ba3a703d10c00e351c1843e001045510550552c1683975c72c97acbb2564ee0344d73440080aaaaaa168fc7b392520a4110108fc703baaedfcb715c688280ebba0003fa0e0f657ff1a3cd532d1c5cdb0500060e26082967618cf1a0900feee9358e7cd03765df62b6080f5f26412905630c841011804a0899190804bea4aa6ac704ce4422f1ec8726140e87c1f33c4cd31cd7c978c69872aacb02c00cc3ce1a89cc94200094a32e028a727000105202072393ca9fbb1f008f0a795c3f08212084f08c3191314626c32900806559b9dedede7ecbb2e0f7fb0980e3006c001a21041cc781e338808044eb2aea2f5adc00e18c2d452960580ca9440687de3fee8040078774f94744c0e059d03647a88886a14804dc19eec37181837b4fc0cc92c484cef155a0653e4c775db7afb7b7b77202a7e338862008423691483c323150a15080288a7b092132632c0d80f13c4f044100211ceaeaab71d3edcb515f8dd3480c26819d7bd378f3c51d0c043a18443048e5e58408021d80aff5d2f964d9e20866549e0ebe7f14f87946c3f1bde599e7791ee3a66b33c64c5dd707464646eea394364ce0040061dfbe7d19006f9eb994adadad01c7714628a58ce77988a2088ee3303c98c440df28dae754431d2f9ca4f2c0d1be02feba71277af7f7e7bd3e45a98c46a4442c4900205a5729271369d2bbbf3fcf715c301c5c81c6a81f1581727fcd00b6bd3b8ae1c124182bdbfec40a388ea303288aa248f7efdf7f02a7a4b4c039ce81e6e6e622801edbb68b1cc741511404bc19393d961b79a76b003d7d361c1718186578f92f593cfd93d7dc437b7bf3b2227bd6deb45a6e5bd94c445180280a685bd94cd6deb45a9615d973686f6ffee99fbce6befc972c0646191c17e8e9b3f14ed700d263b911554a49b22c4fd839b32c2b49298d4722117b329c5312f8c10f7e4029a5072ccb1aa39442144544232742d41aa387f61c33f7ed4fa32fc1b0a52b85977fb39d0e1d1fd6d5802aafba668974c5da26f8d58f86f6ab1cae58db8455d72c91d4802a0f1d1fd65ffecd76baa52b85be04c3befd691cda73cc74cc51a72ad81bf6f97c28872e9a6d59d620632cd6d9d9392981290fb286860610427a6ddb3e68db76a32ccb0806fca43270d8333612d1366fdc235a7429b7f5a59df4584fbfe6f529e2f22bdae46baf5b80e699c01ee9a3b13c12d03c13c0750be03854eefad32ed6db7342db04a61ad632ee8d3feea1c991b41690f629e1709088a2085dd7a1695ad1b2aca38220247ef6b39fd1c9709e33989b376f5eeae0c183cf158bc5351e8fc7a3283266d5667cc6c943e9c37bccc2f089517f2e9dd714559126629bc58d3c2ce7ecb1641158be508222b720101c8f9dba8f6b2303636a2e9d29f89423565df56845301801a514d96c96158bc5638ee3ec8e46a3a3678f58967386d3f7de7baf2b084257a9547a4fd77546084165581066540dfa15a96064d3f9ace255c4ceb54be4abd636a2a5813f6f3ed0d2c0e3aab58de85cbb4456bc8a984de7b3a290d3a3a13e5f6d54150441806118c866b39aaeebbb789e3fd4dedeaeff9f085c76d965acb9b93961dbf64b854261cc711c288a8c6835936b2a8f4b1cef6a82c80b922c623465612c0fd893ccfe84d80e30960746531624598420f202c7395aa5ffa05c1b255ebfdf4728a5c864326e369bed771ce7dd40203074f7dd77bbe387da59cf7953cae79f7fde993f7ffe4bb95c6ebe2008b74c9f3edd170a7ab8857332619eebe686461b939b376c950fedeaf56d5b3c5b5cb6ac168a222095fd68cfa5b236b66ecfc0301cecdc19c791bd7d76ffd1134549289ad32b0e05e6d56783a150a8eca68787e9f0f0f0a0a6695b25497a77f9f2e5f9356bd64c99259db7ac0200975f7eb9d8d7d7d72e49d2037575755756555581e77968258b0d8f307368c4af8fe5e658a2679aa406bc9ca2488aa448f260df70020066ccae895a86651a866568f912b54b0933a41e916a2ab35e7f639b1c535713d705a865c3b56d462d97ba96e3ba36a5ccb2e15a0e98e5c0b51d50db826b3b70b3058a6cf65fce4ba0bdbd3dc2189328a5763a9d6e0a04024f555757cfabaeaee6244982ed38281674361837ad5cde66a6a33849ad33cb7144a0949900c07144a6943995deae90c0e9bcea059951abc8e1b09fecf5df81e892659833cb0f7aa69f39231326a4fc9d20003dbb62d8f51fbf1c99d2846ebbed36aebbbb7b1621e44baaaa7ec6b6ed972a2a2a7e353a3a7ab7699a5fd5346d656d6d6d485555525111249108934ba51272b91c346d93cfb66dd071441cc7411084f2611808c0eff7431004b8ae8b121fc49a163fae9d03e4ccb3309f2613c52eaf04bc1caac3aeffaaac9c92407777f72c9ee7bf128d46efaaadad0dc66231ffe0e0e0ae7038bc3d93c93c68dbf609c3306e884422b5914884f7fbfd080683080402b06d1baeeb7e1812731c8789708410024a298ac522d2e934e37dfbd9a6aee99cc2d740e5cbc5dc3385a05ce01d2d01191308a8c08bbfdb0f161fe89994407b7b7b841072574d4dcd9dd16834685916f2f97c1e80f9c0030fe80f3ffcf09e818181f8d8d8586fa15058974aa596452291483018c478325e8e5e4f11c6184cd344a150402693413a9db632994cdcf2bf9038e146da7f23ae1657360701f7f4aa1c216552fbc680c34940e700319942f6c9df1b30b46f4dba07dadbdb23b22c7fa3bebefecb1cc7058f1c39f276a954fa4e4545c53bdbb66db300e0d8b163e4c61b6f944f9e3c19658cb5288ab24e51941649926a6459f6cbb22c0a82c00320aeeb52d334dd52a9648c5fb9c6354d7bdf75dd0f789edf1759fae84dc58a86afcf5cb30af5111ee3b953b93a0da0370b1c9b48411c07f8f5d3406ff7bf018f4f5d5e6f6969690887c35fb12c6b593e9fff6e381cdeded5d575d63dd77df7ddc76ddcb8514a241255aeebce1445712ec771b3010409215e000263cca594ea8ee3246ddb8e514a074551ec5755756cd1a245f9a79e7aca6dfbdce6a7ad868b6ef3afb81492408072f68a8205240d003c004681975e04de7beb19e0b12f02e770a3139bd875dd686d6ded9ead5bb75a93361c97fbefbf9f7be38d37f8783caee4f3799f6ddb32634c608cf1001821c41504c15014450f8542466b6bab79ebadb7d275ebd63100a85af264d8d1ad97f48b97ad725a3bc09c325e3a5ef08504e0cd3781ad9bde02703df048e69c043e8db4b6b6462449ba4710842500e038ce2ecbb21edfb76f5ffaccb6a7ded487e63f32d7b1dd57dc155737090be7c31df74a9c07307776c37af1d747e1d275c08f7b27fa5c907b62dbb6a7c9b2fcf9fafafa6beaebebaf9165f9f3b66d4f3b5fbfece1aff632ddb899fce595918a9101cc8e020d354078b00fee9f7e3f02d7baf954f0178c0021c4300c233b11af8cbf7fac7b622dfeaddd763a734fea0f7f30839951045323187beeb7a6abe5ef011edd7d66fb0bf6570351144f7bd7f52903cab3c42efef00547ffe7da3dfffec483a00c462efb0de0b117266b7bc108701c77329d4e6f9b78ffa4fd99fba3478d0c26fd7fc4a9724108f87cbee142a1f09d89cac1c4771742d7ff0251a5a5bb47522d920000000049454e44ae426082</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="1341">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f98700000504494441546881dd584d4f1b47187eb6ea8d3f911c682e4575158a9a9357912af223d2832b08415104b97068102c0a87943889a915394ee35a15acc2af88d612e253a0051f90951ce047f8b8f3f6e09df5cceccc7ad75e12b58f6479763c1fcff3beefbcf3ae81ff38ac5c57f33c4a35ceb673db379f8544e283c865199b02a30be0844432264fe8c6e4e88d7ce079a41560ea1f11a3aa5709c9eb99ad9c3c2f034611408ee3607575b5bf9865f5d7f43c8a888bed709e88f079282edf649ea18441abd542abd5ea312302b87545ab1bc8dbb62d19609810cb2640b381e77900fa42c2671d9188bc6ddbb06d3bf51e49c8ee811cb346b1581c79edf402e296b1b845b917fa433d40f682647d6911f1dc98f732229b07c44319ee2f8a5085c4a7dbd273ecd08b7ba4c4b759064b1b093c1cc721a0974d14115a4b0a42e296bfb68b8d131705c4c590f8711c874271ea27beae698fdca02e9ebc09398e439ee711118922f2585b42f610ca804167220f644fa31cb66d258410c4c32d5c5efa10fa22059de85e0371cff3c8f33c6ddcf390f27a73f542be4808c52d4f5943858fb76d9b2066a26bbdc87a3babb99ac2fa27460e00debefd0bb55a5dfb5b3819506ba76b2b253425b14a9ec3711cd4eb0d3c7c388bf9f939bc7953835a810a8b006a3865f0442ed568ff274fa46698de1f23ced5ad9d06c395121a529c98e33878f7ee6fcccdcdc0711c10111e3d9a47b5fa06a9ca8e8ce76098f4155949f762f2fe7d1333332588c55bb158846559d8dcac6261e1b176deb09cb26421028066733bea2895ee4b031a8d7fc0188b9ed5e2edee5d1baf5f6fe2c99305a9fff9f33f40c4c018e1e9d3dfa342310da9340262c439c43e220622161b23e2e3470f00f0ea55058cb188746f6e6fccb367eb2062585959492524e90c10006a36b7b5e44d989d2d197f5b58781c2d3d3dfd0beedd9b86f2da10b584f7edc43a4aa7ce68713308a5d2afd1c6403c7cf8db57f80e8072f96564fd9e3748e3953eefb5b5352de7586ecf46bc8752e9be91b80a51c8c6465910c0628274f74c2824e21d3b0397979f0000376e8ca7223f39f903daed36262626a47e354daac25ebc7829c57efc5b26bfb3b3a3dd3fe601e96f0ea41522bbffc183dfb4a32a953f8dd6d6f5eb88773a1d89f7c02c94c623dc5a44c09d3b3fa1dd6e6377775f434ecc52fac3cbdb268bab487d0f5c5e7e0211e1e6cdef4c320000fbfb470944c31e63d800aeeba6a5042063394d44f8fcf9024110e0d6adef7523866ebbee3688089665690faf09c634aa9e051e0a4110803116b527267e34c6709a5877dd6d29ebf0b68a4ea783b1b13174bbddc4348a42a140beef5baa1091b44e48a13039f0508afddce23af2620a0d0f2d005802b708c6102a140af07ddf2a97cbd4ed76b1bcbcac9090373d3939441004b87d7b4a3ad40049a9f1c307570a153164c4b686b896e7c033303e3e0edff7adf5f5750280a5a525adc578fbe8681f4110606aea67619538719130bf9d8908171717a9881b05a82ee2e01ed9d8d82000585c5c4c14b2b7b70bc618aeaeaec0189348eadae7e7e70389ebb8198bb9242100ac4aa5826ab59a18c3a2a53951b5edfb3ececece38f14c5c1205a41552abd550afd7b542b8e575e44f4e4e707a7a3a34f1d402d20a69341a68369bb1424c240f00878787383e3e1e997866018316e742b6b6b6e0baae741b5b9685bdbd3d1c1c1c003911cf0d85428174dfd0fc239d3076680cffdf6888411ec1355b7c64011c59c87c9550c90a313cf20895ff2dfe058ee8857c8617e1300000000049454e44ae426082</data>
+    </image>
+    <image name="image4">
+        <data format="PNG" length="443">89504e470d0a1a0a0000000d494844520000001e0000002008060000000540c87f00000182494441544889edd73f4bc3401806f0e7cd1d09a2d4a142370de8e2d8a5ab15270707fd065dfc002eee6e2ace8e8a93e028387451e9a4d0418782536c84622749410a4ddfbe0e9ad63f14732945873c70108ebbf777c71d240162466b7da4b5965fda65ec7a71074629954a705d178dc6339819beff8876bb8d4aa56254a70fe7f379e5fbfeccb081ad566b4244502c2ea15028a0567b40a713a25abd451004116c67b3d9dcb01a994ce6c5f3bc0e0050d4e9388ecbcc9ed1b20d4344cb61185ef561adf509303bc5bcb33e4ed8b20ecb44374ddbb6b7f0018b52f30248ec465413a23ba3394aad88d65a1cc7718d2fd760f56b20aaa3db0d13cd37862d6b1b44f7206a0200945a059003f3b1591d53f83d84c1bdfcfc1c3fc63beef57601004a2d80a80ee60b6334113c58c0398064e73b122cb2981805129ff1e849e1144ee1144ee114fe7fb0f1fb98a80ca0f9ad7712221be3852d6b0f44d75ffa44e6c03c6698f90c3f3f79cc4f2c82f7897ad39675b0695cc128afa7009eb4d6c19ffd3bbd017928a9f1548f976f0000000049454e44ae426082</data>
+    </image>
+    <image name="image5">
+        <data format="PNG" length="461">89504e470d0a1a0a0000000d494844520000001e0000002008060000000540c87f00000194494441544889ed97314b03411085dfde4d9213e18420c4ce835482d146d21ab1b2b5b1b248e38fd1f81b042bc1de224d9458096983a9624208060b49210bd95dc7c25c888160f6c821c43c9862879df7cd32cb1e07cc2822ba2222fe252ab3783133685670a862b1882008d0edbec2188376fb05524a54ab552b9f113897cbb9ad566b7dda4629e50a33a350d8473e9f47bddec060a050ab3da1dfef87e0a4effb99691ebeefbf773a9d01008830994aa502634cd3aa6d4b09210e9452f7ccfc0d26a26b00d2719cc738c1ccbcc7cc1b4aa9130cc14c4456a7f53c6fcbf3bc5d9b1a22aa101147ba5ca1b4d67700028c8dcbaa09eb02a212801d0099e1ba0ca0a7b53eb5f1716cc1007818d3d6b32bca8c89a8494456c0b9cc3891481c3173526b1da93e32584af91cb5168836e3b968095e7cf0d8ad4ea7815e294e18f3765688c6189d885d37cb00c71aae7bc8e103f2ff66bc042fc18b07b6fe1e0b5106d09bc8ae82f9385eb0e39c4388871f39e64d181333d8985b006ab21d5b9b11f84288cf35c7b93cb376b0d2c70d8037e00fff9dbe00a462d0de81e999d60000000049454e44ae426082</data>
+    </image>
+    <image name="image6">
+        <data format="PNG" length="456">89504e470d0a1a0a0000000d494844520000001e0000002008060000000540c87f0000018f494441544889ed97bf4bc34014c7bf175fdb14212e42bb99d5a17691acd6c1c1d5c5c9a18b7f8c3ffe06c1497077e8a25227a1b8159d6a6b291607e92007bd3b9f834d690bc55c6810315f38c83df2be9f777c8f40808822a23322e21fd675142f6606450587aa56abf07d1fbdde2b8c31e8749e21a544bd5eb7f219834ba5d252bbdd5e9df7a29432cfcca854b61004019acd270c870a8dc63d06834108ce7a9e5798e7e179de7bb7db1d0280088bb95cce37c6b4acc6b69410625b2975c3ccdf60223a07201dc7b94b12cccc9bcc5c544aed63046622b23aadebbaebaeeb966d7a88e89a8838d6e50aa5b5be02e063222eab21ac1b884e006c00288cf635007dadf5818d8f630b06c0a3356f1f5d713226a2161159011792712693d965e6acd63a567f6cb094f2316e2f102fe3852805a7e0149c82ff1e78e25b5d2c002fb52461cc415988876930732e0f60274930e08d9ffe75c6d124440d407fa6ba0ce6bd64c18e7304216ea76acc6b302661b0319700d4ec38b63663f0b1109f2b8e737a68ed60a58f0b006fc02ffe3b7d01ebcf9c2f4a137a700000000049454e44ae426082</data>
+    </image>
+    <image name="image7">
+        <data format="PNG" length="929">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f98700000368494441546881ed964d4fd44018c77f35def8127258bd48ac61453741d1a0dfc544a318231a2510124e840309070281ac0934f009341a0281c0b22c2e295cc8460ff021f6d8190fdd297d9976db65f125e93fd9f4e9ec74e6f77ffacc4c2157ae5cb972e5fa8f655ce1d8f24fcc7515834a80c5c565841048291042f2e2c5f32b99b39b834980a5a5cf1eb47b1581fb57af5e7675ee6e0c2201cae5150db88c1850ed6fdebcee0ac3651e6e81af7ab771b049edefdebdbd144b270f85c02f9af5a0e90c7df8f0be23a62c9d63c05b7fcae46c0f0d0d02b0b1b18994f1863e7dfa98892d4da744f0a08128f8e0600980adad9dd46525a5607c7c3c1563d29fa9c0a3065c90526900809d9d3d2de0b3674f01f8f2e56ba2a1c9c9c944565d632670f58882b87fbf1f80bdbdaa166a78f80900dfbe7d6fbb36a4bc380be38c840dc86ce017068a4513806af5500bf4f8f143c05d036917bbdf40c888c77d3ddce1ecec2700376e1452a1178b7700a8d58e5a596b596a058f1eb98b7773733b9055f7227dfdc3d720fcfafaba76fe8881ac467efc3826fad983b778b7b777915284faa4895dc5812bc51a504a63c49fd552e91e00bbbbfb0821bc767fbf286c346e07aed4d680d2d9d94fa494f4f6de8ce9e14ebcbf5ff3c0a370ad96d8b201cbb2d22201190cb813487efd3ac5711c6eddbaadebd1716c59ab4829310c43bb78e314bb8d4e4c4c041b5bbb8ae3380821bcb8afef6ec23edefe33c2b25603bb8e8ac36a341af4f4f4d06c3613b7514cd394b66d1b61237e689d11d32c663a6955c675f0fe2db4d16878ac3e364fb125649a26b66d1b333333b2d96c3236361682084e5aaf1fe0380efdfd03095ba5646dcd0a948abf64fcb1065ccbd9760d140a056cdb36a6a6a624c0e8e8a836632aaed5f6711c87818107be51a2e07e60c3303c83a7a7a7a9c0630d845f91927a23d3d3d31260646424d148a5b28b1082f3f373841001485d7c7272d2165cc7762dce599211c0989d9d656e6e2eb186fd9956a0e1d8b66d8e8f8f157826964403698dcccfcfb3b0b0a035a232af83afd7eb1c1d1d750c9eda405a23cbcbcb94cbe5c887981f1ee0e0e080c3c3c34b836736d06e706564656505cbb202a7b16118542a15aad52a7409bc6b324d53eaaeb8e788ff97d4b763657e0361b57b235c71c62f6d40290bcc5f2995acf29747374a2557ae5cb972e5caf52fea37037a3ad6838c25c50000000049454e44ae426082</data>
+    </image>
+    <image name="image8">
+        <data format="PNG" length="3476">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f98700000d5b494441546881ed99cb6f64575ec73fe771df8f2a975d65bb6db7bbed74bac924d3e944c31085893433d2a059205820c186bf00b166c302c18205b04042b044b018c108210142628378689251340999bc269d5733fd48bbedeef6abcaf5baf79ec3e2dc2a3b7e24ce20c426c72adfba756e9d73bebfc7f7f728f8727c39fe57437cd6e4b56bcf2f2e2d3df53badd9996f015a2969a5925863b0677c597cf692204fdf5e491042321c156085eaf6ba9b6fbcfe6f7ffae0c1adbffface5f4674daeac5efdf35ffb8d5fffd58b6bab602d8a0a2505699e2304ee05082110f58d048474f75330424c9f9782c339e19e904a321e8de8f5fa14a5a53732f40ffa575ffdc1732f7defafffe2b7efdc79e7cf7e060049e7dbbff4dd6f7ee5c6330c0e060cfa3dee7d7287dd9d7d9ebefe0c4bcb8b98ca1c01410d62727890f2108490e2c87387208414282979e5e5d7d8dddb234b139eb8f6144a6bbef3cbdfe1276fbff69b77eebcf33d60fb0b01585898bf98e5793c1e8da8aa92380a595cb8c0d2d20a33cd06d64e245f0380a916dc4580adef016b2c15d669680a42624b436f3c666ded22fdfe90bc91515a28c663a228666169a9032c7e61005aeb65df0f3c6bad3b98b4c8c0477b9a9d6e97ddeefed4742640a490eebd04599f522b055802cf278963ac00acdb434ac1c170c8fb1f7dccf5a79f228d63acb5dcdd788cb5ceb4f2461e03f999e73c6b424a6fcef77dac05a5140fb61e90a711fff28f7fc3eece36beef23a5442a855212a5144a2aa49468edae424aa220e499e7beceb082eb3f770d81702080aaaa4893849966839d9d5d02df878926016b2d41180540fcc50168d9d29e06ebc4e5fb1ec568c86baffe80623cc2f7037768a5d05aa3b4aaef355a6b743d27042caf5e266c7430d6a284982c39f505ad3d2a6398509b94028b056bf1b4ef01e199e73c6bc2535ecbf33cacb5186358e87478b4b5415516f87e80f674fdf2d09e03317d29e500e94380599a00767a30eb2e58eb3e2bca825aec53e7771a08fc9f4903edf6ca82d212e703b0d469117fed39d656ff0825e531fb3ff69acce3249cb73a045ec86034c6588b4480b5188473070be3b204e19cdd530a2104c65aa238d149d2ec1c1cec1ef19e73000882a0e3793e169008ac29999d9965beb340cd2b8e068ff23a8e2ea59453ca048bad0c555971301c23acc5ca094b394d180b45510260ac452b89104e3b61181145e9dcc1c1ae04aaf302f0e324ed28ad9c9ea560e3e17e2d79a6114c4af0944755568c8b3142c27038e660d0a7ac4a24022905511892c43141e0e3cc12104e00d65894948c8b3165558105a59c06adb5f8818fef872d9cb99f1b4098e5f98252ca49b526faca1884104861d19ea6284b3ef8f803aacad06ae4b5bd2be22846c9437ab5d6321c8d288a826633c70a59c708671102a84a83354e63520a9472e61b0421be1fce7186bf9e05c00bc330935262ad993a94331967e3f71f6c71ebce6d9a8d9cb5d58ba4517c6836750c90879904b2f60f632d764243f5ba4a2986e3319531a85abb4a098ad23a92d03a05d417001026599e2ba52465696a29825482d178cc3b376f92c6094f5d7992b9d919aaaaa2acaa3acaba408610d849ba201cffb8d4c1790f02e70f581082aaaa1ce3d5ceaf95645c944ea349dec45169ff5c007c5f27719a2aa51545514ca55896156fdf7c8f344e78fada558c318cc785f307813bb01028e9f8df0a97e71863805af2b6a6000b460a84b1785a5355559d5b39fbd74a616d81e769c2206902d1b935a0944c9334d1d3e4b8e6ec0f6fdda2333bcbdaea2ae3727c988922904a519605fbfd1e8f1fefb07fd0036b499384d64c83994683280cb1d6d4cce6ccc8584392c46469cae39d1d16da6db02e986141694d966739909c1b80945e92659932c64c19a7dbeb2280a5c545c71613cf1602cfd36c6c6e716f6383cedc2c7996d29e6d21a5a03286a22cf9e9bd4f08039ff5d5558c716432215fa535eb975679f8f011a5a95c4a2224e0fca339339b02c1b901f8be1747712c8e3a5b59562ccc77f03c4d658d0b460294941cf4fbbcfdde4dbef6ec75669a8de901659d2e4b29996fb779e5473f422078626d95aa32d3fdac31c471449aa61445810ad4b4d6915290a679c61926742a35c5711a27698275bc465519e230244d132cd6314a4d93ca93dcdfdaa4916534f39ca228a88cc1184b655c1a52962552082eadacf0687bdb198fa877976e2d80380a3195f317552774522aa22451a0ce6f42519464699e3ba7136080248a51bec25833dd500830c6b0d869b3d4ee602548a16acaac7557475d2b60aed524894230e6507213ae95e0073ea632186bdd1e0294a748b3542a54569d8c63a703d05a2751143a21090118923822087db67bddfa3377388024496835527c4fd1ed0fa8ac75a8712620a524f434224be80d8735a5d669b305ebcc9dc80f181505931a44498196922ccba4f4bcb42ac6e703e0fb612aeb846cc2e0e3aa64ad3dcfa01c311e9775c6785895ed1ff4c9e29038f4f194c2f734424259da3a4e18faa3715da11d46e94990cce298406b06db3b2e084ae12a3620c952b4f6b3a238382780304894560861c1b8cdba8301bd619f954e933b9b3b58e3d45c6b1a806e7f58e7f70a5d4f580ba67231404a275526c07169461cfab49b195bdb7bd39a414e7dc39237327cdf4b068393673dd58917162fce8a234e3639e1fb3fdd20f0144f5e6c23d4611929a5442957896925c15a2a639c135b8b544cab3489440989ac0b9b240e586a37d9dad965bbdb4348e9d22421504a608525cd73a228ce38a593732a8034cd3acef98ed2bdc018cbcdffdea42c0d4f2ccdd1cc62a43aec44c849eba4b67b55771c5c74adbb14d2ada795a495c7b41b298ff77a3cde3b989692130da95a18491ae30561c229f9d06926a43d3f684ba9b0d6a094a8bdd562ca8ade60c49b1fdc63a9d364797e06632ddb7b07f48705c65a9c57ba855c8568eb629fba5e966461401a079495e1f6c63683e118259d2c8594785a33096255698893045f0729e001e5e70108a2309a555a5155b0fdf811835e17a902169617517570bbb7b5cba3bd0366b2983c09599ccba7ec64acc51a331125ea48dc28ca8a83c198edfd3ebdc1a8f60d77782925bd6e8fcdfb1b84514873ae4d515a94d244713801f0294f380d801f44615b7b8a7eff805b373f64a133cbc6e387742e74504a8105ad5c74dedcde676ba747e86bb2d8278902025f9f489f4763a7bdd1a838ac2b94acd9e6d06cde7ae31da480e170c4b3cd26524910123f8ca2d3ce7b0a80a09924492a8420884256d7d7109561b5318354ea308a5ab7f144f5e3b2e2f1de80477bfd697b719290d9fa5e09478d4aaac386d711bfb4c2f2e4b527d8dfd9c70f7dc220a03f2e514a9066599353f2a113006666161682280e84002d058bcb8b144581e77b5873aca63e52a84c3e104ca2ef91f9c9692785fee46ffadca40f04f317dacccecde0694d511946454565a1d1683539a53b71028031d57cab99ab6bab0b54e5f853dd667bac29f0294e3bca20c7e78fbdf9dcefd5e8adb51495e1605090678d26907e2e80388ee7f224e4b537dea6db3d40aa532bb9230d8ee3b0ea9ea7b575d3a4fe5fd7c68e8e4dad3541599647173b31a410cccdced06c6429e7d14018faed3b1b8fe81acbe6c67dba7b7ba823202611746ac47cda0c8480a228d0da032cc6585c695ae2698fb22cd19e87a92a8410741697d07503edac71fbfe23f67bc394538a9a13007c3fc8676767999b9de5c3b77ecc7b6fbd49188528adf1b487e779f8be8fa73db4a7514ad74147e1791ec61afefd5fff99175e78896e779fadad075cbdfa157ef8c3ffe41bdff816afbcf21fbcf8e237b97fff1ed60e79f6d9af529a3ae740e07b3ec20a2a2acaba5be7793e699a479c52139c005055d5404bc94cb3499224645993e5954b68a5904ad4b98e76203c0fa50e1bba411062ad6565e512972f5fa1dbdd238e62d6d6aeb071ff2e6b6b57b8ffc95dd6d7af10f821420c996db5e80fc62e81b382d7df7a99db8f3ee4c6fa0bacaf3f455995785aa32405a7640e27008cc7a34f8683018d3c27087c3636ee104611cbcbab349b33846184e7792eefd15edd8402a534611822045cbab4cecaca257abd2e5114b3bc7c89cb6b4fb2bcbccae5b52b2c2dad22a546eb82469e037db4d23c787897f79baff2f3bff23c1fbdfc06d7c4578992002915c3417f8f6341ec5400a351ffe3aa2cab3489d5e2e205fcc0676fef1160180c7a349b2d5aad59e2b849148568ad9142a2b5260802b4d6acad5d61beb3409ee7c47144a7d3617dfd0aed7687b5357715421086962c4d3006b4d448b1c0c3708b3f3ef813be3dff5dda8d16a52a515ad3ebee3ee4941f394e00d8dcbcfd93cd079fdc4e8268edc6f5eb5cfdfddfc3f73d64ddfb9752a23d8f3008f1fce048f525a72dc1cbebf3c4b12b49cbb2c2f77d562eb689a2980b4b2da228e6e26a07296138b288cc35735b8d26bf9bff21efeebfc9d7d75f22f3528484c170c4ad8f3fb80b3cfe5c00c0d63ffdc3f7fff2c5177ff10f9e7ffe064a5dc6f574604277b64e0f3ecd1c75cb1c88e2d0f5fb01a9a0acc0f3338ad2e2f919e3c220844f6540494312794c56bfd6bac1f5ce2f302807582a46a3317ff7b7dfe7dd77ffeb7560f7f8614fe4d7f5b870e1c2da6f2d2fafdc901269ad389be3fe0f8710420c8743fbd14737dfeff576fe0af831c782c65900c0fd2eb584cb3ffe5f00d4c3e2247f9f63a9f497e3cbf1e580ff014247feeb85343c370000000049454e44ae426082</data>
+    </image>
+    <image name="image9">
+        <data format="PNG" length="457">89504e470d0a1a0a0000000d494844520000001e0000002008060000000540c87f00000190494441544889ed97bf4bc35010c7bfefe5da462c7111dacd8093437591ae569c5c5d9c1cbaf8c7f8e36f109c0477872e55ea24742d38d5965a2c0ea5838436ef790e6d4a2d04f342834bbe708477e4be9f4bee8604882822ba2122fe23ea51bc981914151ca85aadc2755df4fb1fd05aa3db7d83e77968341a463e7370a954b23a9dce66d88d9ee7ad31332a950394cb65b45aaf984c7c349b2f188d460138eb384e21ccc3719c61afd79b00800892b95cced55ab78dda369410e2d0f7fd47669e8289e8168027a57c4e12ccccfbcc5cf47dff1433301391d1d3dab6bd63dbf69e490d11d58988632d5720a5d40300170be3326ac2b880e80ac02e80c2ec5c0330504a9d99f8485330009e45d839bae2cc9888da4464045cc98c3399cc3133679552b1ea17c0f9bc94c3c8731a8fa7572961b0d96e11785fa013b1656d33c08986651d71f0aae32cd74a948253700a4ec129380587caf84340881a80c152761dcc27c982a5bc80104fbf72cc5bd03a61b0d6f700fce5764c6de6e04b21be37a4bc3e377630d2d71d804fe01fff9d7e00398dcd089ade07160000000049454e44ae426082</data>
+    </image>
+    <image name="image10">
+        <data format="PNG" length="3522">89504e470d0a1a0a0000000d494844520000008b000000180806000000caeb0e1200000d89494441546881ed5adb6f1b45fb7e66d7f6da6b3bb1133b71ec3a47a5b44d93148a1a8a20812a1508041212528554247ac93d37fc21dc700337202e5a40a8a850d136f4903690d2b47142430e4e700e6eecf5313eee617e17feed7cdeda0e6d0912dfa73e52246f76e69d99779e794fb3c0533cc52382543ffcf1c71ff4ca952b88c7e3a094561a1052b7633d389d4ebcfcf2cb181e1e06c7718fdef129fe2b60d8d077df7d976e6d6d4192a4c722890ea7d30997cb85cf3fff1c7ebfff2959fec760d27f5cbe7c997efcf1c71004014d4d4d86461cc7c16eb7435555140a05582c16689a0659960dedcc6633f2f93cbef9e61be472392a491254557dac0999cd6674747480e77903d9767676682291402291c0c6c606645906cff3f0783cf07abd686969417373734dbf87512a95683a9d462e97432291606b70bbddb0d96cb0d96c70381c10048159c742a14063b1185b8bc96482cfe783d96c368c25cb328d46a3501485e9adbdbd1d56ab9500403a9da6894462d7f50b82008fc7038bc542344da39224616767a7617b42082c160b4451445353d35f5a745996693c1e47b15834c808040235eb79188c2c9b9b9b30994ce0380e66b3d9d0a8b5b515a74e9dc2e2e2227ef9e517bcf9e69be0380e5f7df515530c5051222104854201914804e7cf9fdf75a1f5e0f17870e6cc19f6acaa2a8d4422b870e102c2e1300a850273913acc66337c3e1f8e1c398262b148f5cda986aaaa746b6b0b972f5fc6caca0a1289440d91054180dbed86dfefc7912347d8ff373737f1edb7df229bcd02a810eb830f3ea8997b2e97c3d9b367914ea7010056ab15efbfff3e1b7f6a6a0a172f5edc75fd7ebf1fefbcf30e004051144c4e4ee2ce9d3b0ddbf33c0fbbdd0eafd78bc1c141140a056ab3d91a6e7a2c16c3b973e720499241c6e9d3a7779d1750451600d0340d3ccfb3cd70381c0080a6a6268c8c8ca0542ac1e170e0bdf7dec3d75f7f0d8ee36032fd4704c7718f6d497683aaaaf4f7df7fc7cf3fff6c88a31e862ccb884422902409e9741af97c9e8aa2c814a6691a5d5a5ac2952b57f0e0c103689a56574ea95442341a453c1e474b4bcb9eade39f84aaaac86432c8643278f0e00128a5505595d6b3b09aa6d1df7efb0dc964b246462814facbb10c64a19482e338f03c0f003871e2044e9f3e8defbfff1e8410ecdfbf1f838383b874e912befbee3b1042585ba04216ddd288a28860308842a1c0de97cb6544a351b65966b3195eaf17168b85b5f97f570200884422b878f12232990c93dfdcdc8cfefe7ef87c3e6432192c2f2f231a8d429665e4f3794c4e4e02a8985bddacc66231fcf8e38fec34f13c0fb7db8d60300841100000894402c96412994c06aaaa3624e6938210828e8e0ebcf0c20b505515f7efdf67968ae779f4f4f4c0e3f1a0b9b919369bada11c97cb0597cb05a0b2c9b1588cb9949d9d1ddcbd7b17bdbdbd75fb2a8a82dbb76fd73d2c914804d16894fa7cbe8656a92e59f4df4b4b4bb87dfb36c2e130c6c6c670e0c0011042b0baba8a62b1c8daeae0388e29b9b3b3b366d068344a3ffbec33944a25001573fed65b6fa1a3a3a3ee29387bf62c53282104ededed3871e204fafafa986f4ea7d3f4d2a54b989f9f87a228501405f7eeddc3c0c0804111d5a7a9adad0d6fbcf10602810093a3aa2a9524096b6b6b989b9b7ba2007f3754c712c5629146a3510359060707313c3cfc97833efbecb3181b1b23ba9c6bd7aee1e6cd9b8c008542c1101a5423168b617b7b9b3df33ccf3c412a9542241281a669b451dc63d86d4a29b316c78e1dc3993367f0ebafbf627373130070f5ea55c462318c8f8fc3eff783e779c31f21a4a1897f5cc4e371acadad31f299cd660c0d0da1a7a7c7a078a7d38991911178bd5ed6379d4e636969893d271209c3bc044180dd6e37c8e1799eb4b5b591a3478fe2edb7dfc6e0e0e09eace39f84c562415b5b9bc10aba5c2e83a5d6a1691a5d585860e4e0380e070f1e64f1a92ccbd8d8d86007b91eea5a164a29fbad280a08215055159224e1d34f3fc5471f7d8453a74ee1934f3ea98951f6ca7c472211c3c49d4e279e79e619984c2603eb398e238aa2d0cece4e168f504ab1b6b6c65c91288a2084b0b9adadade18b2fbec04f3ffd4483c1209c4e27ec763b44517ca4fa50a954c29d3b7770ebd62dc362676666502e97f764fd8db0b3b383adad2d0a5474140a85d8ba5c2e1786868660b7db6bfa65b359dcbf7f9f3d3b1c0ebcf8e28bc866b3ec502e2e2ee2e8d1a30dc7ae097009212084e0debd7b28954a181d1dc5f9f3e771fefc7984c361f8fd7e4c4c4ce0cf3fff34b81d1d7b4596542a65b0064d4d4d1045b1fe224c2672ebd62dca711cebb3b3b3c3362e180cc266b3219fcfb3394a9284ebd7af83e338381c0eb4b5b5c1eff7636565850683c15dd3c87c3e8f8989893d59e7e3627676168b8b8b008062b1c8e2159bcd86d1d151f4f7f7d7105ed3341a0a855866aac79f5eaf17814040773fc8e7f30887c30dc7ae6b5974c2f4f7f7e3f8f1e35014059452747676a2abab0be57219172e5c00004380ab5ba4bd40b15834c8d2d3f246b05aad86f7f97c9ef96e9fcf8763c78ee1e6cd9b356656d334964d84c361dcbd7b17cf3df71c4aa5121504e15f5758ac264835645946281482d56a85a228b4da0297cb65acadadb164831082bebe3e984c2674757561767616d96c169452cccdcd351cbb862c841016b84e4e4ee2c68d1b1045111f7ef8212e5ebc88b367cfc2e17020954ad504b894d23d8b5974d2ea84f92b123eec0eabc92508029165997a3c1e4c4f4f4392a4ba81a0aaaa48a7d3b87efd3a04416898820a82808181819ad8a0542a617e7e7e57bfff77519d0d01958036994ca25c2e63656505ebebeb3879f2a4a18f2449585d5d653adcb76f1f7c3e1f00a0b3b3136eb79b05dbb1580c6b6b6bb4ababab66dd356ea83a75d6cdb6aaaa3877ee1cb6b6b620cb3292c9644ddaacf707f6c615353535192c452e97aba918578d4b2726266adc969e1603606e2597cbd18d8d0dc46231489284783c8e783cced60a544ee9e2e2220e1c3850773c511431363686e6e666834253a9145d5959f947c9529d0d01802449f4e6cd9b98999981a2282897cb989e9e6644d7348d4e4f4f23954a3119c56211d3d3d3309bcda0941ae6ab691ae6e7e7eb6645bb5a161d8aa260616101006ade3ddc7faf2c8bd7eb3514f9b2d9ac21edab46a150403c1e378ced72b96a2ad10060b7db09502158b95c463e9f472693c18d1b37582c0054c859cfdcffdbd0dada4a42a110d54b0740251bd46b539aa6617171d16079b7b7b71bea12a82d35e830ecbc6e592c160bcc66332c16cb23fde96d799edf33b27477771bd2e15c2e87e9e96924934983d992659986422184c361439a7de8d02116e87df9e597f4d2a54b341e8f5345512850c9a2ac562b69696921dddddde4f0e1c386f1799edff560fc5b20cb324d269335d72e7a612f168b190ec1a3409224acacac40d33483ae0d96a5542a415555d86cb6c772257a605c2c16f7cc045b2c1632353545e3f138cae53228a5585959c1c4c404969797a9dbed46a150c0ad5bb7303d3d6d08def6efdf8f4020c064c9b28cc9c94984c361f4f5f561616181b6b6b6c2643241d3342493494c4d4db1f61cc7a1a3a3a3e642f5ef229d4ed36432595316a094221e8f637575955a2c167691584f46341ac5cccc0cdb9cab57af626e6e8e657e8410ecdbb70f822030f7ac434f5afc7e7f5db97a6a5d2a95b0b1b181870f90812c8aa220168b219bcd3e760553f77d7b59673874e810d6d7d7313737074dd3502c16313b3b8bd5d5553dea47369b358ce9f57a313232628857804adcb5bebe8ecdcd4dd8ed76d86c3696fa178b4516e001952b87e1e1e1bac5ad2785aaaa74666606d7ae5d03a514b95c8ebdd3cbf0b3b3b3686f6fc76bafbdd650cee2e2a221bd2d97cb066bee743af1fcf3cf03a8b8e7e5e565f68ee7791c3f7e1c3d3d3d359bbbbcbc4cf5ca3c00acaeaeb20b511d06b2a8aa0a93c98468348a4c26f3c82e45ff84c1e7f3ede945a2d3e924f97c9eb6b4b460666686cd299d4ed72c441004747777637c7c1c5eafd7a00cb7db8deded6de4f379689a866c366b20870e8bc582f6f676bcfefaeb0804027b9e36974a2543a0a983528a7c3e8f7c3e0f511477d5a17ea5510d42086c361b3a3a3af0d24b2fa1abab8b59e2ead8a3a5a5a52e5100a0bdbd1dbdbdbd989f9f0750897baa89063c44165996214912b2d96cc3cca31e5455452e97432c16dbb59fcd66c3e0e0205b6c5353d3ae976600208a2251148506020184c36148928444226190d1dada0abfdf8f83070fc2e170d428e3d5575f456f6f2ff40fbbd2e934abe3701c075114e1f178100804d0dbdb0bb7db6de8ef743a313030c04e9ddd6eaf1b3c5b2c160c0c0cb0ccca6c36b3422221046d6d6d864f1feac1e572c16ab502a81cc26030b86b48c0f33c445184d7eb454f4f0f9c4e270be04d26130e1c38c00e7d30186c284714451c3e7c18822034fc4a9291c5eff7439665a45229c8b2fcd8e96fb95c462a95dad50d399d4e8c8f8f1b26534fe90f432f30c9b24c0b85020a850253802008b0d96c868f95ea8ccbfaeb71954e6a7d0ea2283694d1dada8a575e79c530ef7a2eca6ab5627474b46e3bfd5aa23a96aa87eaef894c26132997cbf4e0c1830ddbeb633c3c6f8ee3882ccbb4bbbb9bfdaffa73923ae3124551684f4f8f612e86b1f41f8542819e3c7952cfb19ff8d6d5e3f1e0dcb973181a1afad7553f9fe2ef8151cd66b3915028447ff8e18727ae2f984c261c397204870e1ddab3093ec5533cc57f21fe0f532f5cb6e9debdc10000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>pressed()</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>close()</slot>
+    </connection>
+    <connection>
+        <sender>proc100s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>proc100Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>proc75s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>proc75Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>proc50s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>proc50Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>proc25s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>proc25Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>bright100s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>bright100Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>bright75s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>bright75Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>bright50s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>bright50Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>bright25s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>bright25Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>pressed()</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>okSlot()</slot>
+    </connection>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>pressed()</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>close()</slot>
+    </connection>
+    <connection>
+        <sender>display100s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>display100Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>display75s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>display75Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>display50s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>display50Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>display25s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>display25Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>hdd100s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>hdd100Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>hdd75s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>hdd75Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>hdd50s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>hdd50Slot(int)</slot>
+    </connection>
+    <connection>
+        <sender>hdd25s</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>BSMWidget</receiver>
+        <slot>hdd25Slot(int)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in implementation">klocale.h</include>
+    <include location="global" impldecl="in declaration">qstring.h</include>
+    <include location="local" impldecl="in implementation">bsmwidget.ui.h</include>
+</includes>
+<variables>
+    <variable access="public">QString min01;</variable>
+    <variable access="public">QString min03;</variable>
+    <variable access="public">QString min05;</variable>
+    <variable access="public">QString min10;</variable>
+    <variable access="public">QString min15;</variable>
+    <variable access="public">QString min20;</variable>
+    <variable access="public">QString min30;</variable>
+    <variable access="public">QString Never;</variable>
+    <variable access="public">QString Low;</variable>
+    <variable access="public">QString High;</variable>
+</variables>
+<signals>
+    <signal>okPressed();</signal>
+</signals>
+<slots>
+    <slot>proc100Slot( int speed )</slot>
+    <slot>proc75Slot( int speed )</slot>
+    <slot>proc50Slot( int speed )</slot>
+    <slot>proc25Slot( int speed )</slot>
+    <slot>bright100Slot( int bright )</slot>
+    <slot>bright75Slot( int bright )</slot>
+    <slot>bright50Slot( int bright )</slot>
+    <slot>bright25Slot( int bright )</slot>
+    <slot access="private">okSlot()</slot>
+    <slot>display100Slot( int time )</slot>
+    <slot>display75Slot( int time )</slot>
+    <slot>display50Slot( int time )</slot>
+    <slot>display25Slot( int time )</slot>
+    <slot>hdd100Slot( int time )</slot>
+    <slot>hdd75Slot( int time )</slot>
+    <slot>hdd50Slot( int time )</slot>
+    <slot>hdd25Slot( int time )</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
