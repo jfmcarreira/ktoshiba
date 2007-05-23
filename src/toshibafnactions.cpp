@@ -50,7 +50,6 @@ ToshibaFnActions::ToshibaFnActions(QWidget *parent)
             m_Boot = -1;
             m_BootType = -1;
             m_LANCtrl = -1;
-            m_Pad = -1;
         }
 
         // check the BIOS version, date and machine ID
@@ -99,7 +98,9 @@ void ToshibaFnActions::initSCI()
     m_Boot = m_Driver->getBootMethod();
     m_BootType = m_Driver->getBootType();
     m_LANCtrl = m_Driver->getLANController();
+#ifndef ENABLE_SYNAPTICS
     m_Pad = m_Driver->getPointingDevice();
+#endif
 }
 
 void ToshibaFnActions::performFnAction(int action, int key)
@@ -265,7 +266,7 @@ void ToshibaFnActions::toggleMousePad()
 
 #ifdef ENABLE_SYNAPTICS
     m_Pad = (m_Pad == 0)? 1 : 0;
-    mSynPad->setParam(TOUCHPADOFF, ((double)m_Pad));
+    mSynPad->setParam(TOUCHPADOFF, ((double) m_Pad));
 #else // ENABLE_SYNAPTICS
     if (m_SCIIface) {
         m_Pad = m_Driver->getPointingDevice();

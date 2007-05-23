@@ -34,6 +34,7 @@ class KCMKToshibaGeneral;
 class KToshibaProcInterface;
 class KToshibaSMMInterface;
 class KToshibaOmnibookInterface;
+class BSMWidget;
 
 /**
  * @author Azael Avalos <coproscefalo@gmail.com>
@@ -50,12 +51,16 @@ public:
     void defaults();
 protected slots:
     void configChanged();
+    void bsmLoad(int);
+    void bsmChanged();
     void timeout();
+    void hwChanged();
 private:
     KCMKToshibaGeneral *m_KCMKToshibaGeneral;
     KToshibaProcInterface *m_ProcIFace;
     KToshibaSMMInterface *m_SMMIFace;
     KToshibaOmnibookInterface *m_OmniIFace;
+    BSMWidget *m_BSMWidget;
     QTimer *m_Timer;
     bool m_Omnibook;
     bool m_SCIFace;
@@ -65,6 +70,7 @@ private:
     bool m_Init;
     int m_IFaceErr;
     int m_AC;
+    int m_BSM;
 };
 
 #endif // KCMTOSHIBA_MAIN_H

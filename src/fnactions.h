@@ -66,24 +66,25 @@ public:
     void lockScreen();
     void runCommand(int);
     void showPassiveMsg(int, popuptype);
-    SettingsWidget *m_SettingsWidget;
-    StatusWidget *m_StatusWidget;
-    Suspend *m_Suspend;
-#ifdef ENABLE_SYNAPTICS
-    Pad *mSynPad;
-#endif // ENABLE_SYNAPTICS
     int m_Popup;
     int m_BatSave;
     int m_Video;
     int m_Bright;
     int m_Pad;
 protected:
+    SettingsWidget *m_SettingsWidget;
+    StatusWidget *m_StatusWidget;
+    Suspend *m_Suspend;
+#ifdef ENABLE_SYNAPTICS
+    Pad *mSynPad;
+#endif // ENABLE_SYNAPTICS
     int m_Snd;
     int m_Wireless;
     int m_Fan;
 private slots:
     void saveCmd();
 private:
+    void checkSynaptics();
     CmdWidget *m_CmdWidget;
     QWidget *m_Parent;
     QString m_Title;

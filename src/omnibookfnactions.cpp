@@ -41,7 +41,9 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
         //m_Video = m_Omni->getVideo();
         m_Bright = m_Omni->getBrightness();
         m_Wireless = m_Omni->getWifi();
+#ifndef ENABLE_SYNAPTICS
         m_Pad = m_Omni->getTouchPad();
+#endif
         m_Fan = m_Omni->getFan();
     }
     else {
@@ -49,7 +51,6 @@ OmnibookFnActions::OmnibookFnActions(QWidget *parent)
         m_ECType = NONE;
         //m_Video = -1;
         m_Bright = -1;
-        m_Pad = -1;
         m_Fan = -1;
     }
     m_Snd = 1;

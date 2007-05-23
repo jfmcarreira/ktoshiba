@@ -10,8 +10,6 @@
 ** destructor.
 *****************************************************************************/
 
-#include <klocale.h>
-
 void KCMKToshibaGeneral::changedSlot()
 {
     emit(changed());
@@ -118,44 +116,26 @@ void KCMKToshibaGeneral::cmdFnF9Slot( int slot )
 }
 
 
-void KCMKToshibaGeneral::brightSliderSlot( int bright )
+void KCMKToshibaGeneral::hpSlot()
 {
-    if (!bright)
-        hpbright100tl->setNum(7);
+    emit hpSignal( 0 );
 }
 
 
-void KCMKToshibaGeneral::proc100SliderSlot( int speed )
+void KCMKToshibaGeneral::dvdSlot()
 {
-    if (speed == 1)
-        hpproc100tl->setText(i18n("Low"));
-    else
-        hpproc100tl->setText(i18n("High"));
+    emit dvdSignal( 1 );
 }
 
 
-void KCMKToshibaGeneral::proc75SliderSlot( int speed )
+void KCMKToshibaGeneral::presentationSlot()
 {
-    if (speed == 1)
-        hpproc75tl->setText(i18n("Low"));
-    else
-        hpproc75tl->setText(i18n("High"));
+    emit presSignal( 2 );
 }
 
 
-void KCMKToshibaGeneral::proc50SliderSlot( int speed )
+void KCMKToshibaGeneral::hwChangedSlot( int bg )
 {
-    if (speed == 1)
-        hpproc50tl->setText(i18n("Low"));
-    else
-        hpproc50tl->setText(i18n("High"));
-}
-
-
-void KCMKToshibaGeneral::proc25SliderSlot( int speed )
-{
-    if (speed == 1)
-        hpproc25tl->setText(i18n("Low"));
-    else
-        hpproc25tl->setText(i18n("High"));
+    bg = 0;
+    emit hwChanged();
 }

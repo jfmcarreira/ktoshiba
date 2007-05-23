@@ -33,6 +33,7 @@
 #include <kpassivepopup.h>
 #include <kconfig.h>
 #include <kprocess.h>
+#include <kdebug.h>
 
 #include "settingswidget.h"
 #include "statuswidget.h"
@@ -42,9 +43,9 @@ FnActions::FnActions(QWidget *parent)
     : QObject( parent ),
       m_Parent( parent )
 {
-    m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", Qt::WX11BypassWM);
+    m_SettingsWidget = new SettingsWidget(0, "Screen Indicator", WX11BypassWM | WStyle_StaysOnTop);
     m_SettingsWidget->setFocusPolicy(QWidget::NoFocus);
-    m_StatusWidget = new StatusWidget(0, "Screen Indicator Two", Qt::WX11BypassWM);
+    m_StatusWidget = new StatusWidget(0, "Screen Indicator Two", WX11BypassWM | WStyle_StaysOnTop);
     m_StatusWidget->setFocusPolicy(QWidget::NoFocus);
     m_CmdWidget = new CmdWidget(0, "Run Command Indicator");
     m_Suspend = new Suspend(parent);
@@ -60,8 +61,13 @@ FnActions::FnActions(QWidget *parent)
     m_Popup = 0;
     m_Duration = 4000;
     m_FnKey = -1;
+    m_Pad = -1;
 
     connect( m_CmdWidget, SIGNAL( saved() ), SLOT( saveCmd() ) );
+
+#ifdef ENABLE_SYNAPTICS
+    checkSynaptics();
+#endif // ENABLE_SYNAPTICS
 }
 
 FnActions::~FnActions()
@@ -74,6 +80,30 @@ FnActions::~FnActions()
     delete m_SettingsWidget; m_SettingsWidget = NULL;
     delete m_StatusWidget; m_StatusWidget = NULL;
 }
+
+#ifdef ENABLE_SYNAPTICS
+void FnActions::checkSynaptics()
+{
+    static bool err = false;
+    if (!mSynPad->hasDriver()) {
+        kdError() << "KToshiba: Incompatible synaptics driver version " << endl;
+        err = true;
+    }
+
+    if (!err && !mSynPad->hasShm()) {
+        kdError() << "KToshiba: Access denied to driver shared memory area" << endl;
+        err = true;
+    }
+
+    if (!err && !mSynPad->hasParam(TOUCHPADOFF)) {
+        kdError() << "KToshiba: TouchPad will not be enabled/disabled" << endl;
+        err = true;
+    }
+
+    if (!err)
+        m_Pad = (int) mSynPad->getParam(TOUCHPADOFF);
+}
+#endif // ENABLE_SYNAPTICS
 
 void FnActions::showWidget(int widget, int key)
 {

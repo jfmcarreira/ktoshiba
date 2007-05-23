@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-24 23:02-0600\n"
+"POT-Creation-Date: 2007-05-23 02:26-0600\n"
 "PO-Revision-Date: 2006-11-27 16:21-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
@@ -27,71 +27,96 @@ msgid ""
 "Your emails"
 msgstr "coproscefalo@gmail.com"
 
-#: fnactions.cpp:55 ktoshiba.cpp:478 ktoshiba.cpp:814 main.cpp:40
+#. i18n: file cmdwidget.ui line 28
+#: cmdwidget.cpp:141 rc.cpp:6
+#, no-c-format
+msgid "Run Command"
+msgstr "Ejecutar Comando"
+
+#. i18n: file cmdwidget.ui line 57
+#: cmdwidget.cpp:142 rc.cpp:9
+#, no-c-format
+msgid "No command specified, please enter the command you want to run below:"
+msgstr ""
+"Comando no especificado, por favor ingrese el comando que desee ejecutar:"
+
+#. i18n: file cmdwidget.ui line 99
+#: cmdwidget.cpp:144 rc.cpp:15
+#, no-c-format
+msgid "Alt+C"
+msgstr "Alt+C"
+
+#. i18n: file cmdwidget.ui line 110
+#: cmdwidget.cpp:146 rc.cpp:21
+#, no-c-format
+msgid "Alt+S"
+msgstr "Alt+S"
+
+#: fnactions.cpp:56 ktoshiba.cpp:463 ktoshiba.cpp:881 main.cpp:40
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: fnactions.cpp:56
+#: fnactions.cpp:57
 msgid "activated"
 msgstr "activado"
 
-#: fnactions.cpp:57
+#: fnactions.cpp:58
 msgid "deactivated"
 msgstr "desactivado"
 
-#: fnactions.cpp:58
+#: fnactions.cpp:59
 msgid "Function Not Supported"
 msgstr "Función No Soportada"
 
-#: fnactions.cpp:102
+#: fnactions.cpp:132
 msgid "Full Power"
 msgstr "Alto Consumo"
 
-#: fnactions.cpp:113
+#: fnactions.cpp:143
 msgid "Presentation"
 msgstr "Presentación"
 
-#: fnactions.cpp:117
+#: fnactions.cpp:147
 msgid "DVD Playback"
 msgstr ""
 
-#: fnactions.cpp:121
+#: fnactions.cpp:151
 msgid "High Power"
 msgstr "Alto Poder"
 
-#: fnactions.cpp:125
+#: fnactions.cpp:155
 msgid "Long Life"
 msgstr "Vida Alargada"
 
-#: fnactions.cpp:129
+#: fnactions.cpp:159
 msgid "Normal Life"
 msgstr "Vida Normal"
 
-#: fnactions.cpp:133
+#: fnactions.cpp:163
 msgid "Full Life"
 msgstr "Vida Alargada"
 
-#: fnactions.cpp:307
+#: fnactions.cpp:337
 msgid "Battery Not Present"
 msgstr "La Batería no está Presente"
 
-#: fnactions.cpp:309
+#: fnactions.cpp:339
 msgid "Battery Status"
 msgstr "Estado de la Batería"
 
-#: fnactions.cpp:484
+#: fnactions.cpp:514
 msgid "Bluetooth device %1"
 msgstr "Dispositivo Bluetooth %1"
 
-#: fnactions.cpp:488
+#: fnactions.cpp:518
 msgid "Ethernet device %1"
 msgstr "Dispositivo Ethernet %1"
 
-#: fnactions.cpp:492
+#: fnactions.cpp:522
 msgid "Wireless interface %1"
 msgstr "Interfaz inalámbrica %1"
 
-#: ktoshiba.cpp:132
+#: ktoshiba.cpp:124
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
@@ -99,115 +124,115 @@ msgstr ""
 "El programa ktosh_keyhandler no fue encontrado.\n"
 "El monitoreo de las teclas no sera activado."
 
-#: ktoshiba.cpp:134
+#: ktoshiba.cpp:126
 msgid "HotKeys"
 msgstr "HotKeys"
 
-#: ktoshiba.cpp:351
+#: ktoshiba.cpp:336
 msgid "Suspend To &RAM"
 msgstr "Suspender a &RAM"
 
-#: ktoshiba.cpp:353
+#: ktoshiba.cpp:338
 msgid "Suspend To &Disk"
 msgstr "Suspender a &Disco"
 
-#: ktoshiba.cpp:361
+#: ktoshiba.cpp:346
 msgid "Enable &Bluetooth"
 msgstr "Habilitar &Bluetooth"
 
-#: ktoshiba.cpp:367 ktoshiba.cpp:387 ktoshiba.cpp:391
+#: ktoshiba.cpp:352 ktoshiba.cpp:372 ktoshiba.cpp:376
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: ktoshiba.cpp:368
+#: ktoshiba.cpp:353
 msgid "Enabled - PM aware"
 msgstr "Habilitado - con MP"
 
-#: ktoshiba.cpp:369
+#: ktoshiba.cpp:354
 msgid "Enabled - No PM aware"
 msgstr "Habilitado - sin MP"
 
-#: ktoshiba.cpp:370
+#: ktoshiba.cpp:355
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:372
+#: ktoshiba.cpp:357
 msgid "Dynamic"
 msgstr "Dinámico"
 
-#: ktoshiba.cpp:373
+#: ktoshiba.cpp:358
 msgid "Always High"
 msgstr "Siempre Alto"
 
-#: ktoshiba.cpp:374
+#: ktoshiba.cpp:359
 msgid "Always Low"
 msgstr "Siempre Bajo"
 
-#: ktoshiba.cpp:375
+#: ktoshiba.cpp:360
 msgid "CPU Frequency"
 msgstr "Frecuencia del CPU"
 
-#: ktoshiba.cpp:388 ktoshiba.cpp:392
+#: ktoshiba.cpp:373 ktoshiba.cpp:377
 msgid "Enabled"
 msgstr "Activado"
 
-#: ktoshiba.cpp:389
+#: ktoshiba.cpp:374
 msgid "OneTouch Buttons"
 msgstr "Botones OneTouch"
 
-#: ktoshiba.cpp:393
+#: ktoshiba.cpp:378
 msgid "System Fan"
 msgstr "Abanico del Sistema"
 
-#: ktoshiba.cpp:404
+#: ktoshiba.cpp:389
 msgid "CD/DVD"
 msgstr "CD/DVD"
 
-#: ktoshiba.cpp:405
+#: ktoshiba.cpp:390
 msgid "Digital"
 msgstr "Digital"
 
-#: ktoshiba.cpp:406
+#: ktoshiba.cpp:391
 msgid "Multimedia MODE"
 msgstr "MODO Multimedia"
 
-#: ktoshiba.cpp:411
+#: ktoshiba.cpp:396
 msgid "&Configure KToshiba..."
 msgstr "&Configurar KToshiba..."
 
-#: ktoshiba.cpp:414
+#: ktoshiba.cpp:399
 msgid "&Report Bug..."
 msgstr "&Reporta un error..."
 
-#: ktoshiba.cpp:417
+#: ktoshiba.cpp:402
 msgid "&About KToshiba"
 msgstr "&Acerca de KToshiba"
 
-#: ktoshiba.cpp:419
+#: ktoshiba.cpp:404
 msgid "About &KDE"
 msgstr "Acerca de &KDE"
 
-#: ktoshiba.cpp:478
+#: ktoshiba.cpp:463
 msgid "Bluetooth device activated"
 msgstr "Dispositivo Bluetooth activado"
 
-#: ktoshiba.cpp:813
+#: ktoshiba.cpp:880
 msgid "on"
 msgstr "activada"
 
-#: ktoshiba.cpp:813
+#: ktoshiba.cpp:880
 msgid "off"
 msgstr "desactivada"
 
-#: ktoshiba.cpp:814
+#: ktoshiba.cpp:881
 msgid "Wireless antenna turned %1"
 msgstr "Antena inalámbrica %1"
 
-#: ktoshiba.cpp:815
+#: ktoshiba.cpp:882
 msgid "Wireless"
 msgstr "Inalámbrico"
 
-#: ktoshibaomnibookinterface.cpp:40 omnibookfnactions.cpp:48
+#: ktoshibaomnibookinterface.cpp:40 omnibookfnactions.cpp:50
 msgid "UNKNOWN"
 msgstr "DESCONOIDO"
 
@@ -253,39 +278,14 @@ msgstr ""
 msgid "C&ustom"
 msgstr "C&ustom"
 
-#. i18n: file cmdwidget.ui line 28
-#: rc.cpp:6
-#, no-c-format
-msgid "Run Command"
-msgstr "Ejecutar Comando"
-
-#. i18n: file cmdwidget.ui line 57
-#: rc.cpp:9
-#, no-c-format
-msgid "No command specified, please enter the command you want to run below:"
-msgstr ""
-"Comando no especificado, por favor ingrese el comando que desee ejecutar:"
-
-#. i18n: file cmdwidget.ui line 99
-#: rc.cpp:15
-#, no-c-format
-msgid "Alt+C"
-msgstr "Alt+C"
-
-#. i18n: file cmdwidget.ui line 110
-#: rc.cpp:21
-#, no-c-format
-msgid "Alt+S"
-msgstr "Alt+S"
-
 #. i18n: file settingswidget.ui line 16
-#: rc.cpp:24
+#: rc.cpp:24 settingswidget.cpp:1184
 #, no-c-format
 msgid "KToshiba: Video, Power and Boot Status"
 msgstr "KToshiba: Estado de Vidéo, Batería y Método de Inicio"
 
 #. i18n: file statuswidget.ui line 16
-#: rc.cpp:33
+#: rc.cpp:33 statuswidget.cpp:6673
 #, no-c-format
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Widget de Estado"

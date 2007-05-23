@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-24 23:02-0600\n"
+"POT-Creation-Date: 2007-05-23 02:26-0600\n"
 "PO-Revision-Date: 2005-06-15 21:15+0100\n"
 "Last-Translator: Kroly Barcza (VectoR) <kbarcza@blackpanther.hu>\n"
 "Language-Team: Hungarian <translator@vgroup.hu>\n"
@@ -28,190 +28,214 @@ msgid ""
 "Your emails"
 msgstr "kbarcza@blackpanther.hu"
 
-#: fnactions.cpp:55 ktoshiba.cpp:478 ktoshiba.cpp:814 main.cpp:40
+#. i18n: file cmdwidget.ui line 28
+#: cmdwidget.cpp:141 rc.cpp:6
+#, no-c-format
+msgid "Run Command"
+msgstr ""
+
+#. i18n: file cmdwidget.ui line 57
+#: cmdwidget.cpp:142 rc.cpp:9
+#, no-c-format
+msgid "No command specified, please enter the command you want to run below:"
+msgstr ""
+
+#. i18n: file cmdwidget.ui line 99
+#: cmdwidget.cpp:144 rc.cpp:15
+#, no-c-format
+msgid "Alt+C"
+msgstr ""
+
+#. i18n: file cmdwidget.ui line 110
+#: cmdwidget.cpp:146 rc.cpp:21
+#, no-c-format
+msgid "Alt+S"
+msgstr ""
+
+#: fnactions.cpp:56 ktoshiba.cpp:463 ktoshiba.cpp:881 main.cpp:40
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: fnactions.cpp:56
+#: fnactions.cpp:57
 msgid "activated"
 msgstr ""
 
-#: fnactions.cpp:57
+#: fnactions.cpp:58
 msgid "deactivated"
 msgstr ""
 
-#: fnactions.cpp:58
+#: fnactions.cpp:59
 msgid "Function Not Supported"
 msgstr ""
 
-#: fnactions.cpp:102
+#: fnactions.cpp:132
 msgid "Full Power"
 msgstr "Feltöltve"
 
-#: fnactions.cpp:113
+#: fnactions.cpp:143
 #, fuzzy
 msgid "Presentation"
 msgstr "Francia fordítás"
 
-#: fnactions.cpp:117
+#: fnactions.cpp:147
 msgid "DVD Playback"
 msgstr ""
 
-#: fnactions.cpp:121
+#: fnactions.cpp:151
 #, fuzzy
 msgid "High Power"
 msgstr "Alacsony töltöttség"
 
-#: fnactions.cpp:125
+#: fnactions.cpp:155
 msgid "Long Life"
 msgstr "Hosszú élettartam"
 
-#: fnactions.cpp:129
+#: fnactions.cpp:159
 msgid "Normal Life"
 msgstr "Normal élettartam"
 
-#: fnactions.cpp:133
+#: fnactions.cpp:163
 msgid "Full Life"
 msgstr "Teljes élettartam"
 
-#: fnactions.cpp:307
+#: fnactions.cpp:337
 msgid "Battery Not Present"
 msgstr ""
 
-#: fnactions.cpp:309
+#: fnactions.cpp:339
 msgid "Battery Status"
 msgstr ""
 
-#: fnactions.cpp:484
+#: fnactions.cpp:514
 #, fuzzy
 msgid "Bluetooth device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: fnactions.cpp:488
+#: fnactions.cpp:518
 #, fuzzy
 msgid "Ethernet device %1"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: fnactions.cpp:492
+#: fnactions.cpp:522
 msgid "Wireless interface %1"
 msgstr "Wireless csatoló %1"
 
-#: ktoshiba.cpp:132
+#: ktoshiba.cpp:124
 msgid ""
 "The program ktosh_keyhandler cannot be found.\n"
 " HotKeys monitoring will no be enabled."
 msgstr ""
 
-#: ktoshiba.cpp:134
+#: ktoshiba.cpp:126
 msgid "HotKeys"
 msgstr ""
 
-#: ktoshiba.cpp:351
+#: ktoshiba.cpp:336
 msgid "Suspend To &RAM"
 msgstr "Felfüggesztés RAM-ba"
 
-#: ktoshiba.cpp:353
+#: ktoshiba.cpp:338
 msgid "Suspend To &Disk"
 msgstr "Felfüggesztés lemezre"
 
-#: ktoshiba.cpp:361
+#: ktoshiba.cpp:346
 msgid "Enable &Bluetooth"
 msgstr "&Bluetooth bekapcsolása"
 
-#: ktoshiba.cpp:367 ktoshiba.cpp:387 ktoshiba.cpp:391
+#: ktoshiba.cpp:352 ktoshiba.cpp:372 ktoshiba.cpp:376
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:368
+#: ktoshiba.cpp:353
 msgid "Enabled - PM aware"
 msgstr "Bekapcsolva - PM aware"
 
-#: ktoshiba.cpp:369
+#: ktoshiba.cpp:354
 msgid "Enabled - No PM aware"
 msgstr "Bekapcsolva - No PM aware"
 
-#: ktoshiba.cpp:370
+#: ktoshiba.cpp:355
 msgid "Hyper-Threading"
 msgstr "Hyper-Threading"
 
-#: ktoshiba.cpp:372
+#: ktoshiba.cpp:357
 msgid "Dynamic"
 msgstr "Dinamikus"
 
-#: ktoshiba.cpp:373
+#: ktoshiba.cpp:358
 msgid "Always High"
 msgstr "Mindig magas"
 
-#: ktoshiba.cpp:374
+#: ktoshiba.cpp:359
 msgid "Always Low"
 msgstr "Mindig alacsony"
 
-#: ktoshiba.cpp:375
+#: ktoshiba.cpp:360
 msgid "CPU Frequency"
 msgstr "CPU Frekvencia"
 
-#: ktoshiba.cpp:388 ktoshiba.cpp:392
+#: ktoshiba.cpp:373 ktoshiba.cpp:377
 #, fuzzy
 msgid "Enabled"
 msgstr "Kikapcsolva"
 
-#: ktoshiba.cpp:389
+#: ktoshiba.cpp:374
 msgid "OneTouch Buttons"
 msgstr ""
 
-#: ktoshiba.cpp:393
+#: ktoshiba.cpp:378
 msgid "System Fan"
 msgstr ""
 
-#: ktoshiba.cpp:404
+#: ktoshiba.cpp:389
 msgid "CD/DVD"
 msgstr ""
 
-#: ktoshiba.cpp:405
+#: ktoshiba.cpp:390
 msgid "Digital"
 msgstr ""
 
-#: ktoshiba.cpp:406
+#: ktoshiba.cpp:391
 msgid "Multimedia MODE"
 msgstr ""
 
-#: ktoshiba.cpp:411
+#: ktoshiba.cpp:396
 msgid "&Configure KToshiba..."
 msgstr "KToshiba &beállításai"
 
-#: ktoshiba.cpp:414
+#: ktoshiba.cpp:399
 msgid "&Report Bug..."
 msgstr ""
 
-#: ktoshiba.cpp:417
+#: ktoshiba.cpp:402
 msgid "&About KToshiba"
 msgstr "KToshiba &névjegye"
 
-#: ktoshiba.cpp:419
+#: ktoshiba.cpp:404
 msgid "About &KDE"
 msgstr ""
 
-#: ktoshiba.cpp:478
+#: ktoshiba.cpp:463
 msgid "Bluetooth device activated"
 msgstr "Bluetooth eszköz aktiválva"
 
-#: ktoshiba.cpp:813
+#: ktoshiba.cpp:880
 msgid "on"
 msgstr "be"
 
-#: ktoshiba.cpp:813
+#: ktoshiba.cpp:880
 msgid "off"
 msgstr "ki"
 
-#: ktoshiba.cpp:814
+#: ktoshiba.cpp:881
 msgid "Wireless antenna turned %1"
 msgstr "Wireless antenna turned %1"
 
-#: ktoshiba.cpp:815
+#: ktoshiba.cpp:882
 msgid "Wireless"
 msgstr "Wireless"
 
-#: ktoshibaomnibookinterface.cpp:40 omnibookfnactions.cpp:48
+#: ktoshibaomnibookinterface.cpp:40 omnibookfnactions.cpp:50
 msgid "UNKNOWN"
 msgstr ""
 
@@ -260,38 +284,14 @@ msgstr ""
 msgid "C&ustom"
 msgstr "&Egyéni"
 
-#. i18n: file cmdwidget.ui line 28
-#: rc.cpp:6
-#, no-c-format
-msgid "Run Command"
-msgstr ""
-
-#. i18n: file cmdwidget.ui line 57
-#: rc.cpp:9
-#, no-c-format
-msgid "No command specified, please enter the command you want to run below:"
-msgstr ""
-
-#. i18n: file cmdwidget.ui line 99
-#: rc.cpp:15
-#, no-c-format
-msgid "Alt+C"
-msgstr ""
-
-#. i18n: file cmdwidget.ui line 110
-#: rc.cpp:21
-#, no-c-format
-msgid "Alt+S"
-msgstr ""
-
 #. i18n: file settingswidget.ui line 16
-#: rc.cpp:24
+#: rc.cpp:24 settingswidget.cpp:1184
 #, no-c-format
 msgid "KToshiba: Video, Power and Boot Status"
 msgstr "KToshiba: Videó, Energia és Boot állapot"
 
 #. i18n: file statuswidget.ui line 16
-#: rc.cpp:33
+#: rc.cpp:33 statuswidget.cpp:6673
 #, no-c-format
 msgid "KToshiba: Status Widget"
 msgstr "KToshiba: Status Widget"

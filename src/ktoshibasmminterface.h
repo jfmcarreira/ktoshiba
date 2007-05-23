@@ -28,7 +28,7 @@ extern "C"
 #include <fcntl.h>
 #include <linux/types.h>
 
-  // Taken from toshutils
+// Taken from toshutils
 #include "sci.h"
 #include "hci.h"
 }
@@ -50,9 +50,11 @@ public:
   KToshibaSMMInterface(QObject *parent = 0);
   ~KToshibaSMMInterface();
 
+  bool mHWChanged;
+
   /**
    * Gets AC status
-   * @return @p the int holding the AC status
+   * @return the int holding the AC status
    */
   int acPowerStatus();
 
@@ -62,7 +64,8 @@ public:
    **************************************/
   /**
    * Opens an SCI interface.
-   * @return @p true when opened interface
+   * @param err the status reported
+   * @return true when opened interface
    */
   bool openSCInterface(int *err);
   /**
@@ -71,12 +74,12 @@ public:
   void closeSCInterface();
   /**
    * Gets the machine SCI version.
-   * @return @p the SCI version string
+   * @return the SCI version string
    */
   QString getSCIVersion();
   /**
    * Gets the current battery save mode.
-   * @return @p value holding the current save mode
+   * @return value holding the current save mode
    */
   int getBatterySaveMode();
   /**
@@ -86,12 +89,12 @@ public:
   void setBatterySaveMode(int mode);
   /**
    * Gets the Battery Save Mode type.
-   * @return @p the int holding the BSM type
+   * @return the int holding the BSM type
    */
   int getBatterySaveModeType();
   /**
    * Gets the Processor Speed.
-   * @return @p the int holding the current speed
+   * @return the int holding the current speed
    */
   int getProcessingSpeed();
   /**
@@ -101,7 +104,7 @@ public:
   void setProcessingSpeed(int speed);
   /**
    * Gets the Wake on Keyboard status.
-   * @return @p the int holding the cuent status
+   * @return the int holding the cuent status
    */
   int getWakeonKeyboard();
 
@@ -128,7 +131,7 @@ public:
   void setHDDAutoOff(int time);
   /**
    * Gets the current speaker volume.
-   * @return @p the int holding the current volume
+   * @return the int holding the current volume
    */
   int getSpeakerVolume();
   /**
@@ -144,7 +147,7 @@ public:
   void batteryStatus(int *time, int *percent);
   /**
    * Gets the current system boot method.
-   * @return @p the int holdint the current boot method
+   * @return the int holdint the current boot method
    */
   int getBootMethod();
   /**
@@ -159,7 +162,7 @@ public:
   void setCoolingMethod(int method);
   /**
    * Gets the current ATA Priority state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getATAPriority(int index);
   /**
@@ -169,7 +172,7 @@ public:
   void setATAPriority(int index);
   /**
    * Gets the Device Configuration.
-   * @return @p the int holding the device configuration
+   * @return the int holding the device configuration
    */
   int getDeviceConfig();
   /**
@@ -179,12 +182,12 @@ public:
   void setDeviceConfig(int mode);
   /**
    * Gets the system boot method supported.
-   * @return @p the int holding the method supported
+   * @return the int holding the method supported
    */
   int getBootType();
   /**
    * Gets the current LAN controller state
-   * @return @p the int holding the LAN controller state
+   * @return the int holding the LAN controller state
    */
   int getLANController();
   /**
@@ -194,7 +197,7 @@ public:
   void setLANController(int state);
   /**
    * Checks the availability of SpeedStep Technology.
-   * @return @p the int holding the current mode
+   * @return the int holding the current mode
    */
   int getSpeedStep();
   /**
@@ -204,7 +207,7 @@ public:
   void setSpeedStep(int mode);
   /**
    * Gets the Sound Logo mode.
-   * @return @p the int holding the current mode
+   * @return the int holding the current mode
    */
   int getSoundLogo();
   /**
@@ -214,7 +217,7 @@ public:
   void setSoundLogo(int state);
   /**
    * Gets the Power Button Lamp state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getPowerButtonLamp();
   /**
@@ -224,7 +227,7 @@ public:
   void setPowerButtonLamp(int mode);
   /**
    * Gets the Start Up Logo state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getStartUpLogo();
   /**
@@ -234,7 +237,7 @@ public:
   void setStartUpLogo(int mode);
   /**
    * Checks the availability of Hyper-Threading Thechnology.
-   * @return @p the int holding the current status
+   * @return the int holding the current status
    */
   int getHyperThreading();
   /**
@@ -244,7 +247,7 @@ public:
   void setHyperThreading(int status);
   /**
    * Gets the Power Switch state.
-   * @return @p the int holding the current status
+   * @return the int holding the current status
    */
   int getPowerSW();
   /**
@@ -254,7 +257,7 @@ public:
   void setPowerSW(int mode);
   /**
    * Gets the Display Device mode.
-   * @return @p the int holding the current mode
+   * @return the int holding the current mode
    */
   int getDisplayDevice();
   /**
@@ -264,7 +267,7 @@ public:
   void setDisplayDevice(int mode);
   /**
    * Gets the Parallel Port mode.
-   * @return @p the int holding the current mode
+   * @return the int holding the current mode
    */
   int getParallelPort();
   /**
@@ -274,7 +277,7 @@ public:
   void setParallelPort(int mode);
   /**
    * Gets the Keyboard Type state.
-   * @return @p the int holding the current status
+   * @return the int holding the current status
    */
   int getKeyboardType();
   /**
@@ -284,7 +287,7 @@ public:
   void setKeyboardType(int mode);
   /**
    * Gets the status of the mouse pad.
-   * @return @p the int holding the status of the MousePad
+   * @return the int holding the status of the MousePad
    */
   int getPointingDevice();
   /**
@@ -294,7 +297,7 @@ public:
   void setPointingDevice(int status);
   /**
    * Gets the USB Legacy Support state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getUSBLegacySupport();
   /**
@@ -304,7 +307,7 @@ public:
   void setUSBLegacySupport(int state);
   /**
    * Gets the USB Floppy Emulation state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getUSBFDDEmulation();
   /**
@@ -314,7 +317,7 @@ public:
   void setUSBFDDEmulation(int state);
   /**
    * Gets the Wake On LAN status.
-   * @return @p the int holding the current status
+   * @return the int holding the current status
    */
   int getWOL();
   /**
@@ -324,7 +327,7 @@ public:
   void setWOL(int state);
   /**
    * Gets the Remote Boot Protocol mode.
-   * @return @p the int holding the current mode
+   * @return the int holding the current mode
    */
   int getRemoteBootProtocol();
   /**
@@ -339,22 +342,22 @@ public:
    **************************************/
   /**
    * Gets the machine BIOS version.
-   * @return @p value holding the BIOS version
+   * @return value holding the BIOS version
    */
   int machineBIOS();
   /**
    * Gets the machine BIOS date.
-   * @return @p value holding the BIOS date
+   * @return value holding the BIOS date
    */
   int machineBIOSDate();
   /**
    * Gets the machine ID number.
-   * @return @p value holding the machine id
+   * @return value holding the machine id
    */
   int machineID();
   /**
    * Gets the current state of the LCD backlight.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getBackLight();
   /**
@@ -364,12 +367,12 @@ public:
   void setBackLight(int state);
   /**
    * Get the AC status.
-   * @return @p four when connected, three disconnected
+   * @return four when connected, three disconnected
    */
   int getAC();
   /**
    * Gets the current fan status.
-   * @return @p the int holdint the current fan state
+   * @return the int holdint the current fan state
    */
   int getFan();
   /**
@@ -380,17 +383,17 @@ public:
   /**
    * Gets the device attached to the desired bay.
    * @param bay the int holding the desired bay
-   * @return @p the int holding the current device
+   * @return the int holding the current device
    */
   int getBayDevice(int bay);
   /**
    * Checks System Event FIFO for hotkeys.
-   * @return @p the value holding the hotkey id
+   * @return the value holding the hotkey id
    */
   int getSystemEvent();
   /**
    * Enables the System Events
-   * @return @p true if successful, false otherwise
+   * @return true if successful, false otherwise
    */
   bool enableSystemEvent();
   /**
@@ -399,7 +402,7 @@ public:
   void disableSystemEvent();
   /**
    * Gets the current video-out setting.
-   * @return @p the int holdint the current display setting
+   * @return the int holdint the current display setting
    */
   int getVideo();
   /**
@@ -415,7 +418,7 @@ public:
   void getSystemLocks(int *lock, int bay);
   /**
    * Return the current display brightness.
-   * @return @p the int holding the current brightness level
+   * @return the int holding the current brightness level
    */
   int getBrightness();
   /**
@@ -425,12 +428,12 @@ public:
   void setBrightness(int value);
   /**
    * Verifies the wireless antenna switch.
-   * @return @p the int holding the status
+   * @return the int holding the status
    */
   int getWirelessSwitch();
   /**
    * Gets the current wireless power state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getWirelessPower();
   /**
@@ -440,12 +443,12 @@ public:
   void setWirelessPower(int state);
   /**
    * Verifies the Bluetooth device existence.
-   * @return @p the int holding the device status
+   * @return the int holding the device status
    */
   int getBluetooth();
   /**
    * Gets the current Bluetooth power state.
-   * @return @p the int holding the current state
+   * @return the int holding the current state
    */
   int getBluetoothPower();
   /**
@@ -455,8 +458,18 @@ public:
   void setBluetoothPower(int state);
 private:
   /**
+   * Sets the SCI error string.
+   * @return the QString with the error
+   */
+   QString sciError(int err);
+  /**
+   * Sets the HCI error string.
+   * @return the QString with the error
+   */
+   QString hciError(int err);
+  /**
    * Gets the current owner string.
-   * @return @p the string containing the owner string
+   * @return the string containing the owner string
    */
   char *getOwnerString();
   /**
@@ -471,19 +484,9 @@ private:
   void setBluetoothControl(int state);
   /**
    * Gets the maximum ATA Priority index.
-   * @return @p the int holding the maximum index
+   * @return the int holding the maximum index
    */
   int getATAPriorityIndex();
-  /**
-   * Sets the SCI error string.
-   * @return @p the QString with the error
-   */
-   QString sciError(int err);
-  /**
-   * Sets the HCI error string.
-   * @return @p the QString with the error
-   */
-   QString hciError(int err);
 private:
   SMMRegisters reg;
   QString mError;
