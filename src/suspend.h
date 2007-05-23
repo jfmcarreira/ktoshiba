@@ -49,7 +49,7 @@ enum retmsg {
 /**
  * @short Suspend to RAM/Disk
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.2
+ * @version 0.3
  */
 class Suspend : public QObject
 {

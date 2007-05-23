@@ -622,28 +622,27 @@ void KToshiba::bsmUserSettings(int *bright, int *perc, bsmmode mode)
 
     kdDebug() << "User Settings: " << modetxt << " mode..." << endl;
 
-    // TODO: Check that this stuff is correct...
-    if (100 <= *perc > 75) { // (perc <= 100 && perc > 75) ???
+    if (*perc <= 100 && *perc > 75) {
         tmpproc = proc100;
-        *bright = bright100;
+        *bright = 7 - bright100;
         tmpdisp = disp100;
         tmphdd = hdd100;
     } else
-    if (75 <= *perc > 50) {
+    if (*perc <= 75 && *perc > 50) {
         tmpproc = proc75;
-        *bright = bright75;
+        *bright = 7 - bright75;
         tmpdisp = disp75;
         tmphdd = hdd75;
     } else
-    if (50 <= *perc > 25) {
+    if (*perc <= 50 && *perc > 25) {
         tmpproc = proc50;
-        *bright = bright50;
+        *bright = 7 - bright50;
         tmpdisp = disp50;
         tmphdd = hdd50;
     } else
-    if (25 <= *perc > 0) {
+    if (*perc <= 25 && *perc > 0) {
         tmpproc = proc25;
-        *bright = bright25;
+        *bright = 7 - bright25;
         tmpdisp = disp25;
         tmphdd = hdd25;
     }

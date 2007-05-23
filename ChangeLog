@@ -4,6 +4,12 @@
 	* Added two new functions to deal with BSM config file
 	* Finally finished with the new changes made to the BSM
 	* Updated Spanish translation
+	* Fixed setting the correct brightness when in BS Modes
+	* Bumped header versions
+	* Fixed percent sorting for BSM stuff
+	* Moved some strings to KCM class to deal with the
+	  translations there
+	* Updated Spanish catalog again...
 
 2007-05-07 Azael Avalos <coproscefalo@gmail.com>
 	* Now the Hardware tab items send the signal correctly

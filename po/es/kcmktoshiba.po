@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmktoshiba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-23 02:26-0600\n"
-"PO-Revision-Date: 2007-05-23 03:16-0600\n"
+"POT-Creation-Date: 2007-05-23 14:24-0600\n"
+"PO-Revision-Date: 2007-05-23 14:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
@@ -28,13 +28,13 @@ msgid ""
 msgstr "coproscefalo@gmail.com"
 
 #. i18n: file bsmwidget.ui line 28
-#: bsmwidget.cpp:2003 rc.cpp:3
+#: bsmwidget.cpp:2002 rc.cpp:3
 #, no-c-format
 msgid "BSMWidget"
 msgstr "BSMWidget"
 
 #. i18n: file bsmwidget.ui line 82
-#: bsmwidget.cpp:2004 rc.cpp:6
+#: bsmwidget.cpp:2003 rc.cpp:6
 #, no-c-format
 msgid ""
 "Here you can configure the different options for the selected Battery Save "
@@ -44,7 +44,7 @@ msgstr ""
 "para el Modo de Ahorro de Batería seleccionado."
 
 #. i18n: file bsmwidget.ui line 189
-#: bsmwidget.cpp:2008 rc.cpp:12
+#: bsmwidget.cpp:2007 rc.cpp:12
 #, no-c-format
 msgid ""
 "Display\n"
@@ -54,7 +54,7 @@ msgstr ""
 "de la Pantalla:"
 
 #. i18n: file bsmwidget.ui line 486
-#: bsmwidget.cpp:2017 rc.cpp:23
+#: bsmwidget.cpp:2016 rc.cpp:23
 #, no-c-format
 msgid ""
 "Processor\n"
@@ -64,25 +64,25 @@ msgstr ""
 "Procesamiento:"
 
 #. i18n: file bsmwidget.ui line 492
-#: bsmwidget.cpp:2020 rc.cpp:27
+#: bsmwidget.cpp:2019 rc.cpp:27
 #, no-c-format
 msgid "Performance"
 msgstr "Rendimiento"
 
 #. i18n: file bsmwidget.ui line 497
-#: bsmwidget.cpp:2021 rc.cpp:30
+#: bsmwidget.cpp:2020 rc.cpp:30
 #, no-c-format
 msgid "Max. Performance"
 msgstr "Máximo Rendimiento"
 
 #. i18n: file bsmwidget.ui line 502
-#: bsmwidget.cpp:2022 rc.cpp:33
+#: bsmwidget.cpp:2021 rc.cpp:33
 #, no-c-format
 msgid "Battery Optimized"
 msgstr "Optimizado para Batería"
 
 #. i18n: file bsmwidget.ui line 656
-#: bsmwidget.cpp:2024 rc.cpp:37
+#: bsmwidget.cpp:2023 rc.cpp:37
 #, no-c-format
 msgid ""
 "HDD\n"
@@ -92,7 +92,7 @@ msgstr ""
 "del Disco Duro:"
 
 #. i18n: file bsmwidget.ui line 776
-#: bsmwidget.cpp:2028 rc.cpp:43
+#: bsmwidget.cpp:2027 rc.cpp:43
 #, no-c-format
 msgid ""
 "LCD\n"
@@ -102,7 +102,7 @@ msgstr ""
 "del LCD:"
 
 #. i18n: file bsmwidget.ui line 1014
-#: bsmwidget.cpp:2033 rc.cpp:50
+#: bsmwidget.cpp:2032 rc.cpp:50
 #, no-c-format
 msgid "Cooling Method:"
 msgstr ""
@@ -172,8 +172,7 @@ msgstr "Alt+E"
 #. i18n: file kcmtoshiba_general.ui line 266
 #: kcmtoshiba_general.cpp:2559 rc.cpp:91
 #, no-c-format
-msgid ""
-"Check this if you want the Bluetooth device activated at program startup"
+msgid "Check this if you want the Bluetooth device activated at program startup"
 msgstr ""
 "Marca esto si deseas habilitar el dispositivo Bluetooth al comienzo del "
 "programa"
@@ -194,8 +193,7 @@ msgstr "Alt+S"
 #: kcmtoshiba_general.cpp:2562 rc.cpp:100
 #, no-c-format
 msgid "Check this if you want KToshiba to start automatically at KDE login"
-msgstr ""
-"Marca esto si deseas que KToshiba comienze automaticamente al comienzo de KDE"
+msgstr "Marca esto si deseas que KToshiba comienze automaticamente al comienzo de KDE"
 
 #. i18n: file kcmtoshiba_general.ui line 288
 #: kcmtoshiba_general.cpp:2563 rc.cpp:103
@@ -714,8 +712,7 @@ msgstr "Tecla-Fn"
 #. i18n: file kcmtoshiba_general.ui line 2762
 #: kcmtoshiba_general.cpp:2791 rc.cpp:724
 #, no-c-format
-msgid ""
-"These are the different <b>Battery Save Modes</b> that can be configured."
+msgid "These are the different <b>Battery Save Modes</b> that can be configured."
 msgstr ""
 "Estas son los diferentes <b>Modos de Ahorro de Batería</b> que pueden ser "
 "configurados."
@@ -875,26 +872,39 @@ msgstr "RPL"
 msgid "&Hardware"
 msgstr "Hardware"
 
-#: main.cpp:62
+#: main.cpp:63
 msgid "kcmktoshiba"
 msgstr "kcmktoshiba"
 
-#: main.cpp:63
+#: main.cpp:64
 msgid "KDE Control Module for Toshiba Laptops"
 msgstr "Módulo de Control de KDE para el soporte del portátil Toshiba"
 
-#: main.cpp:67
+#: main.cpp:68
 msgid "Original author"
 msgstr "Autor Original"
 
-#: main.cpp:367
+#: main.cpp:108
+msgid "High"
+msgstr "Alto"
+
+#: main.cpp:109
+msgid "Low"
+msgstr "Bajo"
+
+#: main.cpp:110
+msgid "Never"
+msgstr "Nunca"
+
+#: main.cpp:372
 msgid "High Power - KToshiba"
 msgstr "Alto Poder - KToshiba"
 
-#: main.cpp:414
+#: main.cpp:419
 msgid "DVD Playback - KToshiba"
 msgstr "Reproducción de DVD - KToshiba"
 
-#: main.cpp:461
+#: main.cpp:466
 msgid "Presentation - KToshiba"
 msgstr "Presentación - KToshiba"
+

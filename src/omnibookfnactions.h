@@ -28,7 +28,7 @@ class KToshibaOmnibookInterface;
 /**
  * @short Performs the Fn assosiated action
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.2
+ * @version 0.3
  */
 class OmnibookFnActions : public FnActions
 {

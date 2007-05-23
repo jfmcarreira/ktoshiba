@@ -50,7 +50,7 @@ enum popuptype {
 /**
  * @short Shared Fn action class
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.1
+ * @version 0.2
  */
 class FnActions : public QObject
 {
