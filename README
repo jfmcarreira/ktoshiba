@@ -27,6 +27,12 @@ NOTE: On recent kernels it is now possible to load the module without
       specifying the Fn port number and hotkeys monitoring will work
       out of the box (tested on kernels 2.6.16 and 2.6.18 on SUSE 10.1).
 
+NOTE2: Recent models (Satellite(R) U200, and probably others) have trouble
+       using the toshiba kernel module, for these models to work correctly
+       it is strongly recommended to use the experimental toshiba_acpi
+       kernel module instead, you can find the module here:
+       http://memebeam.org/toys/ExperimentalToshibaAcpiDriver
+
 For the program to function properly you need to specify the port for 
 the Fn key at the moment of kernel module insertion 
 ('insmod toshiba fn=0x62'). 
@@ -51,6 +57,10 @@ without the cuotes and it should look something like this:
 
 	alias char-major-10-181 toshiba
 	options toshiba fn=0x62
+
+NOTE: If the experimental toshiba_acpi kernel driver is to be used, then
+      it is only necesary to add a line like this:
+	alias char-major-10-181 toshiba_acpi
 
 If you are using SuSE you might want to add this to modules.conf.local or
 modprobe.conf.local (again depending on running kernel) instead.
