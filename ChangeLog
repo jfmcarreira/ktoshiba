@@ -1,3 +1,10 @@
+2007-05-30 Azael Avalos <coproscefalo@gmail.com>
+	* Released 0.11
+
+2007-05-24 Azael Avalos <coproscefalo@gmail.com>
+	* Updated README files
+	* Bumped configure.in.in version 
+
 2007-05-23 Azael Avalos <coproscefalo@gmail.com>
 	* Set the default (loading) values of the BSM widget
 	* Finished the BSM widget...

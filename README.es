@@ -28,6 +28,12 @@ NOTA: En kernels recientes es posible cargar el modulo sin especificar el
       número de puerto de la tecla Fn y un asi las "hotkeys" funcionaran
       sin algun problema (probado en los kernels 2.6.16 y 2.6.18 en SUSE 10.1).
 
+NOTA2: Modelos recientes (Satellite(R) U200, y probablemente otros) tienen
+       problemas usando el controlador del kernel toshiba, para que estos
+       modelos trabajen correctamente, se recomienda el uso del controlador
+       experimental toshiba_acpi, tu puedes encontrar este controlador aquí:
+       http://memebeam.org/toys/ExperimentalToshibaAcpiDriver
+
 Para que este programa funcione eficientemente se necesita especificar
 el puerto de la tecla Fn al momento de la carga del controlador del kernel
 ('insmod toshiba fn=0x62').
@@ -52,6 +58,10 @@ sin las comillas y se vera algo así:
 
 	alias char-major-10-181 toshiba
 	options toshiba fn=0x62
+
+NOTA: Si se va a utilizar el controlador del kernel experimental toshiba_acpi
+      solo es necesario agregar la siguiente linea:
+	alias char-major-10-181 toshiba_acpi
 
 Si tu usas SuSE entonces tu querras editar el archivo modules.conf.local
 ó modprobe.conf.local (dependiendo del kernel) entonces.
