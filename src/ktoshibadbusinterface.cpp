@@ -189,7 +189,7 @@ bool KToshibaDBusInterface::hibernate()
 bool KToshibaDBusInterface::suspend()
 {
     if (m_suspend) {
-        QDBusReply<void> reply = m_powerIface->call("Hibernate");
+        QDBusReply<void> reply = m_powerIface->call("Suspend");
 
         if (!reply.isValid()) {
             QDBusError err(m_powerIface->lastError());
