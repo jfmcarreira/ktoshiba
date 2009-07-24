@@ -40,7 +40,6 @@ namespace Experimental {
 class KToshiba : public KUniqueApplication
 {
     Q_OBJECT
-    //Q_CLASSINFO("D-Bus Interface", "net.sourceforge.KToshiba")
 
 public:
     KToshiba();

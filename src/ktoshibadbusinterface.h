@@ -31,10 +31,14 @@ class KToshibaDBusInterface : public QObject
 public:
     KToshibaDBusInterface(QObject *parent);
     ~KToshibaDBusInterface();
-    
+
+    QString getModel();
+    bool checkMute();
+    void toggleMute();
     void lockScreen();
     bool hibernate();
     bool suspend();
+    int getBrightness();
     void toggleWireless();
 
 Q_SIGNALS:

@@ -71,7 +71,6 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     }
 
     checkSupportedSuspend();
-    m_wireless = checkWireless();	// Returns false on error
 
     connect( m_halIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
@@ -86,12 +85,68 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
     delete m_powerIface; m_powerIface = NULL;
 }
 
+QString KToshibaDBusInterface::getModel()
+{
+    QDBusInterface iface("org.freedesktop.Hal",
+			 "/org/freedesktop/Hal/devices/computer",
+			 "org.freedesktop.Hal.Device",
+			 QDBusConnection::systemBus(), 0);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "getModel Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        return "UNKNOWN";
+    }
+
+    QDBusReply<QString> reply = iface.call("GetPropertyString",
+					"system.hardware.product");
+
+    if (!reply.isValid()) {
+        QDBusError err(reply.error());
+        fprintf(stderr, "getModel Error: %s\nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+
+        return "UNKNOWN";
+    }
+
+    return reply.value();
+}
+
 void KToshibaDBusInterface::gotInputEvent(QString event, QString type)
 {
     if (event == "ButtonPressed") 
         emit hotkeyPressed(type);
 
     return;
+}
+
+bool KToshibaDBusInterface::checkMute()
+{
+    QDBusInterface iface("org.kde.kmix",
+			 "/Mixer0",
+			 "org.kde.KMix",
+			 QDBusConnection::sessionBus(), 0);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "checkMute Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        return true;
+    }
+
+    // ISSUE: What if we have two sound cards...?
+    // We will use the first one for now...
+    QDBusReply<bool> reply = iface.call("mute",
+					"0");
+
+    if (!reply.isValid()) {
+        QDBusError err(reply.error());
+        fprintf(stderr, "checkMute Error: %s\nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+
+        return true;
+    }
+
+    return reply.value();
 }
 
 void KToshibaDBusInterface::checkSupportedSuspend()
@@ -143,6 +198,28 @@ bool KToshibaDBusInterface::checkWireless()
     }
 
     return reply.value().toBool();
+}
+
+void KToshibaDBusInterface::toggleMute()
+{
+    QDBusInterface iface("org.kde.kmix",
+			 "/Mixer0",
+			 "org.kde.KMix",
+			 QDBusConnection::sessionBus(), 0);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "toggleMute Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        return;
+    }
+
+    QDBusReply<void> reply = iface.call("toggleMute");
+
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "toggleMute Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+    }
 }
 
 void KToshibaDBusInterface::lockScreen()
@@ -203,6 +280,33 @@ bool KToshibaDBusInterface::suspend()
     }
 
     return false;
+}
+
+int KToshibaDBusInterface::getBrightness()
+{
+    QDBusInterface iface("org.freedesktop.Hal",
+			 "/org/freedesktop/Hal/devices/computer_backlight",
+			 "org.freedesktop.Hal.Device.LaptopPanel",
+			 QDBusConnection::systemBus(), 0);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "getBrightness Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+
+        return -1;
+    }
+
+    QDBusReply<int> reply = iface.call("GetBrightness");
+
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "getBrightness Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+
+        return -1;
+    }
+    
+    return reply.value();
 }
 
 void KToshibaDBusInterface::toggleWireless()

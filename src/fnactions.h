@@ -23,6 +23,8 @@
 #include <QObject>
 #include <QString>
 
+//#include "ui_statuswidget.h"
+
 class KToshibaDBusInterface;
 
 class FnActions : public QObject
@@ -37,9 +39,15 @@ public:
 
 private Q_SLOTS:
     void slotGotHotkey(QString);
+    
+protected:
+    //void showWidget();
+    //Ui::StatusWidget m_statusWidget;
 
 private:
+    //QWidget *widget;
     KToshibaDBusInterface* m_dBus;
+    bool m_bright;
 };
 
 #endif // FN_ACTIONS_H

@@ -36,15 +36,21 @@ KToshiba::KToshiba()
       m_Fn( new FnActions( this ) ),
       m_trayicon( new Experimental::KNotificationItem(this) )
 {
-    //QDBusConnection::sessionBus().registerObject("/ktoshiba", this, QDBusConnection::ExportScriptableSlots);
     m_trayicon->setIconByName("ktoshiba");
-    m_trayicon->setToolTip("ktoshiba", i18n("KToshiba - Fn key monitoring for Toshiba laptops"), QString());
+    m_trayicon->setToolTip("ktoshiba", "KToshiba", i18n("Fn key monitoring for Toshiba laptops"));
+    m_trayicon->setCategory(Experimental::KNotificationItem::Hardware);
+    m_trayicon->setStatus( Experimental::KNotificationItem::Passive );
 
     KMenu *popupMenu = m_trayicon->contextMenu();
 
+    // TODO: Find a way of changing the popup menu title
+    // from KToshiba to the actual laptops model name
+    //m_trayicon->setTitle(m_Fn->modelName());
+    //popupMenu->setTitle(m_Fn->modelName());
+
     // TODO: Add other items here...
     popupMenu->addSeparator();
-    KHelpMenu *m_helpMenu = new KHelpMenu( popupMenu, KToshiba::aboutData());
+    KHelpMenu *m_helpMenu = new KHelpMenu( popupMenu, aboutData());
     popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon("help-contents") );
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
     m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
