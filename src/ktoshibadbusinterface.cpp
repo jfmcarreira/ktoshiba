@@ -30,6 +30,8 @@
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject( parent ),
+      m_kbdIface( NULL ),
+      m_powerIface( NULL ),
       m_hibernate( false ),
       m_suspend( false ),
       m_wireless( false )
