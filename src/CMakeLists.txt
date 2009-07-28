@@ -13,14 +13,17 @@ set(KToshibaSources
     main.cpp
 )
 
-#kde4_add_ui_files(KToshibaSources statuswidget.ui)
+qt4_add_resources(qtsourceview_RC_SRCS Icons.qrc)
 
-kde4_add_executable(ktoshiba ${KToshibaSources})
+kde4_add_ui_files(KToshibaSources statuswidget.ui)
+
+kde4_add_executable(ktoshiba ${KToshibaSources} ${qtsourceview_RC_SRCS})
 
 target_link_libraries(ktoshiba
 	${KDE4_KDEUI_LIBS}
 	${KDE4_KPARTS_LIBS}
 	${LIBKNOTIFICATIONITEM-1_LIBRARIES}
+	${KDE4_SOLID_LIBS} solidcontrol
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_SYSTEM_NAME MATCHES Linux)

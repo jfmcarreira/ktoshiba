@@ -33,13 +33,8 @@ public:
     ~KToshibaDBusInterface();
 
     QString getModel();
-    bool checkMute();
-    void toggleMute();
     void lockScreen();
-    bool hibernate();
-    bool suspend();
     int getBrightness();
-    void toggleWireless();
 
 Q_SIGNALS:
     void hotkeyPressed(QString);
@@ -48,15 +43,8 @@ private Q_SLOTS:
     void gotInputEvent(QString, QString);
 
 private:
-    void checkSupportedSuspend();
-    bool checkWireless();
-
-    QDBusInterface* m_halIface;
+    QDBusInterface* m_inputIface;
     QDBusInterface* m_kbdIface;
-    QDBusInterface* m_powerIface;
-    bool m_hibernate;
-    bool m_suspend;
-    bool m_wireless;
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

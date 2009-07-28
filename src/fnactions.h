@@ -23,7 +23,11 @@
 #include <QObject>
 #include <QString>
 
-//#include "ui_statuswidget.h"
+#include <solid/control/powermanager.h>
+
+#include "ui_statuswidget.h"
+
+class QTimer;
 
 class KToshibaDBusInterface;
 
@@ -39,15 +43,24 @@ public:
 
 private Q_SLOTS:
     void slotGotHotkey(QString);
-    
-protected:
-    //void showWidget();
-    //Ui::StatusWidget m_statusWidget;
+    void hideWidget();
+    void acChanged(int);
+    void updateBrightness();
+    void wirelessChanged(bool);
 
 private:
-    //QWidget *widget;
+    void showWidget(int);
+    void checkSupportedSuspend();
+    void suspend(Solid::Control::PowerManager::SuspendMethod);
+    void toggleWireless();
+    QWidget *widget;
+    QTimer *m_widgetTimer;
     KToshibaDBusInterface* m_dBus;
-    bool m_bright;
+    Ui::StatusWidget m_statusWidget;
+    int m_bright;
+    bool m_str;
+    bool m_std;
+    int m_wireless;
 };
 
 #endif // FN_ACTIONS_H

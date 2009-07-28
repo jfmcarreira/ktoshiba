@@ -17,38 +17,56 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <QtGui/QDesktopWidget>
+#include <QTimer>
 
 #include <KDebug>
 #include <KMessageBox>
 #include <KLocale>
+#include <KJob>
+#include <solid/control/networkmanager.h>
 
 #include "fnactions.h"
 #include "ktoshibadbusinterface.h"
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
-      //widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint ) ),
+      widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
+      m_widgetTimer( new QTimer( this ) ),
       m_dBus( new KToshibaDBusInterface( parent ) ),
-      m_bright( -1 )
+      m_bright( -1 ),
+      m_str( false ),
+      m_std( false ),
+      m_wireless( true )
 {
-    //m_statusWidget.setupUi( widget );
-    //setMainWidget( widget );
-    //widget->clearFocus();
+    m_statusWidget.setupUi( widget );
+    widget->clearFocus();
+    widget->setAttribute( Qt::WA_NoSystemBackground );
+    widget->setAttribute( Qt::WA_TranslucentBackground );
+
+    checkSupportedSuspend();
 
     // ISSUE: Internal brightness value, since HAL doesn't seem to
-    // update the brightness value unless AC adaptor is plug/unpluged,
+    // update the brightness value unless AC adaptor is plug/unplugged,
     // so we will rely on the value stored to show widgets... Bummer...
     m_bright = m_dBus->getBrightness();
 
+    Solid::Control::PowerManager::Notifier *powerNotifier = Solid::Control::PowerManager::notifier();
+    Solid::Control::NetworkManager::Notifier *wifiNotifier = Solid::Control::NetworkManager::notifier();
+
     connect( m_dBus, SIGNAL( hotkeyPressed(QString) ), this, SLOT( slotGotHotkey(QString) ) );
+    connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
+    connect( powerNotifier, SIGNAL( acAdapterStateChanged(int) ), this, SLOT( acChanged(int) ) );
+    connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
 }
 
 FnActions::~FnActions()
 {
-    //delete widget; widget = NULL;
+    delete widget; widget = NULL;
+    delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_dBus; m_dBus = NULL;
 }
 
@@ -57,31 +75,82 @@ QString FnActions::modelName()
     return m_dBus->getModel();
 }
 
-//void FnActions::showWidget()
-//{
-    //QRect r = QApplication::desktop()->geometry();
-    //widget->move(r.center() -
-    //            QPoint(widget->width() / 2, widget->height() / 2));
-    //widget->show();
-    //m_statusWidget.stackedWidget->raiseWidget(3);
-    //sleep(3);	// Sleep for three seconds
-    //widget->hide();
-//}
+void FnActions::checkSupportedSuspend()
+{
+    int suspend = Solid::Control::PowerManager::supportedSuspendMethods();
+
+    m_str = (suspend & Solid::Control::PowerManager::ToRam)? true : false;
+    m_std = (suspend & Solid::Control::PowerManager::ToDisk)? true : false;
+}
+
+void FnActions::suspend(Solid::Control::PowerManager::SuspendMethod state)
+{
+    KJob *job = Solid::Control::PowerManager::suspend(state);
+
+    if ( !job->exec() ) {
+        fprintf(stderr, "suspend Error: Could not suspend to %s.\n\
+			Bummer...", ((state == 2)? "ram" :"disk"));
+    }
+}
+
+void FnActions::acChanged(int state)
+{
+    // Slight delay (1 sec) to wait for HAL to update its internal value...
+    if (state == Solid::Control::PowerManager::Plugged ||
+	state == Solid::Control::PowerManager::Unplugged)
+        QTimer::singleShot( 1000, this, SLOT( updateBrightness() ) );
+}
+
+void FnActions::updateBrightness()
+{
+    m_bright = m_dBus->getBrightness();
+}
+
+void FnActions::wirelessChanged(bool state)
+{
+    m_wireless = state;
+}
+
+void FnActions::toggleWireless()
+{
+    Solid::Control::NetworkManager::setWirelessEnabled( ((m_wireless)? false : true) );
+}
+
+void FnActions::showWidget(int wid)
+{
+    QRect r = QApplication::desktop()->geometry();
+    widget->move(r.center() -
+                QPoint(widget->width() / 2, widget->height() / 2));
+    widget->show();
+
+    if (m_bright == -1 || wid < 0)
+        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(8) );
+    else
+        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
+
+    if (m_widgetTimer->isActive())
+        m_widgetTimer->setInterval( 900 );
+    else
+        m_widgetTimer->start( 900 );
+}
+
+void FnActions::hideWidget()
+{
+    widget->hide();
+}
 
 void FnActions::slotGotHotkey(QString hotkey)
 {
     // ISSUE: Fn press/release is not being sent by the drivers or HAL
     // which could be of great use here, eg:
-    // Fn-Pressed -> widget->show();
-    // Hotkey-Pressed -> widget->stackedWidget.raiseWidget(--something--);
-    // Fn-Released -> widget->hide();
+    // Fn-Pressed:	widget->show();
+    // Hotkey-Pressed:	showWidget(--something--) );
+    // Fn-Released:	widget->hide();
 
-    // TODO: Fn-F{Esc, 1, 2, 3, 4, 5, 6, 7, 8, 9} are here,
-    // some (most?) lack implementation...
+    // TODO: Fn-F2, Fn-F5 and Fn-F9 lack implementation...
     if (hotkey == "mute") {
         // ISSUE: KMix or some other app is showing a volume bar whenever
-        // Fn-Esc is pressed, so this call is here just in case...
-        //m_dBus->checkMute();
+        // Fn-Esc is pressed, so this is here just in case...
         //showWidget();
         return;
     } else
@@ -89,29 +158,73 @@ void FnActions::slotGotHotkey(QString hotkey)
         m_dBus->lockScreen();
         return;
     } else
+    if (hotkey == "battery") {
+        // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
     if (hotkey == "sleep") {
-        m_dBus->suspend();
+        if (m_str)
+            suspend(Solid::Control::PowerManager::ToRam);
         return;
     } else
     if (hotkey == "hibernate") {
-        m_dBus->hibernate();
+        if (m_std)
+            suspend(Solid::Control::PowerManager::ToDisk);
         return;
     } else
     if (hotkey == "switch-videomode") {
+        // Do nothing for the time being...
         //showWidget();
         return;
     } else
     if (hotkey == "brightness-down" ||
         hotkey == "brightness-up") {
-        //showWidget();
+        if (hotkey == "brightness-down" && m_bright > 0)
+            m_bright--;
+        else if (m_bright < 7)
+            m_bright++;
+        showWidget(m_bright);
         return;
     } else
     if (hotkey == "wlan") {
-        m_dBus->toggleWireless();
+        toggleWireless();
         return;
     } else
     if (hotkey == "prog1") {
         // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
+    // Multimedia Keys
+    if (hotkey == "play-pause") {
+        // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
+    if (hotkey == "stop-cd") {
+        // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
+    if (hotkey == "previous-song") {
+        // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
+    if (hotkey == "next-song") {
+        // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
+    if (hotkey == "volume-up") {
+        // Do nothing for the time being...
+        //showWidget();
+        return;
+    } else
+    if (hotkey == "volume-down") {
+        // Do nothing for the time being...
+        //showWidget();
         return;
     } else {
         // TODO: This will be gone in a not so distant future, or maybe
