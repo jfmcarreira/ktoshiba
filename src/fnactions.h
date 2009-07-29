@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 #include <solid/control/powermanager.h>
 
@@ -44,19 +45,24 @@ public:
 private Q_SLOTS:
     void slotGotHotkey(QString);
     void hideWidget();
+    void slotProfileChanged(QString, QStringList);
     void acChanged(int);
     void updateBrightness();
     void wirelessChanged(bool);
 
 private:
     void showWidget(int);
+    void checkSupportedProfiles();
     void checkSupportedSuspend();
+    void toggleProfiles();
     void suspend(Solid::Control::PowerManager::SuspendMethod);
     void toggleWireless();
     QWidget *widget;
     QTimer *m_widgetTimer;
     KToshibaDBusInterface* m_dBus;
     Ui::StatusWidget m_statusWidget;
+    QStringList profiles;
+    QString m_profile;
     int m_bright;
     bool m_str;
     bool m_std;

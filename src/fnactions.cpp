@@ -37,6 +37,7 @@ FnActions::FnActions(QObject *parent)
       widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_dBus( new KToshibaDBusInterface( parent ) ),
+      m_profile( "Powersave" ),
       m_bright( -1 ),
       m_str( false ),
       m_std( false ),
@@ -47,6 +48,8 @@ FnActions::FnActions(QObject *parent)
     widget->setAttribute( Qt::WA_NoSystemBackground );
     widget->setAttribute( Qt::WA_TranslucentBackground );
 
+    // We're just going to care about these profiles
+    profiles << "Performance" << "Powersave" << "Presentation";
     checkSupportedSuspend();
 
     // ISSUE: Internal brightness value, since HAL doesn't seem to
@@ -61,6 +64,7 @@ FnActions::FnActions(QObject *parent)
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( powerNotifier, SIGNAL( acAdapterStateChanged(int) ), this, SLOT( acChanged(int) ) );
     connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
+    //connect( m_dBus, SIGNAL( profileChanged(QString, QStringList) ), this, SLOT( slotProfileChanged(QString, QStringList) ) );
 }
 
 FnActions::~FnActions()
@@ -73,6 +77,13 @@ FnActions::~FnActions()
 QString FnActions::modelName()
 {
     return m_dBus->getModel();
+}
+
+void FnActions::slotProfileChanged(QString profile, QStringList profiles)
+{
+    if (profile == "Performance" || profile == "Powersave" ||
+	    profile == "Presentation")
+        m_profile = profile;
 }
 
 void FnActions::checkSupportedSuspend()
@@ -99,6 +110,19 @@ void FnActions::acChanged(int state)
     if (state == Solid::Control::PowerManager::Plugged ||
 	state == Solid::Control::PowerManager::Unplugged)
         QTimer::singleShot( 1000, this, SLOT( updateBrightness() ) );
+}
+
+void FnActions::toggleProfiles()
+{
+    int current = profiles.indexOf(m_profile);
+    if (current == profiles.indexOf(profiles.last()))
+        m_profile = profiles.first();
+    else {
+        current++;
+        m_profile = profiles.at(current);
+    }
+
+    m_dBus->setProfile(m_profile);
 }
 
 void FnActions::updateBrightness()
@@ -159,7 +183,9 @@ void FnActions::slotGotHotkey(QString hotkey)
         return;
     } else
     if (hotkey == "battery") {
-        // Do nothing for the time being...
+        toggleProfiles();
+        // ISSUE: PowerDevil shows a notification whenever
+        // a profile is changed, so, do we need the UI?
         //showWidget();
         return;
     } else
@@ -192,7 +218,9 @@ void FnActions::slotGotHotkey(QString hotkey)
         return;
     } else
     if (hotkey == "prog1") {
-        // Do nothing for the time being...
+        // ISSUE: Ugly, why do X.Org devs have to change
+        // SynapticsSHM struct everytime...?
+        // Can't attach to SHM... Bummer...
         //showWidget();
         return;
     } else

@@ -30,7 +30,8 @@
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject( parent ),
       m_inputIface( NULL ),
-      m_kbdIface( NULL )
+      m_kbdIface( NULL ),
+      m_devilIface( NULL )
 {
     // TODO: Find out if this is the same input device toshiba_acpi uses
     // omnibook ectype TSM40 (13) and TSX205 (16) use this
@@ -57,16 +58,50 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
         return;
     }
 
+    /*m_devilIface = new QDBusInterface("org.kde.powerdevil", 
+			       "/modules/powerdevil", 
+			       "org.kde.PowerDevil", 
+			       QDBusConnection::sessionBus(), this);
+    if (!m_devilIface->isValid()) {
+        QDBusError err(m_devilIface->lastError());
+        fprintf(stderr, "KToshibaDBusInterface Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        return;
+    }*/
+
     connect( m_inputIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
     connect( m_kbdIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
+    // This signal is utterly broken, it gets emited constantly...
+    /*connect( m_devilIface, SIGNAL( profileChanged(QString, QStringList) ),
+	     this, SLOT( profileChangedSlot(QString, QStringList) ) );*/
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
 {
     delete m_inputIface; m_inputIface = NULL;
     delete m_kbdIface; m_kbdIface = NULL;
+    delete m_devilIface; m_devilIface = NULL;
+}
+
+void KToshibaDBusInterface::gotInputEvent(QString event, QString type)
+{
+    if (event == "ButtonPressed") 
+        emit hotkeyPressed(type);
+
+    return;
+}
+
+void KToshibaDBusInterface::profileChangedSlot(QString profile, QStringList profiles)
+{
+    // This gets printed all over again...
+    fprintf(stderr, "profileChangedSlot Got signal with values:\n\
+		%s - %s\n", qPrintable(profile), qPrintable(profiles.join(", ")));
+    // And so the signal, causing a crash...
+    emit profileChangedSlot(profile, profiles);
+    // Somehow we never get to this point...
+    fprintf(stderr, "profileChangedSlot: Signal emited.\n");
 }
 
 QString KToshibaDBusInterface::getModel()
@@ -96,14 +131,6 @@ QString KToshibaDBusInterface::getModel()
     return reply.value();
 }
 
-void KToshibaDBusInterface::gotInputEvent(QString event, QString type)
-{
-    if (event == "ButtonPressed") 
-        emit hotkeyPressed(type);
-
-    return;
-}
-
 void KToshibaDBusInterface::lockScreen()
 {
     QDBusInterface iface("org.freedesktop.ScreenSaver",
@@ -122,6 +149,36 @@ void KToshibaDBusInterface::lockScreen()
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         fprintf(stderr, "lockScreen Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+    }
+}
+
+void KToshibaDBusInterface::setProfile(QString profile)
+{
+    /*QDBusReply<void> reply = m_devilIface->call("setProfile", profile);
+
+    if (!reply.isValid()) {
+        QDBusError err(m_devilIface->lastError());
+        fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+    }*/
+
+    QDBusInterface iface("org.kde.powerdevil",
+			 "/modules/powerdevil",
+			 "org.kde.PowerDevil",
+			 QDBusConnection::sessionBus(), 0);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        return;
+    }
+
+    QDBusReply<void> reply = iface.call("setProfile", profile);
+
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
     }
 }

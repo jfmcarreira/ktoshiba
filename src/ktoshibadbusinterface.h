@@ -21,6 +21,7 @@
 #define KTOSHIBA_DBUS_INTERFACE_H
 
 #include <QObject>
+#include <QString>
 
 class QDBusInterface;
 
@@ -34,17 +35,21 @@ public:
 
     QString getModel();
     void lockScreen();
+    void setProfile(QString);
     int getBrightness();
 
 Q_SIGNALS:
     void hotkeyPressed(QString);
+    void profileChanged(QString, QStringList);
 
 private Q_SLOTS:
     void gotInputEvent(QString, QString);
+    void profileChangedSlot(QString, QStringList);
 
 private:
     QDBusInterface* m_inputIface;
     QDBusInterface* m_kbdIface;
+    QDBusInterface* m_devilIface;
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

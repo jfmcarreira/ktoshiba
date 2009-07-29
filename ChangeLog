@@ -1,5 +1,8 @@
 2009-07-27 Azael Avalos <coproscefalo@gmail.com>
 	* Removed uneeded fuctions from DBusInterface
+	* Added PowerDevil calls to DBusInterface to change
+	  profiles, now we just need to use them...
+	* Fn-F2 (battery) is now working
 
 2009-07-27 Azael Avalos <coproscefalo@gmail.com>
 	* Suspend To {RAM, Disk} is now being handled using
