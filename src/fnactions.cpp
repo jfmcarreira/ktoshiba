@@ -39,18 +39,16 @@ FnActions::FnActions(QObject *parent)
       m_dBus( new KToshibaDBusInterface( parent ) ),
       m_profile( "Powersave" ),
       m_bright( -1 ),
-      m_str( false ),
-      m_std( false ),
       m_wireless( true )
 {
     m_statusWidget.setupUi( widget );
     widget->clearFocus();
-    widget->setAttribute( Qt::WA_NoSystemBackground );
     widget->setAttribute( Qt::WA_TranslucentBackground );
+
+    populateHotkeys();
 
     // We're just going to care about these profiles
     profiles << "Performance" << "Powersave" << "Presentation";
-    checkSupportedSuspend();
 
     // ISSUE: Internal brightness value, since HAL doesn't seem to
     // update the brightness value unless AC adaptor is plug/unplugged,
@@ -74,6 +72,33 @@ FnActions::~FnActions()
     delete m_dBus; m_dBus = NULL;
 }
 
+void FnActions::populateHotkeys()
+{
+    // TODO: Add and/or correct values if needed
+    // Fn-F# values
+    hotkeys.insert("mute", 0);
+    hotkeys.insert("coffee", 1);
+    hotkeys.insert("battery", 2);
+    hotkeys.insert("sleep", 3);
+    hotkeys.insert("hibernate", 4);
+    hotkeys.insert("switch-videomode", 5);
+    hotkeys.insert("brightness-down", 6);
+    hotkeys.insert("brightness-up", 7);
+    hotkeys.insert("wlan", 8);
+    hotkeys.insert("prog1", 9);
+    // Multimedia values
+    hotkeys.insert("homepage", 10);
+    hotkeys.insert("media-player", 11);
+    hotkeys.insert("play-pause", 12);
+    hotkeys.insert("stop-cd", 13);
+    hotkeys.insert("previous-song", 14);
+    hotkeys.insert("next-song", 15);
+    // Other values (Zoom and friends)
+    hotkeys.insert("zoom-reset", 16);
+    hotkeys.insert("zoom-out", 17);
+    hotkeys.insert("zoom-in", 18);
+}
+
 QString FnActions::modelName()
 {
     return m_dBus->getModel();
@@ -84,24 +109,6 @@ void FnActions::slotProfileChanged(QString profile, QStringList profiles)
     if (profile == "Performance" || profile == "Powersave" ||
 	    profile == "Presentation")
         m_profile = profile;
-}
-
-void FnActions::checkSupportedSuspend()
-{
-    int suspend = Solid::Control::PowerManager::supportedSuspendMethods();
-
-    m_str = (suspend & Solid::Control::PowerManager::ToRam)? true : false;
-    m_std = (suspend & Solid::Control::PowerManager::ToDisk)? true : false;
-}
-
-void FnActions::suspend(Solid::Control::PowerManager::SuspendMethod state)
-{
-    KJob *job = Solid::Control::PowerManager::suspend(state);
-
-    if ( !job->exec() ) {
-        fprintf(stderr, "suspend Error: Could not suspend to %s.\n\
-			Bummer...", ((state == 2)? "ram" :"disk"));
-    }
 }
 
 void FnActions::acChanged(int state)
@@ -171,94 +178,71 @@ void FnActions::slotGotHotkey(QString hotkey)
     // Hotkey-Pressed:	showWidget(--something--) );
     // Fn-Released:	widget->hide();
 
-    // TODO: Fn-F2, Fn-F5 and Fn-F9 lack implementation...
-    if (hotkey == "mute") {
-        // ISSUE: KMix or some other app is showing a volume bar whenever
-        // Fn-Esc is pressed, so this is here just in case...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "coffee") {
-        m_dBus->lockScreen();
-        return;
-    } else
-    if (hotkey == "battery") {
-        toggleProfiles();
-        // ISSUE: PowerDevil shows a notification whenever
-        // a profile is changed, so, do we need the UI?
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "sleep") {
-        if (m_str)
-            suspend(Solid::Control::PowerManager::ToRam);
-        return;
-    } else
-    if (hotkey == "hibernate") {
-        if (m_std)
-            suspend(Solid::Control::PowerManager::ToDisk);
-        return;
-    } else
-    if (hotkey == "switch-videomode") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "brightness-down" ||
-        hotkey == "brightness-up") {
-        if (hotkey == "brightness-down" && m_bright > 0)
-            m_bright--;
-        else if (m_bright < 7)
-            m_bright++;
-        showWidget(m_bright);
-        return;
-    } else
-    if (hotkey == "wlan") {
-        toggleWireless();
-        return;
-    } else
-    if (hotkey == "prog1") {
-        // ISSUE: Ugly, why do X.Org devs have to change
-        // SynapticsSHM struct everytime...?
-        // Can't attach to SHM... Bummer...
-        //showWidget();
-        return;
-    } else
-    // Multimedia Keys
-    if (hotkey == "play-pause") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "stop-cd") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "previous-song") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "next-song") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "volume-up") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else
-    if (hotkey == "volume-down") {
-        // Do nothing for the time being...
-        //showWidget();
-        return;
-    } else {
-        // TODO: This will be gone in a not so distant future, or maybe
-        // left here (commented) to test incomming "events"
-        KMessageBox::information(0, i18n("Got Hotkey: %1").arg(hotkey),
-				 i18n("KToshiba - Hotkey"));
+    // TODO: Fn-F5 and Fn-F9 lack implementation...
+    switch ( hotkeys.value(hotkey) ) {
+        case 0:
+          // ISSUE: KMix or some other app is showing a volume bar whenever
+          // Fn-Esc is pressed, so this is here just in case...
+          //showWidget();
+          break;
+        case 1:
+          m_dBus->lockScreen();
+          break;
+        case 2:
+          toggleProfiles();
+          break;
+        case 3:
+          m_dBus->suspend();
+          break;
+        case 4:
+          m_dBus->hibernate();
+          break;
+        case 5:
+          // Do nothing for the time being...
+          //showWidget();
+          break;
+        case 6:
+        case 7:
+          if (hotkey == "brightness-down" && m_bright > 0)
+              m_bright--;
+          else if (m_bright < 7)
+              m_bright++;
+          showWidget(m_bright);
+          break;
+        case 8:
+          toggleWireless();
+          break;
+        case 9:
+          // ISSUE: Ugly, why do X.Org devs have to change
+          // SynapticsSHM struct everytime...?
+          // Can't attach to SHM... Bummer...
+          //showWidget();
+          break;
+        // Multimedia Keys
+        case 10:
+          break;
+        case 11:
+          break;
+        case 12:
+          break;
+        case 13:
+          break;
+        case 14:
+          break;
+        case 15:
+          break;
+        // Zoom et. al.
+        case 16:
+          break;
+        case 17:
+          break;
+        case 18:
+          break;
+        default:
+          // TODO: This will be gone in a not so distant future, or maybe
+          // left here (commented) to test incomming "events"
+          KMessageBox::information(0, i18n("Got Hotkey: %1").arg(hotkey),
+                                   i18n("KToshiba - Hotkey"));
     }
 }
 

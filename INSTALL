@@ -1,0 +1,47 @@
+Requirements
+==================
+- A Toshiba laptop (see NOTE)
+- Compiler and utilities (gcc, make, cmake, etc.)
+- KDE libraries >= 4.3.x and development packages
+- Additionally KToshiba depends on KDE4 workspace and
+  libknotificationitem development packages as well.
+
+NOTE: Since KToshiba uses HAL to get hotkeys and uses D-Bus
+and Solid to perform the actions, it is now possible to use
+any laptop with KToshiba, as long as it has a kernel driver
+that reports events via the input layer.
+
+
+
+Installation
+==================
+If you have everything that is needed, then the install
+process is very simple, extract the downloaded archive
+and then type the following on a Konsole or Terminal:
+
+cd ktoshiba-0.X.Y
+mkdir build && cd build
+cmake ..
+su -c "make install"
+
+
+NOTE: Replace X and Y with the appropiate version numbers,
+eg: ktoshiba-0.4.0
+
+
+Support, Bugs & Requests
+==================
+If you have found a bug or want some features on a future
+release please send an email to the below e-mail address
+with the description of the problem or the feature request.
+
+
+
+Contact
+==================
+You can reach me by mail at 
+coproscefalo@gmail.com
+
+The project homepage is hosted at SourceForge.net
+http://sourceforge.net/projects/ktoshiba
+http://ktoshiba.sourceforge.net/

@@ -36,6 +36,8 @@ public:
     QString getModel();
     void lockScreen();
     void setProfile(QString);
+    bool hibernate();
+    bool suspend();
     int getBrightness();
 
 Q_SIGNALS:
@@ -47,9 +49,15 @@ private Q_SLOTS:
     void profileChangedSlot(QString, QStringList);
 
 private:
+    void checkSupportedSuspend();
+
     QDBusInterface* m_inputIface;
     QDBusInterface* m_kbdIface;
     QDBusInterface* m_devilIface;
+    bool m_hibernate;
+    bool m_suspend;
+    int m_str;
+    int m_std;
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

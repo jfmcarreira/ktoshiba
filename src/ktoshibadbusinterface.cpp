@@ -31,7 +31,11 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject( parent ),
       m_inputIface( NULL ),
       m_kbdIface( NULL ),
-      m_devilIface( NULL )
+      m_devilIface( NULL ),
+      m_hibernate( false ),
+      m_suspend( false ),
+      m_str( 2 ),
+      m_std( 4 )
 {
     // TODO: Find out if this is the same input device toshiba_acpi uses
     // omnibook ectype TSM40 (13) and TSX205 (16) use this
@@ -58,7 +62,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
         return;
     }
 
-    /*m_devilIface = new QDBusInterface("org.kde.powerdevil", 
+    m_devilIface = new QDBusInterface("org.kde.powerdevil", 
 			       "/modules/powerdevil", 
 			       "org.kde.PowerDevil", 
 			       QDBusConnection::sessionBus(), this);
@@ -67,7 +71,9 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
         fprintf(stderr, "KToshibaDBusInterface Error: %s \nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
         return;
-    }*/
+    }
+
+    checkSupportedSuspend();
 
     connect( m_inputIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
@@ -102,6 +108,26 @@ void KToshibaDBusInterface::profileChangedSlot(QString profile, QStringList prof
     emit profileChangedSlot(profile, profiles);
     // Somehow we never get to this point...
     fprintf(stderr, "profileChangedSlot: Signal emited.\n");
+}
+
+void KToshibaDBusInterface::checkSupportedSuspend()
+{
+    QDBusReply<QVariantMap> reply = m_devilIface->call("getSupportedSuspendMethods");
+    if (!reply.isValid()) {
+        QDBusError err(reply.error());
+        fprintf(stderr, "checkSupportedSuspend Error: %s\nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        m_hibernate = m_suspend = false;
+    }
+
+    if (reply.value().contains("Suspend to Disk")) {
+        m_hibernate = true;
+        m_std = reply.value().value("Suspend to Disk").toInt();
+    }
+    if (reply.value().contains("Suspend to RAM")) {
+        m_suspend = true;
+        m_str = reply.value().value("Suspend to RAM").toInt();
+    }
 }
 
 QString KToshibaDBusInterface::getModel()
@@ -155,33 +181,53 @@ void KToshibaDBusInterface::lockScreen()
 
 void KToshibaDBusInterface::setProfile(QString profile)
 {
-    /*QDBusReply<void> reply = m_devilIface->call("setProfile", profile);
+    QDBusReply<void> reply = m_devilIface->call("setProfile", profile);
 
     if (!reply.isValid()) {
         QDBusError err(m_devilIface->lastError());
         fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
-    }*/
-
-    QDBusInterface iface("org.kde.powerdevil",
-			 "/modules/powerdevil",
-			 "org.kde.PowerDevil",
-			 QDBusConnection::sessionBus(), 0);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
-                qPrintable(err.name()), qPrintable(err.message()));
-        return;
-    }
-
-    QDBusReply<void> reply = iface.call("setProfile", profile);
-
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
-                qPrintable(err.name()), qPrintable(err.message()));
     }
 }
+
+bool KToshibaDBusInterface::hibernate()
+{
+    if (m_hibernate) {
+        QDBusReply<void> reply = m_devilIface->call("suspend", m_std);
+
+        if (!reply.isValid()) {
+            QDBusError err(m_devilIface->lastError());
+            fprintf(stderr, "hibernate Error: %s \nMessage: %s\n",
+                    qPrintable(err.name()), qPrintable(err.message()));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+bool KToshibaDBusInterface::suspend()
+{
+    if (m_hibernate) {
+        QDBusReply<void> reply = m_devilIface->call("suspend", m_str);
+
+        if (!reply.isValid()) {
+            QDBusError err(m_devilIface->lastError());
+            fprintf(stderr, "suspend Error: %s \nMessage: %s\n",
+                    qPrintable(err.name()), qPrintable(err.message()));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 
 int KToshibaDBusInterface::getBrightness()
 {
