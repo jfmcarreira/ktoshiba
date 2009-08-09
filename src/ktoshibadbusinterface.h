@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QtDBus/QDBusMessage>
 
 class QDBusInterface;
 
@@ -29,6 +30,12 @@ class KToshibaDBusInterface : public QObject
 {
     Q_OBJECT
 
+public:
+    enum MediaPlayer {
+        Amarok,
+        Kaffeine
+    };
+    
 public:
     KToshibaDBusInterface(QObject *parent);
     ~KToshibaDBusInterface();
@@ -39,6 +46,12 @@ public:
     bool hibernate();
     bool suspend();
     int getBrightness();
+    //void setMediaplayer(MediaPlayer);
+    void launchMediaPlayer();
+    void playerPlayPause();
+    void playerStop();
+    void playerPrevious();
+    void playerNext();
 
 Q_SIGNALS:
     void hotkeyPressed(QString);
@@ -50,14 +63,18 @@ private Q_SLOTS:
 
 private:
     void checkSupportedSuspend();
+    bool checkMediaPlayer();
+    int showMessageBox();
 
     QDBusInterface* m_inputIface;
     QDBusInterface* m_kbdIface;
     QDBusInterface* m_devilIface;
+    QDBusMessage message;
     bool m_hibernate;
     bool m_suspend;
     int m_str;
     int m_std;
+    //int m_player;
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

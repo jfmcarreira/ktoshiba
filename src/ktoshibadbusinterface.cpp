@@ -25,6 +25,10 @@
 #include <QtDBus/QDBusError>
 #include <QtDBus/QDBusReply>
 
+#include <KMessageBox>
+#include <KLocale>
+#include <KProcess>
+
 #include "ktoshibadbusinterface.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
@@ -36,6 +40,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
       m_suspend( false ),
       m_str( 2 ),
       m_std( 4 )
+      //m_player( KToshibaDBusInterface::Amarok )
 {
     // TODO: Find out if this is the same input device toshiba_acpi uses
     // omnibook ectype TSM40 (13) and TSX205 (16) use this
@@ -45,7 +50,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 			       QDBusConnection::systemBus(), this);
     if (!m_inputIface->isValid()) {
         QDBusError err(m_inputIface->lastError());
-        fprintf(stderr, "KToshibaDBusInterface Error: %s \nMessage: %s\n",
+        fprintf(stderr, "KToshibaDBusInterface Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
         return;
     }
@@ -57,7 +62,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 			       QDBusConnection::systemBus(), this);
     if (!m_kbdIface->isValid()) {
         QDBusError err(m_kbdIface->lastError());
-        fprintf(stderr, "KToshibaDBusInterface Error: %s \nMessage: %s\n",
+        fprintf(stderr, "KToshibaDBusInterface Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
         return;
     }
@@ -68,7 +73,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 			       QDBusConnection::sessionBus(), this);
     if (!m_devilIface->isValid()) {
         QDBusError err(m_devilIface->lastError());
-        fprintf(stderr, "KToshibaDBusInterface Error: %s \nMessage: %s\n",
+        fprintf(stderr, "KToshibaDBusInterface Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
         return;
     }
@@ -138,7 +143,7 @@ QString KToshibaDBusInterface::getModel()
 			 QDBusConnection::systemBus(), 0);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        fprintf(stderr, "getModel Error: %s \nMessage: %s\n",
+        fprintf(stderr, "getModel Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
         return "UNKNOWN";
     }
@@ -165,7 +170,7 @@ void KToshibaDBusInterface::lockScreen()
 			 QDBusConnection::sessionBus(), 0);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        fprintf(stderr, "lockScreen Error: %s \nMessage: %s\n",
+        fprintf(stderr, "lockScreen Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
         return;
     }
@@ -174,7 +179,7 @@ void KToshibaDBusInterface::lockScreen()
 
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        fprintf(stderr, "lockScreen Error: %s \nMessage: %s\n",
+        fprintf(stderr, "lockScreen Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
     }
 }
@@ -185,7 +190,7 @@ void KToshibaDBusInterface::setProfile(QString profile)
 
     if (!reply.isValid()) {
         QDBusError err(m_devilIface->lastError());
-        fprintf(stderr, "setProfile Error: %s \nMessage: %s\n",
+        fprintf(stderr, "setProfile Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
     }
 }
@@ -197,7 +202,7 @@ bool KToshibaDBusInterface::hibernate()
 
         if (!reply.isValid()) {
             QDBusError err(m_devilIface->lastError());
-            fprintf(stderr, "hibernate Error: %s \nMessage: %s\n",
+            fprintf(stderr, "hibernate Error: %s\nMessage: %s\n",
                     qPrintable(err.name()), qPrintable(err.message()));
 
             return false;
@@ -216,7 +221,7 @@ bool KToshibaDBusInterface::suspend()
 
         if (!reply.isValid()) {
             QDBusError err(m_devilIface->lastError());
-            fprintf(stderr, "suspend Error: %s \nMessage: %s\n",
+            fprintf(stderr, "suspend Error: %s\nMessage: %s\n",
                     qPrintable(err.name()), qPrintable(err.message()));
 
             return false;
@@ -237,7 +242,7 @@ int KToshibaDBusInterface::getBrightness()
 			 QDBusConnection::systemBus(), 0);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        fprintf(stderr, "getBrightness Error: %s \nMessage: %s\n",
+        fprintf(stderr, "getBrightness Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
 
         return -1;
@@ -247,13 +252,94 @@ int KToshibaDBusInterface::getBrightness()
 
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        fprintf(stderr, "getBrightness Error: %s \nMessage: %s\n",
+        fprintf(stderr, "getBrightness Error: %s\nMessage: %s\n",
                 qPrintable(err.name()), qPrintable(err.message()));
 
         return -1;
     }
     
     return reply.value();
+}
+
+bool KToshibaDBusInterface::checkMediaPlayer()
+{
+    QDBusInterface iface("org.kde.amarok",
+                         "/",
+                         "org.freedesktop.MediaPlayer",
+                         QDBusConnection::sessionBus(), 0);
+
+    // If not valid, means Amarok's not running
+    if (!iface.isValid())
+        return false;
+
+    return true;
+}
+
+int KToshibaDBusInterface::showMessageBox()
+{
+    return KMessageBox::questionYesNo(0, i18n("Amarok is not running.\n"
+                                      "Would you like to start it now?"),
+                                      i18n("Media Player"),
+                                      KStandardGuiItem::yes(),
+                                      KStandardGuiItem::no(),
+                                      "dontaskMediaPlayer");
+}
+
+void KToshibaDBusInterface::launchMediaPlayer()
+{
+    KProcess::startDetached("amarok");
+}
+
+void KToshibaDBusInterface::playerPlayPause()
+{
+    if (checkMediaPlayer()) {
+        message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                 "/Player",
+                                                 "org.freedesktop.MediaPlayer",
+                                                 "Pause");
+        QDBusConnection::sessionBus().send(message);
+    } else
+    if (showMessageBox() == KMessageBox::Yes)
+        launchMediaPlayer();
+}
+
+void KToshibaDBusInterface::playerStop()
+{
+    if (checkMediaPlayer()) {
+            message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                 "/Player",
+                                                 "org.freedesktop.MediaPlayer",
+                                                 "Stop");
+            QDBusConnection::sessionBus().send(message);
+    } else
+    if (showMessageBox() == KMessageBox::Yes)
+        launchMediaPlayer();
+}
+
+void KToshibaDBusInterface::playerPrevious()
+{
+    if (checkMediaPlayer()) {
+        message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                 "/Player",
+                                                 "org.freedesktop.MediaPlayer",
+                                                 "Prev");
+        QDBusConnection::sessionBus().send(message);
+    } else
+    if (showMessageBox() == KMessageBox::Yes)
+        launchMediaPlayer();
+}
+
+void KToshibaDBusInterface::playerNext()
+{
+    if (checkMediaPlayer()) {
+        message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                 "/Player",
+                                                 "org.freedesktop.MediaPlayer",
+                                                 "Next");
+        QDBusConnection::sessionBus().send(message);
+    } else
+    if (showMessageBox() == KMessageBox::Yes)
+        launchMediaPlayer();
 }
 
 

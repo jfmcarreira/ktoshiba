@@ -23,7 +23,6 @@
 #include <QtGui/QDesktopWidget>
 #include <QTimer>
 
-#include <KDebug>
 #include <KMessageBox>
 #include <KLocale>
 #include <KJob>
@@ -222,14 +221,19 @@ void FnActions::slotGotHotkey(QString hotkey)
         case 10:
           break;
         case 11:
+          m_dBus->launchMediaPlayer();
           break;
         case 12:
+          m_dBus->playerPlayPause();
           break;
         case 13:
+          m_dBus->playerStop();
           break;
         case 14:
+          m_dBus->playerPrevious();
           break;
         case 15:
+          m_dBus->playerNext();
           break;
         // Zoom et. al.
         case 16:
