@@ -6,10 +6,11 @@ Requirements
 - Additionally KToshiba depends on KDE4 workspace and
   libknotificationitem development packages as well.
 
-NOTE: Since KToshiba uses HAL to get hotkeys and uses D-Bus
-and Solid to perform the actions, it is now possible to use
-any laptop with KToshiba, as long as it has a kernel driver
-that reports events via the input layer.
+NOTE: Since KToshiba uses HAL to get hotkeys and uses
+D-Bus, Solid, and PowerDevil to perform the actions,
+it is now possible to use any laptop with KToshiba,
+as long as it has a kernel driver that reports events
+via the input layer.
 
 
 
@@ -21,11 +22,11 @@ and then type the following on a Konsole or Terminal:
 
 cd ktoshiba-0.X.Y
 mkdir build && cd build
-cmake ..
+cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
 su -c "make install"
 
 
-NOTE: Replace X and Y with the appropiate version numbers,
+NOTE: Replace X and Y with the appropriate version numbers,
 eg: ktoshiba-0.4.0
 
 

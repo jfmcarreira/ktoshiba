@@ -17,50 +17,100 @@
    Boston, MA 02110-1301, USA.
 */
 
-//#include <QtDBus/QDBusConnection>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <QAction>
 
 #include <KApplication>
 #include <KAboutData>
 #include <KLocale>
-#include <KAction>
 #include <KMenu>
 #include <KHelpMenu>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KStandardDirs>
 #include <knotificationitem.h>
 
 #include "ktoshiba.h"
 #include "fnactions.h"
 #include "version.h"
 
+static const char * const ktosh_config = "ktoshibarc";
+
 KToshiba::KToshiba()
     : KUniqueApplication(),
       m_Fn( new FnActions( this ) ),
-      m_trayicon( new Experimental::KNotificationItem(this) )
+      autostart( NULL ),
+      config( KSharedConfig::openConfig(ktosh_config) ),
+      m_autoStart( true ),
+      m_trayicon( new Experimental::KNotificationItem( this ) )
 {
-    m_trayicon->setIconByName("ktoshiba");
-    m_trayicon->setToolTip("ktoshiba", "KToshiba", i18n("Fn key monitoring for Toshiba laptops"));
-    m_trayicon->setCategory(Experimental::KNotificationItem::Hardware);
+    m_trayicon->setIconByName( "ktoshiba" );
+    m_trayicon->setToolTip( "ktoshiba", "KToshiba", i18n("Fn key monitoring for Toshiba laptops") );
+    m_trayicon->setCategory( Experimental::KNotificationItem::Hardware );
     m_trayicon->setStatus( Experimental::KNotificationItem::Passive );
 
     KMenu *popupMenu = m_trayicon->contextMenu();
 
-    // TODO: Find a way of changing the popup menu title
-    // from KToshiba to the actual laptops model name
-    //m_trayicon->setTitle(m_Fn->modelName());
-    //popupMenu->setTitle(m_Fn->modelName());
+    if (checkConfig())
+        loadConfig();
+    else
+        createConfig();
 
-    // TODO: Add other items here...
+    // UGLY, we should be displaying model name only instead of KToshiba...
+    popupMenu->addTitle( m_Fn->modelName() );
+    // TODO: Add other items here... If any...
+    autostart = popupMenu->addAction( i18n("Start Automatically") );
+    autostart->setCheckable( true );
+    autostart->setChecked( m_autoStart );
     popupMenu->addSeparator();
     KHelpMenu *m_helpMenu = new KHelpMenu( popupMenu, aboutData());
-    popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon("help-contents") );
+    popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
     m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
     popupMenu->addSeparator();
+
+    connect( autostart, SIGNAL( toggled(bool) ), this, SLOT( autostartSlot(bool) ) );
 }
 
 KToshiba::~KToshiba()
 {
     delete m_Fn;
     delete m_trayicon;
+}
+
+bool KToshiba::checkConfig()
+{
+    KStandardDirs kstd;
+    QString config = kstd.findResource("config", ktosh_config);
+
+    if (config.isEmpty()) {
+        //kDebug() << "checkConfig: Configuration file not found." << endl;
+        return false;
+    }
+
+    return true;
+}
+
+void KToshiba::loadConfig()
+{
+    KConfigGroup generalGroup( config, "General" );
+    m_autoStart = generalGroup.readEntry( "AutoStart", true );
+}
+
+void KToshiba::createConfig()
+{
+    KConfigGroup generalGroup( config, "General" );
+    generalGroup.writeEntry( "AutoStart", true );
+    generalGroup.config()->sync();
+}
+
+void KToshiba::autostartSlot(bool start)
+{
+    KConfigGroup generalGroup( config, "General" );
+    generalGroup.writeEntry( "AutoStart", start );
+    generalGroup.config()->sync();
 }
 
 static const char * const description =
@@ -70,9 +120,10 @@ void KToshiba::createAboutData()
 {
     m_about = new KAboutData("KToshiba", 0, ki18n("KToshiba"), ktoshiba_version,
 			ki18n(description), KAboutData::License_GPL,
-			ki18n("(C) 2004-2009, Azael Avalos"), ki18n(""),
+			ki18n("(C) 2004-2009, Azael Avalos"), KLocalizedString(),
 			"http://ktoshiba.sourceforge.net/",
 			"coproscefalo@gmail.com");
+    m_about->setProgramIconName("ktoshiba");
 
     m_about->addAuthor( ki18n("Azael Avalos"),
 			ki18n("Original Author"), "coproscefalo@gmail.com" );

@@ -23,6 +23,9 @@
 #include <QObject>
 
 #include <KUniqueApplication>
+#include <KSharedConfig>
+
+class QAction;
 
 class KAboutData;
 
@@ -49,8 +52,18 @@ public:
     static void destroyAboutData();
     static KAboutData* aboutData();
 
+private Q_SLOTS:
+    void autostartSlot(bool);
+
 private:
+    bool checkConfig();
+    void loadConfig();
+    void createConfig();
+
     FnActions *m_Fn;
+    QAction *autostart;
+    KSharedConfigPtr config;
+    bool m_autoStart;
 
     static KAboutData* m_about;
     Experimental::KNotificationItem *m_trayicon;
