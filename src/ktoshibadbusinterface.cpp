@@ -25,14 +25,11 @@
 #include <QtDBus/QDBusError>
 #include <QtDBus/QDBusReply>
 
-#include <KMessageBox>
-#include <KLocale>
-#include <KProcess>
-
 #include "ktoshibadbusinterface.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject( parent ),
+      m_mediaPlayer( Amarok ),
       m_inputIface( NULL ),
       m_kbdIface( NULL ),
       m_devilIface( NULL ),
@@ -40,7 +37,6 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
       m_suspend( false ),
       m_str( 2 ),
       m_std( 4 )
-      //m_player( KToshibaDBusInterface::Amarok )
 {
     // TODO: Find out if this is the same input device toshiba_acpi uses
     // omnibook ectype TSM40 (13) and TSX205 (16) use this
@@ -261,85 +257,107 @@ int KToshibaDBusInterface::getBrightness()
     return reply.value();
 }
 
+static const char * const Introspect = "org.freedesktop.DBus.Introspectable";
+
 bool KToshibaDBusInterface::checkMediaPlayer()
 {
-    QDBusInterface iface("org.kde.amarok",
-                         "/",
-                         "org.freedesktop.MediaPlayer",
+    QString Service;
+
+    switch (m_mediaPlayer) {
+        case Amarok:
+            Service = "org.kde.amarok";
+            break;
+        case JuK:
+            Service = "org.kde.juk";
+            break;
+    }
+    QDBusInterface iface(Service, "/", Introspect,
                          QDBusConnection::sessionBus(), 0);
 
-    // If not valid, means Amarok's not running
     if (!iface.isValid())
         return false;
 
     return true;
 }
 
-int KToshibaDBusInterface::showMessageBox()
-{
-    return KMessageBox::questionYesNo(0, i18n("Amarok is not running.\n"
-                                      "Would you like to start it now?"),
-                                      i18n("Media Player"),
-                                      KStandardGuiItem::yes(),
-                                      KStandardGuiItem::no(),
-                                      "dontaskMediaPlayer");
-}
-
-void KToshibaDBusInterface::launchMediaPlayer()
-{
-    KProcess::startDetached("amarok");
-}
-
 void KToshibaDBusInterface::playerPlayPause()
 {
-    if (checkMediaPlayer()) {
-        message = QDBusMessage::createMethodCall("org.kde.amarok",
-                                                 "/Player",
-                                                 "org.freedesktop.MediaPlayer",
-                                                 "Pause");
-        QDBusConnection::sessionBus().send(message);
-    } else
-    if (showMessageBox() == KMessageBox::Yes)
-        launchMediaPlayer();
+    switch (m_mediaPlayer) {
+        case Amarok:
+            message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                     "/Player",
+                                                     "org.freedesktop.MediaPlayer",
+                                                     "Pause");
+            break;
+        case JuK:
+            message = QDBusMessage::createMethodCall("org.kde.juk",
+                                                     "/Player",
+                                                     "org.kde.juk.player",
+                                                     "playPause");
+            break;
+    }
+
+    QDBusConnection::sessionBus().send(message);
 }
 
 void KToshibaDBusInterface::playerStop()
 {
-    if (checkMediaPlayer()) {
+    switch (m_mediaPlayer) {
+        case Amarok:
             message = QDBusMessage::createMethodCall("org.kde.amarok",
-                                                 "/Player",
-                                                 "org.freedesktop.MediaPlayer",
-                                                 "Stop");
-            QDBusConnection::sessionBus().send(message);
-    } else
-    if (showMessageBox() == KMessageBox::Yes)
-        launchMediaPlayer();
+                                                     "/Player",
+                                                     "org.freedesktop.MediaPlayer",
+                                                     "Stop");
+            break;
+        case JuK:
+            message = QDBusMessage::createMethodCall("org.kde.juk",
+                                                     "/Player",
+                                                     "org.kde.juk.player",
+                                                     "stop");
+            break;
+    }
+
+    QDBusConnection::sessionBus().send(message);
 }
 
 void KToshibaDBusInterface::playerPrevious()
 {
-    if (checkMediaPlayer()) {
-        message = QDBusMessage::createMethodCall("org.kde.amarok",
-                                                 "/Player",
-                                                 "org.freedesktop.MediaPlayer",
-                                                 "Prev");
-        QDBusConnection::sessionBus().send(message);
-    } else
-    if (showMessageBox() == KMessageBox::Yes)
-        launchMediaPlayer();
+    switch (m_mediaPlayer) {
+        case Amarok:
+            message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                     "/Player",
+                                                     "org.freedesktop.MediaPlayer",
+                                                     "Prev");
+            break;
+        case JuK:
+            message = QDBusMessage::createMethodCall("org.kde.juk",
+                                                     "/Player",
+                                                     "org.kde.juk.player",
+                                                     "back");
+            break;
+    }
+
+    QDBusConnection::sessionBus().send(message);
 }
 
 void KToshibaDBusInterface::playerNext()
 {
-    if (checkMediaPlayer()) {
-        message = QDBusMessage::createMethodCall("org.kde.amarok",
-                                                 "/Player",
-                                                 "org.freedesktop.MediaPlayer",
-                                                 "Next");
-        QDBusConnection::sessionBus().send(message);
-    } else
-    if (showMessageBox() == KMessageBox::Yes)
-        launchMediaPlayer();
+    switch (m_mediaPlayer) {
+        case Amarok:
+            message = QDBusMessage::createMethodCall("org.kde.amarok",
+                                                     "/Player",
+                                                     "org.freedesktop.MediaPlayer",
+                                                     "Next");
+            break;
+        case JuK:
+            message = QDBusMessage::createMethodCall("org.kde.juk",
+                                                     "/Player",
+                                                     "org.kde.juk.player",
+                                                     "forward");
+            break;
+    }
+
+    QDBusConnection::sessionBus().send(message);
 }
 
 

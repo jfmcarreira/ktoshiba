@@ -17,15 +17,13 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <QtGui/QDesktopWidget>
 #include <QTimer>
 
 #include <KMessageBox>
 #include <KLocale>
 #include <KJob>
+#include <KProcess>
 #include <solid/control/networkmanager.h>
 
 #include "fnactions.h"
@@ -33,9 +31,9 @@
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
+      m_dBus( new KToshibaDBusInterface( parent ) ),
       widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
-      m_dBus( new KToshibaDBusInterface( parent ) ),
       m_profile( "Powersave" ),
       m_bright( -1 ),
       m_wireless( true )
@@ -87,7 +85,7 @@ void FnActions::populateHotkeys()
     hotkeys.insert("prog1", 9);
     // Multimedia values
     hotkeys.insert("homepage", 10);
-    hotkeys.insert("media-player", 11);
+    hotkeys.insert("media", 11);
     hotkeys.insert("play-pause", 12);
     hotkeys.insert("stop-cd", 13);
     hotkeys.insert("previous-song", 14);
@@ -96,6 +94,7 @@ void FnActions::populateHotkeys()
     hotkeys.insert("zoom-reset", 16);
     hotkeys.insert("zoom-out", 17);
     hotkeys.insert("zoom-in", 18);
+    hotkeys.insert("prog2", 19);
 }
 
 QString FnActions::modelName()
@@ -108,6 +107,9 @@ void FnActions::slotProfileChanged(QString profile, QStringList profiles)
     if (profile == "Performance" || profile == "Powersave" ||
 	    profile == "Presentation")
         m_profile = profile;
+
+    // Avoid compiler warning
+    if (profiles.contains(profile)) {}
 }
 
 void FnActions::acChanged(int state)
@@ -169,6 +171,63 @@ void FnActions::hideWidget()
     widget->hide();
 }
 
+int FnActions::showMessageBox()
+{
+    QString player = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)? "Amarok" : "JuK";
+    return KMessageBox::questionYesNo(0, i18n("%1 is not running.\n"
+                                      "Would you like to start it now?").arg(player),
+                                      i18n("Media Player"),
+                                      KStandardGuiItem::yes(),
+                                      KStandardGuiItem::no(),
+                                      "dontaskMediaPlayer");
+}
+
+void FnActions::launchMediaPlayer()
+{
+    if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)
+        KProcess::startDetached("amarok");
+    else
+        KProcess::startDetached("juk");
+}
+
+void FnActions::performAction()
+{
+    switch (m_action) {
+        case PlayPause:
+            m_dBus->playerPlayPause();
+            break;
+        case Stop:
+            m_dBus->playerStop();
+            break;
+        case Prev:
+            m_dBus->playerPrevious();
+            break;
+        case Next:
+            m_dBus->playerNext();
+            break;
+    }
+}
+
+void FnActions::mediaAction(PlayerAction action)
+{
+    m_action = action;
+
+    if (m_dBus->checkMediaPlayer())
+        performAction();
+    else
+    if (showMessageBox() == KMessageBox::Yes) {
+        launchMediaPlayer();
+        // 2 seconds to start, then send the requested action
+        QTimer::singleShot( 2000, this, SLOT( performAction() ) );
+    }
+}
+
+void FnActions::changeMediaPlayer()
+{
+    m_dBus->m_mediaPlayer = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)?
+	    KToshibaDBusInterface::JuK : KToshibaDBusInterface::Amarok;
+}
+
 void FnActions::slotGotHotkey(QString hotkey)
 {
     // ISSUE: Fn press/release is not being sent by the drivers or HAL
@@ -221,19 +280,19 @@ void FnActions::slotGotHotkey(QString hotkey)
         case 10:
           break;
         case 11:
-          m_dBus->launchMediaPlayer();
+          launchMediaPlayer();
           break;
         case 12:
-          m_dBus->playerPlayPause();
+          mediaAction(PlayPause);
           break;
         case 13:
-          m_dBus->playerStop();
+          mediaAction(Stop);
           break;
         case 14:
-          m_dBus->playerPrevious();
+          mediaAction(Prev);
           break;
         case 15:
-          m_dBus->playerNext();
+          mediaAction(Next);
           break;
         // Zoom et. al.
         case 16:
@@ -241,6 +300,9 @@ void FnActions::slotGotHotkey(QString hotkey)
         case 17:
           break;
         case 18:
+          break;
+        case 19:
+          changeMediaPlayer();
           break;
         default:
           // TODO: This will be gone in a not so distant future, or maybe

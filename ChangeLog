@@ -1,3 +1,16 @@
+2009-08-25 Azael Avalos <coproscefalo@gmail.com>
+	* Added initial implementation to control JuK
+	  (via multi media keys)
+
+2009-08-23 Azael Avalos <coproscefalo@gmail.com>
+	* Added a timer to delay a bit the Media Player
+	  action if it is not running yet
+
+2009-08-22 Azael Avalos <coproscefalo@gmail.com>
+	* Moved some of the Media Player functions to
+	  FnActions class instead (KToshibaDBusInterface
+	  should only deal with D-Bus calls)
+
 2009-08-11 Azael Avalos <coproscefalo@gmail.com>
 	* AutoStart is now working, implemented basic
 	  configuration file

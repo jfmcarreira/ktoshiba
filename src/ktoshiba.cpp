@@ -42,7 +42,7 @@ KToshiba::KToshiba()
     : KUniqueApplication(),
       m_Fn( new FnActions( this ) ),
       autostart( NULL ),
-      config( KSharedConfig::openConfig(ktosh_config) ),
+      config( KSharedConfig::openConfig( ktosh_config ) ),
       m_autoStart( true ),
       m_trayicon( new Experimental::KNotificationItem( this ) )
 {

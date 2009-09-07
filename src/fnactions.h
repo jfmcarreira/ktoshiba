@@ -36,7 +36,12 @@ class KToshibaDBusInterface;
 class FnActions : public QObject
 {
     Q_OBJECT
-    
+
+    Q_ENUMS(PlayerAction)
+
+public:
+    enum PlayerAction { PlayPause, Stop, Prev, Next };
+
 public:
     FnActions(QObject *parent);
     ~FnActions();
@@ -50,6 +55,7 @@ private Q_SLOTS:
     void acChanged(int);
     void updateBrightness();
     void wirelessChanged(bool);
+    void performAction();
 
 private:
     void populateHotkeys();
@@ -57,15 +63,22 @@ private:
     void checkSupportedProfiles();
     void toggleProfiles();
     void toggleWireless();
+    void launchMediaPlayer();
+    int showMessageBox();
+    void mediaAction(PlayerAction);
+    void changeMediaPlayer();
+
+    KToshibaDBusInterface* m_dBus;
+    Ui::StatusWidget m_statusWidget;
     QWidget *widget;
     QTimer *m_widgetTimer;
     QHash<QString, int> hotkeys;
-    KToshibaDBusInterface* m_dBus;
-    Ui::StatusWidget m_statusWidget;
     QStringList profiles;
     QString m_profile;
+
     int m_bright;
     int m_wireless;
+    int m_action;
 };
 
 #endif // FN_ACTIONS_H
