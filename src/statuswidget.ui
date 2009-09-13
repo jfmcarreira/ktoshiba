@@ -51,7 +51,7 @@
    <item row="0" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>8</number>
+      <number>9</number>
      </property>
      <widget class="QWidget" name="page_0">
       <widget class="QLabel" name="bright0Label">
@@ -222,7 +222,7 @@
       </widget>
      </widget>
      <widget class="QWidget" name="noBrightnessPage">
-      <widget class="QLabel" name="bright0Label_2">
+      <widget class="QLabel" name="nobrightLabel">
        <property name="geometry">
         <rect>
          <x>4</x>
@@ -236,6 +236,48 @@
        </property>
        <property name="pixmap">
         <pixmap resource="Icons.qrc">:/images/images/bright_disabled.png</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="amarokPage">
+      <widget class="QLabel" name="amarokLabel">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>4</y>
+         <width>108</width>
+         <height>92</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="Icons.qrc">:/images/images/amarok.png</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="jukPage">
+      <widget class="QLabel" name="jukLabel">
+       <property name="geometry">
+        <rect>
+         <x>4</x>
+         <y>4</y>
+         <width>108</width>
+         <height>92</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="Icons.qrc">:/images/images/juk.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

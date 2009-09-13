@@ -17,6 +17,9 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <QtGui/QDesktopWidget>
 #include <QTimer>
 
@@ -226,6 +229,9 @@ void FnActions::changeMediaPlayer()
 {
     m_dBus->m_mediaPlayer = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)?
 	    KToshibaDBusInterface::JuK : KToshibaDBusInterface::Amarok;
+
+    int wid = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)? 9 : 10;
+    showWidget(wid);
 }
 
 void FnActions::slotGotHotkey(QString hotkey)

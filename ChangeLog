@@ -1,3 +1,8 @@
+2009-09-12 Azael Avalos <coproscefalo@gmail.com>
+	* Added hotkey (Fn-C) to toggle between Media
+	  Players and adjusted the widget to inform
+	  the user which one is currently being used
+
 2009-08-25 Azael Avalos <coproscefalo@gmail.com>
 	* Added initial implementation to control JuK
 	  (via multi media keys)
