@@ -1,6 +1,8 @@
 <RCC>
   <qresource prefix="images" >
     <file>images/amarok.png</file>
+    <file>images/disabled_64.png</file>
+    <file>images/amarok.png</file>
     <file>images/bright_disabled.png</file>
     <file>images/bright2_0.png</file>
     <file>images/bright2_1.png</file>
@@ -12,6 +14,7 @@
     <file>images/bright2_7.png</file>
     <file>images/fn.png</file>
     <file>images/juk.png</file>
+    <file>images/kaffeine.png</file>
     <file>images/mpad_64.png</file>
     <file>images/mpad-disabled_64.png</file>
   </qresource>

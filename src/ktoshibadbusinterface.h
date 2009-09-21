@@ -33,7 +33,7 @@ class KToshibaDBusInterface : public QObject
     Q_ENUMS(MediaPlayer)
 
 public:
-    enum MediaPlayer { Amarok, JuK };
+    enum MediaPlayer { Amarok, Kaffeine, JuK };
 
 public:
     KToshibaDBusInterface(QObject *parent);

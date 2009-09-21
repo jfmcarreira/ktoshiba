@@ -1,7 +1,26 @@
+2009-09-21 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed TouchPad enable/disable code (I was
+	  discarding the property instead of using it...)
+	* Added cmake option to enable the TouchPad
+	  functionality (-DENABLE_TOUCHPAD_FUNCTIONALITY)
+	* Tagged code for RC1 release
+
+2009-09-20 Azael Avalos <coproscefalo@gmail.com>
+	* Began initial implementation of TouchPad
+	  Enable/Disable via XInputExtension
+	  (we now require synaptics_drv >= 1.0 and
+	  XServer >= 1.6 for it to work)
+	* Updated widget to show status of TouchPad
+	* Added Kaffeine to the supported MediaPlayers
+	  and updated code accordingly ('tho it does
+	  nothing for the time being...)
+
 2009-09-12 Azael Avalos <coproscefalo@gmail.com>
 	* Added hotkey (Fn-C) to toggle between Media
 	  Players and adjusted the widget to inform
 	  the user which one is currently being used
+	* Added an example HAL fdi file to map some
+	  extra buttons
 
 2009-08-25 Azael Avalos <coproscefalo@gmail.com>
 	* Added initial implementation to control JuK

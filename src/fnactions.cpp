@@ -17,11 +17,12 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <config-ktoshiba.h>
 
 #include <QtGui/QDesktopWidget>
 #include <QTimer>
+#include <QRect>
+#include <QApplication>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -31,6 +32,9 @@
 
 #include "fnactions.h"
 #include "ktoshibadbusinterface.h"
+#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
+#include "touchpad.h"
+#endif
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
@@ -39,7 +43,8 @@ FnActions::FnActions(QObject *parent)
       m_widgetTimer( new QTimer( this ) ),
       m_profile( "Powersave" ),
       m_bright( -1 ),
-      m_wireless( true )
+      m_wireless( true ),
+      m_touchpadError( -1 )
 {
     m_statusWidget.setupUi( widget );
     widget->clearFocus();
@@ -58,6 +63,11 @@ FnActions::FnActions(QObject *parent)
     Solid::Control::PowerManager::Notifier *powerNotifier = Solid::Control::PowerManager::notifier();
     Solid::Control::NetworkManager::Notifier *wifiNotifier = Solid::Control::NetworkManager::notifier();
 
+#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
+    m_TouchPad = new TouchPad();
+    m_touchpadError = m_TouchPad->init();
+#endif
+
     connect( m_dBus, SIGNAL( hotkeyPressed(QString) ), this, SLOT( slotGotHotkey(QString) ) );
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( powerNotifier, SIGNAL( acAdapterStateChanged(int) ), this, SLOT( acChanged(int) ) );
@@ -69,6 +79,9 @@ FnActions::~FnActions()
 {
     delete widget; widget = NULL;
     delete m_widgetTimer; m_widgetTimer = NULL;
+#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
+    delete m_TouchPad; m_TouchPad = NULL;
+#endif
     delete m_dBus; m_dBus = NULL;
 }
 
@@ -151,6 +164,21 @@ void FnActions::toggleWireless()
     Solid::Control::NetworkManager::setWirelessEnabled( ((m_wireless)? false : true) );
 }
 
+void FnActions::toggleTouchPad()
+{
+#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
+    if (m_touchpadError == TouchPad::NoError) {
+        int tp = m_TouchPad->getTouchPad();
+        tp = (tp == TouchPad::On)? TouchPad::Off : TouchPad::On;
+        m_TouchPad->setTouchPad( tp );
+        showWidget( ((tp == TouchPad::On)? 10 : 11) );
+        m_TouchPad->m_touchpad = tp;
+    } else
+    if (m_touchpadError != TouchPad::NoError)
+#endif
+        showWidget(11);
+}
+
 void FnActions::showWidget(int wid)
 {
     QRect r = QApplication::desktop()->geometry();
@@ -158,8 +186,10 @@ void FnActions::showWidget(int wid)
                 QPoint(widget->width() / 2, widget->height() / 2));
     widget->show();
 
-    if (m_bright == -1 || wid < 0)
+    if (m_bright == -1)
         m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(8) );
+    else if (wid < 0)
+        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(9) );
     else
         m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
 
@@ -189,6 +219,8 @@ void FnActions::launchMediaPlayer()
 {
     if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)
         KProcess::startDetached("amarok");
+    else if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Kaffeine)
+        KProcess::startDetached("kaffeine");
     else
         KProcess::startDetached("juk");
 }
@@ -227,10 +259,23 @@ void FnActions::mediaAction(PlayerAction action)
 
 void FnActions::changeMediaPlayer()
 {
-    m_dBus->m_mediaPlayer = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)?
-	    KToshibaDBusInterface::JuK : KToshibaDBusInterface::Amarok;
+    int player, wid = -1;
 
-    int wid = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)? 9 : 10;
+    switch (m_dBus->m_mediaPlayer) {
+        case KToshibaDBusInterface::Amarok:
+            player = KToshibaDBusInterface::Kaffeine; break;
+        case KToshibaDBusInterface::Kaffeine:
+            player = KToshibaDBusInterface::JuK; break;
+        case KToshibaDBusInterface::JuK:
+            player = KToshibaDBusInterface::Amarok; break;
+    }
+    m_dBus->m_mediaPlayer = player;
+
+    switch (m_dBus->m_mediaPlayer) {
+        case KToshibaDBusInterface::Amarok: wid = 12; break;
+        case KToshibaDBusInterface::Kaffeine: wid = 13; break;
+        case KToshibaDBusInterface::JuK: wid = 14; break;
+    }
     showWidget(wid);
 }
 
@@ -277,10 +322,7 @@ void FnActions::slotGotHotkey(QString hotkey)
           toggleWireless();
           break;
         case 9:
-          // ISSUE: Ugly, why do X.Org devs have to change
-          // SynapticsSHM struct everytime...?
-          // Can't attach to SHM... Bummer...
-          //showWidget();
+          toggleTouchPad();
           break;
         // Multimedia Keys
         case 10:

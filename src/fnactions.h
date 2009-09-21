@@ -20,6 +20,8 @@
 #ifndef FN_ACTIONS_H
 #define FN_ACTIONS_H
 
+#include <config-ktoshiba.h>
+
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -32,6 +34,9 @@
 class QTimer;
 
 class KToshibaDBusInterface;
+#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
+class TouchPad;
+#endif
 
 class FnActions : public QObject
 {
@@ -63,12 +68,16 @@ private:
     void checkSupportedProfiles();
     void toggleProfiles();
     void toggleWireless();
+    void toggleTouchPad();
     void launchMediaPlayer();
     int showMessageBox();
     void mediaAction(PlayerAction);
     void changeMediaPlayer();
 
-    KToshibaDBusInterface* m_dBus;
+    KToshibaDBusInterface *m_dBus;
+#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
+    TouchPad *m_TouchPad;
+#endif
     Ui::StatusWidget m_statusWidget;
     QWidget *widget;
     QTimer *m_widgetTimer;
@@ -78,6 +87,7 @@ private:
 
     int m_bright;
     int m_wireless;
+    int m_touchpadError;
     int m_action;
 };
 

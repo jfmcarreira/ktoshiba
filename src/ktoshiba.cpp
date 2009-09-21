@@ -30,6 +30,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KStandardDirs>
+#include <KIcon>
 #include <knotificationitem.h>
 
 #include "ktoshiba.h"

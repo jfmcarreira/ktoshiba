@@ -38,7 +38,7 @@ namespace Experimental {
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.3.80
+ * @version 0.3.90
  */
 class KToshiba : public KUniqueApplication
 {
@@ -70,4 +70,3 @@ private:
 };
 
 #endif // KTOSHIBA_H
-

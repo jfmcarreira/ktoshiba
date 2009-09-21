@@ -17,8 +17,10 @@
    Boston, MA 02110-1301, USA.
 */
 
+extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
+}
 
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnection>
@@ -267,6 +269,9 @@ bool KToshibaDBusInterface::checkMediaPlayer()
         case Amarok:
             Service = "org.kde.amarok";
             break;
+        case Kaffeine:
+            Service = "org.kde.kaffeine";
+            break;
         case JuK:
             Service = "org.kde.juk";
             break;
@@ -289,6 +294,9 @@ void KToshibaDBusInterface::playerPlayPause()
                                                      "org.freedesktop.MediaPlayer",
                                                      "Pause");
             break;
+        case Kaffeine:
+            // Do nothing for the time being...
+            break;
         case JuK:
             message = QDBusMessage::createMethodCall("org.kde.juk",
                                                      "/Player",
@@ -308,6 +316,9 @@ void KToshibaDBusInterface::playerStop()
                                                      "/Player",
                                                      "org.freedesktop.MediaPlayer",
                                                      "Stop");
+            break;
+        case Kaffeine:
+            // Do nothing for the time being...
             break;
         case JuK:
             message = QDBusMessage::createMethodCall("org.kde.juk",
@@ -329,6 +340,9 @@ void KToshibaDBusInterface::playerPrevious()
                                                      "org.freedesktop.MediaPlayer",
                                                      "Prev");
             break;
+        case Kaffeine:
+            // Do nothing for the time being...
+            break;
         case JuK:
             message = QDBusMessage::createMethodCall("org.kde.juk",
                                                      "/Player",
@@ -348,6 +362,9 @@ void KToshibaDBusInterface::playerNext()
                                                      "/Player",
                                                      "org.freedesktop.MediaPlayer",
                                                      "Next");
+            break;
+        case Kaffeine:
+            // Do nothing for the time being...
             break;
         case JuK:
             message = QDBusMessage::createMethodCall("org.kde.juk",

@@ -4,7 +4,15 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules ${
 
 find_package( LibKNotificationItem-1 REQUIRED )
 
-include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${LIBKNOTIFICATIONITEM-1_INCLUDE_DIR})
+if(ENABLE_TOUCHPAD_FUNCTIONALITY)
+    set(CMAKE_REQUIRED_LIBRARIES -lXi)
+    if(X11_Xinput_FOUND)
+        set(TouchPadSources touchpad.cpp)
+        set(TouchPadLibs ${X11_Xinput_LIB})
+    endif(X11_Xinput_FOUND)
+endif(ENABLE_TOUCHPAD_FUNCTIONALITY)
+
+include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${LIBKNOTIFICATIONITEM-1_INCLUDE_DIR} ${X11_INCLUDES})
 
 set(KToshibaSources
     ktoshibadbusinterface.cpp
@@ -17,13 +25,14 @@ qt4_add_resources(qtsourceview_RC_SRCS Icons.qrc)
 
 kde4_add_ui_files(KToshibaSources statuswidget.ui)
 
-kde4_add_executable(ktoshiba ${KToshibaSources} ${qtsourceview_RC_SRCS})
+kde4_add_executable(ktoshiba ${KToshibaSources} ${qtsourceview_RC_SRCS} ${TouchPadSources})
 
 target_link_libraries(ktoshiba
 	${KDE4_KDEUI_LIBS}
 	${KDE4_KPARTS_LIBS}
 	${LIBKNOTIFICATIONITEM-1_LIBRARIES}
 	${KDE4_SOLID_LIBS} solidcontrol
+	${TouchPadLibs}
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_SYSTEM_NAME MATCHES Linux)
