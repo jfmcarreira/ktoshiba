@@ -292,7 +292,7 @@ void KToshibaDBusInterface::playerPlayPause()
             message = QDBusMessage::createMethodCall("org.kde.amarok",
                                                      "/Player",
                                                      "org.freedesktop.MediaPlayer",
-                                                     "Pause");
+                                                     "PlayPause");
             break;
         case Kaffeine:
             // Do nothing for the time being...

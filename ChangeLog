@@ -4,6 +4,8 @@
 	* Added cmake option to enable the TouchPad
 	  functionality (-DENABLE_TOUCHPAD_FUNCTIONALITY)
 	* Tagged code for RC1 release
+	* Changed code to use Amarok's PlayPause D-Bus
+	  call (introduced on Beta 2)
 
 2009-09-20 Azael Avalos <coproscefalo@gmail.com>
 	* Began initial implementation of TouchPad
