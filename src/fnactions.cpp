@@ -48,7 +48,10 @@ FnActions::FnActions(QObject *parent)
 {
     m_statusWidget.setupUi( widget );
     widget->clearFocus();
-    widget->setAttribute( Qt::WA_TranslucentBackground );
+    // Only enable Translucency if composite is enabled
+    // otherwise an ugly black background will appear
+    if (m_dBus->m_compositeEnabled)
+        widget->setAttribute( Qt::WA_TranslucentBackground );
 
     populateHotkeys();
 
@@ -72,7 +75,7 @@ FnActions::FnActions(QObject *parent)
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( powerNotifier, SIGNAL( acAdapterStateChanged(int) ), this, SLOT( acChanged(int) ) );
     connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
-    //connect( m_dBus, SIGNAL( profileChanged(QString, QStringList) ), this, SLOT( slotProfileChanged(QString, QStringList) ) );
+    connect( m_dBus, SIGNAL( profileChanged(QString, QStringList) ), this, SLOT( slotProfileChanged(QString, QStringList) ) );
 }
 
 FnActions::~FnActions()
@@ -120,9 +123,7 @@ QString FnActions::modelName()
 
 void FnActions::slotProfileChanged(QString profile, QStringList profiles)
 {
-    if (profile == "Performance" || profile == "Powersave" ||
-	    profile == "Presentation")
-        m_profile = profile;
+    m_profile = profile;
 
     // Avoid compiler warning
     if (profiles.contains(profile)) {}
@@ -159,6 +160,15 @@ void FnActions::wirelessChanged(bool state)
     m_wireless = state;
 }
 
+void FnActions::updateBrightness(QString hotkey)
+{
+    if (hotkey == "brightness-down" && m_bright > 0)
+        m_bright--;
+    else if (m_bright < 7)
+        m_bright++;
+    showWidget(m_bright);
+}
+
 void FnActions::toggleWireless()
 {
     Solid::Control::NetworkManager::setWirelessEnabled( ((m_wireless)? false : true) );
@@ -167,14 +177,13 @@ void FnActions::toggleWireless()
 void FnActions::toggleTouchPad()
 {
 #ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-    if (m_touchpadError == TouchPad::NoError) {
-        int tp = m_TouchPad->getTouchPad();
+    int tp = -1;
+    if (m_touchpadError == TouchPad::NoError && (tp = m_TouchPad->getTouchPad()) != -1) {
         tp = (tp == TouchPad::On)? TouchPad::Off : TouchPad::On;
         m_TouchPad->setTouchPad( tp );
         showWidget( ((tp == TouchPad::On)? 10 : 11) );
         m_TouchPad->m_touchpad = tp;
     } else
-    if (m_touchpadError != TouchPad::NoError)
 #endif
         showWidget(11);
 }
@@ -287,7 +296,7 @@ void FnActions::slotGotHotkey(QString hotkey)
     // Hotkey-Pressed:	showWidget(--something--) );
     // Fn-Released:	widget->hide();
 
-    // TODO: Fn-F5 and Fn-F9 lack implementation...
+    // TODO: Fn-F5 lack implementation...
     switch ( hotkeys.value(hotkey) ) {
         case 0:
           // ISSUE: KMix or some other app is showing a volume bar whenever
@@ -312,11 +321,7 @@ void FnActions::slotGotHotkey(QString hotkey)
           break;
         case 6:
         case 7:
-          if (hotkey == "brightness-down" && m_bright > 0)
-              m_bright--;
-          else if (m_bright < 7)
-              m_bright++;
-          showWidget(m_bright);
+          updateBrightness(hotkey);
           break;
         case 8:
           toggleWireless();

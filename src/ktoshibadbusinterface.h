@@ -52,6 +52,7 @@ public:
     void playerNext();
 
     int m_mediaPlayer;
+    bool m_compositeEnabled;
 
 Q_SIGNALS:
     void hotkeyPressed(QString);
@@ -63,6 +64,7 @@ private Q_SLOTS:
 
 private:
     void checkSupportedSuspend();
+    void checkCompositeStatus();
 
     QDBusInterface* m_inputIface;
     QDBusInterface* m_kbdIface;

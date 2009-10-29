@@ -67,6 +67,7 @@ private:
     void showWidget(int);
     void checkSupportedProfiles();
     void toggleProfiles();
+    void updateBrightness(QString);
     void toggleWireless();
     void toggleTouchPad();
     void launchMediaPlayer();

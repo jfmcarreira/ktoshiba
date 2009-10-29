@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>124</width>
-    <height>108</height>
+    <width>86</width>
+    <height>80</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>124</width>
-    <height>108</height>
+    <width>80</width>
+    <height>80</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -48,330 +48,334 @@
   <property name="windowFilePath">
    <string notr="true"/>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
-    <widget class="QStackedWidget" name="stackedWidget">
-     <property name="currentIndex">
-      <number>12</number>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>7</x>
+     <y>4</y>
+     <width>72</width>
+     <height>72</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="bright0Page">
+    <widget class="QLabel" name="bright0Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
      </property>
-     <widget class="QWidget" name="page_0">
-      <widget class="QLabel" name="bright0Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_0.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_1">
-      <widget class="QLabel" name="bright1Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_1.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_2">
-      <widget class="QLabel" name="bright2Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_2.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_3">
-      <widget class="QLabel" name="bright3Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_3.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_4">
-      <widget class="QLabel" name="bright4Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_4.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_5">
-      <widget class="QLabel" name="bright5Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_5.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_6">
-      <widget class="QLabel" name="bright6Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_6.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="page_7">
-      <widget class="QLabel" name="bright7Label">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright2_7.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="noBrightnessPage">
-      <widget class="QLabel" name="nobrightLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/bright_disabled.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="disabledPage">
-      <widget class="QLabel" name="disabledLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/disabled_64.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="touchpadOnPage">
-      <widget class="QLabel" name="touchpadOnLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/mpad_64.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="touchpadOffPage">
-      <widget class="QLabel" name="touchpadOffLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/mpad-disabled_64.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="amarokPage">
-      <widget class="QLabel" name="amarokLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/amarok.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="kaffeinePage">
-      <widget class="QLabel" name="kaffeineLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/kaffeine.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="jukPage">
-      <widget class="QLabel" name="jukLabel">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>108</width>
-         <height>92</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/images/images/juk.png</pixmap>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_0.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
-   </item>
-  </layout>
+   </widget>
+   <widget class="QWidget" name="bright1Page">
+    <widget class="QLabel" name="bright1Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_1.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="bright2Page">
+    <widget class="QLabel" name="bright2Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_2.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="bright3Page">
+    <widget class="QLabel" name="bright3Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_3.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="bright4Page">
+    <widget class="QLabel" name="bright4Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_4.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="bright5Page">
+    <widget class="QLabel" name="bright5Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_5.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="bright6Page">
+    <widget class="QLabel" name="bright6Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_6.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="bright7Page">
+    <widget class="QLabel" name="bright7Label">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright2_7.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="noBrightnessPage">
+    <widget class="QLabel" name="nobrightLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/bright_disabled.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="disabledPage">
+    <widget class="QLabel" name="disabledLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/disabled_64.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="touchpadOnPage">
+    <widget class="QLabel" name="touchpadOnLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/mpad_64.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="touchpadOffPage">
+    <widget class="QLabel" name="touchpadOffLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/mpad-disabled_64.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="amarokPage">
+    <widget class="QLabel" name="amarokLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/amarok.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="kaffeinePage">
+    <widget class="QLabel" name="kaffeineLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/kaffeine.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="jukPage">
+    <widget class="QLabel" name="jukLabel">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>4</y>
+       <width>64</width>
+       <height>64</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Icons.qrc">:/images/images/juk.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+  </widget>
  </widget>
  <resources>
   <include location="Icons.qrc"/>

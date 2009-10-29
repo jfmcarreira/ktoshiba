@@ -33,7 +33,7 @@ extern "C" {
 class TouchPad
 {
 public:
-    enum TouchPadError { NoError, NoX, NoXInput, NoExtension };
+    enum TouchPadError { NoError, NoX, NoXInput, NoExtension, NoTouchPad };
     enum TouchPadState { Off = 0, On = 1, TapToClickOff = 2 };
 
 public:
@@ -49,7 +49,7 @@ public:
 private:
     void clean();
     int check_XI_version();
-    void findDeviceID();
+    int findDeviceID();
     void setProperty(int);
     int getProperty();
 

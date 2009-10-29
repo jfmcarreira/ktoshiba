@@ -77,14 +77,14 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     }
 
     checkSupportedSuspend();
+    checkCompositeStatus();
 
     connect( m_inputIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
     connect( m_kbdIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
-    // This signal is utterly broken, it gets emited constantly...
-    /*connect( m_devilIface, SIGNAL( profileChanged(QString, QStringList) ),
-	     this, SLOT( profileChangedSlot(QString, QStringList) ) );*/
+    connect( m_devilIface, SIGNAL( profileChanged(QString, QStringList) ),
+	     this, SLOT( profileChangedSlot(QString, QStringList) ) );
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
@@ -96,7 +96,7 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
 
 void KToshibaDBusInterface::gotInputEvent(QString event, QString type)
 {
-    if (event == "ButtonPressed") 
+    if (event == "ButtonPressed")
         emit hotkeyPressed(type);
 
     return;
@@ -104,13 +104,11 @@ void KToshibaDBusInterface::gotInputEvent(QString event, QString type)
 
 void KToshibaDBusInterface::profileChangedSlot(QString profile, QStringList profiles)
 {
-    // This gets printed all over again...
-    fprintf(stderr, "profileChangedSlot Got signal with values:\n\
-		%s - %s\n", qPrintable(profile), qPrintable(profiles.join(", ")));
-    // And so the signal, causing a crash...
-    emit profileChangedSlot(profile, profiles);
-    // Somehow we never get to this point...
-    fprintf(stderr, "profileChangedSlot: Signal emited.\n");
+    // Only emit signal if profile is one of our supported states
+    if (profile == "Performance" || profile == "Powersave" || profile == "Presentation")
+        emit profileChanged(profile, profiles);
+
+    return;
 }
 
 void KToshibaDBusInterface::checkSupportedSuspend()
@@ -131,6 +129,33 @@ void KToshibaDBusInterface::checkSupportedSuspend()
         m_suspend = true;
         m_str = reply.value().value("Suspend to RAM").toInt();
     }
+}
+
+void KToshibaDBusInterface::checkCompositeStatus()
+{
+    QDBusInterface iface("org.kde.kwin",
+			 "/KWin",
+			 "org.kde.KWin",
+			 QDBusConnection::sessionBus(), 0);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        fprintf(stderr, "checkCompositeStatus Error: %s\nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        m_compositeEnabled = false;
+        return;
+    }
+
+    QDBusReply<bool> reply = iface.call("compositingActive");
+
+    if (!reply.isValid()) {
+        QDBusError err(reply.error());
+        fprintf(stderr, "checkCompositeStatus Error: %s\nMessage: %s\n",
+                qPrintable(err.name()), qPrintable(err.message()));
+        m_compositeEnabled = false;
+        return;
+    }
+
+    m_compositeEnabled = reply.value();
 }
 
 QString KToshibaDBusInterface::getModel()

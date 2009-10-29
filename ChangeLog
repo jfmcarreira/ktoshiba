@@ -1,3 +1,22 @@
+2009-10-28 Azael Avalos <coproscefalo@gmail.com>
+	* Finally got profiles working, profileChangedSlot
+	  was being emitted instead of profileChanged
+	  (and then I wonder why things go haywire...)
+
+2009-10-10 Azael Avalos <coproscefalo@gmail.com>
+	* Added a function to check for composite status
+	* Adjusted StatusWidget size
+	* Again, fixed an issue in touchpad.cpp, also
+	  added the function name from where the errors
+	  printed come from
+
+2009-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted touchpad.cpp to XI2, since
+	  XServer 1.7.0 was released recently
+
+2009-09-25 Azael Avalos <coproscefalo@gmail.com>
+	* Small changes on touchpad.{cpp, h}
+
 2009-09-21 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed TouchPad enable/disable code (I was
 	  discarding the property instead of using it...)

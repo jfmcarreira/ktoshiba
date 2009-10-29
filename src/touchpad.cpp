@@ -28,7 +28,9 @@ extern "C" {
 #include "touchpad.h"
 
 TouchPad::TouchPad()
-    : m_Display( NULL )
+    : m_Display( NULL ),
+      m_Device( NULL ),
+      m_DeviceInfo( NULL )
 {
 }
 
@@ -44,21 +46,24 @@ int TouchPad::init()
     m_Display = XOpenDisplay(NULL);
 
     if (m_Display == NULL) {
-        fprintf(stderr, "Unable to connect to X server\n");
+        fprintf(stderr, "TouchPad::init: Unable to connect to X server\n");
         return TouchPad::NoX;
     }
 
     if (!XQueryExtension(m_Display, "XInputExtension", &xi_opcode, &event, &error)) {
-        fprintf(stderr, "X Input extension not available.\n");
+        fprintf(stderr, "TouchPad::init: X Input extension not available.\n");
         return TouchPad::NoXInput;
     }
 
     if (!check_XI_version()) {
-        fprintf(stderr, "%s extension not available.\n", INAME);
+        fprintf(stderr, "TouchPad::init: %s extension not available.\n", INAME);
         return TouchPad::NoExtension;
     }
 
-    findDeviceID();
+    if (!findDeviceID()) {
+        fprintf(stderr, "TouchPad::init: No %s device found.\n", XI_TOUCHPAD);
+        return TouchPad::NoTouchPad;
+    }
 
     return TouchPad::NoError;
 }
@@ -77,7 +82,11 @@ int TouchPad::check_XI_version()
     XExtensionVersion *version;
     int ver = -1;
 
+#ifdef HAVE_XI2
+    version = XQueryInputVersion(m_Display, XI_2_Major, XI_2_Minor);
+#else
     version = XGetExtensionVersion(m_Display, INAME);
+#endif
 
     if (version && (version != (XExtensionVersion*) NoSuchExtension)) {
         ver = version->major_version;
@@ -87,23 +96,29 @@ int TouchPad::check_XI_version()
     return ver;
 }
 
-void TouchPad::findDeviceID()
+int TouchPad::findDeviceID()
 {
-    int devices;
+    int devices = 0;
 
     m_DeviceInfo = XListInputDevices(m_Display, &devices);
     if (!m_DeviceInfo) {
-        fprintf(stderr, "Could not get input devices.\n");
-        return;
+        fprintf(stderr, "TouchPad::findDeviceID:\
+		Could not get input devices.\n");
+        return 0;
     }
 
+    // Let's find the TOUCHPAD
     for (int i = 0; i < devices; i++) {
-        if (strcmp(m_DeviceInfo[i].name, XI_TOUCHPAD)) {
+        if (m_DeviceInfo[i].type == XInternAtom(m_Display, XI_TOUCHPAD, True)) {
+            // And stop looking once found...
             m_DeviceID = m_DeviceInfo[i].id;
+            XFreeDeviceList(m_DeviceInfo);
+            return 1;
         }
     }
-
     XFreeDeviceList(m_DeviceInfo);
+
+    return 0;
 }
 
 int TouchPad::getProperty()
@@ -117,14 +132,16 @@ int TouchPad::getProperty()
 
     m_Device = XOpenDevice(m_Display, m_DeviceID);
     if (!m_Device) {
-        fprintf(stderr, "Could not open %s.\n", XI_TOUCHPAD);
+        fprintf(stderr, "TouchPad::getProperty:\
+		Could not open %s.\n", XI_TOUCHPAD);
         return -1;
     }
 
     m_Properties = XListDeviceProperties(m_Display, m_Device, &properties);
     if (!properties) {
         // Nothing left to do...
-        fprintf(stderr, "The %s does not have any properties...\n", XI_TOUCHPAD);
+        fprintf(stderr, "TouchPad::getProperty:\
+		The %s does not have any properties...\n", XI_TOUCHPAD);
         XFree(m_Properties);
         XCloseDevice(m_Display, m_Device);
         return -1;
@@ -142,7 +159,8 @@ int TouchPad::getProperty()
                                    &bytes_after, &data) == Success) {
                 if (num_items == 0) {
                     // Nothing left to do here either...
-                    fprintf(stderr, "The %s does not have any properties...\n", XI_TOUCHPAD);
+                    fprintf(stderr, "TouchPad::getProperty:\
+			    The %s does not have any properties...\n", XI_TOUCHPAD);
                     XFree(data);
                     XFree(m_Properties);
                     XCloseDevice(m_Display, m_Device);
@@ -170,14 +188,16 @@ void TouchPad::setProperty(int state)
 
     m_Device = XOpenDevice(m_Display, m_DeviceID);
     if (!m_Device) {
-        fprintf(stderr, "Could not open %s.\n", XI_TOUCHPAD);
+        fprintf(stderr, "TouchPad::setProperty:\
+		Could not open %s.\n", XI_TOUCHPAD);
         return;
     }
 
     m_Properties = XListDeviceProperties(m_Display, m_Device, &properties);
     if (!properties) {
         // Nothing left to do...
-        fprintf(stderr, "The %s does not have any properties...\n", XI_TOUCHPAD);
+        fprintf(stderr, "TouchPad::setProperty:\
+		The %s does not have any properties...\n", XI_TOUCHPAD);
         XFree(m_Properties);
         XCloseDevice(m_Display, m_Device);
         return;
@@ -215,6 +235,3 @@ void TouchPad::setTouchPad(int state)
     if (state == TouchPad::On || state == TouchPad::Off)
         setProperty(state);
 }
-
-
-#include "touchpad.h"
