@@ -1,3 +1,14 @@
+2009-11-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added toshiba_acpi input support
+
+2009-11-06 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed endless loop if no supported input
+	  device was found
+
+2009-11-04 Azael Avalos <coproscefalo@gmail.com>
+	* Added function to check for supported input
+	  devices
+
 2009-10-28 Azael Avalos <coproscefalo@gmail.com>
 	* Finally got profiles working, profileChangedSlot
 	  was being emitted instead of profileChanged

@@ -268,7 +268,7 @@ void FnActions::mediaAction(PlayerAction action)
 
 void FnActions::changeMediaPlayer()
 {
-    int player, wid = -1;
+    int player = -1, wid = -1;
 
     switch (m_dBus->m_mediaPlayer) {
         case KToshibaDBusInterface::Amarok:

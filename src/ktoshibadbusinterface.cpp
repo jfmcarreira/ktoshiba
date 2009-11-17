@@ -29,34 +29,39 @@ extern "C" {
 
 #include "ktoshibadbusinterface.h"
 
+QString Hal = "org.freedesktop.Hal";
+QString Introspect = "org.freedesktop.DBus.Introspectable";
+QString KBDInput = "/org/freedesktop/Hal/devices/platform_i8042_i8042_KBD_port_logicaldev_input";
+
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject( parent ),
       m_mediaPlayer( Amarok ),
       m_inputIface( NULL ),
       m_kbdIface( NULL ),
       m_devilIface( NULL ),
+      m_deviceUDI( "computer_logicaldev_input_2" ),
       m_hibernate( false ),
       m_suspend( false ),
       m_str( 2 ),
       m_std( 4 )
 {
+    m_deviceUDI = findInputDevice();
     // TODO: Find out if this is the same input device toshiba_acpi uses
-    // omnibook ectype TSM40 (13) and TSX205 (16) use this
-    m_inputIface = new QDBusInterface("org.freedesktop.Hal", 
-			       "/org/freedesktop/Hal/devices/computer_logicaldev_input_2", 
+    if (m_deviceUDI != "NoInput") {
+        m_inputIface = new QDBusInterface(Hal, m_deviceUDI,
 			       "org.freedesktop.Hal.Device", 
 			       QDBusConnection::systemBus(), this);
-    if (!m_inputIface->isValid()) {
-        QDBusError err(m_inputIface->lastError());
-        fprintf(stderr, "KToshibaDBusInterface Error: %s\nMessage: %s\n",
-                qPrintable(err.name()), qPrintable(err.message()));
-        return;
+        if (!m_inputIface->isValid()) {
+            QDBusError err(m_inputIface->lastError());
+            fprintf(stderr, "KToshibaDBusInterface Error: %s\nMessage: %s\n",
+                    qPrintable(err.name()), qPrintable(err.message()));
+            return;
+        }
     }
     // all other ectypes and multimedia keys use this,
     // however, see the TODO above...
-    m_kbdIface = new QDBusInterface("org.freedesktop.Hal", 
-			       "/org/freedesktop/Hal/devices/platform_i8042_i8042_KBD_port_logicaldev_input", 
-			       "org.freedesktop.Hal.Device", 
+    m_kbdIface = new QDBusInterface(Hal, KBDInput,
+			       "org.freedesktop.Hal.Device",
 			       QDBusConnection::systemBus(), this);
     if (!m_kbdIface->isValid()) {
         QDBusError err(m_kbdIface->lastError());
@@ -65,9 +70,9 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
         return;
     }
 
-    m_devilIface = new QDBusInterface("org.kde.powerdevil", 
-			       "/modules/powerdevil", 
-			       "org.kde.PowerDevil", 
+    m_devilIface = new QDBusInterface("org.kde.powerdevil",
+			       "/modules/powerdevil",
+			       "org.kde.PowerDevil",
 			       QDBusConnection::sessionBus(), this);
     if (!m_devilIface->isValid()) {
         QDBusError err(m_devilIface->lastError());
@@ -79,8 +84,10 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     checkSupportedSuspend();
     checkCompositeStatus();
 
-    connect( m_inputIface, SIGNAL( Condition(QString, QString) ),
-	     this, SLOT( gotInputEvent(QString, QString) ) );
+    if (m_deviceUDI != "NoInput") {
+        connect( m_inputIface, SIGNAL( Condition(QString, QString) ),
+	         this, SLOT( gotInputEvent(QString, QString) ) );
+    }
     connect( m_kbdIface, SIGNAL( Condition(QString, QString) ),
 	     this, SLOT( gotInputEvent(QString, QString) ) );
     connect( m_devilIface, SIGNAL( profileChanged(QString, QStringList) ),
@@ -92,6 +99,32 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
     delete m_inputIface; m_inputIface = NULL;
     delete m_kbdIface; m_kbdIface = NULL;
     delete m_devilIface; m_devilIface = NULL;
+}
+
+QString KToshibaDBusInterface::findInputDevice()
+{
+    QString udi = "/org/freedesktop/Hal/devices/computer_logicaldev_input_";
+
+    for (int i = 0; i <= 3; i++) {
+        QDBusInterface iface(Hal, udi + QString("%1").arg(i),
+			     "org.freedesktop.Hal.Device",
+			     QDBusConnection::systemBus(), 0);
+
+        if (iface.isValid()) {
+            QDBusReply<QString> reply = iface.call("GetPropertyString", "info.product");
+            if (reply.isValid()) {
+                if (reply.value() == "Omnibook ACPI scancode generator" ||
+                    reply.value() == "Toshiba input device") {
+                    reply = iface.call("GetPropertyString", "info.udi");
+                    return reply.value();
+                }
+            }
+        }
+    }
+
+    fprintf(stderr, "findInputDevice Error: Could not find a supported input device.\n\
+                     HotKeys monitoring will no be possible...\n");
+    return "NoInput";
 }
 
 void KToshibaDBusInterface::gotInputEvent(QString event, QString type)
@@ -160,7 +193,7 @@ void KToshibaDBusInterface::checkCompositeStatus()
 
 QString KToshibaDBusInterface::getModel()
 {
-    QDBusInterface iface("org.freedesktop.Hal",
+    QDBusInterface iface(Hal,
 			 "/org/freedesktop/Hal/devices/computer",
 			 "org.freedesktop.Hal.Device",
 			 QDBusConnection::systemBus(), 0);
@@ -259,7 +292,7 @@ bool KToshibaDBusInterface::suspend()
 
 int KToshibaDBusInterface::getBrightness()
 {
-    QDBusInterface iface("org.freedesktop.Hal",
+    QDBusInterface iface(Hal,
 			 "/org/freedesktop/Hal/devices/computer_backlight",
 			 "org.freedesktop.Hal.Device.LaptopPanel",
 			 QDBusConnection::systemBus(), 0);
@@ -283,8 +316,6 @@ int KToshibaDBusInterface::getBrightness()
     
     return reply.value();
 }
-
-static const char * const Introspect = "org.freedesktop.DBus.Introspectable";
 
 bool KToshibaDBusInterface::checkMediaPlayer()
 {

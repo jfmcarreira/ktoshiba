@@ -63,6 +63,7 @@ private Q_SLOTS:
     void profileChangedSlot(QString, QStringList);
 
 private:
+    QString findInputDevice();
     void checkSupportedSuspend();
     void checkCompositeStatus();
 
@@ -70,6 +71,7 @@ private:
     QDBusInterface* m_kbdIface;
     QDBusInterface* m_devilIface;
     QDBusMessage message;
+    QString m_deviceUDI;
 
     bool m_hibernate;
     bool m_suspend;
