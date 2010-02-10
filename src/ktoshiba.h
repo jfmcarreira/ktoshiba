@@ -28,12 +28,10 @@
 class QAction;
 
 class KAboutData;
+class KStatusNotifierItem;
 
 class FnActions;
 
-namespace Experimental {
-	class KNotificationItem;
-}
 
 /**
  * @short Hotkeys monitoring for Toshiba laptops
@@ -66,7 +64,7 @@ private:
     bool m_autoStart;
 
     static KAboutData* m_about;
-    Experimental::KNotificationItem *m_trayicon;
+    KStatusNotifierItem *m_trayicon;
 };
 
 #endif // KTOSHIBA_H

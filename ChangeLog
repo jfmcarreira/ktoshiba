@@ -1,3 +1,15 @@
+2010-02-07 Azael Avalos <coproscefalo@gmail.com>
+	* Added DBus calls to control Kaffeine (we
+	  need Kaffeine 1.0 >= pre3)
+
+2010-01-08 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted code to KStatusNotifierItem, we no
+	  longer need Experimental::KNotifierItem,
+	  and as such, we now require KDE 4.4
+
+2009-12-06 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to CMakeLists.txt
+
 2009-11-16 Azael Avalos <coproscefalo@gmail.com>
 	* Added toshiba_acpi input support
 

@@ -1,7 +1,7 @@
 project(ktoshiba)
 
 # search for KDE
-find_package(KDE4 REQUIRED)
+find_package(KDE4 4.3.90 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 

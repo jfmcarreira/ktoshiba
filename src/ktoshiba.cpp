@@ -31,7 +31,7 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KIcon>
-#include <knotificationitem.h>
+#include <kstatusnotifieritem.h>
 
 #include "ktoshiba.h"
 #include "fnactions.h"
@@ -45,12 +45,12 @@ KToshiba::KToshiba()
       autostart( NULL ),
       config( KSharedConfig::openConfig( ktosh_config ) ),
       m_autoStart( true ),
-      m_trayicon( new Experimental::KNotificationItem( this ) )
+      m_trayicon( new KStatusNotifierItem( this ) )
 {
     m_trayicon->setIconByName( "ktoshiba" );
     m_trayicon->setToolTip( "ktoshiba", "KToshiba", i18n("Fn key monitoring for Toshiba laptops") );
-    m_trayicon->setCategory( Experimental::KNotificationItem::Hardware );
-    m_trayicon->setStatus( Experimental::KNotificationItem::Passive );
+    m_trayicon->setCategory( KStatusNotifierItem::Hardware );
+    m_trayicon->setStatus( KStatusNotifierItem::Passive );
 
     KMenu *popupMenu = m_trayicon->contextMenu();
 
