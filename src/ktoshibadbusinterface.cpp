@@ -351,10 +351,36 @@ void KToshibaDBusInterface::playerPlayPause()
                                                      "PlayPause");
             break;
         case Kaffeine:
-            message = QDBusMessage::createMethodCall("org.kde.kaffeine",
-                                                     "/Player",
-                                                     "org.freedesktop.MediaPlayer",
-                                                     "Pause");
+            // UGLY: Kaffeine doesn't support Play/Pause (yet...)
+			// so let's use this instead to see if something's playing...
+            {QDBusInterface iface("org.kde.kaffeine", "/Player",
+					"org.freedesktop.MediaPlayer", QDBusConnection::sessionBus(), 0);
+            if (!iface.isValid()) {
+                QDBusError err(iface.lastError());
+                fprintf(stderr, "playerPlayPause Error: %s\nMessage: %s\n",
+                    qPrintable(err.name()), qPrintable(err.message()));
+                return;
+            }
+
+            QDBusReply<int> reply = iface.call("PositionGet");
+
+            if (!reply.isValid()) {
+                QDBusError err(iface.lastError());
+                fprintf(stderr, "playerPlayPause Error: %s\nMessage: %s\n",
+                    qPrintable(err.name()), qPrintable(err.message()));
+                return;
+            }
+            if (reply.value() == 0)
+                message = QDBusMessage::createMethodCall("org.kde.kaffeine",
+                                                         "/Player",
+                                                         "org.freedesktop.MediaPlayer",
+                                                         "Play");
+            else
+                message = QDBusMessage::createMethodCall("org.kde.kaffeine",
+                                                         "/Player",
+                                                         "org.freedesktop.MediaPlayer",
+                                                         "Pause");
+            }
             break;
         case JuK:
             message = QDBusMessage::createMethodCall("org.kde.juk",

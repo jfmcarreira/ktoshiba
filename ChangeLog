@@ -1,3 +1,14 @@
+2010-02-21 Azael Avalos <coproscefalo@gmail.com>
+	* Added "Kaffeine" to the MessageBox, it was
+	  only showing "Amarok" and "JuK"
+
+2010-02-14 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed Zoom and friends names in QHash list
+
+2010-02-11 Azael Avalos <coproscefalo@gmail.com>
+	* Addapted Play/Pause for Kaffeine since it is
+	  not supported yet
+
 2010-02-07 Azael Avalos <coproscefalo@gmail.com>
 	* Added DBus calls to control Kaffeine (we
 	  need Kaffeine 1.0 >= pre3)

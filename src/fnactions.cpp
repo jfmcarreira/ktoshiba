@@ -110,9 +110,9 @@ void FnActions::populateHotkeys()
     hotkeys.insert("previous-song", 14);
     hotkeys.insert("next-song", 15);
     // Other values (Zoom and friends)
-    hotkeys.insert("zoom-reset", 16);
-    hotkeys.insert("zoom-out", 17);
-    hotkeys.insert("zoom-in", 18);
+    hotkeys.insert("zoomreset", 16);
+    hotkeys.insert("zoomout", 17);
+    hotkeys.insert("zoomin", 18);
     hotkeys.insert("prog2", 19);
 }
 
@@ -215,7 +215,18 @@ void FnActions::hideWidget()
 
 int FnActions::showMessageBox()
 {
-    QString player = (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)? "Amarok" : "JuK";
+    QString player;
+    switch (m_dBus->m_mediaPlayer) {
+        case KToshibaDBusInterface::Amarok:
+            player = "Amarok";
+            break;
+        case KToshibaDBusInterface::Kaffeine:
+            player = "Kaffeine";
+            break;
+        case KToshibaDBusInterface::JuK:
+            player = "JuK";
+            break;
+    }
     return KMessageBox::questionYesNo(0, i18n("%1 is not running.\n"
                                       "Would you like to start it now?").arg(player),
                                       i18n("Media Player"),
