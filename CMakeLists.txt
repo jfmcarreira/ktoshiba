@@ -12,6 +12,7 @@ include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Q
 
 add_subdirectory( src )
 add_subdirectory( icons )
+add_subdirectory( po )
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")

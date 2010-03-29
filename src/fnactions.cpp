@@ -76,6 +76,7 @@ FnActions::FnActions(QObject *parent)
     connect( powerNotifier, SIGNAL( acAdapterStateChanged(int) ), this, SLOT( acChanged(int) ) );
     connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
     connect( m_dBus, SIGNAL( profileChanged(QString, QStringList) ), this, SLOT( slotProfileChanged(QString, QStringList) ) );
+    connect( parent, SIGNAL( mediaPlayerChanged(int) ), this, SLOT( updateMediaPlayer(int) ) );
 }
 
 FnActions::~FnActions()
@@ -213,6 +214,11 @@ void FnActions::hideWidget()
     widget->hide();
 }
 
+void FnActions::updateMediaPlayer(int player)
+{
+    m_dBus->m_mediaPlayer = player;
+}
+
 int FnActions::showMessageBox()
 {
     QString player;
@@ -297,6 +303,7 @@ void FnActions::changeMediaPlayer()
         case KToshibaDBusInterface::JuK: wid = 14; break;
     }
     showWidget(wid);
+    emit mediaPlayerChanged(m_dBus->m_mediaPlayer);
 }
 
 void FnActions::slotGotHotkey(QString hotkey)

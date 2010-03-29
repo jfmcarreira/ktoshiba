@@ -42,6 +42,7 @@ static const char * const ktosh_config = "ktoshibarc";
 KToshiba::KToshiba()
     : KUniqueApplication(),
       m_Fn( new FnActions( this ) ),
+      mediaPlayerMenu( NULL ),
       autostart( NULL ),
       config( KSharedConfig::openConfig( ktosh_config ) ),
       m_autoStart( true ),
@@ -66,6 +67,19 @@ KToshiba::KToshiba()
     autostart->setCheckable( true );
     autostart->setChecked( m_autoStart );
     popupMenu->addSeparator();
+    mediaPlayerMenu = new KMenu( i18n("Media Player"), popupMenu );
+    amarok = mediaPlayerMenu->addAction( "Amarok" );
+    amarok->setCheckable( true );
+    amarok->setIcon( KIcon("amarok") );
+    amarok->setChecked( true );
+    kaffeine = mediaPlayerMenu->addAction( "Kaffeine" );
+    kaffeine->setCheckable( true );
+    kaffeine->setIcon( KIcon("kaffeine") );
+    juk = mediaPlayerMenu->addAction( "JuK" );
+    juk->setCheckable( true );
+    juk->setIcon( KIcon("juk") );
+    popupMenu->addMenu( mediaPlayerMenu )->setIcon( KIcon("applications-multimedia") );
+    popupMenu->addSeparator();
     KHelpMenu *m_helpMenu = new KHelpMenu( popupMenu, aboutData());
     popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
@@ -73,6 +87,8 @@ KToshiba::KToshiba()
     popupMenu->addSeparator();
 
     connect( autostart, SIGNAL( toggled(bool) ), this, SLOT( autostartSlot(bool) ) );
+    connect( mediaPlayerMenu, SIGNAL( triggered(QAction*) ), this, SLOT( mediaPlayerSlot(QAction*) ) );
+    connect( m_Fn, SIGNAL( mediaPlayerChanged(int) ), this, SLOT( updateMediaPlayer(int) ) );
 }
 
 KToshiba::~KToshiba()
@@ -112,6 +128,39 @@ void KToshiba::autostartSlot(bool start)
     KConfigGroup generalGroup( config, "General" );
     generalGroup.writeEntry( "AutoStart", start );
     generalGroup.config()->sync();
+}
+
+void KToshiba::mediaPlayerSlot(QAction* action)
+{
+    // Clear previous selection
+    amarok->setChecked( false );
+    kaffeine->setChecked( false );
+    juk->setChecked( false );
+    // Check the desired one
+    action->setChecked( true );
+    int player = -1;
+    if (action == amarok)
+        player = 0;
+    else if (action == kaffeine)
+        player = 1;
+    else if (action == juk)
+        player = 2;
+    emit mediaPlayerChanged(player);
+}
+
+void KToshiba::updateMediaPlayer(int player)
+{
+    // Clear previous selection
+    amarok->setChecked( false );
+    kaffeine->setChecked( false );
+    juk->setChecked( false );
+    // Now check the correct one
+    if (player == 0)
+        amarok->setChecked( true );
+    else if (player == 1)
+        kaffeine->setChecked( true );
+    else if (player == 2)
+        juk->setChecked( true );
 }
 
 static const char * const description =

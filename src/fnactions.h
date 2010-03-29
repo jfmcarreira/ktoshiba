@@ -53,6 +53,9 @@ public:
 
     QString modelName();
 
+Q_SIGNALS:
+    void mediaPlayerChanged(int);
+
 private Q_SLOTS:
     void slotGotHotkey(QString);
     void hideWidget();
@@ -61,6 +64,7 @@ private Q_SLOTS:
     void updateBrightness();
     void wirelessChanged(bool);
     void performAction();
+    void updateMediaPlayer(int);
 
 private:
     void populateHotkeys();

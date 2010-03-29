@@ -1,3 +1,11 @@
+2010-03-28 Azael Avalos <coproscefalo@gmail.com>
+	* Shamelessly stole KMess code to update translation files
+	* Added spanish translation
+
+2010-03-24 Azael Avalos <coproscefalo@gmail.com>
+	* Added a sub-menu for toggling between
+	  MultiMedia players (Amarok->Kaffeine-JuK)
+
 2010-02-21 Azael Avalos <coproscefalo@gmail.com>
 	* Added "Kaffeine" to the MessageBox, it was
 	  only showing "Amarok" and "JuK"

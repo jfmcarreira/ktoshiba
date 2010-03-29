@@ -27,6 +27,7 @@
 
 class QAction;
 
+class KMenu;
 class KAboutData;
 class KStatusNotifierItem;
 
@@ -50,8 +51,13 @@ public:
     static void destroyAboutData();
     static KAboutData* aboutData();
 
+Q_SIGNALS:
+    void mediaPlayerChanged(int);
+
 private Q_SLOTS:
     void autostartSlot(bool);
+    void mediaPlayerSlot(QAction*);
+    void updateMediaPlayer(int);
 
 private:
     bool checkConfig();
@@ -59,7 +65,11 @@ private:
     void createConfig();
 
     FnActions *m_Fn;
+    KMenu *mediaPlayerMenu;
     QAction *autostart;
+    QAction *amarok;
+    QAction *kaffeine;
+    QAction *juk;
     KSharedConfigPtr config;
     bool m_autoStart;
 
