@@ -27,8 +27,6 @@
 #include <QStringList>
 #include <QHash>
 
-#include <solid/control/powermanager.h>
-
 #include "ui_statuswidget.h"
 
 class QTimer;
@@ -46,6 +44,7 @@ class FnActions : public QObject
 
 public:
     enum PlayerAction { PlayPause, Stop, Prev, Next };
+    enum WidgetIcons { Disabled, TPOn, TPOff, Amarok, Kaffeine, JuK };
 
 public:
     FnActions(QObject *parent);
@@ -60,8 +59,6 @@ private Q_SLOTS:
     void slotGotHotkey(QString);
     void hideWidget();
     void slotProfileChanged(QString, QStringList);
-    void acChanged(int);
-    void updateBrightness();
     void wirelessChanged(bool);
     void performAction();
     void updateMediaPlayer(int);
@@ -71,7 +68,6 @@ private:
     void showWidget(int);
     void checkSupportedProfiles();
     void toggleProfiles();
-    void updateBrightness(QString);
     void toggleWireless();
     void toggleTouchPad();
     void launchMediaPlayer();
@@ -90,7 +86,6 @@ private:
     QStringList profiles;
     QString m_profile;
 
-    int m_bright;
     int m_wireless;
     int m_touchpadError;
     int m_action;

@@ -1,0 +1,18 @@
+#
+# This file should be copied either as is to "/lib/udev/rules.d" or the commented line
+# added to the appropiate udev rule (usually "/lib/udev/rules.d/95-keymap.rules") in
+# order to map the keys.
+#
+
+# ENV{DMI_VENDOR}=="TOSHIBA", ATTR{[dmi/id]product_name}=="Satellite X205", RUN+="keymap $name toshiba-satellite_x205"
+
+ACTION!="add", GOTO="keyboard_end"
+SUBSYSTEM!="input", GOTO="keyboard_end"
+KERNEL!="event*", GOTO="keyboard_end"
+
+ENV{DMI_VENDOR}="$attr{[dmi/id]sys_vendor}"
+ENV{DMI_VENDOR}=="", GOTO="keyboard_end"
+
+ENV{DMI_VENDOR}=="TOSHIBA", ATTR{[dmi/id]product_name}=="Satellite X205", RUN+="keymap $name toshiba-satellite_x205"
+
+LABEL="keyboard_end"

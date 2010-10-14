@@ -82,11 +82,7 @@ int TouchPad::check_XI_version()
     XExtensionVersion *version;
     int ver = -1;
 
-#ifdef HAVE_XI2
-    version = XQueryInputVersion(m_Display, XI_2_Major, XI_2_Minor);
-#else
     version = XGetExtensionVersion(m_Display, INAME);
-#endif
 
     if (version && (version != (XExtensionVersion*) NoSuchExtension)) {
         ver = version->major_version;
@@ -121,18 +117,13 @@ int TouchPad::findDeviceID()
     return 0;
 }
 
-int TouchPad::getProperty()
+int TouchPad::findProperty()
 {
-    int state = -1;
-    int properties, actual_format, size;
-    char *name;
-    unsigned long num_items, bytes_after;
-    unsigned char *data;
-    Atom actual_type;
+    int properties;
 
     m_Device = XOpenDevice(m_Display, m_DeviceID);
     if (!m_Device) {
-        fprintf(stderr, "TouchPad::getProperty:\
+        fprintf(stderr, "TouchPad::findProperty:\
 		Could not open %s.\n", XI_TOUCHPAD);
         return -1;
     }
@@ -140,7 +131,7 @@ int TouchPad::getProperty()
     m_Properties = XListDeviceProperties(m_Display, m_Device, &properties);
     if (!properties) {
         // Nothing left to do...
-        fprintf(stderr, "TouchPad::getProperty:\
+        fprintf(stderr, "TouchPad::findProperty:\
 		The %s does not have any properties...\n", XI_TOUCHPAD);
         XFree(m_Properties);
         XCloseDevice(m_Display, m_Device);
@@ -149,30 +140,49 @@ int TouchPad::getProperty()
 
     // Let's find "Synaptics Off" property
     while (properties--) {
-        name = XGetAtomName(m_Display, m_Properties[properties]);
-        if (!strcmp(name, "Synaptics Off")) {
+        atomName = XGetAtomName(m_Display, m_Properties[properties]);
+        if (!strcmp(atomName, "Synaptics Off")) {
             // And stop looking once found...
             m_TouchPadOffProperty = m_Properties[properties];
-
-            if (XGetDeviceProperty(m_Display, m_Device, m_TouchPadOffProperty, 0, 1000, False,
-                                   AnyPropertyType, &actual_type, &actual_format, &num_items,
-                                   &bytes_after, &data) == Success) {
-                if (num_items == 0) {
-                    // Nothing left to do here either...
-                    fprintf(stderr, "TouchPad::getProperty:\
-			    The %s does not have any properties...\n", XI_TOUCHPAD);
-                    XFree(data);
-                    XFree(m_Properties);
-                    XCloseDevice(m_Display, m_Device);
-                    return -1;
-                }
-
-                size = sizeof(char);
-                state = (*((char*)data));
-            }
-            break;
+            return 0;
         }
     }
+    XFree(m_Properties);
+    XCloseDevice(m_Display, m_Device);
+
+    return -1;
+}
+
+int TouchPad::getProperty()
+{
+    int state = -1;
+    int actual_format, size;
+    unsigned long num_items, bytes_after;
+    unsigned char *data;
+    Atom actual_type;
+
+    if (findProperty() < 0)
+        return -1;
+
+    if (XGetDeviceProperty(m_Display, m_Device, m_TouchPadOffProperty, 0, 1000, False,
+                           AnyPropertyType, &actual_type, &actual_format, &num_items,
+                           &bytes_after, &data) == Success) {
+        if (num_items == 0) {
+            // Nothing left to do here either...
+            fprintf(stderr, "TouchPad::getProperty:\
+		    The %s does not have any properties...\n", XI_TOUCHPAD);
+            XFree(data);
+            XFree(m_Properties);
+            XCloseDevice(m_Display, m_Device);
+            return -1;
+        }
+        
+        size = sizeof(char);
+        state = (*((char*)data));
+	fprintf(stderr, "TouchPad::getProperty:\
+		    The %s state is %s\n", XI_TOUCHPAD, ((state)? "On" : "Off"));
+    }
+
     XFree(data);
     XFree(m_Properties);
     XCloseDevice(m_Display, m_Device);
@@ -182,43 +192,21 @@ int TouchPad::getProperty()
 
 void TouchPad::setProperty(int state)
 {
-    int properties, format = 8, elements = 1;
-    char *name, *data;
+    int format = 8, elements = 1;
+    char *data;
     Atom property;
 
-    m_Device = XOpenDevice(m_Display, m_DeviceID);
-    if (!m_Device) {
-        fprintf(stderr, "TouchPad::setProperty:\
-		Could not open %s.\n", XI_TOUCHPAD);
+    if (findProperty() < 0)
         return;
-    }
 
-    m_Properties = XListDeviceProperties(m_Display, m_Device, &properties);
-    if (!properties) {
-        // Nothing left to do...
-        fprintf(stderr, "TouchPad::setProperty:\
-		The %s does not have any properties...\n", XI_TOUCHPAD);
-        XFree(m_Properties);
-        XCloseDevice(m_Display, m_Device);
-        return;
-    }
-
-    // Let's find "Synaptics Off" property
-    while (properties--) {
-        name = XGetAtomName(m_Display, m_Properties[properties]);
-        if (!strcmp(name, "Synaptics Off")) {
-            // And stop looking once found...
-            m_TouchPadOffProperty = m_Properties[properties];
-            break;
-        }
-    }
-
-    property = XInternAtom(m_Display, name, True);
+    property = XInternAtom(m_Display, atomName, True);
     data = (char*)calloc(elements, sizeof(long));
     (*((char*)data)) = state;
     
     XChangeDeviceProperty(m_Display, m_Device, property, XA_INTEGER, format,
                           PropModeReplace, (unsigned char*)data, elements);
+	fprintf(stderr, "TouchPad::setProperty:\
+		    The %s state is %s\n", XI_TOUCHPAD, ((state)? "On" : "Off"));
 
     free(data);
     XFree(m_Properties);

@@ -42,7 +42,6 @@ FnActions::FnActions(QObject *parent)
       widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_profile( "Powersave" ),
-      m_bright( -1 ),
       m_wireless( true ),
       m_touchpadError( -1 )
 {
@@ -58,12 +57,6 @@ FnActions::FnActions(QObject *parent)
     // We're just going to care about these profiles
     profiles << "Performance" << "Powersave" << "Presentation";
 
-    // ISSUE: Internal brightness value, since HAL doesn't seem to
-    // update the brightness value unless AC adaptor is plug/unplugged,
-    // so we will rely on the value stored to show widgets... Bummer...
-    m_bright = m_dBus->getBrightness();
-
-    Solid::Control::PowerManager::Notifier *powerNotifier = Solid::Control::PowerManager::notifier();
     Solid::Control::NetworkManager::Notifier *wifiNotifier = Solid::Control::NetworkManager::notifier();
 
 #ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
@@ -73,7 +66,6 @@ FnActions::FnActions(QObject *parent)
 
     connect( m_dBus, SIGNAL( hotkeyPressed(QString) ), this, SLOT( slotGotHotkey(QString) ) );
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
-    connect( powerNotifier, SIGNAL( acAdapterStateChanged(int) ), this, SLOT( acChanged(int) ) );
     connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
     connect( m_dBus, SIGNAL( profileChanged(QString, QStringList) ), this, SLOT( slotProfileChanged(QString, QStringList) ) );
     connect( parent, SIGNAL( mediaPlayerChanged(int) ), this, SLOT( updateMediaPlayer(int) ) );
@@ -130,14 +122,6 @@ void FnActions::slotProfileChanged(QString profile, QStringList profiles)
     if (profiles.contains(profile)) {}
 }
 
-void FnActions::acChanged(int state)
-{
-    // Slight delay (1 sec) to wait for HAL to update its internal value...
-    if (state == Solid::Control::PowerManager::Plugged ||
-	state == Solid::Control::PowerManager::Unplugged)
-        QTimer::singleShot( 1000, this, SLOT( updateBrightness() ) );
-}
-
 void FnActions::toggleProfiles()
 {
     int current = profiles.indexOf(m_profile);
@@ -151,23 +135,9 @@ void FnActions::toggleProfiles()
     m_dBus->setProfile(m_profile);
 }
 
-void FnActions::updateBrightness()
-{
-    m_bright = m_dBus->getBrightness();
-}
-
 void FnActions::wirelessChanged(bool state)
 {
     m_wireless = state;
-}
-
-void FnActions::updateBrightness(QString hotkey)
-{
-    if (hotkey == "brightness-down" && m_bright > 0)
-        m_bright--;
-    else if (m_bright < 7)
-        m_bright++;
-    showWidget(m_bright);
 }
 
 void FnActions::toggleWireless()
@@ -180,13 +150,13 @@ void FnActions::toggleTouchPad()
 #ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
     int tp = -1;
     if (m_touchpadError == TouchPad::NoError && (tp = m_TouchPad->getTouchPad()) != -1) {
-        tp = (tp == TouchPad::On)? TouchPad::Off : TouchPad::On;
-        m_TouchPad->setTouchPad( tp );
-        showWidget( ((tp == TouchPad::On)? 10 : 11) );
-        m_TouchPad->m_touchpad = tp;
+        //tp = (tp)? TouchPad::On : TouchPad::Off;
+        m_TouchPad->setTouchPad( !tp );
+        showWidget( ((tp)? TPOff : TPOn) );
+        //m_TouchPad->m_touchpad = tp;
     } else
 #endif
-        showWidget(11);
+        showWidget(TPOff);
 }
 
 void FnActions::showWidget(int wid)
@@ -196,10 +166,8 @@ void FnActions::showWidget(int wid)
                 QPoint(widget->width() / 2, widget->height() / 2));
     widget->show();
 
-    if (m_bright == -1)
-        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(8) );
-    else if (wid < 0)
-        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(9) );
+    if (wid < 0)
+        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(Disabled) );
     else
         m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
 
@@ -289,19 +257,17 @@ void FnActions::changeMediaPlayer()
 
     switch (m_dBus->m_mediaPlayer) {
         case KToshibaDBusInterface::Amarok:
-            player = KToshibaDBusInterface::Kaffeine; break;
+            player = KToshibaDBusInterface::Kaffeine;
+            wid = Kaffeine; break;
         case KToshibaDBusInterface::Kaffeine:
-            player = KToshibaDBusInterface::JuK; break;
+            player = KToshibaDBusInterface::JuK;
+            wid = JuK; break;
         case KToshibaDBusInterface::JuK:
-            player = KToshibaDBusInterface::Amarok; break;
+            player = KToshibaDBusInterface::Amarok;
+            wid = Amarok; break;
     }
-    m_dBus->m_mediaPlayer = player;
 
-    switch (m_dBus->m_mediaPlayer) {
-        case KToshibaDBusInterface::Amarok: wid = 12; break;
-        case KToshibaDBusInterface::Kaffeine: wid = 13; break;
-        case KToshibaDBusInterface::JuK: wid = 14; break;
-    }
+    m_dBus->m_mediaPlayer = player;
     showWidget(wid);
     emit mediaPlayerChanged(m_dBus->m_mediaPlayer);
 }
@@ -339,7 +305,7 @@ void FnActions::slotGotHotkey(QString hotkey)
           break;
         case 6:
         case 7:
-          updateBrightness(hotkey);
+          // Do nothing, since KDE dies it now for us  
           break;
         case 8:
           toggleWireless();

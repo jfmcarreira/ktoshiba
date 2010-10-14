@@ -1,6 +1,24 @@
+2010-10-13 Azael Avalos <coproscefalo@gmail.com>
+	* Added udev rules to map Satellite X205 series
+	  hotkeys
+	* Removed unused brightness icons and stack pages
+	  from StatusWidget
+	* Implemented a new function (findProperty) in
+	  touchpad.{cpp, h} to avoid duplicating code
+	  between setProperty and getProperty
+
+2010-10-06 Azael Avalos <coproscefalo@gmail.com>
+	* Removed brightness stuff since KDE does it
+	  for us now since KDE >= 4.5.0
+
+2010-04-10 Azael Avalos <coproscefalo@gmail.com>
+	* XQueryInputVersion doesn't exist anymore,
+	  remove it from touchpad.cpp
+
 2010-03-28 Azael Avalos <coproscefalo@gmail.com>
 	* Shamelessly stole KMess code to update translation files
 	* Added spanish translation
+	* Tagged code for RC2 release
 
 2010-03-24 Azael Avalos <coproscefalo@gmail.com>
 	* Added a sub-menu for toggling between

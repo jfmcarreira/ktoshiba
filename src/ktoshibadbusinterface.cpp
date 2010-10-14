@@ -289,34 +289,6 @@ bool KToshibaDBusInterface::suspend()
     return false;
 }
 
-
-int KToshibaDBusInterface::getBrightness()
-{
-    QDBusInterface iface(Hal,
-			 "/org/freedesktop/Hal/devices/computer_backlight",
-			 "org.freedesktop.Hal.Device.LaptopPanel",
-			 QDBusConnection::systemBus(), 0);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        fprintf(stderr, "getBrightness Error: %s\nMessage: %s\n",
-                qPrintable(err.name()), qPrintable(err.message()));
-
-        return -1;
-    }
-
-    QDBusReply<int> reply = iface.call("GetBrightness");
-
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        fprintf(stderr, "getBrightness Error: %s\nMessage: %s\n",
-                qPrintable(err.name()), qPrintable(err.message()));
-
-        return -1;
-    }
-    
-    return reply.value();
-}
-
 bool KToshibaDBusInterface::checkMediaPlayer()
 {
     QString Service;

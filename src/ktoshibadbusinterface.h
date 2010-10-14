@@ -44,7 +44,6 @@ public:
     void setProfile(QString);
     bool hibernate();
     bool suspend();
-    int getBrightness();
     bool checkMediaPlayer();
     void playerPlayPause();
     void playerStop();

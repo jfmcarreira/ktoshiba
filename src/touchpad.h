@@ -34,7 +34,7 @@ class TouchPad
 {
 public:
     enum TouchPadError { NoError, NoX, NoXInput, NoExtension, NoTouchPad };
-    enum TouchPadState { Off = 0, On = 1, TapToClickOff = 2 };
+    enum TouchPadState { On = 0, Off = 1, TapToClickOff = 2 };
 
 public:
     TouchPad();
@@ -50,6 +50,7 @@ private:
     void clean();
     int check_XI_version();
     int findDeviceID();
+    int findProperty();
     void setProperty(int);
     int getProperty();
 
@@ -59,6 +60,7 @@ private:
     Atom *m_Properties;
     Atom m_TouchPadOffProperty;
     XID m_DeviceID;
+    char *atomName;
 };
 
 #endif // TOUCHPAD_H

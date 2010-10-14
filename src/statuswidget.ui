@@ -57,199 +57,34 @@
      <height>72</height>
     </rect>
    </property>
-   <property name="currentIndex">
-    <number>1</number>
+   <property name="minimumSize">
+    <size>
+     <width>72</width>
+     <height>72</height>
+    </size>
    </property>
-   <widget class="QWidget" name="bright0Page">
-    <widget class="QLabel" name="bright0Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_0.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright1Page">
-    <widget class="QLabel" name="bright1Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_1.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright2Page">
-    <widget class="QLabel" name="bright2Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_2.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright3Page">
-    <widget class="QLabel" name="bright3Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_3.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright4Page">
-    <widget class="QLabel" name="bright4Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_4.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright5Page">
-    <widget class="QLabel" name="bright5Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_5.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright6Page">
-    <widget class="QLabel" name="bright6Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_6.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="bright7Page">
-    <widget class="QLabel" name="bright7Label">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright2_7.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="noBrightnessPage">
-    <widget class="QLabel" name="nobrightLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/bright_disabled.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
+   <property name="maximumSize">
+    <size>
+     <width>72</width>
+     <height>72</height>
+    </size>
+   </property>
+   <property name="currentIndex">
+    <number>3</number>
+   </property>
    <widget class="QWidget" name="disabledPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="disabledLabel">
      <property name="geometry">
       <rect>
@@ -258,6 +93,18 @@
        <width>64</width>
        <height>64</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
      </property>
      <property name="text">
       <string/>
@@ -268,9 +115,24 @@
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
+     <property name="indent">
+      <number>0</number>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="touchpadOnPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="touchpadOnLabel">
      <property name="geometry">
       <rect>
@@ -279,6 +141,18 @@
        <width>64</width>
        <height>64</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
      </property>
      <property name="text">
       <string/>
@@ -292,6 +166,18 @@
     </widget>
    </widget>
    <widget class="QWidget" name="touchpadOffPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="touchpadOffLabel">
      <property name="geometry">
       <rect>
@@ -300,6 +186,18 @@
        <width>64</width>
        <height>64</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
      </property>
      <property name="text">
       <string/>
@@ -313,6 +211,18 @@
     </widget>
    </widget>
    <widget class="QWidget" name="amarokPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="amarokLabel">
      <property name="geometry">
       <rect>
@@ -321,6 +231,18 @@
        <width>64</width>
        <height>64</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
      </property>
      <property name="text">
       <string/>
@@ -334,6 +256,18 @@
     </widget>
    </widget>
    <widget class="QWidget" name="kaffeinePage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="kaffeineLabel">
      <property name="geometry">
       <rect>
@@ -342,6 +276,12 @@
        <width>64</width>
        <height>64</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
      </property>
      <property name="text">
       <string/>
@@ -355,6 +295,18 @@
     </widget>
    </widget>
    <widget class="QWidget" name="jukPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="jukLabel">
      <property name="geometry">
       <rect>
@@ -363,6 +315,18 @@
        <width>64</width>
        <height>64</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>64</width>
+       <height>64</height>
+      </size>
      </property>
      <property name="text">
       <string/>
