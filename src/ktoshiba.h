@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,8 +20,6 @@
 #ifndef KTOSHIBA_H
 #define KTOSHIBA_H
 
-#include <QObject>
-
 #include <KUniqueApplication>
 #include <KSharedConfig>
 
@@ -33,11 +31,10 @@ class KStatusNotifierItem;
 
 class FnActions;
 
-
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.3.90
+ * @version 0.4.0
  */
 class KToshiba : public KUniqueApplication
 {
@@ -51,8 +48,12 @@ public:
     static void destroyAboutData();
     static KAboutData* aboutData();
 
+    bool x11EventFilter(XEvent *);
+
 Q_SIGNALS:
+    void hotkeyPressed(int);
     void mediaPlayerChanged(int);
+    void touchpadDisabled(bool);
 
 private Q_SLOTS:
     void autostartSlot(bool);
@@ -60,13 +61,16 @@ private Q_SLOTS:
     void updateMediaPlayer(int);
 
 private:
+    void grabKeys();
     bool checkConfig();
     void loadConfig();
     void createConfig();
+    void clearMediaPlayerSelection();
 
     FnActions *m_Fn;
     KMenu *mediaPlayerMenu;
     QAction *autostart;
+    QAction *nomp;
     QAction *amarok;
     QAction *kaffeine;
     QAction *juk;

@@ -32,7 +32,7 @@
    <string>StatusWidget</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset>
     <normaloff>:/images/images/fn.png</normaloff>
     <normalon>:/images/images/fn.png</normalon>:/images/images/fn.png</iconset>
   </property>
@@ -70,7 +70,7 @@
     </size>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="disabledPage">
     <property name="minimumSize">
@@ -110,7 +110,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/disabled_64.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/disabled_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -158,7 +158,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/mpad_64.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/mpad_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -203,7 +203,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/mpad-disabled_64.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/mpad-disabled_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -248,7 +248,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/amarok.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/amarok_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -287,7 +287,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/kaffeine.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/kaffeine_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -332,7 +332,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/images/juk.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/juk_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

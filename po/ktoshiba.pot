@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2010-03-28 20:36-0700\n"
+        "POT-Creation-Date: 2010-10-14 10:45-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,22 +15,22 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: fnactions.cpp:236
+#: fnactions.cpp:204
 #, possible-kde-format
 msgid   "%1 is not running.\n"
         "Would you like to start it now?"
 msgstr  ""
 
-#: fnactions.cpp:238 ktoshiba.cpp:70
+#: fnactions.cpp:206 ktoshiba.cpp:70
 msgid   "Media Player"
 msgstr  ""
 
-#: fnactions.cpp:381
+#: fnactions.cpp:347
 #, possible-kde-format
 msgid   "Got Hotkey: %1"
 msgstr  ""
 
-#: fnactions.cpp:382
+#: fnactions.cpp:348
 msgid   "KToshiba - Hotkey"
 msgstr  ""
 

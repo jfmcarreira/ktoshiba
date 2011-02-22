@@ -1,5 +1,5 @@
  /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,15 +17,19 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <QX11Info>
+
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
+
+#include "ktoshiba.h"
+
+extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <kuniqueapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
-
-#include "ktoshiba.h"
+#include <X11/Xlib.h>
+}
 
 int main(int argc, char *argv[])
 {
@@ -43,6 +47,7 @@ int main(int argc, char *argv[])
     app->setQuitOnLastWindowClosed( false );
 
     int ret = app->exec();
+    XSelectInput(QX11Info::display(), DefaultRootWindow(QX11Info::display()), KeyPressMask);
     KToshiba::destroyAboutData();
 
     return ret;

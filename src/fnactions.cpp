@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,24 +17,18 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <config-ktoshiba.h>
-
 #include <QtGui/QDesktopWidget>
 #include <QTimer>
 #include <QRect>
-#include <QApplication>
 
 #include <KMessageBox>
 #include <KLocale>
-#include <KJob>
-#include <KProcess>
+#include <KDebug>
+#include <KToolInvocation>
 #include <solid/control/networkmanager.h>
 
 #include "fnactions.h"
 #include "ktoshibadbusinterface.h"
-#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-#include "touchpad.h"
-#endif
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
@@ -43,7 +37,7 @@ FnActions::FnActions(QObject *parent)
       m_widgetTimer( new QTimer( this ) ),
       m_profile( "Powersave" ),
       m_wireless( true ),
-      m_touchpadError( -1 )
+      m_touchpad( true )
 {
     m_statusWidget.setupUi( widget );
     widget->clearFocus();
@@ -52,74 +46,29 @@ FnActions::FnActions(QObject *parent)
     if (m_dBus->m_compositeEnabled)
         widget->setAttribute( Qt::WA_TranslucentBackground );
 
-    populateHotkeys();
-
     // We're just going to care about these profiles
     profiles << "Performance" << "Powersave" << "Presentation";
 
     Solid::Control::NetworkManager::Notifier *wifiNotifier = Solid::Control::NetworkManager::notifier();
 
-#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-    m_TouchPad = new TouchPad();
-    m_touchpadError = m_TouchPad->init();
-#endif
-
-    connect( m_dBus, SIGNAL( hotkeyPressed(QString) ), this, SLOT( slotGotHotkey(QString) ) );
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
-    connect( m_dBus, SIGNAL( profileChanged(QString, QStringList) ), this, SLOT( slotProfileChanged(QString, QStringList) ) );
+    connect( m_dBus, SIGNAL( profileChanged(QString) ), this, SLOT( profileChanged(QString) ) );
+    connect( m_dBus, SIGNAL( touchpadChanged(bool) ), this, SLOT( touchpadChanged(bool) ) );
     connect( parent, SIGNAL( mediaPlayerChanged(int) ), this, SLOT( updateMediaPlayer(int) ) );
+    connect( parent, SIGNAL( hotkeyPressed(int) ), this, SLOT( slotGotHotkey(int) ) );
 }
 
 FnActions::~FnActions()
 {
     delete widget; widget = NULL;
     delete m_widgetTimer; m_widgetTimer = NULL;
-#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-    delete m_TouchPad; m_TouchPad = NULL;
-#endif
     delete m_dBus; m_dBus = NULL;
 }
 
-void FnActions::populateHotkeys()
-{
-    // TODO: Add and/or correct values if needed
-    // Fn-F# values
-    hotkeys.insert("mute", 0);
-    hotkeys.insert("coffee", 1);
-    hotkeys.insert("battery", 2);
-    hotkeys.insert("sleep", 3);
-    hotkeys.insert("hibernate", 4);
-    hotkeys.insert("switch-videomode", 5);
-    hotkeys.insert("brightness-down", 6);
-    hotkeys.insert("brightness-up", 7);
-    hotkeys.insert("wlan", 8);
-    hotkeys.insert("prog1", 9);
-    // Multimedia values
-    hotkeys.insert("homepage", 10);
-    hotkeys.insert("media", 11);
-    hotkeys.insert("play-pause", 12);
-    hotkeys.insert("stop-cd", 13);
-    hotkeys.insert("previous-song", 14);
-    hotkeys.insert("next-song", 15);
-    // Other values (Zoom and friends)
-    hotkeys.insert("zoomreset", 16);
-    hotkeys.insert("zoomout", 17);
-    hotkeys.insert("zoomin", 18);
-    hotkeys.insert("prog2", 19);
-}
-
-QString FnActions::modelName()
-{
-    return m_dBus->getModel();
-}
-
-void FnActions::slotProfileChanged(QString profile, QStringList profiles)
+void FnActions::profileChanged(QString profile)
 {
     m_profile = profile;
-
-    // Avoid compiler warning
-    if (profiles.contains(profile)) {}
 }
 
 void FnActions::toggleProfiles()
@@ -145,18 +94,15 @@ void FnActions::toggleWireless()
     Solid::Control::NetworkManager::setWirelessEnabled( ((m_wireless)? false : true) );
 }
 
+void FnActions::touchpadChanged(bool state)
+{
+    m_touchpad = state;
+}
+
 void FnActions::toggleTouchPad()
 {
-#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-    int tp = -1;
-    if (m_touchpadError == TouchPad::NoError && (tp = m_TouchPad->getTouchPad()) != -1) {
-        //tp = (tp)? TouchPad::On : TouchPad::Off;
-        m_TouchPad->setTouchPad( !tp );
-        showWidget( ((tp)? TPOff : TPOn) );
-        //m_TouchPad->m_touchpad = tp;
-    } else
-#endif
-        showWidget(TPOff);
+    m_dBus->setTouchPad( ((m_touchpad)? false : true) );
+    showWidget(((m_touchpad)? TPOff : TPOn));
 }
 
 void FnActions::showWidget(int wid)
@@ -185,6 +131,7 @@ void FnActions::hideWidget()
 void FnActions::updateMediaPlayer(int player)
 {
     m_dBus->m_mediaPlayer = player;
+    kDebug() << "Media Player changed" << endl;
 }
 
 int FnActions::showMessageBox()
@@ -212,11 +159,11 @@ int FnActions::showMessageBox()
 void FnActions::launchMediaPlayer()
 {
     if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Amarok)
-        KProcess::startDetached("amarok");
+        KToolInvocation::startServiceByDesktopName("amarok");
     else if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::Kaffeine)
-        KProcess::startDetached("kaffeine");
-    else
-        KProcess::startDetached("juk");
+        KToolInvocation::startServiceByDesktopName("kaffeine");
+    else if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::JuK)
+        KToolInvocation::startServiceByDesktopName("juk");
 }
 
 void FnActions::performAction()
@@ -241,6 +188,9 @@ void FnActions::mediaAction(PlayerAction action)
 {
     m_action = action;
 
+    if (m_dBus->m_mediaPlayer == KToshibaDBusInterface::NoMP)
+        return;
+
     if (m_dBus->checkMediaPlayer())
         performAction();
     else
@@ -256,6 +206,9 @@ void FnActions::changeMediaPlayer()
     int player = -1, wid = -1;
 
     switch (m_dBus->m_mediaPlayer) {
+        case KToshibaDBusInterface::NoMP:
+            player = KToshibaDBusInterface::Amarok;
+	    wid = Amarok; break;
         case KToshibaDBusInterface::Amarok:
             player = KToshibaDBusInterface::Kaffeine;
             wid = Kaffeine; break;
@@ -263,8 +216,8 @@ void FnActions::changeMediaPlayer()
             player = KToshibaDBusInterface::JuK;
             wid = JuK; break;
         case KToshibaDBusInterface::JuK:
-            player = KToshibaDBusInterface::Amarok;
-            wid = Amarok; break;
+            player = KToshibaDBusInterface::NoMP;
+            wid = Disabled; break;
     }
 
     m_dBus->m_mediaPlayer = player;
@@ -272,7 +225,7 @@ void FnActions::changeMediaPlayer()
     emit mediaPlayerChanged(m_dBus->m_mediaPlayer);
 }
 
-void FnActions::slotGotHotkey(QString hotkey)
+void FnActions::slotGotHotkey(int hotkey)
 {
     // ISSUE: Fn press/release is not being sent by the drivers or HAL
     // which could be of great use here, eg:
@@ -280,72 +233,71 @@ void FnActions::slotGotHotkey(QString hotkey)
     // Hotkey-Pressed:	showWidget(--something--) );
     // Fn-Released:	widget->hide();
 
-    // TODO: Fn-F5 lack implementation...
-    switch ( hotkeys.value(hotkey) ) {
-        case 0:
+    switch ( hotkey ) {
+        case 121: // Mute
           // ISSUE: KMix or some other app is showing a volume bar whenever
           // Fn-Esc is pressed, so this is here just in case...
           //showWidget();
           break;
-        case 1:
+        case 160: // Coffee
           m_dBus->lockScreen();
           break;
-        case 2:
+        case 244: // Battery
           toggleProfiles();
           break;
-        case 3:
+        case 150:
           m_dBus->suspend();
           break;
-        case 4:
+        case 213:
           m_dBus->hibernate();
           break;
-        case 5:
+        case 235: // Video-Out
           // Do nothing for the time being...
           //showWidget();
           break;
-        case 6:
-        case 7:
-          // Do nothing, since KDE dies it now for us  
+        case 232: // Brightness control
+        case 233:
+          // Do nothing, since KDE does it now for us  
           break;
-        case 8:
+        case 246: // WLAN
           toggleWireless();
           break;
-        case 9:
+        case 156: // Prog1
           toggleTouchPad();
           break;
-        // Multimedia Keys
-        case 10:
-          break;
-        case 11:
+        /*
+         * Multimedia Keys
+         */
+        case 234:
           launchMediaPlayer();
           break;
-        case 12:
+        case 172:
           mediaAction(PlayPause);
           break;
-        case 13:
+        case 136:
           mediaAction(Stop);
           break;
-        case 14:
+        case 173:
           mediaAction(Prev);
           break;
-        case 15:
+        case 171:
           mediaAction(Next);
           break;
-        // Zoom et. al.
-        case 16:
+        /*
+         * Misc
+         */
+        case 180: // Homepage
+          KToolInvocation::invokeBrowser("", "");
           break;
-        case 17:
+        case 236: // KBD Illumination
           break;
-        case 18:
+        case 428: // Zoom Reset
+        case 427: // Zoom Out
+        case 426: // Zoom In
           break;
-        case 19:
+        case 157: // Prog2
           changeMediaPlayer();
           break;
-        default:
-          // TODO: This will be gone in a not so distant future, or maybe
-          // left here (commented) to test incomming "events"
-          KMessageBox::information(0, i18n("Got Hotkey: %1").arg(hotkey),
-                                   i18n("KToshiba - Hotkey"));
     }
 }
 

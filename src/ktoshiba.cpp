@@ -1,5 +1,5 @@
  /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,12 +17,9 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-
+#include <QX11Info>
 #include <QAction>
 
-#include <KApplication>
 #include <KAboutData>
 #include <KLocale>
 #include <KMenu>
@@ -30,17 +27,21 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KStandardDirs>
-#include <KIcon>
+#include <KDebug>
 #include <kstatusnotifieritem.h>
 
 #include "ktoshiba.h"
 #include "fnactions.h"
 #include "version.h"
 
+extern "C" {
+#include <X11/Xlib.h>
+}
+
 static const char * const ktosh_config = "ktoshibarc";
 
 KToshiba::KToshiba()
-    : KUniqueApplication(),
+    : KUniqueApplication(), //QApplication(QX11Info::display()),
       m_Fn( new FnActions( this ) ),
       mediaPlayerMenu( NULL ),
       autostart( NULL ),
@@ -60,24 +61,21 @@ KToshiba::KToshiba()
     else
         createConfig();
 
-    // UGLY, we should be displaying model name only instead of KToshiba...
-    popupMenu->addTitle( m_Fn->modelName() );
     // TODO: Add other items here... If any...
     autostart = popupMenu->addAction( i18n("Start Automatically") );
     autostart->setCheckable( true );
     autostart->setChecked( m_autoStart );
     popupMenu->addSeparator();
     mediaPlayerMenu = new KMenu( i18n("Media Player"), popupMenu );
-    amarok = mediaPlayerMenu->addAction( "Amarok" );
+    nomp = mediaPlayerMenu->addAction( QIcon(":/images/disabled.png"), "None" );
+    nomp->setCheckable( true );
+    nomp->setChecked( true );
+    amarok = mediaPlayerMenu->addAction( KIcon("amarok"), "Amarok" );
     amarok->setCheckable( true );
-    amarok->setIcon( KIcon("amarok") );
-    amarok->setChecked( true );
-    kaffeine = mediaPlayerMenu->addAction( "Kaffeine" );
+    kaffeine = mediaPlayerMenu->addAction( KIcon("kaffeine"), "Kaffeine" );
     kaffeine->setCheckable( true );
-    kaffeine->setIcon( KIcon("kaffeine") );
-    juk = mediaPlayerMenu->addAction( "JuK" );
+    juk = mediaPlayerMenu->addAction( KIcon("juk"), "JuK" );
     juk->setCheckable( true );
-    juk->setIcon( KIcon("juk") );
     popupMenu->addMenu( mediaPlayerMenu )->setIcon( KIcon("applications-multimedia") );
     popupMenu->addSeparator();
     KHelpMenu *m_helpMenu = new KHelpMenu( popupMenu, aboutData());
@@ -85,6 +83,9 @@ KToshiba::KToshiba()
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
     m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
     popupMenu->addSeparator();
+
+    grabKeys();
+    installEventFilter(m_Fn);
 
     connect( autostart, SIGNAL( toggled(bool) ), this, SLOT( autostartSlot(bool) ) );
     connect( mediaPlayerMenu, SIGNAL( triggered(QAction*) ), this, SLOT( mediaPlayerSlot(QAction*) ) );
@@ -97,13 +98,51 @@ KToshiba::~KToshiba()
     delete m_trayicon;
 }
 
+void KToshiba::grabKeys()
+{
+    // Fn-F#
+    //XGrabKey(QX11Info::display(), 121, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Mute
+    XGrabKey(QX11Info::display(), 160, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Coffee
+    XGrabKey(QX11Info::display(), 244, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Battery
+    //XGrabKey(QX11Info::display(), 150, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Sleep
+    //XGrabKey(QX11Info::display(), 213, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Hibernate
+    XGrabKey(QX11Info::display(), 235, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Video-Out
+    //XGrabKey(QX11Info::display(), 232, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Bright-Up
+    //XGrabKey(QX11Info::display(), 233, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Bright-Down
+    XGrabKey(QX11Info::display(), 246, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // WLAN
+    XGrabKey(QX11Info::display(), 156, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Prog1 (Toggle Touchpad)
+    // Multimedia
+    XGrabKey(QX11Info::display(), 234, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Media Player
+    XGrabKey(QX11Info::display(), 172, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Play/Pause
+    XGrabKey(QX11Info::display(), 136, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Stop
+    XGrabKey(QX11Info::display(), 173, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Previous
+    XGrabKey(QX11Info::display(), 171, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Next
+    // Misc
+    XGrabKey(QX11Info::display(), 180, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Homepage
+    XGrabKey(QX11Info::display(), 236, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // KBD Illumination
+    XGrabKey(QX11Info::display(), 428, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Zoom Reset
+    XGrabKey(QX11Info::display(), 427, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Zoom out
+    XGrabKey(QX11Info::display(), 426, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Zoom In
+    XGrabKey(QX11Info::display(), 157, AnyModifier, DefaultRootWindow(QX11Info::display()), False, GrabModeAsync, GrabModeAsync); // Prog2
+}
+
+bool KToshiba::x11EventFilter(XEvent *ev)
+{
+    if (ev->type == KeyPress) {
+        kDebug() << "Got key: " << ev->xkey.keycode << endl;
+        emit hotkeyPressed(ev->xkey.keycode);
+    }
+
+    return false;
+}
+
 bool KToshiba::checkConfig()
 {
     KStandardDirs kstd;
     QString config = kstd.findResource("config", ktosh_config);
 
     if (config.isEmpty()) {
-        //kDebug() << "checkConfig: Configuration file not found." << endl;
+        kDebug() << "Configuration file not found." << endl;
         return false;
     }
 
@@ -112,15 +151,26 @@ bool KToshiba::checkConfig()
 
 void KToshiba::loadConfig()
 {
+    kDebug() << "Loading configuration file..." << endl;
     KConfigGroup generalGroup( config, "General" );
     m_autoStart = generalGroup.readEntry( "AutoStart", true );
 }
 
 void KToshiba::createConfig()
 {
+    kDebug() << "Default configuration file created." << endl;
     KConfigGroup generalGroup( config, "General" );
     generalGroup.writeEntry( "AutoStart", true );
     generalGroup.config()->sync();
+}
+
+void KToshiba::clearMediaPlayerSelection()
+{
+    // Clear previous selection
+    nomp->setChecked( false );
+    amarok->setChecked( false );
+    kaffeine->setChecked( false );
+    juk->setChecked( false );
 }
 
 void KToshiba::autostartSlot(bool start)
@@ -132,34 +182,32 @@ void KToshiba::autostartSlot(bool start)
 
 void KToshiba::mediaPlayerSlot(QAction* action)
 {
-    // Clear previous selection
-    amarok->setChecked( false );
-    kaffeine->setChecked( false );
-    juk->setChecked( false );
+    clearMediaPlayerSelection();
     // Check the desired one
     action->setChecked( true );
     int player = -1;
-    if (action == amarok)
+    if (action == nomp)
         player = 0;
-    else if (action == kaffeine)
+    else if (action == amarok)
         player = 1;
-    else if (action == juk)
+    else if (action == kaffeine)
         player = 2;
+    else if (action == juk)
+        player = 3;
     emit mediaPlayerChanged(player);
 }
 
 void KToshiba::updateMediaPlayer(int player)
 {
-    // Clear previous selection
-    amarok->setChecked( false );
-    kaffeine->setChecked( false );
-    juk->setChecked( false );
+    clearMediaPlayerSelection();
     // Now check the correct one
     if (player == 0)
-        amarok->setChecked( true );
+        nomp->setChecked( true );
     else if (player == 1)
-        kaffeine->setChecked( true );
+        amarok->setChecked( true );
     else if (player == 2)
+        kaffeine->setChecked( true );
+    else if (player == 3)
         juk->setChecked( true );
 }
 

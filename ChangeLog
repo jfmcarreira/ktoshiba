@@ -1,3 +1,26 @@
+2011-02-21 Azael Avalos <coproscefalo@gmail.com>
+	* We now use XGrabKeys and x11EventFilter to
+	  get hotkeys
+	* Replaced KProcess with KToolInvocation
+	* Bumped KTosiba to 0.4.0
+
+2011-01-28 Azael Avalos <coproscefalo@gmail.com>
+	* Removed touchpad.{cpp, h} and added synaptiks (0.4.0)
+	  as a replacement (shipped on most distros by default)
+
+2011-01-27 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted PowerDevil D-Bus paths and methods
+	  to reflect changes made to new KDE SC release (4.6.0)
+	* Removed HAL functions and calls since its now
+	  deprecated
+
+2010-12-04 Azael Avalos <coproscefalo@gmail.com>
+	* Added an option to not monitor MediaPlayer keys
+
+2010-10-14 Azael Avalos <coproscefalo@gmail.com>
+	* Removed cmake/modules/FindLibKNotificationItem-1.cmake
+	  since it's not needed anymore
+
 2010-10-13 Azael Avalos <coproscefalo@gmail.com>
 	* Added udev rules to map Satellite X205 series
 	  hotkeys

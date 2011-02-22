@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,8 +20,6 @@
 #ifndef FN_ACTIONS_H
 #define FN_ACTIONS_H
 
-#include <config-ktoshiba.h>
-
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -32,9 +30,6 @@
 class QTimer;
 
 class KToshibaDBusInterface;
-#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-class TouchPad;
-#endif
 
 class FnActions : public QObject
 {
@@ -50,21 +45,19 @@ public:
     FnActions(QObject *parent);
     ~FnActions();
 
-    QString modelName();
-
 Q_SIGNALS:
     void mediaPlayerChanged(int);
 
 private Q_SLOTS:
-    void slotGotHotkey(QString);
+    void slotGotHotkey(int);
     void hideWidget();
-    void slotProfileChanged(QString, QStringList);
+    void profileChanged(QString);
     void wirelessChanged(bool);
+    void touchpadChanged(bool);
     void performAction();
     void updateMediaPlayer(int);
-
+  
 private:
-    void populateHotkeys();
     void showWidget(int);
     void checkSupportedProfiles();
     void toggleProfiles();
@@ -76,18 +69,16 @@ private:
     void changeMediaPlayer();
 
     KToshibaDBusInterface *m_dBus;
-#ifdef ENABLE_TOUCHPAD_FUNCTIONALITY
-    TouchPad *m_TouchPad;
-#endif
     Ui::StatusWidget m_statusWidget;
     QWidget *widget;
     QTimer *m_widgetTimer;
-    QHash<QString, int> hotkeys;
     QStringList profiles;
     QString m_profile;
 
-    int m_wireless;
-    int m_touchpadError;
+    QHash<QString, int> hotkeys;
+
+    bool m_wireless;
+    bool m_touchpad;
     int m_action;
 };
 

@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -25,6 +25,8 @@
 #include <QtDBus/QDBusMessage>
 
 class QDBusInterface;
+class QDBusVariant;
+class QString;
 
 class KToshibaDBusInterface : public QObject
 {
@@ -33,17 +35,17 @@ class KToshibaDBusInterface : public QObject
     Q_ENUMS(MediaPlayer)
 
 public:
-    enum MediaPlayer { Amarok, Kaffeine, JuK };
+    enum MediaPlayer { NoMP, Amarok, Kaffeine, JuK };
 
 public:
     KToshibaDBusInterface(QObject *parent);
     ~KToshibaDBusInterface();
 
-    QString getModel();
     void lockScreen();
     void setProfile(QString);
     bool hibernate();
     bool suspend();
+    void setTouchPad(bool);
     bool checkMediaPlayer();
     void playerPlayPause();
     void playerStop();
@@ -54,23 +56,20 @@ public:
     bool m_compositeEnabled;
 
 Q_SIGNALS:
-    void hotkeyPressed(QString);
-    void profileChanged(QString, QStringList);
+    void profileChanged(QString);
+    void touchpadChanged(bool);
 
 private Q_SLOTS:
-    void gotInputEvent(QString, QString);
-    void profileChangedSlot(QString, QStringList);
+    void profileChangedSlot(QString);
+    void touchpadChangedSlot(bool, QString, QDBusVariant);
 
 private:
-    QString findInputDevice();
     void checkSupportedSuspend();
     void checkCompositeStatus();
 
-    QDBusInterface* m_inputIface;
-    QDBusInterface* m_kbdIface;
     QDBusInterface* m_devilIface;
+    QDBusInterface* m_touchpadIface;
     QDBusMessage message;
-    QString m_deviceUDI;
 
     bool m_hibernate;
     bool m_suspend;

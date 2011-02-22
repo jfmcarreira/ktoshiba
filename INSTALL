@@ -5,12 +5,11 @@ Requirements
 - KDE libraries >= 4.3.x and development packages
 - Additionally KToshiba depends on KDE4 workspace and
   libknotificationitem development packages as well.
-- Optional, if you want to enable/disable the TouchPad
-  you will need a recent XServer (>= 1.6.0) installed
-  and also a recent synaptics_drv (>= 1.0)
+- If you want to enable/disable the TouchPad
+  you will need synaptiks (0.4.0) installed
 
 
-NOTE: Since KToshiba uses HAL to get hotkeys and uses
+NOTE: KToshiba grabs hotkeys via XGrabKey and uses
 D-Bus, Solid, and PowerDevil to perform the actions,
 it is now possible to use any laptop with KToshiba,
 as long as it has a kernel driver that reports events
@@ -33,9 +32,6 @@ su -c "make install"
 NOTE: Replace X and Y with the appropriate version numbers,
 eg: ktoshiba-0.4.0
 
-NOTE2: Optional, you can add the configure parameter
--DENABLE_TOUCHPAD_FUNCTIONALITY=1
-in order to Enable/Disable the TouchPad
 
 
 Support, Bugs & Requests
