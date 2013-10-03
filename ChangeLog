@@ -1,8 +1,56 @@
+2013-10-03 Azael Avalos <coproscefalo@gmail.com>
+	* Updated INSTALL instructions
+
+2013-09-30 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed touchpad enable/disable code
+	* Added cmake checks for input.h, udev and
+	  NetworkManager-KDE4
+
+2013-09-20 Azael Avalos <coproscefalo@gmail.com>
+	* Lots of code cleanup here and there
+
+2013-09-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added icons and adapted code for KBD Illumination
+
+2013-09-15 Azael Avalos <coproscefalo@gmail.com>
+	* Added icons and adapted code for ECO mode
+
+2013-09-06 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the led handling by executing a shell
+	  script, QFile write handling was removed because
+	  we needed root access...
+	* Profiles are now "complete", they dim the screen,
+	  inhibit screen power management when in Presentation
+	  mode, etc.
+
+2013-09-04 Azael Avalos <coproscefalo@gmail.com>
+	* Key handling converted to a class
+	* Removed the DBus call, left there the skeleton
+	  for future use
+
+2013-09-03 Azael Avalos <coproscefalo@gmail.com>
+	* Removed X11 stuff
+	* Added pkgconfig and libudev as requirement
+	* We now query hotkeys directly from input devices
+	* Added ktoshhelper
+	* Added some extra checks to KToshibaDBusInterface and
+	  exported our keys interface using XML tools
+
+2013-09-01 Azael Avalos <coproscefalo@gmail.com>
+	* Removed all media player handling stuff
+	* Added Zoom handling functions and code
+	* Added icons for power profiles and wireless status
+	  (thanks to the oxygen team, I shamelessly stole 'em)
+
+2013-08-31 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to key grab stuff
+	* Adapted Solid Networking stuff
+
 2011-02-21 Azael Avalos <coproscefalo@gmail.com>
 	* We now use XGrabKeys and x11EventFilter to
 	  get hotkeys
 	* Replaced KProcess with KToolInvocation
-	* Bumped KTosiba to 0.4.0
+	* Bumped KToshiba to 0.4.0
 
 2011-01-28 Azael Avalos <coproscefalo@gmail.com>
 	* Removed touchpad.{cpp, h} and added synaptiks (0.4.0)

@@ -1,19 +1,16 @@
 Requirements
 ==================
-- A Toshiba laptop (see NOTE)
+- A Toshiba laptop with a recent toshiba_acpi.ko
+  kernel module
 - Compiler and utilities (gcc, make, cmake, etc.)
 - KDE libraries >= 4.3.x and development packages
-- Additionally KToshiba depends on KDE4 workspace and
-  libknotificationitem development packages as well.
-- If you want to enable/disable the TouchPad
-  you will need synaptiks (0.4.0) installed
+- Additionally KToshiba depends on NetworkManager-KDE4,
+  Solid, udev and the input.h kernel include.
 
 
-NOTE: KToshiba grabs hotkeys via XGrabKey and uses
-D-Bus, Solid, and PowerDevil to perform the actions,
-it is now possible to use any laptop with KToshiba,
-as long as it has a kernel driver that reports events
-via the input layer.
+NOTE: KToshiba grabs hotkeys via /dev/input/eventX
+and uses D-Bus, Solid and ktoshhelper script to
+perform the actions.
 
 
 
@@ -31,6 +28,19 @@ su -c "make install"
 
 NOTE: Replace X and Y with the appropriate version numbers,
 eg: ktoshiba-0.4.0
+
+
+
+Post-Installation
+==================
+Once KToshia is installed, a few things must be done in
+order to get it to work properly:
+
+1 - Copy the udev rule (99-ktoshiba-input.rules), found in rules/udev
+    to "/lib/udev/rules.d", create a new gruop named input and add
+    your username to that group (a restart mught be needed...).
+2 - Add a sudo rule to make the script ktoshhelper run under root
+    privilegies in order to change leds, touchpad and brightness, etc..
 
 
 

@@ -1,5 +1,5 @@
- /*
-   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
+/*
+   Copyright (C) 2013  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,33 +17,32 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#ifndef KTOSHIBAKEYHANDLER_H
+#define KTOSHIBAKEYHANDLER_H
 
-extern "C" {
-#include <stdio.h>
-#include <stdlib.h>
-}
+class QSocketNotifier;
 
-#include "ktoshiba.h"
-
-int main(int argc, char *argv[])
+class KToshibaKeyHandler : public QObject
 {
-    KToshiba::createAboutData();
-    KCmdLineArgs::init(argc, argv, KToshiba::aboutData());
-    KUniqueApplication::addCmdLineOptions();
+    Q_OBJECT
 
-    if (!KUniqueApplication::start()) {
-        fprintf(stderr, "KToshiba is already running!\n");
-        exit(0);
-    }
+public:
+    KToshibaKeyHandler(QObject *parent);
+    ~KToshibaKeyHandler();
 
-    KUniqueApplication *app = new KToshiba();
-    app->disableSessionManagement();
-    app->setQuitOnLastWindowClosed( false );
+Q_SIGNALS:
+    void hotkeyPressed(int);
 
-    int ret = app->exec();
-    KToshiba::destroyAboutData();
+private Q_SLOTS:
+    void readData();
 
-    return ret;
-}
+private:
+    QString findDevice();
+
+    QSocketNotifier *m_Notifier;
+    QString m_Device;
+
+    int m_Fd;
+};
+
+#endif

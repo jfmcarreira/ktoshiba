@@ -24,62 +24,50 @@
 #include <QString>
 #include <QStringList>
 #include <QHash>
+#include <QKeyEvent>
 
 #include "ui_statuswidget.h"
-
-class QTimer;
+#include "ktoshibakeyhandler.h"
 
 class KToshibaDBusInterface;
+class KToshibaKeyHandler;
 
 class FnActions : public QObject
 {
     Q_OBJECT
 
-    Q_ENUMS(PlayerAction)
-
 public:
-    enum PlayerAction { PlayPause, Stop, Prev, Next };
-    enum WidgetIcons { Disabled, TPOn, TPOff, Amarok, Kaffeine, JuK };
+    enum WidgetIcons { Disabled, TPOn, TPOff, WifiOn, WifiOff, Performance, Powersave, Presentation, ECO, KBDOff, KBDOn, KBDAuto, Blank };
+    enum zoomActions { ZoomReset = 0, ZoomIn = 1, ZoomOut = -1 };
 
 public:
     FnActions(QObject *parent);
     ~FnActions();
 
-Q_SIGNALS:
-    void mediaPlayerChanged(int);
-
 private Q_SLOTS:
     void slotGotHotkey(int);
-    void hideWidget();
-    void profileChanged(QString);
     void wirelessChanged(bool);
-    void touchpadChanged(bool);
-    void performAction();
-    void updateMediaPlayer(int);
-  
+
 private:
     void showWidget(int);
-    void checkSupportedProfiles();
     void toggleProfiles();
-    void toggleWireless();
+    void brightness(int);
     void toggleTouchPad();
-    void launchMediaPlayer();
-    int showMessageBox();
-    void mediaAction(PlayerAction);
-    void changeMediaPlayer();
+    void toggleKBDIllumination();
+    void toggleIllumination(bool);
+    void toggleEcoLed(bool);
 
     KToshibaDBusInterface *m_dBus;
+    KToshibaKeyHandler *m_keyHandler;
     Ui::StatusWidget m_statusWidget;
     QWidget *widget;
-    QTimer *m_widgetTimer;
     QStringList profiles;
     QString m_profile;
 
-    QHash<QString, int> hotkeys;
-
     bool m_wireless;
-    bool m_touchpad;
-    int m_action;
+    bool m_eco;
+    bool m_fnPressed;
+    int m_cookie;
 };
 
 #endif // FN_ACTIONS_H

@@ -1,0 +1,57 @@
+#! /bin/sh
+#
+# Copyright (c) 2013 Azael Avalos <coproscefalo@gmail.com>
+#
+# A little script helper to toggle various objects in the kernel
+#
+
+backlight_device() {
+    if [ -d /sys/class/backlight/acpi_video0 ]; then
+        BLDIR="/sys/class/backlight/acpi_video0"
+    else
+        if [ -d /sys/class/backlight/toshiba ]; then
+            BLDIR="/sys/class/backlight/toshiba"
+        else
+            BLDIR="unknown"
+        fi
+    fi
+}
+
+case "$1" in
+    illumination)
+        echo "$2" > /sys/class/leds/toshiba::illumination/brightness
+        ;;
+    eco)
+        echo "$2" > /sys/class/leds/toshiba::eco_mode/brightness
+        ;;
+    kbdbacklight)
+        echo "$2" > /sys/class/leds/toshiba::kbd_backlight/brightness
+        ;;
+    keyboard)
+        echo "$2: $3" > /sys/devices/platform/toshiba/kbd_illumination
+        ;;
+    brightness)
+        backlight_device
+        if [ "$BLDIR" = "unknown" ]; then
+            exit 2
+        else
+            echo "$2" > "$BLDIR/brightness"
+        fi
+        ;;
+    touchpad)
+        echo "$2" > /sys/devices/platform/toshiba/touchpad
+        ;;
+    protect)
+        echo "1" > /sys/devices/platform/toshiba_haps/protect
+        ;;
+    plevel)
+        echo "$2" > /sys/devices/platform/toshiba_haps/protection_level
+        ;;
+    *)
+        echo "Usage: $0 {illumination|eco|kbbacklight|keyboard|touchpad} {0,1}"
+        echo "       $0 brightness {0-7}"
+        echo "       $0 plevel {0-3}"
+        echo "       $0 protect"
+        exit 1
+        ;;
+esac

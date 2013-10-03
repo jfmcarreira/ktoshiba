@@ -1,0 +1,8 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="net.sourceforge.KToshiba">
+    <method name="gotKey">
+      <arg name="key" type="i" direction="in"/>
+    </method>
+  </interface>
+</node>

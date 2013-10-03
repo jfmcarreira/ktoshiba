@@ -32,49 +32,23 @@ class KToshibaDBusInterface : public QObject
 {
     Q_OBJECT
 
-    Q_ENUMS(MediaPlayer)
+    Q_CLASSINFO("KToshiba D-Bus Interface", "net.sourceforge.KToshiba")
 
 public:
-    enum MediaPlayer { NoMP, Amarok, Kaffeine, JuK };
+    enum zoomActions { ZoomReset = 0, ZoomIn = 1, ZoomOut = -1 };
 
 public:
     KToshibaDBusInterface(QObject *parent);
-    ~KToshibaDBusInterface();
 
+    bool checkCompositeStatus();
     void lockScreen();
-    void setProfile(QString);
-    bool hibernate();
-    bool suspend();
-    void setTouchPad(bool);
-    bool checkMediaPlayer();
-    void playerPlayPause();
-    void playerStop();
-    void playerPrevious();
-    void playerNext();
-
-    int m_mediaPlayer;
-    bool m_compositeEnabled;
+    void setZoom(int);
 
 Q_SIGNALS:
     void profileChanged(QString);
-    void touchpadChanged(bool);
 
-private Q_SLOTS:
-    void profileChangedSlot(QString);
-    void touchpadChangedSlot(bool, QString, QDBusVariant);
-
-private:
-    void checkSupportedSuspend();
-    void checkCompositeStatus();
-
-    QDBusInterface* m_devilIface;
-    QDBusInterface* m_touchpadIface;
-    QDBusMessage message;
-
-    bool m_hibernate;
-    bool m_suspend;
-    int m_str;
-    int m_std;
+public Q_SLOTS:
+    void gotKey(int key);
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

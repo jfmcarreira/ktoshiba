@@ -1,11 +1,15 @@
 <RCC>
   <qresource>
-    <file>images/amarok_64.png</file>
-    <file alias="disabled.png">images/disabled_16.png</file>
+    <file>images/kbd_on_64.png</file>
+    <file>images/kbd_off_64.png</file>
+    <file>images/green_world_64.png</file>
+    <file>images/wireless-disconnected_64.png</file>
+    <file>images/performance_64.png</file>
+    <file>images/powersave_64.png</file>
+    <file>images/presentation_64.png</file>
+    <file>images/wireless_64.png</file>
     <file>images/disabled_64.png</file>
     <file>images/fn.png</file>
-    <file>images/juk_64.png</file>
-    <file>images/kaffeine_64.png</file>
     <file>images/mpad_64.png</file>
     <file>images/mpad-disabled_64.png</file>
   </qresource>
