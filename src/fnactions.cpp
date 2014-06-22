@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,17 +18,16 @@
 */
 
 #include <QtGui/QDesktopWidget>
-#include <QRect>
+#include <QFile>
 
-#include <KMessageBox>
 #include <KLocale>
 #include <KDebug>
-#include <KToolInvocation>
-#include <KProcess>
+#include <KWindowSystem>
+#include <KAuth/Action>
+
 #include <solid/device.h>
 #include <solid/acadapter.h>
 #include <solid/powermanagement.h>
-#include <solid/controlnm09/networkmanager.h>
 
 extern "C" {
 #include <linux/input.h>
@@ -38,23 +37,29 @@ extern "C" {
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
+#define HELPER_ID "net.sourceforge.ktoshiba.ktoshhelper"
+
 using namespace Solid::PowerManagement;
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
       m_dBus( new KToshibaDBusInterface( parent ) ),
       m_keyHandler( new KToshibaKeyHandler( parent ) ),
-      widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
-      m_wireless( true ),
+      m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_fnPressed( false ),
       m_cookie( 0 )
 {
-    m_statusWidget.setupUi( widget );
-    widget->clearFocus();
+    m_statusWidget.setupUi( m_widget );
+    m_widget->clearFocus();
     // Only enable Translucency if composite is enabled
     // otherwise an ugly black background will appear
-    if (m_dBus->checkCompositeStatus())
-        widget->setAttribute( Qt::WA_TranslucentBackground );
+    m_widget->setAttribute( Qt::WA_TranslucentBackground, KWindowSystem::compositingActive() );
+
+    m_device = findDevicePath();
+    if (m_device.isEmpty()) {
+        //parent->quit();
+        exit(-1);
+    }
 
     // We're just going to care about these profiles
     profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
@@ -63,17 +68,63 @@ FnActions::FnActions(QObject *parent)
     Solid::Device device = list[0];
     Solid::AcAdapter *acAdapter = device.as<Solid::AcAdapter>();
     m_profile = (acAdapter->isPlugged()) ? QString("Performance") : QString("Powersave");
+    changeProfile(m_profile);
 
-    Solid::Control::NetworkManagerNm09::Notifier *wifiNotifier = Solid::Control::NetworkManagerNm09::notifier();
-
-    connect( wifiNotifier, SIGNAL( wirelessEnabledChanged(bool) ), this, SLOT( wirelessChanged(bool) ) );
-    connect( m_keyHandler, SIGNAL( hotkeyPressed(int) ), this, SLOT( slotGotHotkey(int) ) );
+    connect( m_keyHandler, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
+    connect( acAdapter, SIGNAL( plugStateChanged(bool, QString) ), this, SLOT( acAdapterChanged(bool) ) );
+    connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
 }
 
 FnActions::~FnActions()
 {
-    delete widget; widget = NULL;
+    delete m_widget; m_widget = NULL;
+    delete m_keyHandler; m_keyHandler = NULL;
     delete m_dBus; m_dBus = NULL;
+}
+
+QString FnActions::findDevicePath()
+{
+    QFile file("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/path");
+    if (file.exists()) {
+        kDebug() << "Found interface TOS1900" << endl;
+        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/");
+    }
+
+    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/path");
+    if (file.exists()) {
+        kDebug() << "Found interface TOS6200" << endl;
+        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/");
+    }
+
+    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/path");
+    if (file.exists()) {
+        kDebug() << "Found interface TOS6208" << endl;
+        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/");
+    }
+
+    kError() << "No known interface found" << endl;
+
+    return QString("");
+}
+
+void FnActions::acAdapterChanged(bool state)
+{
+    if (m_profile == "Powersave" && state) {
+        m_profile = "Performance";
+        changeProfile(m_profile);
+        return;
+    }
+
+    if (m_profile == "Performance" && !state) {
+        m_profile = "Powersave";
+        changeProfile(m_profile);
+        return;
+    }
+}
+
+void FnActions::compositingChanged(bool state)
+{
+    m_widget->setAttribute( Qt::WA_TranslucentBackground, state );
 }
 
 void FnActions::toggleProfiles()
@@ -86,219 +137,208 @@ void FnActions::toggleProfiles()
         m_profile = profiles.at(current);
     }
 
-    KProcess process(this);
-    if (m_profile == "Powersave") {
+    changeProfile(m_profile);
+}
+
+void FnActions::changeProfile(QString profile)
+{
+    if (profile == "Powersave") {
         showWidget(Powersave);
-        toggleEcoLed(false);
-        toggleIllumination(false);
-        process << "sudo" << "ktoshhelper" << "brightness" << "3";
-    } else if (m_profile == "Performance") {
+        toggleEcoLed(Off);
+        toggleIllumination(Off);
+        screenBrightness(3);
+        if (getKBDMode() == 2)
+            toggleKBDBacklight(Off);
+    } else if (profile == "Performance") {
         showWidget(Performance);
-        toggleEcoLed(false);
-        toggleIllumination(true);
-        process << "sudo" << "ktoshhelper" << "brightness" << "7";
-    } else if (m_profile == "Presentation") {
+        toggleEcoLed(Off);
+        toggleIllumination(On);
+        screenBrightness(7);
+    } else if (profile == "Presentation") {
         showWidget(Presentation);
-        toggleEcoLed(false);
-        toggleIllumination(true);
+        toggleEcoLed(Off);
+        toggleIllumination(On);
+        screenBrightness(5);
         m_cookie = beginSuppressingScreenPowerManagement(m_profile);
-        process << "sudo" << "ktoshhelper" << "brightness" << "5";
-    } else if (m_profile == "ECO") {
+    } else if (profile == "ECO") {
         showWidget(ECO);
-        toggleEcoLed(true);
-        toggleIllumination(false);
-        process << "sudo" << "ktoshhelper" << "brightness" << "4";
+        toggleEcoLed(On);
+        toggleIllumination(Off);
+        screenBrightness(4);
+        if (getKBDMode() == 2)
+            toggleKBDBacklight(Off);
     }
-    process.startDetached();
+    kDebug() << "Changed battery profile to: " << m_profile;
 
     if (m_cookie != 0)
         if (stopSuppressingScreenPowerManagement(m_cookie))
             m_cookie = 0;
 }
 
-void FnActions::brightness(int level)
+void FnActions::screenBrightness(int level)
 {
-    QFile file(this);
-    QString root = QString("/sys/class/backlight/");
-
-    file.setFileName(root + "acpi_video0/actual_brightness");
-    if (!file.exists()) {
-        file.setFileName(root + "toshiba/actual_brightness");
-        if (!file.exists()) {
-            kError() << "Could not locate Backlight device." << endl;
-            return;
-        }
-    }
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open Backlight for reading: " << file.error() << endl;
-        return;
-    }
-
-    QTextStream stream(&file);
-    int bright = stream.readAll().toInt();
-    file.close();
-
-    if ((bright == 7 && level == 1) || (bright == 0 && level == -1))
-        return;
-
-    KProcess process(this);
-    QString str;
-    process << "sudo" << "ktoshhelper" << "brightness" << str.setNum(bright + level);
-    process.startDetached();
-}
-
-void FnActions::wirelessChanged(bool state)
-{
-    m_wireless = state;
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.screenbrightness");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("level", level);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.screenbrightness failed";
 }
 
 void FnActions::toggleTouchPad()
 {
     QFile file(this);
 
-    file.setFileName("/sys/devices/platform/toshiba/touchpad");
+    file.setFileName(m_device + "touchpad");
     if (!file.exists()) {
-        kError() << "Could not locate TouchPad device." << endl;
+        kWarning() << "Could not locate TouchPad file." << endl;
         return;
     }
     
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open TouchPad for reading: " << file.error() << endl;
+    if (!file.open(QIODevice::ReadOnly)) {
+        kError() << "Could not open TouchPad file for reading: " << file.error();
         return;
     }
 
     QTextStream stream(&file);
-    int tpad = stream.readAll().toInt();
+    int state = stream.readAll().toInt();
     file.close();
 
-    KProcess process(this);
-    if (tpad) {
-        process << "sudo" << "ktoshhelper" << "touchpad" << "0";
-        showWidget(TPOff);
-    } else if (!tpad) {
-        process << "sudo" << "ktoshhelper" << "touchpad" << "1";
-        showWidget(TPOn);
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("state", (state ? 0 : 1));
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed";
+}
+
+void FnActions::kbdBacklight()
+{
+    if (getKBDMode() != 2) {
+        kWarning() << "Keyboard backlight timeout can't be changed in this mode";
+        return;
     }
-    process.startDetached();
+
+    QFile file(m_device + "kbd_backlight_timeout");
+    if (!file.exists()) {
+        kWarning() << "Could not locate KBD backlight timeout device.";
+        return;
+    }
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        kError() << "Could not open KBD backlight timeout file for reading: " << file.error();
+        return;
+    }
+
+    QTextStream stream(&file);
+    int time = stream.readAll().toInt();
+    file.close();
+
+    QString format = QString("<font color='grey'><b>%1</b></font>");
+    m_statusWidget.kbdAutoTimeLabel->setText(format.arg(time));
+    showWidget(KBDAuto);
 }
 
 void FnActions::toggleIllumination(bool on)
 {
-    QFile file(this);
-
-    file.setFileName("/sys/class/leds/toshiba::illumination/brightness");
-    if (!file.exists()) {
-        kError() << "Could not locate Illumination led device." << endl;
-        return;
-    }
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open KBD led for reading: " << file.error() << endl;
-        return;
-    }
-
-    QTextStream stream(&file);
-    int illum_led = stream.readAll().toInt();
-    file.close();
-
-    KProcess process(this);
-    if (on && !illum_led) {
-        process << "sudo" << "ktoshhelper" << "illumination" << "1";
-    } else if (!on && illum_led) {
-        process << "sudo" << "ktoshhelper" << "illumination" << "0";
-    }
-    process.startDetached();
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.illumination");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("state", (on ? 1 : 0));
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.illumination failed";
 }
 
 void FnActions::toggleEcoLed(bool on)
 {
-    QFile file(this);
-
-    file.setFileName("/sys/class/leds/toshiba::eco_mode/brightness");
-    if (!file.exists()) {
-        kError() << "Could not locate ECO led device." << endl;
-        return;
-    }
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open ECO led for reading: " << file.error() << endl;
-        return;
-    }
-
-    QTextStream stream(&file);
-    int eco_led = stream.readAll().toInt();
-    file.close();
-
-    KProcess process(this);
-    if (on && !eco_led) {
-        process << "sudo" << "ktoshhelper" << "eco" << "1";
-    } else if (!on && eco_led) {
-        process << "sudo" << "ktoshhelper" << "eco" << "0";
-    }
-    process.startDetached();
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.eco");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("state", (on ? 1 : 0));
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.eco failed";
 }
 
-void FnActions::toggleKBDIllumination()
+void FnActions::toggleKBDBacklight(bool on)
 {
-    QFile file(this);
-    int mode, time, backlight;
+	// TODO: Implement me...
+}
 
-    file.setFileName("/sys/devices/platform/toshiba/kbd_illumination");
+int FnActions::getKBDMode()
+{
+    QFile file(m_device + "kbd_backlight_mode");
     if (!file.exists()) {
-        kError() << "Could not locate KBD illumination device." << endl;
-        return;
+        kWarning() << "Could not locate KBD backlight mode device.";
+        return 0;
     }
     
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open KBD led for reading: " << file.error() << endl;
-        return;
+        kError() << "Could not open KBD backlight mode file for reading: " << file.error();
+        return 0;
     }
 
     QTextStream stream(&file);
-    int lines = 2;
-    mode = time = backlight = -1;
-    while (lines) {
-        QString line = stream.readLine(12);
-        QStringList split = line.split(":");
-        if (split[0] == "mode")
-            mode = split[1].toInt();
-        else if (split[0] == "time")
-            time = split[1].toInt();
-        else if (split[0] == "backlight")
-            backlight = split[1].toInt();
-        lines--;
-    }
+    int mode = stream.readAll().toInt();
     file.close();
 
-    if (mode == 2) {
-        QString format = QString("<font color='grey'><b>%1</b></font>");
-        m_statusWidget.kbdAutoTimeLabel->setText(format.arg(time));
-        showWidget(KBDAuto);
-    } else if (mode == 1) {
-        KProcess process(this);
-        if (backlight) {
-            process << "sudo" << "ktoshhelper" << "kbdbacklight" << "0";
-            showWidget(KBDOff);
-        } else if (!backlight) {
-            process << "sudo" << "ktoshhelper" << "kbdbacklight" << "1";
-            showWidget(KBDOn);
-        }
-        process.startDetached();
+    return mode;
+}
+
+int FnActions::getKBDTimeout()
+{
+    QFile file(m_device + "kbd_backlight_timeout");
+    if (!file.exists()) {
+        kWarning() << "Could not locate KBD backlight timeout device.";
+        return 0;
     }
+    
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        kError() << "Could not open KBD backlight timeout file for reading: " << file.error();
+        return 0;
+    }
+
+    QTextStream stream(&file);
+    int time = stream.readAll().toInt();
+    file.close();
+
+    return time;
+}
+
+void FnActions::changeKBDMode()
+{
+    int mode = (getKBDMode() == 1 ? 2 : 1);
+
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdmode");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("mode", mode);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed";
+}
+
+void FnActions::changeKBDTimeout(int time)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("time", time);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed";
 }
 
 void FnActions::showWidget(int wid)
 {
     QRect r = QApplication::desktop()->geometry();
-    widget->move(r.center() -
-                QPoint(widget->width() / 2, widget->height() / 2));
-    widget->show();
+    m_widget->move(r.center() -
+                QPoint(m_widget->width() / 2, m_widget->height() / 2));
+    m_widget->show();
 
     if (wid < 0)
         m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(Disabled) );
     else
         m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
+
+    m_widget->hide();
 }
 
 void FnActions::slotGotHotkey(int hotkey)
@@ -310,20 +350,11 @@ void FnActions::slotGotHotkey(int hotkey)
     case KEY_BATTERY:
         toggleProfiles();
         break;
-    case KEY_BRIGHTNESSDOWN:
-        brightness(-1);
-        break;
-    case KEY_BRIGHTNESSUP:
-        brightness(1);
-        break;
-    case KEY_WLAN:
-        m_wireless ? showWidget(WifiOff) : showWidget(WifiOn) ;
-        break;
     case KEY_TOUCHPAD_TOGGLE: 
         toggleTouchPad();
         break;
     case KEY_KBDILLUMTOGGLE:
-        toggleKBDIllumination();
+        kbdBacklight();
         break;
     case KEY_ZOOMRESET:
         m_dBus->setZoom( ZoomReset );
@@ -334,13 +365,16 @@ void FnActions::slotGotHotkey(int hotkey)
     case KEY_ZOOMIN:
         m_dBus->setZoom( ZoomIn );
         break;
-    case KEY_FN:
+    /* By default, the FN key is ignored by the driver,
+     * but could be very useful for us...
+     */
+    /*case KEY_FN:
         m_fnPressed = m_fnPressed ? false : true;
         if (m_fnPressed)
             showWidget(Blank);
         else
-            widget->hide();
-        break;
+            m_widget->hide();
+        break;*/
     }
 }
 

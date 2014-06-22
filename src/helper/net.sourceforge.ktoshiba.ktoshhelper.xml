@@ -1,0 +1,142 @@
+<!DOCTYPE node PUBLIC
+"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd" [
+  <!ENTITY ERROR_GENERAL "net.sourceforge.ktoshiba.GeneralError">
+]
+>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <interface name="net.sourceforge.ktoshiba.ktoshhelper">
+    <doc:doc>
+      <doc:description>
+        <doc:para>
+          net.sourceforge.ktoshiba.ktoshhelper is a DBus interface implemented
+          by KToshiba.
+          It allows several actions (if supported) to be controlled like
+          TouchPad and ECO led state.
+        </doc:para>
+      </doc:description>
+    </doc:doc>
+
+    <method name="screenbrightness">
+      <arg name="level" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the screen backlight brightness.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the brightness level of the screen backlight.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the brightness</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="toggletouchpad">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the TouchPad state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the TouchPad state to on/off.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the TouchPad state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="illumination">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the Illumination led state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the Illumination led.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the Illumination led</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="eco">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the ECO led state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the ECO led.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the ECO led</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="kbdtimeout">
+      <arg name="time" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the keyboard backlight timeout.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the timeout of the keyboard backlight.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight timeout</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="kbdmode">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the keyboard backlight mode.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the keyboard backlight mode.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+  </interface>
+
+</node>

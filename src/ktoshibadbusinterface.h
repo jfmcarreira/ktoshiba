@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2013  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,11 +22,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QtDBus/QDBusMessage>
-
-class QDBusInterface;
-class QDBusVariant;
-class QString;
 
 class KToshibaDBusInterface : public QObject
 {
@@ -40,8 +35,11 @@ public:
 public:
     KToshibaDBusInterface(QObject *parent);
 
-    bool checkCompositeStatus();
+    void toggleMute();
     void lockScreen();
+    void suspendTo(QString);
+    void setBrightness(int);
+    void kbdBacklight(bool);
     void setZoom(int);
 
 Q_SIGNALS:
@@ -49,6 +47,14 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void gotKey(int key);
+
+private:
+    QString getMixerControl();
+    void str();
+    void std();
+
+    QString m_Mixer;
+    bool m_wireless;
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

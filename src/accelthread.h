@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2013  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,3 +16,30 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
+#ifndef ACCELTHREAD_H
+#define ACCELTHREAD_H
+
+#include <QThread>
+
+class AccelThread : public QThread
+{
+    Q_OBJECT
+
+public:
+    AccelThread(QObject *parent = 0);
+    void run();
+
+public Q_SLOTS:
+    void getAxes();
+
+Q_SIGNALS:
+    void axesUpdated(int x, int y, int z);
+
+private:
+    int x;
+    int y;
+    int z;
+};
+
+#endif // ACCELTHREAD_H

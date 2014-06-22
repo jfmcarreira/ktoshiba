@@ -1,5 +1,0 @@
-#
-# This file should be copied to "/lib/udev/keymaps" in order to map the keys.
-#
-
-0xbc prog2 # Fn-C to toggle media player on KToshiba

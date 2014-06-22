@@ -1,3 +1,22 @@
+2014-06-21 Azael Avalos <coproscefalo@gmail.com>
+	* NM code was dropped
+	* Accel code was dropped also
+	* udev rules updated (and now are installed by default)
+	* ktoshhelper converted to KAuth helper
+	* Translation updated
+	* Lots more...
+
+2013-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Removed KBD Backlight on/off code and icons,
+	  KDE4 now handles it for us
+
+2013-10-07 Azael Avalos <coproscefalo@gmail.com>
+	* Updated udev rules files
+
+2013-10-05 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted code to new changes on toshiba_acpi
+	  for KBD Backlight status
+
 2013-10-03 Azael Avalos <coproscefalo@gmail.com>
 	* Updated INSTALL instructions
 

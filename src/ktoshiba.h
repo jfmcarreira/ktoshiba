@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2011  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,6 +22,8 @@
 
 #include <KUniqueApplication>
 #include <KSharedConfig>
+
+#include "ui_kbdtimeoutwidget.h"
 
 class QAction;
 
@@ -49,17 +51,25 @@ public:
     static KAboutData* aboutData();
 
 private Q_SLOTS:
-    void autostartSlot(bool);
+    void changeKBDMode();
+    void kbdTimeoutClicked();
+    void changeKBDTimeout(QAbstractButton *);
+    void timeChanged(int);
 
 private:
     bool checkConfig();
     void loadConfig();
     void createConfig();
 
-    FnActions *m_Fn;
-    QAction *autostart;
+    FnActions *m_fn;
+    QAction *touchPad;
+    QAction *kbdTimeout;
+    QAction *kbdMode;
+    Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
+    QWidget *m_widget;
     KSharedConfigPtr config;
-    bool m_autoStart;
+    int m_mode;
+    int m_time;
 
     static KAboutData* m_about;
     KStatusNotifierItem *m_trayicon;

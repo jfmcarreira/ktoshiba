@@ -1,20 +1,21 @@
 #
-# This file should be copied either as is to "/lib/udev/rules.d" or the commented lines
+# This file should be copied either as is to "/lib/udev/rules.d" or the commented line
 # added to the appropiate udev rule (usually "/lib/udev/rules.d/95-keymap.rules") in
 # order to map the keys.
 #
 
-# ENV{DMI_VENDOR}=="TOSHIBA", ATTR{[dmi/id]product_name}=="Satellite X205", RUN+="keymap $name toshiba-satellite_x205"
 # ENV{DMI_VENDOR}=="TOSHIBA", ATTR{[dmi/id]product_name}=="Qosmio X505", RUN+="keymap $name toshiba-qosmio_x505"
 
-ACTION!="add", GOTO="keyboard_end"
-SUBSYSTEM!="input", GOTO="keyboard_end"
+ACTION=="remove", GOTO="keyboard_end"
 KERNEL!="event*", GOTO="keyboard_end"
+ENV{ID_INPUT_KEY}=="", GOTO="keyboard_end"
+SUBSYSTEMS=="bluetooth", GOTO="keyboard_end"
 
-ENV{DMI_VENDOR}="$attr{[dmi/id]sys_vendor}"
-ENV{DMI_VENDOR}=="", GOTO="keyboard_end"
+DRIVERS=="atkbd", GOTO="keyboard_vendorcheck"
+GOTO="keyboard_end"
 
-ENV{DMI_VENDOR}=="TOSHIBA", ATTR{[dmi/id]product_name}=="Satellite X205", RUN+="keymap $name toshiba-satellite_x205"
+LABEL="keyboard_vendorcheck"
+
 ENV{DMI_VENDOR}=="TOSHIBA", ATTR{[dmi/id]product_name}=="Qosmio X505", RUN+="keymap $name toshiba-qosmio_x505"
 
 LABEL="keyboard_end"

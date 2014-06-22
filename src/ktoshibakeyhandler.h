@@ -20,6 +20,12 @@
 #ifndef KTOSHIBAKEYHANDLER_H
 #define KTOSHIBAKEYHANDLER_H
 
+#include <libudev.h>
+
+#define TOSHNAME "Toshiba input device"
+#define TOSHPHYS "toshiba_acpi/input0"
+#define SUBSYS   "input"
+
 class QSocketNotifier;
 
 class KToshibaKeyHandler : public QObject
@@ -32,17 +38,25 @@ public:
 
 Q_SIGNALS:
     void hotkeyPressed(int);
+    void nodeChanged(QString);
 
 private Q_SLOTS:
-    void readData();
+    void readData(int);
+    void changeNode(QString);
 
 private:
-    QString findDevice();
+    struct udev *udev;
+    struct udev_monitor *monitor;
 
-    QSocketNotifier *m_Notifier;
-    QString m_Device;
+    void initUDev();
+    void checkDevice(struct udev_device *);
+    void pollUDev();
+    void setNotifier();
 
-    int m_Fd;
+    QSocketNotifier *m_notifier;
+    QString m_device;
+    int m_fd;
+    int fd;
 };
 
 #endif

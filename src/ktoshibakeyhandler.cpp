@@ -28,8 +28,6 @@ extern "C" {
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-
-#include <libudev.h>
 }
 
 #include "ktoshibakeyhandler.h"
@@ -37,49 +35,59 @@ extern "C" {
 KToshibaKeyHandler::KToshibaKeyHandler(QObject *parent)
     : QObject( parent )
 {
-    m_Device = findDevice();
-    if (m_Device.isNull() || m_Device.isEmpty()) {
-        kError() << "No device to monitor...";
-        exit(0);
-    }
+    initUDev();
 
-    m_Fd = ::open(m_Device.toLocal8Bit().constData(), O_RDONLY, 0);
-    if (m_Fd >= 0) {
-        kDebug() << "Opened " << m_Device << " as keyboard input" << endl;
-        m_Notifier = new QSocketNotifier(m_Fd, QSocketNotifier::Read, this);
-        connect( m_Notifier, SIGNAL( activated(int) ), this, SLOT( readData() ) );
-    } else {
-        kWarning() << "Cannot open " << m_Device.toLocal8Bit().constData() << "for keyboard input ("
-                   << strerror(errno) << ")" << endl;
-    }
+    setNotifier();
+
+    connect( this, SIGNAL( nodeChanged(QString) ), this, SLOT( changeNode(QString) ));
+
+    //pollUDev();
 }
 
 KToshibaKeyHandler::~KToshibaKeyHandler()
 {
-    if (m_Fd >= 0)
-        ::close(m_Fd);
+    if (m_fd >= 0)
+        ::close(m_fd);
+
+    udev_unref(udev);
 }
 
-QString KToshibaKeyHandler::findDevice()
+void KToshibaKeyHandler::initUDev()
 {
-    QString nodepath;
-    QString sysattr1;
-    QString sysattr2;
-    struct udev *udev;
+    // Create the udev object
+    udev = udev_new();
+    if (!udev) {
+        kError() << "Cannot create the udev object" << endl;
+        exit(1);
+    }
+
+    // Create the udev monitor
+    monitor = udev_monitor_new_from_netlink(udev, "udev");
+    if (!monitor) {
+        kError() << "Cannot create the udev monitor" << endl;
+        exit(1);
+    }
+    
+    // Add filters
+    if (udev_monitor_filter_add_match_subsystem_devtype(monitor, SUBSYS, NULL) < 0) {
+        kError() << "Cannot add udev filter" << endl;
+        exit(1);
+    }
+
+    if (udev_monitor_enable_receiving(monitor) < 0) {
+        kError() << "Cannot enable monitor receiving" << endl;
+        exit(1);
+    }
+
+    fd = udev_monitor_get_fd(monitor);
+
     struct udev_enumerate *enumerate;
     struct udev_list_entry *devices, *dev_list_entry;
     struct udev_device *dev;
 
-    // Create the udev object
-    udev = udev_new();
-    if (!udev) {
-        kError() << "Can't create udev";
-        return nodepath;
-    }
-
     // Create a list of the devices in the 'input' subsystem
     enumerate = udev_enumerate_new(udev);
-    udev_enumerate_add_match_subsystem(enumerate, "input");
+    udev_enumerate_add_match_subsystem(enumerate, SUBSYS);
     udev_enumerate_scan_devices(enumerate);
     devices = udev_enumerate_get_list_entry(enumerate);
     // Loop until we find the correct 'input' device
@@ -88,39 +96,108 @@ QString KToshibaKeyHandler::findDevice()
         dev = udev_device_new_from_syspath(udev, path);
 
         // Get the device node path
-        nodepath = QString(udev_device_get_devnode(dev));
+        QString nodepath = QString(udev_device_get_devnode(dev));
 
         // Get the parent device
         dev = udev_device_get_parent(dev);
 
         // Get the sysattr values
-        sysattr1 = QString(udev_device_get_sysattr_value(dev,"name"));
-        sysattr2 = QString(udev_device_get_sysattr_value(dev,"phys"));
-        if (sysattr1 == "Toshiba input device" && sysattr2 == "toshiba_acpi/input0") {
+        QString name = QString(udev_device_get_sysattr_value(dev, "name"));
+        QString phys = QString(udev_device_get_sysattr_value(dev, "phys"));
+        if (name == TOSHNAME && phys == TOSHPHYS) {
             kDebug() << "Found device: " << nodepath << endl
-                     << "  Name: " << sysattr1 << endl
-                     << "  Phys: " << sysattr2 << endl;
+                     << "  Name: " << name << endl
+                     << "  Phys: " << phys << endl;
+            m_device = nodepath;
             udev_device_unref(dev);
-            udev_enumerate_unref(enumerate);
-            udev_unref(udev);
-            return nodepath;
+            break;
         }
 
         udev_device_unref(dev);
     }
-
     udev_enumerate_unref(enumerate);
 
-    udev_unref(udev);
-
-    return nodepath;
+    if (m_device.isNull() || m_device.isEmpty()) {
+        kError() << "No device to monitor...";
+        exit(1);
+    }
 }
 
-void KToshibaKeyHandler::readData()
+void KToshibaKeyHandler::checkDevice(struct udev_device *device)
+{
+    // Get the device node path
+    QString nodepath = QString(udev_device_get_devnode(device));
+
+    device = udev_device_get_parent(device);
+
+    QString name = QString(udev_device_get_sysattr_value(device, "name"));
+    QString phys = QString(udev_device_get_sysattr_value(device, "phys"));
+    if (name == TOSHNAME && phys == TOSHPHYS) {
+        kDebug() << "Found device: " << nodepath << endl
+                 << "  Name: " << name << endl
+                 << "  Phys: " << phys << endl;
+        emit nodeChanged(nodepath);
+    }
+}
+
+void KToshibaKeyHandler::pollUDev()
+{
+    while (1) {
+        int ret;
+        fd_set fds;
+        struct timeval tv;
+
+        FD_ZERO(&fds);
+        FD_SET(fd, &fds);
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+
+        ret = select(fd+1, &fds, NULL, NULL, &tv);
+        if (ret > 0 && FD_ISSET(fd, &fds)) {
+            kDebug() << "A device changed..." << endl;
+
+            struct udev_device *dev = udev_monitor_receive_device(monitor);
+            if (dev)
+                checkDevice(dev);
+            else
+                kError() << "No device received..." << endl;
+        }
+        usleep(250*1000);
+    }
+}
+
+void KToshibaKeyHandler::setNotifier()
+{
+    m_fd = ::open(m_device.toLocal8Bit().constData(), O_RDONLY, 0);
+    if (m_fd >= 0) {
+        kDebug() << "Opened " << m_device << " as keyboard input" << endl;
+        m_notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
+        connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( readData(int) ) );
+    } else {
+        kError() << "Cannot open " << m_device << " for keyboard input ("
+                 << strerror(errno) << ")" << endl;
+        exit(1);
+    }
+}
+
+void KToshibaKeyHandler::changeNode(QString nodepath)
+{
+    if (m_fd >= 0)
+        ::close(m_fd);
+
+    disconnect( m_notifier, SLOT( readData(int) ) );
+    m_device = nodepath;
+
+    setNotifier();
+}
+
+void KToshibaKeyHandler::readData(int socket)
 {
     input_event event;
 
-    int n = read(m_Fd, &event, sizeof(input_event));
+    kDebug() << "Received data from socket: " << socket << endl;
+
+    int n = read(m_fd, &event, sizeof(input_event));
     if (n != 16) {
         kDebug() << "key pressed: n=" << n;
         return;

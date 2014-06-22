@@ -1,7 +1,5 @@
 <RCC>
   <qresource>
-    <file>images/kbd_on_64.png</file>
-    <file>images/kbd_off_64.png</file>
     <file>images/green_world_64.png</file>
     <file>images/wireless-disconnected_64.png</file>
     <file>images/performance_64.png</file>

@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2009  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,3 +16,34 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
+#ifndef KTOSHHELPER_H
+#define KTOSHHELPER_H
+
+#include <QObject>
+
+#include <kauth.h>
+
+using namespace KAuth;
+
+class KToshHelper : public QObject
+{
+    Q_OBJECT
+
+public:
+    KToshHelper(QObject *parent = 0);
+
+public slots:
+    ActionReply screenbrightness(QVariantMap args);
+    ActionReply toggletouchpad(QVariantMap args);
+    ActionReply illumination(QVariantMap args);
+    ActionReply eco(QVariantMap args);
+    ActionReply kbdtimeout(QVariantMap args);
+    ActionReply kbdmode(QVariantMap args);
+
+private:
+    QString findDevicePath();
+    QString m_device;
+};
+
+#endif // KTOSHHELPER_H

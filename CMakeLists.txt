@@ -15,41 +15,29 @@ else()
     message(FATAL_ERROR "Kernel input include (input.h) not found...")
 endif()
 
-set(NM09_LIBRARY_DIR "/usr/lib")
-find_library(NM09_LIB solidcontrolnm09 HINTS ${NM09_LIBRARY_DIR})
-if(EXISTS ${NM09_LIB})
-    message(STATUS "Found NetworkManager-KDE4 0.9.x library dir: ${NM09_LIBRARY_DIR}")
-
-    set(NM09_INCLUDE_DIR "/usr/include/solid/controlnm09")
-    find_file(NM09_H "networkmanager.h" ${NM09_INCLUDE_DIR})
-    if(EXISTS ${NM09_H})
-        set(LIBNM09_LIBRARY ${NM09_LIB})
-        message(STATUS "Found NetworkManager-KDE4 0.9.x include dir: ${NM09_INCLUDE_DIR}")
-    else()
-        message(FATAL_ERROR "NetworkManager-KDE4 0.9.x include directory not found, please install devel package")
-    endif()
-else()
-    message(FATAL_ERROR "Could not find libsolidcontrol09.so, please install NetworkManager-KDE4 0.9.x")
-endif()
-
 pkg_check_modules(PC_LIBUDEV libudev)
-set(LIBUDEV_DEFINITIONS ${PC_LIBUDEV_CFLAGS_OTHER})
-
-find_path(LIBUDEV_INCLUDE_DIR libudev.h
+if(${PC_LIBUDEV_FOUND})
+    find_path(LIBUDEV_INCLUDE_DIR libudev.h
 	HINTS ${PC_LIBUDEV_INCLUDEDIR} ${PC_LIBUDEV_INCLUDE_DIRS}
 	PATH_SUFFIXES libudev )
 
-find_library(LIBUDEV_LIBRARY udev
+    find_library(LIBUDEV_LIBRARY udev
 	HINTS ${PC_LIBUDEV_LIBDIR} ${PC_LIBUDEV_LIBRARY_DIRS} )
 
-set(LIBUDEV_LIBRARIES ${LIBUDEV_LIBRARY})
-set(LIBUDEV_INCLUDE_DIRS ${LIBUDEV_INCLUDE_DIR})
+    message(STATUS "Found udev: ${LIBUDEV_LIBRARY}")
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(libudev DEFAULT_MSG
+    set(LIBUDEV_DEFINITIONS ${PC_LIBUDEV_CFLAGS_OTHER})
+    set(LIBUDEV_LIBRARIES ${LIBUDEV_LIBRARY})
+    set(LIBUDEV_INCLUDE_DIRS ${LIBUDEV_INCLUDE_DIR})
+
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(libudev DEFAULT_MSG
 	LIBUDEV_LIBRARY LIBUDEV_INCLUDE_DIR )
 
-mark_as_advanced(LIBUDEV_INCLUDE_DIR LIBUDEV_LIBRARY)
+    mark_as_advanced(LIBUDEV_INCLUDE_DIR LIBUDEV_LIBRARY)
+else(${PC_LIBUDEV_FOUND})
+    message(FATAL_ERROR "udev could not be found...")
+endif(${PC_LIBUDEV_FOUND})
 
 configure_file(config-ktoshiba.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktoshiba.h)
 

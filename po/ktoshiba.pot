@@ -7,87 +7,63 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2010-10-14 10:45-0600\n"
+        "POT-Creation-Date: 2014-06-21 23:33-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
         "MIME-Version: 1.0\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: fnactions.cpp:204
-#, possible-kde-format
-msgid   "%1 is not running.\n"
-        "Would you like to start it now?"
-msgstr  ""
-
-#: fnactions.cpp:206 ktoshiba.cpp:70
-msgid   "Media Player"
-msgstr  ""
-
-#: fnactions.cpp:347
-#, possible-kde-format
-msgid   "Got Hotkey: %1"
-msgstr  ""
-
-#: fnactions.cpp:348
-msgid   "KToshiba - Hotkey"
-msgstr  ""
-
-#: ktoshiba.cpp:52
+#: ktoshiba.cpp:55
 msgid   "Fn key monitoring for Toshiba laptops"
 msgstr  ""
 
-#: ktoshiba.cpp:66
-msgid   "Start Automatically"
+#: ktoshiba.cpp:74
+msgid   "Toggle TouchPad"
 msgstr  ""
 
-#: ktoshiba.cpp:179
+#: ktoshiba.cpp:78 ktoshiba.cpp:145
+#, possible-kde-format
+msgid   "Switch the keyboard backlight mode to %1"
+msgstr  ""
+
+#: ktoshiba.cpp:80
+msgid   "Change the keyboard backlight timeout"
+msgstr  ""
+
+#: ktoshiba.cpp:139
+msgid   "The computer must be restarted in order to activate the new keyboard "
+        "Mode"
+msgstr  ""
+
+#: ktoshiba.cpp:214
+msgid   "(C) 2004-2013, Azael Avalos"
+msgstr  ""
+
+#: ktoshiba.cpp:220
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:180
-msgid   "toshutils and HCI-SCI stuff"
-msgstr  ""
-
-#: ktoshiba.cpp:182
+#: ktoshiba.cpp:221
 msgid   "Toshiba Laptop ACPI Extras driver"
 msgstr  ""
 
-#: ktoshiba.cpp:184
-msgid   "Powersave Daemon & KPowersave"
-msgstr  ""
-
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:223
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:223
 msgid   "Some ideas and pieces of code"
 msgstr  ""
 
-#: ktoshiba.cpp:188
-msgid   "ksynaptics Team"
-msgstr  ""
-
-#: ktoshiba.cpp:188
-msgid   "library for enabling/disabling TouchPad"
-msgstr  ""
-
-#: ktoshiba.cpp:190
+#: ktoshiba.cpp:225
 msgid   "French translation"
 msgstr  ""
 
-#: ktoshiba.cpp:192
+#: ktoshiba.cpp:227
 msgid   "Hungarian translation"
-msgstr  ""
-
-#: ktoshiba.cpp:194
-msgid   "omnibook stuff tester"
-msgstr  ""
-
-#: ktoshiba.cpp:196
-msgid   "Porting to new systray framework"
 msgstr  ""
 
 #: rc.cpp:1
@@ -98,4 +74,22 @@ msgstr  ""
 #: rc.cpp:2
 msgctxt "EMAIL OF TRANSLATORS"
 msgid   "Your emails"
+msgstr  ""
+
+#. i18n: file: kbdtimeoutwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, kbdTimeoutWidget)
+#: rc.cpp:5
+msgid   "Keyboard Backlight Timeout"
+msgstr  ""
+
+#. i18n: file: statuswidget.ui:561
+#. i18n: ectx: property (text), widget (QLabel, kbdAutoTextLabel)
+#: rc.cpp:11
+msgid   "<font color='gray'><b>AUTO</b></font>"
+msgstr  ""
+
+#. i18n: file: statuswidget.ui:601
+#. i18n: ectx: property (text), widget (QLabel, kbdAutoTimeLabel)
+#: rc.cpp:14
+msgid   "<font color='white'>15</font>"
 msgstr  ""
