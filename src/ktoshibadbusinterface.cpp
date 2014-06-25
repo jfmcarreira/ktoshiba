@@ -139,7 +139,7 @@ void KToshibaDBusInterface::setBrightness(int level)
 {
     QDBusInterface iface("org.kde.Solid.PowerManagement",
 			 "/org/kde/Solid/PowerManagement/Actions/BrightnessControl",
-			 "org.kde.Solid.PowerManagement.BrightnessControl",
+			 "org.kde.Solid.PowerManagement.Actions.BrightnessControl",
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -153,18 +153,18 @@ void KToshibaDBusInterface::setBrightness(int level)
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
                  << "Message: " << err.message() << endl;
+        return;
     }
 
-    if ((bright == 0 && level == -1) || (bright == 100 && level == 1))
+    if ((bright.value() == 0 && level == -1) || (bright.value() == 100 && level == 1))
         return;
 
-    int brightness = bright.value();
     if (level == 1)
-        brightness += 15;
-    else
-        brightness -= 15;
+        level = bright.value() + 15;
+    else if (level == -1)
+        level = bright.value() - 15;
 
-    QDBusReply<void> reply = iface.call("setBrightness", brightness);
+    QDBusReply<void> reply = iface.call("setBrightness", level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl

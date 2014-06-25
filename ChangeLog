@@ -1,3 +1,10 @@
+2014-06-24 Azael Avalos <coproscefalo@gmail.com>
+	* Removed a lot of files not used anymore
+	* Misc changes here and there
+	* Added udev rule, forgot to do it...
+	* Removed screenBrightness function from FnActions
+	  and KAuth helper, code adapted
+
 2014-06-21 Azael Avalos <coproscefalo@gmail.com>
 	* NM code was dropped
 	* Accel code was dropped also

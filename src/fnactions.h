@@ -59,7 +59,6 @@ private:
     void showWidget(int);
     void toggleProfiles();
     void changeProfile(QString);
-    void screenBrightness(int);
     void toggleIllumination(bool);
     void toggleEcoLed(bool);
     void kbdBacklight();

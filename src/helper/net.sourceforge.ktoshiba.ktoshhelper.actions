@@ -3,12 +3,6 @@ Name=KToshiba helper application
 Icon=ktoshiba
 URL=http://ktoshiba.sourceforge.net/
 
-[net.sourceforge.ktoshiba.ktoshhelper.screenbrightness]
-Name=Screen brightness
-Description=Sets the desired screen backlight level
-Policy=yes
-PolicyInactive=yes
-
 [net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad]
 Name=Toggles TouchPad state
 Description=Sets the desired TouchPad state

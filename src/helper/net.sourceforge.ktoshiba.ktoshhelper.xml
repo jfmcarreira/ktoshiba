@@ -17,26 +17,6 @@
       </doc:description>
     </doc:doc>
 
-    <method name="screenbrightness">
-      <arg name="level" type="i" direction="in">
-        <doc:doc>
-          <doc:summary>
-            The value to set the screen backlight brightness.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Set the brightness level of the screen backlight.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the brightness</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
     <method name="toggletouchpad">
       <arg name="state" type="i" direction="in">
         <doc:doc>

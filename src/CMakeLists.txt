@@ -20,8 +20,7 @@ qt4_add_dbus_adaptor(adaptor_SRCS net.sourceforge.ktoshiba.xml
 
 qt4_add_resources(qtsourceview_RC_SRCS Icons.qrc)
 
-kde4_add_ui_files(KToshibaSources statuswidget.ui)
-kde4_add_ui_files(KToshibaSources kbdtimeoutwidget.ui)
+kde4_add_ui_files(KToshibaSources statuswidget.ui kbdtimeoutwidget.ui)
 
 kde4_add_executable(ktoshiba ${KToshibaSources} ${qtsourceview_RC_SRCS} ${adaptor_SRCS})
 

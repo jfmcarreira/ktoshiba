@@ -31,6 +31,8 @@ KToshHelper::KToshHelper(QObject *parent)
     : QObject(parent)
 {
     m_device = findDevicePath();
+    if (m_device.isEmpty() || m_device.isNull())
+        exit(-1);
 }
 
 QString KToshHelper::findDevicePath()
@@ -58,47 +60,6 @@ QString KToshHelper::findDevicePath()
     qWarning() << "No known interface found" << endl;
 
     return QString("");
-}
-
-ActionReply KToshHelper::screenbrightness(QVariantMap args)
-{
-    ActionReply reply;
-    int level = args["level"].toInt();
-
-    if (level < 0 || level > 7) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-EINVAL);
-        reply.setErrorDescription("The value was out of range");
-
-        return reply;
-    }
-
-    QFile file("/sys/class/backlight/acpi_video0/brightness");
-    if (!file.exists()) {
-        file.setFileName("/sys/class/backlight/toshiba/brightness");
-        if (!file.exists()) {
-            reply = ActionReply::HelperErrorReply;
-            reply.setErrorCode(-ENODEV);
-            reply.setErrorDescription("The backlight device does not exist");
-
-            return reply;
-        }
-    }
-
-    if (!file.open(QIODevice::WriteOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
-
-       return reply;
-    }
-
-    QTextStream stream(&file);
-    stream << level;
-    file.close();
-
-    reply = ActionReply::Success;
-
-    return reply;
 }
 
 ActionReply KToshHelper::toggletouchpad(QVariantMap args)

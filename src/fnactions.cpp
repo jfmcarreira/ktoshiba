@@ -56,7 +56,7 @@ FnActions::FnActions(QObject *parent)
     m_widget->setAttribute( Qt::WA_TranslucentBackground, KWindowSystem::compositingActive() );
 
     m_device = findDevicePath();
-    if (m_device.isEmpty())
+    if (m_device.isEmpty() || m_device.isNull())
         qApp->quit();
 
     // We're just going to care about these profiles
@@ -144,24 +144,24 @@ void FnActions::changeProfile(QString profile)
         showWidget(Powersave);
         toggleEcoLed(Off);
         toggleIllumination(Off);
-        screenBrightness(3);
+        m_dBus->setBrightness(42);
         toggleKBDBacklight(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
         toggleEcoLed(Off);
         toggleIllumination(On);
-        screenBrightness(7);
+        m_dBus->setBrightness(100);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
         toggleEcoLed(Off);
         toggleIllumination(On);
-        screenBrightness(5);
+        m_dBus->setBrightness(71);
         m_cookie = beginSuppressingScreenPowerManagement(m_profile);
     } else if (profile == "ECO") {
         showWidget(ECO);
         toggleEcoLed(On);
         toggleIllumination(Off);
-        screenBrightness(4);
+        m_dBus->setBrightness(57);
         toggleKBDBacklight(Off);
     }
     kDebug() << "Changed battery profile to: " << m_profile;
@@ -169,16 +169,6 @@ void FnActions::changeProfile(QString profile)
     if (m_cookie != 0)
         if (stopSuppressingScreenPowerManagement(m_cookie))
             m_cookie = 0;
-}
-
-void FnActions::screenBrightness(int level)
-{
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.screenbrightness");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("level", level);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.screenbrightness failed";
 }
 
 void FnActions::toggleTouchPad()

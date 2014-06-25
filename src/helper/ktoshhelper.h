@@ -34,7 +34,6 @@ public:
     KToshHelper(QObject *parent = 0);
 
 public slots:
-    ActionReply screenbrightness(QVariantMap args);
     ActionReply toggletouchpad(QVariantMap args);
     ActionReply illumination(QVariantMap args);
     ActionReply eco(QVariantMap args);
