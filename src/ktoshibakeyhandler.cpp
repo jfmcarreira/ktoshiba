@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2013  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2013-2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -102,8 +102,8 @@ void KToshibaKeyHandler::initUDev()
         dev = udev_device_get_parent(dev);
 
         // Get the sysattr values
-        QString name = QString(udev_device_get_sysattr_value(dev, "name"));
-        QString phys = QString(udev_device_get_sysattr_value(dev, "phys"));
+        QString name(udev_device_get_sysattr_value(dev, "name"));
+        QString phys(udev_device_get_sysattr_value(dev, "phys"));
         if (name == TOSHNAME && phys == TOSHPHYS) {
             kDebug() << "Found device: " << nodepath << endl
                      << "  Name: " << name << endl
@@ -126,12 +126,12 @@ void KToshibaKeyHandler::initUDev()
 void KToshibaKeyHandler::checkDevice(struct udev_device *device)
 {
     // Get the device node path
-    QString nodepath = QString(udev_device_get_devnode(device));
+    QString nodepath(udev_device_get_devnode(device));
 
     device = udev_device_get_parent(device);
 
-    QString name = QString(udev_device_get_sysattr_value(device, "name"));
-    QString phys = QString(udev_device_get_sysattr_value(device, "phys"));
+    QString name(udev_device_get_sysattr_value(device, "name"));
+    QString phys(udev_device_get_sysattr_value(device, "phys"));
     if (name == TOSHNAME && phys == TOSHPHYS) {
         kDebug() << "Found device: " << nodepath << endl
                  << "  Name: " << name << endl
@@ -198,7 +198,7 @@ void KToshibaKeyHandler::readData(int socket)
     kDebug() << "Received data from socket: " << socket << endl;
 
     int n = read(m_fd, &event, sizeof(input_event));
-    if (n != 16) {
+    if (n != 24) {
         kDebug() << "key pressed: n=" << n;
         return;
     }

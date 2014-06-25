@@ -56,10 +56,8 @@ FnActions::FnActions(QObject *parent)
     m_widget->setAttribute( Qt::WA_TranslucentBackground, KWindowSystem::compositingActive() );
 
     m_device = findDevicePath();
-    if (m_device.isEmpty()) {
-        //parent->quit();
-        exit(-1);
-    }
+    if (m_device.isEmpty())
+        qApp->quit();
 
     // We're just going to care about these profiles
     profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
@@ -107,15 +105,15 @@ QString FnActions::findDevicePath()
     return QString("");
 }
 
-void FnActions::acAdapterChanged(bool state)
+void FnActions::acAdapterChanged(bool connected)
 {
-    if (m_profile == "Powersave" && state) {
+    if (m_profile == "Powersave" && connected) {
         m_profile = "Performance";
         changeProfile(m_profile);
         return;
     }
 
-    if (m_profile == "Performance" && !state) {
+    if (m_profile == "Performance" && !connected) {
         m_profile = "Powersave";
         changeProfile(m_profile);
         return;
@@ -147,8 +145,7 @@ void FnActions::changeProfile(QString profile)
         toggleEcoLed(Off);
         toggleIllumination(Off);
         screenBrightness(3);
-        if (getKBDMode() == 2)
-            toggleKBDBacklight(Off);
+        toggleKBDBacklight(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
         toggleEcoLed(Off);
@@ -165,8 +162,7 @@ void FnActions::changeProfile(QString profile)
         toggleEcoLed(On);
         toggleIllumination(Off);
         screenBrightness(4);
-        if (getKBDMode() == 2)
-            toggleKBDBacklight(Off);
+        toggleKBDBacklight(Off);
     }
     kDebug() << "Changed battery profile to: " << m_profile;
 
@@ -261,7 +257,8 @@ void FnActions::toggleEcoLed(bool on)
 
 void FnActions::toggleKBDBacklight(bool on)
 {
-	// TODO: Implement me...
+    if (getKBDMode() == 2)
+        m_dBus->kbdBacklight(on);
 }
 
 int FnActions::getKBDMode()
@@ -306,7 +303,11 @@ int FnActions::getKBDTimeout()
 
 void FnActions::changeKBDMode()
 {
-    int mode = (getKBDMode() == 1 ? 2 : 1);
+    int mode = getKBDMode();
+    if (!mode)
+        return;
+    
+    mode = (mode == 1) ? 2 : 1;
 
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdmode");
     action.setHelperID(HELPER_ID);
@@ -341,7 +342,7 @@ void FnActions::showWidget(int wid)
     m_widget->hide();
 }
 
-void FnActions::slotGotHotkey(int hotkey)
+void FnActions::processHotkey(int hotkey)
 {
     switch ( hotkey ) {
     case KEY_COFFEE:

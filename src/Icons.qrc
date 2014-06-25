@@ -10,5 +10,6 @@
     <file>images/fn.png</file>
     <file>images/mpad_64.png</file>
     <file>images/mpad-disabled_64.png</file>
+    <file>images/keyboard_black_64.png</file>
   </qresource>
 </RCC>

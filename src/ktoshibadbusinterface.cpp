@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2013  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -27,8 +27,7 @@
 #include "ktoshibadbusadaptor.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
-    : QObject( parent ),
-      m_Mixer( QString("org.kde.kmix") )
+    : QObject( parent )
 {
     new KToshibaDBusAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -39,69 +38,6 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 void KToshibaDBusInterface::gotKey(int key)
 {
     kDebug() << "Key received: " << key << endl;
-}
-
-void KToshibaDBusInterface::toggleMute()
-{
-    QString mixercontrol = getMixerControl();
-    if (mixercontrol.isEmpty())
-        return;
-
-    QDBusInterface iface(m_Mixer, mixercontrol,
-			  "org.kde.KMix.Control",
-			  QDBusConnection::sessionBus(), this);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return;
-    }
-
-    QDBusReply<void> reply = iface.call("toggleMute");
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return;
-    }
-}
-
-QString KToshibaDBusInterface::getMixerControl()
-{
-    QDBusInterface iface(m_Mixer, "/Mixers",
-			 "org.kde.KMix.MixSet",
-			 QDBusConnection::sessionBus(), this);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return QString();
-    }
-
-    QString mixer;
-    QDBusReply<QString> reply = iface.call("currentMasterMixer");
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return QString();
-    }
-    mixer = reply.value();
-    mixer.replace(":", "_");
-
-    QString control;
-    reply = iface.call("currentMasterControl");
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return QString();
-    }
-    control = reply.value();
-    control.replace(".", "_");
-    control.replace("-", "_");
-
-    return QString("/Mixers/" + mixer + "/" + control);
 }
 
 void KToshibaDBusInterface::lockScreen()

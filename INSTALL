@@ -4,13 +4,13 @@ Requirements
   kernel module
 - Compiler and utilities (gcc, make, cmake, etc.)
 - KDE libraries >= 4.3.x and development packages
-- Additionally KToshiba depends on NetworkManager-KDE4,
-  Solid, udev and the input.h kernel include.
+- Additionally KToshiba depends on Solid, udev
+  and the input.h kernel include.
 
 
 NOTE: KToshiba grabs hotkeys via /dev/input/eventX
-and uses D-Bus, Solid and ktoshhelper script to
-perform the actions.
+and uses D-Bus, Solid and ktoshhelper to perform
+the actions.
 
 
 
@@ -33,14 +33,11 @@ eg: ktoshiba-0.4.0
 
 Post-Installation
 ==================
-Once KToshia is installed, a few things must be done in
-order to get it to work properly:
+Once KToshiba is installed, a restart is needed to activate the new
+udev rules, or you can simply do the following (as root):
 
-1 - Copy the udev rule (99-ktoshiba-input.rules), found in rules/udev
-    to "/lib/udev/rules.d", create a new gruop named input and add
-    your username to that group (a restart mught be needed...).
-2 - Add a sudo rule to make the script ktoshhelper run under root
-    privilegies in order to change leds, touchpad and brightness, etc..
+1 - Reload the udev rules (udevadm control --reload-rules).
+2 - Activate the new rules (udevadm trigger).
 
 
 

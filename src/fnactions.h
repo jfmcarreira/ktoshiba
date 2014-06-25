@@ -49,7 +49,7 @@ public:
     void changeKBDTimeout(int);
 
 private Q_SLOTS:
-    void slotGotHotkey(int);
+    void processHotkey(int);
     void toggleTouchPad();
     void acAdapterChanged(bool);
     void compositingChanged(bool);

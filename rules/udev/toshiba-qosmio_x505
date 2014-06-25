@@ -1,8 +1,0 @@
-0xD6 prog3  # ECO mode
-0xF0 reserved # This is triggered right after the USB webcam is reset
-0xF1 f22 # Touchpad on
-0xF2 f23 # Touchpad off
-# These are being triggered upon pressing the touchpad toggle button
-0xE0 reserved # This triggers right after touchpad on/off
-0x71 reserved # This triggers twice right after touchpad enable 0xF1
-0x72 reserved # This triggers twice right after touchpad disable 0xF2

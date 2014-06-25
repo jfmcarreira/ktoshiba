@@ -1,4 +1,4 @@
- /*
+/*
    Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
@@ -72,7 +72,7 @@ KToshiba::KToshiba()
 
     // TODO: Add other items here... If any...
     touchPad = popupMenu->addAction( i18n("Toggle TouchPad") );
-    touchPad->setIcon( KIcon( "synaptiks" ) );
+    touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
     if (m_mode > 0) {
         popupMenu->addSeparator();
         kbdMode = popupMenu->addAction( i18n("Switch the keyboard backlight mode to %1", (m_mode == 1 ? "Auto" : "FN-Z")) );
