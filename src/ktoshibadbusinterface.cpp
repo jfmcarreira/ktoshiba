@@ -18,7 +18,6 @@
 */
 
 #include <QtDBus/QtDBus>
-#include <QString>
 
 #include <KDebug>
 #include <KWindowSystem>
@@ -37,7 +36,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 
 void KToshibaDBusInterface::gotKey(int key)
 {
-    kDebug() << "Key received: " << key << endl;
+    kDebug() << "Key received: " << key;
 }
 
 void KToshibaDBusInterface::lockScreen()
@@ -49,7 +48,7 @@ void KToshibaDBusInterface::lockScreen()
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
         return;
     }
 
@@ -57,81 +56,7 @@ void KToshibaDBusInterface::lockScreen()
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-    }
-}
-
-void KToshibaDBusInterface::suspendTo(QString type)
-{
-    if (type == QString("RAM"))
-        str();
-    else if (type == QString("Disk"))
-        std();
-}
-
-void KToshibaDBusInterface::str()
-{
-    QDBusInterface iface("org.freedesktop.PowerManagement",
-			 "/org/freedesktop/PowerManagement",
-			 "org.freedesktop.PowerManagement",
-			 QDBusConnection::sessionBus(), this);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return;
-    }
-
-    QDBusReply<bool> reply = iface.call("CanSuspend");
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-    }
-
-    if (!reply.value()) {
-        kWarning() << "System does not support STR (Suspend)" << endl;
-        return;
-    }
-
-    QDBusReply<void> str = iface.call("Suspend");
-    if (!str.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-    }
-}
-
-void KToshibaDBusInterface::std()
-{
-    QDBusInterface iface("org.freedesktop.PowerManagement",
-			 "/org/freedesktop/PowerManagement",
-			 "org.freedesktop.PowerManagement",
-			 QDBusConnection::sessionBus(), this);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-        return;
-    }
-
-    QDBusReply<bool> reply = iface.call("CanHibernate");
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
-    }
-
-    if (!reply.value()) {
-        kWarning() << "System does not support STD (Hibernate)" << endl;
-        return;
-    }
-
-    QDBusReply<void> std = iface.call("Hibernate");
-    if (!std.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
     }
 }
 
@@ -144,7 +69,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
         return;
     }
 
@@ -152,7 +77,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     if (!bright.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
         return;
     }
 
@@ -168,11 +93,11 @@ void KToshibaDBusInterface::setBrightness(int level)
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
     }
 }
 
-void KToshibaDBusInterface::kbdBacklight(bool state)
+void KToshibaDBusInterface::setKBDBacklight(bool state)
 {
     QDBusInterface iface("org.kde.Solid.PowerManagement",
 			 "/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl",
@@ -181,7 +106,7 @@ void KToshibaDBusInterface::kbdBacklight(bool state)
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
         return;
     }
 
@@ -190,7 +115,7 @@ void KToshibaDBusInterface::kbdBacklight(bool state)
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
     }
 }
 
@@ -208,7 +133,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
         return;
     }
 
@@ -228,7 +153,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message() << endl;
+                 << "Message: " << err.message();
     }
 }
 

@@ -18,29 +18,20 @@
 */
 
 #include <QtGui/QDesktopWidget>
-#include <QtGui/QDialogButtonBox>
-#include <QRect>
-#include <QAction>
-#include <QTimer>
 
-#include <KAboutData>
-#include <KLocale>
+#include <KStatusNotifierItem>
 #include <KMenu>
 #include <KHelpMenu>
-#include <KConfig>
-#include <KConfigGroup>
 #include <KStandardDirs>
 #include <KDebug>
 #include <KNotification>
+#include <KAboutData>
+#include <KConfigGroup>
 #include <KIcon>
-#include <KAuth/Action>
-#include <KStatusNotifierItem>
 
 #include "ktoshiba.h"
 #include "fnactions.h"
 #include "version.h"
-
-#define HELPER_ID "net.sourceforge.ktoshiba.ktoshhelper"
 
 static const char * const ktosh_config = "ktoshibarc";
 
@@ -73,17 +64,13 @@ KToshiba::KToshiba()
     // TODO: Add other items here... If any...
     touchPad = popupMenu->addAction( i18n("Toggle TouchPad") );
     touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
-    if (m_mode > 0) {
-        popupMenu->addSeparator();
-        kbdMode = popupMenu->addAction( i18n("Switch the keyboard backlight mode to %1", (m_mode == 1 ? "Auto" : "FN-Z")) );
-        kbdMode->setIcon( KIcon( "input-keyboard" ) );
-        kbdTimeout = popupMenu->addAction( i18n("Change the keyboard backlight timeout") );
-        kbdTimeout->setIcon( KIcon( "input-keyboard" ) );
-        if (m_mode == 2)
-            kbdTimeout->setVisible(true);
-        else
-            kbdTimeout->setVisible(false);
-    }
+    popupMenu->addSeparator();
+    kbdMode = popupMenu->addAction( i18n("Switch the keyboard backlight mode to %1", (m_mode == 1) ? "Auto" : "FN-Z") );
+    kbdMode->setIcon( KIcon( "input-keyboard" ) );
+    kbdMode->setVisible((m_mode > 0) ? true : false);
+    kbdTimeout = popupMenu->addAction( i18n("Change the keyboard backlight timeout") );
+    kbdTimeout->setIcon( KIcon( "input-keyboard" ) );
+    kbdTimeout->setVisible((m_mode == 2) ? true: false);
     popupMenu->addSeparator();
     KHelpMenu *m_helpMenu = new KHelpMenu( popupMenu, aboutData());
     popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
@@ -112,7 +99,7 @@ bool KToshiba::checkConfig()
     QString config = kstd.findResource("config", ktosh_config);
 
     if (config.isEmpty()) {
-        kDebug() << "Configuration file not found." << endl;
+        kDebug() << "Configuration file not found.";
         return false;
     }
 
@@ -121,28 +108,27 @@ bool KToshiba::checkConfig()
 
 void KToshiba::loadConfig()
 {
-    kDebug() << "Loading configuration file..." << endl;
+    kDebug() << "Loading configuration file...";
     KConfigGroup generalGroup( config, "General" );
 }
 
 void KToshiba::createConfig()
 {
-    kDebug() << "Default configuration file created." << endl;
+    kDebug() << "Default configuration file created.";
     KConfigGroup generalGroup( config, "General" );
     generalGroup.config()->sync();
 }
 
 void KToshiba::changeKBDMode()
 {
-    KNotification *notification = new KNotification("changedKBDMode", KNotification::Persistent, NULL);
-    notification->setTitle("KToshiba - Attention");
-    notification->setText(i18n("The computer must be restarted in order to activate the new keyboard Mode"));
-    notification->setPixmap(QPixmap("input-keyboard"));
+    KNotification *notification =
+		KNotification::event(KNotification::Notification, i18n("Keyboard Mode"),
+				     i18n("The computer must be restarted in order to activate the new keyboard Mode"));
     notification->sendEvent();
 
     m_fn->changeKBDMode();
     m_mode = m_fn->getKBDMode();
-    kbdMode->setText( i18n("Switch the keyboard backlight mode to %1", (m_mode == 1 ? "Auto" : "FN-Z")) );
+    kbdMode->setText( i18n("Switch the keyboard backlight mode to %1", (m_mode == 1) ? "Auto" : "FN-Z") );
 }
 
 void KToshiba::kbdTimeoutClicked()
@@ -211,21 +197,15 @@ void KToshiba::createAboutData()
 {
     m_about = new KAboutData("KToshiba", 0, ki18n("KToshiba"), ktoshiba_version,
 			ki18n(description), KAboutData::License_GPL,
-			ki18n("(C) 2004-2013, Azael Avalos"), KLocalizedString(),
+			ki18n("(C) 2004-2014, Azael Avalos"), KLocalizedString(),
 			"http://ktoshiba.sourceforge.net/",
 			"coproscefalo@gmail.com");
     m_about->setProgramIconName("ktoshiba");
 
     m_about->addAuthor( ki18n("Azael Avalos"),
 			ki18n("Original Author"), "coproscefalo@gmail.com" );
-    m_about->addCredit( ki18n("John Belmonte"), ki18n("Toshiba Laptop ACPI Extras driver"),
-                    "john@neggie.net", "http://memebeam.org/toys/ToshibaAcpiDriver/" );
     m_about->addCredit( ki18n("KDE Team"), ki18n("Some ideas and pieces of code"), 0,
                     "http://www.kde.org/" );
-    m_about->addCredit( ki18n("Nicolas Ternisien"), ki18n("French translation"),
-                    "nicolas.ternisien@gmail.com", 0 );
-    m_about->addCredit( ki18n("Charles Barcza"), ki18n("Hungarian translation"),
-                    "kbarcza@blackpanther.hu", "http://www.blackpanther.hu" );
 }
 
 void KToshiba::destroyAboutData()

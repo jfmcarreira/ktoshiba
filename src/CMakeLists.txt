@@ -36,5 +36,4 @@ endif(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_SYSTEM_NAME MATCHES Linux)
 
 install(TARGETS ktoshiba ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES ktoshiba.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES ktoshiba.notifyrc DESTINATION ${DATA_INSTALL_DIR}/ktoshiba)
 install(FILES ${CMAKE_SOURCE_DIR}/rules/udev/99-ktoshiba-input.rules DESTINATION "/lib/udev/rules.d")

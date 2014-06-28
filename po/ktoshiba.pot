@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2014-06-21 23:33-0600\n"
+        "POT-Creation-Date: 2014-06-26 20:11-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,54 +16,42 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: ktoshiba.cpp:55
+#: ktoshiba.cpp:46
 msgid   "Fn key monitoring for Toshiba laptops"
 msgstr  ""
 
-#: ktoshiba.cpp:74
+#: ktoshiba.cpp:65
 msgid   "Toggle TouchPad"
 msgstr  ""
 
-#: ktoshiba.cpp:78 ktoshiba.cpp:145
+#: ktoshiba.cpp:68 ktoshiba.cpp:131
 #, possible-kde-format
 msgid   "Switch the keyboard backlight mode to %1"
 msgstr  ""
 
-#: ktoshiba.cpp:80
+#: ktoshiba.cpp:71
 msgid   "Change the keyboard backlight timeout"
 msgstr  ""
 
-#: ktoshiba.cpp:139
+#: ktoshiba.cpp:125
+msgid   "Keyboard Mode"
+msgstr  ""
+
+#: ktoshiba.cpp:126
 msgid   "The computer must be restarted in order to activate the new keyboard "
         "Mode"
 msgstr  ""
 
-#: ktoshiba.cpp:214
-msgid   "(C) 2004-2013, Azael Avalos"
-msgstr  ""
-
-#: ktoshiba.cpp:220
+#: ktoshiba.cpp:206
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:221
-msgid   "Toshiba Laptop ACPI Extras driver"
-msgstr  ""
-
-#: ktoshiba.cpp:223
+#: ktoshiba.cpp:207
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:223
+#: ktoshiba.cpp:207
 msgid   "Some ideas and pieces of code"
-msgstr  ""
-
-#: ktoshiba.cpp:225
-msgid   "French translation"
-msgstr  ""
-
-#: ktoshiba.cpp:227
-msgid   "Hungarian translation"
 msgstr  ""
 
 #: rc.cpp:1
@@ -80,16 +68,4 @@ msgstr  ""
 #. i18n: ectx: property (windowTitle), widget (QWidget, kbdTimeoutWidget)
 #: rc.cpp:5
 msgid   "Keyboard Backlight Timeout"
-msgstr  ""
-
-#. i18n: file: statuswidget.ui:561
-#. i18n: ectx: property (text), widget (QLabel, kbdAutoTextLabel)
-#: rc.cpp:11
-msgid   "<font color='gray'><b>AUTO</b></font>"
-msgstr  ""
-
-#. i18n: file: statuswidget.ui:601
-#. i18n: ectx: property (text), widget (QLabel, kbdAutoTimeLabel)
-#: rc.cpp:14
-msgid   "<font color='white'>15</font>"
 msgstr  ""

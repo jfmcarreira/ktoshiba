@@ -38,25 +38,19 @@ public:
 
 Q_SIGNALS:
     void hotkeyPressed(int);
-    void nodeChanged(QString);
 
 private Q_SLOTS:
     void readData(int);
-    void changeNode(QString);
 
 private:
-    struct udev *udev;
-    struct udev_monitor *monitor;
-
     void initUDev();
-    void checkDevice(struct udev_device *);
-    void pollUDev();
     void setNotifier();
 
+    struct udev *udev;
+    struct udev_monitor *monitor;
     QSocketNotifier *m_notifier;
     QString m_device;
     int m_fd;
-    int fd;
 };
 
 #endif

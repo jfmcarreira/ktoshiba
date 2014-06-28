@@ -248,7 +248,7 @@ void FnActions::toggleEcoLed(bool on)
 void FnActions::toggleKBDBacklight(bool on)
 {
     if (getKBDMode() == 2)
-        m_dBus->kbdBacklight(on);
+        m_dBus->setKBDBacklight(on);
 }
 
 int FnActions::getKBDMode()

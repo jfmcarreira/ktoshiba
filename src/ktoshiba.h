@@ -27,7 +27,6 @@
 
 class QAction;
 
-class KMenu;
 class KAboutData;
 class KStatusNotifierItem;
 

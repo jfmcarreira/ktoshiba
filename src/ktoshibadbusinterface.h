@@ -21,7 +21,6 @@
 #define KTOSHIBA_DBUS_INTERFACE_H
 
 #include <QObject>
-#include <QString>
 
 class KToshibaDBusInterface : public QObject
 {
@@ -36,17 +35,12 @@ public:
     KToshibaDBusInterface(QObject *parent);
 
     void lockScreen();
-    void suspendTo(QString);
     void setBrightness(int);
-    void kbdBacklight(bool);
+    void setKBDBacklight(bool);
     void setZoom(int);
 
 public Q_SLOTS:
     void gotKey(int key);
-
-private:
-    void str();
-    void std();
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

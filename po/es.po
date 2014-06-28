@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Azael Avalos <coproscefalo@gmail.com>. 2010
+# Azael Avalos <coproscefalo@gmail.com>. 2014
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-"POT-Creation-Date: 2014-06-21 23:33-0600\n"
+"POT-Creation-Date: 2014-06-26 20:11-0600\n"
 "PO-Revision-Date: 2010-03-28 20:46-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,52 +18,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ktoshiba.cpp:55
+#: ktoshiba.cpp:46
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: ktoshiba.cpp:74
+#: ktoshiba.cpp:65
 msgid "Toggle TouchPad"
 msgstr "Activa/Desactiva el TouchPad"
 
-#: ktoshiba.cpp:78 ktoshiba.cpp:145
+#: ktoshiba.cpp:68 ktoshiba.cpp:131
 #, kde-format
 msgid "Switch the keyboard backlight mode to %1"
 msgstr "Cambia la luz del teclado a modo %1"
 
-#: ktoshiba.cpp:80
+#: ktoshiba.cpp:71
 msgid "Change the keyboard backlight timeout"
 msgstr "Cambia el tiempo de apagado de la luz del teclado"
 
-#: ktoshiba.cpp:139
+#: ktoshiba.cpp:125
+msgid "Keyboard Mode"
+msgstr "Modo del Teclado"
+
+#: ktoshiba.cpp:126
 msgid ""
 "The computer must be restarted in order to activate the new keyboard Mode"
 msgstr ""
 "La computadora debe ser reiniciada para activar el nuevo modo del teclado"
 
-#: ktoshiba.cpp:220
+#: ktoshiba.cpp:206
 msgid "Original Author"
 msgstr "Autor Original"
 
-#: ktoshiba.cpp:221
-msgid "Toshiba Laptop ACPI Extras driver"
-msgstr "Controlador de Extras ACPI para laptops Toshiba"
-
-#: ktoshiba.cpp:223
+#: ktoshiba.cpp:207
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: ktoshiba.cpp:223
+#: ktoshiba.cpp:207
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
-
-#: ktoshiba.cpp:225
-msgid "French translation"
-msgstr "Traducción al Francés"
-
-#: ktoshiba.cpp:227
-msgid "Hungarian translation"
-msgstr "Traducción al Húngaro"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -80,52 +72,3 @@ msgstr "coproscefalo@gmail.com"
 #: rc.cpp:5
 msgid "Keyboard Backlight Timeout"
 msgstr "Tiempo de apagado de la Luz del Teclado"
-
-#. i18n: file: statuswidget.ui:561
-#. i18n: ectx: property (text), widget (QLabel, kbdAutoTextLabel)
-#: rc.cpp:11
-msgid "<font color='gray'><b>AUTO</b></font>"
-msgstr ""
-
-#. i18n: file: statuswidget.ui:601
-#. i18n: ectx: property (text), widget (QLabel, kbdAutoTimeLabel)
-#: rc.cpp:14
-msgid "<font color='white'>15</font>"
-msgstr ""
-
-#~ msgid ""
-#~ "%1 is not running.\n"
-#~ "Would you like to start it now?"
-#~ msgstr ""
-#~ "%1 no se esta ejecutando.\n"
-#~ "¿Quieres ejecutarlo ahora?"
-
-#~ msgid "Media Player"
-#~ msgstr "Reproductor Multimedia"
-
-#~ msgid "Got Hotkey: %1"
-#~ msgstr "Tecla rapida obtenida: %1"
-
-#~ msgid "KToshiba - Hotkey"
-#~ msgstr "KToshiba - Tecla Rapida"
-
-#~ msgid "Start Automatically"
-#~ msgstr "Comienzo Automático"
-
-#~ msgid "toshutils and HCI-SCI stuff"
-#~ msgstr "toshutils y codigo HCI-SCI"
-
-#~ msgid "Powersave Daemon & KPowersave"
-#~ msgstr "El demonio Powersave y KPowersave"
-
-#~ msgid "ksynaptics Team"
-#~ msgstr "El equipo de ksynaptics"
-
-#~ msgid "library for enabling/disabling TouchPad"
-#~ msgstr "Libreria para habilitar/deshabilitar el TouchPad"
-
-#~ msgid "omnibook stuff tester"
-#~ msgstr "Probador de gestiones del modulo omnibook"
-
-#~ msgid "Porting to new systray framework"
-#~ msgstr "Adaptación al nuevo sistema de la barra de tareas"
