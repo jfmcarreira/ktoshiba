@@ -18,7 +18,8 @@
 */
 
 #include <QtGui/QDesktopWidget>
-#include <QFile>
+#include <QtCore/QTimer>
+#include <QtCore/QFile>
 
 #include <KLocale>
 #include <KDebug>
@@ -44,8 +45,9 @@ using namespace Solid::PowerManagement;
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
       m_dBus( new KToshibaDBusInterface( parent ) ),
-      m_keyHandler( new KToshibaKeyHandler( parent ) ),
+      m_keyHandler( new KToshibaKeyHandler( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
+      m_widgetTimer( new QTimer( this ) ),
       m_fnPressed( false ),
       m_cookie( 0 )
 {
@@ -55,22 +57,22 @@ FnActions::FnActions(QObject *parent)
     // otherwise an ugly black background will appear
     m_widget->setAttribute( Qt::WA_TranslucentBackground, KWindowSystem::compositingActive() );
 
-    m_device = findDevicePath();
-    if (m_device.isEmpty() || m_device.isNull())
-        qApp->quit();
-
     // We're just going to care about these profiles
-    profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
+    m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
 
     QList<Solid::Device> list = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter, QString());
     Solid::Device device = list[0];
     Solid::AcAdapter *acAdapter = device.as<Solid::AcAdapter>();
     m_profile = (acAdapter->isPlugged()) ? QString("Performance") : QString("Powersave");
-    changeProfile(m_profile);
 
+    connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( m_keyHandler, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
     connect( acAdapter, SIGNAL( plugStateChanged(bool, QString) ), this, SLOT( acAdapterChanged(bool) ) );
     connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
+    connect( m_dBus, SIGNAL( kbdModeChanged() ), this, SLOT( changeKBDMode() ) );
+    connect( m_dBus, SIGNAL( kbdTimeoutChanged(int) ), this, SLOT( changeKBDTimeout(int) ) );
+    connect( m_dBus, SIGNAL( touchpadChanged() ), this, SLOT( toggleTouchPad() ) );
+    connect( m_dBus, SIGNAL( ecoChanged(bool) ), this, SLOT( toggleEcoLed(bool) ) );
 }
 
 FnActions::~FnActions()
@@ -78,31 +80,6 @@ FnActions::~FnActions()
     delete m_widget; m_widget = NULL;
     delete m_keyHandler; m_keyHandler = NULL;
     delete m_dBus; m_dBus = NULL;
-}
-
-QString FnActions::findDevicePath()
-{
-    QFile file("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/path");
-    if (file.exists()) {
-        kDebug() << "Found interface TOS1900" << endl;
-        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/");
-    }
-
-    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/path");
-    if (file.exists()) {
-        kDebug() << "Found interface TOS6200" << endl;
-        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/");
-    }
-
-    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/path");
-    if (file.exists()) {
-        kDebug() << "Found interface TOS6208" << endl;
-        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/");
-    }
-
-    kError() << "No known interface found" << endl;
-
-    return QString("");
 }
 
 void FnActions::acAdapterChanged(bool connected)
@@ -127,12 +104,12 @@ void FnActions::compositingChanged(bool state)
 
 void FnActions::toggleProfiles()
 {
-    int current = profiles.indexOf(m_profile);
-    if (current == profiles.indexOf(profiles.last())) {
-        m_profile = profiles.first();
+    int current = m_profiles.indexOf(m_profile);
+    if (current == m_profiles.indexOf(m_profiles.last())) {
+        m_profile = m_profiles.first();
     } else {
         current++;
-        m_profile = profiles.at(current);
+        m_profile = m_profiles.at(current);
     }
 
     changeProfile(m_profile);
@@ -173,26 +150,8 @@ void FnActions::changeProfile(QString profile)
 
 void FnActions::toggleTouchPad()
 {
-    QFile file(this);
-
-    file.setFileName(m_device + "touchpad");
-    if (!file.exists()) {
-        kWarning() << "Could not locate TouchPad file." << endl;
-        return;
-    }
-    
-    if (!file.open(QIODevice::ReadOnly)) {
-        kError() << "Could not open TouchPad file for reading: " << file.error();
-        return;
-    }
-
-    QTextStream stream(&file);
-    int state = stream.readAll().toInt();
-    file.close();
-
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
     action.setHelperID(HELPER_ID);
-    action.addArgument("state", (state ? 0 : 1));
     KAuth::ActionReply reply = action.execute();
     if (reply.failed())
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed";
@@ -200,25 +159,12 @@ void FnActions::toggleTouchPad()
 
 void FnActions::kbdBacklight()
 {
-    if (getKBDMode() != 2) {
+    if (getKBDMode() != AutoMode) {
         kWarning() << "Keyboard backlight timeout can't be changed in this mode";
         return;
     }
 
-    QFile file(m_device + "kbd_backlight_timeout");
-    if (!file.exists()) {
-        kWarning() << "Could not locate KBD backlight timeout device.";
-        return;
-    }
-
-    if (!file.open(QIODevice::ReadOnly)) {
-        kError() << "Could not open KBD backlight timeout file for reading: " << file.error();
-        return;
-    }
-
-    QTextStream stream(&file);
-    int time = stream.readAll().toInt();
-    file.close();
+    int time = getKBDTimeout();
 
     QString format = QString("<font color='grey'><b>%1</b></font>");
     m_statusWidget.kbdAutoTimeLabel->setText(format.arg(time));
@@ -227,68 +173,50 @@ void FnActions::kbdBacklight()
 
 void FnActions::toggleIllumination(bool on)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.illumination");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setillumination");
     action.setHelperID(HELPER_ID);
     action.addArgument("state", (on ? 1 : 0));
     KAuth::ActionReply reply = action.execute();
     if (reply.failed())
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.illumination failed";
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed";
 }
 
 void FnActions::toggleEcoLed(bool on)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.eco");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.seteco");
     action.setHelperID(HELPER_ID);
     action.addArgument("state", (on ? 1 : 0));
     KAuth::ActionReply reply = action.execute();
     if (reply.failed())
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.eco failed";
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed";
 }
 
 void FnActions::toggleKBDBacklight(bool on)
 {
-    if (getKBDMode() == 2)
+    if (getKBDMode() == AutoMode)
         m_dBus->setKBDBacklight(on);
 }
 
 int FnActions::getKBDMode()
 {
-    QFile file(m_device + "kbd_backlight_mode");
-    if (!file.exists()) {
-        kWarning() << "Could not locate KBD backlight mode device.";
-        return 0;
-    }
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open KBD backlight mode file for reading: " << file.error();
-        return 0;
-    }
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdmode");
+    action.setHelperID(HELPER_ID);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed";
 
-    QTextStream stream(&file);
-    int mode = stream.readAll().toInt();
-    file.close();
-
-    return mode;
+    return reply.data()["mode"].toInt();
 }
 
 int FnActions::getKBDTimeout()
 {
-    QFile file(m_device + "kbd_backlight_timeout");
-    if (!file.exists()) {
-        kWarning() << "Could not locate KBD backlight timeout device.";
-        return 0;
-    }
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kError() << "Could not open KBD backlight timeout file for reading: " << file.error();
-        return 0;
-    }
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout");
+    action.setHelperID(HELPER_ID);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed())
+        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed";
 
-    QTextStream stream(&file);
-    int time = stream.readAll().toInt();
-    file.close();
-
-    return time;
+    return reply.data()["time"].toInt();
 }
 
 void FnActions::changeKBDMode()
@@ -297,24 +225,24 @@ void FnActions::changeKBDMode()
     if (!mode)
         return;
     
-    mode = (mode == 1) ? 2 : 1;
+    mode = (mode == FNZMode) ? AutoMode : FNZMode;
 
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdmode");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdmode");
     action.setHelperID(HELPER_ID);
     action.addArgument("mode", mode);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed())
-        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed";
+        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed";
 }
 
 void FnActions::changeKBDTimeout(int time)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout");
     action.setHelperID(HELPER_ID);
     action.addArgument("time", time);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed())
-        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed";
+        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed";
 }
 
 void FnActions::showWidget(int wid)
@@ -329,6 +257,14 @@ void FnActions::showWidget(int wid)
     else
         m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
 
+    if (m_widgetTimer->isActive())
+        m_widgetTimer->setInterval( 900 );
+    else
+        m_widgetTimer->start( 900 );
+}
+
+void FnActions::hideWidget()
+{
     m_widget->hide();
 }
 

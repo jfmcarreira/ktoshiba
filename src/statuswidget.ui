@@ -70,7 +70,7 @@
     </size>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>5</number>
    </property>
    <widget class="QWidget" name="disabledPage">
     <property name="minimumSize">
@@ -111,198 +111,6 @@
      </property>
      <property name="pixmap">
       <pixmap resource="Icons.qrc">:/images/disabled_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="touchpadOnPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="touchpadOnLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/mpad_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="touchpadOffPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="touchpadOffLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/mpad-disabled_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="wifiOnPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="wifiOnLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/wireless_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="wifiOffPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="wifiOffLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/wireless-disconnected_64.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -457,6 +265,18 @@
     </widget>
    </widget>
    <widget class="QWidget" name="ecoPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="ecoLabel">
      <property name="geometry">
       <rect>
@@ -493,6 +313,18 @@
     </widget>
    </widget>
    <widget class="QWidget" name="kbdAutoPage">
+    <property name="minimumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>72</width>
+      <height>72</height>
+     </size>
+    </property>
     <widget class="QLabel" name="kbdAutoLabel">
      <property name="geometry">
       <rect>

@@ -1,3 +1,20 @@
+2014-07-03 Azael Avalos <coproscefalo@gmail.com>
+	* Changed KToshHelper to set ang get calls,
+	  removing some duplicated code from FnActions,
+	  code adapted
+	* Re-added widget Timer
+	* Removed unused icons and StatusWidget pages
+
+2014-07-02 Azael Avalos <coproscefalo@gmail.com>
+	* Some minor changes to declarations (dec -> m_dec)
+
+2014-06-28 Azael Avalos <coproscefalo@gmail.com>
+	* Changed DBus object registration name from "/"
+	  to "/net/sourceforge/KToshiba"
+	* Removed gotKey DBus call stub
+	* Added four new DBus calls, changeKBDMode, setKBDTimeout,
+	  toggleTouchPad and setECOLed
+
 2014-06-26 Azael Avalos <coproscefalo@gmail.com>
 	* Code cleanup
 

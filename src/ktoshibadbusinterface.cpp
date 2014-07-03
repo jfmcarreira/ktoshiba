@@ -31,12 +31,27 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     new KToshibaDBusAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerService("net.sourceforge.KToshiba");
-    dbus.registerObject("/", this);
+    dbus.registerObject("/net/sourceforge/KToshiba", this);
 }
 
-void KToshibaDBusInterface::gotKey(int key)
+void KToshibaDBusInterface::changeKBDMode()
 {
-    kDebug() << "Key received: " << key;
+    emit kbdModeChanged();
+}
+
+void KToshibaDBusInterface::setKBDTimeout(int time)
+{
+    emit kbdTimeoutChanged(time);
+}
+
+void KToshibaDBusInterface::toggleTouchPad()
+{
+    emit touchpadChanged();
+}
+
+void KToshibaDBusInterface::setECOLed(bool enabled)
+{
+    emit ecoChanged(enabled);
 }
 
 void KToshibaDBusInterface::lockScreen()

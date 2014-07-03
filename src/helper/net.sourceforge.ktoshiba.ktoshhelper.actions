@@ -4,31 +4,43 @@ Icon=ktoshiba
 URL=http://ktoshiba.sourceforge.net/
 
 [net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad]
-Name=Toggles TouchPad state
-Description=Sets the desired TouchPad state
+Name=Toggle touchpad
+Description=Toggles the TouchPad state
 Policy=yes
 PolicyInactive=yes
 
-[net.sourceforge.ktoshiba.ktoshhelper.illumination]
-Name=Toggle illumination
+[net.sourceforge.ktoshiba.ktoshhelper.setillumination]
+Name=Set illumination
 Description=Sets the desired Illumination led status
 Policy=yes
 PolicyInactive=yes
 
-[net.sourceforge.ktoshiba.ktoshhelper.eco]
-Name=Toggle ECO
+[net.sourceforge.ktoshiba.ktoshhelper.seteco]
+Name=Set eco
 Description=Sets the desired ECO led state
 Policy=yes
 PolicyInactive=yes
 
 [net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout]
 Name=Keyboard timeout
+Description=Gets the current keyboard backlight timeout
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout]
+Name=Set keyboard timeout
 Description=Sets the desired keyboard backlight timeout
 Policy=yes
 PolicyInactive=yes
 
 [net.sourceforge.ktoshiba.ktoshhelper.kbdmode]
 Name=Keyboard mode
+Description=Gets the current keyboard backlight mode
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.setkbdmode]
+Name=Set keyboard mode
 Description=Sets the desired keyboard backlight mode
 Policy=yes
 PolicyInactive=yes

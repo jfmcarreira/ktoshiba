@@ -1,8 +1,87 @@
-<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-<node>
+<!DOCTYPE node PUBLIC
+"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd" [
+  <!ENTITY ERROR_GENERAL "net.sourceforge.KToshiba.GeneralError">
+]
+>
+<node name="/" xmlns:doc="http://www.freedesktop.org/dbus/1.0/doc.dtd">
   <interface name="net.sourceforge.KToshiba">
-    <method name="gotKey">
-      <arg name="key" type="i" direction="in"/>
+    <doc:doc>
+      <doc:description>
+        <doc:para>
+          net.sourceforge.KToshiba is a DBus interface implemented by KToshiba.
+          It allows to change the keyboard backlight mode and timeout (if
+          the laptop supports it) as well as toggling the touchpad and eco
+          mode led state.
+        </doc:para>
+      </doc:description>
+    </doc:doc>
+
+    <method name="changeKBDMode">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Changes the keyboard backlight mode of operation from FN-Z to Auto and viceversa.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while changing the keyboard backlight mode</doc:error>
+        </doc:errors>
+      </doc:doc>
     </method>
+
+    <method name="setKBDTimeout">
+      <arg name="time" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The timeout of the keyboard backlight.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the timeout value for the keyboard backlight.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight timeout</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="toggleTouchPad">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Toggles the touchpad from enabled to disabled and viceversa.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while toggling the touchpad</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setECOLed">
+      <arg name="enabled" type="b" direction="in">
+        <doc:doc>
+          <doc:summary>
+            Set the value of the ECO mode led state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the ECO mode led from on to off and viceversa.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the ECO mode led state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
   </interface>
 </node>

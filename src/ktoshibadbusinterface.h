@@ -20,7 +20,7 @@
 #ifndef KTOSHIBA_DBUS_INTERFACE_H
 #define KTOSHIBA_DBUS_INTERFACE_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class KToshibaDBusInterface : public QObject
 {
@@ -39,8 +39,17 @@ public:
     void setKBDBacklight(bool);
     void setZoom(int);
 
+Q_SIGNALS:
+    void kbdModeChanged();
+    void kbdTimeoutChanged(int);
+    void touchpadChanged();
+    void ecoChanged(bool);
+
 public Q_SLOTS:
-    void gotKey(int key);
+    void changeKBDMode();
+    void setKBDTimeout(int);
+    void toggleTouchPad();
+    void setECOLed(bool);
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

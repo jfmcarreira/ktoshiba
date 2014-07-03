@@ -12,32 +12,25 @@
           net.sourceforge.ktoshiba.ktoshhelper is a DBus interface implemented
           by KToshiba.
           It allows several actions (if supported) to be controlled like
-          TouchPad and ECO led state.
+          TouchPad, ECO led state and keyboard backlight mode.
         </doc:para>
       </doc:description>
     </doc:doc>
 
     <method name="toggletouchpad">
-      <arg name="state" type="i" direction="in">
-        <doc:doc>
-          <doc:summary>
-            The value to set the TouchPad state.
-          </doc:summary>
-        </doc:doc>
-      </arg>
       <doc:doc>
         <doc:description>
           <doc:para>
-            Set the TouchPad state to on/off.
+            Toggles the TouchPad state on/off.
           </doc:para>
         </doc:description>
         <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the TouchPad state</doc:error>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while toggling the TouchPad</doc:error>
         </doc:errors>
       </doc:doc>
     </method>
 
-    <method name="illumination">
+    <method name="setillumination">
       <arg name="state" type="i" direction="in">
         <doc:doc>
           <doc:summary>
@@ -57,7 +50,7 @@
       </doc:doc>
     </method>
 
-    <method name="eco">
+    <method name="seteco">
       <arg name="state" type="i" direction="in">
         <doc:doc>
           <doc:summary>
@@ -78,6 +71,26 @@
     </method>
 
     <method name="kbdtimeout">
+      <arg name="time" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The current value of the keyboard backlight timeout.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the timeout of the keyboard backlight.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight timeout</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setkbdtimeout">
       <arg name="time" type="i" direction="in">
         <doc:doc>
           <doc:summary>
@@ -98,6 +111,26 @@
     </method>
 
     <method name="kbdmode">
+      <arg name="mode" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The current value of the keyboard backlight mode.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the keyboard backlight mode.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setkbdmode">
       <arg name="mode" type="i" direction="in">
         <doc:doc>
           <doc:summary>

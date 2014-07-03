@@ -64,16 +64,9 @@ QString KToshHelper::findDevicePath()
 
 ActionReply KToshHelper::toggletouchpad(QVariantMap args)
 {
+    Q_UNUSED(args)
+
     ActionReply reply;
-    int state = args["state"].toInt();
-
-    if (state < 0 || state > 1) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-EINVAL);
-        reply.setErrorDescription("The value was out of range");
-
-        return reply;
-    }
 
     QFile file(m_device + "touchpad");
     if (!file.exists()) {
@@ -84,7 +77,7 @@ ActionReply KToshHelper::toggletouchpad(QVariantMap args)
         return reply;
     }
 
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::ReadWrite)) {
        reply = ActionReply::HelperErrorReply;
        reply.setErrorCode(file.error());
 
@@ -92,7 +85,8 @@ ActionReply KToshHelper::toggletouchpad(QVariantMap args)
     }
 
     QTextStream stream(&file);
-    stream << state;
+    int state = stream.readAll().toInt();
+    stream << !state;
     file.close();
 
     reply = ActionReply::Success;
@@ -100,7 +94,7 @@ ActionReply KToshHelper::toggletouchpad(QVariantMap args)
     return reply;
 }
 
-ActionReply KToshHelper::illumination(QVariantMap args)
+ActionReply KToshHelper::setillumination(QVariantMap args)
 {
     ActionReply reply;
     int state = args["state"].toInt();
@@ -138,7 +132,7 @@ ActionReply KToshHelper::illumination(QVariantMap args)
     return reply;
 }
 
-ActionReply KToshHelper::eco(QVariantMap args)
+ActionReply KToshHelper::seteco(QVariantMap args)
 {
     ActionReply reply;
     int state = args["state"].toInt();
@@ -178,6 +172,38 @@ ActionReply KToshHelper::eco(QVariantMap args)
 
 ActionReply KToshHelper::kbdmode(QVariantMap args)
 {
+    Q_UNUSED(args)
+
+    ActionReply reply;
+
+    QFile file(m_device + "kbd_backlight_mode");
+    if (!file.exists()) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-ENODEV);
+        reply.setErrorDescription("The keyboard backlight mode device does not exist");
+
+        return reply;
+    }
+
+    if (!file.open(QIODevice::ReadOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(file.error());
+
+       return reply;
+    }
+
+    QTextStream stream(&file);
+    int mode = stream.readAll().toInt();
+    file.close();
+
+    reply = ActionReply::Success;
+    reply.addData("mode", mode);
+
+    return reply;
+}
+
+ActionReply KToshHelper::setkbdmode(QVariantMap args)
+{
     ActionReply reply;
     int mode = args["mode"].toInt();
 
@@ -215,6 +241,38 @@ ActionReply KToshHelper::kbdmode(QVariantMap args)
 }
 
 ActionReply KToshHelper::kbdtimeout(QVariantMap args)
+{
+    Q_UNUSED(args)
+
+    ActionReply reply;
+
+    QFile file(m_device + "kbd_backlight_timeout");
+    if (!file.exists()) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-ENODEV);
+        reply.setErrorDescription("The keyboard backlight timeout device does not exist");
+
+        return reply;
+    }
+
+    if (!file.open(QIODevice::ReadOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(file.error());
+
+       return reply;
+    }
+
+    QTextStream stream(&file);
+    int time = stream.readAll().toInt();
+    file.close();
+
+    reply = ActionReply::Success;
+    reply.addData("time", time);
+
+    return reply;
+}
+
+ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
 {
     ActionReply reply;
     int time = args["time"].toInt();

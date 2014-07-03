@@ -28,6 +28,7 @@
 class QAction;
 
 class KAboutData;
+class KHelpMenu;
 class KStatusNotifierItem;
 
 class FnActions;
@@ -61,16 +62,17 @@ private:
     void createConfig();
 
     FnActions *m_fn;
-    QAction *touchPad;
-    QAction *kbdTimeout;
-    QAction *kbdMode;
+    QAction *m_touchPad;
+    QAction *m_kbdTimeout;
+    QAction *m_kbdMode;
     Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
     QWidget *m_widget;
-    KSharedConfigPtr config;
+    KSharedConfigPtr m_config;
     int m_mode;
     int m_time;
 
     static KAboutData* m_about;
+    KHelpMenu *m_helpMenu;
     KStatusNotifierItem *m_trayicon;
 };
 

@@ -20,11 +20,13 @@
 #ifndef FN_ACTIONS_H
 #define FN_ACTIONS_H
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "ui_statuswidget.h"
+
+class QTimer;
 
 class KToshibaDBusInterface;
 class KToshibaKeyHandler;
@@ -34,9 +36,9 @@ class FnActions : public QObject
     Q_OBJECT
 
 public:
-    enum WidgetIcons { Disabled, TPOn, TPOff, WifiOn, WifiOff, Performance, Powersave, Presentation, ECO, KBDAuto, Blank };
+    enum WidgetIcons { Disabled, Performance, Powersave, Presentation, ECO, KBDAuto, Blank };
     enum zoomActions { ZoomReset = 0, ZoomIn = 1, ZoomOut = -1 };
-    enum KbdBacklight { FNZMode = 1, AutoMode = 2 };
+    enum KbdBacklight { NotAvailable = 0, FNZMode = 1, AutoMode = 2 };
     enum toogleActions { Off = false, On = true };
 
 public:
@@ -44,23 +46,25 @@ public:
     ~FnActions();
 
     int getKBDMode();
-    void changeKBDMode();
     int getKBDTimeout();
-    void changeKBDTimeout(int);
 
-private Q_SLOTS:
+public Q_SLOTS:
     void processHotkey(int);
     void toggleTouchPad();
+    void changeKBDMode();
+    void changeKBDTimeout(int);
+    void toggleEcoLed(bool);
     void acAdapterChanged(bool);
     void compositingChanged(bool);
+    
+private Q_SLOTS:
+    void hideWidget();
 
 private:
-    QString findDevicePath();
     void showWidget(int);
     void toggleProfiles();
     void changeProfile(QString);
     void toggleIllumination(bool);
-    void toggleEcoLed(bool);
     void kbdBacklight();
     void toggleKBDBacklight(bool);
 
@@ -68,9 +72,9 @@ private:
     KToshibaKeyHandler *m_keyHandler;
     Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
-    QStringList profiles;
+    QTimer *m_widgetTimer;
+    QStringList m_profiles;
     QString m_profile;
-    QString m_device;
     QString m_version;
 
     bool m_fnPressed;

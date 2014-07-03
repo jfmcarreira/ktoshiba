@@ -35,10 +35,12 @@ public:
 
 public slots:
     ActionReply toggletouchpad(QVariantMap args);
-    ActionReply illumination(QVariantMap args);
-    ActionReply eco(QVariantMap args);
+    ActionReply setillumination(QVariantMap args);
+    ActionReply seteco(QVariantMap args);
     ActionReply kbdtimeout(QVariantMap args);
+    ActionReply setkbdtimeout(QVariantMap args);
     ActionReply kbdmode(QVariantMap args);
+    ActionReply setkbdmode(QVariantMap args);
 
 private:
     QString findDevicePath();
