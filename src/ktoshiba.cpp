@@ -38,8 +38,10 @@ static const char * const ktosh_config = "ktoshibarc";
 KToshiba::KToshiba()
     : KUniqueApplication(),
       m_fn( new FnActions( this ) ),
+      m_helper( new HelperActions( this ) ),
       m_widget( new QWidget( 0, Qt::WindowStaysOnTopHint ) ),
       m_config( KSharedConfig::openConfig( ktosh_config ) ),
+      m_modeText( i18n("Switch the keyboard backlight mode to %1") ),
       m_trayicon( new KStatusNotifierItem( this ) )
 {
     m_trayicon->setIconByName( "ktoshiba" );
@@ -52,7 +54,7 @@ KToshiba::KToshiba()
     m_kbdTimeoutWidget.timeoutSpinBox->setMinimum(0);
     m_widget->clearFocus();
 
-    m_mode = m_fn->getKBDMode();
+    m_mode = (m_helper->isKBDBacklightSupported()) ? m_helper->getKBDMode() : FnActions::NotAvailable;
 
     KMenu *m_popupMenu = m_trayicon->contextMenu();
 
@@ -64,8 +66,9 @@ KToshiba::KToshiba()
     // TODO: Add other items here... If any...
     m_touchPad = m_popupMenu->addAction( i18n("Toggle TouchPad") );
     m_touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
+    m_touchPad->setVisible( m_helper->isTouchPadSupported() );
     m_popupMenu->addSeparator();
-    m_kbdMode = m_popupMenu->addAction( i18n("Switch the keyboard backlight mode to %1", (m_mode == 1) ? "Auto" : "FN-Z") );
+    m_kbdMode = m_popupMenu->addAction( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
     m_kbdMode->setIcon( KIcon( "input-keyboard" ) );
     m_kbdMode->setVisible((m_mode == FnActions::NotAvailable) ? false : true);
     m_kbdTimeout = m_popupMenu->addAction( i18n("Change the keyboard backlight timeout") );
@@ -77,17 +80,19 @@ KToshiba::KToshiba()
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
     m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
 
-    connect( m_kbdMode, SIGNAL( triggered(bool) ), this, SLOT( changeKBDMode() ) );
-    connect( m_kbdTimeout, SIGNAL( triggered(bool) ), this, SLOT( kbdTimeoutClicked() ) );
-    connect( m_touchPad, SIGNAL( triggered(bool) ), m_fn, SLOT( toggleTouchPad() ) );
+    connect( m_kbdMode, SIGNAL( triggered() ), this, SLOT( changeKBDMode() ) );
+    connect( m_kbdTimeout, SIGNAL( triggered() ), this, SLOT( kbdTimeoutClicked() ) );
+    connect( m_touchPad, SIGNAL( triggered() ), m_helper, SLOT( toggleTouchPad() ) );
     connect( m_kbdTimeoutWidget.buttonBox, SIGNAL( clicked(QAbstractButton *) ),
              this, SLOT( changeKBDTimeout(QAbstractButton *) ) );
     connect( m_kbdTimeoutWidget.timeoutSpinBox, SIGNAL( valueChanged(int) ), this, SLOT( timeChanged(int) ) );
+    connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( changeKBDMode(int) ) );
 }
 
 KToshiba::~KToshiba()
 {
     delete m_fn; m_fn = NULL;
+    delete m_helper; m_helper = NULL;
     delete m_widget; m_widget = NULL;
     delete m_trayicon; m_trayicon = NULL;
 }
@@ -118,26 +123,25 @@ void KToshiba::createConfig()
     generalGroup.config()->sync();
 }
 
-void KToshiba::changeKBDMode()
+void KToshiba::changeKBDMode(int mode)
 {
     KNotification *notification =
 		KNotification::event(KNotification::Notification, i18n("Keyboard Mode"),
 				     i18n("The computer must be restarted in order to activate the new keyboard Mode"));
     notification->sendEvent();
 
-    m_fn->changeKBDMode();
-    m_mode = m_fn->getKBDMode();
-    m_kbdMode->setText( i18n("Switch the keyboard backlight mode to %1", (m_mode == FnActions::FNZMode) ? "FN-Z" : "Auto") );
+    m_mode = (!mode) ? m_helper->getKBDMode() : mode;
+    m_helper->setKBDMode((m_mode == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode);
+    m_kbdMode->setText( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
 }
 
 void KToshiba::kbdTimeoutClicked()
 {
     if (m_widget->isHidden()) {
-        m_kbdTimeoutWidget.timeoutSpinBox->setValue(m_fn->getKBDTimeout());
         QRect r = QApplication::desktop()->geometry();
         m_widget->move(r.center() -
                     QPoint(m_widget->width() / 2, m_widget->height() / 2));
-        m_time = m_fn->getKBDTimeout();
+        m_time = m_helper->getKBDTimeout();
         m_kbdTimeoutWidget.timeoutSpinBox->setValue(m_time);
         m_widget->show();
     } else {
@@ -160,11 +164,11 @@ void KToshiba::changeKBDTimeout(QAbstractButton *button)
 
     switch(stdButton) {
     case QDialogButtonBox::Ok:
-        m_fn->changeKBDTimeout(m_time);
+        m_helper->setKBDTimeout(m_time);
         m_widget->hide();
     break;
     case QDialogButtonBox::Apply:
-        m_fn->changeKBDTimeout(m_time);
+        m_helper->setKBDTimeout(m_time);
     break;
     case QDialogButtonBox::Cancel:
         m_widget->hide();

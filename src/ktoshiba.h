@@ -32,6 +32,7 @@ class KHelpMenu;
 class KStatusNotifierItem;
 
 class FnActions;
+class HelperActions;
 
 /**
  * @short Hotkeys monitoring for Toshiba laptops
@@ -51,7 +52,7 @@ public:
     static KAboutData* aboutData();
 
 private Q_SLOTS:
-    void changeKBDMode();
+    void changeKBDMode(int mode = 0);
     void kbdTimeoutClicked();
     void changeKBDTimeout(QAbstractButton *);
     void timeChanged(int);
@@ -62,12 +63,14 @@ private:
     void createConfig();
 
     FnActions *m_fn;
+    HelperActions *m_helper;
     QAction *m_touchPad;
     QAction *m_kbdTimeout;
     QAction *m_kbdMode;
     Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
     QWidget *m_widget;
     KSharedConfigPtr m_config;
+    QString m_modeText;
     int m_mode;
     int m_time;
 

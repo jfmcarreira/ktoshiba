@@ -19,12 +19,10 @@
 
 #include <QtGui/QDesktopWidget>
 #include <QtCore/QTimer>
-#include <QtCore/QFile>
 
 #include <KLocale>
 #include <KDebug>
 #include <KWindowSystem>
-#include <KAuth/Action>
 
 #include <solid/device.h>
 #include <solid/acadapter.h>
@@ -38,14 +36,13 @@ extern "C" {
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
-#define HELPER_ID "net.sourceforge.ktoshiba.ktoshhelper"
-
 using namespace Solid::PowerManagement;
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
       m_dBus( new KToshibaDBusInterface( parent ) ),
       m_keyHandler( new KToshibaKeyHandler( this ) ),
+      m_helper( new HelperActions( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_fnPressed( false ),
@@ -69,16 +66,13 @@ FnActions::FnActions(QObject *parent)
     connect( m_keyHandler, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
     connect( acAdapter, SIGNAL( plugStateChanged(bool, QString) ), this, SLOT( acAdapterChanged(bool) ) );
     connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
-    connect( m_dBus, SIGNAL( kbdModeChanged() ), this, SLOT( changeKBDMode() ) );
-    connect( m_dBus, SIGNAL( kbdTimeoutChanged(int) ), this, SLOT( changeKBDTimeout(int) ) );
-    connect( m_dBus, SIGNAL( touchpadChanged() ), this, SLOT( toggleTouchPad() ) );
-    connect( m_dBus, SIGNAL( ecoChanged(bool) ), this, SLOT( toggleEcoLed(bool) ) );
 }
 
 FnActions::~FnActions()
 {
     delete m_widget; m_widget = NULL;
     delete m_keyHandler; m_keyHandler = NULL;
+    delete m_helper; m_helper = NULL;
     delete m_dBus; m_dBus = NULL;
 }
 
@@ -102,6 +96,11 @@ void FnActions::compositingChanged(bool state)
     m_widget->setAttribute( Qt::WA_TranslucentBackground, state );
 }
 
+void FnActions::toggleTouchPad()
+{
+    m_helper->toggleTouchPad();
+}
+
 void FnActions::toggleProfiles()
 {
     int current = m_profiles.indexOf(m_profile);
@@ -119,27 +118,27 @@ void FnActions::changeProfile(QString profile)
 {
     if (profile == "Powersave") {
         showWidget(Powersave);
-        toggleEcoLed(Off);
-        toggleIllumination(Off);
+        m_helper->setEcoLed(Off);
+        m_helper->setIllumination(Off);
         m_dBus->setBrightness(42);
-        toggleKBDBacklight(Off);
+        setKBDBacklight(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
-        toggleEcoLed(Off);
-        toggleIllumination(On);
+        m_helper->setEcoLed(Off);
+        m_helper->setIllumination(On);
         m_dBus->setBrightness(100);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
-        toggleEcoLed(Off);
-        toggleIllumination(On);
+        m_helper->setEcoLed(Off);
+        m_helper->setIllumination(On);
         m_dBus->setBrightness(71);
         m_cookie = beginSuppressingScreenPowerManagement(m_profile);
     } else if (profile == "ECO") {
         showWidget(ECO);
-        toggleEcoLed(On);
-        toggleIllumination(Off);
+        m_helper->setEcoLed(On);
+        m_helper->setIllumination(Off);
         m_dBus->setBrightness(57);
-        toggleKBDBacklight(Off);
+        setKBDBacklight(Off);
     }
     kDebug() << "Changed battery profile to: " << m_profile;
 
@@ -148,101 +147,28 @@ void FnActions::changeProfile(QString profile)
             m_cookie = 0;
 }
 
-void FnActions::toggleTouchPad()
-{
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed";
-}
-
 void FnActions::kbdBacklight()
 {
-    if (getKBDMode() != AutoMode) {
-        kWarning() << "Keyboard backlight timeout can't be changed in this mode";
+    int mode = m_helper->getKBDMode();
+    if (mode == NotAvailable) {
+        kDebug() << "Keyboard backlight is not supported";
+        return;
+    } else if (mode == FNZMode) {
+        kDebug() << "Keyboard backlight mode is not set to Auto";
         return;
     }
 
-    int time = getKBDTimeout();
+    int time = m_helper->getKBDTimeout();
 
     QString format = QString("<font color='grey'><b>%1</b></font>");
     m_statusWidget.kbdAutoTimeLabel->setText(format.arg(time));
     showWidget(KBDAuto);
 }
 
-void FnActions::toggleIllumination(bool on)
+void FnActions::setKBDBacklight(bool on)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setillumination");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("state", (on ? 1 : 0));
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed";
-}
-
-void FnActions::toggleEcoLed(bool on)
-{
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.seteco");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("state", (on ? 1 : 0));
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed";
-}
-
-void FnActions::toggleKBDBacklight(bool on)
-{
-    if (getKBDMode() == AutoMode)
+    if (m_helper->getKBDMode() == AutoMode)
         m_dBus->setKBDBacklight(on);
-}
-
-int FnActions::getKBDMode()
-{
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdmode");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed";
-
-    return reply.data()["mode"].toInt();
-}
-
-int FnActions::getKBDTimeout()
-{
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed";
-
-    return reply.data()["time"].toInt();
-}
-
-void FnActions::changeKBDMode()
-{
-    int mode = getKBDMode();
-    if (!mode)
-        return;
-    
-    mode = (mode == FNZMode) ? AutoMode : FNZMode;
-
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdmode");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("mode", mode);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed";
-}
-
-void FnActions::changeKBDTimeout(int time)
-{
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("time", time);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed())
-        qWarning() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed";
 }
 
 void FnActions::showWidget(int wid)

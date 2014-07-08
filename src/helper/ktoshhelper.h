@@ -20,7 +20,8 @@
 #ifndef KTOSHHELPER_H
 #define KTOSHHELPER_H
 
-#include <QObject>
+#include <QtCore/QObject>
+#include <QtCore/QFile>
 
 #include <kauth.h>
 
@@ -34,8 +35,12 @@ public:
     KToshHelper(QObject *parent = 0);
 
 public slots:
+    ActionReply deviceexists(QVariantMap args);
+    ActionReply leddeviceexists(QVariantMap args);
     ActionReply toggletouchpad(QVariantMap args);
+    ActionReply illumination(QVariantMap args);
     ActionReply setillumination(QVariantMap args);
+    ActionReply eco(QVariantMap args);
     ActionReply seteco(QVariantMap args);
     ActionReply kbdtimeout(QVariantMap args);
     ActionReply setkbdtimeout(QVariantMap args);
@@ -43,8 +48,10 @@ public slots:
     ActionReply setkbdmode(QVariantMap args);
 
 private:
-    QString findDevicePath();
-    QString m_device;
+    QString findDriverPath();
+
+    QString m_driverPath;
+    QFile m_file;
 };
 
 #endif // KTOSHHELPER_H

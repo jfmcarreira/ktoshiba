@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,43 +17,36 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef KTOSHIBA_DBUS_INTERFACE_H
-#define KTOSHIBA_DBUS_INTERFACE_H
+#ifndef HELPERACTIONS_H
+#define HELPERACTIONS_H
 
 #include <QtCore/QObject>
 
-class HelperActions;
-
-class KToshibaDBusInterface : public QObject
+class HelperActions : public QObject
 {
     Q_OBJECT
 
-    Q_CLASSINFO("KToshiba D-Bus Interface", "net.sourceforge.KToshiba")
-
 public:
-    enum zoomActions { ZoomReset = 0, ZoomIn = 1, ZoomOut = -1 };
+    HelperActions(QObject *parent = 0);
 
-public:
-    KToshibaDBusInterface(QObject *parent);
-
-    void lockScreen();
-    void setBrightness(int);
-    void setKBDBacklight(bool);
-    void setZoom(int);
+    bool isTouchPadSupported();
+    bool isIlluminationSupported();
+    bool isECOSupported();
+    bool isKBDBacklightSupported();
 
 public Q_SLOTS:
     void toggleTouchPad();
-    bool getECOLed();
-    void setECOLed(bool);
     bool getIllumination();
     void setIllumination(bool);
+    bool getEcoLed();
+    void setEcoLed(bool);
     int getKBDMode();
-    void changeKBDMode();
+    void setKBDMode(int);
     int getKBDTimeout();
     void setKBDTimeout(int);
 
-private:
-    HelperActions *m_helper;
+Q_SIGNALS:
+    void kbdModeChanged(int mode = 0);
 };
 
-#endif	// KTOSHIBA_DBUS_INTERFACE_H
+#endif // HELPERACTIONS_H

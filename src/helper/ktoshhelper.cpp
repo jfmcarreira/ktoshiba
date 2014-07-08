@@ -17,42 +17,35 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <QFile>
 #include <QDebug>
 #include <QVariantMap>
-
-extern "C" {
-#include <asm/errno.h>
-}
 
 #include "ktoshhelper.h"
 
 KToshHelper::KToshHelper(QObject *parent)
     : QObject(parent)
 {
-    m_device = findDevicePath();
-    if (m_device.isEmpty() || m_device.isNull())
+    m_driverPath = findDriverPath();
+    if (m_driverPath.isEmpty())
         exit(-1);
 }
 
-QString KToshHelper::findDevicePath()
+QString KToshHelper::findDriverPath()
 {
-    QFile file(this);
-
-    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/path");
-    if (file.exists()) {
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/path");
+    if (m_file.exists()) {
         qDebug() << "Found interface TOS1900" << endl;
         return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/");
     }
 
-    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/path");
-    if (file.exists()) {
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/path");
+    if (m_file.exists()) {
         qDebug() << "Found interface TOS6200" << endl;
         return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/");
     }
 
-    file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/path");
-    if (file.exists()) {
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/path");
+    if (m_file.exists()) {
         qDebug() << "Found interface TOS6208" << endl;
         return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/");
     }
@@ -62,34 +55,83 @@ QString KToshHelper::findDevicePath()
     return QString("");
 }
 
+ActionReply KToshHelper::deviceexists(QVariantMap args)
+{
+    ActionReply reply;
+    QString device = args["device"].toString();
+
+    m_file.setFileName(m_driverPath + device);
+    if (!m_file.exists()) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-19); // No such device
+        reply.setErrorDescription("The device does not exist");
+
+        return reply;
+    }
+
+    return reply;
+}
+
+ActionReply KToshHelper::leddeviceexists(QVariantMap args)
+{
+    ActionReply reply;
+    QString device = args["device"].toString();
+
+    m_file.setFileName("/sys/class/leds/toshiba::" + device + "/brightness");
+    if (!m_file.exists()) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-19); // No such device
+        reply.setErrorDescription("The device does not exist");
+
+        return reply;
+    }
+
+    return reply;
+}
+
 ActionReply KToshHelper::toggletouchpad(QVariantMap args)
 {
     Q_UNUSED(args)
 
     ActionReply reply;
 
-    QFile file(m_device + "touchpad");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The touchpad device does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::ReadWrite)) {
+    m_file.setFileName(m_driverPath + "touchpad");
+    if (!m_file.open(QIODevice::ReadWrite)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     int state = stream.readAll().toInt();
     stream << !state;
-    file.close();
+    m_file.close();
 
-    reply = ActionReply::Success;
+    return reply;
+}
+
+ActionReply KToshHelper::illumination(QVariantMap args)
+{
+    Q_UNUSED(args)
+
+    ActionReply reply;
+
+    m_file.setFileName("/sys/class/leds/toshiba::illumination/brightness");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    reply.addData("state", state);
 
     return reply;
 }
@@ -101,33 +143,48 @@ ActionReply KToshHelper::setillumination(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-EINVAL);
+        reply.setErrorCode(-22); // Invalid argument
         reply.setErrorDescription("The value was out of range");
 
         return reply;
     }
 
-    QFile file("/sys/class/leds/toshiba::illumination/brightness");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The illumination led does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::WriteOnly)) {
+    m_file.setFileName("/sys/class/leds/toshiba::illumination/brightness");
+    if (!m_file.open(QIODevice::WriteOnly)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     stream << state;
-    file.close();
+    m_file.close();
 
-    reply = ActionReply::Success;
+    return reply;
+}
+
+ActionReply KToshHelper::eco(QVariantMap args)
+{
+    Q_UNUSED(args)
+
+    ActionReply reply;
+
+    m_file.setFileName("/sys/class/leds/toshiba::eco_mode/brightness");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    reply.addData("state", state);
 
     return reply;
 }
@@ -139,33 +196,24 @@ ActionReply KToshHelper::seteco(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-EINVAL);
+        reply.setErrorCode(-22); // Invalid argument
         reply.setErrorDescription("The value was out of range");
 
         return reply;
     }
 
-    QFile file("/sys/class/leds/toshiba::eco_mode/brightness");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The eco mode led does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::WriteOnly)) {
+    m_file.setFileName("/sys/class/leds/toshiba::eco_mode/brightness");
+    if (!m_file.open(QIODevice::WriteOnly)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     stream << state;
-    file.close();
-
-    reply = ActionReply::Success;
+    m_file.close();
 
     return reply;
 }
@@ -176,27 +224,19 @@ ActionReply KToshHelper::kbdmode(QVariantMap args)
 
     ActionReply reply;
 
-    QFile file(m_device + "kbd_backlight_mode");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The keyboard backlight mode device does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::ReadOnly)) {
+    m_file.setFileName(m_driverPath + "kbd_backlight_mode");
+    if (!m_file.open(QIODevice::ReadOnly)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     int mode = stream.readAll().toInt();
-    file.close();
+    m_file.close();
 
-    reply = ActionReply::Success;
     reply.addData("mode", mode);
 
     return reply;
@@ -209,33 +249,24 @@ ActionReply KToshHelper::setkbdmode(QVariantMap args)
 
     if (mode < 1 || mode > 2) {
         reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-EINVAL);
+        reply.setErrorCode(-22); // Invalid argument
         reply.setErrorDescription("The value was out of range");
 
         return reply;
     }
 
-    QFile file(m_device + "kbd_backlight_mode");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The keyboard backlight mode device does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::WriteOnly)) {
+    m_file.setFileName(m_driverPath + "kbd_backlight_mode");
+    if (!m_file.open(QIODevice::WriteOnly)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     stream << mode;
-    file.close();
-
-    reply = ActionReply::Success;
+    m_file.close();
 
     return reply;
 }
@@ -246,27 +277,19 @@ ActionReply KToshHelper::kbdtimeout(QVariantMap args)
 
     ActionReply reply;
 
-    QFile file(m_device + "kbd_backlight_timeout");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The keyboard backlight timeout device does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::ReadOnly)) {
+    m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
+    if (!m_file.open(QIODevice::ReadOnly)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     int time = stream.readAll().toInt();
-    file.close();
+    m_file.close();
 
-    reply = ActionReply::Success;
     reply.addData("time", time);
 
     return reply;
@@ -279,33 +302,24 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
 
     if (time < 0 || time > 60) {
         reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-EINVAL);
+        reply.setErrorCode(-22); // Invalid argument
         reply.setErrorDescription("The value was out of range");
 
         return reply;
     }
 
-    QFile file(m_device + "kbd_backlight_timeout");
-    if (!file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-ENODEV);
-        reply.setErrorDescription("The keyboard backlight timeout device does not exist");
-
-        return reply;
-    }
-
-    if (!file.open(QIODevice::WriteOnly)) {
+    m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
+    if (!m_file.open(QIODevice::WriteOnly)) {
        reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(file.error());
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
 
        return reply;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&m_file);
     stream << time;
-    file.close();
-
-    reply = ActionReply::Success;
+    m_file.close();
 
     return reply;
 }

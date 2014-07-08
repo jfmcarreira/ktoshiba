@@ -24,9 +24,11 @@
 
 #include "ktoshibadbusinterface.h"
 #include "ktoshibadbusadaptor.h"
+#include "helperactions.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
-    : QObject( parent )
+    : QObject( parent ),
+      m_helper( new HelperActions( this ) )
 {
     new KToshibaDBusAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -34,24 +36,72 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     dbus.registerObject("/net/sourceforge/KToshiba", this);
 }
 
-void KToshibaDBusInterface::changeKBDMode()
-{
-    emit kbdModeChanged();
-}
-
-void KToshibaDBusInterface::setKBDTimeout(int time)
-{
-    emit kbdTimeoutChanged(time);
-}
-
 void KToshibaDBusInterface::toggleTouchPad()
 {
-    emit touchpadChanged();
+    if (m_helper->isTouchPadSupported())
+        m_helper->toggleTouchPad();
+}
+
+bool KToshibaDBusInterface::getECOLed()
+{
+    if (m_helper->isECOSupported())
+        return m_helper->getEcoLed();
+
+    return false;
 }
 
 void KToshibaDBusInterface::setECOLed(bool enabled)
 {
-    emit ecoChanged(enabled);
+    if (m_helper->isECOSupported())
+        m_helper->setEcoLed(enabled);
+}
+
+bool KToshibaDBusInterface::getIllumination()
+{
+    if (m_helper->isIlluminationSupported())
+        return m_helper->getIllumination();
+
+    return false;
+}
+
+void KToshibaDBusInterface::setIllumination(bool enabled)
+{
+    if (m_helper->isIlluminationSupported())
+        m_helper->setIllumination(enabled);
+}
+
+int KToshibaDBusInterface::getKBDMode()
+{
+    if (!m_helper->isKBDBacklightSupported())
+        return 0;
+
+    return m_helper->getKBDMode();
+}
+
+void KToshibaDBusInterface::changeKBDMode()
+{
+    if (!m_helper->isKBDBacklightSupported())
+        return;
+
+    int mode = m_helper->getKBDMode();
+
+    m_helper->setKBDMode((mode == 1) ? 2 : 1);
+}
+
+int KToshibaDBusInterface::getKBDTimeout()
+{
+    if (!m_helper->isKBDBacklightSupported())
+        return -1;
+
+    return m_helper->getKBDTimeout();
+}
+
+void KToshibaDBusInterface::setKBDTimeout(int time)
+{
+    if (!m_helper->isKBDBacklightSupported())
+        return;
+
+    m_helper->setKBDTimeout(time);
 }
 
 void KToshibaDBusInterface::lockScreen()

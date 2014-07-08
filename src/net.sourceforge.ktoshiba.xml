@@ -10,51 +10,21 @@
       <doc:description>
         <doc:para>
           net.sourceforge.KToshiba is a DBus interface implemented by KToshiba.
-          It allows to change the keyboard backlight mode and timeout (if
-          the laptop supports it) as well as toggling the touchpad and eco
-          mode led state.
+          It allows to change the keyboard backlight mode and timeout as well
+          as toggling the touchpad and eco mode led state (if the laptop supports
+          such features).
         </doc:para>
       </doc:description>
     </doc:doc>
-
-    <method name="changeKBDMode">
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Changes the keyboard backlight mode of operation from FN-Z to Auto and viceversa.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while changing the keyboard backlight mode</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
-    <method name="setKBDTimeout">
-      <arg name="time" type="i" direction="in">
-        <doc:doc>
-          <doc:summary>
-            The timeout of the keyboard backlight.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Set the timeout value for the keyboard backlight.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight timeout</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
 
     <method name="toggleTouchPad">
       <doc:doc>
         <doc:description>
           <doc:para>
             Toggles the touchpad from enabled to disabled and viceversa.
+          </doc:para>
+          <doc:para>
+            Does nothing when not supported.
           </doc:para>
         </doc:description>
         <doc:errors>
@@ -63,11 +33,33 @@
       </doc:doc>
     </method>
 
+    <method name="getECOLed">
+      <arg name="enabled" type="b" direction="out">
+        <doc:doc>
+          <doc:summary>
+            Get the value of the ECO mode led.
+            Returns <doc:tt>false</doc::tt> when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the state of the ECO mode led.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the ECO mode led state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
     <method name="setECOLed">
       <arg name="enabled" type="b" direction="in">
         <doc:doc>
           <doc:summary>
-            Set the value of the ECO mode led state.
+            Set the value of the ECO mode led.
+            Does nothing when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -79,6 +71,127 @@
         </doc:description>
         <doc:errors>
           <doc:error name="&ERROR_GENERAL;">if an error occured while setting the ECO mode led state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getIllumination">
+      <arg name="enabled" type="b" direction="out">
+        <doc:doc>
+          <doc:summary>
+            Get the value of the Illumination led.
+            Returns <doc:tt>false</doc::tt> when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the state of the Illumination led.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the Illumination led state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setIllumination">
+      <arg name="enabled" type="b" direction="in">
+        <doc:doc>
+          <doc:summary>
+            Set the value of the Illumination led.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the Illumination led from on to off and viceversa.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the Illumination led state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getKBDMode">
+      <arg name="mode" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The value of the keyboard backlight mode.
+            Returns <doc:tt>Zero</doc::tt> when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the keyboard backlight mode of operation.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="changeKBDMode">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Changes the keyboard backlight mode of operation from FN-Z to Auto and viceversa.
+          </doc:para>
+          <doc:para>
+            Does nothing when not supported.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while changing the keyboard backlight mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getKBDTimeout">
+      <arg name="time" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The timeout of the keyboard backlight.
+            Returns <doc:tt>-1</doc::tt> when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the timeout value for the keyboard backlight.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight timeout</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setKBDTimeout">
+      <arg name="time" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The timeout of the keyboard backlight.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the timeout value for the keyboard backlight.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight timeout</doc:error>
         </doc:errors>
       </doc:doc>
     </method>

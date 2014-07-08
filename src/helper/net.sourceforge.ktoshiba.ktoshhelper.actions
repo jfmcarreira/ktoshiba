@@ -3,15 +3,39 @@ Name=KToshiba helper application
 Icon=ktoshiba
 URL=http://ktoshiba.sourceforge.net/
 
+[net.sourceforge.ktoshiba.ktoshhelper.deviceexists]
+Name=Device exists
+Description=Checks whether a device exists or not
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.leddeviceexists]
+Name=Led device exists
+Description=Checks whether a LED device exists or not
+Policy=yes
+PolicyInactive=yes
+
 [net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad]
 Name=Toggle touchpad
 Description=Toggles the TouchPad state
 Policy=yes
 PolicyInactive=yes
 
+[net.sourceforge.ktoshiba.ktoshhelper.illumination]
+Name=Illumination
+Description=Gets the Illumination led status
+Policy=yes
+PolicyInactive=yes
+
 [net.sourceforge.ktoshiba.ktoshhelper.setillumination]
 Name=Set illumination
 Description=Sets the desired Illumination led status
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.eco]
+Name=Eco
+Description=Gets the ECO led state
 Policy=yes
 PolicyInactive=yes
 

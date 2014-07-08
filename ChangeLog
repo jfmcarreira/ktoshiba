@@ -1,9 +1,31 @@
+2014-07-08 Azael Avalos <coproscefalo@gmail.com>
+	* Added two new functions to KAuth helper that check
+	  for devices and led devices
+	* Removed check for device existence on all KAuth helper
+	  calls, we are now assuming that deviceexists and
+	  leddeviceexists have been called before making the calls
+	* KToshibaDBusInterface calls now check for supported
+	  devices and do nothing if they're not
+	* Added error descriptions and removed errno.h dependecy
+	  from KAuth helper
+	* Added getKBDMode and getKBDTimeout calls to KToshibaDBusInterface
+	* Removed autostart entries from .desktop file
+
+2014-07-07 Azael Avalos <coproscefalo@gmail.com>
+	* Added eco and illumination GET calls to
+	  KAuth helper, HelperActions and KToshibaDBusInterface
+	* Removed unused KToshibaDBusInterface signals
+	* Added KAuth helper kbdModeChanged signal
+	* Some small changes here and there
+
 2014-07-03 Azael Avalos <coproscefalo@gmail.com>
 	* Changed KToshHelper to set ang get calls,
 	  removing some duplicated code from FnActions,
 	  code adapted
 	* Re-added widget Timer
 	* Removed unused icons and StatusWidget pages
+	* Sub classed helper calls to HelperActions
+	* Added setIllumination DBus call
 
 2014-07-02 Azael Avalos <coproscefalo@gmail.com>
 	* Some minor changes to declarations (dec -> m_dec)

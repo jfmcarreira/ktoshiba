@@ -24,12 +24,14 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
+#include "helperactions.h"
 #include "ui_statuswidget.h"
 
 class QTimer;
 
 class KToshibaDBusInterface;
 class KToshibaKeyHandler;
+class HelperActions;
 
 class FnActions : public QObject
 {
@@ -45,17 +47,13 @@ public:
     FnActions(QObject *parent);
     ~FnActions();
 
-    int getKBDMode();
-    int getKBDTimeout();
+    int m_mode;
 
 public Q_SLOTS:
     void processHotkey(int);
-    void toggleTouchPad();
-    void changeKBDMode();
-    void changeKBDTimeout(int);
-    void toggleEcoLed(bool);
     void acAdapterChanged(bool);
     void compositingChanged(bool);
+    void toggleTouchPad();
     
 private Q_SLOTS:
     void hideWidget();
@@ -64,12 +62,12 @@ private:
     void showWidget(int);
     void toggleProfiles();
     void changeProfile(QString);
-    void toggleIllumination(bool);
     void kbdBacklight();
-    void toggleKBDBacklight(bool);
+    void setKBDBacklight(bool);
 
     KToshibaDBusInterface *m_dBus;
     KToshibaKeyHandler *m_keyHandler;
+    HelperActions *m_helper;
     Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
     QTimer *m_widgetTimer;
