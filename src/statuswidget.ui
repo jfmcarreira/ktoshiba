@@ -353,7 +353,7 @@
       <enum>Qt::AutoText</enum>
      </property>
      <property name="pixmap">
-      <pixmap>:/images/kbd_on_64.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/keyboard_black_64.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -368,69 +368,29 @@
       <number>0</number>
      </property>
     </widget>
-    <widget class="QLabel" name="kbdAutoTextLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>&lt;font color='gray'&gt;&lt;b&gt;AUTO&lt;/b&gt;&lt;/font&gt;</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::RichText</enum>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignHCenter|Qt::AlignTop</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
     <widget class="QLabel" name="kbdAutoTimeLabel">
      <property name="geometry">
       <rect>
        <x>4</x>
-       <y>56</y>
+       <y>40</y>
        <width>64</width>
-       <height>16</height>
+       <height>30</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
        <width>64</width>
-       <height>16</height>
+       <height>30</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
        <width>64</width>
-       <height>64</height>
+       <height>30</height>
       </size>
      </property>
      <property name="text">
-      <string>&lt;font color='white'&gt;15&lt;/font&gt;</string>
+      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#000000;&quot;&gt;15&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>
@@ -439,7 +399,7 @@
       <bool>true</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

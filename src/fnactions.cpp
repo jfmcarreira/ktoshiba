@@ -150,17 +150,17 @@ void FnActions::changeProfile(QString profile)
 void FnActions::kbdBacklight()
 {
     int mode = m_helper->getKBDMode();
-    if (mode == NotAvailable) {
-        kDebug() << "Keyboard backlight is not supported";
-        return;
-    } else if (mode == FNZMode) {
+    if (mode == FNZMode) {
         kDebug() << "Keyboard backlight mode is not set to Auto";
         return;
     }
 
     int time = m_helper->getKBDTimeout();
 
-    QString format = QString("<font color='grey'><b>%1</b></font>");
+    QString format = QString("<html><head/><body><p align=\"center\">\
+			      <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
+			      %1\
+			      </span></p></body></html>");
     m_statusWidget.kbdAutoTimeLabel->setText(format.arg(time));
     showWidget(KBDAuto);
 }

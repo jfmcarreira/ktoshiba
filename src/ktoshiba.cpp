@@ -64,6 +64,10 @@ KToshiba::KToshiba()
         createConfig();
 
     // TODO: Add other items here... If any...
+    m_autoStart = m_popupMenu->addAction( i18n("Start Automatically") );
+    m_autoStart->setCheckable( true );
+    m_autoStart->setChecked( m_autostart );
+    m_popupMenu->addSeparator();
     m_touchPad = m_popupMenu->addAction( i18n("Toggle TouchPad") );
     m_touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
     m_touchPad->setVisible( m_helper->isTouchPadSupported() );
@@ -80,13 +84,14 @@ KToshiba::KToshiba()
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
     m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
 
+    connect( m_autoStart, SIGNAL( toggled(bool) ), this, SLOT( autostartClicked(bool) ) );
     connect( m_kbdMode, SIGNAL( triggered() ), this, SLOT( changeKBDMode() ) );
     connect( m_kbdTimeout, SIGNAL( triggered() ), this, SLOT( kbdTimeoutClicked() ) );
     connect( m_touchPad, SIGNAL( triggered() ), m_helper, SLOT( toggleTouchPad() ) );
     connect( m_kbdTimeoutWidget.buttonBox, SIGNAL( clicked(QAbstractButton *) ),
              this, SLOT( changeKBDTimeout(QAbstractButton *) ) );
     connect( m_kbdTimeoutWidget.timeoutSpinBox, SIGNAL( valueChanged(int) ), this, SLOT( timeChanged(int) ) );
-    connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( changeKBDMode(int) ) );
+    connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( kbdModeNotification(int) ) );
 }
 
 KToshiba::~KToshiba()
@@ -114,25 +119,40 @@ void KToshiba::loadConfig()
 {
     kDebug() << "Loading configuration file...";
     KConfigGroup generalGroup( m_config, "General" );
+    m_autostart = generalGroup.readEntry( "AutoStart", true );
 }
 
 void KToshiba::createConfig()
 {
     kDebug() << "Default configuration file created.";
     KConfigGroup generalGroup( m_config, "General" );
+    generalGroup.writeEntry( "AutoStart", true );
     generalGroup.config()->sync();
 }
 
-void KToshiba::changeKBDMode(int mode)
+void KToshiba::autostartClicked(bool enabled)
+{
+    KConfigGroup generalGroup( m_config, "General" );
+    generalGroup.writeEntry( "AutoStart", enabled );
+    generalGroup.config()->sync();
+}
+
+void KToshiba::kbdModeNotification(int mode)
 {
     KNotification *notification =
 		KNotification::event(KNotification::Notification, i18n("Keyboard Mode"),
 				     i18n("The computer must be restarted in order to activate the new keyboard Mode"));
     notification->sendEvent();
 
-    m_mode = (!mode) ? m_helper->getKBDMode() : mode;
-    m_helper->setKBDMode((m_mode == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode);
-    m_kbdMode->setText( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
+    m_mode = mode;
+    m_kbdMode->setText( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "FN-Z" : "Auto") );
+}
+
+void KToshiba::changeKBDMode()
+{
+    int mode = m_helper->getKBDMode();
+    m_helper->setKBDMode((mode == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode);
+    kbdModeNotification(mode);
 }
 
 void KToshiba::kbdTimeoutClicked()

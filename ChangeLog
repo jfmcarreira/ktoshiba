@@ -1,3 +1,16 @@
+2014-07-09 Azael Avalos <coproscefalo@gmail.com>
+	* Re-added AutoStart functionality (I guess I had a
+	  brain fart when I removed it...)
+	* Removed <doc..tt> entries from xml file, as they
+	  were causing incomplete DBus calls
+	* Fixed an issue with getKBDTimeout DBus call, we now
+	  check for kbd bl mode to be Auto to return the actual
+	  timeout, or -1 if it is set to FN-Z
+	* Fixes to Switch Keyboard Backlight Mode menu entry
+	* Fixed a typo in Icons.qrc, now the black keyboard
+	  will be shown along with the timeout
+	* Changed StatusWidget text color to a tone of grey
+
 2014-07-08 Azael Avalos <coproscefalo@gmail.com>
 	* Added two new functions to KAuth helper that check
 	  for devices and led devices
@@ -10,6 +23,7 @@
 	  from KAuth helper
 	* Added getKBDMode and getKBDTimeout calls to KToshibaDBusInterface
 	* Removed autostart entries from .desktop file
+	* Added black keyboard icon to statuswidget
 
 2014-07-07 Azael Avalos <coproscefalo@gmail.com>
 	* Added eco and illumination GET calls to

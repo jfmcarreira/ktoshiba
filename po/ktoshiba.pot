@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2014-06-26 20:11-0600\n"
+        "POT-Creation-Date: 2014-07-09 11:02-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,41 +16,45 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: ktoshiba.cpp:46
-msgid   "Fn key monitoring for Toshiba laptops"
-msgstr  ""
-
-#: ktoshiba.cpp:65
-msgid   "Toggle TouchPad"
-msgstr  ""
-
-#: ktoshiba.cpp:68 ktoshiba.cpp:131
+#: ktoshiba.cpp:44
 #, possible-kde-format
 msgid   "Switch the keyboard backlight mode to %1"
 msgstr  ""
 
+#: ktoshiba.cpp:48
+msgid   "Fn key monitoring for Toshiba laptops"
+msgstr  ""
+
+#: ktoshiba.cpp:67
+msgid   "Start Automatically"
+msgstr  ""
+
 #: ktoshiba.cpp:71
+msgid   "Toggle TouchPad"
+msgstr  ""
+
+#: ktoshiba.cpp:78
 msgid   "Change the keyboard backlight timeout"
 msgstr  ""
 
-#: ktoshiba.cpp:125
+#: ktoshiba.cpp:143
 msgid   "Keyboard Mode"
 msgstr  ""
 
-#: ktoshiba.cpp:126
+#: ktoshiba.cpp:144
 msgid   "The computer must be restarted in order to activate the new keyboard "
         "Mode"
 msgstr  ""
 
-#: ktoshiba.cpp:206
+#: ktoshiba.cpp:229
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:207
+#: ktoshiba.cpp:230
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:207
+#: ktoshiba.cpp:230
 msgid   "Some ideas and pieces of code"
 msgstr  ""
 

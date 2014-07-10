@@ -38,7 +38,7 @@
         <doc:doc>
           <doc:summary>
             Get the value of the ECO mode led.
-            Returns <doc:tt>false</doc::tt> when not supported.
+            Returns false when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -80,7 +80,7 @@
         <doc:doc>
           <doc:summary>
             Get the value of the Illumination led.
-            Returns <doc:tt>false</doc::tt> when not supported.
+            Returns false when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -122,7 +122,7 @@
         <doc:doc>
           <doc:summary>
             The value of the keyboard backlight mode.
-            Returns <doc:tt>Zero</doc::tt> when not supported.
+            Returns Zero when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -159,7 +159,7 @@
         <doc:doc>
           <doc:summary>
             The timeout of the keyboard backlight.
-            Returns <doc:tt>-1</doc::tt> when not supported.
+            Returns -1 when not supported and when keyboard backlight mode is set to FN-Z.
           </doc:summary>
         </doc:doc>
       </arg>

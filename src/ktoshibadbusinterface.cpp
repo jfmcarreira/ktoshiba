@@ -93,7 +93,7 @@ int KToshibaDBusInterface::getKBDTimeout()
     if (!m_helper->isKBDBacklightSupported())
         return -1;
 
-    return m_helper->getKBDTimeout();
+    return (m_helper->getKBDMode() == 1) ? -1 : m_helper->getKBDTimeout();
 }
 
 void KToshibaDBusInterface::setKBDTimeout(int time)
