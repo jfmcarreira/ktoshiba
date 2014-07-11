@@ -37,7 +37,7 @@ class HelperActions;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.4.0
+ * @version 4.0
  */
 class KToshiba : public KUniqueApplication
 {

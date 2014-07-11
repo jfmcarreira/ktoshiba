@@ -156,8 +156,8 @@ void KToshiba::changeKBDModeText(int mode)
 
 void KToshiba::changeKBDMode()
 {
-    int mode = m_helper->getKBDMode();
-    m_helper->setKBDMode((mode == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode);
+    int mode = (m_helper->getKBDMode() == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode;
+    m_helper->setKBDMode(mode);
     changeKBDModeText(mode);
 }
 

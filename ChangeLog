@@ -4,6 +4,11 @@
 	* FnActions now check for supported devices, somehow
 	  forgot to add those checks earlier
 	* Change KDE dependecy to 4.6.0 on CMakeLists
+	* Fixed an issue where the KBD Mode text was not being
+	  changed correctly
+	* Removed unused code from KToshibaDBusInterface
+	  setBrightness function
+	* Changed version number in ktoshiba.h
 
 2014-07-10 Azael Avalos <coproscefalo@gmail.com>
 	* Small change to KAuth helper includes

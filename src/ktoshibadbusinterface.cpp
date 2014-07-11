@@ -146,14 +146,6 @@ void KToshibaDBusInterface::setBrightness(int level)
         return;
     }
 
-    if ((bright.value() == 0 && level == -1) || (bright.value() == 100 && level == 1))
-        return;
-
-    if (level == 1)
-        level = bright.value() + 15;
-    else if (level == -1)
-        level = bright.value() - 15;
-
     QDBusReply<void> reply = iface.call("setBrightness", level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
