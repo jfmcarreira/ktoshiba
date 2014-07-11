@@ -1,3 +1,17 @@
+2014-07-11 Azael Avalos <coproscefalo@gmail.com>
+	* m_widgetTimer is now being deleted on destructor
+	* Some small changes to INSTALL file
+	* FnActions now check for supported devices, somehow
+	  forgot to add those checks earlier
+	* Change KDE dependecy to 4.6.0 on CMakeLists
+
+2014-07-10 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to KAuth helper includes
+	* Small change to KBD Mode notification, we now show
+	  the black keyboard icon
+	* Fixed a bug where two notifications were being
+	  fired instead of just one
+
 2014-07-09 Azael Avalos <coproscefalo@gmail.com>
 	* Re-added AutoStart functionality (I guess I had a
 	  brain fart when I removed it...)

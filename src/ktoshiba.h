@@ -54,7 +54,8 @@ public:
 private Q_SLOTS:
     void autostartClicked(bool);
     void changeKBDMode();
-    void kbdModeNotification(int);
+    void changeKBDModeText(int);
+    void notifyKBDModeChanged();
     void kbdTimeoutClicked();
     void changeKBDTimeout(QAbstractButton *);
     void timeChanged(int);
@@ -75,7 +76,6 @@ private:
     KSharedConfigPtr m_config;
     QString m_modeText;
     bool m_autostart;
-    int m_mode;
     int m_time;
 
     static KAboutData* m_about;

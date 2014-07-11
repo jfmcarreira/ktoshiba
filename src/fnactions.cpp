@@ -71,6 +71,7 @@ FnActions::FnActions(QObject *parent)
 FnActions::~FnActions()
 {
     delete m_widget; m_widget = NULL;
+    delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_keyHandler; m_keyHandler = NULL;
     delete m_helper; m_helper = NULL;
     delete m_dBus; m_dBus = NULL;
@@ -118,25 +119,33 @@ void FnActions::changeProfile(QString profile)
 {
     if (profile == "Powersave") {
         showWidget(Powersave);
-        m_helper->setEcoLed(Off);
-        m_helper->setIllumination(Off);
+        if (m_helper->isECOSupported())
+            m_helper->setEcoLed(Off);
+        if (m_helper->isIlluminationSupported())
+            m_helper->setIllumination(Off);
         m_dBus->setBrightness(42);
         setKBDBacklight(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
-        m_helper->setEcoLed(Off);
-        m_helper->setIllumination(On);
+        if (m_helper->isECOSupported())
+            m_helper->setEcoLed(Off);
+        if (m_helper->isIlluminationSupported())
+            m_helper->setIllumination(On);
         m_dBus->setBrightness(100);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
-        m_helper->setEcoLed(Off);
-        m_helper->setIllumination(On);
+        if (m_helper->isECOSupported())
+            m_helper->setEcoLed(Off);
+        if (m_helper->isIlluminationSupported())
+            m_helper->setIllumination(On);
         m_dBus->setBrightness(71);
         m_cookie = beginSuppressingScreenPowerManagement(m_profile);
     } else if (profile == "ECO") {
         showWidget(ECO);
-        m_helper->setEcoLed(On);
-        m_helper->setIllumination(Off);
+        if (m_helper->isECOSupported())
+            m_helper->setEcoLed(On);
+        if (m_helper->isIlluminationSupported())
+            m_helper->setIllumination(Off);
         m_dBus->setBrightness(57);
         setKBDBacklight(Off);
     }
@@ -167,6 +176,9 @@ void FnActions::kbdBacklight()
 
 void FnActions::setKBDBacklight(bool on)
 {
+    if (!m_helper->isKBDBacklightSupported())
+        return;
+
     if (m_helper->getKBDMode() == AutoMode)
         m_dBus->setKBDBacklight(on);
 }

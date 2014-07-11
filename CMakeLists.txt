@@ -2,7 +2,7 @@ project(ktoshiba)
 
 # search for Qt and KDE
 find_package(Qt4 REQUIRED)
-find_package(KDE4 4.3.90 REQUIRED)
+find_package(KDE4 4.6.0 REQUIRED)
 find_package(PkgConfig REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)

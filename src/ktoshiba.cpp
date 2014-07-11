@@ -31,6 +31,7 @@
 
 #include "ktoshiba.h"
 #include "fnactions.h"
+#include "helperactions.h"
 #include "version.h"
 
 static const char * const ktosh_config = "ktoshibarc";
@@ -54,7 +55,7 @@ KToshiba::KToshiba()
     m_kbdTimeoutWidget.timeoutSpinBox->setMinimum(0);
     m_widget->clearFocus();
 
-    m_mode = (m_helper->isKBDBacklightSupported()) ? m_helper->getKBDMode() : FnActions::NotAvailable;
+    int mode = (m_helper->isKBDBacklightSupported()) ? m_helper->getKBDMode() : FnActions::NotAvailable;
 
     KMenu *m_popupMenu = m_trayicon->contextMenu();
 
@@ -72,12 +73,12 @@ KToshiba::KToshiba()
     m_touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
     m_touchPad->setVisible( m_helper->isTouchPadSupported() );
     m_popupMenu->addSeparator();
-    m_kbdMode = m_popupMenu->addAction( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
+    m_kbdMode = m_popupMenu->addAction( m_modeText.arg( (mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
     m_kbdMode->setIcon( KIcon( "input-keyboard" ) );
-    m_kbdMode->setVisible((m_mode == FnActions::NotAvailable) ? false : true);
+    m_kbdMode->setVisible((mode == FnActions::NotAvailable) ? false : true);
     m_kbdTimeout = m_popupMenu->addAction( i18n("Change the keyboard backlight timeout") );
     m_kbdTimeout->setIcon( KIcon( "input-keyboard" ) );
-    m_kbdTimeout->setVisible((m_mode == FnActions::AutoMode) ? true: false);
+    m_kbdTimeout->setVisible((mode == FnActions::AutoMode) ? true: false);
     m_popupMenu->addSeparator();
     m_helpMenu = new KHelpMenu( m_popupMenu, aboutData());
     m_popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
@@ -91,7 +92,8 @@ KToshiba::KToshiba()
     connect( m_kbdTimeoutWidget.buttonBox, SIGNAL( clicked(QAbstractButton *) ),
              this, SLOT( changeKBDTimeout(QAbstractButton *) ) );
     connect( m_kbdTimeoutWidget.timeoutSpinBox, SIGNAL( valueChanged(int) ), this, SLOT( timeChanged(int) ) );
-    connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( kbdModeNotification(int) ) );
+    connect( m_helper, SIGNAL( kbdModeChanged() ), this, SLOT( notifyKBDModeChanged() ) );
+    connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( changeKBDModeText(int) ) );
 }
 
 KToshiba::~KToshiba()
@@ -137,22 +139,26 @@ void KToshiba::autostartClicked(bool enabled)
     generalGroup.config()->sync();
 }
 
-void KToshiba::kbdModeNotification(int mode)
+void KToshiba::notifyKBDModeChanged()
 {
+    QIcon icon(":images/keyboard_black_64.png");
     KNotification *notification =
-		KNotification::event(KNotification::Notification, i18n("Keyboard Mode"),
-				     i18n("The computer must be restarted in order to activate the new keyboard Mode"));
+		KNotification::event(KNotification::Notification, i18n("KToshiba - Keyboard Mode"),
+				     i18n("The computer must be restarted in order to activate the new keyboard Mode"),
+				     icon.pixmap(48, 48), 0, KNotification::Persistent);
     notification->sendEvent();
+}
 
-    m_mode = mode;
-    m_kbdMode->setText( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "FN-Z" : "Auto") );
+void KToshiba::changeKBDModeText(int mode)
+{
+    m_kbdMode->setText( m_modeText.arg( (mode == FnActions::FNZMode) ? "FN-Z" : "Auto") );
 }
 
 void KToshiba::changeKBDMode()
 {
     int mode = m_helper->getKBDMode();
     m_helper->setKBDMode((mode == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode);
-    kbdModeNotification(mode);
+    changeKBDModeText(mode);
 }
 
 void KToshiba::kbdTimeoutClicked()

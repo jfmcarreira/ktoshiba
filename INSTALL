@@ -1,16 +1,15 @@
 Requirements
 ==================
 - A Toshiba laptop with a recent toshiba_acpi.ko
-  kernel module
+  kernel module (kernel >= 3.15 recommended)
 - Compiler and utilities (gcc, make, cmake, etc.)
-- KDE libraries >= 4.3.x and development packages
+- KDE libraries >= 4.6.x and development packages
 - Additionally KToshiba depends on Solid, udev
   and the input.h kernel include.
 
 
 NOTE: KToshiba grabs hotkeys via /dev/input/eventX
-and uses D-Bus, Solid and ktoshhelper to perform
-the actions.
+and uses D-Bus and ktoshhelper to perform the actions.
 
 
 

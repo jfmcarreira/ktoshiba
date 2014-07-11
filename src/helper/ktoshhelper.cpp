@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <QDebug>
-#include <QVariantMap>
+#include <QtCore/QDebug>
+#include <QtCore/QVariantMap>
 
 #include "ktoshhelper.h"
 

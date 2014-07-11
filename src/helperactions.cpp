@@ -173,7 +173,7 @@ void HelperActions::setKBDMode(int mode)
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed";
         kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
     }
-    
+
     emit kbdModeChanged(mode);
 }
 
