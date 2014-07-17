@@ -55,7 +55,7 @@ KToshiba::KToshiba()
     m_kbdTimeoutWidget.timeoutSpinBox->setMinimum(0);
     m_widget->clearFocus();
 
-    int mode = (m_helper->isKBDBacklightSupported()) ? m_helper->getKBDMode() : FnActions::NotAvailable;
+    int mode = (m_helper->isKBDBacklightSupported) ? m_helper->getKBDMode() : FnActions::NotAvailable;
 
     KMenu *m_popupMenu = m_trayicon->contextMenu();
 
@@ -71,7 +71,7 @@ KToshiba::KToshiba()
     m_popupMenu->addSeparator();
     m_touchPad = m_popupMenu->addAction( i18n("Toggle TouchPad") );
     m_touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
-    m_touchPad->setVisible( m_helper->isTouchPadSupported() );
+    m_touchPad->setVisible( m_helper->isTouchPadSupported );
     m_popupMenu->addSeparator();
     m_kbdMode = m_popupMenu->addAction( m_modeText.arg( (mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
     m_kbdMode->setIcon( KIcon( "input-keyboard" ) );

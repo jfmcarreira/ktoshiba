@@ -1,3 +1,21 @@
+2014-07-17 Azael Avalos <coproscefalo@gmail.com>
+	* Merged deviceexists with leddeviceexists,
+	  code adapted
+	* isXXXSupported functions turned into variables and
+	  function code renamed to checkXXX, this is to avoid
+	  calling the KAuth helper many times
+
+2014-07-16 Azael Avalos <coproscefalo@gmail.com>
+	* Bumped version to 4.0.1
+
+2014-07-15 Azael Avalos <coproscefalo@gmail.com>
+	* Updated COPYING file address
+	* Changed udev rule installation from /lib/udev/rules.d
+	  to /usr/lib/udev/rules.d
+
+2014-07-14 Azael Avalos <coproscefalo@gmail.com>
+	* Small changes to desktop file and removed duplicated entry
+
 2014-07-11 Azael Avalos <coproscefalo@gmail.com>
 	* m_widgetTimer is now being deleted on destructor
 	* Some small changes to INSTALL file

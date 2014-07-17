@@ -27,9 +27,13 @@
 HelperActions::HelperActions(QObject *parent)
   : QObject( parent )
 {
+    isTouchPadSupported = checkTouchPad();
+    isIlluminationSupported = checkIllumination();
+    isECOSupported = checkECO();
+    isKBDBacklightSupported = checkKBDBacklight();
 }
 
-bool HelperActions::isTouchPadSupported()
+bool HelperActions::checkTouchPad()
 {
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
     action.setHelperID(HELPER_ID);
@@ -44,9 +48,9 @@ bool HelperActions::isTouchPadSupported()
     return true;
 }
 
-bool HelperActions::isIlluminationSupported()
+bool HelperActions::checkIllumination()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.leddeviceexists");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
     action.setHelperID(HELPER_ID);
     action.addArgument("device", "illumination");
     KAuth::ActionReply reply = action.execute();
@@ -59,9 +63,9 @@ bool HelperActions::isIlluminationSupported()
     return true;
 }
 
-bool HelperActions::isECOSupported()
+bool HelperActions::checkECO()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.leddeviceexists");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
     action.setHelperID(HELPER_ID);
     action.addArgument("device", "eco_mode");
     KAuth::ActionReply reply = action.execute();
@@ -74,7 +78,7 @@ bool HelperActions::isECOSupported()
     return true;
 }
 
-bool HelperActions::isKBDBacklightSupported()
+bool HelperActions::checkKBDBacklight()
 {
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
     action.setHelperID(HELPER_ID);

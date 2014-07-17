@@ -119,32 +119,32 @@ void FnActions::changeProfile(QString profile)
 {
     if (profile == "Powersave") {
         showWidget(Powersave);
-        if (m_helper->isECOSupported())
+        if (m_helper->isECOSupported)
             m_helper->setEcoLed(Off);
-        if (m_helper->isIlluminationSupported())
+        if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(Off);
         m_dBus->setBrightness(42);
         setKBDBacklight(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
-        if (m_helper->isECOSupported())
+        if (m_helper->isECOSupported)
             m_helper->setEcoLed(Off);
-        if (m_helper->isIlluminationSupported())
+        if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(On);
         m_dBus->setBrightness(100);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
-        if (m_helper->isECOSupported())
+        if (m_helper->isECOSupported)
             m_helper->setEcoLed(Off);
-        if (m_helper->isIlluminationSupported())
+        if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(On);
         m_dBus->setBrightness(71);
         m_cookie = beginSuppressingScreenPowerManagement(m_profile);
     } else if (profile == "ECO") {
         showWidget(ECO);
-        if (m_helper->isECOSupported())
+        if (m_helper->isECOSupported)
             m_helper->setEcoLed(On);
-        if (m_helper->isIlluminationSupported())
+        if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(Off);
         m_dBus->setBrightness(57);
         setKBDBacklight(Off);
@@ -176,7 +176,7 @@ void FnActions::kbdBacklight()
 
 void FnActions::setKBDBacklight(bool on)
 {
-    if (!m_helper->isKBDBacklightSupported())
+    if (!m_helper->isKBDBacklightSupported)
         return;
 
     if (m_helper->getKBDMode() == AutoMode)

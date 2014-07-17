@@ -60,24 +60,18 @@ ActionReply KToshHelper::deviceexists(QVariantMap args)
     ActionReply reply;
     QString device = args["device"].toString();
 
-    m_file.setFileName(m_driverPath + device);
-    if (!m_file.exists()) {
+    if (device == "touchpad" || device == "kbd_backlight_mode") {
+        m_file.setFileName(m_driverPath + device);
+    } else if (device == "illumination" || device == "eco_mode") {
+        m_file.setFileName("/sys/class/leds/toshiba::" + device + "/brightness");
+    } else {
         reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-19); // No such device
-        reply.setErrorDescription("The device does not exist");
+        reply.setErrorCode(-22);
+        reply.setErrorDescription("Invalid device name");
 
         return reply;
     }
 
-    return reply;
-}
-
-ActionReply KToshHelper::leddeviceexists(QVariantMap args)
-{
-    ActionReply reply;
-    QString device = args["device"].toString();
-
-    m_file.setFileName("/sys/class/leds/toshiba::" + device + "/brightness");
     if (!m_file.exists()) {
         reply = ActionReply::HelperErrorReply;
         reply.setErrorCode(-19); // No such device

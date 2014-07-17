@@ -38,13 +38,13 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 
 void KToshibaDBusInterface::toggleTouchPad()
 {
-    if (m_helper->isTouchPadSupported())
+    if (m_helper->isTouchPadSupported)
         m_helper->toggleTouchPad();
 }
 
 bool KToshibaDBusInterface::getECOLed()
 {
-    if (m_helper->isECOSupported())
+    if (m_helper->isECOSupported)
         return m_helper->getEcoLed();
 
     return false;
@@ -52,13 +52,13 @@ bool KToshibaDBusInterface::getECOLed()
 
 void KToshibaDBusInterface::setECOLed(bool enabled)
 {
-    if (m_helper->isECOSupported())
+    if (m_helper->isECOSupported)
         m_helper->setEcoLed(enabled);
 }
 
 bool KToshibaDBusInterface::getIllumination()
 {
-    if (m_helper->isIlluminationSupported())
+    if (m_helper->isIlluminationSupported)
         return m_helper->getIllumination();
 
     return false;
@@ -66,13 +66,13 @@ bool KToshibaDBusInterface::getIllumination()
 
 void KToshibaDBusInterface::setIllumination(bool enabled)
 {
-    if (m_helper->isIlluminationSupported())
+    if (m_helper->isIlluminationSupported)
         m_helper->setIllumination(enabled);
 }
 
 int KToshibaDBusInterface::getKBDMode()
 {
-    if (!m_helper->isKBDBacklightSupported())
+    if (!m_helper->isKBDBacklightSupported)
         return 0;
 
     return m_helper->getKBDMode();
@@ -80,7 +80,7 @@ int KToshibaDBusInterface::getKBDMode()
 
 void KToshibaDBusInterface::changeKBDMode()
 {
-    if (!m_helper->isKBDBacklightSupported())
+    if (!m_helper->isKBDBacklightSupported)
         return;
 
     int mode = m_helper->getKBDMode();
@@ -90,7 +90,7 @@ void KToshibaDBusInterface::changeKBDMode()
 
 int KToshibaDBusInterface::getKBDTimeout()
 {
-    if (!m_helper->isKBDBacklightSupported())
+    if (!m_helper->isKBDBacklightSupported)
         return -1;
 
     return (m_helper->getKBDMode() == 1) ? -1 : m_helper->getKBDTimeout();
@@ -98,7 +98,7 @@ int KToshibaDBusInterface::getKBDTimeout()
 
 void KToshibaDBusInterface::setKBDTimeout(int time)
 {
-    if (!m_helper->isKBDBacklightSupported())
+    if (!m_helper->isKBDBacklightSupported)
         return;
 
     m_helper->setKBDTimeout(time);

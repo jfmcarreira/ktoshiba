@@ -29,10 +29,10 @@ class HelperActions : public QObject
 public:
     HelperActions(QObject *parent = 0);
 
-    bool isTouchPadSupported();
-    bool isIlluminationSupported();
-    bool isECOSupported();
-    bool isKBDBacklightSupported();
+    bool isTouchPadSupported;
+    bool isIlluminationSupported;
+    bool isECOSupported;
+    bool isKBDBacklightSupported;
 
 public Q_SLOTS:
     void toggleTouchPad();
@@ -47,6 +47,12 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void kbdModeChanged(int mode = 0);
+
+private:
+    bool checkTouchPad();
+    bool checkIllumination();
+    bool checkECO();
+    bool checkKBDBacklight();
 };
 
 #endif // HELPERACTIONS_H

@@ -36,7 +36,6 @@ public:
 
 public slots:
     ActionReply deviceexists(QVariantMap args);
-    ActionReply leddeviceexists(QVariantMap args);
     ActionReply toggletouchpad(QVariantMap args);
     ActionReply illumination(QVariantMap args);
     ActionReply setillumination(QVariantMap args);

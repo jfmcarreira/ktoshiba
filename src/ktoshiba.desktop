@@ -1,6 +1,5 @@
 [Desktop Entry]
 Version=1.0
-Type=Application
 Name=KToshiba
 Name[de]=KToshiba
 Name[es]=KToshiba
@@ -8,6 +7,9 @@ Name[fr]=KToshiba
 Name[hu]=KToshiba
 Name[it]=KToshiba
 Name[xx]=xxKToshibaxx
+GenericName=Key Monitor
+GenericName[es]=Monitor de Teclas
+GenericName[xx]=xxKey Monitorxx
 Comment=Fn-Key monitoring for Toshiba laptops
 Comment[de]=Fn-Schlüssel die Toshiba Notebook überwacht
 Comment[es]=Monitoreo de tecla Fn para Toshiba portables
@@ -19,6 +21,7 @@ Exec=ktoshiba
 Icon=ktoshiba
 Type=Application
 Terminal=false
+OnlyShowIn=KDE
 X-KDE-autostart-after=panel
 X-KDE-StartupNotify=false
 X-DBUS-StartupType=Unique
