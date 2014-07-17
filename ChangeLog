@@ -4,6 +4,8 @@
 	* isXXXSupported functions turned into variables and
 	  function code renamed to checkXXX, this is to avoid
 	  calling the KAuth helper many times
+	* Changed kbdtimeoutwidget window icon, last change before
+	  4.0.1 tagging
 
 2014-07-16 Azael Avalos <coproscefalo@gmail.com>
 	* Bumped version to 4.0.1
