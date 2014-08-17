@@ -25,12 +25,13 @@
 #define HELPER_ID "net.sourceforge.ktoshiba.ktoshhelper"
 
 HelperActions::HelperActions(QObject *parent)
-  : QObject( parent )
+    : QObject( parent )
 {
     isTouchPadSupported = checkTouchPad();
     isIlluminationSupported = checkIllumination();
     isECOSupported = checkECO();
     isKBDBacklightSupported = checkKBDBacklight();
+    isAccelSupported = checkAccelerator();
 }
 
 bool HelperActions::checkTouchPad()
@@ -40,7 +41,7 @@ bool HelperActions::checkTouchPad()
     action.addArgument("device", "touchpad");
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kDebug() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
 
         return false;
     }
@@ -55,7 +56,7 @@ bool HelperActions::checkIllumination()
     action.addArgument("device", "illumination");
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kDebug() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
 
         return false;
     }
@@ -70,7 +71,7 @@ bool HelperActions::checkECO()
     action.addArgument("device", "eco_mode");
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kDebug() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
 
         return false;
     }
@@ -85,7 +86,22 @@ bool HelperActions::checkKBDBacklight()
     action.addArgument("device", "kbd_backlight_mode");
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kDebug() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
+
+        return false;
+    }
+
+    return true;
+}
+
+bool HelperActions::checkAccelerator()
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("device", "accelerator");
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
 
         return false;
     }
@@ -99,8 +115,8 @@ void HelperActions::toggleTouchPad()
     action.setHelperID(HELPER_ID);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -110,8 +126,8 @@ bool HelperActions::getIllumination()
     action.setHelperID(HELPER_ID);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
     return (reply.data()["state"].toInt()) ? true : false;
@@ -124,8 +140,8 @@ void HelperActions::setIllumination(bool enabled)
     action.addArgument("state", (enabled ? 1 : 0));
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -135,8 +151,8 @@ bool HelperActions::getEcoLed()
     action.setHelperID(HELPER_ID);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
     return (reply.data()["state"].toInt()) ? true : false;
@@ -149,8 +165,8 @@ void HelperActions::setEcoLed(bool enabled)
     action.addArgument("state", (enabled ? 1 : 0));
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -160,8 +176,8 @@ int HelperActions::getKBDMode()
     action.setHelperID(HELPER_ID);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
     return reply.data()["mode"].toInt();
@@ -174,8 +190,8 @@ void HelperActions::setKBDMode(int mode)
     action.addArgument("mode", mode);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
     emit kbdModeChanged(mode);
@@ -187,8 +203,8 @@ int HelperActions::getKBDTimeout()
     action.setHelperID(HELPER_ID);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
     return reply.data()["time"].toInt();
@@ -201,8 +217,45 @@ void HelperActions::setKBDTimeout(int time)
     action.addArgument("time", time);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed";
-        kError() << reply.errorDescription() << ". Error code: " << reply.errorCode();
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getProtectionLevel()
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.protectionlevel");
+    action.setHelperID(HELPER_ID);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.protectionlevel failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+
+    return reply.data()["level"].toInt();
+}
+
+void HelperActions::setProtectionLevel(int level)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("level", level);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+void HelperActions::unloadHeads(int timeout)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("timeout", timeout);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 

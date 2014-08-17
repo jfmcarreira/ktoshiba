@@ -68,3 +68,21 @@ Name=Set keyboard mode
 Description=Sets the desired keyboard backlight mode
 Policy=yes
 PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.protectionlevel]
+Name=Protection level
+Description=Gets the current HDD protection level
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel]
+Name=Set protection level
+Description=Sets the desired HDD protection level
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.unloadheads]
+Name=Unload heads
+Description=Unloads the HDDs heads to prevent damage
+Policy=yes
+PolicyInactive=yes

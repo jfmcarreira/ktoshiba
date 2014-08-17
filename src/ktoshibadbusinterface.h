@@ -51,6 +51,8 @@ public Q_SLOTS:
     void changeKBDMode();
     int getKBDTimeout();
     void setKBDTimeout(int);
+    int getProtectionLevel();
+    void setProtectionLevel(int);
 
 private:
     HelperActions *m_helper;

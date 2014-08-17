@@ -45,6 +45,9 @@ public slots:
     ActionReply setkbdtimeout(QVariantMap args);
     ActionReply kbdmode(QVariantMap args);
     ActionReply setkbdmode(QVariantMap args);
+    ActionReply protectionlevel(QVariantMap args);
+    ActionReply setprotectionlevel(QVariantMap args);
+    ActionReply unloadheads(QVariantMap args);
 
 private:
     QString findDriverPath();

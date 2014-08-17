@@ -196,5 +196,47 @@
       </doc:doc>
     </method>
 
+    <method name="getProtectionLevel">
+      <arg name="level" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The HDD protection level.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the HDD protection level.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the HDD protection level</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setProtectionLevel">
+      <arg name="level" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The HDD protection level.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the HDD protection level.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the HDD protection level</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
   </interface>
 </node>

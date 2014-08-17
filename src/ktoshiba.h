@@ -23,6 +23,7 @@
 #include <KUniqueApplication>
 #include <KSharedConfig>
 
+#include "ui_hddprotectionwidget.h"
 #include "ui_kbdtimeoutwidget.h"
 
 class QAction;
@@ -33,11 +34,12 @@ class KStatusNotifierItem;
 
 class FnActions;
 class HelperActions;
+class KToshibaHDDProtect;
 
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 4.0
+ * @version 4.1
  */
 class KToshiba : public KUniqueApplication
 {
@@ -53,12 +55,17 @@ public:
 
 private Q_SLOTS:
     void autostartClicked(bool);
+    void monitorHDDClicked(bool);
+    void protectionLvlClicked();
+    void changeProtectionLvl(QAbstractButton *);
+    void levelChanged(int);
     void changeKBDMode();
     void changeKBDModeText(int);
     void notifyKBDModeChanged();
     void kbdTimeoutClicked();
     void changeKBDTimeout(QAbstractButton *);
     void timeChanged(int);
+    void notifyHDDMovement();
 
 private:
     bool checkConfig();
@@ -67,15 +74,24 @@ private:
 
     FnActions *m_fn;
     HelperActions *m_helper;
+    KToshibaHDDProtect *m_hdd;
     QAction *m_autoStart;
+    QAction *m_hddMonitor;
+    QAction *m_hddProtectionLvl;
     QAction *m_touchPad;
     QAction *m_kbdTimeout;
     QAction *m_kbdMode;
+    Ui::hddProtectionWidget m_hddProtectionWidget;
     Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
-    QWidget *m_widget;
+    QWidget *m_protectionWidget;
+    QWidget *m_timeoutWidget;
     KSharedConfigPtr m_config;
+    QStringList m_levels;
     QString m_modeText;
     bool m_autostart;
+    bool m_monitorHDD;
+    int m_level;
+    int m_mode;
     int m_time;
 
     static KAboutData* m_about;

@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2014-07-09 11:02-0600\n"
+        "POT-Creation-Date: 2014-08-17 12:02-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,45 +16,82 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: ktoshiba.cpp:44
+#: ktoshiba.cpp:48
 #, possible-kde-format
 msgid   "Switch the keyboard backlight mode to %1"
 msgstr  ""
 
-#: ktoshiba.cpp:48
+#: ktoshiba.cpp:53
 msgid   "Fn key monitoring for Toshiba laptops"
 msgstr  ""
 
-#: ktoshiba.cpp:67
+#: ktoshiba.cpp:64
 msgid   "Start Automatically"
 msgstr  ""
 
-#: ktoshiba.cpp:71
+#: ktoshiba.cpp:70
+msgid   "High"
+msgstr  ""
+
+#: ktoshiba.cpp:70
+msgid   "Low"
+msgstr  ""
+
+#. i18n: file: hddprotectionwidget.ui:32
+#. i18n: ectx: property (text), widget (QLabel, levelLabel)
+#: ktoshiba.cpp:70 rc.cpp:8
+msgid   "Medium"
+msgstr  ""
+
+#: ktoshiba.cpp:70
+msgid   "Off"
+msgstr  ""
+
+#: ktoshiba.cpp:81
+msgid   "Monitor HDD movement"
+msgstr  ""
+
+#. i18n: file: hddprotectionwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, hddProtectionWidget)
+#: ktoshiba.cpp:85 rc.cpp:5
+msgid   "HDD Protection Level"
+msgstr  ""
+
+#: ktoshiba.cpp:98
 msgid   "Toggle TouchPad"
 msgstr  ""
 
-#: ktoshiba.cpp:78
+#: ktoshiba.cpp:114
 msgid   "Change the keyboard backlight timeout"
 msgstr  ""
 
-#: ktoshiba.cpp:143
-msgid   "Keyboard Mode"
+#: ktoshiba.cpp:196
+msgid   "KToshiba - HDD Monitor"
 msgstr  ""
 
-#: ktoshiba.cpp:144
+#: ktoshiba.cpp:197
+msgid   "Vibration has been detected and the HDD has been stopped to prevent "
+        "damage"
+msgstr  ""
+
+#: ktoshiba.cpp:267
+msgid   "KToshiba - Keyboard Mode"
+msgstr  ""
+
+#: ktoshiba.cpp:268
 msgid   "The computer must be restarted in order to activate the new keyboard "
         "Mode"
 msgstr  ""
 
-#: ktoshiba.cpp:229
+#: ktoshiba.cpp:356
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:230
+#: ktoshiba.cpp:357
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:230
+#: ktoshiba.cpp:357
 msgid   "Some ideas and pieces of code"
 msgstr  ""
 
@@ -70,6 +107,6 @@ msgstr  ""
 
 #. i18n: file: kbdtimeoutwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, kbdTimeoutWidget)
-#: rc.cpp:5
+#: rc.cpp:11
 msgid   "Keyboard Backlight Timeout"
 msgstr  ""

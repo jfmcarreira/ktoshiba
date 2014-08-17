@@ -33,6 +33,7 @@ public:
     bool isIlluminationSupported;
     bool isECOSupported;
     bool isKBDBacklightSupported;
+    bool isAccelSupported;
 
 public Q_SLOTS:
     void toggleTouchPad();
@@ -44,6 +45,9 @@ public Q_SLOTS:
     void setKBDMode(int);
     int getKBDTimeout();
     void setKBDTimeout(int);
+    int getProtectionLevel();
+    void setProtectionLevel(int);
+    void unloadHeads(int);
 
 Q_SIGNALS:
     void kbdModeChanged(int mode = 0);
@@ -53,6 +57,7 @@ private:
     bool checkIllumination();
     bool checkECO();
     bool checkKBDBacklight();
+    bool checkAccelerator();
 };
 
 #endif // HELPERACTIONS_H

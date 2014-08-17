@@ -104,6 +104,22 @@ void KToshibaDBusInterface::setKBDTimeout(int time)
     m_helper->setKBDTimeout(time);
 }
 
+int KToshibaDBusInterface::getProtectionLevel()
+{
+    if (!m_helper->isAccelSupported)
+        return -1;
+
+    return m_helper->getProtectionLevel();
+}
+
+void KToshibaDBusInterface::setProtectionLevel(int level)
+{
+    if (!m_helper->isAccelSupported)
+        return;
+
+    m_helper->setProtectionLevel(level);
+}
+
 void KToshibaDBusInterface::lockScreen()
 {
     QDBusInterface iface("org.freedesktop.ScreenSaver",

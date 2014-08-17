@@ -19,6 +19,8 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QVariantMap>
+#include <QtCore/QDir>
+#include <QtCore/QStringList>
 
 #include "ktoshhelper.h"
 
@@ -64,7 +66,9 @@ ActionReply KToshHelper::deviceexists(QVariantMap args)
         m_file.setFileName(m_driverPath + device);
     } else if (device == "illumination" || device == "eco_mode") {
         m_file.setFileName("/sys/class/leds/toshiba::" + device + "/brightness");
-    } else {
+    } else if (device == "accelerator") {
+        m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/uevent");
+    }else {
         reply = ActionReply::HelperErrorReply;
         reply.setErrorCode(-22);
         reply.setErrorDescription("Invalid device name");
@@ -314,6 +318,91 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
     QTextStream stream(&m_file);
     stream << time;
     m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::protectionlevel(QVariantMap args)
+{
+    Q_UNUSED(args)
+
+    ActionReply reply;
+
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    int level = stream.readAll().toInt();
+    m_file.close();
+
+    reply.addData("level", level);
+
+    return reply;
+}
+
+ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
+{
+    ActionReply reply;
+    int level = args["level"].toInt();
+
+    if (level < 0 || level > 3) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << level;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::unloadheads(QVariantMap args)
+{
+    ActionReply reply;
+    int timeout = args["timeout"].toInt();
+
+    if (timeout < 0 || timeout > 5000) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    QDir dir("/sys/block");
+    dir.setNameFilters(QStringList("sd*"));
+    QStringList hdds(dir.entryList());
+    for (int current = hdds.indexOf(hdds.first()); current <= hdds.indexOf(hdds.last()); current++) {
+        QString path("/sys/block/%1/device/unload_heads");
+        m_file.setFileName(path.arg(hdds.at(current)));
+        if (m_file.open(QIODevice::WriteOnly)) {
+            QTextStream stream(&m_file);
+            stream << timeout;
+            m_file.close();
+        } else {
+           qWarning() << "Could not protect" << hdds.at(current) << "heads" << endl
+                      << "\tError:" << m_file.error() << "-" << m_file.errorString();
+        }
+    }
 
     return reply;
 }

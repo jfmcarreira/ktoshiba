@@ -9,6 +9,7 @@ add_subdirectory(helper)
 set(KToshibaSources
     ktoshibadbusinterface.cpp
     ktoshibakeyhandler.cpp
+    ktoshibahddprotect.cpp
     helperactions.cpp
     fnactions.cpp
     ktoshiba.cpp
@@ -21,7 +22,7 @@ qt4_add_dbus_adaptor(adaptor_SRCS net.sourceforge.ktoshiba.xml
 
 qt4_add_resources(qtsourceview_RC_SRCS Icons.qrc)
 
-kde4_add_ui_files(KToshibaSources statuswidget.ui kbdtimeoutwidget.ui)
+kde4_add_ui_files(KToshibaSources statuswidget.ui kbdtimeoutwidget.ui hddprotectionwidget.ui)
 
 kde4_add_executable(ktoshiba ${KToshibaSources} ${qtsourceview_RC_SRCS} ${adaptor_SRCS})
 

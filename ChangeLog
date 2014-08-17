@@ -1,3 +1,27 @@
+2014-08-17 Azael Avalos <coproscefalo@gmail.com>
+	* Added menu option and widget to change the
+	  HDD protection level
+	* A bit of reorganization in the constructor code
+	* Updated spanish translation
+
+2014-08-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added a KNotify event when HDD movement is detected
+	* Bumped version to 4.1
+
+2014-08-15 Azael Avalos <coproscefalo@gmail.com>
+	* HDD monitoring changed to receive netlink events,
+	  thanks go to the hal team, since I shamelessly
+	  stole (used?) part of their code :-)
+
+2014-08-09 Azael Avalos <coproscefalo@gmail.com>
+	* HDD monitoring code moved to own class
+
+2014-07-31 Azael Avalos <coproscefalo@gmail.com>
+	* Added HDD monitoring features
+
+2014-07-18 Azael Avalos <coproscefalo@gmail.com>
+	* Missing semicolon in desktop file
+
 2014-07-17 Azael Avalos <coproscefalo@gmail.com>
 	* Merged deviceexists with leddeviceexists,
 	  code adapted
