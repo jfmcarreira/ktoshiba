@@ -302,7 +302,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/green_world_64.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/green_world.svg</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -312,7 +312,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="kbdAutoPage">
+   <widget class="QWidget" name="keyboardPage">
     <property name="minimumSize">
      <size>
       <width>72</width>
@@ -325,7 +325,7 @@
       <height>72</height>
      </size>
     </property>
-    <widget class="QLabel" name="kbdAutoLabel">
+    <widget class="QLabel" name="kbdStatusIcon">
      <property name="geometry">
       <rect>
        <x>4</x>
@@ -353,7 +353,7 @@
       <enum>Qt::AutoText</enum>
      </property>
      <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/keyboard_black_64.png</pixmap>
+      <pixmap resource="Icons.qrc">:/images/keyboard_black_on_64.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -368,7 +368,7 @@
       <number>0</number>
      </property>
     </widget>
-    <widget class="QLabel" name="kbdAutoTimeLabel">
+    <widget class="QLabel" name="kbdStatusText">
      <property name="geometry">
       <rect>
        <x>4</x>
@@ -390,7 +390,7 @@
       </size>
      </property>
      <property name="text">
-      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#000000;&quot;&gt;15&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string notr="true">15</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>

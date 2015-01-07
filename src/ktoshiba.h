@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,6 +20,8 @@
 #ifndef KTOSHIBA_H
 #define KTOSHIBA_H
 
+#include <Phonon/MediaObject>
+
 #include <KUniqueApplication>
 #include <KSharedConfig>
 
@@ -28,6 +30,7 @@
 
 class QAction;
 
+class KMenu;
 class KAboutData;
 class KHelpMenu;
 class KStatusNotifierItem;
@@ -39,7 +42,7 @@ class KToshibaHDDProtect;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 4.1
+ * @version 4.2
  */
 class KToshiba : public KUniqueApplication
 {
@@ -91,9 +94,11 @@ private:
     bool m_autostart;
     bool m_monitorHDD;
     int m_level;
+    int m_type;
     int m_mode;
     int m_time;
 
+    KMenu *m_popupMenu;
     static KAboutData* m_about;
     KHelpMenu *m_helpMenu;
     KStatusNotifierItem *m_trayicon;

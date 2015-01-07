@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2013-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2013-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,13 +20,11 @@
 #ifndef KTOSHIBAKEYHANDLER_H
 #define KTOSHIBAKEYHANDLER_H
 
-#include <libudev.h>
-
-#define TOSHNAME "Toshiba input device"
-#define TOSHPHYS "toshiba_acpi/input0"
-#define SUBSYS   "input"
+#include <QtCore/QStringList>
 
 class QSocketNotifier;
+
+class UDevHelper;
 
 class KToshibaKeyHandler : public QObject
 {
@@ -43,14 +41,13 @@ private Q_SLOTS:
     void readData(int);
 
 private:
-    void initUDev();
-    void setNotifier();
+    int getSocket();
 
-    struct udev *udev;
-    struct udev_monitor *monitor;
+    UDevHelper *m_udevHelper;
     QSocketNotifier *m_notifier;
+    QStringList m_namePhys;
     QString m_device;
-    int m_fd;
+    int m_socket;
 };
 
-#endif
+#endif // KTOSHIBAKEYHANDLER_H

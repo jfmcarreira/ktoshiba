@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,6 +17,9 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <QtCore/QStringList>
+#include <QtCore/QTextStream>
+
 #include <KAuth/Action>
 #include <KDebug>
 
@@ -27,86 +30,92 @@
 HelperActions::HelperActions(QObject *parent)
     : QObject( parent )
 {
+    m_driverPath = findDriverPath();
+    if (m_driverPath.isEmpty())
+        exit(-1);
+
+    m_ledsPath = "/sys/class/leds/toshiba::";
+    m_hapsPath = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/";
+
     isTouchPadSupported = checkTouchPad();
     isIlluminationSupported = checkIllumination();
     isECOSupported = checkECO();
     isKBDBacklightSupported = checkKBDBacklight();
-    isAccelSupported = checkAccelerator();
+    isKBDTypeSupported = checkKBDType();
+    isHAPSSupported = checkHAPS();
+}
+
+QString HelperActions::findDriverPath()
+{
+    QStringList m_devices;
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6208:00";
+    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
+    for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
+        m_file.setFileName(path.arg(m_devices.at(current)));
+        if (m_file.open(QIODevice::ReadOnly)) {
+            m_file.close();
+            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
+        }
+
+        current++;
+    }
+
+    kWarning() << "No known interface found" << endl;
+
+    return QString("");
+}
+
+bool HelperActions::deviceExists(QString device)
+{
+    if (device == "touchpad" || device == "kbd_backlight_mode" || device == "kbd_type") {
+        m_file.setFileName(m_driverPath + device);
+    } else if (device == "illumination" || device == "eco_mode") {
+        m_file.setFileName(m_ledsPath + device + "/brightness");
+    } else if (device == "haps") {
+        m_file.setFileName(m_hapsPath + "protection_level");
+    } else {
+        kError() << "Invalid device name" << "(" << device << ")";
+
+        return false;
+    }
+
+    if (!m_file.exists()) {
+        kDebug() << "The specified device does not exist" << "(" << device << ")";
+
+        return false;
+    }
+
+    return true;
 }
 
 bool HelperActions::checkTouchPad()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("device", "touchpad");
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
-
-        return false;
-    }
-
-    return true;
+    return deviceExists("touchpad");
 }
 
 bool HelperActions::checkIllumination()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("device", "illumination");
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
-
-        return false;
-    }
-
-    return true;
+    return deviceExists("illumination");
 }
 
 bool HelperActions::checkECO()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("device", "eco_mode");
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
-
-        return false;
-    }
-
-    return true;
+    return deviceExists("eco_mode");
 }
 
 bool HelperActions::checkKBDBacklight()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("device", "kbd_backlight_mode");
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
-
-        return false;
-    }
-
-    return true;
+    return deviceExists("kbd_backlight_mode");
 }
 
-bool HelperActions::checkAccelerator()
+bool HelperActions::checkKBDType()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.deviceexists");
-    action.setHelperID(HELPER_ID);
-    action.addArgument("device", "accelerator");
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kDebug() << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    return deviceExists("kbd_type");
+}
 
-        return false;
-    }
-
-    return true;
+bool HelperActions::checkHAPS()
+{
+    return deviceExists("haps");
 }
 
 void HelperActions::toggleTouchPad()
@@ -122,15 +131,19 @@ void HelperActions::toggleTouchPad()
 
 bool HelperActions::getIllumination()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.illumination");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    m_file.setFileName(m_ledsPath + "illumination/brightness");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getIllumination failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return false;
     }
 
-    return (reply.data()["state"].toInt()) ? true : false;
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    return state ? true : false;
 }
 
 void HelperActions::setIllumination(bool enabled)
@@ -147,15 +160,19 @@ void HelperActions::setIllumination(bool enabled)
 
 bool HelperActions::getEcoLed()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.eco");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    m_file.setFileName(m_ledsPath + "eco_mode/brightness");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getEcoLed failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return false;
     }
 
-    return (reply.data()["state"].toInt()) ? true : false;
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    return state ? true : false;
 }
 
 void HelperActions::setEcoLed(bool enabled)
@@ -170,17 +187,38 @@ void HelperActions::setEcoLed(bool enabled)
     }
 }
 
-int HelperActions::getKBDMode()
+int HelperActions::getKBDType()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdmode");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.kbdmode failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    m_file.setFileName(m_driverPath + "kbd_type");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getKBDType failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
     }
 
-    return reply.data()["mode"].toInt();
+    QTextStream stream(&m_file);
+    int type = stream.readAll().toInt();
+    m_file.close();
+
+    return type;
+}
+
+int HelperActions::getKBDMode()
+{
+    m_file.setFileName(m_driverPath + "kbd_backlight_mode");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getKBDMode failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int mode = stream.readAll().toInt();
+    m_file.close();
+
+    return mode;
 }
 
 void HelperActions::setKBDMode(int mode)
@@ -192,6 +230,8 @@ void HelperActions::setKBDMode(int mode)
     if (reply.failed()) {
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed" << endl
                  << reply.errorDescription() << "(" << reply.errorCode() << ")";
+
+        return;
     }
 
     emit kbdModeChanged(mode);
@@ -199,15 +239,19 @@ void HelperActions::setKBDMode(int mode)
 
 int HelperActions::getKBDTimeout()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.kbdtimeout failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getKBDTimeout failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
     }
 
-    return reply.data()["time"].toInt();
+    QTextStream stream(&m_file);
+    int timeout = stream.readAll().toInt();
+    m_file.close();
+
+    return timeout;
 }
 
 void HelperActions::setKBDTimeout(int time)
@@ -224,15 +268,19 @@ void HelperActions::setKBDTimeout(int time)
 
 int HelperActions::getProtectionLevel()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.protectionlevel");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.protectionlevel failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getProtectionLevel failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
     }
 
-    return reply.data()["level"].toInt();
+    QTextStream stream(&m_file);
+    int level = stream.readAll().toInt();
+    m_file.close();
+
+    return level;
 }
 
 void HelperActions::setProtectionLevel(int level)

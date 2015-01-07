@@ -1,3 +1,61 @@
+2015-01-06 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed the accepted kbd mode values on ktoshhelper
+	* ECO mode adapted to type 2 kbd backlight
+	* Updated copyright year 
+
+2014-11-05 Azael Avalos <coproscefalo@gmail.com>
+	* Moved and adapted all read functions from ktoshhelper
+	  to helperactions, there's no need to be root to read
+	  values from sys
+	* Some misc rename to accelerometer
+	* Added new call isKBDTypeSupported to check for type 2
+	  keyboard backlight implementations
+
+2014-10-23 Azael Avalos <coproscefalo@gmail.com>
+	* Removed laptop movement detection files and code,
+	  it was consuming around 12% CPU to query the
+	  position file, it might later be added back if
+	  a better way of polling (or reporting) is found
+
+2014-10-22 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to INSTALL file
+
+2014-10-11 Azael Avalos <coproscefalo@gmail.com>
+	* Changed accelerometer file check, it was enabled
+	  even if no toshiba_haps module was loaded
+
+2014-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Changed widget timeout range from 0-99 to 1-60,
+	  which is the supported range
+
+2014-09-13 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted code to changes in driver upstream,
+	  we now support two types of keyboard backlight
+	  implementation
+
+2014-09-06 Azael Avalos <coproscefalo@gmail.com>
+	* Added accelerometer files, this is the initial
+	  support for laptop movement detection
+
+2014-08-30 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to helperactions functions, they
+	  now return on error, also fixed indentation
+
+2014-08-27 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to findDriverPath function
+
+2014-08-24 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to findDevide function, udev rules
+	  pick the last (matched) device, so let function
+	  keep searching until it finds the last device
+
+2014-08-18 Azael Avalos <coproscefalo@gmail.com>
+	* Moved all the UDev code from KToshibaHDDProtect
+	  class and created the new class named UDevHelper
+	* Added new class KToshibaAccel that monitors the
+	  built-in accelerometer of Toshiba laptops
+	* Misc changes here and there
+
 2014-08-17 Azael Avalos <coproscefalo@gmail.com>
 	* Added menu option and widget to change the
 	  HDD protection level

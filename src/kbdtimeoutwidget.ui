@@ -14,7 +14,7 @@
    <string>Keyboard Backlight Timeout</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset>
     <normaloff>:/images/keyboard_black_64.png</normaloff>:/images/keyboard_black_64.png</iconset>
   </property>
   <widget class="QWidget" name="layoutWidget">
@@ -31,7 +31,14 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QSpinBox" name="timeoutSpinBox"/>
+     <widget class="QSpinBox" name="timeoutSpinBox">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>60</number>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QDialogButtonBox" name="buttonBox">

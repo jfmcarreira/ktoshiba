@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -21,6 +21,8 @@
 #define HELPERACTIONS_H
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QFile>
 
 class HelperActions : public QObject
 {
@@ -33,7 +35,8 @@ public:
     bool isIlluminationSupported;
     bool isECOSupported;
     bool isKBDBacklightSupported;
-    bool isAccelSupported;
+    bool isKBDTypeSupported;
+    bool isHAPSSupported;
 
 public Q_SLOTS:
     void toggleTouchPad();
@@ -41,6 +44,7 @@ public Q_SLOTS:
     void setIllumination(bool);
     bool getEcoLed();
     void setEcoLed(bool);
+    int getKBDType();
     int getKBDMode();
     void setKBDMode(int);
     int getKBDTimeout();
@@ -53,11 +57,19 @@ Q_SIGNALS:
     void kbdModeChanged(int mode = 0);
 
 private:
+    QString findDriverPath();
+    bool deviceExists(QString);
     bool checkTouchPad();
     bool checkIllumination();
     bool checkECO();
     bool checkKBDBacklight();
-    bool checkAccelerator();
+    bool checkKBDType();
+    bool checkHAPS();
+
+    QString m_driverPath;
+    QString m_ledsPath;
+    QString m_hapsPath;
+    QFile m_file;
 };
 
 #endif // HELPERACTIONS_H

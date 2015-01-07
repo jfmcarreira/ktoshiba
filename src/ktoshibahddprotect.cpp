@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,6 +18,7 @@
 */
 
 #include <QtCore/QSocketNotifier>
+#include <QtCore/qmath.h>
 
 #include <KDebug>
 
@@ -179,7 +180,7 @@ int KToshibaHDDProtect::hddEventSocket()
         return -1;
     }
 
-    kDebug() << "Opened socket" << fd << "for HDD monitoring";
+    kDebug() << "Binded to socket" << fd << "for HDD monitoring";
 
     return fd;
 }

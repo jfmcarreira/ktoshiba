@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -46,7 +46,8 @@ KToshiba::KToshiba()
       m_timeoutWidget( new QWidget( 0, Qt::WindowStaysOnTopHint ) ),
       m_config( KSharedConfig::openConfig( ktosh_config ) ),
       m_modeText( i18n("Switch the keyboard backlight mode to %1") ),
-      m_mode( FnActions::NotAvailable ),
+      m_type( 1 ),
+      m_mode( FnActions::TIMER ),
       m_trayicon( new KStatusNotifierItem( this ) )
 {
     m_trayicon->setIconByName( "ktoshiba" );
@@ -54,7 +55,8 @@ KToshiba::KToshiba()
     m_trayicon->setCategory( KStatusNotifierItem::Hardware );
     m_trayicon->setStatus( KStatusNotifierItem::Passive );
 
-    KMenu *m_popupMenu = m_trayicon->contextMenu();
+    m_popupMenu = m_trayicon->contextMenu();
+    m_trayicon->setAssociatedWidget( m_popupMenu );
 
     if (checkConfig())
         loadConfig();
@@ -66,7 +68,7 @@ KToshiba::KToshiba()
     m_autoStart->setChecked( m_autostart );
     connect( m_autoStart, SIGNAL( toggled(bool) ), this, SLOT( autostartClicked(bool) ) );
 
-    if (m_helper->isAccelSupported) {
+    if (m_helper->isHAPSSupported) {
         m_levels << i18n("Off") << i18n("Low") << i18n("Medium") << i18n("High");
 
         m_hdd->setHDDProtection(m_monitorHDD);
@@ -102,27 +104,34 @@ KToshiba::KToshiba()
     }
 
     if (m_helper->isKBDBacklightSupported) {
+        m_mode = m_helper->getKBDMode();
+        if (m_helper->isKBDTypeSupported)
+            m_type = m_helper->getKBDType();
+
+        if (m_type == 1) {
+            m_kbdMode = m_popupMenu->addAction( m_modeText );
+            m_kbdMode->setText( m_modeText.arg( (m_mode == FnActions::TIMER) ? "FN-Z" : "AUTO" ) );
+            m_kbdMode->setIcon( KIcon( "input-keyboard" ) );
+
+            connect( m_kbdMode, SIGNAL( triggered() ), this, SLOT( changeKBDMode() ) );
+            connect( m_helper, SIGNAL( kbdModeChanged() ), this, SLOT( notifyKBDModeChanged() ) );
+            connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( changeKBDModeText(int) ) );
+        }
+
         m_kbdTimeoutWidget.setupUi( m_timeoutWidget );
         m_kbdTimeoutWidget.timeoutSpinBox->setMaximum(60);
-        m_kbdTimeoutWidget.timeoutSpinBox->setMinimum(0);
+        m_kbdTimeoutWidget.timeoutSpinBox->setMinimum(1);
         m_timeoutWidget->clearFocus();
 
-        m_mode = m_helper->getKBDMode();
-
-        m_kbdMode = m_popupMenu->addAction( m_modeText.arg( (m_mode == FnActions::FNZMode) ? "Auto" : "FN-Z") );
-        m_kbdMode->setIcon( KIcon( "input-keyboard" ) );
         m_kbdTimeout = m_popupMenu->addAction( i18n("Change the keyboard backlight timeout") );
         m_kbdTimeout->setIcon( KIcon( "input-keyboard" ) );
-        m_kbdTimeout->setVisible((m_mode == FnActions::AutoMode) ? true: false);
+        m_kbdTimeout->setVisible((m_mode == FnActions::TIMER) ? true: false);
 
-        connect( m_kbdMode, SIGNAL( triggered() ), this, SLOT( changeKBDMode() ) );
         connect( m_kbdTimeout, SIGNAL( triggered() ), this, SLOT( kbdTimeoutClicked() ) );
         connect( m_kbdTimeoutWidget.buttonBox, SIGNAL( clicked(QAbstractButton *) ),
 		 this, SLOT( changeKBDTimeout(QAbstractButton *) ) );
         connect( m_kbdTimeoutWidget.timeoutSpinBox, SIGNAL( valueChanged(int) ),
 		 this, SLOT( timeChanged(int) ) );
-        connect( m_helper, SIGNAL( kbdModeChanged() ), this, SLOT( notifyKBDModeChanged() ) );
-        connect( m_helper, SIGNAL( kbdModeChanged(int) ), this, SLOT( changeKBDModeText(int) ) );
     }
 
     m_popupMenu->addSeparator();
@@ -139,7 +148,9 @@ KToshiba::~KToshiba()
     delete m_hdd; m_hdd = NULL;
     delete m_protectionWidget; m_protectionWidget = NULL;
     delete m_timeoutWidget; m_timeoutWidget = NULL;
+    delete m_helpMenu; m_helpMenu = NULL;
     delete m_trayicon; m_trayicon = NULL;
+    delete m_popupMenu; m_popupMenu = NULL;
 }
 
 bool KToshiba::checkConfig()
@@ -266,7 +277,7 @@ void KToshiba::changeProtectionLvl(QAbstractButton *button)
 
 void KToshiba::notifyKBDModeChanged()
 {
-    QIcon icon(":images/keyboard_black_64.png");
+    QIcon icon(":images/keyboard_black_on_64.png");
     KNotification *notification =
 		KNotification::event(KNotification::Notification, i18n("KToshiba - Keyboard Mode"),
 				     i18n("The computer must be restarted in order to activate the new keyboard Mode"),
@@ -276,12 +287,12 @@ void KToshiba::notifyKBDModeChanged()
 
 void KToshiba::changeKBDModeText(int mode)
 {
-    m_kbdMode->setText( m_modeText.arg( (mode == FnActions::FNZMode) ? "FN-Z" : "Auto") );
+    m_kbdMode->setText( m_modeText.arg( (mode == FnActions::FNZ) ? "FN-Z" : "AUTO") );
 }
 
 void KToshiba::changeKBDMode()
 {
-    int mode = (m_helper->getKBDMode() == FnActions::FNZMode) ? FnActions::AutoMode : FnActions::FNZMode;
+    int mode = (m_helper->getKBDMode() == FnActions::FNZ) ? FnActions::TIMER : FnActions::FNZ;
     m_helper->setKBDMode(mode);
     changeKBDModeText(mode);
 }
@@ -351,7 +362,7 @@ void KToshiba::createAboutData()
 {
     m_about = new KAboutData("KToshiba", 0, ki18n("KToshiba"), ktoshiba_version,
 			ki18n(description), KAboutData::License_GPL,
-			ki18n("(C) 2004-2014, Azael Avalos"), KLocalizedString(),
+			ki18n("(C) 2004-2015, Azael Avalos"), KLocalizedString(),
 			"http://ktoshiba.sourceforge.net/",
 			"coproscefalo@gmail.com");
     m_about->setProgramIconName("ktoshiba");
@@ -360,6 +371,8 @@ void KToshiba::createAboutData()
 			ki18n("Original Author"), "coproscefalo@gmail.com" );
     m_about->addCredit( ki18n("KDE Team"), ki18n("Some ideas and pieces of code"), 0,
                     "http://www.kde.org/" );
+    m_about->addCredit( ki18n("Mauricio Duque"), ki18n("Green world icon"),
+		    "info@snap2objects.com", "http://www.snap2objects.com/" );
 }
 
 void KToshiba::destroyAboutData()

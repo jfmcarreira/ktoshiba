@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -46,6 +46,7 @@ FnActions::FnActions(QObject *parent)
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_fnPressed( false ),
+      m_type( 1 ),
       m_cookie( 0 )
 {
     m_statusWidget.setupUi( m_widget );
@@ -56,6 +57,14 @@ FnActions::FnActions(QObject *parent)
 
     // We're just going to care about these profiles
     m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
+
+    if (m_helper->isKBDBacklightSupported) {
+        if (m_helper->isKBDTypeSupported)
+            m_type = m_helper->getKBDType();
+
+        if (m_type == 2)
+            m_modes << OFF << ON << TIMER;
+    }
 
     QList<Solid::Device> list = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter, QString());
     Solid::Device device = list[0];
@@ -99,7 +108,8 @@ void FnActions::compositingChanged(bool state)
 
 void FnActions::toggleTouchPad()
 {
-    m_helper->toggleTouchPad();
+    if (m_helper->isTouchPadSupported)
+        m_helper->toggleTouchPad();
 }
 
 void FnActions::toggleProfiles()
@@ -149,7 +159,7 @@ void FnActions::changeProfile(QString profile)
         m_dBus->setBrightness(57);
         setKBDBacklight(Off);
     }
-    kDebug() << "Changed battery profile to: " << m_profile;
+    kDebug() << "Changed battery profile to:" << m_profile;
 
     if (m_cookie != 0)
         if (stopSuppressingScreenPowerManagement(m_cookie))
@@ -158,29 +168,69 @@ void FnActions::changeProfile(QString profile)
 
 void FnActions::kbdBacklight()
 {
-    int mode = m_helper->getKBDMode();
-    if (mode == FNZMode) {
-        kDebug() << "Keyboard backlight mode is not set to Auto";
+    if (!m_helper->isKBDBacklightSupported)
         return;
-    }
 
-    int time = m_helper->getKBDTimeout();
-
+    QIcon icon;
     QString format = QString("<html><head/><body><p align=\"center\">\
 			      <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
 			      %1\
 			      </span></p></body></html>");
-    m_statusWidget.kbdAutoTimeLabel->setText(format.arg(time));
-    showWidget(KBDAuto);
+
+    m_mode = m_helper->getKBDMode();
+
+    if (m_type == 1) {
+        if (m_mode == TIMER) {
+            int time = m_helper->getKBDTimeout();
+            icon = QIcon(":images/keyboard_black_on_64.png");
+            m_statusWidget.kbdStatusText->setText(format.arg(time));
+        } else {
+            kDebug() << "Keyboard backlight mode is set to FN-Z";
+            return;
+        }
+    }
+
+    if (m_type == 2) {
+        int current = m_modes.indexOf(m_mode);
+        if (current == m_modes.indexOf(m_modes.last())) {
+            m_mode = m_modes.first();
+        } else {
+            current++;
+            m_mode = m_modes.at(current);
+        }
+
+        m_helper->setKBDMode(m_mode);
+        switch (m_mode) {
+        case OFF:
+            icon = QIcon(":images/keyboard_black_off_64.png");
+            m_statusWidget.kbdStatusText->setText(format.arg(i18n("OFF")));
+            break;
+        case ON:
+            icon = QIcon(":images/keyboard_black_on_64.png");
+            m_statusWidget.kbdStatusText->setText(format.arg(i18n("ON")));
+            break;
+        case TIMER:
+            icon = QIcon(":images/keyboard_black_on_64.png");
+            int time = m_helper->getKBDTimeout();
+            m_statusWidget.kbdStatusText->setText(format.arg(time));
+            break;
+        }
+    }
+
+    m_statusWidget.kbdStatusIcon->setPixmap(icon.pixmap(64, 64));
+    showWidget(KBDStatus);
 }
 
-void FnActions::setKBDBacklight(bool on)
+void FnActions::setKBDBacklight(bool state)
 {
     if (!m_helper->isKBDBacklightSupported)
         return;
 
-    if (m_helper->getKBDMode() == AutoMode)
-        m_dBus->setKBDBacklight(on);
+    m_mode = m_helper->getKBDMode();
+    if (m_type == 1 && m_mode == FNZ)
+        m_dBus->setKBDBacklight(state);
+    else if (m_type == 2)
+        m_helper->setKBDMode(OFF);
 }
 
 void FnActions::showWidget(int wid)
@@ -222,13 +272,15 @@ void FnActions::processHotkey(int hotkey)
         kbdBacklight();
         break;
     case KEY_ZOOMRESET:
-        m_dBus->setZoom( ZoomReset );
+        m_dBus->setZoom( Reset );
         break;
     case KEY_ZOOMOUT:
-        m_dBus->setZoom( ZoomOut );
+        m_dBus->setZoom( Out );
         break;
     case KEY_ZOOMIN:
-        m_dBus->setZoom( ZoomIn );
+        m_dBus->setZoom( In );
+        break;
+    case KEY_PROG1: /* Screen Rotation */
         break;
     /* By default, the FN key is ignored by the driver,
      * but could be very useful for us...

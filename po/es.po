@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Azael Avalos <coproscefalo@gmail.com>. 2014
+# Azael Avalos <coproscefalo@gmail.com>. 2014-2015
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-"POT-Creation-Date: 2014-08-17 12:02-0600\n"
+"POT-Creation-Date: 2015-01-06 23:13-0700\n"
 "PO-Revision-Date: 2010-03-28 20:46-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,86 +18,98 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: fnactions.cpp:206
+msgid "OFF"
+msgstr "APAGADO"
+
+#: fnactions.cpp:210
+msgid "ON"
+msgstr "ENCENDIDO"
+
 #: ktoshiba.cpp:48
 #, kde-format
 msgid "Switch the keyboard backlight mode to %1"
 msgstr "Cambia la luz del teclado a modo %1"
 
-#: ktoshiba.cpp:53
+#: ktoshiba.cpp:54
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: ktoshiba.cpp:64
+#: ktoshiba.cpp:66
 msgid "Start Automatically"
 msgstr "Comienza Automaticamente"
 
-#: ktoshiba.cpp:70
+#: ktoshiba.cpp:72
 msgid "High"
 msgstr "Alto"
 
-#: ktoshiba.cpp:70
+#: ktoshiba.cpp:72
 msgid "Low"
 msgstr "Bajo"
 
-#. i18n: file: hddprotectionwidget.ui:32
+#. i18n: file: hddprotectionwidget.ui:34
 #. i18n: ectx: property (text), widget (QLabel, levelLabel)
-#: ktoshiba.cpp:70 rc.cpp:8
+#: ktoshiba.cpp:72 rc.cpp:8
 msgid "Medium"
 msgstr "Medio"
 
-#: ktoshiba.cpp:70
+#: ktoshiba.cpp:72
 msgid "Off"
 msgstr "Apagado"
 
-#: ktoshiba.cpp:81
+#: ktoshiba.cpp:83
 msgid "Monitor HDD movement"
 msgstr "Monitorea movimiento del disco duro"
 
 #. i18n: file: hddprotectionwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, hddProtectionWidget)
-#: ktoshiba.cpp:85 rc.cpp:5
+#: ktoshiba.cpp:87 rc.cpp:5
 msgid "HDD Protection Level"
 msgstr "Nivel de Protección del Disco Duro"
 
-#: ktoshiba.cpp:98
+#: ktoshiba.cpp:100
 msgid "Toggle TouchPad"
 msgstr "Activa/Desactiva el TouchPad"
 
-#: ktoshiba.cpp:114
+#: ktoshiba.cpp:126
 msgid "Change the keyboard backlight timeout"
 msgstr "Cambia el tiempo de apagado de la luz del teclado"
 
-#: ktoshiba.cpp:196
+#: ktoshiba.cpp:207
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: ktoshiba.cpp:197
+#: ktoshiba.cpp:208
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: ktoshiba.cpp:267
+#: ktoshiba.cpp:282
 msgid "KToshiba - Keyboard Mode"
 msgstr "KToshiba - Modo del Teclado"
 
-#: ktoshiba.cpp:268
+#: ktoshiba.cpp:283
 msgid ""
 "The computer must be restarted in order to activate the new keyboard Mode"
 msgstr ""
 "La computadora debe ser reiniciada para activar el nuevo modo del teclado"
 
-#: ktoshiba.cpp:356
+#: ktoshiba.cpp:371
 msgid "Original Author"
 msgstr "Autor Original"
 
-#: ktoshiba.cpp:357
+#: ktoshiba.cpp:372
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: ktoshiba.cpp:357
+#: ktoshiba.cpp:372
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
+
+#: ktoshiba.cpp:374
+msgid "Green world icon"
+msgstr "Icono del mundo verde"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"

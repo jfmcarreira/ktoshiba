@@ -10,6 +10,7 @@ set(KToshibaSources
     ktoshibadbusinterface.cpp
     ktoshibakeyhandler.cpp
     ktoshibahddprotect.cpp
+    udevhelper.cpp
     helperactions.cpp
     fnactions.cpp
     ktoshiba.cpp
@@ -30,6 +31,7 @@ target_link_libraries(ktoshiba
 	${KDE4_KDEUI_LIBS}
 	${KDE4_SOLID_LIBS}
 	${LIBUDEV_LIBRARY}
+	phonon
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_SYSTEM_NAME MATCHES Linux)

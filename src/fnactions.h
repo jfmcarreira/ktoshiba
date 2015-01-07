@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -38,16 +38,16 @@ class FnActions : public QObject
     Q_OBJECT
 
 public:
-    enum WidgetIcons { Disabled, Performance, Powersave, Presentation, ECO, KBDAuto, Blank };
-    enum zoomActions { ZoomReset = 0, ZoomIn = 1, ZoomOut = -1 };
-    enum KbdBacklight { NotAvailable = 0, FNZMode = 1, AutoMode = 2 };
-    enum toogleActions { Off = false, On = true };
+    enum WidgetIcons { Disabled, Performance, Powersave, Presentation, ECO, KBDStatus, Blank };
+    enum Zoom { Reset = 0, In = 1, Out = -1 };
+    enum KbdBacklight { FNZ = 0x1, TIMER = 0x2, ON = 0x8, OFF = 0x10 };
+    enum ToogleActions { Off = false, On = true };
 
 public:
     FnActions(QObject *parent);
     ~FnActions();
 
-    int m_mode;
+    //int m_mode;
 
 public Q_SLOTS:
     void processHotkey(int);
@@ -72,10 +72,13 @@ private:
     QWidget *m_widget;
     QTimer *m_widgetTimer;
     QStringList m_profiles;
+    QList<int> m_modes;
     QString m_profile;
     QString m_version;
 
     bool m_fnPressed;
+    int m_type;
+    int m_mode;
     int m_cookie;
 };
 

@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -34,57 +34,22 @@ KToshHelper::KToshHelper(QObject *parent)
 
 QString KToshHelper::findDriverPath()
 {
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/path");
-    if (m_file.exists()) {
-        qDebug() << "Found interface TOS1900" << endl;
-        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS1900:00/");
-    }
+    QStringList m_devices;
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6208:00";
+    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
+    for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
+        m_file.setFileName(path.arg(m_devices.at(current)));
+        if (m_file.open(QIODevice::ReadOnly)) {
+            m_file.close();
+            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
+        }
 
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/path");
-    if (m_file.exists()) {
-        qDebug() << "Found interface TOS6200" << endl;
-        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6200:00/");
-    }
-
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/path");
-    if (m_file.exists()) {
-        qDebug() << "Found interface TOS6208" << endl;
-        return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS6208:00/");
+        current++;
     }
 
     qWarning() << "No known interface found" << endl;
 
     return QString("");
-}
-
-ActionReply KToshHelper::deviceexists(QVariantMap args)
-{
-    ActionReply reply;
-    QString device = args["device"].toString();
-
-    if (device == "touchpad" || device == "kbd_backlight_mode") {
-        m_file.setFileName(m_driverPath + device);
-    } else if (device == "illumination" || device == "eco_mode") {
-        m_file.setFileName("/sys/class/leds/toshiba::" + device + "/brightness");
-    } else if (device == "accelerator") {
-        m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/uevent");
-    }else {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-22);
-        reply.setErrorDescription("Invalid device name");
-
-        return reply;
-    }
-
-    if (!m_file.exists()) {
-        reply = ActionReply::HelperErrorReply;
-        reply.setErrorCode(-19); // No such device
-        reply.setErrorDescription("The device does not exist");
-
-        return reply;
-    }
-
-    return reply;
 }
 
 ActionReply KToshHelper::toggletouchpad(QVariantMap args)
@@ -95,41 +60,17 @@ ActionReply KToshHelper::toggletouchpad(QVariantMap args)
 
     m_file.setFileName(m_driverPath + "touchpad");
     if (!m_file.open(QIODevice::ReadWrite)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(m_file.error());
+        reply.setErrorDescription(m_file.errorString());
 
-       return reply;
+        return reply;
     }
 
     QTextStream stream(&m_file);
     int state = stream.readAll().toInt();
     stream << !state;
     m_file.close();
-
-    return reply;
-}
-
-ActionReply KToshHelper::illumination(QVariantMap args)
-{
-    Q_UNUSED(args)
-
-    ActionReply reply;
-
-    m_file.setFileName("/sys/class/leds/toshiba::illumination/brightness");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
-
-       return reply;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    reply.addData("state", state);
 
     return reply;
 }
@@ -149,40 +90,16 @@ ActionReply KToshHelper::setillumination(QVariantMap args)
 
     m_file.setFileName("/sys/class/leds/toshiba::illumination/brightness");
     if (!m_file.open(QIODevice::WriteOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(m_file.error());
+        reply.setErrorDescription(m_file.errorString());
 
-       return reply;
+        return reply;
     }
 
     QTextStream stream(&m_file);
     stream << state;
     m_file.close();
-
-    return reply;
-}
-
-ActionReply KToshHelper::eco(QVariantMap args)
-{
-    Q_UNUSED(args)
-
-    ActionReply reply;
-
-    m_file.setFileName("/sys/class/leds/toshiba::eco_mode/brightness");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
-
-       return reply;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    reply.addData("state", state);
 
     return reply;
 }
@@ -202,11 +119,11 @@ ActionReply KToshHelper::seteco(QVariantMap args)
 
     m_file.setFileName("/sys/class/leds/toshiba::eco_mode/brightness");
     if (!m_file.open(QIODevice::WriteOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(m_file.error());
+        reply.setErrorDescription(m_file.errorString());
 
-       return reply;
+        return reply;
     }
 
     QTextStream stream(&m_file);
@@ -216,36 +133,12 @@ ActionReply KToshHelper::seteco(QVariantMap args)
     return reply;
 }
 
-ActionReply KToshHelper::kbdmode(QVariantMap args)
-{
-    Q_UNUSED(args)
-
-    ActionReply reply;
-
-    m_file.setFileName(m_driverPath + "kbd_backlight_mode");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
-
-       return reply;
-    }
-
-    QTextStream stream(&m_file);
-    int mode = stream.readAll().toInt();
-    m_file.close();
-
-    reply.addData("mode", mode);
-
-    return reply;
-}
-
 ActionReply KToshHelper::setkbdmode(QVariantMap args)
 {
     ActionReply reply;
     int mode = args["mode"].toInt();
 
-    if (mode < 1 || mode > 2) {
+    if (mode != 1 && mode != 2 && mode != 8 && mode != 0x10) {
         reply = ActionReply::HelperErrorReply;
         reply.setErrorCode(-22); // Invalid argument
         reply.setErrorDescription("The value was out of range");
@@ -265,30 +158,6 @@ ActionReply KToshHelper::setkbdmode(QVariantMap args)
     QTextStream stream(&m_file);
     stream << mode;
     m_file.close();
-
-    return reply;
-}
-
-ActionReply KToshHelper::kbdtimeout(QVariantMap args)
-{
-    Q_UNUSED(args)
-
-    ActionReply reply;
-
-    m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
-
-       return reply;
-    }
-
-    QTextStream stream(&m_file);
-    int time = stream.readAll().toInt();
-    m_file.close();
-
-    reply.addData("time", time);
 
     return reply;
 }
@@ -318,30 +187,6 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
     QTextStream stream(&m_file);
     stream << time;
     m_file.close();
-
-    return reply;
-}
-
-ActionReply KToshHelper::protectionlevel(QVariantMap args)
-{
-    Q_UNUSED(args)
-
-    ActionReply reply;
-
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-       reply = ActionReply::HelperErrorReply;
-       reply.setErrorCode(m_file.error());
-       reply.setErrorDescription(m_file.errorString());
-
-       return reply;
-    }
-
-    QTextStream stream(&m_file);
-    int level = stream.readAll().toInt();
-    m_file.close();
-
-    reply.addData("level", level);
 
     return reply;
 }

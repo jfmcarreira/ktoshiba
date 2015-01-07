@@ -17,46 +17,6 @@
       </doc:description>
     </doc:doc>
 
-    <method name="deviceexists">
-      <arg name="device" type="s" direction="in">
-        <doc:doc>
-          <doc:summary>
-            The device name to check for.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Checks whether a device exists or not.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while checking for the device</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
-    <method name="leddeviceexists">
-      <arg name="device" type="s" direction="in">
-        <doc:doc>
-          <doc:summary>
-            The led device name to check for.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Checks whether a led device exists or not.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while checking for the led device</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
     <method name="toggletouchpad">
       <doc:doc>
         <doc:description>
@@ -66,26 +26,6 @@
         </doc:description>
         <doc:errors>
           <doc:error name="&ERROR_GENERAL;">if an error occured while toggling the TouchPad</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
-    <method name="illumination">
-      <arg name="state" type="i" direction="out">
-        <doc:doc>
-          <doc:summary>
-            The value of the Illumination led state.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Get the state of the Illumination led.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the Illumination led</doc:error>
         </doc:errors>
       </doc:doc>
     </method>
@@ -110,26 +50,6 @@
       </doc:doc>
     </method>
 
-    <method name="eco">
-      <arg name="state" type="i" direction="out">
-        <doc:doc>
-          <doc:summary>
-            The value of the ECO led state.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Get the state of the ECO led.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the ECO led</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
     <method name="seteco">
       <arg name="state" type="i" direction="in">
         <doc:doc>
@@ -146,26 +66,6 @@
         </doc:description>
         <doc:errors>
           <doc:error name="&ERROR_GENERAL;">if an error occured while setting the ECO led</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
-    <method name="kbdtimeout">
-      <arg name="time" type="i" direction="out">
-        <doc:doc>
-          <doc:summary>
-            The current value of the keyboard backlight timeout.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Get the timeout of the keyboard backlight.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight timeout</doc:error>
         </doc:errors>
       </doc:doc>
     </method>
@@ -190,26 +90,6 @@
       </doc:doc>
     </method>
 
-    <method name="kbdmode">
-      <arg name="mode" type="i" direction="out">
-        <doc:doc>
-          <doc:summary>
-            The current value of the keyboard backlight mode.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Get the keyboard backlight mode.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight mode</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
     <method name="setkbdmode">
       <arg name="mode" type="i" direction="in">
         <doc:doc>
@@ -226,26 +106,6 @@
         </doc:description>
         <doc:errors>
           <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight mode</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
-    <method name="protectionlevel">
-      <arg name="level" type="i" direction="out">
-        <doc:doc>
-          <doc:summary>
-            The current value of the HDD protection level.
-          </doc:summary>
-        </doc:doc>
-      </arg>
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Get the HDD protection level.
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the HDD protection level</doc:error>
         </doc:errors>
       </doc:doc>
     </method>

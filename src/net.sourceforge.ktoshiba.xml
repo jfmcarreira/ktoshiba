@@ -117,6 +117,27 @@
       </doc:doc>
     </method>
 
+    <method name="getKBDType">
+      <arg name="type" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The value of the keyboard backlight type.
+            Returns Zero when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the keyboard backlight type.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard backlight type</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
     <method name="getKBDMode">
       <arg name="mode" type="i" direction="out">
         <doc:doc>
@@ -138,14 +159,19 @@
       </doc:doc>
     </method>
 
-    <method name="changeKBDMode">
+    <method name="setKBDMode">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value of the keyboard backlight mode.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
       <doc:doc>
         <doc:description>
           <doc:para>
-            Changes the keyboard backlight mode of operation from FN-Z to Auto and viceversa.
-          </doc:para>
-          <doc:para>
-            Does nothing when not supported.
+            Changes the keyboard backlight mode of operation.
           </doc:para>
         </doc:description>
         <doc:errors>
@@ -159,7 +185,7 @@
         <doc:doc>
           <doc:summary>
             The timeout of the keyboard backlight.
-            Returns -1 when not supported and when keyboard backlight mode is set to FN-Z.
+            Returns 0 when not supported and when keyboard backlight mode is not set to AUTO or TIMER.
           </doc:summary>
         </doc:doc>
       </arg>

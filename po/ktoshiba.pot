@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2014-08-17 12:02-0600\n"
+        "POT-Creation-Date: 2015-01-06 23:13-0700\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,83 +16,95 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
+#: fnactions.cpp:206
+msgid   "OFF"
+msgstr  ""
+
+#: fnactions.cpp:210
+msgid   "ON"
+msgstr  ""
+
 #: ktoshiba.cpp:48
 #, possible-kde-format
 msgid   "Switch the keyboard backlight mode to %1"
 msgstr  ""
 
-#: ktoshiba.cpp:53
+#: ktoshiba.cpp:54
 msgid   "Fn key monitoring for Toshiba laptops"
 msgstr  ""
 
-#: ktoshiba.cpp:64
+#: ktoshiba.cpp:66
 msgid   "Start Automatically"
 msgstr  ""
 
-#: ktoshiba.cpp:70
+#: ktoshiba.cpp:72
 msgid   "High"
 msgstr  ""
 
-#: ktoshiba.cpp:70
+#: ktoshiba.cpp:72
 msgid   "Low"
 msgstr  ""
 
-#. i18n: file: hddprotectionwidget.ui:32
+#. i18n: file: hddprotectionwidget.ui:34
 #. i18n: ectx: property (text), widget (QLabel, levelLabel)
-#: ktoshiba.cpp:70 rc.cpp:8
+#: ktoshiba.cpp:72 rc.cpp:8
 msgid   "Medium"
 msgstr  ""
 
-#: ktoshiba.cpp:70
+#: ktoshiba.cpp:72
 msgid   "Off"
 msgstr  ""
 
-#: ktoshiba.cpp:81
+#: ktoshiba.cpp:83
 msgid   "Monitor HDD movement"
 msgstr  ""
 
 #. i18n: file: hddprotectionwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, hddProtectionWidget)
-#: ktoshiba.cpp:85 rc.cpp:5
+#: ktoshiba.cpp:87 rc.cpp:5
 msgid   "HDD Protection Level"
 msgstr  ""
 
-#: ktoshiba.cpp:98
+#: ktoshiba.cpp:100
 msgid   "Toggle TouchPad"
 msgstr  ""
 
-#: ktoshiba.cpp:114
+#: ktoshiba.cpp:126
 msgid   "Change the keyboard backlight timeout"
 msgstr  ""
 
-#: ktoshiba.cpp:196
+#: ktoshiba.cpp:207
 msgid   "KToshiba - HDD Monitor"
 msgstr  ""
 
-#: ktoshiba.cpp:197
+#: ktoshiba.cpp:208
 msgid   "Vibration has been detected and the HDD has been stopped to prevent "
         "damage"
 msgstr  ""
 
-#: ktoshiba.cpp:267
+#: ktoshiba.cpp:282
 msgid   "KToshiba - Keyboard Mode"
 msgstr  ""
 
-#: ktoshiba.cpp:268
+#: ktoshiba.cpp:283
 msgid   "The computer must be restarted in order to activate the new keyboard "
         "Mode"
 msgstr  ""
 
-#: ktoshiba.cpp:356
+#: ktoshiba.cpp:371
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:357
+#: ktoshiba.cpp:372
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:357
+#: ktoshiba.cpp:372
 msgid   "Some ideas and pieces of code"
+msgstr  ""
+
+#: ktoshiba.cpp:374
+msgid   "Green world icon"
 msgstr  ""
 
 #: rc.cpp:1

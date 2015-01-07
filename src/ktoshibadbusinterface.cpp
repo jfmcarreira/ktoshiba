@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2014  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -70,6 +70,14 @@ void KToshibaDBusInterface::setIllumination(bool enabled)
         m_helper->setIllumination(enabled);
 }
 
+int KToshibaDBusInterface::getKBDType()
+{
+    if (!m_helper->isKBDTypeSupported)
+        return 0;
+
+    return m_helper->getKBDType();
+}
+
 int KToshibaDBusInterface::getKBDMode()
 {
     if (!m_helper->isKBDBacklightSupported)
@@ -78,22 +86,20 @@ int KToshibaDBusInterface::getKBDMode()
     return m_helper->getKBDMode();
 }
 
-void KToshibaDBusInterface::changeKBDMode()
+void KToshibaDBusInterface::setKBDMode(int mode)
 {
     if (!m_helper->isKBDBacklightSupported)
         return;
 
-    int mode = m_helper->getKBDMode();
-
-    m_helper->setKBDMode((mode == 1) ? 2 : 1);
+    m_helper->setKBDMode(mode);
 }
 
 int KToshibaDBusInterface::getKBDTimeout()
 {
     if (!m_helper->isKBDBacklightSupported)
-        return -1;
+        return 0;
 
-    return (m_helper->getKBDMode() == 1) ? -1 : m_helper->getKBDTimeout();
+    return (getKBDMode() == 2) ? m_helper->getKBDTimeout() : 0;
 }
 
 void KToshibaDBusInterface::setKBDTimeout(int time)
@@ -106,7 +112,7 @@ void KToshibaDBusInterface::setKBDTimeout(int time)
 
 int KToshibaDBusInterface::getProtectionLevel()
 {
-    if (!m_helper->isAccelSupported)
+    if (!m_helper->isHAPSSupported)
         return -1;
 
     return m_helper->getProtectionLevel();
@@ -114,7 +120,7 @@ int KToshibaDBusInterface::getProtectionLevel()
 
 void KToshibaDBusInterface::setProtectionLevel(int level)
 {
-    if (!m_helper->isAccelSupported)
+    if (!m_helper->isHAPSSupported)
         return;
 
     m_helper->setProtectionLevel(level);
@@ -129,7 +135,7 @@ void KToshibaDBusInterface::lockScreen()
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
         return;
     }
 
@@ -137,7 +143,7 @@ void KToshibaDBusInterface::lockScreen()
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
     }
 }
 
@@ -150,7 +156,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
         return;
     }
 
@@ -158,7 +164,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     if (!bright.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
         return;
     }
 
@@ -166,7 +172,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
     }
 }
 
@@ -179,7 +185,7 @@ void KToshibaDBusInterface::setKBDBacklight(bool state)
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
         return;
     }
 
@@ -188,7 +194,7 @@ void KToshibaDBusInterface::setKBDBacklight(bool state)
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
     }
 }
 
@@ -206,7 +212,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
         return;
     }
 
@@ -226,7 +232,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
-                 << "Message: " << err.message();
+                 << "Message:" << err.message();
     }
 }
 

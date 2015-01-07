@@ -17,38 +17,30 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef KTOSHHELPER_H
-#define KTOSHHELPER_H
+#ifndef UDEVHELPER_H
+#define UDEVHELPER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QFile>
+#include <QtCore/QStringList>
 
-#include <kauth.h>
+#include <libudev.h>
 
-using namespace KAuth;
+#define TOSHNAME "Toshiba input device"
+#define TOSHPHYS "toshiba_acpi/input0"
 
-class KToshHelper : public QObject
+class UDevHelper : public QObject
 {
     Q_OBJECT
 
 public:
-    KToshHelper(QObject *parent = 0);
+    UDevHelper(QObject *parent);
 
-public slots:
-    ActionReply toggletouchpad(QVariantMap args);
-    ActionReply setillumination(QVariantMap args);
-    ActionReply seteco(QVariantMap args);
-    ActionReply setkbdtimeout(QVariantMap args);
-    ActionReply setkbdmode(QVariantMap args);
-    ActionReply setprotectionlevel(QVariantMap args);
-    ActionReply unloadheads(QVariantMap args);
+    QString findDevice(QStringList);
 
 private:
-    QString findDriverPath();
+    void initUDev();
 
-    QString m_driverPath;
-    QFile m_file;
+    struct udev *udev;
+    struct udev_monitor *monitor;
 };
 
-#endif // KTOSHHELPER_H
+#endif // UDEVHELPER_H
