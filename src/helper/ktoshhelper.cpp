@@ -35,7 +35,7 @@ KToshHelper::KToshHelper(QObject *parent)
 QString KToshHelper::findDriverPath()
 {
     QStringList m_devices;
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6208:00";
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
     for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
         m_file.setFileName(path.arg(m_devices.at(current)));
@@ -52,14 +52,21 @@ QString KToshHelper::findDriverPath()
     return QString("");
 }
 
-ActionReply KToshHelper::toggletouchpad(QVariantMap args)
+ActionReply KToshHelper::settouchpad(QVariantMap args)
 {
-    Q_UNUSED(args)
-
     ActionReply reply;
+    int state = args["state"].toInt();
+
+    if (state < 0 || state > 1) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
 
     m_file.setFileName(m_driverPath + "touchpad");
-    if (!m_file.open(QIODevice::ReadWrite)) {
+    if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply::HelperErrorReply;
         reply.setErrorCode(m_file.error());
         reply.setErrorDescription(m_file.errorString());
@@ -68,8 +75,7 @@ ActionReply KToshHelper::toggletouchpad(QVariantMap args)
     }
 
     QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    stream << !state;
+    stream << state;
     m_file.close();
 
     return reply;
@@ -167,7 +173,7 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
     ActionReply reply;
     int time = args["time"].toInt();
 
-    if (time < 0 || time > 60) {
+    if (time < 1 || time > 60) {
         reply = ActionReply::HelperErrorReply;
         reply.setErrorCode(-22); // Invalid argument
         reply.setErrorDescription("The value was out of range");

@@ -36,7 +36,7 @@ public:
     KToshHelper(QObject *parent = 0);
 
 public slots:
-    ActionReply toggletouchpad(QVariantMap args);
+    ActionReply settouchpad(QVariantMap args);
     ActionReply setillumination(QVariantMap args);
     ActionReply seteco(QVariantMap args);
     ActionReply setkbdtimeout(QVariantMap args);

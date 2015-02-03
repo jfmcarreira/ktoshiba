@@ -42,7 +42,8 @@ public:
     void setZoom(int);
 
 public Q_SLOTS:
-    void toggleTouchPad();
+    bool getTouchPad();
+    void setTouchPad(bool);
     bool getECOLed();
     void setECOLed(bool);
     bool getIllumination();

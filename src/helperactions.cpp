@@ -48,7 +48,7 @@ HelperActions::HelperActions(QObject *parent)
 QString HelperActions::findDriverPath()
 {
     QStringList m_devices;
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6208:00";
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
     for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
         m_file.setFileName(path.arg(m_devices.at(current)));
@@ -118,7 +118,24 @@ bool HelperActions::checkHAPS()
     return deviceExists("haps");
 }
 
-void HelperActions::toggleTouchPad()
+bool HelperActions::getTouchPad()
+{
+    m_file.setFileName(m_driverPath + "touchpad");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getTouchpad failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return false;
+    }
+
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    return state ? true : false;
+}
+
+void HelperActions::setTouchPad(bool enabled)
 {
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
     action.setHelperID(HELPER_ID);
@@ -127,6 +144,8 @@ void HelperActions::toggleTouchPad()
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed" << endl
                  << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
+
+    emit touchpadToggled(enabled);
 }
 
 bool HelperActions::getIllumination()
@@ -234,7 +253,7 @@ void HelperActions::setKBDMode(int mode)
         return;
     }
 
-    emit kbdModeChanged(mode);
+    emit kbdModeChanged();
 }
 
 int HelperActions::getKBDTimeout()

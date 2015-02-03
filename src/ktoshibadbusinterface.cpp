@@ -36,10 +36,18 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     dbus.registerObject("/net/sourceforge/KToshiba", this);
 }
 
-void KToshibaDBusInterface::toggleTouchPad()
+bool KToshibaDBusInterface::getTouchPad()
 {
     if (m_helper->isTouchPadSupported)
-        m_helper->toggleTouchPad();
+        return m_helper->getTouchPad();
+
+    return false;
+}
+
+void KToshibaDBusInterface::setTouchPad(bool enabled)
+{
+    if (m_helper->isTouchPadSupported)
+        m_helper->setTouchPad(enabled);
 }
 
 bool KToshibaDBusInterface::getECOLed()

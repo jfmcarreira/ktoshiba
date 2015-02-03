@@ -1,3 +1,53 @@
+2015-02-02 Azael Avalos <coproscefalo@gmail.com>
+	* Bump version to 4.2
+
+2015-01-21 Azael Avalos <coproscefalo@gmail.com>
+	* Removed autostart code (again), we install the .desktop
+	  file under the XDG_AUTOSTART macro, so there is no need
+	  for a config option
+
+2015-01-20 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue where the disabled icon was beign showed
+	  when the battery profiles were disabled and the AC adapter
+	  was (dis)connected
+	* Added some icons to the Keyboard Backlight submenu
+	* Added device ID TOS6207 to supported devices to be on par
+	  with driver
+	* Splitted the TouchPad into get/set from toggle and added a
+	  signal to know whenever it is {en, dis}abled
+
+2015-01-17 Azael Avalos <coproscefalo@gmail.com>
+	* Added new white icon
+	* Removed kbd backlight handling from powersave and
+	  performance profiles
+
+2015-01-12 Azael Avalos <coproscefalo@gmail.com>
+	* Removed brightness setting from powersave and
+	  performance profiles (KDE does it for us)
+	* Fixed an issue where the KBD backlight was not
+	  being turned on/off by battery profiles (that's
+	  what happens when you just copy paste...)
+	* Moved all instances of helper from KToshiba to
+	  FNActions class, this way only one instance is created
+	  instead of two
+
+2015-01-11 Azael Avalos <coproscefalo@gmail.com>
+	* Added submenu options for battery profiles
+
+2015-01-08 Azael Avalos <coproscefalo@gmail.com>
+	* Added sub menu for changing kbd backlight mode
+	* Small changes to some strings
+	* Deleted some no longer used variables
+
+2015-01-07 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue where the keyboard timeout entry
+	  was not hidden on kbd mode change
+	* Removed -std flags and set -D_DEFAULT_SOURCE to avoid
+	  compiler warnings
+	* Changed ktoshhelper setKBDTimeout range from 0-60 to
+	  1-60, only the 1st kbd implementation supports a zero
+	  value (and who would want a zero value anyway...?)
+
 2015-01-06 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed the accepted kbd mode values on ktoshhelper
 	* ECO mode adapted to type 2 kbd backlight

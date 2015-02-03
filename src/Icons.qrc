@@ -9,5 +9,6 @@
     <file>images/mpad_64.png</file>
     <file>images/keyboard_black_on_64.png</file>
     <file>images/keyboard_black_off_64.png</file>
+    <file>images/keyboard_timer_64.png</file>
   </qresource>
 </RCC>

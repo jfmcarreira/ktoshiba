@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-"POT-Creation-Date: 2015-01-06 23:13-0700\n"
+"POT-Creation-Date: 2015-01-21 11:06-0700\n"
 "PO-Revision-Date: 2010-03-28 20:46-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,96 +18,129 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: fnactions.cpp:206
+#: fnactions.cpp:296 ktoshiba.cpp:122
 msgid "OFF"
 msgstr "APAGADO"
 
-#: fnactions.cpp:210
+#: fnactions.cpp:300 ktoshiba.cpp:118
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: ktoshiba.cpp:48
-#, kde-format
-msgid "Switch the keyboard backlight mode to %1"
-msgstr "Cambia la luz del teclado a modo %1"
-
-#: ktoshiba.cpp:54
+#: ktoshiba.cpp:50
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: ktoshiba.cpp:66
-msgid "Start Automatically"
-msgstr "Comienza Automaticamente"
-
-#: ktoshiba.cpp:72
+#: ktoshiba.cpp:63
 msgid "High"
 msgstr "Alto"
 
-#: ktoshiba.cpp:72
+#: ktoshiba.cpp:63
 msgid "Low"
 msgstr "Bajo"
 
 #. i18n: file: hddprotectionwidget.ui:34
 #. i18n: ectx: property (text), widget (QLabel, levelLabel)
-#: ktoshiba.cpp:72 rc.cpp:8
+#: ktoshiba.cpp:63 rc.cpp:8
 msgid "Medium"
 msgstr "Medio"
 
-#: ktoshiba.cpp:72
+#: ktoshiba.cpp:63
 msgid "Off"
 msgstr "Apagado"
 
-#: ktoshiba.cpp:83
+#: ktoshiba.cpp:74
 msgid "Monitor HDD movement"
 msgstr "Monitorea movimiento del disco duro"
 
 #. i18n: file: hddprotectionwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, hddProtectionWidget)
-#: ktoshiba.cpp:87 rc.cpp:5
+#: ktoshiba.cpp:78 rc.cpp:5
 msgid "HDD Protection Level"
 msgstr "Nivel de Protección del Disco Duro"
 
-#: ktoshiba.cpp:100
+#: ktoshiba.cpp:91
 msgid "Toggle TouchPad"
 msgstr "Activa/Desactiva el TouchPad"
 
-#: ktoshiba.cpp:126
-msgid "Change the keyboard backlight timeout"
-msgstr "Cambia el tiempo de apagado de la luz del teclado"
+#: ktoshiba.cpp:99
+msgid "Keyboard Backlight Mode"
+msgstr "Modo de la Luz del Teclado"
 
-#: ktoshiba.cpp:207
+#: ktoshiba.cpp:102
+msgid "FN-Z"
+msgstr "FN-Z"
+
+#: ktoshiba.cpp:106
+msgid "AUTO"
+msgstr "AUTO"
+
+#: ktoshiba.cpp:114
+msgid "TIMER"
+msgstr "TIMER"
+
+#. i18n: file: kbdtimeoutwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, kbdTimeoutWidget)
+#: ktoshiba.cpp:137 rc.cpp:11
+msgid "Keyboard Backlight Timeout"
+msgstr "Tiempo de apagado de la Luz del Teclado"
+
+#: ktoshiba.cpp:150
+msgid "Battery Profiles"
+msgstr "Perfiles de Batería"
+
+#: ktoshiba.cpp:152
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+#: ktoshiba.cpp:156
+msgid "Performance"
+msgstr "Alto Desempeño"
+
+#: ktoshiba.cpp:159
+msgid "Powersave"
+msgstr "Ahorro de Energía"
+
+#: ktoshiba.cpp:162
+msgid "Presentation"
+msgstr "Presentación"
+
+#: ktoshiba.cpp:165
+msgid "ECO"
+msgstr "ECO"
+
+#: ktoshiba.cpp:237
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: ktoshiba.cpp:208
+#: ktoshiba.cpp:238
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: ktoshiba.cpp:282
+#: ktoshiba.cpp:351
 msgid "KToshiba - Keyboard Mode"
 msgstr "KToshiba - Modo del Teclado"
 
-#: ktoshiba.cpp:283
+#: ktoshiba.cpp:352
 msgid ""
 "The computer must be restarted in order to activate the new keyboard Mode"
 msgstr ""
 "La computadora debe ser reiniciada para activar el nuevo modo del teclado"
 
-#: ktoshiba.cpp:371
+#: ktoshiba.cpp:463
 msgid "Original Author"
 msgstr "Autor Original"
 
-#: ktoshiba.cpp:372
+#: ktoshiba.cpp:464
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: ktoshiba.cpp:372
+#: ktoshiba.cpp:464
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
 
-#: ktoshiba.cpp:374
+#: ktoshiba.cpp:466
 msgid "Green world icon"
 msgstr "Icono del mundo verde"
 
@@ -120,9 +153,3 @@ msgstr "Azael Avalos"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "coproscefalo@gmail.com"
-
-#. i18n: file: kbdtimeoutwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget, kbdTimeoutWidget)
-#: rc.cpp:11
-msgid "Keyboard Backlight Timeout"
-msgstr "Tiempo de apagado de la Luz del Teclado"

@@ -39,7 +39,8 @@ public:
     bool isHAPSSupported;
 
 public Q_SLOTS:
-    void toggleTouchPad();
+    bool getTouchPad();
+    void setTouchPad(bool);
     bool getIllumination();
     void setIllumination(bool);
     bool getEcoLed();
@@ -54,7 +55,8 @@ public Q_SLOTS:
     void unloadHeads(int);
 
 Q_SIGNALS:
-    void kbdModeChanged(int mode = 0);
+    void kbdModeChanged();
+    void touchpadToggled(bool);
 
 private:
     QString findDriverPath();

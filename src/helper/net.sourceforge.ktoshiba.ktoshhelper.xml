@@ -17,15 +17,22 @@
       </doc:description>
     </doc:doc>
 
-    <method name="toggletouchpad">
+    <method name="settouchpad">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the Touchpad state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
       <doc:doc>
         <doc:description>
           <doc:para>
-            Toggles the TouchPad state on/off.
+            Set the state of the TouchPad.
           </doc:para>
         </doc:description>
         <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while toggling the TouchPad</doc:error>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the TouchPad</doc:error>
         </doc:errors>
       </doc:doc>
     </method>

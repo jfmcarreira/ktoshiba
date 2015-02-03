@@ -17,18 +17,44 @@
       </doc:description>
     </doc:doc>
 
-    <method name="toggleTouchPad">
+    <method name="getTouchPad">
+      <arg name="enabled" type="b" direction="out">
+        <doc:doc>
+          <doc:summary>
+            Get the value of the TouchPad.
+            Returns false when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
       <doc:doc>
         <doc:description>
           <doc:para>
-            Toggles the touchpad from enabled to disabled and viceversa.
-          </doc:para>
-          <doc:para>
-            Does nothing when not supported.
+            Get the state of the TouchPad.
           </doc:para>
         </doc:description>
         <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while toggling the touchpad</doc:error>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the TouchPad state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setTouchPad">
+      <arg name="enabled" type="b" direction="in">
+        <doc:doc>
+          <doc:summary>
+            Set the value of the TouchPad.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the TouchPad from on to off and viceversa.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the TouchPad state</doc:error>
         </doc:errors>
       </doc:doc>
     </method>

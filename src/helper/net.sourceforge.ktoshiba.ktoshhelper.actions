@@ -3,9 +3,9 @@ Name=KToshiba helper application
 Icon=ktoshiba
 URL=http://ktoshiba.sourceforge.net/
 
-[net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad]
-Name=Toggle touchpad
-Description=Toggles the TouchPad state
+[net.sourceforge.ktoshiba.ktoshhelper.settouchpad]
+Name=Set touchpad
+Description=Sets the desired TouchPad state
 Policy=yes
 PolicyInactive=yes
 

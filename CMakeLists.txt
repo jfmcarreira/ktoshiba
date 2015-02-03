@@ -41,7 +41,7 @@ endif(${PC_LIBUDEV_FOUND})
 
 configure_file(config-ktoshiba.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktoshiba.h)
 
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${LIBUDEV_DEFINITIONS} -DHAVE_CONFIG_H=1)
+add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${LIBUDEV_DEFINITIONS} -DHAVE_CONFIG_H=1 -D_DEFAULT_SOURCE)
 include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_INCLUDES})
 
 add_subdirectory( src )

@@ -40,13 +40,16 @@ using namespace Solid::PowerManagement;
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
-      m_dBus( new KToshibaDBusInterface( parent ) ),
+      m_type( 1 ),
+      m_mode( TIMER ),
+      m_time( 15 ),
+      m_dBus( new KToshibaDBusInterface( this ) ),
       m_keyHandler( new KToshibaKeyHandler( this ) ),
       m_helper( new HelperActions( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_fnPressed( false ),
-      m_type( 1 ),
+      m_batKeyPressed( false ),
       m_cookie( 0 )
 {
     m_statusWidget.setupUi( m_widget );
@@ -59,6 +62,7 @@ FnActions::FnActions(QObject *parent)
     m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
 
     if (m_helper->isKBDBacklightSupported) {
+        m_mode = m_helper->getKBDMode();
         if (m_helper->isKBDTypeSupported)
             m_type = m_helper->getKBDType();
 
@@ -75,6 +79,8 @@ FnActions::FnActions(QObject *parent)
     connect( m_keyHandler, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
     connect( acAdapter, SIGNAL( plugStateChanged(bool, QString) ), this, SLOT( acAdapterChanged(bool) ) );
     connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
+    connect( m_helper, SIGNAL( kbdModeChanged() ), this, SLOT( kbdBacklightModeChanged() ) );
+    connect( parent, SIGNAL( batteryProfilesToggled(bool) ), this, SLOT( batMonitorChanged(bool) ) );
 }
 
 FnActions::~FnActions()
@@ -106,10 +112,46 @@ void FnActions::compositingChanged(bool state)
     m_widget->setAttribute( Qt::WA_TranslucentBackground, state );
 }
 
+void FnActions::kbdBacklightModeChanged()
+{
+    emit kbdModeChanged();
+}
+
+void FnActions::batMonitorChanged(bool state)
+{
+    m_batMonitor = state;
+}
+
+bool FnActions::hapsIsSupported()
+{
+    return m_helper->isHAPSSupported;
+}
+
+int FnActions::protectionLevel()
+{
+    if (m_helper->isHAPSSupported)
+        return m_helper->getProtectionLevel();
+
+    return 0;
+}
+
+void FnActions::setProtectionLevel(int level)
+{
+    if (m_helper->isHAPSSupported)
+        m_helper->setProtectionLevel(level);
+}
+
+bool FnActions::touchpadIsSupported()
+{
+    return m_helper->isTouchPadSupported;
+}
+
 void FnActions::toggleTouchPad()
 {
-    if (m_helper->isTouchPadSupported)
-        m_helper->toggleTouchPad();
+    if (!m_helper->isTouchPadSupported)
+        return;
+
+    m_helper->setTouchPad(!m_helper->getTouchPad());
 }
 
 void FnActions::toggleProfiles()
@@ -127,27 +169,37 @@ void FnActions::toggleProfiles()
 
 void FnActions::changeProfile(QString profile)
 {
+    if (m_batMonitor) {
+        if (m_batKeyPressed)
+            showWidget(Disabled);
+
+        return;
+    }
+
     if (profile == "Powersave") {
         showWidget(Powersave);
         if (m_helper->isECOSupported)
             m_helper->setEcoLed(Off);
         if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(Off);
-        m_dBus->setBrightness(42);
-        setKBDBacklight(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
         if (m_helper->isECOSupported)
             m_helper->setEcoLed(Off);
         if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(On);
-        m_dBus->setBrightness(100);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
         if (m_helper->isECOSupported)
             m_helper->setEcoLed(Off);
         if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(On);
+        if (m_helper->isKBDBacklightSupported) {
+            if (m_type == 1 && m_mode == FNZ)
+                m_dBus->setKBDBacklight(On);
+            else if (m_type == 2)
+                m_helper->setKBDMode(ON);
+        }
         m_dBus->setBrightness(71);
         m_cookie = beginSuppressingScreenPowerManagement(m_profile);
     } else if (profile == "ECO") {
@@ -156,14 +208,52 @@ void FnActions::changeProfile(QString profile)
             m_helper->setEcoLed(On);
         if (m_helper->isIlluminationSupported)
             m_helper->setIllumination(Off);
+        if (m_helper->isKBDBacklightSupported) {
+            if (m_type == 1 && m_mode == FNZ)
+                m_dBus->setKBDBacklight(Off);
+            else if (m_type == 2)
+                m_helper->setKBDMode(OFF);
+        }
         m_dBus->setBrightness(57);
-        setKBDBacklight(Off);
     }
     kDebug() << "Changed battery profile to:" << m_profile;
 
     if (m_cookie != 0)
         if (stopSuppressingScreenPowerManagement(m_cookie))
             m_cookie = 0;
+}
+
+bool FnActions::kbdBacklightIsSupported()
+{
+    return m_helper->isKBDBacklightSupported;
+}
+
+int FnActions::kbdBacklightMode()
+{
+    if (m_helper->isKBDBacklightSupported)
+        return m_helper->getKBDMode();
+
+    return 0;
+}
+
+void FnActions::setKbdBacklightMode(int mode)
+{
+    if (m_helper->isKBDBacklightSupported)
+        m_helper->setKBDMode(mode);
+}
+
+int FnActions::kbdBacklightTimeout()
+{
+    if (m_helper->isKBDBacklightSupported)
+        return m_helper->getKBDTimeout();
+
+    return -1;
+}
+
+void FnActions::setKbdBacklightTimeout(int time)
+{
+    if (m_helper->isKBDBacklightSupported)
+        m_helper->setKBDTimeout(time);
 }
 
 void FnActions::kbdBacklight()
@@ -221,18 +311,6 @@ void FnActions::kbdBacklight()
     showWidget(KBDStatus);
 }
 
-void FnActions::setKBDBacklight(bool state)
-{
-    if (!m_helper->isKBDBacklightSupported)
-        return;
-
-    m_mode = m_helper->getKBDMode();
-    if (m_type == 1 && m_mode == FNZ)
-        m_dBus->setKBDBacklight(state);
-    else if (m_type == 2)
-        m_helper->setKBDMode(OFF);
-}
-
 void FnActions::showWidget(int wid)
 {
     QRect r = QApplication::desktop()->geometry();
@@ -263,6 +341,7 @@ void FnActions::processHotkey(int hotkey)
         m_dBus->lockScreen();
         break;
     case KEY_BATTERY:
+        m_batKeyPressed = true;
         toggleProfiles();
         break;
     case KEY_TOUCHPAD_TOGGLE: 

@@ -29,6 +29,7 @@
 #include "ui_kbdtimeoutwidget.h"
 
 class QAction;
+class QMenu;
 
 class KMenu;
 class KAboutData;
@@ -36,7 +37,6 @@ class KHelpMenu;
 class KStatusNotifierItem;
 
 class FnActions;
-class HelperActions;
 class KToshibaHDDProtect;
 
 /**
@@ -57,18 +57,27 @@ public:
     static KAboutData* aboutData();
 
 private Q_SLOTS:
-    void autostartClicked(bool);
     void monitorHDDClicked(bool);
     void protectionLvlClicked();
     void changeProtectionLvl(QAbstractButton *);
     void levelChanged(int);
-    void changeKBDMode();
-    void changeKBDModeText(int);
+    void timerClicked();
+    void fnzClicked();
+    void onClicked();
+    void offClicked();
     void notifyKBDModeChanged();
     void kbdTimeoutClicked();
     void changeKBDTimeout(QAbstractButton *);
     void timeChanged(int);
     void notifyHDDMovement();
+    void disabledClicked(bool);
+    void performanceClicked();
+    void powersaveClicked();
+    void presentationClicked();
+    void ecoClicked();
+
+Q_SIGNALS:
+    void batteryProfilesToggled(bool);
 
 private:
     bool checkConfig();
@@ -76,27 +85,31 @@ private:
     void createConfig();
 
     FnActions *m_fn;
-    HelperActions *m_helper;
     KToshibaHDDProtect *m_hdd;
-    QAction *m_autoStart;
     QAction *m_hddMonitor;
     QAction *m_hddProtectionLvl;
     QAction *m_touchPad;
+    QMenu *m_kbdModeMenu;
+    QAction *m_kbdTimer;
+    QAction *m_kbdFNZ;
+    QAction *m_kbdOn;
+    QAction *m_kbdOff;
     QAction *m_kbdTimeout;
-    QAction *m_kbdMode;
+    QMenu *m_batteryMenu;
+    QAction *m_batDisabled;
+    QAction *m_batPerformance;
+    QAction *m_batPowersave;
+    QAction *m_batPresentation;
+    QAction *m_batECO;
     Ui::hddProtectionWidget m_hddProtectionWidget;
     Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
     QWidget *m_protectionWidget;
     QWidget *m_timeoutWidget;
     KSharedConfigPtr m_config;
     QStringList m_levels;
-    QString m_modeText;
-    bool m_autostart;
     bool m_monitorHDD;
+    bool m_batteryProfiles;
     int m_level;
-    int m_type;
-    int m_mode;
-    int m_time;
 
     KMenu *m_popupMenu;
     static KAboutData* m_about;

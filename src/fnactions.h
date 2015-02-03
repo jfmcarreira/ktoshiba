@@ -46,24 +46,40 @@ public:
 public:
     FnActions(QObject *parent);
     ~FnActions();
+    void changeProfile(QString);
+    bool hapsIsSupported();
+    int protectionLevel();
+    void setProtectionLevel(int);
+    bool touchpadIsSupported();
+    bool kbdBacklightIsSupported();
+    int kbdBacklightMode();
+    void setKbdBacklightMode(int);
+    int kbdBacklightTimeout();
+    void setKbdBacklightTimeout(int);
 
-    //int m_mode;
+    bool m_batMonitor;
+    int m_type;
+    int m_mode;
+    int m_time;
 
 public Q_SLOTS:
     void processHotkey(int);
     void acAdapterChanged(bool);
     void compositingChanged(bool);
     void toggleTouchPad();
+    void batMonitorChanged(bool);
     
 private Q_SLOTS:
     void hideWidget();
+    void kbdBacklightModeChanged();
+
+Q_SIGNALS:
+    void kbdModeChanged();
 
 private:
     void showWidget(int);
     void toggleProfiles();
-    void changeProfile(QString);
     void kbdBacklight();
-    void setKBDBacklight(bool);
 
     KToshibaDBusInterface *m_dBus;
     KToshibaKeyHandler *m_keyHandler;
@@ -77,8 +93,7 @@ private:
     QString m_version;
 
     bool m_fnPressed;
-    int m_type;
-    int m_mode;
+    bool m_batKeyPressed;
     int m_cookie;
 };
 
