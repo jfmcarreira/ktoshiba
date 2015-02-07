@@ -42,7 +42,7 @@ class KToshibaHDDProtect;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 4.2
+ * @version 4.2.1
  */
 class KToshiba : public KUniqueApplication
 {

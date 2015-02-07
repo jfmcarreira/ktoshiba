@@ -137,11 +137,12 @@ bool HelperActions::getTouchPad()
 
 void HelperActions::setTouchPad(bool enabled)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.settouchpad");
     action.setHelperID(HELPER_ID);
+    action.addArgument("state", (enabled ? 1 : 0));
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed" << endl
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed" << endl
                  << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 

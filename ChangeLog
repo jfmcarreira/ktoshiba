@@ -1,3 +1,15 @@
+2015-02-07 Azael Avalos <coproscefalo@gmail.com>
+	* Bump version to 4.2.1
+
+2015-02-06 Azael Avalos <coproscefalo@gmail.com>
+	* Removed white icon installation, was causing trouble building
+	  the package at the OBS, it can still be added manually tho...
+	* Fixed some issues with the touchpad {en, dis}able code (a miss
+	  merge from 4.2 release...)
+	* Fixed an issue with setting the kbd mode (somehow we cannot pass
+	  hex values to helper function, let's make them int then...)
+	* Removed unused code from setBrightness DBus call
+
 2015-02-02 Azael Avalos <coproscefalo@gmail.com>
 	* Bump version to 4.2
 

@@ -168,14 +168,6 @@ void KToshibaDBusInterface::setBrightness(int level)
         return;
     }
 
-    QDBusReply<int> bright = iface.call("brightness");
-    if (!bright.isValid()) {
-        QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
-        return;
-    }
-
     QDBusReply<void> reply = iface.call("setBrightness", level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());

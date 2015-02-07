@@ -344,7 +344,7 @@ void FnActions::processHotkey(int hotkey)
         m_batKeyPressed = true;
         toggleProfiles();
         break;
-    case KEY_TOUCHPAD_TOGGLE: 
+    case KEY_TOUCHPAD_TOGGLE:
         toggleTouchPad();
         break;
     case KEY_KBDILLUMTOGGLE:

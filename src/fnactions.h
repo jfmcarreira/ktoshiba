@@ -40,7 +40,7 @@ class FnActions : public QObject
 public:
     enum WidgetIcons { Disabled, Performance, Powersave, Presentation, ECO, KBDStatus, Blank };
     enum Zoom { Reset = 0, In = 1, Out = -1 };
-    enum KbdBacklight { FNZ = 0x1, TIMER = 0x2, ON = 0x8, OFF = 0x10 };
+    enum KbdBacklight { FNZ = 1, TIMER = 2, ON = 8, OFF = 16 };
     enum ToogleActions { Off = false, On = true };
 
 public:
