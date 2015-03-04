@@ -3,6 +3,12 @@ Name=KToshiba helper application
 Icon=ktoshiba
 URL=http://ktoshiba.sourceforge.net/
 
+[net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo]
+Name=Dump sysinfo
+Description=Dumps the system information (dmidecode)
+Policy=yes
+PolicyInactive=yes
+
 [net.sourceforge.ktoshiba.ktoshhelper.settouchpad]
 Name=Set touchpad
 Description=Sets the desired TouchPad state
@@ -30,6 +36,48 @@ PolicyInactive=yes
 [net.sourceforge.ktoshiba.ktoshhelper.setkbdmode]
 Name=Set keyboard mode
 Description=Sets the desired keyboard backlight mode
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge]
+Name=USB sleep & charge
+Description=Sets the USB sleep and charge operation mode
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl]
+Name=USB sleep functions under battery
+Description=Sets the battery level at which the sleep functions will be disabled
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge]
+Name=USB rapid charge
+Description=Sets the USB rapid charge state
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.usbsleepmusic]
+Name=USB sleep & music
+Description=Sets the USB sleep and music state
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.kbdfunctions]
+Name=Keyboard funcctions
+Description=Sets the desired keyboard functions mode
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.panelpoweron]
+Name=Panel power on
+Description=Sets the panel power on mode
+Policy=yes
+PolicyInactive=yes
+
+[net.sourceforge.ktoshiba.ktoshhelper.usbthree]
+Name=USB three
+Description=Sets the desired USB 3 operation mode
 Policy=yes
 PolicyInactive=yes
 

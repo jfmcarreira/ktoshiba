@@ -1,28 +1,28 @@
 /*
    Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #ifndef KTOSHIBAHDDPROTECT_H
 #define KTOSHIBAHDDPROTECT_H
 
-class QSocketNotifier;
+#define HDD_VIBRATED   0x80
+#define HDD_STABILIZED 0x81
 
-class HelperActions;
+class QSocketNotifier;
 
 class KToshibaHDDProtect : public QObject
 {
@@ -32,21 +32,19 @@ public:
     KToshibaHDDProtect(QObject *parent);
     ~KToshibaHDDProtect();
 
-    void setHDDProtection(bool enabled);
+    bool attach();
+    void detach();
+    void setHDDProtection(bool);
 
 private Q_SLOTS:
-    void protectHDD(int);
+    void parseEvents(int);
 
 Q_SIGNALS:
-    void movementDetected();
+    void eventDetected(int);
 
 private:
-    int hddEventSocket();
-    void unloadHDDHeads(int event);
-
-    HelperActions *m_helper;
     QSocketNotifier *m_notifier;
-    int m_fd;
+    int m_socket;
 };
 
 #endif // KTOSHIBAHDDPROTECT_H

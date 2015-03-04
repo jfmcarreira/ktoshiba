@@ -5,6 +5,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules ${
 include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
 
 add_subdirectory(helper)
+add_subdirectory(kcm)
 
 set(KToshibaSources
     ktoshibadbusinterface.cpp
@@ -23,7 +24,7 @@ qt4_add_dbus_adaptor(adaptor_SRCS net.sourceforge.ktoshiba.xml
 
 qt4_add_resources(qtsourceview_RC_SRCS Icons.qrc)
 
-kde4_add_ui_files(KToshibaSources statuswidget.ui kbdtimeoutwidget.ui hddprotectionwidget.ui)
+kde4_add_ui_files(KToshibaSources statuswidget.ui kbdtimeoutwidget.ui)
 
 kde4_add_executable(ktoshiba ${KToshibaSources} ${qtsourceview_RC_SRCS} ${adaptor_SRCS})
 

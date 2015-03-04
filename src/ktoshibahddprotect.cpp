@@ -1,20 +1,19 @@
 /*
    Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #include <QtCore/QSocketNotifier>
@@ -31,25 +30,22 @@ extern "C" {
 }
 
 #include "ktoshibahddprotect.h"
-#include "helperactions.h"
+#include "fnactions.h"
 
 #define TOSHIBA_HAPS   "TOS620A:00"
-#define HDD_VIBRATED   0x80
-#define HDD_STABILIZED 0x81
 
 /*
- * The following structs and declarations
- * were taken from hal.
+ * The following structs and declarations were taken from
+ * linux ACPI event.c
  */
 typedef char acpi_device_class[20]; 
+
 struct acpi_genl_event {
     acpi_device_class device_class;
     char bus_id[15];
     unsigned int type;
     unsigned int data;
 };
-
-#define ACPI_GENL_VERSION 0x01
 
 enum {
     ACPI_GENL_ATTR_UNSPEC,
@@ -63,45 +59,32 @@ enum {
     ACPI_GENL_CMD_EVENT,
     __ACPI_GENL_CMD_MAX,
 };
+#define ACPI_GENL_CMD_MAX (__ACPI_GENL_CMD_MAX - 1)
+
+#define ACPI_GENL_FAMILY_NAME		"acpi_event"
+#define ACPI_GENL_VERSION		0x01
+#define ACPI_GENL_MCAST_GROUP_NAME	"acpi_mc_group"
 
 KToshibaHDDProtect::KToshibaHDDProtect(QObject *parent)
     : QObject( parent ),
-      m_helper( new HelperActions( this ) )
+      m_notifier( NULL )
 {
-    m_fd = hddEventSocket();
-    if (m_fd >= 0)
-        m_notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
 }
 
 KToshibaHDDProtect::~KToshibaHDDProtect()
 {
-    if (m_fd >= 0)
-        ::close(m_fd);
-
-    delete m_helper; m_helper = NULL;
+    detach();
 }
 
 void KToshibaHDDProtect::setHDDProtection(bool enabled)
 {
     if (enabled)
-        connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( protectHDD(int) ) );
+        connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( parseEvents(int) ) );
     else
         m_notifier->disconnect();
 }
 
-void KToshibaHDDProtect::unloadHDDHeads(int event)
-{
-    if (event == HDD_VIBRATED) {
-        kDebug() << "Vibration detected";
-        m_helper->unloadHeads(5000);
-        emit movementDetected();
-    } else if (event == HDD_STABILIZED) {
-        kDebug() << "Vibration stabilized";
-        m_helper->unloadHeads(0);
-    }
-}
-
-void KToshibaHDDProtect::protectHDD(int socket)
+void KToshibaHDDProtect::parseEvents(int socket)
 {
     if (socket < 0)
         return;
@@ -150,39 +133,47 @@ void KToshibaHDDProtect::protectHDD(int socket)
 
     if (QString(event->bus_id) == TOSHIBA_HAPS) {
         kDebug() << "HAPS event detected";
-        unloadHDDHeads(event->type);
+        emit eventDetected(event->type);
     }
 }
 
-int KToshibaHDDProtect::hddEventSocket()
+bool KToshibaHDDProtect::attach()
 {
     struct sockaddr_nl nl;
-    const int bufsize = 16 * 1024 * 1024;
-    memset(&nl, 0, sizeof(struct sockaddr_nl));
+    memset(&nl, 0, sizeof(nl));
     nl.nl_family = AF_NETLINK;
-    nl.nl_pid = ::getpid();
-    nl.nl_groups = 0xffffffff;
+    nl.nl_pid = 0;
+    nl.nl_groups = 0;
 
-    int fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
-    if (fd < 0) {
-        kError() << "Cannot open netlink socket, HDD monitoring will not be possible";
-
-        return -1;
+    m_socket = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
+    if (m_socket < 0) {
+        kError() << "Cannot open netlink socket, HDD monitoring will not be possible"
+                 << endl << strerror(errno);
+        return false;
     }
 
-    setsockopt(fd, SOL_SOCKET, SO_RCVBUFFORCE, &bufsize, sizeof(bufsize));
-
-    int ret = ::bind(fd, (struct sockaddr *) &nl, sizeof(struct sockaddr_nl));
-    if (ret < 0) {
-        kError() << "Netlink socket bind failed, HDD monitoring will not be possible";
-        ::close(fd);
-
-        return -1;
+    if (::bind(m_socket, (struct sockaddr *) &nl, sizeof(nl)) < 0) {
+        kError() << "Netlink socket bind failed, HDD monitoring will not be possible"
+                 << endl << strerror(errno);
+        ::close(m_socket);
+        return false;
     }
+    kDebug() << "Binded to socket" << m_socket << "for HDD monitoring";
 
-    kDebug() << "Binded to socket" << fd << "for HDD monitoring";
+    m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
-    return fd;
+    return true;
+}
+
+void KToshibaHDDProtect::detach()
+{
+    if (m_notifier) {
+        m_notifier->setEnabled(false);
+        delete m_notifier;
+    }
+    if (m_socket)
+        ::close(m_socket);
+    m_socket = -1;
 }
 
 

@@ -1,20 +1,19 @@
 /*
    Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #include <QtGui/QDesktopWidget>
@@ -33,6 +32,7 @@ extern "C" {
 }
 
 #include "fnactions.h"
+#include "helperactions.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
@@ -40,12 +40,12 @@ using namespace Solid::PowerManagement;
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
+      m_helper( new HelperActions( this ) ),
       m_type( 1 ),
       m_mode( TIMER ),
       m_time( 15 ),
       m_dBus( new KToshibaDBusInterface( this ) ),
-      m_keyHandler( new KToshibaKeyHandler( this ) ),
-      m_helper( new HelperActions( this ) ),
+      m_hotkeys( new KToshibaKeyHandler( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_fnPressed( false ),
@@ -61,6 +61,35 @@ FnActions::FnActions(QObject *parent)
     // We're just going to care about these profiles
     m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
 
+    connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
+    connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
+    connect( parent, SIGNAL( batteryProfilesToggled(bool) ), this, SLOT( batMonitorChanged(bool) ) );
+}
+
+FnActions::~FnActions()
+{
+    delete m_widget; m_widget = NULL;
+    delete m_widgetTimer; m_widgetTimer = NULL;
+    if (m_keyConnected)
+        delete m_hotkeys; m_hotkeys = NULL;
+    delete m_helper; m_helper = NULL;
+    delete m_dBus; m_dBus = NULL;
+}
+
+bool FnActions::init()
+{
+    m_keyConnected = m_hotkeys->attach();
+    if (!m_keyConnected)
+        return false;
+
+    m_helperConnected = m_helper->init();
+    if (!m_helperConnected)
+        return false;
+
+    m_dbusConnected = m_dBus->init();
+    if (!m_dbusConnected)
+        return false;
+
     if (m_helper->isKBDBacklightSupported) {
         m_mode = m_helper->getKBDMode();
         if (m_helper->isKBDTypeSupported)
@@ -70,41 +99,9 @@ FnActions::FnActions(QObject *parent)
             m_modes << OFF << ON << TIMER;
     }
 
-    QList<Solid::Device> list = Solid::Device::listFromType(Solid::DeviceInterface::AcAdapter, QString());
-    Solid::Device device = list[0];
-    Solid::AcAdapter *acAdapter = device.as<Solid::AcAdapter>();
-    m_profile = (acAdapter->isPlugged()) ? QString("Performance") : QString("Powersave");
+    connect( m_hotkeys, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
 
-    connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
-    connect( m_keyHandler, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
-    connect( acAdapter, SIGNAL( plugStateChanged(bool, QString) ), this, SLOT( acAdapterChanged(bool) ) );
-    connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
-    connect( m_helper, SIGNAL( kbdModeChanged() ), this, SLOT( kbdBacklightModeChanged() ) );
-    connect( parent, SIGNAL( batteryProfilesToggled(bool) ), this, SLOT( batMonitorChanged(bool) ) );
-}
-
-FnActions::~FnActions()
-{
-    delete m_widget; m_widget = NULL;
-    delete m_widgetTimer; m_widgetTimer = NULL;
-    delete m_keyHandler; m_keyHandler = NULL;
-    delete m_helper; m_helper = NULL;
-    delete m_dBus; m_dBus = NULL;
-}
-
-void FnActions::acAdapterChanged(bool connected)
-{
-    if (m_profile == "Powersave" && connected) {
-        m_profile = "Performance";
-        changeProfile(m_profile);
-        return;
-    }
-
-    if (m_profile == "Performance" && !connected) {
-        m_profile = "Powersave";
-        changeProfile(m_profile);
-        return;
-    }
+    return true;
 }
 
 void FnActions::compositingChanged(bool state)
@@ -112,38 +109,9 @@ void FnActions::compositingChanged(bool state)
     m_widget->setAttribute( Qt::WA_TranslucentBackground, state );
 }
 
-void FnActions::kbdBacklightModeChanged()
-{
-    emit kbdModeChanged();
-}
-
 void FnActions::batMonitorChanged(bool state)
 {
     m_batMonitor = state;
-}
-
-bool FnActions::hapsIsSupported()
-{
-    return m_helper->isHAPSSupported;
-}
-
-int FnActions::protectionLevel()
-{
-    if (m_helper->isHAPSSupported)
-        return m_helper->getProtectionLevel();
-
-    return 0;
-}
-
-void FnActions::setProtectionLevel(int level)
-{
-    if (m_helper->isHAPSSupported)
-        m_helper->setProtectionLevel(level);
-}
-
-bool FnActions::touchpadIsSupported()
-{
-    return m_helper->isTouchPadSupported;
 }
 
 void FnActions::toggleTouchPad()
@@ -221,39 +189,6 @@ void FnActions::changeProfile(QString profile)
     if (m_cookie != 0)
         if (stopSuppressingScreenPowerManagement(m_cookie))
             m_cookie = 0;
-}
-
-bool FnActions::kbdBacklightIsSupported()
-{
-    return m_helper->isKBDBacklightSupported;
-}
-
-int FnActions::kbdBacklightMode()
-{
-    if (m_helper->isKBDBacklightSupported)
-        return m_helper->getKBDMode();
-
-    return 0;
-}
-
-void FnActions::setKbdBacklightMode(int mode)
-{
-    if (m_helper->isKBDBacklightSupported)
-        m_helper->setKBDMode(mode);
-}
-
-int FnActions::kbdBacklightTimeout()
-{
-    if (m_helper->isKBDBacklightSupported)
-        return m_helper->getKBDTimeout();
-
-    return -1;
-}
-
-void FnActions::setKbdBacklightTimeout(int time)
-{
-    if (m_helper->isKBDBacklightSupported)
-        m_helper->setKBDTimeout(time);
 }
 
 void FnActions::kbdBacklight()
@@ -344,7 +279,7 @@ void FnActions::processHotkey(int hotkey)
         m_batKeyPressed = true;
         toggleProfiles();
         break;
-    case KEY_TOUCHPAD_TOGGLE:
+    case KEY_TOUCHPAD_TOGGLE: 
         toggleTouchPad();
         break;
     case KEY_KBDILLUMTOGGLE:
@@ -358,8 +293,6 @@ void FnActions::processHotkey(int hotkey)
         break;
     case KEY_ZOOMIN:
         m_dBus->setZoom( In );
-        break;
-    case KEY_PROG1: /* Screen Rotation */
         break;
     /* By default, the FN key is ignored by the driver,
      * but could be very useful for us...

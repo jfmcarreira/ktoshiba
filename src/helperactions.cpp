@@ -1,20 +1,19 @@
 /*
    Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #include <QtCore/QStringList>
@@ -30,9 +29,13 @@
 HelperActions::HelperActions(QObject *parent)
     : QObject( parent )
 {
+}
+
+bool HelperActions::init()
+{
     m_driverPath = findDriverPath();
     if (m_driverPath.isEmpty())
-        exit(-1);
+        return false;
 
     m_ledsPath = "/sys/class/leds/toshiba::";
     m_hapsPath = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/";
@@ -42,7 +45,15 @@ HelperActions::HelperActions(QObject *parent)
     isECOSupported = checkECO();
     isKBDBacklightSupported = checkKBDBacklight();
     isKBDTypeSupported = checkKBDType();
+    isUSBSleepChargeSupported = checkUSBSleepCharge();
+    isUSBRapidChargeSupported = checkUSBRapidCharge();
+    isUSBSleepMusicSupported = checkUSBSleepMusic();
+    isKBDFunctionsSupported = checkKBDFunctions();
+    isPanelPowerONSupported = checkPanelPowerON();
+    isUSBThreeSupported = checkUSBThree();
     isHAPSSupported = checkHAPS();
+
+    return true;
 }
 
 QString HelperActions::findDriverPath()
@@ -52,22 +63,23 @@ QString HelperActions::findDriverPath()
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
     for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
         m_file.setFileName(path.arg(m_devices.at(current)));
-        if (m_file.open(QIODevice::ReadOnly)) {
-            m_file.close();
+        if (m_file.exists())
             return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
-        }
 
         current++;
     }
 
-    kWarning() << "No known interface found" << endl;
+    kWarning() << "No known kernel interface found" << endl;
 
     return QString("");
 }
 
 bool HelperActions::deviceExists(QString device)
 {
-    if (device == "touchpad" || device == "kbd_backlight_mode" || device == "kbd_type") {
+    if (device == "touchpad" || device == "kbd_backlight_mode" || device == "kbd_type" ||
+        device == "usb_sleep_charge" || device == "usb_functions_on_battery" ||
+        device == "usb_rapid_charge" || device == "usb_sleep_music" || device == "kbd_functions_keys" ||
+        device == "panel_power_on" || device == "usb_three") {
         m_file.setFileName(m_driverPath + device);
     } else if (device == "illumination" || device == "eco_mode") {
         m_file.setFileName(m_ledsPath + device + "/brightness");
@@ -79,13 +91,7 @@ bool HelperActions::deviceExists(QString device)
         return false;
     }
 
-    if (!m_file.exists()) {
-        kDebug() << "The specified device does not exist" << "(" << device << ")";
-
-        return false;
-    }
-
-    return true;
+    return m_file.exists();
 }
 
 bool HelperActions::checkTouchPad()
@@ -113,64 +119,152 @@ bool HelperActions::checkKBDType()
     return deviceExists("kbd_type");
 }
 
+bool HelperActions::checkUSBSleepCharge()
+{
+    return deviceExists("usb_sleep_charge");
+}
+
+bool HelperActions::checkUSBRapidCharge()
+{
+    return deviceExists("usb_rapid_charge");
+}
+
+bool HelperActions::checkUSBSleepMusic()
+{
+    return deviceExists("usb_sleep_music");
+}
+
+bool HelperActions::checkKBDFunctions()
+{
+    return deviceExists("kbd_functions_keys");
+}
+
+bool HelperActions::checkPanelPowerON()
+{
+    return deviceExists("panel_power_on");
+}
+
+bool HelperActions::checkUSBThree()
+{
+    return deviceExists("usb_three");
+}
+
 bool HelperActions::checkHAPS()
 {
     return deviceExists("haps");
 }
 
-bool HelperActions::getTouchPad()
+void HelperActions::getSysInfo()
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo");
+    action.setHelperID(HELPER_ID);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+
+        return;
+    }
+
+    m_file.setFileName("/var/tmp/dmidecode");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getSysInfo failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return;
+    }
+
+    QTextStream in(&m_file);
+    int vercount = 0;
+    do {
+        QString line = in.readLine();
+        QStringList splited = line.split(":");
+        // BIOS Information
+        if (splited[0].contains("Vendor")) {
+            sysinfo << splited[1];
+            continue;
+        }
+        if (splited[0].contains("Version")) {
+            sysinfo << splited[1];
+            vercount++;
+            continue;
+        }
+        if (splited[0].contains("Release Date")) {
+            sysinfo << splited[1];
+            continue;
+        }
+        if (splited[0].contains("Firmware Revision")) {
+            sysinfo << splited[1];
+            continue;
+        }
+        // System Information
+        if (splited[0].contains("Product Name")) {
+            sysinfo << splited[1];
+            continue;
+        }
+        if (splited[0].contains("Version")) {
+            sysinfo << splited[1];
+            break;
+        }
+    } while (!in.atEnd() || vercount == 2);
+    m_file.close();
+
+    qDebug() << sysinfo;
+}
+
+int HelperActions::getTouchPad()
 {
     m_file.setFileName(m_driverPath + "touchpad");
     if (!m_file.open(QIODevice::ReadOnly)) {
         kError() << "getTouchpad failed" << endl
                  << m_file.errorString() << "(" << m_file.error() << ")";
 
-        return false;
+        return -1;
     }
 
     QTextStream stream(&m_file);
     int state = stream.readAll().toInt();
     m_file.close();
 
-    return state ? true : false;
+    return state;
 }
 
-void HelperActions::setTouchPad(bool enabled)
+void HelperActions::setTouchPad(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.settouchpad");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
     action.setHelperID(HELPER_ID);
-    action.addArgument("state", (enabled ? 1 : 0));
+    action.addArgument("state", state);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed" << endl
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed" << endl
                  << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
-    emit touchpadToggled(enabled);
+    emit touchpadToggled(state);
 }
 
-bool HelperActions::getIllumination()
+int HelperActions::getIllumination()
 {
     m_file.setFileName(m_ledsPath + "illumination/brightness");
     if (!m_file.open(QIODevice::ReadOnly)) {
         kError() << "getIllumination failed" << endl
                  << m_file.errorString() << "(" << m_file.error() << ")";
 
-        return false;
+        return -1;
     }
 
     QTextStream stream(&m_file);
     int state = stream.readAll().toInt();
     m_file.close();
 
-    return state ? true : false;
+    return state;
 }
 
-void HelperActions::setIllumination(bool enabled)
+void HelperActions::setIllumination(int state)
 {
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setillumination");
     action.setHelperID(HELPER_ID);
-    action.addArgument("state", (enabled ? 1 : 0));
+    action.addArgument("state", state);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed" << endl
@@ -178,28 +272,28 @@ void HelperActions::setIllumination(bool enabled)
     }
 }
 
-bool HelperActions::getEcoLed()
+int HelperActions::getEcoLed()
 {
     m_file.setFileName(m_ledsPath + "eco_mode/brightness");
     if (!m_file.open(QIODevice::ReadOnly)) {
         kError() << "getEcoLed failed" << endl
                  << m_file.errorString() << "(" << m_file.error() << ")";
 
-        return false;
+        return -1;
     }
 
     QTextStream stream(&m_file);
     int state = stream.readAll().toInt();
     m_file.close();
 
-    return state ? true : false;
+    return state;
 }
 
-void HelperActions::setEcoLed(bool enabled)
+void HelperActions::setEcoLed(int state)
 {
     KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.seteco");
     action.setHelperID(HELPER_ID);
-    action.addArgument("state", (enabled ? 1 : 0));
+    action.addArgument("state", state);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed" << endl
@@ -282,6 +376,209 @@ void HelperActions::setKBDTimeout(int time)
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
         kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getUSBSleepCharge()
+{
+    m_file.setFileName(m_driverPath + "usb_sleep_charge");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getUSBSleepCharge failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int mode = stream.readAll().toInt();
+    m_file.close();
+
+    return mode;
+}
+
+void HelperActions::setUSBSleepCharge(int mode)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("mode", mode);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getUSBSleepFunctionsBatLvl()
+{
+    m_file.setFileName(m_driverPath + "usb_functions_on_battery");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getUSBSleepFunctionsBatLvl failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int level = stream.readAll().toInt();
+    m_file.close();
+
+    return level;
+}
+
+void HelperActions::setUSBSleepFunctionsBatLvl(int level)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("level", level);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getUSBRapidCharge()
+{
+    m_file.setFileName(m_driverPath + "usb_rapid_charge");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getUSBRapidCharge failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    return state;
+}
+
+void HelperActions::setUSBRapidCharge(int state)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("state", state);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getUSBSleepMusic()
+{
+    m_file.setFileName(m_driverPath + "usb_sleep_music");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getUSBSleepMusic failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    return state;
+}
+
+void HelperActions::setUSBSleepMusic(int state)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("state", state);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getKBDFunctions()
+{
+    m_file.setFileName(m_driverPath + "kbd_functions_keys");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getKBDFunctions failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int mode = stream.readAll().toInt();
+    m_file.close();
+
+    return mode;
+}
+
+void HelperActions::setKBDFunctions(int mode)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("mode", mode);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getPanelPowerON()
+{
+    m_file.setFileName(m_driverPath + "panel_power_on");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getPanelPowerON failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int state = stream.readAll().toInt();
+    m_file.close();
+
+    return state;
+}
+
+void HelperActions::setPanelPowerON(int state)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("state", state);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron failed" << endl
+                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    }
+}
+
+int HelperActions::getUSBThree()
+{
+    m_file.setFileName(m_driverPath + "usb_three");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getUSBThree failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int mode = stream.readAll().toInt();
+    m_file.close();
+
+    return mode;
+}
+
+void HelperActions::setUSBThree(int mode)
+{
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbthree");
+    action.setHelperID(HELPER_ID);
+    action.addArgument("mode", mode);
+    KAuth::ActionReply reply = action.execute();
+    if (reply.failed()) {
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbthree failed" << endl
                  << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }

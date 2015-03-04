@@ -17,6 +17,19 @@
       </doc:description>
     </doc:doc>
 
+    <method name="dumpsysinfo">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Dumps the system information (dmidecode).
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while dumping the system information</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
     <method name="settouchpad">
       <arg name="state" type="i" direction="in">
         <doc:doc>
@@ -113,6 +126,146 @@
         </doc:description>
         <doc:errors>
           <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setusbsleepcharge">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the USB sleep and charge mode.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the USB sleep and charge mode.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB sleep and charge mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setusbsleepfuctionsbatlvl">
+      <arg name="level" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the USB sleep functions battery level.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the USB sleep functions battery level.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB sleep functions battery level</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setusbrapidcharge">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the USB rapid charge state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the USB rapid charge state.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB rapid charge state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setusbsleepmusic">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the USB sleep and music state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the USB sleep and music state.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB sleep and music state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setkbdfunctions">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the keyboard functions mode.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the keyboard functions mode.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard functions mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setpanelpoweron">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the panel power on state.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the panel power on state.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the panel power on state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setusbthree">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The value to set the USB three mode.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the USB three mode.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB three mode</doc:error>
         </doc:errors>
       </doc:doc>
     </method>

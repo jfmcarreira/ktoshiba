@@ -21,6 +21,8 @@
 #include <QtCore/QVariantMap>
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
+#include <QtCore/QProcess>
+#include <QtCore/QByteArray>
 
 #include "ktoshhelper.h"
 
@@ -52,6 +54,38 @@ QString KToshHelper::findDriverPath()
     return QString("");
 }
 
+ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
+{
+    Q_UNUSED(args)
+
+    ActionReply reply;
+
+    QProcess p;
+    //p.start("/usr/sbin/dmidecode", QStringList() << "-s" << "bios-version");
+    p.start("/usr/sbin/dmidecode");
+    if (!p.waitForFinished(-1)) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-100);
+        reply.setErrorDescription(p.errorString());
+
+        return reply;
+    }
+    QByteArray info = p.readAll();
+
+    QFile dump("/var/tmp/dmidecode");
+    if (!dump.open(QIODevice::WriteOnly)) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(dump.error());
+        reply.setErrorDescription(dump.errorString());
+
+        return reply;
+    }
+    dump.write(info);
+    dump.close();
+        
+    return reply;
+}
+
 ActionReply KToshHelper::settouchpad(QVariantMap args)
 {
     ActionReply reply;
@@ -77,6 +111,22 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
     QTextStream stream(&m_file);
     stream << state;
     m_file.close();
+
+    // Code for TouchPad LED (when it is available), we simply uncomment this
+    /*if (!state) {
+        m_file.setFileName("/sys/class/leds/psmouse::synaptics/brightness");
+        if (!m_file.open(QIODevice::WriteOnly)) {
+            reply = ActionReply::HelperErrorReply;
+            reply.setErrorCode(m_file.error());
+            reply.setErrorDescription(m_file.errorString());
+
+            return reply;
+        }
+
+        QTextStream stream(&m_file);
+        stream << !state;
+        m_file.close();
+    }*/
 
     return reply;
 }
@@ -197,6 +247,212 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
     return reply;
 }
 
+ActionReply KToshHelper::setusbsleepcharge(QVariantMap args)
+{
+    ActionReply reply;
+    int mode = args["mode"].toInt();
+
+    if (mode < 0 || mode > 2) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "usb_sleep_charge");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << mode;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::setusbsleepfunctionsbatlvl(QVariantMap args)
+{
+    ActionReply reply;
+    int level = args["level"].toInt();
+
+    if (level < 0 || level > 100) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "sleep_functions_on_battery");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << level;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::setusbrapidcharge(QVariantMap args)
+{
+    ActionReply reply;
+    int state = args["state"].toInt();
+
+    if (state < 0 || state > 1) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "usb_rapid_charge");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << state;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::setusbsleepmusic(QVariantMap args)
+{
+    ActionReply reply;
+    int state = args["state"].toInt();
+
+    if (state < 0 || state > 1) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "usb_sleep_music");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << state;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::setkbdfunctions(QVariantMap args)
+{
+    ActionReply reply;
+    int mode = args["mode"].toInt();
+
+    if (mode < 0 || mode > 1) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "kbd_functions_mode");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << mode;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::setpanelpoweron(QVariantMap args)
+{
+    ActionReply reply;
+    int state = args["state"].toInt();
+
+    if (state < 0 || state > 1) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "panel_power_on");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << state;
+    m_file.close();
+
+    return reply;
+}
+
+ActionReply KToshHelper::setusbthree(QVariantMap args)
+{
+    ActionReply reply;
+    int mode = args["mode"].toInt();
+
+    if (mode < 0 || mode > 1) {
+        reply = ActionReply::HelperErrorReply;
+        reply.setErrorCode(-22); // Invalid argument
+        reply.setErrorDescription("The value was out of range");
+
+        return reply;
+    }
+
+    m_file.setFileName(m_driverPath + "usb_three");
+    if (!m_file.open(QIODevice::WriteOnly)) {
+       reply = ActionReply::HelperErrorReply;
+       reply.setErrorCode(m_file.error());
+       reply.setErrorDescription(m_file.errorString());
+
+       return reply;
+    }
+
+    QTextStream stream(&m_file);
+    stream << mode;
+    m_file.close();
+
+    return reply;
+}
+
+/*
+ * HDD Protection calls
+ */
 ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
 {
     ActionReply reply;

@@ -18,11 +18,11 @@
     </doc:doc>
 
     <method name="getTouchPad">
-      <arg name="enabled" type="b" direction="out">
+      <arg name="state" type="i" direction="out">
         <doc:doc>
           <doc:summary>
             Get the value of the TouchPad.
-            Returns false when not supported.
+            Returns -1 when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -39,7 +39,7 @@
     </method>
 
     <method name="setTouchPad">
-      <arg name="enabled" type="b" direction="in">
+      <arg name="state" type="i" direction="in">
         <doc:doc>
           <doc:summary>
             Set the value of the TouchPad.
@@ -60,11 +60,11 @@
     </method>
 
     <method name="getECOLed">
-      <arg name="enabled" type="b" direction="out">
+      <arg name="state" type="i" direction="out">
         <doc:doc>
           <doc:summary>
             Get the value of the ECO mode led.
-            Returns false when not supported.
+            Returns -1 when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -81,7 +81,7 @@
     </method>
 
     <method name="setECOLed">
-      <arg name="enabled" type="b" direction="in">
+      <arg name="state" type="i" direction="in">
         <doc:doc>
           <doc:summary>
             Set the value of the ECO mode led.
@@ -102,11 +102,11 @@
     </method>
 
     <method name="getIllumination">
-      <arg name="enabled" type="b" direction="out">
+      <arg name="state" type="i" direction="out">
         <doc:doc>
           <doc:summary>
             Get the value of the Illumination led.
-            Returns false when not supported.
+            Returns -1 when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -123,7 +123,7 @@
     </method>
 
     <method name="setIllumination">
-      <arg name="enabled" type="b" direction="in">
+      <arg name="state" type="i" direction="in">
         <doc:doc>
           <doc:summary>
             Set the value of the Illumination led.
@@ -148,7 +148,7 @@
         <doc:doc>
           <doc:summary>
             The value of the keyboard backlight type.
-            Returns Zero when not supported.
+            Returns -1 when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -169,7 +169,7 @@
         <doc:doc>
           <doc:summary>
             The value of the keyboard backlight mode.
-            Returns Zero when not supported.
+            Returns -1 when not supported.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -211,7 +211,7 @@
         <doc:doc>
           <doc:summary>
             The timeout of the keyboard backlight.
-            Returns 0 when not supported and when keyboard backlight mode is not set to AUTO or TIMER.
+            Returns -1 when not supported and 0 when keyboard backlight mode is not set to AUTO or TIMER.
           </doc:summary>
         </doc:doc>
       </arg>
@@ -244,6 +244,300 @@
         </doc:description>
         <doc:errors>
           <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard backlight timeout</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getUSBSleepCharge">
+      <arg name="mode" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The mode of the USB Sleep and Charge.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the charging mode for the USB sleep and charge.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the USB sleep and charge mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setUSBSleepCharge">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The mode of the USB Sleep and Charge.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the charging mode for the USB sleep and charge.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB sleep and charge mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getUSBSleepFunctionsBatLvl">
+      <arg name="level" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The battery level to disable the USB sleep functions.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the battery level to disable the USB sleep functions.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the USB sleep functions battery level</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setUSBSleepFunctionsBatLvl">
+      <arg name="level" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The battery level to disable the USB sleep functions.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the battery level to disable the USB sleep functions.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB sleep functions battery level</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getUSBRapidCharge">
+      <arg name="state" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The state of the USB rapid charge.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the state of the USB rapid charge.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the USB rapid charge state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setUSBRapidCharge">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The state of the USB rapid charge.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state value of the USB rapid charge.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB rapid charge state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getUSBSleepMusic">
+      <arg name="state" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The state of the USB sleep and music.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the state of the USB sleep and music.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the USB sleep and music state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setUSBSleepMusic">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The state of the USB sleep and music.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the USB sleep and music.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB sleep and music state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getKBDFunctions">
+      <arg name="mode" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The mode of the keyboard functions keys.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the mode of the keyboard functions keys.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the keyboard functions keys mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setKBDFunctions">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The mode of the keyboard functions keys.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the mode of the keyboard functions keys.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the keyboard functions keys mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getPanelPowerON">
+      <arg name="state" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The state of the panel power ON.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the state of the panel power ON.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the panel power ON state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setPanelPowerON">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The state of the panel power ON.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the state of the panel power ON.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the panel power ON state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="getUSBThree">
+      <arg name="mode" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The mode of the USB  three.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the mode of the USB three.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the USB three mode</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setUSBThree">
+      <arg name="mode" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The mode of the USB three.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the mode of the USB three.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the USB three mode</doc:error>
         </doc:errors>
       </doc:doc>
     </method>

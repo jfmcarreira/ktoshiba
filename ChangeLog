@@ -1,3 +1,34 @@
+2015-03-03 Azael Avalos <coproscefalo@gmail.com>
+	* Added KCM with a General Tab showing system information
+	* Added a KCM tab for HDD protection configuration and removed code
+	  KToshiba class
+
+2015-03-02 Azael Avalos <coproscefalo@gmail.com>
+	* Added functions to dump and parse dmidecode information, as
+	  the data will be used in the upcomming KCM
+	* Fixed some return values from HelperActions class, they were
+	  returning false instead of -1
+
+2015-03-01 Azael Avalos <coproscefalo@gmail.com>
+	* Some changes to most of the classes, we now exit at the main
+	  class (KToshiba) in case something's wrong
+	* Removed uneeded functions from FnActions class
+	* Added code for TouchPad LED (inactive for now until kernel
+	  supports it)
+
+2015-02-27 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to KToshibaHDDProtect and KToshiba classes, we are
+	  not initializing the classes if we don't have support for it
+	* Some small change to KToshibaKeyHandler class
+
+2015-02-21 Azael Avalos <coproscefalo@gmail.com>
+	* Added support for more features found on the upstream
+	  toshiba_acpi kernel driver (to be released on 3.20/4.0)
+	* Changed the values from a few functions from bool to int
+	  in HelperActions and DBus classes
+	* Re-added the doMenu function in KToshiba class
+	* Make use of qobject_cast to only make one instance of HelperActions
+
 2015-02-07 Azael Avalos <coproscefalo@gmail.com>
 	* Bump version to 4.2.1
 

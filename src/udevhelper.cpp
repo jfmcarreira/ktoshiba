@@ -1,20 +1,19 @@
 /*
    Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #include <KDebug>
@@ -24,30 +23,32 @@
 UDevHelper::UDevHelper(QObject *parent)
     : QObject( parent )
 {
-    initUDev();
 }
 
-void UDevHelper::initUDev()
+bool UDevHelper::initUDev()
 {
     // Create the udev object
     udev = udev_new();
     if (!udev) {
         kError() << "Cannot create the udev object";
-        exit(-1);
+
+        return false;
     }
 
     // Create the udev monitor
     monitor = udev_monitor_new_from_netlink(udev, "udev");
     if (!monitor) {
         kError() << "Cannot create the udev monitor";
-        exit(-2);
+        return false;
     }
     
     // Add filters
     if (udev_monitor_filter_add_match_subsystem_devtype(monitor, "input", NULL) < 0) {
         kError() << "Cannot add udev filter";
-        exit(-3);
+        return false;
     }
+
+    return true;
 }
 
 QString UDevHelper::findDevice(QStringList namePhys)
@@ -78,7 +79,7 @@ QString UDevHelper::findDevice(QStringList namePhys)
         QString phys(udev_device_get_sysattr_value(dev, "phys"));
         if (name == namePhys.at(0) && phys == namePhys.at(1)) {
             node = nodepath;
-            qDebug() << "Found device:" << nodepath << endl
+            kDebug() << "Found device:" << nodepath << endl
                      << "  Name:" << name << endl
                      << "  Phys:" << phys << endl;
         }

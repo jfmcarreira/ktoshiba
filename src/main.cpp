@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     if (!KUniqueApplication::start()) {
         fprintf(stderr, "KToshiba is already running!\n");
-        exit(0);
+        return 0;
     }
 
     KUniqueApplication *app = new KToshiba();

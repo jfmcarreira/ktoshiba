@@ -1,20 +1,19 @@
 /*
    Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #ifndef KTOSHIBA_H
@@ -25,7 +24,6 @@
 #include <KUniqueApplication>
 #include <KSharedConfig>
 
-#include "ui_hddprotectionwidget.h"
 #include "ui_kbdtimeoutwidget.h"
 
 class QAction;
@@ -42,7 +40,7 @@ class KToshibaHDDProtect;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 4.2.1
+ * @version 4.3
  */
 class KToshiba : public KUniqueApplication
 {
@@ -57,10 +55,9 @@ public:
     static KAboutData* aboutData();
 
 private Q_SLOTS:
-    void monitorHDDClicked(bool);
-    void protectionLvlClicked();
-    void changeProtectionLvl(QAbstractButton *);
-    void levelChanged(int);
+    void cleanup();
+    void protectHDD(int);
+    void notifyHDDMovement();
     void timerClicked();
     void fnzClicked();
     void onClicked();
@@ -69,7 +66,6 @@ private Q_SLOTS:
     void kbdTimeoutClicked();
     void changeKBDTimeout(QAbstractButton *);
     void timeChanged(int);
-    void notifyHDDMovement();
     void disabledClicked(bool);
     void performanceClicked();
     void powersaveClicked();
@@ -83,6 +79,7 @@ private:
     bool checkConfig();
     void loadConfig();
     void createConfig();
+    void doMenu();
 
     FnActions *m_fn;
     KToshibaHDDProtect *m_hdd;
@@ -101,14 +98,14 @@ private:
     QAction *m_batPowersave;
     QAction *m_batPresentation;
     QAction *m_batECO;
-    Ui::hddProtectionWidget m_hddProtectionWidget;
     Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
-    QWidget *m_protectionWidget;
     QWidget *m_timeoutWidget;
     KSharedConfigPtr m_config;
-    QStringList m_levels;
-    bool m_monitorHDD;
     bool m_batteryProfiles;
+    bool m_hddConnected;
+    bool m_fnConnected;
+    bool m_monitorHDD;
+    bool m_notifyHDD;
     int m_level;
 
     KMenu *m_popupMenu;

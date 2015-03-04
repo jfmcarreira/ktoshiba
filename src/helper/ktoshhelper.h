@@ -36,11 +36,28 @@ public:
     KToshHelper(QObject *parent = 0);
 
 public slots:
-    ActionReply settouchpad(QVariantMap args);
+    /*
+     * System Information call
+     */
+    ActionReply dumpsysinfo(QVariantMap args);
+    /*
+     * Hardware calls
+     */
     ActionReply setillumination(QVariantMap args);
+    ActionReply settouchpad(QVariantMap args);
     ActionReply seteco(QVariantMap args);
     ActionReply setkbdtimeout(QVariantMap args);
     ActionReply setkbdmode(QVariantMap args);
+    ActionReply setusbsleepcharge(QVariantMap args);
+    ActionReply setusbsleepfunctionsbatlvl(QVariantMap args);
+    ActionReply setusbrapidcharge(QVariantMap args);
+    ActionReply setusbsleepmusic(QVariantMap args);
+    ActionReply setkbdfunctions(QVariantMap args);
+    ActionReply setpanelpoweron(QVariantMap args);
+    ActionReply setusbthree(QVariantMap args);
+    /*
+     * HDD Protection calls
+     */
     ActionReply setprotectionlevel(QVariantMap args);
     ActionReply unloadheads(QVariantMap args);
 
