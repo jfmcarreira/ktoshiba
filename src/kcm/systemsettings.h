@@ -24,7 +24,10 @@
 #include <KSharedConfig>
 
 #include "ui_sysinfo.h"
+#include "ui_general.h"
 #include "ui_hddprotect.h"
+#include "ui_sleeputils.h"
+#include "ui_keyboard.h"
 
 class KTabWidget;
 
@@ -47,15 +50,25 @@ protected:
 
 private Q_SLOTS:
     void protectionLevelChanged(int);
+    void batteryLevelChanged(int);
+    void kbdTimeoutChanged(int);
+    void kbdFunctionsChanged(int);
+    void kbdBacklightChanged(int);
 
 private:
+    void addTabs();
+
     HelperActions *m_helper;
+    bool m_helperAttached;
+
     KTabWidget *m_tabWidget;
     KSharedConfigPtr m_config;
 
     Ui::SysInfo m_sysinfo;
+    Ui::General m_general;
     Ui::HDDProtect m_hdd;
-    QWidget *hdd_widget;
+    Ui::SleepUtils m_sleep;
+    Ui::Keyboard m_kbd;
 
     QString m_modelFamily;
     QString m_modelNumber;
@@ -63,12 +76,29 @@ private:
     QString m_biosDate;
     QString m_biosManufacturer;
     QString m_ecVersion;
+
+    int m_touchpad;
+    int m_usbthree;
+    int m_panelpower;
+
     QStringList m_levels;
     bool m_monitorHDD;
     bool m_notifyHDD;
     int m_level;
 
-    bool m_helperAttached;
+    int m_sleepcharge;
+    int m_sleepmusic;
+    QStringList m_sleeponbat;
+    int m_batenabled;
+    int m_batlevel;
+    int m_rapidcharge;
+
+    int m_functions;
+    int m_type;
+    QStringList m_type1;
+    QStringList m_type2;
+    int m_mode;
+    int m_time;
 };
 
 #endif // KTOSHIBASYSTEMSETTINGS_H

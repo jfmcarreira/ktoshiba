@@ -16,7 +16,7 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtGui/QDesktopWidget>
+#include <QDesktopWidget>
 
 #include <KStatusNotifierItem>
 #include <KMenu>
@@ -52,6 +52,7 @@ KToshiba::KToshiba()
 
     m_fnConnected = m_fn->init();
     if (!m_fnConnected) {
+        destroyAboutData();
         cleanup();
         ::exit(-1);
     }
@@ -65,8 +66,6 @@ KToshiba::KToshiba()
         m_hdd = new KToshibaHDDProtect( m_fn );
         m_hddConnected = m_hdd->attach();
     }
-    if (m_fn->m_helper->isKBDBacklightSupported)
-        m_timeoutWidget = new QWidget( 0, Qt::WindowStaysOnTopHint );
 
     doMenu();
 }
@@ -80,12 +79,8 @@ void KToshiba::cleanup()
 {
     if (m_fn->m_helper->isHAPSSupported)
         delete m_hdd; m_hdd = NULL;
-    if (m_fn->m_helper->isKBDBacklightSupported) {
-        delete m_timeoutWidget; m_timeoutWidget = NULL;
-    }
-    if (m_fnConnected) {
+    if (m_fnConnected)
         delete m_fn; m_fn = NULL;
-    }
     delete m_helpMenu; m_helpMenu = NULL;
     delete m_trayicon; m_trayicon = NULL;
 }
@@ -113,15 +108,16 @@ void KToshiba::loadConfig()
     KConfigGroup hddGroup( m_config, "HDDProtection" );
     m_monitorHDD = hddGroup.readEntry( "MonitorHDD", true );
     m_notifyHDD = hddGroup.readEntry( "NotifyHDDMovement", true );
-    m_level = hddGroup.readEntry( "HDDProtectionLvl", 2 );
 }
 
 void KToshiba::createConfig()
 {
     kDebug() << "Default configuration file created.";
+    // General group
     KConfigGroup generalGroup( m_config, "General" );
     generalGroup.writeEntry( "BatteryProfiles", true );
     generalGroup.config()->sync();
+    // System Information group
     KConfigGroup sysinfoGroup( m_config, "SystemInformation" );
     sysinfoGroup.writeEntry( "ModelFamily", m_fn->m_helper->sysinfo[4] );
     sysinfoGroup.writeEntry( "ModelNumber", m_fn->m_helper->sysinfo[5] );
@@ -130,10 +126,10 @@ void KToshiba::createConfig()
     sysinfoGroup.writeEntry( "BIOSManufacturer", m_fn->m_helper->sysinfo[0] );
     sysinfoGroup.writeEntry( "ECVersion", m_fn->m_helper->sysinfo[3] );
     sysinfoGroup.config()->sync();
+    // HDD Protection group
     KConfigGroup hddGroup( m_config, "HDDProtection" );
     hddGroup.writeEntry( "MonitorHDD", true );
     hddGroup.writeEntry( "NotifyHDDMovement", true );
-    hddGroup.writeEntry( "HDDProtectionLvl", 2 );
     hddGroup.config()->sync();
 }
 
@@ -141,69 +137,8 @@ void KToshiba::doMenu()
 {
     if (m_fn->m_helper->isHAPSSupported && m_hddConnected) {
         m_hdd->setHDDProtection(m_monitorHDD);
-        if (m_level != m_fn->m_helper->getProtectionLevel())
-            m_fn->m_helper->setProtectionLevel(m_level);
 
         connect( m_hdd, SIGNAL( eventDetected(int) ), this, SLOT( protectHDD(int) ) );
-    }
-
-    if (m_fn->m_helper->isTouchPadSupported) {
-        m_touchPad = m_popupMenu->addAction( i18n("Toggle TouchPad") );
-        m_touchPad->setIcon( QIcon( ":images/mpad_64.png" ) );
-
-        connect( m_touchPad, SIGNAL( triggered() ), m_fn, SLOT( toggleTouchPad() ) );
-    }
-
-    if (m_fn->m_helper->isKBDBacklightSupported) {
-        m_kbdModeMenu = new QMenu(m_popupMenu);
-        m_kbdModeMenu->setTitle( i18n("Keyboard Backlight Mode") );
-        m_popupMenu->addMenu( m_kbdModeMenu )->setIcon( KIcon( "input-keyboard" ) );
-        if (m_fn->m_type == 1) {
-            m_kbdFNZ = m_kbdModeMenu->addAction( i18n("FN-Z") );
-            m_kbdFNZ->setIcon( QIcon( ":images/keyboard_black_on_64.png" ) );
-            m_kbdFNZ->setCheckable( true );
-            m_kbdFNZ->setChecked( m_fn->m_mode == FnActions::FNZ ? true : false );
-            m_kbdTimer = m_kbdModeMenu->addAction( i18n("AUTO") );
-            m_kbdTimer->setIcon( QIcon( ":images/keyboard_timer_64.png" ) );
-            m_kbdTimer->setCheckable( true );
-            m_kbdTimer->setChecked( m_fn->m_mode == FnActions::TIMER ? true : false );
-
-            connect( m_kbdFNZ, SIGNAL( triggered() ), this, SLOT( fnzClicked() ) );
-            connect( m_kbdTimer, SIGNAL( triggered() ), this, SLOT( timerClicked() ) );
-        } else if (m_fn->m_type == 2) {
-            m_kbdTimer = m_kbdModeMenu->addAction( i18n("TIMER") );
-            m_kbdTimer->setIcon( QIcon( ":images/keyboard_timer_64.png" ) );
-            m_kbdTimer->setCheckable( true );
-            m_kbdTimer->setChecked( m_fn->m_mode == FnActions::TIMER ? true : false );
-            m_kbdOn = m_kbdModeMenu->addAction( i18n("ON") );
-            m_kbdOn->setIcon( QIcon( ":images/keyboard_black_on_64.png" ) );
-            m_kbdOn->setCheckable( true );
-            m_kbdOn->setChecked( m_fn->m_mode == FnActions::ON ? true : false );
-            m_kbdOff = m_kbdModeMenu->addAction( i18n("OFF") );
-            m_kbdOff->setIcon( QIcon( ":images/keyboard_black_off_64.png" ) );
-            m_kbdOff->setCheckable( true );
-            m_kbdOff->setChecked( m_fn->m_mode == FnActions::OFF ? true : false );
-
-            connect( m_kbdTimer, SIGNAL( triggered() ), this, SLOT( timerClicked() ) );
-            connect( m_kbdOn, SIGNAL( triggered() ), this, SLOT( onClicked() ) );
-            connect( m_kbdOff, SIGNAL( triggered() ), this, SLOT( offClicked() ) );
-        }
-
-        m_kbdTimeoutWidget.setupUi( m_timeoutWidget );
-        m_kbdTimeoutWidget.timeoutSpinBox->setMaximum(60);
-        m_kbdTimeoutWidget.timeoutSpinBox->setMinimum(1);
-        m_timeoutWidget->clearFocus();
-
-        m_kbdTimeout = m_popupMenu->addAction( i18n("Keyboard Backlight Timeout") );
-        m_kbdTimeout->setIcon( KIcon( "input-keyboard" ) );
-        m_kbdTimeout->setVisible((m_fn->m_mode == FnActions::TIMER) ? true : false);
-
-        connect( m_fn->m_helper, SIGNAL( kbdModeChanged() ), this, SLOT( notifyKBDModeChanged() ) );
-        connect( m_kbdTimeout, SIGNAL( triggered() ), this, SLOT( kbdTimeoutClicked() ) );
-        connect( m_kbdTimeoutWidget.buttonBox, SIGNAL( clicked(QAbstractButton *) ),
-		 this, SLOT( changeKBDTimeout(QAbstractButton *) ) );
-        connect( m_kbdTimeoutWidget.timeoutSpinBox, SIGNAL( valueChanged(int) ),
-		 this, SLOT( timeChanged(int) ) );
     }
 
     m_batteryMenu = new QMenu(m_popupMenu);
@@ -258,114 +193,6 @@ void KToshiba::protectHDD(int event)
     } else if (event == HDD_STABILIZED) {
         kDebug() << "Vibration stabilized";
         m_fn->m_helper->unloadHeads(0);
-    }
-}
-
-void KToshiba::fnzClicked()
-{
-    m_fn->m_helper->setKBDMode(FnActions::FNZ);
-    m_kbdFNZ->setChecked( true );
-    m_kbdTimer->setChecked( false );
-}
-
-void KToshiba::timerClicked()
-{
-    m_fn->m_helper->setKBDMode(FnActions::TIMER);
-    m_kbdTimer->setChecked( true );
-    if (m_fn->m_type == 1) {
-        m_kbdFNZ->setChecked( false );
-    } else if (m_fn->m_type == 2) {
-        m_kbdOn->setChecked( false );
-        m_kbdOff->setChecked( false );
-    }
-}
-
-void KToshiba::onClicked()
-{
-    m_fn->m_helper->setKBDMode(FnActions::ON);
-    m_kbdTimer->setChecked( false );
-    m_kbdOn->setChecked( true );
-    m_kbdOff->setChecked( false );
-}
-
-void KToshiba::offClicked()
-{
-    m_fn->m_helper->setKBDMode(FnActions::OFF);
-    m_kbdTimer->setChecked( false );
-    m_kbdOn->setChecked( false );
-    m_kbdOff->setChecked( true );
-}
-
-void KToshiba::notifyKBDModeChanged()
-{
-    m_fn->m_mode = m_fn->m_helper->getKBDMode();
-    m_kbdTimeout->setVisible((m_fn->m_mode == FnActions::TIMER) ? true : false);
-
-    if (m_fn->m_type == 1) {
-        QIcon icon(":images/keyboard_black_on_64.png");
-        KNotification *notification =
-		KNotification::event(KNotification::Notification, i18n("KToshiba - Keyboard Mode"),
-				     i18n("The computer must be restarted in order to activate the new keyboard Mode"),
-				     icon.pixmap(48, 48), 0, KNotification::Persistent);
-        notification->sendEvent();
-    }
-}
-
-void KToshiba::kbdTimeoutClicked()
-{
-    if (m_timeoutWidget->isHidden()) {
-        QRect r = QApplication::desktop()->geometry();
-        m_timeoutWidget->move(r.center() -
-                    QPoint(m_timeoutWidget->width() / 2, m_timeoutWidget->height() / 2));
-        m_fn->m_time = m_fn->m_helper->getKBDTimeout();
-        m_kbdTimeoutWidget.timeoutSpinBox->setValue(m_fn->m_time);
-        m_timeoutWidget->show();
-    } else {
-        m_timeoutWidget->hide();
-    }
-}
-
-void KToshiba::timeChanged(int time)
-{
-    if (time == m_fn->m_time)
-        return;
-
-    m_fn->m_time = time;
-}
-
-void KToshiba::changeKBDTimeout(QAbstractButton *button)
-{
-    QDialogButtonBox::StandardButton stdButton =
-	    m_kbdTimeoutWidget.buttonBox->standardButton(button);
-
-    switch(stdButton) {
-    case QDialogButtonBox::Ok:
-        m_fn->m_helper->setKBDTimeout(m_fn->m_time);
-        m_timeoutWidget->hide();
-    break;
-    case QDialogButtonBox::Apply:
-        m_fn->m_helper->setKBDTimeout(m_fn->m_time);
-    break;
-    case QDialogButtonBox::Cancel:
-        m_timeoutWidget->hide();
-    break;
-    case QDialogButtonBox::NoButton:
-    case QDialogButtonBox::Save:
-    case QDialogButtonBox::SaveAll:
-    case QDialogButtonBox::Open:
-    case QDialogButtonBox::Yes:
-    case QDialogButtonBox::YesToAll:
-    case QDialogButtonBox::No:
-    case QDialogButtonBox::NoToAll:
-    case QDialogButtonBox::Abort:
-    case QDialogButtonBox::Retry:
-    case QDialogButtonBox::Ignore:
-    case QDialogButtonBox::Close:
-    case QDialogButtonBox::Discard:
-    case QDialogButtonBox::Help:
-    case QDialogButtonBox::Reset:
-    case QDialogButtonBox::RestoreDefaults:
-    break;
     }
 }
 

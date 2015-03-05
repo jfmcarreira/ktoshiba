@@ -24,8 +24,6 @@
 #include <KUniqueApplication>
 #include <KSharedConfig>
 
-#include "ui_kbdtimeoutwidget.h"
-
 class QAction;
 class QMenu;
 
@@ -52,20 +50,12 @@ public:
 
     static void createAboutData();
     static void destroyAboutData();
-    static KAboutData* aboutData();
+    static KAboutData *aboutData();
 
 private Q_SLOTS:
     void cleanup();
     void protectHDD(int);
     void notifyHDDMovement();
-    void timerClicked();
-    void fnzClicked();
-    void onClicked();
-    void offClicked();
-    void notifyKBDModeChanged();
-    void kbdTimeoutClicked();
-    void changeKBDTimeout(QAbstractButton *);
-    void timeChanged(int);
     void disabledClicked(bool);
     void performanceClicked();
     void powersaveClicked();
@@ -82,31 +72,22 @@ private:
     void doMenu();
 
     FnActions *m_fn;
+    bool m_fnConnected;
+
     KToshibaHDDProtect *m_hdd;
-    QAction *m_hddMonitor;
-    QAction *m_hddProtectionLvl;
-    QAction *m_touchPad;
-    QMenu *m_kbdModeMenu;
-    QAction *m_kbdTimer;
-    QAction *m_kbdFNZ;
-    QAction *m_kbdOn;
-    QAction *m_kbdOff;
-    QAction *m_kbdTimeout;
+    bool m_hddConnected;
+    bool m_monitorHDD;
+    bool m_notifyHDD;
+
     QMenu *m_batteryMenu;
     QAction *m_batDisabled;
     QAction *m_batPerformance;
     QAction *m_batPowersave;
     QAction *m_batPresentation;
     QAction *m_batECO;
-    Ui::kbdTimeoutWidget m_kbdTimeoutWidget;
-    QWidget *m_timeoutWidget;
-    KSharedConfigPtr m_config;
     bool m_batteryProfiles;
-    bool m_hddConnected;
-    bool m_fnConnected;
-    bool m_monitorHDD;
-    bool m_notifyHDD;
-    int m_level;
+
+    KSharedConfigPtr m_config;
 
     KMenu *m_popupMenu;
     static KAboutData* m_about;

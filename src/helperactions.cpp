@@ -16,8 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtCore/QStringList>
-#include <QtCore/QTextStream>
+#include <QStringList>
+#include <QTextStream>
 
 #include <KAuth/Action>
 #include <KDebug>
@@ -29,6 +29,18 @@
 HelperActions::HelperActions(QObject *parent)
     : QObject( parent )
 {
+    isTouchPadSupported = false;
+    isIlluminationSupported = false;
+    isECOSupported = false;
+    isKBDBacklightSupported = false;
+    isKBDTypeSupported = false;
+    isUSBSleepChargeSupported = false;
+    isUSBRapidChargeSupported = false;
+    isUSBSleepMusicSupported = false;
+    isKBDFunctionsSupported = false;
+    isPanelPowerONSupported = false;
+    isUSBThreeSupported = false;
+    isHAPSSupported = false;
 }
 
 bool HelperActions::init()
@@ -77,8 +89,8 @@ QString HelperActions::findDriverPath()
 bool HelperActions::deviceExists(QString device)
 {
     if (device == "touchpad" || device == "kbd_backlight_mode" || device == "kbd_type" ||
-        device == "usb_sleep_charge" || device == "usb_functions_on_battery" ||
-        device == "usb_rapid_charge" || device == "usb_sleep_music" || device == "kbd_functions_keys" ||
+        device == "usb_sleep_charge" || device == "sleep_functions_on_battery" ||
+        device == "usb_rapid_charge" || device == "usb_sleep_music" || device == "kbd_function_keys" ||
         device == "panel_power_on" || device == "usb_three") {
         m_file.setFileName(m_driverPath + device);
     } else if (device == "illumination" || device == "eco_mode") {
@@ -136,7 +148,7 @@ bool HelperActions::checkUSBSleepMusic()
 
 bool HelperActions::checkKBDFunctions()
 {
-    return deviceExists("kbd_functions_keys");
+    return deviceExists("kbd_function_keys");
 }
 
 bool HelperActions::checkPanelPowerON()
@@ -206,7 +218,7 @@ void HelperActions::getSysInfo()
             sysinfo << splited[1];
             break;
         }
-    } while (!in.atEnd() || vercount == 2);
+    } while (!in.atEnd() || vercount < 2);
     m_file.close();
 
     qDebug() << sysinfo;
@@ -409,21 +421,21 @@ void HelperActions::setUSBSleepCharge(int mode)
     }
 }
 
-int HelperActions::getUSBSleepFunctionsBatLvl()
+QStringList HelperActions::getUSBSleepFunctionsBatLvl()
 {
-    m_file.setFileName(m_driverPath + "usb_functions_on_battery");
+    m_file.setFileName(m_driverPath + "sleep_functions_on_battery");
     if (!m_file.open(QIODevice::ReadOnly)) {
         kError() << "getUSBSleepFunctionsBatLvl failed" << endl
                  << m_file.errorString() << "(" << m_file.error() << ")";
 
-        return -1;
+        return QStringList();
     }
 
     QTextStream stream(&m_file);
-    int level = stream.readAll().toInt();
+    QString line = stream.readAll();
     m_file.close();
 
-    return level;
+    return line.split(" ");
 }
 
 void HelperActions::setUSBSleepFunctionsBatLvl(int level)
@@ -498,7 +510,7 @@ void HelperActions::setUSBSleepMusic(int state)
 
 int HelperActions::getKBDFunctions()
 {
-    m_file.setFileName(m_driverPath + "kbd_functions_keys");
+    m_file.setFileName(m_driverPath + "kbd_function_keys");
     if (!m_file.open(QIODevice::ReadOnly)) {
         kError() << "getKBDFunctions failed" << endl
                  << m_file.errorString() << "(" << m_file.error() << ")";

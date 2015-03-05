@@ -16,8 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtGui/QDesktopWidget>
-#include <QtCore/QTimer>
+#include <QDesktopWidget>
+#include <QTimer>
 
 #include <KLocale>
 #include <KDebug>

@@ -4,7 +4,7 @@ set(SystemSettings_SRCS
     ../helperactions.cpp
 )
 
-kde4_add_ui_files(SystemSettings_SRCS sysinfo.ui hddprotect.ui)
+kde4_add_ui_files(SystemSettings_SRCS sysinfo.ui general.ui hddprotect.ui sleeputils.ui keyboard.ui)
 kde4_add_plugin(kcm_ktoshibam ${SystemSettings_SRCS})
 target_link_libraries(kcm_ktoshibam ${KDE4_KDEUI_LIBS})
 

@@ -16,7 +16,7 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 
 #include <KDebug>
 #include <KWindowSystem>
@@ -138,8 +138,10 @@ void KToshibaDBusInterface::setUSBSleepCharge(int mode)
 
 int KToshibaDBusInterface::getUSBSleepFunctionsBatLvl()
 {
-    if (m_fn->m_helper->isUSBSleepChargeSupported)
-        return m_fn->m_helper->getUSBSleepFunctionsBatLvl();
+    if (m_fn->m_helper->isUSBSleepChargeSupported) {
+        QStringList values = m_fn->m_helper->getUSBSleepFunctionsBatLvl();
+        return values[1].toInt();
+    }
 
     return -1;
 }

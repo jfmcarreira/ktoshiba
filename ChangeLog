@@ -1,3 +1,17 @@
+2015-03-04 Azael Avalos <coproscefalo@gmail.com>
+	* Added a KCM tab for sleep utilities configuration
+	* Added a KCM tab for keyboard settings and removed code from
+	  KToshiba class
+	* Fixed a typo in HelperActions class, we were not reading the correct
+	  file for sleep functions under battery, and also, changed the return
+	  parameter to QStringList (from int), adapted code accordingly
+	* Fixed a type in HelperActions and KToshHelper, we were not
+	  reading/writing to the correct file
+	* Small change to Qt include files
+	* Merged KCM CMakeLists into the main one
+	* Added a KCM tab for general settings, removed the TouchPad code
+	  from KToshiba class
+
 2015-03-03 Azael Avalos <coproscefalo@gmail.com>
 	* Added KCM with a General Tab showing system information
 	* Added a KCM tab for HDD protection configuration and removed code

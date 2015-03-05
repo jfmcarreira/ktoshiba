@@ -16,8 +16,7 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtCore/QSocketNotifier>
-#include <QtCore/qmath.h>
+#include <QSocketNotifier>
 
 #include <KDebug>
 

@@ -17,12 +17,12 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <QtCore/QDebug>
-#include <QtCore/QVariantMap>
-#include <QtCore/QDir>
-#include <QtCore/QStringList>
-#include <QtCore/QProcess>
-#include <QtCore/QByteArray>
+#include <QDebug>
+#include <QVariantMap>
+#include <QDir>
+#include <QStringList>
+#include <QProcess>
+#include <QByteArray>
 
 #include "ktoshhelper.h"
 
@@ -376,7 +376,7 @@ ActionReply KToshHelper::setkbdfunctions(QVariantMap args)
         return reply;
     }
 
-    m_file.setFileName(m_driverPath + "kbd_functions_mode");
+    m_file.setFileName(m_driverPath + "kbd_function_keys");
     if (!m_file.open(QIODevice::WriteOnly)) {
        reply = ActionReply::HelperErrorReply;
        reply.setErrorCode(m_file.error());
