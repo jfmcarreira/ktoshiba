@@ -61,6 +61,7 @@ private Q_SLOTS:
     void powersaveClicked();
     void presentationClicked();
     void ecoClicked();
+    void configureClicked();
 
 Q_SIGNALS:
     void batteryProfilesToggled(bool);
@@ -86,6 +87,8 @@ private:
     QAction *m_batPresentation;
     QAction *m_batECO;
     bool m_batteryProfiles;
+
+    QAction *m_configure;
 
     KSharedConfigPtr m_config;
 

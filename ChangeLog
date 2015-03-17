@@ -1,3 +1,9 @@
+2015-03-17 Azael Avalos <coproscefalo@gmail.com>
+	* Implemented defaults function
+	* Implemented save function
+	* Fixed KToshHelper actions name, a few functions were missing the
+	  set prefix
+
 2015-03-04 Azael Avalos <coproscefalo@gmail.com>
 	* Added a KCM tab for sleep utilities configuration
 	* Added a KCM tab for keyboard settings and removed code from
@@ -11,6 +17,11 @@
 	* Merged KCM CMakeLists into the main one
 	* Added a KCM tab for general settings, removed the TouchPad code
 	  from KToshiba class
+	* Added menu option to open configuration (KCM)
+	* Some small changes to destructors
+	* Changed QProcess to KProcess
+	* Fixed an issue with dmidecode parser (it was getting too many
+	  version strings)
 
 2015-03-03 Azael Avalos <coproscefalo@gmail.com>
 	* Added KCM with a General Tab showing system information

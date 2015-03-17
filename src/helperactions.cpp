@@ -187,7 +187,7 @@ void HelperActions::getSysInfo()
     }
 
     QTextStream in(&m_file);
-    int vercount = 0;
+    int count = 0;
     do {
         QString line = in.readLine();
         QStringList splited = line.split(":");
@@ -198,8 +198,11 @@ void HelperActions::getSysInfo()
         }
         if (splited[0].contains("Version")) {
             sysinfo << splited[1];
-            vercount++;
-            continue;
+            count++;
+            if (count == 2)
+               break;
+            else
+               continue;
         }
         if (splited[0].contains("Release Date")) {
             sysinfo << splited[1];
@@ -214,14 +217,8 @@ void HelperActions::getSysInfo()
             sysinfo << splited[1];
             continue;
         }
-        if (splited[0].contains("Version")) {
-            sysinfo << splited[1];
-            break;
-        }
-    } while (!in.atEnd() || vercount < 2);
+    } while (!in.atEnd());
     m_file.close();
-
-    qDebug() << sysinfo;
 }
 
 int HelperActions::getTouchPad()
@@ -243,12 +240,12 @@ int HelperActions::getTouchPad()
 
 void HelperActions::setTouchPad(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad");
+    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.settouchpad");
     action.setHelperID(HELPER_ID);
     action.addArgument("state", state);
     KAuth::ActionReply reply = action.execute();
     if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.toggletouchpad failed" << endl
+        kError() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed" << endl
                  << reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 

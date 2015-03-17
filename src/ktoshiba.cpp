@@ -27,6 +27,7 @@
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KIcon>
+#include <KProcess>
 
 #include "ktoshiba.h"
 #include "fnactions.h"
@@ -79,8 +80,7 @@ void KToshiba::cleanup()
 {
     if (m_fn->m_helper->isHAPSSupported)
         delete m_hdd; m_hdd = NULL;
-    if (m_fnConnected)
-        delete m_fn; m_fn = NULL;
+    delete m_fn; m_fn = NULL;
     delete m_helpMenu; m_helpMenu = NULL;
     delete m_trayicon; m_trayicon = NULL;
 }
@@ -167,6 +167,10 @@ void KToshiba::doMenu()
     connect( m_batPresentation, SIGNAL( triggered() ), this, SLOT( presentationClicked() ) );
     connect( m_batECO, SIGNAL( triggered() ), this, SLOT( ecoClicked() ) );
 
+    m_configure = m_popupMenu->addAction( i18n("Configure") );
+    m_configure->setIcon( KIcon( "configure" ) );
+    connect( m_configure, SIGNAL( triggered() ), this, SLOT( configureClicked() ) );
+
     m_popupMenu->addSeparator();
     m_helpMenu = new KHelpMenu( m_popupMenu, aboutData());
     m_popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
@@ -228,6 +232,13 @@ void KToshiba::presentationClicked()
 void KToshiba::ecoClicked()
 {
     m_fn->changeProfile("ECO");
+}
+
+void KToshiba::configureClicked()
+{
+    KProcess p;
+    p.setProgram(KStandardDirs::findExe("kcmshell4"), QStringList() << "ktoshibam");
+    p.startDetached();
 }
 
 static const char * const description =

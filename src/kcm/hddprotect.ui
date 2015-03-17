@@ -43,6 +43,9 @@
          <property name="text">
           <string>HDD Protection:</string>
          </property>
+         <property name="buddy">
+          <cstring>hdd_protect_checkbox</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -76,6 +79,9 @@
          <property name="text">
           <string>HDD Protection Notification:</string>
          </property>
+         <property name="buddy">
+          <cstring>hdd_notification_checkbox</cstring>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -108,6 +114,9 @@
          </property>
          <property name="text">
           <string>HDD Protection Level:</string>
+         </property>
+         <property name="buddy">
+          <cstring>protection_level_slider</cstring>
          </property>
         </widget>
        </item>

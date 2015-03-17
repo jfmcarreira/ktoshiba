@@ -42,17 +42,17 @@ public:
                             const QVariantList &args = QVariantList());
     virtual ~KToshibaSystemSettings();
 
-    virtual void load();
-    virtual void save();
-    virtual void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected:
 
 private Q_SLOTS:
+    void configChanged();
     void protectionLevelChanged(int);
     void batteryLevelChanged(int);
     void kbdTimeoutChanged(int);
-    void kbdFunctionsChanged(int);
     void kbdBacklightChanged(int);
 
 private:
@@ -98,6 +98,7 @@ private:
     QStringList m_type1;
     QStringList m_type2;
     int m_mode;
+    int m_index;
     int m_time;
 };
 

@@ -57,25 +57,25 @@ Description=Sets the USB rapid charge state
 Policy=yes
 PolicyInactive=yes
 
-[net.sourceforge.ktoshiba.ktoshhelper.usbsleepmusic]
+[net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic]
 Name=USB sleep & music
 Description=Sets the USB sleep and music state
 Policy=yes
 PolicyInactive=yes
 
-[net.sourceforge.ktoshiba.ktoshhelper.kbdfunctions]
+[net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions]
 Name=Keyboard funcctions
 Description=Sets the desired keyboard functions mode
 Policy=yes
 PolicyInactive=yes
 
-[net.sourceforge.ktoshiba.ktoshhelper.panelpoweron]
+[net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron]
 Name=Panel power on
 Description=Sets the panel power on mode
 Policy=yes
 PolicyInactive=yes
 
-[net.sourceforge.ktoshiba.ktoshhelper.usbthree]
+[net.sourceforge.ktoshiba.ktoshhelper.setusbthree]
 Name=USB three
 Description=Sets the desired USB 3 operation mode
 Policy=yes

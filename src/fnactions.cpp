@@ -70,10 +70,9 @@ FnActions::~FnActions()
 {
     delete m_widget; m_widget = NULL;
     delete m_widgetTimer; m_widgetTimer = NULL;
-    if (m_keyConnected)
-        delete m_hotkeys; m_hotkeys = NULL;
-    delete m_helper; m_helper = NULL;
     delete m_dBus; m_dBus = NULL;
+    delete m_hotkeys; m_hotkeys = NULL;
+    delete m_helper; m_helper = NULL;
 }
 
 bool FnActions::init()

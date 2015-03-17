@@ -61,7 +61,6 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
     ActionReply reply;
 
     QProcess p;
-    //p.start("/usr/sbin/dmidecode", QStringList() << "-s" << "bios-version");
     p.start("/usr/sbin/dmidecode");
     if (!p.waitForFinished(-1)) {
         reply = ActionReply::HelperErrorReply;
@@ -70,7 +69,6 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
 
         return reply;
     }
-    QByteArray info = p.readAll();
 
     QFile dump("/var/tmp/dmidecode");
     if (!dump.open(QIODevice::WriteOnly)) {
@@ -80,7 +78,7 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
 
         return reply;
     }
-    dump.write(info);
+    dump.write(p.readAll());
     dump.close();
         
     return reply;
