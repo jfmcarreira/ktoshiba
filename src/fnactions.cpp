@@ -23,8 +23,6 @@
 #include <KDebug>
 #include <KWindowSystem>
 
-#include <solid/device.h>
-#include <solid/acadapter.h>
 #include <solid/powermanagement.h>
 
 extern "C" {

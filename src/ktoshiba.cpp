@@ -53,6 +53,7 @@ KToshiba::KToshiba()
 
     m_fnConnected = m_fn->init();
     if (!m_fnConnected) {
+        kFatal() << "Could not continue loading, cleaning up...";
         destroyAboutData();
         cleanup();
         ::exit(-1);

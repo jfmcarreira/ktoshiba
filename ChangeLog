@@ -1,3 +1,8 @@
+2015-03-18 Azael Avalos <coproscefalo@gmail.com>
+	* Cleaned includes from some files that I missed on last cleanup
+	* Added a KMessageWidget to inform users that some changes need a reboot
+	  or that an error has happened
+
 2015-03-17 Azael Avalos <coproscefalo@gmail.com>
 	* Implemented defaults function
 	* Implemented save function

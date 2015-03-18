@@ -16,7 +16,7 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtCore/QSocketNotifier>
+#include <QSocketNotifier>
 
 #include <KDebug>
 

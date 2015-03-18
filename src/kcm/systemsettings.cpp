@@ -24,6 +24,7 @@
 #include <KAboutData>
 #include <KTabWidget>
 #include <KConfigGroup>
+#include <KMessageWidget>
 #include <KDebug>
 
 #include "systemsettings.h"
@@ -58,32 +59,45 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     setAboutData(about);
 
     QGridLayout *layout = new QGridLayout(this);
+    QVBoxLayout *message = new QVBoxLayout();
+    layout->addLayout(message, 0, 0, 0);
+
+    m_message = new KMessageWidget(this);
+    m_message->setVisible(false);
+    message->addWidget(m_message);
 
     m_tabWidget = new KTabWidget(this);
-    layout->addWidget(m_tabWidget, 0, 0, 0);
+    layout->addWidget(m_tabWidget, 1, 0, 0);
 
     QWidget *sysinfo_widget = new QWidget(this);
     m_sysinfo.setupUi(sysinfo_widget);
     sysinfo_widget->setContentsMargins(20, 20, 20, 20);
     m_tabWidget->addTab(sysinfo_widget, i18n("System Information"));
 
-    QWidget *gen_widget = new QWidget(this);
-    m_general.setupUi(gen_widget);
-    gen_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(gen_widget, i18n("General Settings"));
-
     m_helperAttached = m_helper->init();
-    if (m_helperAttached)
+    if (m_helperAttached) {
         addTabs();
+        m_message->setMessageType(KMessageWidget::Information);
+        m_message->setText(i18n("Please reboot for hardware changes to take effect"));
+    } else {
+        m_message->setMessageType(KMessageWidget::Error);
+        m_message->setText(i18n("Could not communicate with helper, hardware changes will not be possible"));
+    }
 }
 
 KToshibaSystemSettings::~KToshibaSystemSettings()
 {
+    delete m_message; m_message = NULL;
     delete m_tabWidget; m_tabWidget = NULL;
 }
 
 void KToshibaSystemSettings::addTabs()
 {
+    QWidget *gen_widget = new QWidget(this);
+    m_general.setupUi(gen_widget);
+    gen_widget->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(gen_widget, i18n("General Settings"));
+
     if (m_helper->isHAPSSupported) {
         kDebug() << "HDD Protection supported";
         QWidget *hdd_widget = new QWidget(this);
@@ -100,6 +114,7 @@ void KToshibaSystemSettings::addTabs()
         m_tabWidget->addTab(sleep_widget, i18n("Sleep Utilities"));
     }
     if (m_helper->isKBDFunctionsSupported || m_helper->isKBDBacklightSupported) {
+        kDebug() << "KBD Settings supported";
         QWidget *kbd_widget = new QWidget(this);
         m_kbd.setupUi(kbd_widget);
         kbd_widget->setContentsMargins(20, 20, 20, 20);
@@ -133,6 +148,7 @@ void KToshibaSystemSettings::load()
         m_general.touchpad_warning->setText(
 		i18n("Warning: This option disables the pointing device via hardware.\n"
 		     "To disable via software go to: Hardware->Input Devices->Touchpad"));
+
         connect( m_general.touchpad_checkbox, SIGNAL( stateChanged(int) ),
 		 this, SLOT( configChanged() ) );
     } else {
@@ -142,8 +158,9 @@ void KToshibaSystemSettings::load()
     if (m_helper->isUSBRapidChargeSupported) {
         m_rapidcharge = m_helper->getUSBRapidCharge();
         m_general.rapid_charge_checkbox->setChecked( m_rapidcharge ? true : false );
+
         connect( m_general.rapid_charge_checkbox, SIGNAL( stateChanged(int) ),
-		 this, SLOT( configChanged() ) );
+		 this, SLOT( configChangedReboot() ) );
     } else {
         m_general.rapid_charge_label->setEnabled(false);
         m_general.rapid_charge_checkbox->setEnabled(false);
@@ -151,8 +168,9 @@ void KToshibaSystemSettings::load()
     if (m_helper->isUSBThreeSupported) {
         m_usbthree = m_helper->getUSBThree();
         m_general.usb_three_checkbox->setChecked( m_usbthree ? true : false );
+
         connect( m_general.usb_three_checkbox, SIGNAL( stateChanged(int) ),
-		 this, SLOT( configChanged() ) );
+		 this, SLOT( configChangedReboot() ) );
     } else {
         m_general.usb_three_label->setEnabled(false);
         m_general.usb_three_checkbox->setEnabled(false);
@@ -160,8 +178,9 @@ void KToshibaSystemSettings::load()
     if (m_helper->isPanelPowerONSupported) {
         m_panelpower = m_helper->getPanelPowerON();
         m_general.panel_power_checkbox->setChecked( m_panelpower ? true : false );
+
         connect( m_general.panel_power_checkbox, SIGNAL( stateChanged(int) ),
-		 this, SLOT( configChanged() ) );
+		 this, SLOT( configChangedReboot() ) );
     } else {
         m_general.panel_power_label->setEnabled(false);
         m_general.panel_power_checkbox->setEnabled(false);
@@ -176,6 +195,7 @@ void KToshibaSystemSettings::load()
         m_level = m_helper->getProtectionLevel();
         m_hdd.protection_level->setText( m_levels.at( m_level ) );
         m_hdd.protection_level_slider->setValue( m_level );
+
         connect( m_hdd.hdd_protect_checkbox, SIGNAL( stateChanged(int) ),
 		 this, SLOT( configChanged() ) );
         connect( m_hdd.hdd_notification_checkbox, SIGNAL( stateChanged(int) ),
@@ -193,6 +213,7 @@ void KToshibaSystemSettings::load()
         m_sleep.battery_level_checkbox->setChecked( m_batenabled ? true : false );
         m_sleep.battery_level->setText( QString::number(m_batlevel) + "%" );
         m_sleep.battery_level_slider->setValue( m_batlevel );
+
         connect( m_sleep.sleep_charge_checkbox, SIGNAL( stateChanged(int) ),
 		 this, SLOT( configChanged() ) );
         connect( m_sleep.battery_level_checkbox, SIGNAL( stateChanged(int) ),
@@ -208,6 +229,7 @@ void KToshibaSystemSettings::load()
     if (m_helper->isUSBSleepMusicSupported) {
         m_sleepmusic = m_helper->getUSBSleepMusic();
         m_sleep.sleep_music_checkbox->setChecked( m_sleepmusic ? true : false );
+
         connect( m_sleep.sleep_music_checkbox, SIGNAL( stateChanged(int) ),
 		 this, SLOT( configChanged() ) );
     } else {
@@ -218,32 +240,31 @@ void KToshibaSystemSettings::load()
     if (m_helper->isKBDFunctionsSupported) {
         m_functions = m_helper->getKBDFunctions();
         m_kbd.kbd_functions_combobox->setCurrentIndex( m_functions );
+
         connect( m_kbd.kbd_functions_combobox, SIGNAL( currentIndexChanged(int) ),
-		 this, SLOT( configChanged() ) );
+		 this, SLOT( configChangedReboot() ) );
     } else {
         m_kbd.function_keys_label->setEnabled(false);
         m_kbd.kbd_functions_combobox->setEnabled(false);
     }
     if (m_helper->isKBDBacklightSupported) {
-        m_type = m_helper->getKBDType();
-        if (m_type == 1)
-            m_kbd.kbd_backlight_combobox->addItems(m_type1);
-        else if (m_type == 2)
-            m_kbd.kbd_backlight_combobox->addItems(m_type2);
-
-        m_mode = m_helper->getKBDMode();
         m_index = 0;
-        if (m_mode == 1)
-            m_index = 0;
-        else if (m_mode == 2 && m_type == 1)
-            m_index = 1;
-        else if (m_mode == 2 && m_type == 2)
-            m_index = 0;
-        else if (m_mode == 8)
-            m_index = 1;
-        else if (m_mode == 16)
-            m_index = 2;
+        m_mode = m_helper->getKBDMode();
+        m_type = m_helper->getKBDType();
+        if (m_type == 1) {
+            m_kbd.kbd_backlight_combobox->addItems(m_type1);
+            m_index = m_mode == 1 ? 0 : 1;
+        } else if (m_type == 2) {
+            m_kbd.kbd_backlight_combobox->addItems(m_type2);
+            if (m_mode == 2)
+                m_index = 0;
+            else if (m_mode == 8)
+                m_index = 1;
+            else if (m_mode == 16)
+                m_index = 2;
+        }
         m_kbd.kbd_backlight_combobox->setCurrentIndex( m_index );
+
         if (m_mode == 2) {
             m_time = m_helper->getKBDTimeout();
             m_kbd.kbd_timeout->setText( QString::number(m_time) + i18n(" sec") );
@@ -252,8 +273,9 @@ void KToshibaSystemSettings::load()
             m_kbd.kbd_timeout_label->setEnabled(false);
             m_kbd.kbd_timeout_slider->setEnabled(false);
         }
+
         connect( m_kbd.kbd_backlight_combobox, SIGNAL( currentIndexChanged(int) ),
-		 this, SLOT( kbdBacklightChanged(int) ) );
+		 this, SLOT( configChanged() ) );
         connect( m_kbd.kbd_timeout_slider, SIGNAL( valueChanged(int) ),
 		 this, SLOT( kbdTimeoutChanged(int) ) );
     } else {
@@ -354,20 +376,36 @@ void KToshibaSystemSettings::save()
     if (m_helper->isKBDBacklightSupported) {
         tmp = m_kbd.kbd_backlight_combobox->currentIndex();
         if (m_index != tmp) {
-            if (m_type == 1 && tmp == 0)
-                m_helper->setKBDMode(1);
-            else if ((m_type == 1 && tmp == 1) || (m_type == 2 && tmp == 0))
-                m_helper->setKBDMode(2);
-            else if (m_type == 2 && tmp == 1)
-                m_helper->setKBDMode(8);
-            else if (m_type == 2 && tmp == 2)
-                m_helper->setKBDMode(16);
+            if (m_type == 1 && tmp == 0) {
+                m_helper->setKBDMode(1);	// FN-Z
+            } else if (m_type == 1 && tmp == 1) {
+                m_helper->setKBDMode(2);	// AUTO
+            } else if (m_type == 2 && tmp == 0) {
+                m_helper->setKBDMode(2);	// TIMER
+                m_time = m_helper->getKBDTimeout();
+                m_kbd.kbd_timeout_label->setEnabled( true );
+                m_kbd.kbd_timeout_slider->setEnabled( true );
+                m_kbd.kbd_timeout->setText( QString::number(m_time) + i18n(" sec") );
+                m_kbd.kbd_timeout_slider->setValue( m_time );
+            } else if (m_type == 2 && tmp == 1) {
+                m_helper->setKBDMode(8);	// ON
+                m_kbd.kbd_timeout_label->setEnabled( false );
+                m_kbd.kbd_timeout_slider->setEnabled( false );
+                m_kbd.kbd_timeout->setEnabled( false );
+            } else if (m_type == 2 && tmp == 2) {
+                m_helper->setKBDMode(16);	// OFF
+                m_kbd.kbd_timeout_label->setEnabled( false );
+                m_kbd.kbd_timeout_slider->setEnabled( false );
+                m_kbd.kbd_timeout->setEnabled( false );
+            }
             m_index = tmp;
         }
-        tmp = m_kbd.kbd_timeout_slider->value();
-        if (m_time != tmp) {
-            m_helper->setKBDTimeout(tmp);
-            m_time = tmp;
+        if (m_type == 2 && m_mode == 2) {
+            tmp = m_kbd.kbd_timeout_slider->value();
+            if (m_time != tmp) {
+                m_helper->setKBDTimeout(tmp);
+                m_time = tmp;
+            }
         }
     }
 }
@@ -381,16 +419,22 @@ void KToshibaSystemSettings::defaults()
             m_general.touchpad_checkbox->setChecked( true );
     }
     if (m_helper->isUSBRapidChargeSupported) {
-        if (m_rapidcharge)
+        if (m_rapidcharge) {
             m_general.rapid_charge_checkbox->setChecked( false );
+            showRebootMessage();
+        }
     }
     if (m_helper->isUSBThreeSupported) {
-        if (!m_usbthree)
+        if (!m_usbthree) {
             m_general.usb_three_checkbox->setChecked( true );
+            showRebootMessage();
+        }
     }
     if (m_helper->isPanelPowerONSupported) {
-        if (m_panelpower)
+        if (m_panelpower) {
             m_general.panel_power_checkbox->setChecked( false );
+            showRebootMessage();
+        }
     }
     // HDD Protection tab
     if (m_helper->isHAPSSupported) {
@@ -421,19 +465,25 @@ void KToshibaSystemSettings::defaults()
             m_kbd.kbd_functions_combobox->setCurrentIndex( 1 );
     }
     if (m_helper->isKBDBacklightSupported) {
-        if (m_mode != 2 || m_time != 15) {
-            if (m_type == 1)
+        if (m_mode != 2) {
+            if (m_type == 1) {
                 m_kbd.kbd_backlight_combobox->setCurrentIndex( 2 );
-            else if (m_type == 2)
+                showRebootMessage();
+            } else if (m_type == 2) {
                 m_kbd.kbd_backlight_combobox->setCurrentIndex( 0 );
-            m_kbd.kbd_timeout_label->setEnabled( true );
-            m_kbd.kbd_timeout_slider->setEnabled( true );
-            m_kbd.kbd_timeout->setText( QString::number(15) + i18n(" sec") );
-            m_kbd.kbd_timeout_slider->setValue( 15 );
+            }
         }
+        if (m_time != 15 && m_mode == 2)
+            m_kbd.kbd_timeout_slider->setValue(15);
     }
 
     emit changed(true);
+}
+
+void KToshibaSystemSettings::showRebootMessage()
+{
+    if (!m_message->isVisible())
+        m_message->setVisible(true);
 }
 
 void KToshibaSystemSettings::configChanged()
@@ -441,37 +491,30 @@ void KToshibaSystemSettings::configChanged()
     emit changed(true);
 }
 
+void KToshibaSystemSettings::configChangedReboot()
+{
+    showRebootMessage();
+
+    emit changed(true);
+}
+
 void KToshibaSystemSettings::protectionLevelChanged(int level)
 {
     m_hdd.protection_level->setText(m_levels.at(level));
+
     emit changed(true);
 }
 
 void KToshibaSystemSettings::batteryLevelChanged(int level)
 {
     m_sleep.battery_level->setText(QString::number(level) + "%");
+
     emit changed(true);
 }
 
 void KToshibaSystemSettings::kbdTimeoutChanged(int time)
 {
     m_kbd.kbd_timeout->setText(QString::number(time) + i18n(" sec"));
-    emit changed(true);
-}
-
-void KToshibaSystemSettings::kbdBacklightChanged(int index)
-{
-    if ((m_type == 1 && index == 1) || (m_type == 2 && index == 0)) {
-        m_kbd.kbd_timeout_label->setEnabled( true );
-        m_kbd.kbd_timeout_slider->setEnabled( true );
-        m_kbd.kbd_timeout->setText( QString::number(m_time) + i18n(" sec") );
-        m_kbd.kbd_timeout_slider->setValue( m_time );
-    }
-    if ((m_type == 1 && index != 1) || (m_type == 2 && index != 0)) {
-        m_kbd.kbd_timeout_label->setEnabled( false );
-        m_kbd.kbd_timeout_slider->setEnabled( false );
-        m_kbd.kbd_timeout->setEnabled( false );
-    }
 
     emit changed(true);
 }

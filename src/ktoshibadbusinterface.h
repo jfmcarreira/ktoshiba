@@ -19,7 +19,7 @@
 #ifndef KTOSHIBA_DBUS_INTERFACE_H
 #define KTOSHIBA_DBUS_INTERFACE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class FnActions;
 

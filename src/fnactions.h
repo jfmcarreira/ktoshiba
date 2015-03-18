@@ -19,9 +19,9 @@
 #ifndef FN_ACTIONS_H
 #define FN_ACTIONS_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QString>
+#include <QStringList>
 
 #include "ui_statuswidget.h"
 
@@ -54,19 +54,17 @@ public:
     int m_mode;
     int m_time;
 
-public Q_SLOTS:
-    void processHotkey(int);
-    void compositingChanged(bool);
-    void toggleTouchPad();
-    void batMonitorChanged(bool);
-    
 private Q_SLOTS:
     void hideWidget();
+    void processHotkey(int);
+    void batMonitorChanged(bool);
+    void compositingChanged(bool);
 
 private:
     void showWidget(int);
     void toggleProfiles();
     void kbdBacklight();
+    void toggleTouchPad();
 
     KToshibaDBusInterface *m_dBus;
     KToshibaKeyHandler *m_hotkeys;

@@ -1,20 +1,19 @@
 /*
-   Copyright (C) 2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
 */
 
 #ifndef KTOSHIBASYSTEMSETTINGS_H
@@ -30,6 +29,7 @@
 #include "ui_keyboard.h"
 
 class KTabWidget;
+class KMessageWidget;
 
 class HelperActions;
 
@@ -40,28 +40,28 @@ class KToshibaSystemSettings : public KCModule
 public:
     explicit KToshibaSystemSettings(QWidget *parent,
                             const QVariantList &args = QVariantList());
-    virtual ~KToshibaSystemSettings();
+    ~KToshibaSystemSettings();
 
     void load();
     void save();
     void defaults();
 
-protected:
-
 private Q_SLOTS:
     void configChanged();
+    void configChangedReboot();
     void protectionLevelChanged(int);
     void batteryLevelChanged(int);
     void kbdTimeoutChanged(int);
-    void kbdBacklightChanged(int);
 
 private:
     void addTabs();
+    void showRebootMessage();
 
     HelperActions *m_helper;
     bool m_helperAttached;
 
     KTabWidget *m_tabWidget;
+    KMessageWidget *m_message;
     KSharedConfigPtr m_config;
 
     Ui::SysInfo m_sysinfo;

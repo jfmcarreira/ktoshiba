@@ -19,7 +19,7 @@
 #ifndef KTOSHIBAKEYHANDLER_H
 #define KTOSHIBAKEYHANDLER_H
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 class QSocketNotifier;
 

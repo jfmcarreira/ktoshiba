@@ -30,11 +30,11 @@ KToshibaDBusInterface::KToshibaDBusInterface(FnActions *parent)
     : QObject( parent )
 {
     m_fn = qobject_cast<FnActions *>(parent);
-    new KToshibaDBusAdaptor(this);
 }
 
 bool KToshibaDBusInterface::init()
 {
+    new KToshibaDBusAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if (!dbus.registerService("net.sourceforge.KToshiba"))
         return false;

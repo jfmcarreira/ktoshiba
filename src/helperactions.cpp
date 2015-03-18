@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QStringList>
 #include <QTextStream>
 
 #include <KAuth/Action>

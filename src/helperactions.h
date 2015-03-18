@@ -19,10 +19,10 @@
 #ifndef HELPERACTIONS_H
 #define HELPERACTIONS_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QFile>
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include <QFile>
 
 class HelperActions : public QObject
 {
