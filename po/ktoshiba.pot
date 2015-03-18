@@ -7,136 +7,158 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2015-01-21 11:06-0700\n"
+        "POT-Creation-Date: 2015-03-18 14:04-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
         "Language: \n"
         "MIME-Version: 1.0\n"
-        "Content-Type: text/plain; charset=CHARSET\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: fnactions.cpp:296 ktoshiba.cpp:122
+#: fnactions.cpp:228 kcm/systemsettings.cpp:123
 msgid   "OFF"
 msgstr  ""
 
-#: fnactions.cpp:300 ktoshiba.cpp:118
+#: fnactions.cpp:232 kcm/systemsettings.cpp:123
 msgid   "ON"
 msgstr  ""
 
-#: ktoshiba.cpp:50
-msgid   "Fn key monitoring for Toshiba laptops"
+#: kcm/systemsettings.cpp:47
+msgid   "KToshiba KCM"
 msgstr  ""
 
-#: ktoshiba.cpp:63
+#: kcm/systemsettings.cpp:49
+msgid   "KToshiba System Settings"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:51
+msgid   "Copyright © 2015 Azael Avalos"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:56
+msgid   "Original author"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:75
+msgid   "System Information"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:81
+msgid   "Please reboot for hardware changes to take effect"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:84
+msgid   "Could not communicate with helper, hardware changes will not be "
+        "possible"
+msgstr  ""
+
+#. i18n: file: kcm/general.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, General)
+#: kcm/systemsettings.cpp:99 rc.cpp:5
+msgid   "General Settings"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:106
+msgid   "HDD Protection"
+msgstr  ""
+
+#: kcm/systemsettings.cpp:107
 msgid   "High"
 msgstr  ""
 
-#: ktoshiba.cpp:63
+#: kcm/systemsettings.cpp:107
 msgid   "Low"
 msgstr  ""
 
-#. i18n: file: hddprotectionwidget.ui:34
-#. i18n: ectx: property (text), widget (QLabel, levelLabel)
-#: ktoshiba.cpp:63 rc.cpp:8
+#: kcm/systemsettings.cpp:107
 msgid   "Medium"
 msgstr  ""
 
-#: ktoshiba.cpp:63
+#: kcm/systemsettings.cpp:107
 msgid   "Off"
 msgstr  ""
 
-#: ktoshiba.cpp:74
-msgid   "Monitor HDD movement"
+#. i18n: file: kcm/sleeputils.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
+#: kcm/systemsettings.cpp:114 rc.cpp:50
+msgid   "Sleep Utilities"
 msgstr  ""
 
-#. i18n: file: hddprotectionwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget, hddProtectionWidget)
-#: ktoshiba.cpp:78 rc.cpp:5
-msgid   "HDD Protection Level"
+#. i18n: file: kcm/keyboard.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
+#: kcm/systemsettings.cpp:121 rc.cpp:32
+msgid   "Keyboard Settings"
 msgstr  ""
 
-#: ktoshiba.cpp:91
-msgid   "Toggle TouchPad"
+#: kcm/systemsettings.cpp:149
+msgid   "Warning: This option disables the pointing device via hardware.\n"
+        "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr  ""
 
-#: ktoshiba.cpp:99
-msgid   "Keyboard Backlight Mode"
+#: kcm/systemsettings.cpp:270 kcm/systemsettings.cpp:388
+#: kcm/systemsettings.cpp:517
+msgid   " sec"
 msgstr  ""
 
-#: ktoshiba.cpp:102
-msgid   "FN-Z"
+#: ktoshiba.cpp:47
+msgid   "Fn key monitoring for Toshiba laptops"
 msgstr  ""
 
-#: ktoshiba.cpp:106
-msgid   "AUTO"
-msgstr  ""
-
-#: ktoshiba.cpp:114
-msgid   "TIMER"
-msgstr  ""
-
-#. i18n: file: kbdtimeoutwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget, kbdTimeoutWidget)
-#: ktoshiba.cpp:137 rc.cpp:11
-msgid   "Keyboard Backlight Timeout"
-msgstr  ""
-
-#: ktoshiba.cpp:150
+#: ktoshiba.cpp:146
 msgid   "Battery Profiles"
 msgstr  ""
 
-#: ktoshiba.cpp:152
+#: ktoshiba.cpp:148
 msgid   "Disabled"
 msgstr  ""
 
-#: ktoshiba.cpp:156
+#: ktoshiba.cpp:152
 msgid   "Performance"
 msgstr  ""
 
-#: ktoshiba.cpp:159
+#: ktoshiba.cpp:155
 msgid   "Powersave"
 msgstr  ""
 
-#: ktoshiba.cpp:162
+#: ktoshiba.cpp:158
 msgid   "Presentation"
 msgstr  ""
 
-#: ktoshiba.cpp:165
+#: ktoshiba.cpp:161
 msgid   "ECO"
 msgstr  ""
 
-#: ktoshiba.cpp:237
+#: ktoshiba.cpp:171
+msgid   "Configure"
+msgstr  ""
+
+#: ktoshiba.cpp:185
 msgid   "KToshiba - HDD Monitor"
 msgstr  ""
 
-#: ktoshiba.cpp:238
+#: ktoshiba.cpp:186
 msgid   "Vibration has been detected and the HDD has been stopped to prevent "
         "damage"
 msgstr  ""
 
-#: ktoshiba.cpp:351
-msgid   "KToshiba - Keyboard Mode"
+#: ktoshiba.cpp:252
+msgid   "Copyright © 2004-2015, Azael Avalos"
 msgstr  ""
 
-#: ktoshiba.cpp:352
-msgid   "The computer must be restarted in order to activate the new keyboard "
-        "Mode"
-msgstr  ""
-
-#: ktoshiba.cpp:463
+#: ktoshiba.cpp:258
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:464
+#: ktoshiba.cpp:259
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:464
+#: ktoshiba.cpp:259
 msgid   "Some ideas and pieces of code"
 msgstr  ""
 
-#: ktoshiba.cpp:466
+#: ktoshiba.cpp:261
 msgid   "Green world icon"
 msgstr  ""
 
@@ -148,4 +170,142 @@ msgstr  ""
 #: rc.cpp:2
 msgctxt "EMAIL OF TRANSLATORS"
 msgid   "Your emails"
+msgstr  ""
+
+#. i18n: file: kcm/general.ui:44
+#. i18n: ectx: property (text), widget (QLabel, touchpad_label)
+#: rc.cpp:8
+msgid   "Pointing device:"
+msgstr  ""
+
+#. i18n: file: kcm/general.ui:93
+#. i18n: ectx: property (text), widget (QLabel, rapid_charge_label)
+#: rc.cpp:11
+msgid   "USB Rapid Charge:"
+msgstr  ""
+
+#. i18n: file: kcm/general.ui:129
+#. i18n: ectx: property (text), widget (QLabel, usb_three_label)
+#: rc.cpp:14
+msgid   "USB 3:"
+msgstr  ""
+
+#. i18n: file: kcm/general.ui:165
+#. i18n: ectx: property (text), widget (QLabel, panel_power_label)
+#: rc.cpp:17
+msgid   "Panel Power ON:"
+msgstr  ""
+
+#. i18n: file: kcm/hddprotect.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, HDDProtect)
+#: rc.cpp:20
+msgid   "HDD Protect"
+msgstr  ""
+
+#. i18n: file: kcm/hddprotect.ui:44
+#. i18n: ectx: property (text), widget (QLabel, hdd_protect_label)
+#: rc.cpp:23
+msgid   "HDD Protection:"
+msgstr  ""
+
+#. i18n: file: kcm/hddprotect.ui:80
+#. i18n: ectx: property (text), widget (QLabel, hdd_notification_label)
+#: rc.cpp:26
+msgid   "HDD Protection Notification:"
+msgstr  ""
+
+#. i18n: file: kcm/hddprotect.ui:116
+#. i18n: ectx: property (text), widget (QLabel, protection_level_label)
+#: rc.cpp:29
+msgid   "HDD Protection Level:"
+msgstr  ""
+
+#. i18n: file: kcm/keyboard.ui:44
+#. i18n: ectx: property (text), widget (QLabel, function_keys_label)
+#: rc.cpp:35
+msgid   "Function Keys mode:"
+msgstr  ""
+
+#. i18n: file: kcm/keyboard.ui:68
+#. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)
+#: rc.cpp:38
+msgid   "Normal"
+msgstr  ""
+
+#. i18n: file: kcm/keyboard.ui:73
+#. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)
+#: rc.cpp:41
+msgid   "Function"
+msgstr  ""
+
+#. i18n: file: kcm/keyboard.ui:87
+#. i18n: ectx: property (text), widget (QLabel, kbd_backlight_label)
+#: rc.cpp:44
+msgid   "Keyboard Backlight mode:"
+msgstr  ""
+
+#. i18n: file: kcm/keyboard.ui:119
+#. i18n: ectx: property (text), widget (QLabel, kbd_timeout_label)
+#: rc.cpp:47
+msgid   "Keyboard Backlight timeout:"
+msgstr  ""
+
+#. i18n: file: kcm/sleeputils.ui:44
+#. i18n: ectx: property (text), widget (QLabel, sleep_charge_label)
+#: rc.cpp:53
+msgid   "USB Sleep and Charge:"
+msgstr  ""
+
+#. i18n: file: kcm/sleeputils.ui:80
+#. i18n: ectx: property (text), widget (QLabel, sleep_music_label)
+#: rc.cpp:56
+msgid   "USB Sleep and Music:"
+msgstr  ""
+
+#. i18n: file: kcm/sleeputils.ui:116
+#. i18n: ectx: property (text), widget (QLabel, battery_level_label)
+#: rc.cpp:59
+msgid   "Battery Level:"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, SysInfo)
+#: rc.cpp:62
+msgid   "General"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:44
+#. i18n: ectx: property (text), widget (QLabel, model_family_label)
+#: rc.cpp:65
+msgid   "Model family:"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:83
+#. i18n: ectx: property (text), widget (QLabel, model_number_label)
+#: rc.cpp:68
+msgid   "Model number:"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:122
+#. i18n: ectx: property (text), widget (QLabel, bios_version_label)
+#: rc.cpp:71
+msgid   "BIOS version:"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:161
+#. i18n: ectx: property (text), widget (QLabel, bios_date_label)
+#: rc.cpp:74
+msgid   "BIOS date:"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:200
+#. i18n: ectx: property (text), widget (QLabel, bios_manufacturer_label)
+#: rc.cpp:77
+msgid   "BIOS manufacturer:"
+msgstr  ""
+
+#. i18n: file: kcm/sysinfo.ui:239
+#. i18n: ectx: property (text), widget (QLabel, ec_version_label)
+#: rc.cpp:80
+msgid   "EC version:"
 msgstr  ""

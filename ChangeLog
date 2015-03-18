@@ -2,6 +2,9 @@
 	* Cleaned includes from some files that I missed on last cleanup
 	* Added a KMessageWidget to inform users that some changes need a reboot
 	  or that an error has happened
+	* Fixed an issue with the KCM tabs, they're now all created by default,
+	  but disabled if the features under them are not supported
+	* Updated spanish translation
 
 2015-03-17 Azael Avalos <coproscefalo@gmail.com>
 	* Implemented defaults function

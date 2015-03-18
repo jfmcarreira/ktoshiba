@@ -69,11 +69,6 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     m_tabWidget = new KTabWidget(this);
     layout->addWidget(m_tabWidget, 1, 0, 0);
 
-    QWidget *sysinfo_widget = new QWidget(this);
-    m_sysinfo.setupUi(sysinfo_widget);
-    sysinfo_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(sysinfo_widget, i18n("System Information"));
-
     m_helperAttached = m_helper->init();
     if (m_helperAttached) {
         addTabs();
@@ -93,35 +88,39 @@ KToshibaSystemSettings::~KToshibaSystemSettings()
 
 void KToshibaSystemSettings::addTabs()
 {
+    QWidget *sysinfo_widget = new QWidget(this);
+    m_sysinfo.setupUi(sysinfo_widget);
+    sysinfo_widget->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(sysinfo_widget, i18n("System Information"));
+
     QWidget *gen_widget = new QWidget(this);
     m_general.setupUi(gen_widget);
     gen_widget->setContentsMargins(20, 20, 20, 20);
     m_tabWidget->addTab(gen_widget, i18n("General Settings"));
 
-    if (m_helper->isHAPSSupported) {
-        kDebug() << "HDD Protection supported";
-        QWidget *hdd_widget = new QWidget(this);
-        m_hdd.setupUi(hdd_widget);
-        hdd_widget->setContentsMargins(20, 20, 20, 20);
-        m_tabWidget->addTab(hdd_widget, i18n("HDD Protection"));
-        m_levels << i18n("Off") << i18n("Low") << i18n("Medium") << i18n("High");
-    }
-    if (m_helper->isUSBSleepChargeSupported || m_helper->isUSBSleepMusicSupported) {
-        kDebug() << "Sleep Functions supported";
-        QWidget *sleep_widget = new QWidget(this);
-        m_sleep.setupUi(sleep_widget);
-        sleep_widget->setContentsMargins(20, 20, 20, 20);
-        m_tabWidget->addTab(sleep_widget, i18n("Sleep Utilities"));
-    }
-    if (m_helper->isKBDFunctionsSupported || m_helper->isKBDBacklightSupported) {
-        kDebug() << "KBD Settings supported";
-        QWidget *kbd_widget = new QWidget(this);
-        m_kbd.setupUi(kbd_widget);
-        kbd_widget->setContentsMargins(20, 20, 20, 20);
-        m_tabWidget->addTab(kbd_widget, i18n("Keyboard Settings"));
-        m_type1 << "FN-Z" << "AUTO";
-        m_type2 << "TIMER" << i18n("ON") << i18n("OFF");
-    }
+    QWidget *hdd_widget = new QWidget(this);
+    m_hdd.setupUi(hdd_widget);
+    hdd_widget->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(hdd_widget, i18n("HDD Protection"));
+    m_levels << i18n("Off") << i18n("Low") << i18n("Medium") << i18n("High");
+    if (!m_helper->isHAPSSupported)
+        m_tabWidget->setTabEnabled(2, false);
+
+    QWidget *sleep_widget = new QWidget(this);
+    m_sleep.setupUi(sleep_widget);
+    sleep_widget->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(sleep_widget, i18n("Sleep Utilities"));
+    if (!m_helper->isUSBSleepChargeSupported && !m_helper->isUSBSleepMusicSupported)
+        m_tabWidget->setTabEnabled(3, false);
+
+    QWidget *kbd_widget = new QWidget(this);
+    m_kbd.setupUi(kbd_widget);
+    kbd_widget->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(kbd_widget, i18n("Keyboard Settings"));
+    m_type1 << "FN-Z" << "AUTO";
+    m_type2 << "TIMER" << i18n("ON") << i18n("OFF");
+    if (!m_helper->isKBDFunctionsSupported && !m_helper->isKBDBacklightSupported)
+        m_tabWidget->setTabEnabled(4, false);
 }
 
 void KToshibaSystemSettings::load()
