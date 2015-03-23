@@ -39,12 +39,14 @@ bool UDevHelper::initUDev()
     monitor = udev_monitor_new_from_netlink(udev, "udev");
     if (!monitor) {
         kError() << "Cannot create the udev monitor";
+
         return false;
     }
     
     // Add filters
     if (udev_monitor_filter_add_match_subsystem_devtype(monitor, "input", NULL) < 0) {
         kError() << "Cannot add udev filter";
+
         return false;
     }
 

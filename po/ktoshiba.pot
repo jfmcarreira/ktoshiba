@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-        "POT-Creation-Date: 2015-03-18 14:04-0600\n"
+        "POT-Creation-Date: 2015-03-23 13:02-0600\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,149 +16,149 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: fnactions.cpp:228 kcm/systemsettings.cpp:123
+#: fnactions.cpp:228 kcm/systemsettings.cpp:120
 msgid   "OFF"
 msgstr  ""
 
-#: fnactions.cpp:232 kcm/systemsettings.cpp:123
+#: fnactions.cpp:232 kcm/systemsettings.cpp:120
 msgid   "ON"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:47
+#: kcm/systemsettings.cpp:45
 msgid   "KToshiba KCM"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:49
+#: kcm/systemsettings.cpp:47
 msgid   "KToshiba System Settings"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:51
+#: kcm/systemsettings.cpp:49
 msgid   "Copyright © 2015 Azael Avalos"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:56
+#: kcm/systemsettings.cpp:54
 msgid   "Original author"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:75
-msgid   "System Information"
-msgstr  ""
-
-#: kcm/systemsettings.cpp:81
+#: kcm/systemsettings.cpp:74
 msgid   "Please reboot for hardware changes to take effect"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:84
+#: kcm/systemsettings.cpp:77
 msgid   "Could not communicate with helper, hardware changes will not be "
         "possible"
 msgstr  ""
 
+#: kcm/systemsettings.cpp:93
+msgid   "System Information"
+msgstr  ""
+
 #. i18n: file: kcm/general.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: kcm/systemsettings.cpp:99 rc.cpp:5
+#: kcm/systemsettings.cpp:98 rc.cpp:5
 msgid   "General Settings"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:106
+#: kcm/systemsettings.cpp:103
 msgid   "HDD Protection"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid   "High"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid   "Low"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid   "Medium"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid   "Off"
 msgstr  ""
 
 #. i18n: file: kcm/sleeputils.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: kcm/systemsettings.cpp:114 rc.cpp:50
+#: kcm/systemsettings.cpp:111 rc.cpp:50
 msgid   "Sleep Utilities"
 msgstr  ""
 
 #. i18n: file: kcm/keyboard.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: kcm/systemsettings.cpp:121 rc.cpp:32
+#: kcm/systemsettings.cpp:118 rc.cpp:32
 msgid   "Keyboard Settings"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:149
+#: kcm/systemsettings.cpp:160
 msgid   "Warning: This option disables the pointing device via hardware.\n"
         "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr  ""
 
-#: kcm/systemsettings.cpp:270 kcm/systemsettings.cpp:388
-#: kcm/systemsettings.cpp:517
+#: kcm/systemsettings.cpp:281 kcm/systemsettings.cpp:399
+#: kcm/systemsettings.cpp:531
 msgid   " sec"
 msgstr  ""
 
-#: ktoshiba.cpp:47
+#: ktoshiba.cpp:45
 msgid   "Fn key monitoring for Toshiba laptops"
 msgstr  ""
 
-#: ktoshiba.cpp:146
+#: ktoshiba.cpp:149
 msgid   "Battery Profiles"
 msgstr  ""
 
-#: ktoshiba.cpp:148
+#: ktoshiba.cpp:151
 msgid   "Disabled"
 msgstr  ""
 
-#: ktoshiba.cpp:152
+#: ktoshiba.cpp:155
 msgid   "Performance"
 msgstr  ""
 
-#: ktoshiba.cpp:155
+#: ktoshiba.cpp:158
 msgid   "Powersave"
 msgstr  ""
 
-#: ktoshiba.cpp:158
+#: ktoshiba.cpp:161
 msgid   "Presentation"
 msgstr  ""
 
-#: ktoshiba.cpp:161
+#: ktoshiba.cpp:164
 msgid   "ECO"
 msgstr  ""
 
-#: ktoshiba.cpp:171
+#: ktoshiba.cpp:174
 msgid   "Configure"
 msgstr  ""
 
-#: ktoshiba.cpp:185
+#: ktoshiba.cpp:188
 msgid   "KToshiba - HDD Monitor"
 msgstr  ""
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:189
 msgid   "Vibration has been detected and the HDD has been stopped to prevent "
         "damage"
 msgstr  ""
 
-#: ktoshiba.cpp:252
+#: ktoshiba.cpp:255
 msgid   "Copyright © 2004-2015, Azael Avalos"
 msgstr  ""
 
-#: ktoshiba.cpp:258
+#: ktoshiba.cpp:261
 msgid   "Original Author"
 msgstr  ""
 
-#: ktoshiba.cpp:259
+#: ktoshiba.cpp:262
 msgid   "KDE Team"
 msgstr  ""
 
-#: ktoshiba.cpp:259
+#: ktoshiba.cpp:262
 msgid   "Some ideas and pieces of code"
 msgstr  ""
 
-#: ktoshiba.cpp:261
+#: ktoshiba.cpp:264
 msgid   "Green world icon"
 msgstr  ""
 

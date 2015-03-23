@@ -16,8 +16,9 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include <KUniqueApplication>
+#include <KAboutData>
+#include <KCmdLineArgs>
 
 extern "C" {
 #include <stdio.h>
@@ -25,9 +26,14 @@ extern "C" {
 }
 
 #include "ktoshiba.h"
+#include "version.h"
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setApplicationName("KToshiba");
+    QCoreApplication::setApplicationVersion(ktoshiba_version);
+    QCoreApplication::setOrganizationDomain("sourceforge.net");
+
     KToshiba::createAboutData();
     KCmdLineArgs::init(argc, argv, KToshiba::aboutData());
     KUniqueApplication::addCmdLineOptions();
@@ -37,12 +43,15 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    KUniqueApplication *app = new KToshiba();
-    app->disableSessionManagement();
-    app->setQuitOnLastWindowClosed( false );
+    KUniqueApplication app;
+    app.disableSessionManagement();
+    app.setQuitOnLastWindowClosed( false );
 
-    int ret = app->exec();
-    KToshiba::destroyAboutData();
+    KToshiba *ktoshiba = new KToshiba();
+    if (!ktoshiba->initialize()) {
+        delete ktoshiba;
+        return -1;
+    }
 
-    return ret;
+    return app.exec();
 }

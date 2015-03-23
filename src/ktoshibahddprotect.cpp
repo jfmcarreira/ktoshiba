@@ -29,7 +29,6 @@ extern "C" {
 }
 
 #include "ktoshibahddprotect.h"
-#include "fnactions.h"
 
 #define TOSHIBA_HAPS   "TOS620A:00"
 
@@ -146,15 +145,15 @@ bool KToshibaHDDProtect::attach()
 
     m_socket = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
     if (m_socket < 0) {
-        kError() << "Cannot open netlink socket, HDD monitoring will not be possible"
-                 << endl << strerror(errno);
+        kError() << "Cannot open netlink socket:" << strerror(errno);
+
         return false;
     }
 
     if (::bind(m_socket, (struct sockaddr *) &nl, sizeof(nl)) < 0) {
-        kError() << "Netlink socket bind failed, HDD monitoring will not be possible"
-                 << endl << strerror(errno);
+        kError() << "Netlink socket bind failed:" << strerror(errno);
         ::close(m_socket);
+
         return false;
     }
     kDebug() << "Binded to socket" << m_socket << "for HDD monitoring";
@@ -168,7 +167,7 @@ void KToshibaHDDProtect::detach()
 {
     if (m_notifier) {
         m_notifier->setEnabled(false);
-        delete m_notifier;
+        delete m_notifier; m_notifier = NULL;
     }
     if (m_socket)
         ::close(m_socket);

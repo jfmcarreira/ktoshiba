@@ -16,9 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDesktopWidget>
-
-#include <KStatusNotifierItem>
 #include <KMenu>
 #include <KHelpMenu>
 #include <KStandardDirs>
@@ -35,28 +32,37 @@
 #include "ktoshibahddprotect.h"
 #include "version.h"
 
-static const char * const ktosh_config = "ktoshibarc";
+#define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
-    : KUniqueApplication(),
+    : KStatusNotifierItem(),
       m_fn( new FnActions( this ) ),
-      m_config( KSharedConfig::openConfig( ktosh_config ) ),
-      m_trayicon( new KStatusNotifierItem( this ) )
+      m_hdd( new KToshibaHDDProtect( this ) ),
+      m_config( KSharedConfig::openConfig( CONFIG_FILE ) )
 {
-    m_trayicon->setIconByName( "ktoshiba" );
-    m_trayicon->setToolTip( "ktoshiba", "KToshiba", i18n("Fn key monitoring for Toshiba laptops") );
-    m_trayicon->setCategory( KStatusNotifierItem::Hardware );
-    m_trayicon->setStatus( KStatusNotifierItem::Passive );
+    setTitle( i18n("KToshiba") );
+    setIconByName( "ktoshiba" );
+    setToolTip( "ktoshiba", i18n("KToshiba"), i18n("Fn key monitoring for Toshiba laptops") );
+    setCategory( Hardware );
+    setStatus( Passive );
 
-    m_popupMenu = m_trayicon->contextMenu();
-    m_trayicon->setAssociatedWidget( m_popupMenu );
+    m_popupMenu = contextMenu();
+    setAssociatedWidget( m_popupMenu );
+}
 
+KToshiba::~KToshiba()
+{
+    cleanup();
+}
+
+bool KToshiba::initialize()
+{
     m_fnConnected = m_fn->init();
     if (!m_fnConnected) {
-        kFatal() << "Could not continue loading, cleaning up...";
-        destroyAboutData();
+        kError() << "Could not continue loading, cleaning up...";
         cleanup();
-        ::exit(-1);
+
+        return false;
     }
 
     if (checkConfig())
@@ -65,31 +71,32 @@ KToshiba::KToshiba()
         createConfig();
 
     if (m_fn->m_helper->isHAPSSupported) {
-        m_hdd = new KToshibaHDDProtect( m_fn );
         m_hddConnected = m_hdd->attach();
+        if (m_hddConnected) {
+            m_hdd->setHDDProtection(m_monitorHDD);
+
+            connect( m_hdd, SIGNAL( eventDetected(int) ), this, SLOT( protectHDD(int) ) );
+        } else {
+            kError() << "HDD monitoring will not be possible";
+        }
     }
 
     doMenu();
-}
 
-KToshiba::~KToshiba()
-{
-    cleanup();
+    return true;
 }
 
 void KToshiba::cleanup()
 {
-    if (m_fn->m_helper->isHAPSSupported)
-        delete m_hdd; m_hdd = NULL;
+    destroyAboutData();
+    delete m_hdd; m_hdd = NULL;
     delete m_fn; m_fn = NULL;
-    delete m_helpMenu; m_helpMenu = NULL;
-    delete m_trayicon; m_trayicon = NULL;
 }
 
 bool KToshiba::checkConfig()
 {
     KStandardDirs kstd;
-    QString config = kstd.findResource("config", ktosh_config);
+    QString config = kstd.findResource("config", CONFIG_FILE);
 
     if (config.isEmpty()) {
         kDebug() << "Configuration file not found.";
@@ -104,8 +111,10 @@ bool KToshiba::checkConfig()
 void KToshiba::loadConfig()
 {
     kDebug() << "Loading configuration file...";
+    // General group
     KConfigGroup generalGroup( m_config, "General" );
     m_batteryProfiles = generalGroup.readEntry( "BatteryProfiles", true );
+    // HDD Protection group
     KConfigGroup hddGroup( m_config, "HDDProtection" );
     m_monitorHDD = hddGroup.readEntry( "MonitorHDD", true );
     m_notifyHDD = hddGroup.readEntry( "NotifyHDDMovement", true );
@@ -136,12 +145,6 @@ void KToshiba::createConfig()
 
 void KToshiba::doMenu()
 {
-    if (m_fn->m_helper->isHAPSSupported && m_hddConnected) {
-        m_hdd->setHDDProtection(m_monitorHDD);
-
-        connect( m_hdd, SIGNAL( eventDetected(int) ), this, SLOT( protectHDD(int) ) );
-    }
-
     m_batteryMenu = new QMenu(m_popupMenu);
     m_batteryMenu->setTitle( i18n("Battery Profiles") );
     m_popupMenu->addMenu( m_batteryMenu )->setIcon( KIcon( "battery" ) );

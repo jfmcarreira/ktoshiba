@@ -27,21 +27,35 @@
 #include "helperactions.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(FnActions *parent)
-    : QObject( parent )
+    : QObject( parent ),
+      m_service( false ),
+      m_object( false )
 {
     m_fn = qobject_cast<FnActions *>(parent);
 }
 
-bool KToshibaDBusInterface::init()
+void KToshibaDBusInterface::init()
 {
     new KToshibaDBusAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    if (!dbus.registerService("net.sourceforge.KToshiba"))
-        return false;
-    if (!dbus.registerObject("/net/sourceforge/KToshiba", this))
-        return false;
+    m_service = dbus.registerService("net.sourceforge.KToshiba");
+    if (!m_service)
+        kError() << "Could not register DBus service";
 
-    return true;
+    m_object = dbus.registerObject("/net/sourceforge/KToshiba", this);
+    if (!m_object)
+        kError() << "Could not register DBus object";
+}
+
+KToshibaDBusInterface::~KToshibaDBusInterface()
+{
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    if (m_object)
+        dbus.unregisterObject("/net/sourceforge/KToshiba");
+
+    if (m_service)
+        if (!dbus.unregisterService("net.sourceforge.KToshiba"))
+            kError() << "Could not unregister DBus service";
 }
 
 int KToshibaDBusInterface::getTouchPad()
@@ -246,6 +260,7 @@ void KToshibaDBusInterface::lockScreen()
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
                  << "Message:" << err.message();
+
         return;
     }
 
@@ -267,6 +282,7 @@ void KToshibaDBusInterface::setBrightness(int level)
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
                  << "Message:" << err.message();
+
         return;
     }
 
@@ -288,6 +304,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
                  << "Message:" << err.message();
+
         return;
     }
 
@@ -304,6 +321,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
 {
     if (!KWindowSystem::compositingActive()) {
         kWarning() << "Compositing have been disabled, Zoom actions cannot be activated" << endl;
+
         return;
     }
 
@@ -315,6 +333,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
         QDBusError err(iface.lastError());
         kError() << err.name() << endl
                  << "Message:" << err.message();
+
         return;
     }
 

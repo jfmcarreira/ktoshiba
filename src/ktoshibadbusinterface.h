@@ -31,7 +31,8 @@ class KToshibaDBusInterface : public QObject
 
 public:
     KToshibaDBusInterface(FnActions *parent);
-    bool init();
+    ~KToshibaDBusInterface();
+    void init();
 
     void lockScreen();
     void setBrightness(int);
@@ -69,6 +70,9 @@ public Q_SLOTS:
 
 private:
     FnActions *m_fn;
+
+    bool m_service;
+    bool m_object;
 };
 
 #endif	// KTOSHIBA_DBUS_INTERFACE_H

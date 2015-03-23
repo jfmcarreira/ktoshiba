@@ -47,12 +47,9 @@ public:
     bool init();
 
     void changeProfile(QString);
+    bool m_batMonitor;
 
     HelperActions *m_helper;
-    bool m_batMonitor;
-    int m_type;
-    int m_mode;
-    int m_time;
 
 private Q_SLOTS:
     void hideWidget();
@@ -75,13 +72,12 @@ private:
     QList<int> m_modes;
     QString m_profile;
     QString m_version;
-
-    bool m_keyConnected;
-    bool m_helperConnected;
-    bool m_dbusConnected;
     bool m_fnPressed;
     bool m_batKeyPressed;
     int m_cookie;
+    int m_type;
+    int m_mode;
+    int m_time;
 };
 
 #endif // FN_ACTIONS_H

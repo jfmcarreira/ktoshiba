@@ -42,6 +42,7 @@ QString KToshHelper::findDriverPath()
         m_file.setFileName(path.arg(m_devices.at(current)));
         if (m_file.open(QIODevice::ReadOnly)) {
             m_file.close();
+
             return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
         }
 

@@ -19,9 +19,7 @@
 #ifndef KTOSHIBA_H
 #define KTOSHIBA_H
 
-#include <Phonon/MediaObject>
-
-#include <KUniqueApplication>
+#include <KStatusNotifierItem>
 #include <KSharedConfig>
 
 class QAction;
@@ -40,20 +38,20 @@ class KToshibaHDDProtect;
  * @author Azael Avalos <coproscefalo@gmail.com>
  * @version 4.3
  */
-class KToshiba : public KUniqueApplication
+class KToshiba : public KStatusNotifierItem
 {
     Q_OBJECT
 
 public:
     KToshiba();
-    ~KToshiba();
+    virtual ~KToshiba();
 
+    bool initialize();
     static void createAboutData();
     static void destroyAboutData();
     static KAboutData *aboutData();
 
 private Q_SLOTS:
-    void cleanup();
     void protectHDD(int);
     void notifyHDDMovement();
     void disabledClicked(bool);
@@ -67,6 +65,7 @@ Q_SIGNALS:
     void batteryProfilesToggled(bool);
 
 private:
+    void cleanup();
     bool checkConfig();
     void loadConfig();
     void createConfig();
@@ -95,7 +94,6 @@ private:
     KMenu *m_popupMenu;
     static KAboutData* m_about;
     KHelpMenu *m_helpMenu;
-    KStatusNotifierItem *m_trayicon;
 };
 
 #endif // KTOSHIBA_H

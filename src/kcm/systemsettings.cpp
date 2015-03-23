@@ -16,9 +16,7 @@
    <http://www.gnu.org/licenses/>.
  */
 
-#include <QScrollArea>
 #include <QLayout>
-#include <QDebug>
 
 #include <KPluginFactory>
 #include <KAboutData>
@@ -77,6 +75,7 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     } else {
         m_message->setMessageType(KMessageWidget::Error);
         m_message->setText(i18n("Could not communicate with helper, hardware changes will not be possible"));
+        m_message->setVisible(true);
     }
 }
 
@@ -125,9 +124,22 @@ void KToshibaSystemSettings::addTabs()
 
 void KToshibaSystemSettings::load()
 {
+    if (!m_helperAttached)
+        return;
+
     kDebug() << "load called";
     // System Information tab
     KConfigGroup sysinfo( m_config, "SystemInformation" );
+    if (!sysinfo.exists()) {
+        m_helper->getSysInfo();
+        sysinfo.writeEntry( "ModelFamily", m_helper->sysinfo[4] );
+        sysinfo.writeEntry( "ModelNumber", m_helper->sysinfo[5] );
+        sysinfo.writeEntry( "BIOSVersion", m_helper->sysinfo[1] );
+        sysinfo.writeEntry( "BIOSDate", m_helper->sysinfo[2] );
+        sysinfo.writeEntry( "BIOSManufacturer", m_helper->sysinfo[0] );
+        sysinfo.writeEntry( "ECVersion", m_helper->sysinfo[3] );
+        sysinfo.config()->sync();
+    }
     m_modelFamily = sysinfo.readEntry("ModelFamily", QString());
     m_sysinfo.model_family->setText(m_modelFamily);
     m_modelNumber = sysinfo.readEntry("ModelNumber", QString());
@@ -411,6 +423,9 @@ void KToshibaSystemSettings::save()
 
 void KToshibaSystemSettings::defaults()
 {
+    if (!m_helperAttached)
+        return;
+
     kDebug() << "defaults called";
     // General tab
     if (m_helper->isTouchPadSupported) {

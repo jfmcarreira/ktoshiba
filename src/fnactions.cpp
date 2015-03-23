@@ -39,16 +39,16 @@ using namespace Solid::PowerManagement;
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
       m_helper( new HelperActions( this ) ),
-      m_type( 1 ),
-      m_mode( TIMER ),
-      m_time( 15 ),
       m_dBus( new KToshibaDBusInterface( this ) ),
       m_hotkeys( new KToshibaKeyHandler( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
       m_fnPressed( false ),
       m_batKeyPressed( false ),
-      m_cookie( 0 )
+      m_cookie( 0 ),
+      m_type( 1 ),
+      m_mode( TIMER ),
+      m_time( 15 )
 {
     m_statusWidget.setupUi( m_widget );
     m_widget->clearFocus();
@@ -75,17 +75,16 @@ FnActions::~FnActions()
 
 bool FnActions::init()
 {
-    m_keyConnected = m_hotkeys->attach();
-    if (!m_keyConnected)
+    if (!m_hotkeys->attach())
         return false;
 
-    m_helperConnected = m_helper->init();
-    if (!m_helperConnected)
-        return false;
+    if (!m_helper->init()) {
+        kError() << "Could not communicate with helper, hardware changes will not be possible";
 
-    m_dbusConnected = m_dBus->init();
-    if (!m_dbusConnected)
         return false;
+    }
+
+    m_dBus->init();
 
     if (m_helper->isKBDBacklightSupported) {
         m_mode = m_helper->getKBDMode();
@@ -166,7 +165,7 @@ void FnActions::changeProfile(QString profile)
                 m_helper->setKBDMode(ON);
         }
         m_dBus->setBrightness(71);
-        m_cookie = beginSuppressingScreenPowerManagement(m_profile);
+        m_cookie = beginSuppressingScreenPowerManagement(profile);
     } else if (profile == "ECO") {
         showWidget(ECO);
         if (m_helper->isECOSupported)
@@ -181,7 +180,7 @@ void FnActions::changeProfile(QString profile)
         }
         m_dBus->setBrightness(57);
     }
-    kDebug() << "Changed battery profile to:" << m_profile;
+    kDebug() << "Changed battery profile to:" << profile;
 
     if (m_cookie != 0)
         if (stopSuppressingScreenPowerManagement(m_cookie))
@@ -208,6 +207,7 @@ void FnActions::kbdBacklight()
             m_statusWidget.kbdStatusText->setText(format.arg(time));
         } else {
             kDebug() << "Keyboard backlight mode is set to FN-Z";
+
             return;
         }
     }
@@ -250,10 +250,7 @@ void FnActions::showWidget(int wid)
                 QPoint(m_widget->width() / 2, m_widget->height() / 2));
     m_widget->show();
 
-    if (wid < 0)
-        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(Disabled) );
-    else
-        m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
+    m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
 
     if (m_widgetTimer->isActive())
         m_widgetTimer->setInterval( 900 );

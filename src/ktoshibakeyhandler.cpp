@@ -33,7 +33,9 @@ extern "C" {
 
 KToshibaKeyHandler::KToshibaKeyHandler(QObject *parent)
     : QObject( parent ),
-      m_udevHelper( new UDevHelper( this ) )
+      m_udevHelper( new UDevHelper( this ) ),
+      m_notifier( NULL ),
+      m_socket( 0 )
 {
     m_namePhys << TOSHNAME << TOSHPHYS;
 }
@@ -94,6 +96,7 @@ void KToshibaKeyHandler::readData(int socket)
     int n = read(socket, &event, sizeof(struct input_event));
     if (n != sizeof(struct input_event)) {
         kError() << "Error reading hotkeys" << n;
+
         return;
     }
 

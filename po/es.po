@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-"POT-Creation-Date: 2015-03-18 14:04-0600\n"
+"POT-Creation-Date: 2015-03-23 13:02-0600\n"
 "PO-Revision-Date: 2010-03-28 20:46-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,155 +18,156 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: fnactions.cpp:228 kcm/systemsettings.cpp:123
+#: fnactions.cpp:228 kcm/systemsettings.cpp:120
 msgid "OFF"
 msgstr "APAGADO"
 
-#: fnactions.cpp:232 kcm/systemsettings.cpp:123
+#: fnactions.cpp:232 kcm/systemsettings.cpp:120
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: kcm/systemsettings.cpp:47
+#: kcm/systemsettings.cpp:45
 msgid "KToshiba KCM"
 msgstr "KToshiba KCM"
 
-#: kcm/systemsettings.cpp:49
+#: kcm/systemsettings.cpp:47
 msgid "KToshiba System Settings"
 msgstr "Ajustes del Sistema de KToshiba"
 
-#: kcm/systemsettings.cpp:51
+#: kcm/systemsettings.cpp:49
 msgid "Copyright © 2015 Azael Avalos"
 msgstr "Derechos de autor © 2015 Azael Avalos"
 
-#: kcm/systemsettings.cpp:56
+#: kcm/systemsettings.cpp:54
 msgid "Original author"
 msgstr "Autor Original"
 
-#: kcm/systemsettings.cpp:75
-msgid "System Information"
-msgstr "Información del Sistema"
-
-#: kcm/systemsettings.cpp:81
+#: kcm/systemsettings.cpp:74
 msgid "Please reboot for hardware changes to take effect"
-msgstr ""
-"Por favor reinicie para que los cambios en el hardware tengan efecto"
+msgstr "Por favor reinicie para que los cambios en el hardware tengan efecto"
 
-#: kcm/systemsettings.cpp:84
+#: kcm/systemsettings.cpp:77
 msgid ""
 "Could not communicate with helper, hardware changes will not be possible"
 msgstr ""
-"No se pudo comunicar con el programa ayudante, los cambios al hardware no serán posibles"
+"No se pudo comunicar con el programa ayudante, los cambios al hardware no "
+"serán posibles"
+
+#: kcm/systemsettings.cpp:93
+msgid "System Information"
+msgstr "Información del Sistema"
 
 #. i18n: file: kcm/general.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: kcm/systemsettings.cpp:99 rc.cpp:5
+#: kcm/systemsettings.cpp:98 rc.cpp:5
 msgid "General Settings"
 msgstr "Ajustes Generales"
 
-#: kcm/systemsettings.cpp:106
+#: kcm/systemsettings.cpp:103
 msgid "HDD Protection"
 msgstr "Protección del Disco Duro"
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid "High"
 msgstr "Alto"
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid "Low"
 msgstr "Bajo"
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid "Medium"
 msgstr "Medio"
 
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:104
 msgid "Off"
 msgstr "Apagado"
 
 #. i18n: file: kcm/sleeputils.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: kcm/systemsettings.cpp:114 rc.cpp:50
+#: kcm/systemsettings.cpp:111 rc.cpp:50
 msgid "Sleep Utilities"
 msgstr "Utilidades de Reposo"
 
 #. i18n: file: kcm/keyboard.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: kcm/systemsettings.cpp:121 rc.cpp:32
+#: kcm/systemsettings.cpp:118 rc.cpp:32
 msgid "Keyboard Settings"
 msgstr "Ajustes del Teclado"
 
-#: kcm/systemsettings.cpp:149
+#: kcm/systemsettings.cpp:160
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
 "Advertencia: Esta opción deshabilita el panel táctil via hardware.\n"
-"Para deshabilitarlo via software ir a: Hardware->Dispositivos de Entrada->Panel táctil"
+"Para deshabilitarlo via software ir a: Hardware->Dispositivos de Entrada-"
+">Panel táctil"
 
-#: kcm/systemsettings.cpp:270 kcm/systemsettings.cpp:388
-#: kcm/systemsettings.cpp:517
+#: kcm/systemsettings.cpp:281 kcm/systemsettings.cpp:399
+#: kcm/systemsettings.cpp:531
 msgid " sec"
 msgstr " seg"
 
-#: ktoshiba.cpp:47
+#: ktoshiba.cpp:45
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: ktoshiba.cpp:146
+#: ktoshiba.cpp:149
 msgid "Battery Profiles"
 msgstr "Perfiles de Batería"
 
-#: ktoshiba.cpp:148
+#: ktoshiba.cpp:151
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: ktoshiba.cpp:152
+#: ktoshiba.cpp:155
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: ktoshiba.cpp:155
+#: ktoshiba.cpp:158
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: ktoshiba.cpp:158
+#: ktoshiba.cpp:161
 msgid "Presentation"
 msgstr "Presentación"
 
-#: ktoshiba.cpp:161
+#: ktoshiba.cpp:164
 msgid "ECO"
 msgstr "ECO"
 
-#: ktoshiba.cpp:171
+#: ktoshiba.cpp:174
 msgid "Configure"
 msgstr "Configurar"
 
-#: ktoshiba.cpp:185
+#: ktoshiba.cpp:188
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: ktoshiba.cpp:186
+#: ktoshiba.cpp:189
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: ktoshiba.cpp:252
+#: ktoshiba.cpp:255
 msgid "Copyright © 2004-2015, Azael Avalos"
 msgstr "Derechos de autor © 2004-2015, Azael Avalos"
 
-#: ktoshiba.cpp:258
+#: ktoshiba.cpp:261
 msgid "Original Author"
 msgstr "Autor Original"
 
-#: ktoshiba.cpp:259
+#: ktoshiba.cpp:262
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: ktoshiba.cpp:259
+#: ktoshiba.cpp:262
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
 
-#: ktoshiba.cpp:261
+#: ktoshiba.cpp:264
 msgid "Green world icon"
 msgstr "Icono del mundo verde"
 
@@ -232,7 +233,7 @@ msgstr "Nivel de Protección del Disco Duro:"
 #. i18n: ectx: property (text), widget (QLabel, function_keys_label)
 #: rc.cpp:35
 msgid "Function Keys mode:"
-msgstr "Mode de las teclas de Función:"
+msgstr "Modo de las teclas de Función:"
 
 #. i18n: file: kcm/keyboard.ui:68
 #. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)

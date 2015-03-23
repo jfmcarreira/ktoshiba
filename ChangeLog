@@ -1,3 +1,16 @@
+2015-03-23 Azael Avalos <coproscefalo@gmail.com>
+	* Removed some unused variables from FnActions and KToshibaSystemSettings
+	  classes and added some error messages
+	* Do not bail out if the DBus service is not registered, added error
+	  messages too
+
+2015-03-19 Azael Avalos <coproscefalo@gmail.com>
+	* Added a check to KCM for the System Information fields, it will now
+	  create them if they do not exist
+	* We now exit from main.cpp instead from KToshiba class in case of an
+	  error
+	* Changed KToshiba class from KUniqueApplication to KStatusNotifierItem
+
 2015-03-18 Azael Avalos <coproscefalo@gmail.com>
 	* Cleaned includes from some files that I missed on last cleanup
 	* Added a KMessageWidget to inform users that some changes need a reboot
@@ -5,6 +18,7 @@
 	* Fixed an issue with the KCM tabs, they're now all created by default,
 	  but disabled if the features under them are not supported
 	* Updated spanish translation
+	* Small change to KCM, it now shows the error message
 
 2015-03-17 Azael Avalos <coproscefalo@gmail.com>
 	* Implemented defaults function
