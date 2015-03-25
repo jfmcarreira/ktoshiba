@@ -34,6 +34,17 @@ KToshibaDBusInterface::KToshibaDBusInterface(FnActions *parent)
     m_fn = qobject_cast<FnActions *>(parent);
 }
 
+KToshibaDBusInterface::~KToshibaDBusInterface()
+{
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    if (m_object)
+        dbus.unregisterObject("/net/sourceforge/KToshiba");
+
+    if (m_service)
+        if (!dbus.unregisterService("net.sourceforge.KToshiba"))
+            kError() << "Could not unregister DBus service";
+}
+
 void KToshibaDBusInterface::init()
 {
     new KToshibaDBusAdaptor(this);
@@ -47,15 +58,9 @@ void KToshibaDBusInterface::init()
         kError() << "Could not register DBus object";
 }
 
-KToshibaDBusInterface::~KToshibaDBusInterface()
+void KToshibaDBusInterface::configFileChanged()
 {
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    if (m_object)
-        dbus.unregisterObject("/net/sourceforge/KToshiba");
-
-    if (m_service)
-        if (!dbus.unregisterService("net.sourceforge.KToshiba"))
-            kError() << "Could not unregister DBus service";
+    emit configChanged();
 }
 
 int KToshibaDBusInterface::getTouchPad()

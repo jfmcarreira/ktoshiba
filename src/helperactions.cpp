@@ -74,8 +74,11 @@ QString HelperActions::findDriverPath()
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
     for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
         m_file.setFileName(path.arg(m_devices.at(current)));
-        if (m_file.exists())
+        if (m_file.exists()) {
+            m_device = m_devices.at(current);
+
             return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
+        }
 
         current++;
     }
@@ -83,6 +86,11 @@ QString HelperActions::findDriverPath()
     kWarning() << "No known kernel interface found" << endl;
 
     return QString("");
+}
+
+QString HelperActions::getDeviceHID()
+{
+    return m_device;
 }
 
 bool HelperActions::deviceExists(QString device)
@@ -187,37 +195,62 @@ void HelperActions::getSysInfo()
 
     QTextStream in(&m_file);
     int count = 0;
-    do {
+    while (count < 2) {
         QString line = in.readLine();
         QStringList splited = line.split(":");
         // BIOS Information
         if (splited[0].contains("Vendor")) {
-            sysinfo << splited[1];
+            sysinfo << splited[1].trimmed();
             continue;
         }
         if (splited[0].contains("Version")) {
-            sysinfo << splited[1];
+            sysinfo << splited[1].trimmed();
             count++;
-            if (count == 2)
-               break;
-            else
-               continue;
+            continue;
         }
         if (splited[0].contains("Release Date")) {
-            sysinfo << splited[1];
+            sysinfo << splited[1].trimmed();
             continue;
         }
         if (splited[0].contains("Firmware Revision")) {
-            sysinfo << splited[1];
+            sysinfo << splited[1].trimmed();
             continue;
         }
         // System Information
         if (splited[0].contains("Product Name")) {
-            sysinfo << splited[1];
+            sysinfo << splited[1].trimmed();
             continue;
         }
-    } while (!in.atEnd());
+    };
     m_file.close();
+}
+
+QString HelperActions::getDriverVersion()
+{
+    m_file.setFileName(m_driverPath + "version");
+    if (!m_file.exists()) {
+        kWarning() << "An older driver found, some functionality won't be available"
+                   << "Please see the file README.toshiba_acpi for upgrading instructions";
+        m_file.setFileName("/proc/acpi/toshiba_acpi/version");
+        if (!m_file.exists()) {
+            kError() << "No version file detected";
+
+            return QString("Unknown");
+        }
+    }
+
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        kError() << "getDriverVersion failed" << endl
+                 << m_file.errorString() << "(" << m_file.error() << ")";
+
+        return QString("Unknown");
+    }
+
+    QTextStream in(&m_file);
+    QString version = in.readAll();
+    m_file.close();
+
+    return version;
 }
 
 int HelperActions::getTouchPad()

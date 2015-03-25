@@ -17,6 +17,19 @@
       </doc:description>
     </doc:doc>
 
+    <method name="configFileChanged">
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Notifies of a configuration change.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while notifiying the configuration change</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
     <method name="getTouchPad">
       <arg name="state" type="i" direction="out">
         <doc:doc>

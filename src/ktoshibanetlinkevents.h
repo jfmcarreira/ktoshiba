@@ -16,35 +16,36 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KTOSHIBAHDDPROTECT_H
-#define KTOSHIBAHDDPROTECT_H
+#ifndef KTOSHIBANETLINKEVENTS_H
+#define KTOSHIBANETLINKEVENTS_H
 
-#define HDD_VIBRATED   0x80
-#define HDD_STABILIZED 0x81
+#include <QString>
 
 class QSocketNotifier;
 
-class KToshibaHDDProtect : public QObject
+class KToshibaNetlinkEvents : public QObject
 {
     Q_OBJECT
 
 public:
-    KToshibaHDDProtect(QObject *parent);
-    ~KToshibaHDDProtect();
+    KToshibaNetlinkEvents(QObject *parent);
+    ~KToshibaNetlinkEvents();
 
     bool attach();
     void detach();
-    void setHDDProtection(bool);
+    void setDeviceHID(QString);
+
+Q_SIGNALS:
+    void hapsEvent(int);
+    void tvapEvent(int);
 
 private Q_SLOTS:
     void parseEvents(int);
 
-Q_SIGNALS:
-    void eventDetected(int);
-
 private:
     QSocketNotifier *m_notifier;
+    QString m_deviceHID;
     int m_socket;
 };
 
-#endif // KTOSHIBAHDDPROTECT_H
+#endif // KTOSHIBANETLINKEVENTS_H

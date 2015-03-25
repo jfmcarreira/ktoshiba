@@ -47,14 +47,15 @@ public:
     bool init();
 
     void changeProfile(QString);
-    bool m_batMonitor;
 
     HelperActions *m_helper;
+
+public Q_SLOTS:
+    void batMonitorChanged(bool);
 
 private Q_SLOTS:
     void hideWidget();
     void processHotkey(int);
-    void batMonitorChanged(bool);
     void compositingChanged(bool);
 
 private:
@@ -72,8 +73,8 @@ private:
     QList<int> m_modes;
     QString m_profile;
     QString m_version;
-    bool m_fnPressed;
     bool m_batKeyPressed;
+    bool m_batMonitor;
     int m_cookie;
     int m_type;
     int m_mode;

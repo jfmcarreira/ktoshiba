@@ -43,7 +43,6 @@ FnActions::FnActions(QObject *parent)
       m_hotkeys( new KToshibaKeyHandler( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
-      m_fnPressed( false ),
       m_batKeyPressed( false ),
       m_cookie( 0 ),
       m_type( 1 ),
@@ -62,6 +61,7 @@ FnActions::FnActions(QObject *parent)
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
     connect( parent, SIGNAL( batteryProfilesToggled(bool) ), this, SLOT( batMonitorChanged(bool) ) );
+    connect( m_dBus, SIGNAL( configChanged() ), parent, SLOT( configChanged() ) );
 }
 
 FnActions::~FnActions()
@@ -288,16 +288,6 @@ void FnActions::processHotkey(int hotkey)
     case KEY_ZOOMIN:
         m_dBus->setZoom( In );
         break;
-    /* By default, the FN key is ignored by the driver,
-     * but could be very useful for us...
-     */
-    /*case KEY_FN:
-        m_fnPressed = m_fnPressed ? false : true;
-        if (m_fnPressed)
-            showWidget(Blank);
-        else
-            m_widget->hide();
-        break;*/
     }
 }
 

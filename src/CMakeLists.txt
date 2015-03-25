@@ -9,7 +9,7 @@ add_subdirectory(helper)
 set(KToshibaSources
     ktoshibadbusinterface.cpp
     ktoshibakeyhandler.cpp
-    ktoshibahddprotect.cpp
+    ktoshibanetlinkevents.cpp
     udevhelper.cpp
     helperactions.cpp
     fnactions.cpp

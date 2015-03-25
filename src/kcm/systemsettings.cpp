@@ -17,6 +17,7 @@
  */
 
 #include <QLayout>
+#include <QtDBus>
 
 #include <KPluginFactory>
 #include <KAboutData>
@@ -152,6 +153,7 @@ void KToshibaSystemSettings::load()
     m_sysinfo.bios_manufacturer->setText(m_biosManufacturer);
     m_ecVersion = sysinfo.readEntry("ECVersion", QString());
     m_sysinfo.ec_version->setText(m_ecVersion);
+    m_sysinfo.driver_version->setText(m_helper->getDriverVersion());
     // General tab
     if (m_helper->isTouchPadSupported) {
         m_touchpad = m_helper->getTouchPad();
@@ -333,17 +335,23 @@ void KToshibaSystemSettings::save()
     // HDD Protection tab
     if (m_helper->isHAPSSupported) {
         KConfigGroup hddGroup( m_config, "HDDProtection" );
+        QDBusInterface iface("net.sourceforge.KToshiba",
+			     "/net/sourceforge/KToshiba",
+			     "net.sourceforge.KToshiba",
+			     QDBusConnection::sessionBus(), this);
         bool tmp2 = m_hdd.hdd_protect_checkbox->checkState() == Qt::Checked ? true : false;
         if (m_monitorHDD != tmp2) {
             hddGroup.writeEntry( "MonitorHDD", tmp2 );
             hddGroup.config()->sync();
             m_monitorHDD = tmp2;
+            QDBusReply<void> reply = iface.call("configFileChanged");
         }
         tmp2 = m_hdd.hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
         if (m_notifyHDD != tmp2) {
             hddGroup.writeEntry( "NotifyHDDMovement", tmp2 );
             hddGroup.config()->sync();
             m_notifyHDD = tmp2;
+            QDBusReply<void> reply = iface.call("configFileChanged");
         }
         tmp = m_hdd.protection_level_slider->value();
         if (m_level != tmp) {

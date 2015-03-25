@@ -29,15 +29,20 @@
 #include "ktoshiba.h"
 #include "fnactions.h"
 #include "helperactions.h"
-#include "ktoshibahddprotect.h"
+#include "ktoshibanetlinkevents.h"
 #include "version.h"
+
+#define HDD_VIBRATED   0x80
+#define HDD_STABILIZED 0x81
 
 #define CONFIG_FILE "ktoshibarc"
 
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
       m_fn( new FnActions( this ) ),
-      m_hdd( new KToshibaHDDProtect( this ) ),
+      m_fnConnected( false ),
+      m_nl( new KToshibaNetlinkEvents( this ) ),
+      m_nlAttached( false ),
       m_config( KSharedConfig::openConfig( CONFIG_FILE ) )
 {
     setTitle( i18n("KToshiba") );
@@ -70,15 +75,14 @@ bool KToshiba::initialize()
     else
         createConfig();
 
-    if (m_fn->m_helper->isHAPSSupported) {
-        m_hddConnected = m_hdd->attach();
-        if (m_hddConnected) {
-            m_hdd->setHDDProtection(m_monitorHDD);
-
-            connect( m_hdd, SIGNAL( eventDetected(int) ), this, SLOT( protectHDD(int) ) );
-        } else {
-            kError() << "HDD monitoring will not be possible";
-        }
+    m_nlAttached = m_nl->attach();
+    if (m_nlAttached) {
+        m_nl->setDeviceHID(m_fn->m_helper->getDeviceHID());
+	// TODO: We need a signal or something to let us know when the config file has changed
+        if (m_fn->m_helper->isHAPSSupported && m_monitorHDD)
+            connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
+    } else {
+        kError() << "Events monitoring will not be possible";
     }
 
     doMenu();
@@ -89,7 +93,7 @@ bool KToshiba::initialize()
 void KToshiba::cleanup()
 {
     destroyAboutData();
-    delete m_hdd; m_hdd = NULL;
+    delete m_nl; m_nl = NULL;
     delete m_fn; m_fn = NULL;
 }
 
@@ -164,7 +168,7 @@ void KToshiba::doMenu()
     m_batECO = m_batteryMenu->addAction( i18n("ECO") );
     m_batECO->setIcon( QIcon( ":images/green_world.svg" ) );
     m_batECO->setEnabled( !m_batteryProfiles );
-    m_fn->m_batMonitor = m_batteryProfiles;
+    m_fn->batMonitorChanged(m_batteryProfiles);
     connect( m_batDisabled, SIGNAL( toggled(bool) ), this, SLOT( disabledClicked(bool) ) );
     connect( m_batPerformance, SIGNAL( triggered() ), this, SLOT( performanceClicked() ) );
     connect( m_batPowersave, SIGNAL( triggered() ), this, SLOT( powersaveClicked() ) );
@@ -180,6 +184,11 @@ void KToshiba::doMenu()
     m_popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
     m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
+}
+
+void KToshiba::configChanged()
+{
+    loadConfig();
 }
 
 void KToshiba::notifyHDDMovement()

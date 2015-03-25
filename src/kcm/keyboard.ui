@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>Azael Avalos &lt;coproscefalo@gmail.com&gt;</author>
  <class>Keyboard</class>
  <widget class="QWidget" name="Keyboard">
   <property name="geometry">

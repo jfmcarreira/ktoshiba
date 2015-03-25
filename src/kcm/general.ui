@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>Azael Avalos &lt;coproscefalo@gmail.com&gt;</author>
  <class>General</class>
  <widget class="QWidget" name="General">
   <property name="geometry">

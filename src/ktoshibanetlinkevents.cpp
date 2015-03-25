@@ -28,7 +28,7 @@ extern "C" {
 #include <errno.h>
 }
 
-#include "ktoshibahddprotect.h"
+#include "ktoshibanetlinkevents.h"
 
 #define TOSHIBA_HAPS   "TOS620A:00"
 
@@ -63,26 +63,24 @@ enum {
 #define ACPI_GENL_VERSION		0x01
 #define ACPI_GENL_MCAST_GROUP_NAME	"acpi_mc_group"
 
-KToshibaHDDProtect::KToshibaHDDProtect(QObject *parent)
+KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
     : QObject( parent ),
-      m_notifier( NULL )
+      m_notifier( NULL ),
+      m_socket( 0 )
 {
 }
 
-KToshibaHDDProtect::~KToshibaHDDProtect()
+KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
 {
     detach();
 }
 
-void KToshibaHDDProtect::setHDDProtection(bool enabled)
+void KToshibaNetlinkEvents::setDeviceHID(QString hid)
 {
-    if (enabled)
-        connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( parseEvents(int) ) );
-    else
-        m_notifier->disconnect();
+    m_deviceHID = hid;
 }
 
-void KToshibaHDDProtect::parseEvents(int socket)
+void KToshibaNetlinkEvents::parseEvents(int socket)
 {
     if (socket < 0)
         return;
@@ -131,11 +129,14 @@ void KToshibaHDDProtect::parseEvents(int socket)
 
     if (QString(event->bus_id) == TOSHIBA_HAPS) {
         kDebug() << "HAPS event detected";
-        emit eventDetected(event->type);
+        emit hapsEvent(event->type);
+    } else if (QString(event->bus_id) == m_deviceHID) {
+        kDebug() << "TVAP event detected";
+        emit tvapEvent(event->type);
     }
 }
 
-bool KToshibaHDDProtect::attach()
+bool KToshibaNetlinkEvents::attach()
 {
     struct sockaddr_nl nl;
     memset(&nl, 0, sizeof(nl));
@@ -156,14 +157,16 @@ bool KToshibaHDDProtect::attach()
 
         return false;
     }
-    kDebug() << "Binded to socket" << m_socket << "for HDD monitoring";
+    kDebug() << "Binded to socket" << m_socket << "for events monitoring";
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
+
+    connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( parseEvents(int) ) );
 
     return true;
 }
 
-void KToshibaHDDProtect::detach()
+void KToshibaNetlinkEvents::detach()
 {
     if (m_notifier) {
         m_notifier->setEnabled(false);
@@ -175,4 +178,4 @@ void KToshibaHDDProtect::detach()
 }
 
 
-#include "ktoshibahddprotect.moc"
+#include "ktoshibanetlinkevents.moc"

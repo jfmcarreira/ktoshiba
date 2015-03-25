@@ -31,7 +31,7 @@ class KHelpMenu;
 class KStatusNotifierItem;
 
 class FnActions;
-class KToshibaHDDProtect;
+class KToshibaNetlinkEvents;
 
 /**
  * @short Hotkeys monitoring for Toshiba laptops
@@ -51,6 +51,12 @@ public:
     static void destroyAboutData();
     static KAboutData *aboutData();
 
+Q_SIGNALS:
+    void batteryProfilesToggled(bool);
+    
+public Q_SLOTS:
+    void configChanged();
+
 private Q_SLOTS:
     void protectHDD(int);
     void notifyHDDMovement();
@@ -60,9 +66,6 @@ private Q_SLOTS:
     void presentationClicked();
     void ecoClicked();
     void configureClicked();
-
-Q_SIGNALS:
-    void batteryProfilesToggled(bool);
 
 private:
     void cleanup();
@@ -74,8 +77,9 @@ private:
     FnActions *m_fn;
     bool m_fnConnected;
 
-    KToshibaHDDProtect *m_hdd;
-    bool m_hddConnected;
+    KToshibaNetlinkEvents *m_nl;
+    bool m_nlAttached;
+
     bool m_monitorHDD;
     bool m_notifyHDD;
 

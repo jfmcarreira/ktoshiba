@@ -51,6 +51,8 @@ public Q_SLOTS:
      * System Information call
      */
     void getSysInfo();
+    QString getDriverVersion();
+    QString getDeviceHID();
     /*
      * Hardware calls
      */
@@ -106,6 +108,7 @@ private:
     bool checkUSBThree();
     bool checkHAPS();
 
+    QString m_device;
     QString m_driverPath;
     QString m_ledsPath;
     QString m_hapsPath;

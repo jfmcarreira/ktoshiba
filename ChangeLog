@@ -1,8 +1,26 @@
+2015-03-25 Azael Avalos <coproscefalo@gmail.com>
+	* Removed white space from sysinfo variable in HelperActions class
+	* Small change to getSysInfo function
+	* Added a new function to get the HID to HelperActions class
+	* Renamed KToshibaHDDProtect class to KToshibaNetlinkEvents, added a
+	  new signal and removed some code
+	* Added a new method to the DBus backend to notify of a configuration
+	  file change and adapted code to reload the config if it happens
+
+2015-03-24 Azael Avalos <coproscefalo@gmail.com>
+	* Added a function to get driver version to HelperActions class, and warn
+	  if the driver version is too "old"
+	* Updated the System Information tab to show the driver version
+	* Added a new file named README.toshiba_acpi with instructions on how
+	  and where to download and install an updated toshiba_acpi module
+
 2015-03-23 Azael Avalos <coproscefalo@gmail.com>
 	* Removed some unused variables from FnActions and KToshibaSystemSettings
 	  classes and added some error messages
 	* Do not bail out if the DBus service is not registered, added error
 	  messages too
+	* Created the Boot Options widget, not yet pushed to SVN since we don't
+	  have support for it upstream
 
 2015-03-19 Azael Avalos <coproscefalo@gmail.com>
 	* Added a check to KCM for the System Information fields, it will now

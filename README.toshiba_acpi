@@ -1,0 +1,42 @@
+toshiba_acpi
+============
+If you are reading this file, it means that KToshiba warned you about
+an "old" driver being used, or simply you wanted to take a look at
+the contents of this file :-)
+
+If it if the first case, I have a more recent toshiba_acpi kernel
+driver uploaded to pastebin, as well as a Makefile for it, but before
+we proceed, you need to install a few packages in order to build the
+newer module, how to install those packages is highly dependent on
+the distribution you are using, so we are not going to cover that
+here (Google is your friend).
+
+
+Packages
+-------
+The needed packages to build the newer module are:
+- gcc
+- make
+- kernel-sources
+
+
+Pastebin files
+--------------
+- Makefile	->	http://pastebin.com/bt7EjuUi
+- toshiba_acpi	->	http://pastebin.com/k3DpPaPJ
+
+
+Installation
+------------
+Once the needed packages are installed and the previous two files
+are downloaded, open a terminal (Konsole) and change to the directory
+were the previous two files were donwloaded, and do the following:
+
+> cd /place/to/where/you/downloaded/your/files
+> make
+> sudo make install
+> sudo make load
+
+
+Once all the above has been done successfuly, simply restart KToshiba
+and enjoy the new functionality :-)

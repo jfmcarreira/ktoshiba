@@ -39,7 +39,11 @@ public:
     void setKBDBacklight(int);
     void setZoom(int);
 
+Q_SIGNALS:
+    void configChanged();
+
 public Q_SLOTS:
+    void configFileChanged();
     int getTouchPad();
     void setTouchPad(int);
     int getECOLed();

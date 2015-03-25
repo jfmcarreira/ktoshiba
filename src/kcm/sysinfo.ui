@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>Azael Avalos &lt;coproscefalo@gmail.com&gt;</author>
  <class>SysInfo</class>
  <widget class="QWidget" name="SysInfo">
   <property name="geometry">
@@ -17,7 +18,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
+     <y>10</y>
      <width>500</width>
      <height>228</height>
     </rect>
@@ -255,6 +256,45 @@
        </item>
        <item row="5" column="2">
         <widget class="QLabel" name="ec_version">
+         <property name="minimumSize">
+          <size>
+           <width>130</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="driver_version_label">
+         <property name="minimumSize">
+          <size>
+           <width>130</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Driver version:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <spacer name="driver_version_spacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>240</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="6" column="2">
+        <widget class="QLabel" name="driver_version">
          <property name="minimumSize">
           <size>
            <width>130</width>
