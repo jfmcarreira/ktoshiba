@@ -57,11 +57,11 @@ private Q_SLOTS:
     void hideWidget();
     void processHotkey(int);
     void compositingChanged(bool);
+    void kbdBacklight();
 
 private:
     void showWidget(int);
     void toggleProfiles();
-    void kbdBacklight();
     void toggleTouchPad();
 
     KToshibaDBusInterface *m_dBus;

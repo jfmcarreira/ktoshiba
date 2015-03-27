@@ -64,6 +64,12 @@
        </item>
        <item row="0" column="2">
         <widget class="QCheckBox" name="touchpad_checkbox">
+         <property name="toolTip">
+          <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -113,6 +119,12 @@
        </item>
        <item row="2" column="2">
         <widget class="QCheckBox" name="rapid_charge_checkbox">
+         <property name="toolTip">
+          <string>Toggles the USB rapid charge feature.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Toggles the USB rapid charge feature.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -149,6 +161,12 @@
        </item>
        <item row="3" column="2">
         <widget class="QCheckBox" name="usb_three_checkbox">
+         <property name="toolTip">
+          <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -185,6 +203,12 @@
        </item>
        <item row="4" column="2">
         <widget class="QCheckBox" name="panel_power_checkbox">
+         <property name="toolTip">
+          <string>Turns ON the laptop whenever you open the LID.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Turns ON the laptop whenever you open the LID.</string>
+         </property>
          <property name="text">
           <string/>
          </property>

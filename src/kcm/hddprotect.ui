@@ -64,6 +64,12 @@
        </item>
        <item row="0" column="2">
         <widget class="QCheckBox" name="hdd_protect_checkbox">
+         <property name="toolTip">
+          <string>Toggles the HDD protection monitoring.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Toggles the HDD protection monitoring.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -100,6 +106,12 @@
        </item>
        <item row="1" column="2">
         <widget class="QCheckBox" name="hdd_notification_checkbox">
+         <property name="toolTip">
+          <string>Notify if the HDD monitoring detected movement.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Notify if the HDD monitoring detected movement.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -123,6 +135,12 @@
        </item>
        <item row="2" column="2">
         <widget class="QLabel" name="protection_level">
+         <property name="toolTip">
+          <string>The current HDD protection level.</string>
+         </property>
+         <property name="whatsThis">
+          <string>The current HDD protection level.</string>
+         </property>
          <property name="minimumSize">
           <size>
            <width>130</width>
@@ -136,6 +154,12 @@
        </item>
        <item row="3" column="0" colspan="3">
         <widget class="QSlider" name="protection_level_slider">
+         <property name="toolTip">
+          <string>Sets the HDD protection level.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Sets the HDD protection level.</string>
+         </property>
          <property name="maximum">
           <number>3</number>
          </property>

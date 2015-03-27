@@ -20,6 +20,7 @@
 #define KTOSHIBA_DBUS_INTERFACE_H
 
 #include <QObject>
+#include <QDBusAbstractAdaptor>
 
 class FnActions;
 
@@ -43,7 +44,7 @@ Q_SIGNALS:
     void configChanged();
 
 public Q_SLOTS:
-    void configFileChanged();
+    Q_NOREPLY void configFileChanged();
     int getTouchPad();
     void setTouchPad(int);
     int getECOLed();

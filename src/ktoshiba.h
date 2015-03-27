@@ -53,6 +53,7 @@ public:
 
 Q_SIGNALS:
     void batteryProfilesToggled(bool);
+    void kbdModeChanged();
     
 public Q_SLOTS:
     void configChanged();
@@ -66,6 +67,7 @@ private Q_SLOTS:
     void presentationClicked();
     void ecoClicked();
     void configureClicked();
+    void parseTVAPEvents(int);
 
 private:
     void cleanup();

@@ -64,6 +64,12 @@
        </item>
        <item row="0" column="2">
         <widget class="QCheckBox" name="sleep_charge_checkbox">
+         <property name="toolTip">
+          <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -78,7 +84,7 @@
           </size>
          </property>
          <property name="text">
-          <string>USB Sleep and Music:</string>
+          <string>Sleep and Music:</string>
          </property>
          <property name="buddy">
           <cstring>sleep_music_checkbox</cstring>
@@ -100,6 +106,12 @@
        </item>
        <item row="1" column="2">
         <widget class="QCheckBox" name="sleep_music_checkbox">
+         <property name="toolTip">
+          <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -123,6 +135,12 @@
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="battery_level">
+         <property name="toolTip">
+          <string>The current battery level at which the sleep functions will be disabled.</string>
+         </property>
+         <property name="whatsThis">
+          <string>The current battery level at which the sleep functions will be disabled.</string>
+         </property>
          <property name="minimumSize">
           <size>
            <width>130</width>
@@ -136,6 +154,12 @@
        </item>
        <item row="2" column="2">
         <widget class="QCheckBox" name="battery_level_checkbox">
+         <property name="toolTip">
+          <string>Allows the sleep functions to operate when the computer is under battery power.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Allows the sleep functions to operate when the computer is under battery power.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -143,6 +167,12 @@
        </item>
        <item row="3" column="0" colspan="3">
         <widget class="QSlider" name="battery_level_slider">
+         <property name="toolTip">
+          <string>Sets the battery level at which the sleep functions will be disabled.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Sets the battery level at which the sleep functions will be disabled.</string>
+         </property>
          <property name="maximum">
           <number>100</number>
          </property>

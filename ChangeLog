@@ -1,3 +1,10 @@
+2015-03-27 Azael Avalos <coproscefalo@gmail.com>
+	* Added tooltip and whatsthis properties to KCM ui files
+	* Updated spanish translation
+	* Fixed a bug in KCM while loading sleep functions values
+	* Added a function to handle TVAP events from upstream (tho' only
+	  does limited things like updating the KBD backlight status)
+
 2015-03-25 Azael Avalos <coproscefalo@gmail.com>
 	* Removed white space from sysinfo variable in HelperActions class
 	* Small change to getSysInfo function

@@ -75,10 +75,10 @@ bool KToshiba::initialize()
     else
         createConfig();
 
+    m_nl->setDeviceHID(m_fn->m_helper->getDeviceHID());
     m_nlAttached = m_nl->attach();
     if (m_nlAttached) {
-        m_nl->setDeviceHID(m_fn->m_helper->getDeviceHID());
-	// TODO: We need a signal or something to let us know when the config file has changed
+        connect( m_nl, SIGNAL( tvapEvent(int) ), this, SLOT( parseTVAPEvents(int) ) );
         if (m_fn->m_helper->isHAPSSupported && m_monitorHDD)
             connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
     } else {
@@ -189,6 +189,11 @@ void KToshiba::doMenu()
 void KToshiba::configChanged()
 {
     loadConfig();
+
+    if (m_monitorHDD)
+        connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
+    else if (!m_monitorHDD)
+        disconnect( this, SLOT( protectHDD(int) ) );
 }
 
 void KToshiba::notifyHDDMovement()
@@ -252,6 +257,32 @@ void KToshiba::configureClicked()
     KProcess p;
     p.setProgram(KStandardDirs::findExe("kcmshell4"), QStringList() << "ktoshibam");
     p.startDetached();
+}
+
+void KToshiba::parseTVAPEvents(int event)
+{
+    kDebug() << "Received event 0x" << hex << event;
+    switch(event) {
+    case 0x80:	// Hotkeys and some system events
+        break;
+    case 0x81:	// Dock events
+    case 0x82:
+    case 0x83: 
+        break;
+    case 0x88:	// Thermal event
+        break;
+    case 0x8f:	// LID closed
+    case 0x90:	// LID is closed and Dock has been ejected
+        break;
+    case 0x8b:	// SATA power events
+    case 0x8c:
+        break;
+    case 0x92:	// KBD backlight event
+        emit kbdModeChanged();
+        break;
+    default:
+        kDebug() << "Unknown event";
+    }
 }
 
 static const char * const description =

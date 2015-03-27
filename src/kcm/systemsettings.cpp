@@ -221,7 +221,7 @@ void KToshibaSystemSettings::load()
         m_sleepcharge = m_helper->getUSBSleepCharge();
         m_sleep.sleep_charge_checkbox->setChecked( m_sleepcharge ? true : false );
         m_sleeponbat = m_helper->getUSBSleepFunctionsBatLvl();
-        m_batenabled = m_sleeponbat[1].toInt();
+        m_batenabled = m_sleeponbat[0].toInt();
         m_batlevel = m_sleeponbat[1].toInt();
         m_sleep.battery_level_checkbox->setChecked( m_batenabled ? true : false );
         m_sleep.battery_level->setText( QString::number(m_batlevel) + "%" );
@@ -344,14 +344,14 @@ void KToshibaSystemSettings::save()
             hddGroup.writeEntry( "MonitorHDD", tmp2 );
             hddGroup.config()->sync();
             m_monitorHDD = tmp2;
-            QDBusReply<void> reply = iface.call("configFileChanged");
+            iface.call("configFileChanged");
         }
         tmp2 = m_hdd.hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
         if (m_notifyHDD != tmp2) {
             hddGroup.writeEntry( "NotifyHDDMovement", tmp2 );
             hddGroup.config()->sync();
             m_notifyHDD = tmp2;
-            QDBusReply<void> reply = iface.call("configFileChanged");
+            iface.call("configFileChanged");
         }
         tmp = m_hdd.protection_level_slider->value();
         if (m_level != tmp) {

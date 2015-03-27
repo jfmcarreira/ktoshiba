@@ -61,6 +61,7 @@ FnActions::FnActions(QObject *parent)
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
     connect( parent, SIGNAL( batteryProfilesToggled(bool) ), this, SLOT( batMonitorChanged(bool) ) );
+    connect( parent, SIGNAL( kbdModeChanged() ), this, SLOT( kbdBacklight() ) );
     connect( m_dBus, SIGNAL( configChanged() ), parent, SLOT( configChanged() ) );
 }
 

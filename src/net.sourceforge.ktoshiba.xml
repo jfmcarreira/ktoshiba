@@ -10,9 +10,9 @@
       <doc:description>
         <doc:para>
           net.sourceforge.KToshiba is a DBus interface implemented by KToshiba.
-          It allows to change the keyboard backlight mode and timeout as well
-          as toggling the touchpad and eco mode led state (if the laptop supports
-          such features).
+          It allows to change the laptop's internal hardware states, such as the
+          keyboard backlight mode (and timeout as well), toggling the touchpad,
+          and eco mode led state, etc. if the laptop supports such features.
         </doc:para>
       </doc:description>
     </doc:doc>
@@ -21,7 +21,7 @@
       <doc:doc>
         <doc:description>
           <doc:para>
-            Notifies of a configuration change.
+            Notifies internally of a configuration change.
           </doc:para>
         </doc:description>
         <doc:errors>

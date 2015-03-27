@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-"POT-Creation-Date: 2015-03-23 13:02-0600\n"
+"POT-Creation-Date: 2015-03-27 11:44-0600\n"
 "PO-Revision-Date: 2010-03-28 20:46-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,156 +18,156 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: fnactions.cpp:228 kcm/systemsettings.cpp:120
+#: fnactions.cpp:228 kcm/systemsettings.cpp:121
 msgid "OFF"
 msgstr "APAGADO"
 
-#: fnactions.cpp:232 kcm/systemsettings.cpp:120
+#: fnactions.cpp:232 kcm/systemsettings.cpp:121
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: kcm/systemsettings.cpp:45
+#: kcm/systemsettings.cpp:46
 msgid "KToshiba KCM"
 msgstr "KToshiba KCM"
 
-#: kcm/systemsettings.cpp:47
+#: kcm/systemsettings.cpp:48
 msgid "KToshiba System Settings"
 msgstr "Ajustes del Sistema de KToshiba"
 
-#: kcm/systemsettings.cpp:49
+#: kcm/systemsettings.cpp:50
 msgid "Copyright © 2015 Azael Avalos"
 msgstr "Derechos de autor © 2015 Azael Avalos"
 
-#: kcm/systemsettings.cpp:54
+#: kcm/systemsettings.cpp:55
 msgid "Original author"
 msgstr "Autor Original"
 
-#: kcm/systemsettings.cpp:74
+#: kcm/systemsettings.cpp:75
 msgid "Please reboot for hardware changes to take effect"
 msgstr "Por favor reinicie para que los cambios en el hardware tengan efecto"
 
-#: kcm/systemsettings.cpp:77
+#: kcm/systemsettings.cpp:78
 msgid ""
 "Could not communicate with helper, hardware changes will not be possible"
 msgstr ""
 "No se pudo comunicar con el programa ayudante, los cambios al hardware no "
 "serán posibles"
 
-#: kcm/systemsettings.cpp:93
+#: kcm/systemsettings.cpp:94
 msgid "System Information"
 msgstr "Información del Sistema"
 
-#. i18n: file: kcm/general.ui:14
+#. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: kcm/systemsettings.cpp:98 rc.cpp:5
+#: kcm/systemsettings.cpp:99 rc.cpp:17
 msgid "General Settings"
 msgstr "Ajustes Generales"
 
-#: kcm/systemsettings.cpp:103
+#: kcm/systemsettings.cpp:104
 msgid "HDD Protection"
 msgstr "Protección del Disco Duro"
 
-#: kcm/systemsettings.cpp:104
+#: kcm/systemsettings.cpp:105
 msgid "High"
 msgstr "Alto"
 
-#: kcm/systemsettings.cpp:104
+#: kcm/systemsettings.cpp:105
 msgid "Low"
 msgstr "Bajo"
 
-#: kcm/systemsettings.cpp:104
+#: kcm/systemsettings.cpp:105
 msgid "Medium"
 msgstr "Medio"
 
-#: kcm/systemsettings.cpp:104
+#: kcm/systemsettings.cpp:105
 msgid "Off"
 msgstr "Apagado"
 
-#. i18n: file: kcm/sleeputils.ui:14
+#. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: kcm/systemsettings.cpp:111 rc.cpp:50
+#: kcm/systemsettings.cpp:112 rc.cpp:128
 msgid "Sleep Utilities"
 msgstr "Utilidades de Reposo"
 
-#. i18n: file: kcm/keyboard.ui:14
+#. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: kcm/systemsettings.cpp:118 rc.cpp:32
+#: kcm/systemsettings.cpp:119 rc.cpp:92
 msgid "Keyboard Settings"
 msgstr "Ajustes del Teclado"
 
-#: kcm/systemsettings.cpp:160
+#: kcm/systemsettings.cpp:162
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
-"Advertencia: Esta opción deshabilita el panel táctil via hardware.\n"
-"Para deshabilitarlo via software ir a: Hardware->Dispositivos de Entrada-"
+"Advertencia: Esta opción deshabilita el panel táctil vía hardware.\n"
+"Para deshabilitarlo vía software ir a: Hardware->Dispositivos de Entrada-"
 ">Panel táctil"
 
-#: kcm/systemsettings.cpp:281 kcm/systemsettings.cpp:399
-#: kcm/systemsettings.cpp:531
+#: kcm/systemsettings.cpp:283 kcm/systemsettings.cpp:407
+#: kcm/systemsettings.cpp:539
 msgid " sec"
 msgstr " seg"
 
-#: ktoshiba.cpp:45
+#: ktoshiba.cpp:50
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: ktoshiba.cpp:149
+#: ktoshiba.cpp:153
 msgid "Battery Profiles"
 msgstr "Perfiles de Batería"
 
-#: ktoshiba.cpp:151
+#: ktoshiba.cpp:155
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: ktoshiba.cpp:155
+#: ktoshiba.cpp:159
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: ktoshiba.cpp:158
+#: ktoshiba.cpp:162
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: ktoshiba.cpp:161
+#: ktoshiba.cpp:165
 msgid "Presentation"
 msgstr "Presentación"
 
-#: ktoshiba.cpp:164
+#: ktoshiba.cpp:168
 msgid "ECO"
 msgstr "ECO"
 
-#: ktoshiba.cpp:174
+#: ktoshiba.cpp:178
 msgid "Configure"
 msgstr "Configurar"
 
-#: ktoshiba.cpp:188
+#: ktoshiba.cpp:197
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: ktoshiba.cpp:189
+#: ktoshiba.cpp:198
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: ktoshiba.cpp:255
+#: ktoshiba.cpp:264
 msgid "Copyright © 2004-2015, Azael Avalos"
 msgstr "Derechos de autor © 2004-2015, Azael Avalos"
 
-#: ktoshiba.cpp:261
+#: ktoshiba.cpp:270
 msgid "Original Author"
 msgstr "Autor Original"
 
-#: ktoshiba.cpp:262
+#: ktoshiba.cpp:271
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: ktoshiba.cpp:262
+#: ktoshiba.cpp:271
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
 
-#: ktoshiba.cpp:264
+#: ktoshiba.cpp:273
 msgid "Green world icon"
 msgstr "Icono del mundo verde"
 
@@ -181,140 +181,325 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "coproscefalo@gmail.com"
 
-#. i18n: file: kcm/general.ui:44
-#. i18n: ectx: property (text), widget (QLabel, touchpad_label)
+#. i18n: file: kcm/boot.ui:15
+#. i18n: ectx: property (windowTitle), widget (QWidget, Boot)
+#: rc.cpp:5
+msgid "Boot Options"
+msgstr "Opciones de Arranque"
+
+#. i18n: file: kcm/boot.ui:39
+#. i18n: ectx: property (text), widget (QPushButton, preferButton)
 #: rc.cpp:8
+msgid "Prefer"
+msgstr "Preferir"
+
+#. i18n: file: kcm/boot.ui:46
+#. i18n: ectx: property (text), widget (QPushButton, deferButton)
+#: rc.cpp:11
+msgid "Defer"
+msgstr "Aplazar"
+
+#. i18n: file: kcm/boot.ui:69
+#. i18n: ectx: property (text), widget (QLabel, panel_power_label)
+#. i18n: file: kcm/general.ui:184
+#. i18n: ectx: property (text), widget (QLabel, panel_power_label)
+#: rc.cpp:14 rc.cpp:47
+msgid "Panel Power ON:"
+msgstr "Encendido mediante el panel:"
+
+#. i18n: file: kcm/general.ui:45
+#. i18n: ectx: property (text), widget (QLabel, touchpad_label)
+#: rc.cpp:20
 msgid "Pointing device:"
 msgstr "Panel táctil:"
 
-#. i18n: file: kcm/general.ui:93
+#. i18n: file: kcm/general.ui:68
+#. i18n: ectx: property (toolTip), widget (QCheckBox, touchpad_checkbox)
+#. i18n: file: kcm/general.ui:71
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, touchpad_checkbox)
+#: rc.cpp:23 rc.cpp:26
+msgid "Disables the touchpad (and trackpoint, if available) via hardware."
+msgstr ""
+"Deshabilita el panel táctil (y el trackpoint, si está disponible) vía "
+"hardware."
+
+#. i18n: file: kcm/general.ui:100
 #. i18n: ectx: property (text), widget (QLabel, rapid_charge_label)
-#: rc.cpp:11
+#: rc.cpp:29
 msgid "USB Rapid Charge:"
 msgstr "Carga Rapida del USB:"
 
-#. i18n: file: kcm/general.ui:129
+#. i18n: file: kcm/general.ui:123
+#. i18n: ectx: property (toolTip), widget (QCheckBox, rapid_charge_checkbox)
+#. i18n: file: kcm/general.ui:126
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, rapid_charge_checkbox)
+#: rc.cpp:32 rc.cpp:35
+msgid "Toggles the USB rapid charge feature."
+msgstr "Alterna la funcionalidad de Carga Rápida del USB."
+
+#. i18n: file: kcm/general.ui:142
 #. i18n: ectx: property (text), widget (QLabel, usb_three_label)
-#: rc.cpp:14
+#: rc.cpp:38
 msgid "USB 3:"
 msgstr "USB 3:"
 
 #. i18n: file: kcm/general.ui:165
-#. i18n: ectx: property (text), widget (QLabel, panel_power_label)
-#: rc.cpp:17
-msgid "Panel Power ON:"
-msgstr "Encendido mediante el Panel:"
+#. i18n: ectx: property (toolTip), widget (QCheckBox, usb_three_checkbox)
+#. i18n: file: kcm/general.ui:168
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, usb_three_checkbox)
+#: rc.cpp:41 rc.cpp:44
+msgid "Disables USB 3 functionality, acting as a regular USB 2."
+msgstr "Deshabilita la funcionalidad del USB 3, actuando como un puerto USB 2."
 
-#. i18n: file: kcm/hddprotect.ui:14
+#. i18n: file: kcm/general.ui:207
+#. i18n: ectx: property (toolTip), widget (QCheckBox, panel_power_checkbox)
+#. i18n: file: kcm/general.ui:210
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, panel_power_checkbox)
+#: rc.cpp:50 rc.cpp:53
+msgid "Turns ON the laptop whenever you open the LID."
+msgstr "Enciende el portátil cuando se abre la tapa."
+
+#. i18n: file: kcm/hddprotect.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, HDDProtect)
-#: rc.cpp:20
+#: rc.cpp:56
 msgid "HDD Protect"
 msgstr "Protección del Disco Duro"
 
-#. i18n: file: kcm/hddprotect.ui:44
+#. i18n: file: kcm/hddprotect.ui:45
 #. i18n: ectx: property (text), widget (QLabel, hdd_protect_label)
-#: rc.cpp:23
+#: rc.cpp:59
 msgid "HDD Protection:"
 msgstr "Protección del Disco Duro:"
 
-#. i18n: file: kcm/hddprotect.ui:80
+#. i18n: file: kcm/hddprotect.ui:68
+#. i18n: ectx: property (toolTip), widget (QCheckBox, hdd_protect_checkbox)
+#. i18n: file: kcm/hddprotect.ui:71
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, hdd_protect_checkbox)
+#: rc.cpp:62 rc.cpp:65
+msgid "Toggles the HDD protection monitoring."
+msgstr "Alterna la protección del disco duro."
+
+#. i18n: file: kcm/hddprotect.ui:87
 #. i18n: ectx: property (text), widget (QLabel, hdd_notification_label)
-#: rc.cpp:26
+#: rc.cpp:68
 msgid "HDD Protection Notification:"
 msgstr "Notificación de Protección del Disco Duro:"
 
-#. i18n: file: kcm/hddprotect.ui:116
+#. i18n: file: kcm/hddprotect.ui:110
+#. i18n: ectx: property (toolTip), widget (QCheckBox, hdd_notification_checkbox)
+#. i18n: file: kcm/hddprotect.ui:113
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, hdd_notification_checkbox)
+#: rc.cpp:71 rc.cpp:74
+msgid "Notify if the HDD monitoring detected movement."
+msgstr "Notifica sí el monitoreo del disco duro ha detectado movimiento."
+
+#. i18n: file: kcm/hddprotect.ui:129
 #. i18n: ectx: property (text), widget (QLabel, protection_level_label)
-#: rc.cpp:29
+#: rc.cpp:77
 msgid "HDD Protection Level:"
 msgstr "Nivel de Protección del Disco Duro:"
 
-#. i18n: file: kcm/keyboard.ui:44
+#. i18n: file: kcm/hddprotect.ui:139
+#. i18n: ectx: property (toolTip), widget (QLabel, protection_level)
+#. i18n: file: kcm/hddprotect.ui:142
+#. i18n: ectx: property (whatsThis), widget (QLabel, protection_level)
+#: rc.cpp:80 rc.cpp:83
+msgid "The current HDD protection level."
+msgstr "El nivel de protección del disco duro."
+
+#. i18n: file: kcm/hddprotect.ui:158
+#. i18n: ectx: property (toolTip), widget (QSlider, protection_level_slider)
+#. i18n: file: kcm/hddprotect.ui:161
+#. i18n: ectx: property (whatsThis), widget (QSlider, protection_level_slider)
+#: rc.cpp:86 rc.cpp:89
+msgid "Sets the HDD protection level."
+msgstr "Fija el nivel de protección del disco duro."
+
+#. i18n: file: kcm/keyboard.ui:45
 #. i18n: ectx: property (text), widget (QLabel, function_keys_label)
-#: rc.cpp:35
+#: rc.cpp:95
 msgid "Function Keys mode:"
 msgstr "Modo de las teclas de Función:"
 
 #. i18n: file: kcm/keyboard.ui:68
+#. i18n: ectx: property (toolTip), widget (QComboBox, kbd_functions_combobox)
+#. i18n: file: kcm/keyboard.ui:71
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kbd_functions_combobox)
+#: rc.cpp:98 rc.cpp:101
+msgid ""
+"Select how the keyboard Function keys operate.  Normal: The F{1-12} keys are "
+"as usual and the hotkeys are accessed via FN-F{1-12}.  Function: The F{1-12} "
+"keys trigger the hotkey and the F{1-12} keys are accessed via FN-F{1-12}."
+msgstr ""
+"Selecciona como operan las teclas de función.  Normal: Las teclas F{1-12} "
+"están como siempre y las teclas de acceso rápido se accesan vía FN-F{1-12}.  "
+"Función: Las teclas F{1-12} hacen funcionar los accesos rápidos y las teclas "
+"F{1-12} se accesan vía FN-F{1-12}."
+
+#. i18n: file: kcm/keyboard.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)
-#: rc.cpp:38
+#: rc.cpp:104
 msgid "Normal"
 msgstr "Normal"
 
-#. i18n: file: kcm/keyboard.ui:73
+#. i18n: file: kcm/keyboard.ui:80
 #. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)
-#: rc.cpp:41
+#: rc.cpp:107
 msgid "Function"
 msgstr "Función"
 
-#. i18n: file: kcm/keyboard.ui:87
+#. i18n: file: kcm/keyboard.ui:94
 #. i18n: ectx: property (text), widget (QLabel, kbd_backlight_label)
-#: rc.cpp:44
+#: rc.cpp:110
 msgid "Keyboard Backlight mode:"
 msgstr "Modo de la Luz del Teclado:"
 
-#. i18n: file: kcm/keyboard.ui:119
+#. i18n: file: kcm/keyboard.ui:117
+#. i18n: ectx: property (toolTip), widget (QComboBox, kbd_backlight_combobox)
+#. i18n: file: kcm/keyboard.ui:120
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kbd_backlight_combobox)
+#: rc.cpp:113 rc.cpp:116
+msgid "Select the keyboard backlight operation mode."
+msgstr "Selecciona el modo de operación de la luz del teclado:"
+
+#. i18n: file: kcm/keyboard.ui:133
 #. i18n: ectx: property (text), widget (QLabel, kbd_timeout_label)
-#: rc.cpp:47
+#: rc.cpp:119
 msgid "Keyboard Backlight timeout:"
 msgstr "Tiempo de apagado de la Luz del Teclado:"
 
-#. i18n: file: kcm/sleeputils.ui:44
+#. i18n: file: kcm/keyboard.ui:169
+#. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
+#. i18n: file: kcm/keyboard.ui:172
+#. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
+#: rc.cpp:122 rc.cpp:125
+msgid ""
+"Sets the time the keyboard backlight will turn off after the last keypress."
+msgstr ""
+"Fija el tiempo en el que la luz del teclado se apagará despues de la ultima "
+"tecla presionada."
+
+#. i18n: file: kcm/sleeputils.ui:45
 #. i18n: ectx: property (text), widget (QLabel, sleep_charge_label)
-#: rc.cpp:53
+#: rc.cpp:131
 msgid "USB Sleep and Charge:"
 msgstr "Carga en reposo del USB:"
 
-#. i18n: file: kcm/sleeputils.ui:80
-#. i18n: ectx: property (text), widget (QLabel, sleep_music_label)
-#: rc.cpp:56
-msgid "USB Sleep and Music:"
-msgstr "Musica y reposo del USB:"
+#. i18n: file: kcm/sleeputils.ui:68
+#. i18n: ectx: property (toolTip), widget (QCheckBox, sleep_charge_checkbox)
+#. i18n: file: kcm/sleeputils.ui:71
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, sleep_charge_checkbox)
+#: rc.cpp:134 rc.cpp:137
+msgid ""
+"Toggles the USB Sleep and Charge feature.  The computer USB ports will "
+"remain powered when the computer is asleep or turned off."
+msgstr ""
+"Alterna la carga en reposo.  Los puertos USB del ordenador permanecerán "
+"activados cuando el ordenador se encuentre apagado ó en reposo."
 
-#. i18n: file: kcm/sleeputils.ui:116
+#. i18n: file: kcm/sleeputils.ui:87
+#. i18n: ectx: property (text), widget (QLabel, sleep_music_label)
+#: rc.cpp:140
+msgid "Sleep and Music:"
+msgstr "Musica en reposo:"
+
+#. i18n: file: kcm/sleeputils.ui:110
+#. i18n: ectx: property (toolTip), widget (QCheckBox, sleep_music_checkbox)
+#. i18n: file: kcm/sleeputils.ui:113
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, sleep_music_checkbox)
+#: rc.cpp:143 rc.cpp:146
+msgid ""
+"Toggles the Sleep and Music feature.  The laptop speakers remain powered and "
+"the line-in jack is used to connect an external device to use the laptop "
+"speakers when the computer is asleep or turned off."
+msgstr ""
+"Alterna la musica en reposo.  Los altavoces del portátil permanecerán "
+"activos y el puerto de audio de entrada puede ser usado para conectar "
+"dispositivos externos para usar los altavoces del portátil cuando se "
+"encuentre apagado ó en reposo."
+
+#. i18n: file: kcm/sleeputils.ui:129
 #. i18n: ectx: property (text), widget (QLabel, battery_level_label)
-#: rc.cpp:59
+#: rc.cpp:149
 msgid "Battery Level:"
 msgstr "Nivel de Batería:"
 
-#. i18n: file: kcm/sysinfo.ui:14
+#. i18n: file: kcm/sleeputils.ui:139
+#. i18n: ectx: property (toolTip), widget (QLabel, battery_level)
+#. i18n: file: kcm/sleeputils.ui:142
+#. i18n: ectx: property (whatsThis), widget (QLabel, battery_level)
+#: rc.cpp:152 rc.cpp:155
+msgid ""
+"The current battery level at which the sleep functions will be disabled."
+msgstr ""
+"El nivel de la batería en el cual las funciones de reposo serán desactivadas."
+
+#. i18n: file: kcm/sleeputils.ui:158
+#. i18n: ectx: property (toolTip), widget (QCheckBox, battery_level_checkbox)
+#. i18n: file: kcm/sleeputils.ui:161
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, battery_level_checkbox)
+#: rc.cpp:158 rc.cpp:161
+msgid ""
+"Allows the sleep functions to operate when the computer is under battery "
+"power."
+msgstr ""
+"Permite operar a las funciones de reposo cuando el ordenador se encuentre "
+"bajo el poder de la batería."
+
+#. i18n: file: kcm/sleeputils.ui:171
+#. i18n: ectx: property (toolTip), widget (QSlider, battery_level_slider)
+#. i18n: file: kcm/sleeputils.ui:174
+#. i18n: ectx: property (whatsThis), widget (QSlider, battery_level_slider)
+#: rc.cpp:164 rc.cpp:167
+msgid "Sets the battery level at which the sleep functions will be disabled."
+msgstr ""
+"Fija el nivel de la batería en el cual las funciones de reposo serán "
+"desactivadas."
+
+#. i18n: file: kcm/sysinfo.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SysInfo)
-#: rc.cpp:62
+#: rc.cpp:170
 msgid "General"
 msgstr "General"
 
-#. i18n: file: kcm/sysinfo.ui:44
+#. i18n: file: kcm/sysinfo.ui:45
 #. i18n: ectx: property (text), widget (QLabel, model_family_label)
-#: rc.cpp:65
+#: rc.cpp:173
 msgid "Model family:"
 msgstr "Familia del Modelo:"
 
-#. i18n: file: kcm/sysinfo.ui:83
+#. i18n: file: kcm/sysinfo.ui:84
 #. i18n: ectx: property (text), widget (QLabel, model_number_label)
-#: rc.cpp:68
+#: rc.cpp:176
 msgid "Model number:"
 msgstr "Número del Modelo:"
 
-#. i18n: file: kcm/sysinfo.ui:122
+#. i18n: file: kcm/sysinfo.ui:123
 #. i18n: ectx: property (text), widget (QLabel, bios_version_label)
-#: rc.cpp:71
+#: rc.cpp:179
 msgid "BIOS version:"
 msgstr "Versión del BIOS:"
 
-#. i18n: file: kcm/sysinfo.ui:161
+#. i18n: file: kcm/sysinfo.ui:162
 #. i18n: ectx: property (text), widget (QLabel, bios_date_label)
-#: rc.cpp:74
+#: rc.cpp:182
 msgid "BIOS date:"
 msgstr "Fecha del BIOS:"
 
-#. i18n: file: kcm/sysinfo.ui:200
+#. i18n: file: kcm/sysinfo.ui:201
 #. i18n: ectx: property (text), widget (QLabel, bios_manufacturer_label)
-#: rc.cpp:77
+#: rc.cpp:185
 msgid "BIOS manufacturer:"
 msgstr "Fabricante del BIOS:"
 
-#. i18n: file: kcm/sysinfo.ui:239
+#. i18n: file: kcm/sysinfo.ui:240
 #. i18n: ectx: property (text), widget (QLabel, ec_version_label)
-#: rc.cpp:80
+#: rc.cpp:188
 msgid "EC version:"
 msgstr "Version del EC:"
+
+#. i18n: file: kcm/sysinfo.ui:279
+#. i18n: ectx: property (text), widget (QLabel, driver_version_label)
+#: rc.cpp:191
+msgid "Driver version:"
+msgstr "Version del controlador:"

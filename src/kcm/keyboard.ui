@@ -64,6 +64,12 @@
        </item>
        <item row="0" column="2">
         <widget class="QComboBox" name="kbd_functions_combobox">
+         <property name="toolTip">
+          <string>Select how the keyboard Function keys operate.  Normal: The F{1-12} keys are as usual and the hotkeys are accessed via FN-F{1-12}.  Function: The F{1-12} keys trigger the hotkey and the F{1-12} keys are accessed via FN-F{1-12}.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Select how the keyboard Function keys operate.  Normal: The F{1-12} keys are as usual and the hotkeys are accessed via FN-F{1-12}.  Function: The F{1-12} keys trigger the hotkey and the F{1-12} keys are accessed via FN-F{1-12}.</string>
+         </property>
          <item>
           <property name="text">
            <string>Normal</string>
@@ -106,7 +112,14 @@
         </spacer>
        </item>
        <item row="1" column="2">
-        <widget class="QComboBox" name="kbd_backlight_combobox"/>
+        <widget class="QComboBox" name="kbd_backlight_combobox">
+         <property name="toolTip">
+          <string>Select the keyboard backlight operation mode.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Select the keyboard backlight operation mode.</string>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="kbd_timeout_label">
@@ -152,6 +165,12 @@
        </item>
        <item row="3" column="0" colspan="3">
         <widget class="QSlider" name="kbd_timeout_slider">
+         <property name="toolTip">
+          <string>Sets the time the keyboard backlight will turn off after the last keypress.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Sets the time the keyboard backlight will turn off after the last keypress.</string>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
