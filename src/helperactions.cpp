@@ -197,28 +197,28 @@ void HelperActions::getSysInfo()
     int count = 0;
     while (count < 2) {
         QString line = in.readLine();
-        QStringList splited = line.split(":");
+        QStringList split = line.split(":");
         // BIOS Information
-        if (splited[0].contains("Vendor")) {
-            sysinfo << splited[1].trimmed();
+        if (split[0].contains("Vendor")) {
+            sysinfo << split[1].trimmed();
             continue;
         }
-        if (splited[0].contains("Version")) {
-            sysinfo << splited[1].trimmed();
+        if (split[0].contains("Version")) {
+            sysinfo << split[1].trimmed();
             count++;
             continue;
         }
-        if (splited[0].contains("Release Date")) {
-            sysinfo << splited[1].trimmed();
+        if (split[0].contains("Release Date")) {
+            sysinfo << split[1].trimmed();
             continue;
         }
-        if (splited[0].contains("Firmware Revision")) {
-            sysinfo << splited[1].trimmed();
+        if (split[0].contains("Firmware Revision")) {
+            sysinfo << split[1].trimmed();
             continue;
         }
         // System Information
-        if (splited[0].contains("Product Name")) {
-            sysinfo << splited[1].trimmed();
+        if (split[0].contains("Product Name")) {
+            sysinfo << split[1].trimmed();
             continue;
         }
     };
@@ -229,28 +229,44 @@ QString HelperActions::getDriverVersion()
 {
     m_file.setFileName(m_driverPath + "version");
     if (!m_file.exists()) {
-        kWarning() << "An older driver found, some functionality won't be available"
+        kWarning() << "An older driver found, some functionality won't be available."
                    << "Please see the file README.toshiba_acpi for upgrading instructions";
-        m_file.setFileName("/proc/acpi/toshiba_acpi/version");
+        m_file.setFileName("/proc/acpi/toshiba/version");
         if (!m_file.exists()) {
             kError() << "No version file detected";
 
             return QString("Unknown");
         }
+
+        if (!m_file.open(QIODevice::ReadOnly)) {
+            kError() << "getDriverVersion failed" << endl
+                     << m_file.errorString() << "(" << m_file.error() << ")";
+
+            return QString("Unknown");
+       }
+
+        QTextStream in(&m_file);
+        QString line = in.readLine();
+        QStringList split = line.split(":");
+        m_file.close();
+
+        return split[1].trimmed();
+    } else {
+        if (!m_file.open(QIODevice::ReadOnly)) {
+            kError() << "getDriverVersion failed" << endl
+                     << m_file.errorString() << "(" << m_file.error() << ")";
+
+            return QString("Unknown");
+       }
+
+        QTextStream in(&m_file);
+        QString version = in.readAll();
+        m_file.close();
+
+        return version;
     }
 
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getDriverVersion failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
-
-        return QString("Unknown");
-    }
-
-    QTextStream in(&m_file);
-    QString version = in.readAll();
-    m_file.close();
-
-    return version;
+    return QString("Unknown");
 }
 
 int HelperActions::getTouchPad()
@@ -388,8 +404,6 @@ void HelperActions::setKBDMode(int mode)
 
         return;
     }
-
-    emit kbdModeChanged();
 }
 
 int HelperActions::getKBDTimeout()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://ktoshiba.sourceforge.net/\n"
-"POT-Creation-Date: 2015-03-27 11:44-0600\n"
+"POT-Creation-Date: 2015-04-06 13:17-0600\n"
 "PO-Revision-Date: 2010-03-28 20:46-0700\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: fnactions.cpp:228 kcm/systemsettings.cpp:121
+#: fnactions.cpp:229 kcm/systemsettings.cpp:121
 msgid "OFF"
 msgstr "APAGADO"
 
-#: fnactions.cpp:232 kcm/systemsettings.cpp:121
+#: fnactions.cpp:233 kcm/systemsettings.cpp:121
 msgid "ON"
 msgstr "ENCENDIDO"
 
@@ -141,33 +141,33 @@ msgstr "ECO"
 msgid "Configure"
 msgstr "Configurar"
 
-#: ktoshiba.cpp:197
+#: ktoshiba.cpp:202
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: ktoshiba.cpp:198
+#: ktoshiba.cpp:203
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: ktoshiba.cpp:264
+#: ktoshiba.cpp:295
 msgid "Copyright © 2004-2015, Azael Avalos"
 msgstr "Derechos de autor © 2004-2015, Azael Avalos"
 
-#: ktoshiba.cpp:270
+#: ktoshiba.cpp:301
 msgid "Original Author"
 msgstr "Autor Original"
 
-#: ktoshiba.cpp:271
+#: ktoshiba.cpp:302
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: ktoshiba.cpp:271
+#: ktoshiba.cpp:302
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
 
-#: ktoshiba.cpp:273
+#: ktoshiba.cpp:304
 msgid "Green world icon"
 msgstr "Icono del mundo verde"
 

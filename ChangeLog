@@ -1,3 +1,16 @@
+2015-04-06 Azael Avalos <coproscefalo@gmail.com>
+	* Fix an issue with getDriverVersion function, we are now
+	  officially on 4.3
+
+2015-04-02 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed path name for version file info
+
+2015-03-29 Azael Avalos <coproscefalo@gmail.com>
+	* Removed autostart stuff from CMakeLists.txt and desktop file,
+	  updated main.cpp to let the session management handle KToshiba
+	* Removed kbdModeChanged signal from HelperActions class, we now
+	  get the notfication from Netlink event
+
 2015-03-27 Azael Avalos <coproscefalo@gmail.com>
 	* Added tooltip and whatsthis properties to KCM ui files
 	* Updated spanish translation

@@ -16,14 +16,11 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
+
 #include <KUniqueApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
-
-extern "C" {
-#include <stdio.h>
-#include <stdlib.h>
-}
 
 #include "ktoshiba.h"
 #include "version.h"
@@ -39,12 +36,12 @@ int main(int argc, char *argv[])
     KUniqueApplication::addCmdLineOptions();
 
     if (!KUniqueApplication::start()) {
-        fprintf(stderr, "KToshiba is already running!\n");
+        qDebug() << "KToshiba is already running!";
+
         return 0;
     }
 
     KUniqueApplication app;
-    app.disableSessionManagement();
     app.setQuitOnLastWindowClosed( false );
 
     KToshiba *ktoshiba = new KToshiba();

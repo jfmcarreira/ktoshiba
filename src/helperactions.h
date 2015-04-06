@@ -89,7 +89,6 @@ public Q_SLOTS:
     void unloadHeads(int);
 
 Q_SIGNALS:
-    void kbdModeChanged();
     void touchpadToggled(int);
 
 private:

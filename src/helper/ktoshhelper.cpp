@@ -111,19 +111,24 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
     m_file.close();
 
     // Code for TouchPad LED (when it is available), we simply uncomment this
-    /*if (!state) {
-        m_file.setFileName("/sys/class/leds/psmouse::synaptics/brightness");
-        if (!m_file.open(QIODevice::WriteOnly)) {
-            reply = ActionReply::HelperErrorReply;
-            reply.setErrorCode(m_file.error());
-            reply.setErrorDescription(m_file.errorString());
+    /*m_file.setFileName("/sys/class/leds/psmouse::synaptics/brightness");
+    if (!m_file.exists()) {
+        // No need to report as an error if the file does not exists
+        return reply;
+    } else {
+        if (!state) {
+            if (!m_file.open(QIODevice::WriteOnly)) {
+                reply = ActionReply::HelperErrorReply;
+                reply.setErrorCode(m_file.error());
+                reply.setErrorDescription(m_file.errorString());
 
-            return reply;
+                return reply;
+            }
+
+            QTextStream stream(&m_file);
+            stream << !state;
+            m_file.close();
         }
-
-        QTextStream stream(&m_file);
-        stream << !state;
-        m_file.close();
     }*/
 
     return reply;

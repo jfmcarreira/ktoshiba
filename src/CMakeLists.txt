@@ -55,7 +55,6 @@ target_link_libraries(kcm_ktoshibam
 
 install(TARGETS ktoshiba ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES ktoshiba.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES ktoshiba.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})
 install(FILES ${CMAKE_SOURCE_DIR}/rules/udev/99-ktoshiba-input.rules DESTINATION "/usr/lib/udev/rules.d")
 # KCM
 install(TARGETS kcm_ktoshibam DESTINATION ${PLUGIN_INSTALL_DIR})
