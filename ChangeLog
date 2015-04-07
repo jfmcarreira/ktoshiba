@@ -1,1187 +1,626 @@
-2007-05-30 Azael Avalos <coproscefalo@gmail.com>
-	* Released 0.11
-
-2007-05-24 Azael Avalos <coproscefalo@gmail.com>
-	* Updated README files
-	* Bumped configure.in.in version 
-
-2007-05-23 Azael Avalos <coproscefalo@gmail.com>
-	* Set the default (loading) values of the BSM widget
-	* Finished the BSM widget...
-	* Added two new functions to deal with BSM config file
-	* Finally finished with the new changes made to the BSM
-	* Updated Spanish translation
-	* Fixed setting the correct brightness when in BS Modes
-	* Bumped header versions
-	* Fixed percent sorting for BSM stuff
-	* Moved some strings to KCM class to deal with the
-	  translations there
-	* Updated Spanish catalog again...
-
-2007-05-07 Azael Avalos <coproscefalo@gmail.com>
-	* Now the Hardware tab items send the signal correctly
-	* Removed old BSM stuff from KCM and cleaned up a bit
-	* More advances to the BSM stuff, it is semi-functional now
-	* Got the Hardware stuff working now (getting closer to a
-	  release, once I finish the BSM stuff...)
-
-2007-05-02 Azael Avalos <coproscefalo@gmail.com>
-	* Moved checkSynaptics function to FnActions class
-	  (it should have been there since the beginning...)
-
-2007-04-30 Azael Avalos <coproscefalo@gmail.com>
-	* More advances to the KCM BSM code
-
-2007-04-28 Azael Avalos <coproscefalo@gmail.com>
-	* Disabled BSM stuff from KCM for now
-	* Some small changes here and there
-
-2007-04-24 Azael Avalos <coproscefalo@gmail.com>
-	* Added new functions to KToshibaSMMInterface class
-	  (Wake on Keyboard)
-	* "Implemented" BSM for omnibook users, 'tho it will
-	  only change bright levels...
-	* Removed some config stuff since we don't need it
-	* Aded new function to get the BIOS date
-	* Some small changes here and there
-
-2007-04-23 Azael Avalos <coproscefalo@gmail.com>
-	* Finished adding new configuration tab for
-	  hardware related stuff to the KCModule
-
-2007-04-22 Azael Avalos <coproscefalo@gmail.com>
-	* Some small changes to FnActions class
-
-2007-04-21 Azael Avalos <coproscefalo@gmail.com>
-	* Aplied changes needed to make use of new
-	  libsynaptics version (0.14.6c)
-
-2007-04-18 Azael Avalos <coproscefalo@gmail.com>
-	* Started some changes to the BSM code (again...)
-
-2007-04-14 Azael Avalos <coproscefalo@gmail.com>
-	* Some small changes here and there
-
-2007-03-15 Azael Avalos <coproscefalo@gmail.com>
-	* Changed the DOP call to KMix to set mute/unmute
-	  to the master volume (and I thought I had it that way...)
-	* Some misc changes here and there
-
-2007-03-13 Azael Avalos <coproscefalo@gmail.com>
-	* Run Command Widget will now appear on the center
-	  of the screen
-
-2007-03-06 Azael Avalos <coproscefalo@gmail.com>
-	* Removed ktosh_helper.cpp and also removed it from
-	  Makefile.am (somehow I forgot to remove this earlier...)
-
-2007-03-05 Azael Avalos <coproscefalo@gmail.com>
-	* The Run Command options is now implemented on all
-	  Fn-Esc/F{1,2,3,4,5,6,7,8,9} keys
-	* Added widget to enter command and save the command
-	  in case the user forgot to enter it or was left blank
-
-2007-03-03 Azael Avalos <coproscefalo@gmail.com>
-	* Some slight changes to toshibafnactions.cpp file
-	  to reduce messages (looks cleaner now)
-
-2007-03-02 Azael Avalos <coproscefalo@gmail.com>
-	* Reverted some changes made to {s,h}ci.c files
-
-2007-02-21 Azael Avalos <coproscefalo@gmail.com>
-	* Added new model ID, thanks to Andreas Brinkmann
-
-2007-02-13 Azael Avalos <coproscefalo@gmail.com>
-	* Added new model strings to omnibook interface
-
-2007-02-10 Azael Avalos <coproscefalo@gmail.com>
-	* Removed some unneeded includes from
-	  kcmtoshiba_general.iu file
-	* Added initial implementation for running commands
-	  using the Fn-Esc/F{1,2,3,4,5,6,7,8,9} keys
-	  (being reviewed, it may be kept or removed...)
-	* Used enums instead of char in FnActions class and
-	  adapted accordingly
-
-2007-01-29 Azael Avalos <coproscefalo@gmail.com>
-	* Added some enums to Suspend class
-	* Removed some unneeded code from hotkeys monitoring
-	  function
-
-2007-01-20 Azael Avalos <coproscefalo@gmail.com>
-	* Use LIBHAL_FREE_DBUS_ERROR macro on Suspend.cpp
-	* Removed deprecated calls to HAL
-	* Changed resume slot call from 10 to 4 seconds
-
-2007-01-15 Azael Avalos <coproscefalo@gmail.com>
-	* Updated ktoshiba.desktop file
-
-2007-01-05 Azael Avalos <coproscefalo@gmail.com>
-	* Removed some unneccesary stuff
-
-2007-01-04 Azael Avalos <coproscefalo@gmail.com>
-	* Completed suspend support using HAL
-	  (let the testing begins...)
-	* Added missing argument to avoid:
-	  "QString::arg(): Argument missing: ..."
-
-2007-01-03 Azael Avalos <coproscefalo@gmail.com>
-	* Added initial HAL support
-
-2007-01-01 Azael Avalos <coproscefalo@gmail.com>
-	* Updated keycodes definitions all over the place
-	  (we now need omnibook module from SVN trunk)
-	* Updated omnibook code, now all Fn-Key combos are configurable
-	  (exept Fn-F6 and Fn-F7 which are hard coded)
-	* Disabled Fn-F5 (Video Out) for toshiba users since most (all?)
-	  newer laptops do it automatically anyway...
-
-2006-12-31 Azael Avalos <coproscefalo@gmail.com>
-	* Removed forgotten helper code from Suspend class...
-	* STR and STD are disabled for now
-
-2006-12-30 Azael Avalos <coproscefalo@gmail.com>
-	* Added missing dbus_bus_register function call to
-	  DBUS interface (it was causing KToshiba to use about
-	  30% of system resources...)
-	* Removed Helper button from KCM and related code
-
-2006-12-28 Azael Avalos <coproscefalo@gmail.com>
-	* Powersave support dropped
-
-2006-12-13 Azael Avalos <coproscefalo@gmail.com>
-	* Released 0.10
-
-2006-12-12 Azael Avalos <coproscefalo@gmail.com>
-	* Suepend and KToshibaDBUSInterface classes updated to use
-	  new powersave and DBUS method calls (code taken from KPowersave)
-
-2006-12-11 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed issue that caused KToshiba to keep running even
-	  if there was no toshiba module available when omnibook
-	  support was not enabled
-	* Removed Alpha from version since 0.10 will be released
-	  on wednesday the 13th
-	* Reverted some changes made to main.cpp file, somehow was
-	  causing KToshiba to crash at exit
-	* Do some reordering of DBUS calls in the KToshibaDBUSInterface
-	  class
-	* Removed some unused fuctions from KToshibaDBUSInterface class
-	* Suspend class was cleaned and needs to be updated to use new
-	  powersave (0.15.10) since it changed a lot
-
-2006-12-10 Azael Avalos <coproscefalo@gmail.com>
-	* Added a check to ToshibaFnActions class constructor to
-	  verify existence, read and write operations on /dev/toshiba
-	* Added some extra checks to KToshiba class destructor
-
-2006-12-09 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed enableSystemEvent function, it was returning
-	  success when no write permissions are set on /dev/toshiba
-
-2006-12-04 Azael Avalos <coproscefalo@gmail.com>
-	* Some more small changes in STD code
-	* Fixed an if statement in KToshibaSMMInterface
-
-2006-11-29 Azael Avalos <coproscefalo@gmail.com>
-	* Some small changes in KToshibaSMMInterface and
-	  {h,s}ci.h headers
-	* Fixed STD timer, insted of waiting 1.5 minutes
-	  (90 seconds), it was only witing 0.15 minutes (9 seconds),
-	  now it's waiting 1 minute instead
-	* Some changes in STD code
-
-2006-11-28 Azael Avalos <coproscefalo@gmail.com>
-	* Added a missing exit(0) call whenever we receive a
-	  quit signal to ktosh_keyhandler program
-	* Added a usleep(100000) (so we match the QTimer from the
-	  toshiba module) to ktosh_keyhandler program
-	* Some small changes here and there
-
-2006-11-27 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed some BSM stuff (why didn't I noticed it before...?)
-	  and slightly changed some stuff
-	* Disabled Fn-Key Tab for omnibook users if ktosh_keyhandler
-	  program is not found
-	* Small modification to {sci,hci}.c files (removed some
-	  unneeded and duplicated code)
-	* Added new functions to set/get the owner string
-	  (implementation tken from toshutils), but they are
-	  disabled (need some testing first)
-	* Updated Setting widget and FnActions class to
-	  reflect changes in BSM
-	* Some small changes to KToshibaSMMInetraface class
-	  and removed an unused variable
-	* Added missing ktoshibaicons_DATA entry in icons makefile
-	  (now there will be no error reported on ~/.xsession-errors)
-
-2006-11-26 Azael Avalos <coproscefalo@gmail.com>
-	* Disabled the Fn-F5 combobox from the KCM, this is
-	  because it toggles the Video-Out, and the models
-	  I've seen have that function hardcoded.
-
-2006-11-16 Azael Avalos <coproscefalo@gmail.com>
-	* Updated the handbook
-
-2006-11-14 Azael Avalos <coproscefalo@gmail.com>
-	* Removed toshiba_acpi module monitoring, it needs more
-	  implementation and also the support is limited
-	  (tho the experimental toshiba_acpi driver provides
-	  the same functionality as the toshiba module)
-	* Disabled Fn-Key tab on KCM if system does not support
-	  Hotkeys monitoring
-
-2006-11-13 Azael Avalos <coproscefalo@gmail.com>
-	* A little modification to sci.c and hci.c to return
-	  the correct error code instead of {S,H}CI_FAILURE
-	  all the time
-	* Some misc changes to KToshibaSMMInterface
-	* Small change to omnibook batteryStatus function to
-	  return a value when the battery is not present
-	* Some more slight changes to KToshibaSMMInterface
-	  and {sci,hci}.c files
-	* Adapted KCM files, KToshiba and ToshibaFnActions classes
-	  to new changes in library
-
-2006-11-12 Azael Avalos <coproscefalo@gmail.com>
-	* Removed some code that was causing KToshiba to crash
-	  (strange, it wasn't happening before...)
-	* Added two new functions to KToshibaSMMInterface to set
-	  the returned error code in case of failure
-	* Updated Desktop entry
-	* Updated ktoshibasmminterface.h function information
-	* Fixed an issue regarding Bluetooth enabling/disabling
-	  when there is no Bluetooth device present
-	* Fixed display of correct widget when Fan was turned On/Off
-	* Fixed tooltip display when LAN card was enabled/disabled
-
-2006-11-07 Azael Avalos <coproscefalo@gmail.com>
-	* Updted README and README.es files
-
-2006-11-05 Azael Avalos <coproscefalo@gmail.com>
-	* Renamed the Satellite A25 string to Satellite A25 Series
-	  (thanks to Emre for providing the info)
-	* Fixed typos in ChangeLog last entry...
-	* Fixed a function calling on omnibookfnactions
-	  (thanks to Emre for providing the info)
-	* Fixed compilation problem if --with-omnibook=yes
-	  was enabled
-
-2006-11-02 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed a bug where if you removed the battery, it caused
-	  the KCM to crash
-	* Reduced some code in ktoshibaprocinterface.cpp
-	* Fixed an issue where boot priority was not being updated
-	  correctly
-
-2006-10-30 Azael Avalos <coproscefalo@gmail.com>
-	* Some retouches to settingswidget.ui
-	* Small changes to configure.in.in, libsynaptics won't
-	  be enabled as default (same as --with-libsynaptics=no)
-	  and omnibook support will (same as --with-omnibook=yes)
-
-2006-10-25 Azael Avalos <coproscefalo@gmail.com>
-	* Retouched and updated brightenss icons
-
-2006-10-23 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed an issue where widget was not updating correctly
-	  as you pressed the hoykeys
-
-2006-10-20 Azael Avalos <coproscefalo@gmail.com>
-	* Some small changes to ktoshiba.cpp
-
-2006-10-17 Azael Avalos <coproscefalo@gmail.com>
-	* Updated README.omnibook about Wireless and Bluetooth
-	  support and removed the omke project link
-	* Added keycode 163 for Bluetooth toggling
-	* Fixed potential error when suspending to disk and using
-	  omnibook module
-	* Added some extra checks to the toshiba code to
-	  avoid errors just in case...
-	* Removed the long list of model IDs from the hci.h header
-	  since it is now contained and expanded a bit on modelid.h
-	  header file
-
-2006-10-16 Azael Avalos <coproscefalo@gmail.com>
-	* Modified ktoshiba.{h,cpp} so that if omnibook support
-	  is compiled in it can work on both, toshiba and
-	  omnibook kernel modules
-
-2006-10-13 Azael Avalos <coproscefalo@gmail.com>
-	* Some changes to KCModule
-
-2006-10-09 Azael Avalos <coproscefalo@gmail.com>
-	* Small change to checkOmnibook function
-	* Added function to get hotkeys from toshiba_acpi
-	  kernel module
-	* Some changes to toshibafnactions class
-
-2006-10-04 Azael Avalos <coproscefalo@gmail.com>
-	* Small change to ktosh_keyhandler program
-
-2006-10-04 Azael Avalos <coproscefalo@gmail.com>
-	* Created new class named FnActions which is inherited
-	  from Toshiba/OmnibookFnActions classes to reduce some
-	  duplicated code
-	* Fixed the Battery Status display for omnibook users
-
-2006-10-01 Azael Avalos <coproscefalo@gmail.com>
-	* Added a new kecode entry for wireless on/off
-	  and enabled it on KCM
-	* Changed the LCD Baclight function to _really_
-	  turn off the LCD backlight...
-
-2006-09-27 Azael Avalos <coproscefalo@gmail.com>
-	* More models added to omnibookModelName function
-	* Created new class nmed KToshibaOmnibookInterface
-	  and moved all omnibook related stuff there
-	* Updated all files accordingly to new changes and
-	  now really activated Bluetooth for omnibook users
-	* Disabled Fan and OneTouch menu entries if corresponding
-	  /proc/omnibook files are not there
-
-2006-09-26 Azael Avalos <coproscefalo@gmail.com>
-	* Added function to get the WiFi antenna switch status
-	* Updated wifi switch functions on both, toshiba and
-	  omnibookfnactions classes
-
-2006-09-25 Azael Avalos <coproscefalo@gmail.com>
-	* Small changes to omnibookModelName function
-
-2006-09-24 Azael Avalos <coproscefalo@gmail.com>
-	* Enabled KCM Bluetooth checkbox for omnibook users
-	  and adapted bluetooth function accordinlgy
-	* Fixed a typo on a debug message on KToshibaSMMInterface
-
-2006-09-22 Azael Avalos <coproscefalo@gmail.com>
-	* Updated ectype according to info found on
-	  omnibook homepage and added the missing Tecra S1/S2
-	* Added WiFi and Bluetooth support for omnibook module
-	  users
-
-2006-09-14 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed bug regarding Battery Save Mode
-
-2006-09-04 Azael Avalos <coproscefalo@gmail.com>
-	* Hardcoded Fn-F6 and Fn-F7 for omnibook users to do
-	  brightness up/down respectively since some models
-	  do it automatically
-	* Disabled Fn-Key comboboxes from 2 to 9, since only Fn-Esc
-	  and Fn-F1 can be configured
-	* Updated README.omnibook file
-	* Released 0.9
-
-2006-08-27 Azael Avalos <coproscefalo@gmail.com>
-	* Some misc changes...
-	* Fixed killing of ktosh_keyhandler program (we are now
-	  ready for testing ;-)
-
-2006-08-25 Azael Avalos <coproscefalo@gmail.com>
-	* Small changes to configure.in.in and src/Makefile.am
-	* Added Bluetooth existence check and adapted Enable Bluetooth
-	  function acordingly
-
-2006-08-23 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed compilation problems if powersave was not enabled
-	  and got rid of a couple more compiler warnings
-	* Fixed a typo that prevented compiling if libsynaptics was
-	  not enabled
-	* Removed --with-helper configure flag, it will compiled if
-	  powersave is not enabled
-	* Got rid of a couple more compiling warnings for ktosh_helper
-	  (still got one tho...)
-	* Updated omnibookfnctions class functions and added a battery
-	  status to keycode 161
-	* KToshiba now opens an xterm if konsole is not found and
-	  firefox if kfmclient is not found also (maybe we can made
-	  the desired browser configurable...)
-
-2006-08-21 Azael Avalos <coproscefalo@gmail.com>
-	* Updted README.omnibook file regarding the available
-	  Fn-Key options that work
-	* Fixed an issue about displaying the wrong icon when the
-	  MousePad was disabled or not available
-	* Fixed a long standing issue regarding the brightness
-	  not showing the correct icons (why I didn't fixed it
-	  before...?)
-	* Some more updates to the omnibook ectypes (but we still
-	  depend on model name :-( )
-	* Omnibook code compile again and _removed_ compiler warnings
-	* Updated key handler keys and _removed_ the compiler warning
-
-2006-08-18 Azael Avalos <coproscefalo@gmail.com>
-	* Initial D-BUS support (we now depend on D-BUS also, which
-	  eventually will replace all DCOP stuff when KDE4 is out ;-)
-
-2006-08-16 Azael Avalos <coproscefalo@gmail.com>
-	* Removed some more unneeded variables now that we use DCOPRef
-	* Added battery status by pressing Fn-b (for toshiba users) but
-	  only works if the SCI is opened
-	* Small change to KCM
-
-2006-08-15 Azael Avalos <coproscefalo@gmail.com>
-	* Dropped SCI AC checking, we now use HCI and ACPI only
-	* Removed unneeded call to loadConfiguration function
-	* Fixed possible bug for the Battery Type and Battery Save Mode
-	* Removed unneeded variable mOmnibook
-
-2006-08-14 Azael Avalos <coproscefalo@gmail.com>
-	* Moved a couple variables to the toshiba part
-	* Small change on loadConfiguration function
-	* Fixed a possible bug in the audio app starting function
-	* Small code reduction on main KCM plus fixed an issue for
-	  models having problems accessing the SCI
-	* Updated README.omnibook file
-
-2006-08-13 Azael Avalos <coproscefalo@gmail.com>
-	* Made the smm driver public so the toshiba class can
-	  access the functions without the need for a constructor
-	* Cleaned up a bit the mousepad handling functions
-	* Removed some redundant variables and initialized some
-	  to make valgrind happy
-
-2006-08-11 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed an issue regarding Video-Out toggle
-
-2006-08-09 Azael Avalos <coproscefalo@gmail.com>
-	* Some small changes to toshibafnactions class
-
-2006-08-08 Azael Avalos <coproscefalo@gmail.com>
-	* Small update to omnibook ectype (tho is still based on
-	  name, I need a better way to identify the ectype...)
-	* Small change to suspend class (we now have a signal emmited
-	  whenever STD is enabled, I now need to figure it out how
-	  to know when we are back from STD...)
-
-2006-08-06 Azael Avalos <coproscefalo@gmail.com>
-	* Small change on suspend class
-	* Updated *.desktop files
-
-2006-08-05 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed Bluetooth menu entry
-	* Some misc small changes
-
-2006-08-04 Azael Avalos <coproscefalo@gmail.com>
-	* Some changes to suspend class
-
-2006-08-03 Azael Avalos <coproscefalo@gmail.com>
-	* Some misc changes
-	* Fixed calling of increase/decreaseVolume functions
-
-2006-07-29 Azael Avalos <coproscefalo@gmail.com>
-	* New function for omnibbok users to increase/decrase volume
-
-2006-07-28 Azael Avalos <coproscefalo@gmail.com>
-	* Small change on how Audio Application was started
-	  (we now use startServiceByDesktopName function)
-
-2006-07-27 Azael Avalos <coproscefalo@gmail.com>
-	* Dropped KsCD support from CD/DVD mode, Kaffeine is a more
-	  feature rich player and also supports audio CDs
-	* Removed MODE timer, now you can select the desired MODE
-	  using Fn-d (Digital) and Fn-c (CD/DVD) or toggle MODE
-	  using Fn-t (Digital <-> CD/DVD)
-	* Removed modular X.Org Server check, it now compiles
-	  by some added libraries to Makefile.am
-	* Added some needed libraries to SYNAPTICS flag in
-	  order to compile under modular X.Org Server
-
-2006-07-26 Azael Avalos <coproscefalo@gmail.com>
-	* Added a function to retreive the model name for
-	  omnibook users (the previous code wasn't working...)
-	* Updated Multimedia MODE and OneTouch icons
-	  (they look kinda nicer now ;-))
-	* Fixed setting of parameters for omnibook users
-	  (damn, I'm making a lot of mistakes... anyway...)
-	* Moved model name code to own function and reordered a bit
-	* New function to return the ectype for omnibook users
-	  (now all REPORTED keycodes are working)
-
-2006-07-25 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed a bug that caused KToshiba to crash at loading
-	  configuration file
-	* Some changes to the configuration file (ktoshibarc)
-	* Implemented the _Maximize_ hotkey found on some models
-	  (it toggles fullscreen on kaffeine instead of maximize)
-	* Added a new menu entry for omnibook users so they can
-	  toggle the MultiMedia MODE (CD/DVD <-> Digital) and
-	  also fixed menu ordering (I need to pay more attention...)
-	* Enabled some more stuff for omnibook users on KCM
-	* Added icons for OneTouch buttons and multimedia MODE
-
-2006-07-24 Azael Avalos <coproscefalo@gmail.com>
-	* Updated keycodes on keyhandler program
-	* Moved keycodes to own _subfunction_
-	* The keyhandler program is only compiled if
-	  user specified --with-omnibook
-	* Updated Spanish translation
-	* Some misc changes
-
-2006-07-23 Azael Avalos <coproscefalo@gmail.com>
-	* Some small changes on omnibook hotkeys function
-	  (replaced some breaks with returns instead)
-	* Added configure check for Modular X.Org X Server
-
-2006-07-21 Azael Avalos <coproscefalo@gmail.com>
-	* Added a function to open the configured Media Player
-	* Changed default Audio Application to Amarok
-	  (weird, why wasn't this the default...?)
-	* Enabled the Fn-Key tab for omnibook users
-	  (tho only some options are working for them)
-	* Some small change to configure.in.in and Makefile.am
-	* Removed modelid.cpp, moved all stuff to header file
-
-2006-07-19 Azael Avalos <coproscefalo@gmail.com>
-	* Updated ktoshiba.desktop file
-	* Re-ordered panel menu
-	* Fixed an issue regarding the multimedia MODE
-	  (was causing a lot of error messages)
-	* Deactivated hotkeys monitoring if we could not
-	  activate them
-	* Added AutoStart functionality and added a checkbox
-	  on KCModule to toggle state
-
-2006-07-14 Azael Avalos <coproscefalo@gmail.com>
-	* Updated README files
-	* Moved Suspend To RAM/Disk to own class
-	* Some changes to KCModule
-	* Reverted changes on how the KCModule was called,
-	  it was causing a lot of instances of the module to appear
-	* Added the toshiba.h header file, now we don't need
-	  the kernel sources to compile KToshiba ;-)
-
-2006-07-14 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed a typo on main.cpp
-
-2006-07-13 Azael Avalos <coproscefalo@gmail.com>
-	* Some changes here and there
-	* Finished key handling stuff, we now need to get more
-	  keycodes and actions for omnibook models
-
-2006-07-11 Azael Avalos <coproscefalo@gmail.com>
-	* Small clean up, reduced some code lines
-	* Moved synaptics check function to KToshiba class
-	* Added functions for omnibook TouchPad enabling/disabling
-	  functionality (if system supports it)
-	* Added a DCOP interface to receive the keycodes from
-	  the key handler program (only activated for omnibook)
-
-2006-07-10 Azael Avalos <coproscefalo@gmail.com>
-	* Key handling success, thanks go to the lineak project
-	  since I borrowed their ideas, hehe ;-)
+2015-04-06 Azael Avalos <coproscefalo@gmail.com>
+	* Fix an issue with getDriverVersion function, we are now
+	  officially on 4.3
+
+2015-04-02 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed path name for version file info
+
+2015-03-29 Azael Avalos <coproscefalo@gmail.com>
+	* Removed autostart stuff from CMakeLists.txt and desktop file,
+	  updated main.cpp to let the session management handle KToshiba
+	* Removed kbdModeChanged signal from HelperActions class, we now
+	  get the notfication from Netlink event
+
+2015-03-27 Azael Avalos <coproscefalo@gmail.com>
+	* Added tooltip and whatsthis properties to KCM ui files
+	* Updated spanish translation
+	* Fixed a bug in KCM while loading sleep functions values
+	* Added a function to handle TVAP events from upstream (tho' only
+	  does limited things like updating the KBD backlight status)
+
+2015-03-25 Azael Avalos <coproscefalo@gmail.com>
+	* Removed white space from sysinfo variable in HelperActions class
+	* Small change to getSysInfo function
+	* Added a new function to get the HID to HelperActions class
+	* Renamed KToshibaHDDProtect class to KToshibaNetlinkEvents, added a
+	  new signal and removed some code
+	* Added a new method to the DBus backend to notify of a configuration
+	  file change and adapted code to reload the config if it happens
+
+2015-03-24 Azael Avalos <coproscefalo@gmail.com>
+	* Added a function to get driver version to HelperActions class, and warn
+	  if the driver version is too "old"
+	* Updated the System Information tab to show the driver version
+	* Added a new file named README.toshiba_acpi with instructions on how
+	  and where to download and install an updated toshiba_acpi module
+
+2015-03-23 Azael Avalos <coproscefalo@gmail.com>
+	* Removed some unused variables from FnActions and KToshibaSystemSettings
+	  classes and added some error messages
+	* Do not bail out if the DBus service is not registered, added error
+	  messages too
+	* Created the Boot Options widget, not yet pushed to SVN since we don't
+	  have support for it upstream
+
+2015-03-19 Azael Avalos <coproscefalo@gmail.com>
+	* Added a check to KCM for the System Information fields, it will now
+	  create them if they do not exist
+	* We now exit from main.cpp instead from KToshiba class in case of an
+	  error
+	* Changed KToshiba class from KUniqueApplication to KStatusNotifierItem
+
+2015-03-18 Azael Avalos <coproscefalo@gmail.com>
+	* Cleaned includes from some files that I missed on last cleanup
+	* Added a KMessageWidget to inform users that some changes need a reboot
+	  or that an error has happened
+	* Fixed an issue with the KCM tabs, they're now all created by default,
+	  but disabled if the features under them are not supported
+	* Updated spanish translation
+	* Small change to KCM, it now shows the error message
+
+2015-03-17 Azael Avalos <coproscefalo@gmail.com>
+	* Implemented defaults function
+	* Implemented save function
+	* Fixed KToshHelper actions name, a few functions were missing the
+	  set prefix
+
+2015-03-04 Azael Avalos <coproscefalo@gmail.com>
+	* Added a KCM tab for sleep utilities configuration
+	* Added a KCM tab for keyboard settings and removed code from
+	  KToshiba class
+	* Fixed a typo in HelperActions class, we were not reading the correct
+	  file for sleep functions under battery, and also, changed the return
+	  parameter to QStringList (from int), adapted code accordingly
+	* Fixed a type in HelperActions and KToshHelper, we were not
+	  reading/writing to the correct file
+	* Small change to Qt include files
+	* Merged KCM CMakeLists into the main one
+	* Added a KCM tab for general settings, removed the TouchPad code
+	  from KToshiba class
+	* Added menu option to open configuration (KCM)
+	* Some small changes to destructors
+	* Changed QProcess to KProcess
+	* Fixed an issue with dmidecode parser (it was getting too many
+	  version strings)
+
+2015-03-03 Azael Avalos <coproscefalo@gmail.com>
+	* Added KCM with a General Tab showing system information
+	* Added a KCM tab for HDD protection configuration and removed code
+	  KToshiba class
+
+2015-03-02 Azael Avalos <coproscefalo@gmail.com>
+	* Added functions to dump and parse dmidecode information, as
+	  the data will be used in the upcomming KCM
+	* Fixed some return values from HelperActions class, they were
+	  returning false instead of -1
+
+2015-03-01 Azael Avalos <coproscefalo@gmail.com>
+	* Some changes to most of the classes, we now exit at the main
+	  class (KToshiba) in case something's wrong
+	* Removed uneeded functions from FnActions class
+	* Added code for TouchPad LED (inactive for now until kernel
+	  supports it)
+
+2015-02-27 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to KToshibaHDDProtect and KToshiba classes, we are
+	  not initializing the classes if we don't have support for it
+	* Some small change to KToshibaKeyHandler class
+
+2015-02-21 Azael Avalos <coproscefalo@gmail.com>
+	* Added support for more features found on the upstream
+	  toshiba_acpi kernel driver (to be released on 3.20/4.0)
+	* Changed the values from a few functions from bool to int
+	  in HelperActions and DBus classes
+	* Re-added the doMenu function in KToshiba class
+	* Make use of qobject_cast to only make one instance of HelperActions
+
+2015-02-07 Azael Avalos <coproscefalo@gmail.com>
+	* Bump version to 4.2.1
+
+2015-02-06 Azael Avalos <coproscefalo@gmail.com>
+	* Removed white icon installation, was causing trouble building
+	  the package at the OBS, it can still be added manually tho...
+	* Fixed some issues with the touchpad {en, dis}able code (a miss
+	  merge from 4.2 release...)
+	* Fixed an issue with setting the kbd mode (somehow we cannot pass
+	  hex values to helper function, let's make them int then...)
+	* Removed unused code from setBrightness DBus call
+
+2015-02-02 Azael Avalos <coproscefalo@gmail.com>
+	* Bump version to 4.2
+
+2015-01-21 Azael Avalos <coproscefalo@gmail.com>
+	* Removed autostart code (again), we install the .desktop
+	  file under the XDG_AUTOSTART macro, so there is no need
+	  for a config option
+
+2015-01-20 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue where the disabled icon was beign showed
+	  when the battery profiles were disabled and the AC adapter
+	  was (dis)connected
+	* Added some icons to the Keyboard Backlight submenu
+	* Added device ID TOS6207 to supported devices to be on par
+	  with driver
+	* Splitted the TouchPad into get/set from toggle and added a
+	  signal to know whenever it is {en, dis}abled
+
+2015-01-17 Azael Avalos <coproscefalo@gmail.com>
+	* Added new white icon
+	* Removed kbd backlight handling from powersave and
+	  performance profiles
+
+2015-01-12 Azael Avalos <coproscefalo@gmail.com>
+	* Removed brightness setting from powersave and
+	  performance profiles (KDE does it for us)
+	* Fixed an issue where the KBD backlight was not
+	  being turned on/off by battery profiles (that's
+	  what happens when you just copy paste...)
+	* Moved all instances of helper from KToshiba to
+	  FNActions class, this way only one instance is created
+	  instead of two
+
+2015-01-11 Azael Avalos <coproscefalo@gmail.com>
+	* Added submenu options for battery profiles
+
+2015-01-08 Azael Avalos <coproscefalo@gmail.com>
+	* Added sub menu for changing kbd backlight mode
+	* Small changes to some strings
+	* Deleted some no longer used variables
+
+2015-01-07 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue where the keyboard timeout entry
+	  was not hidden on kbd mode change
+	* Removed -std flags and set -D_DEFAULT_SOURCE to avoid
+	  compiler warnings
+	* Changed ktoshhelper setKBDTimeout range from 0-60 to
+	  1-60, only the 1st kbd implementation supports a zero
+	  value (and who would want a zero value anyway...?)
+
+2015-01-06 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed the accepted kbd mode values on ktoshhelper
+	* ECO mode adapted to type 2 kbd backlight
+	* Updated copyright year 
+
+2014-11-05 Azael Avalos <coproscefalo@gmail.com>
+	* Moved and adapted all read functions from ktoshhelper
+	  to helperactions, there's no need to be root to read
+	  values from sys
+	* Some misc rename to accelerometer
+	* Added new call isKBDTypeSupported to check for type 2
+	  keyboard backlight implementations
+
+2014-10-23 Azael Avalos <coproscefalo@gmail.com>
+	* Removed laptop movement detection files and code,
+	  it was consuming around 12% CPU to query the
+	  position file, it might later be added back if
+	  a better way of polling (or reporting) is found
+
+2014-10-22 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to INSTALL file
+
+2014-10-11 Azael Avalos <coproscefalo@gmail.com>
+	* Changed accelerometer file check, it was enabled
+	  even if no toshiba_haps module was loaded
+
+2014-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Changed widget timeout range from 0-99 to 1-60,
+	  which is the supported range
+
+2014-09-13 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted code to changes in driver upstream,
+	  we now support two types of keyboard backlight
+	  implementation
+
+2014-09-06 Azael Avalos <coproscefalo@gmail.com>
+	* Added accelerometer files, this is the initial
+	  support for laptop movement detection
+
+2014-08-30 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to helperactions functions, they
+	  now return on error, also fixed indentation
+
+2014-08-27 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to findDriverPath function
+
+2014-08-24 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to findDevide function, udev rules
+	  pick the last (matched) device, so let function
+	  keep searching until it finds the last device
+
+2014-08-18 Azael Avalos <coproscefalo@gmail.com>
+	* Moved all the UDev code from KToshibaHDDProtect
+	  class and created the new class named UDevHelper
+	* Added new class KToshibaAccel that monitors the
+	  built-in accelerometer of Toshiba laptops
 	* Misc changes here and there
 
-2006-07-07 Azael Avalos <coproscefalo@gmail.com>
-	* Added new function to turn on/off LCD Backlight for
-	  omnibook users
-	* Started testing the Fn-key and onetouch handling for
-	  omnibook users
-	* Moved all multimedia related stuff to own funtions
-	  to avoid duplicate code
-
-2006-07-06 Azael Avalos <coproscefalo@gmail.com>
-	* Disabled Setup Helper Application button if helper
-	  was not enabled
-	* Disabled Bluetooth checkbox for omnibook users
-	* Disabled Battery Save Mode tab if SCI interface
-	  is not available
-	* Small changes to KCModule layout
-
-2006-07-01 Azael Avalos <coproscefalo@gmail.com>
-	* Some small change to the application menu
-
-2006-06-28 Azael Avalos <coproscefalo@gmail.com>
-	* Added some error messages to toshibaProcStatus()
-	  function and a check to a return value of fgets()
-	  to make g++ happy (KToshiba now compiles cleanly
-	  and without warnings)
-	* Added fan action images for omnibook menu
-
-2006-06-28 Azael Avalos <coproscefalo@gmail.com>
-	* Slightly changed Wireless toggling function, now
-	  it will only trigger if the wireless anthena switch
-	  is turned on
-
-2006-06-25 Azael Avalos <coproscefalo@gmail.com>
-	* Reordered SCI and HCI functions
-	  (now we can see which functions depend on what)
-	* Added some checks to SCI functions, now the functions
-	  will not trigger if the SCI interface is not open
-
-2006-06-19 Azael Avalos <coproscefalo@gmail.com>
-	* Renamed amaroK to Amarok due to recent name change
-	* Added icons to the "Select Audio Application" combobox
-
-2006-06-14 Azael Avalos <coproscefalo@gmail.com>
-	* Some small updates to KCModule icons an text
-	  (like renamed Boot Method -> Boot Sequence)
-
-2006-06-13 Azael Avalos <coproscefalo@gmail.com>
-	* Added new option to toggle Ethernet device On/Off
-	* Some retouches to ktoshiba and KCM icons
-	* Updated KCMKToshiba to reflect recent changes
-	* Fixed an issue where timers where started on KCModule
-	  even if the toshiba or omnibook modules weren't found
-	* Misc changes
-
-2006-06-12 Azael Avalos <coproscefalo@gmail.com>
-	* Removed battery checking code (from main program)
-	* Some misc changes
-	* Fixed a horrible mistake in configure.in.in
-	  (that happens when you copy paste and don't pay attention...)
-
-2006-05-02 Azael Avalos <coproscefalo@gmail.com>
-	* Changed KCM Module icon, now it uses the laptop one
-	* Some small executable size reduction for omnibook users
-
-2006-04-13 Azael Avalos <coproscefalo@gmail.com>
-	* New model added, thanks to Christian Jägle
-
-2006-04-12 Azael Avalos <coproscefalo@gmail.com>
-	* Finished adding new functions to KToshibaSMMInterface
-	* Finished README.omnibook file
-	* Added configure parameter to enable/disable omnibook
-	  support and addapted files accordingly
-	* Released 0.8
-
-2006-04-11 Azael Avalos <coproscefalo@gmail.com>
-	* Added new MODES to sci.h and some existing ones
-	  were renamed slightly
-	* Updated copyright year
-	* Added newly added mode functions to KToshibaSMMInterface
-	* Updated settingswidget to reflect boot order changes
-
-2006-03-24 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed a small tooltip display problem
-	* Updated my e-mail on some parts I've forgot...
-
-2006-03-23 Azael Avalos <coproscefalo@gmail.com>
-	* Changed the way on how to write to /proc files
-	* Fix typo (Incopatible -> Incompatible)
-	* Litle retouches to some icons, look a bit nicer, jeje
-
-2006-03-20 Azael Avalos <coproscefalo@gmail.com>
-	* Added new configure parameter to enable/disable
-	  libsynaptics support
-	* Updated files to reflect libsynaptics changes
-
-2006-03-13 Azael Avalos <coproscefalo@gmail.com>
-	* updated configure.in.in check for powersave, it now
-	  depends on powersave >= 0.12.2
-	* updated Makefile.am for new powersave changes
-
-2006-02-13 Azael Avalos <coproscefalo@gmail.com>
-	* Fixed an issue displaying the icon when Battery and AC
-	  were not monitored
-
-2006-02-06 Azael Avalos <coproscefalo@gmail.com>
-	* Added new configure parameter to disable ktosh_helper
-	  (useful if you use powersave since it's not needed)
-	* Added new config option to disable Battery and AC monitoring
-	  (since there are already a lot of programs that do the same),
-	  now KToshiba can be used only to monitor Fn-Key combos and
-	  system related changes only
-	* Added a debug message showing SCI version number, this to
-	  identify models with problems accessing the SCI functions
-
-2006-02-05 Azael Avalos <coproscefalo@gmail.com>
-	* Remove code regarding suspending laptop to Disk, it
-	  will be reworked and added again when the issue is found
-	* Updated e-mail all over the place...
-
-2006-01-10 Azael Avalos <neftali@utep.edu>
-	* Fixed an issue regarding BSM, it was triggered everytime
-	  the laptop was connected/disconnected from AC
-
-2006-01-09 Azael Avalos <neftali@utep.edu>
-	* Removed command line options code from main.cpp since
-	  they are not used plus corrected a typo in changelog...
-	* Changed battery and power status code a bit, now it
-	  defaults to ACPI if SMM Interface reports errors
-	* Added more checks when STD is activated
-
-2006-01-08 Azael Avalos <neftali@utep.edu>
-	* MousePad disabling/enabling now working again, we now use
-	  libsynaptics library and the new synaptics driver 0.14.4
-	* Removed uneeded file synshm.h
-
-2006-01-04 Azael Avalos <neftali@utep.edu>
-	* The powersave support is finally finished...
-
-2005-12-20 Azael Avalos <neftali@utep.edu>
-	* Removed unused constructor from FnActions class
-	* Use correct member name on KToshiba's contructor
-	* Remove some unused includes from ktoshibaprocinterface.h
-
-2005-12-19 Azael Avalos <neftali@utep.edu>
-	* New model added, thanks to Matteo Andreozzi
-	* Changes on ktoshibaprocinteface so it is similar
-	  to ktoshibasmminterface (now more verbose on errors)
-
-2005-12-13 Azael Avalos <neftali@utep.edu>
-	* Smal change on STD code using powersave and fixed
-	  a small typo in changelog
-
-2005-12-12 Azael Avalos <neftali@utep.edu>
-	* Removed SelectBay code, seems nobody is using it and
-	  it needs a rewrite...
-	* Small changes to wireless switch checking
-
-2005-12-08 Azael Avalos <neftali@utep.edu>
-	* Added powersave support again (disabeld by default),
-	  can be enabled by adding --enable-powersave to ./configure
-
-2005-11-09 Azael Avalos <neftali@utep.edu>
-	* Added popup menu for enabling/disabling fan for omnibook
-	* Fixed big mistake for enabling/disabling fan...
-
-2005-11-08 Azael Avalos <neftali@utep.edu>
-	* Enabled brightness change on omnibook to reflect
-	  changes in AC power
-	* Disabled non needed tabs for omnibook users on KCModule
-
-2005-11-06 Azael Avalos <neftali@utep.edu>
-	* Started support for writing to /proc entries
-	* Enabled change of battery polling on omnibook
-	  (was disabled before, so changes on KCModule didn't affect)
-
-2005-11-01 Azael Avalos <neftali@utep.edu>
-	* Fixed an annoying brightness bug if laptop was put
-	  into User Setting Mode
-
-2005-10-30 Azael Avalos <neftali@utep.edu>
-	* Fixed brightness widget for omnibook users
-	  (it was being displayed constantly)
-
-2005-10-18 Azael Avalos <neftali@utep.edu>
-	* Fixed Bluetooth checkbox on config dialog
-	* Formating changes on some files
-	* Fixed a race between constructors
-
-2005-09-16 Azael Avalos <neftali@utep.edu>
-	* Changed discharging icon, now it should display correctly
-	* Changed /proc enries access (reduced some code)
-	* Fixed time left displaying on taskbar (ACPI only)
-
-2005-08-24 Azael Avalos <neftali@utep.edu>
-	* Added LCD brightness monitoring for omnibook
-	* Fixed popup menu, now irrelevant settings will not be
-	  available for omnibook users (and others also)
-
-2005-08-23 Azael Avalos <neftali@utep.edu>
-	* Fixed an issue with AC checking for omnibook
-	* Removed some un-needed code from displayPixmap() function
-	* Reduced messages from FnActions class
-	  (reduced more meaningless messages for omnibook users)
-	* Added a couple functions for omnibook
-	* Made preparatives for start polling omnibook entries
-
-2005-08-22 Azael Avalos <neftali@utep.edu>
-	* Fixed model display, I had it double...
-	* Fixed typo on changelog (again)... I need some sleep...
-	* Initialized a variable that could lead to a bug on KCM
-
-2005-08-21 Azael Avalos <neftali@utep.edu>
-	* Fixed battery percent display for omnibook
-	* Converted procactions.* into library for better access
-	* Fixed wrong function calling when using the omnibook module
-	  (this "should" reduce lots of garbage messages)
-
-2005-08-20 Azael Avalos <neftali@utep.edu>
-	* Added support for battery and AC adaptor monitoring
-	  using omnibook kernel module
-
-2005-08-19 Azael Avalos <neftali@utep.edu>
-	* Initial support for omnibook kernel module
-
-2005-08-17 Azael Avalos <neftali@utep.edu>
-	* Moved /proc related functions to separate files (exept
-	  from KCModule) in preparation for "omke" branch
-
-2005-08-16 Azael Avalos <neftali@utep.edu>
-	* Removed uneeded code from displayPixmap() function
-
-2005-08-15 Azael Avalos <neftali@utep.edu>
-	* Added checks to use ACPI functions to KCModule
-	* Some small fixes to ACPI check code
-	* Fixed the displayed "time" when ACPI is used
-
-2005-08-14 Azael Avalos <neftali@utep.edu>
-	* Added new function to check battery over ACPI
-	* Added checks to use ACPI functions if needed
-
-2005-08-12 Azael Avalos <neftali@utep.edu>
-	* Added new functions to check configuration file
-	  (it will be created with default values if not found)
-
-2005-08-11 Azael Avalos <neftali@utep.edu>
-	* Some small changes on displayPixmap() function
-	* Removed CVS comments from hci and sci headers
-	* Corrected typo on ChangeLog
-
-2005-08-09 Azael Avalos <neftali@utep.edu>
-	* Re-arranged Video-Out icons to avoid some confusion
-	* Boot Method icons now loads current icon set
-	* Changed some icons on Video-Out widget
-	  (taken from black and white icon set)
-
-2005-06-20 Azael Avalos <neftali@utep.edu>
-	* More hotkeys ID added
-
-2005-06-17 Azael Avalos <neftali@utep.edu>
-	* Hungarian translations updated, thanks to Charles Barcza
-	* Heh, corrected date on Changelog's last entry...
-	* New model ID added, thanks to Charles Barcza
-
-2005-06-16 Azael Avalos <neftali@utep.edu>
-	* Changed KToshibaSMMInterface Bluetooth code and
-	  added new Fn function to toggle Bluetooth power
-	* Updated KCM options
-
-2005-06-14 Azael Avalos <neftali@utep.edu>
-	* Polished new class FnActions
-
-2005-06-14 Azael Avalos <neftali@utep.edu>
-	* Added new class to handle Fn actions
-
-2005-06-13 Azael Avalos <neftali@utep.edu>
-	* Some changes to checkHotKeys() function
-	  (some lines where reduced)
-	* Released 0.7
-
-2005-06-11 Azael Avalos <neftali@utep.edu>
-	* Updated admin directory and src/Makefile.am
-	* initialized some variables to avoid compiler warnings
-
-2005-06-10 Azael Avalos <neftali@utep.edu>
-	* Used classes instead of includes where possible
-	* Removed uneeded variables
-
-2005-06-06 Azael Avalos <neftali@utep.edu>
-	* Removed a function since was not needed anymore
-
-2005-06-04 Azael Avalos <neftali@utep.edu>
-	* New model id added thanks to Jan Karjalainen
-	* French translations updated, thanks to Nicolas Ternisien
-
-2005-06-02 Azael Avalos <neftali@utep.edu>
-	* Added a check for /proc/acpi/sleep file, if it doesn't
-	  exist STD and STR menu items are disabled
-	* Some changes to KToshibaSMMInterface
-	* Some changes on toggleFan() function
-	* Added a new function to retreive AC status from ACPI
-	  in case HCI and SCI calls fail
-	* Small check to Battery Save Mode Type, it now defaultss to
-	  mode 2 if we got a failure
-
-2005-06-01 Azael Avalos <neftali@utep.edu>
-	* Updated Makefile.am (again)
-	* More cleans to CVS
-	* Made new icons for ktoshiba
-
-2005-05-31 Azael Avalos <neftali@utep.edu>
-	* Fixed displaying of current language, KCM will now
-	  be displaying current language correctly
-	* Started CVS cleanup
-	* Small updates to ktoshiba and ktoshibam desktop files
-	* Small update to Makefile.am and added new file to handle
-	  translation messages
-	* Updated Spanish translation
-	* Added Hyper-Threading popup menu
-	* Added French comment to ktoshibam.desktop, thanks to
-	  Nicolas Ternisien, and fixed a typo
-
-2005-05-28 Azael Avalos <neftali@utep.edu>
-	* Added an AC check to KCM (again...)
-
-2005-05-27 Azael Avalos <neftali@utep.edu>
-	* Added French translation, thanks to Nicolas Ternisien
-	* Again a small AC update to displayPixmap() function and
-	  KCM, now some extra error messages may not be displayed
-
-2005-05-26 Azael Avalos <neftali@utep.edu>
-	* New model id thanks to Nicolas Ternisien
-	* Removed some global variables and made them local
-	* Added two new fuctions to KToshibaSMMInterface,
-	  set/getBackLight() to turn on/off the LCD backlight
-	* Added function to toggle backlight and updated KCM
-	* Added new popup menu to activate SpeedStep frequencies
-	  and moved menu code to own function
-
-2005-05-25 Azael Avalos <neftali@utep.edu>
-	* New model id added thanks to Mihai
-	* Removed error issued when no events are present
-	* Added return instead of break on parts that don't
-	  need to call the performFnAction() function
-	* Removed unused variable and updated displayPixmap()
-	  function
-
-2005-05-23 Azael Avalos <neftali@utep.edu>
-	* Small check on displayPixmap() function
-	  regarding AC power
-	* Changed AC code and added a check
-	* Some small check for MousePad
-
-2005-05-22 Azael Avalos <neftali@utep.edu>
-	* Removed some unused lines from main.cpp file
-	* Added three more hotkey codes
-	  (S-Video Out, I-Button, E-Button)
-	* Updated MousePad code
-
-2005-05-21 Azael Avalos <neftali@utep.edu>
-	* Small update to hci.h file
-
-2005-05-20 Azael Avalos <neftali@utep.edu>
-	* Finished Boot Method code and updated KCM
-	* Updated wireless disabling/enabling code and
-	  removed code from ktosh_helper
-	* Updated Bluetooth code
-
-2005-05-19 Azael Avalos <neftali@utep.edu>
-	* Updated hci.h file
-	* Added new functions to change boot method
-
-2005-05-18 Azael Avalos <neftali@utep.edu>
-	* SelectBay check is now _really_ being checked
-	* Cleaned up a bit wireless antenna code and some
-	  other areas
-	* Moved Model ID code to separate files
-	* Updated README files
-
-2005-05-13 Azael Avalos <neftali@utep.edu>
-	* Added extra check to closeInterface()
-
-2005-05-12 Azael Avalos <neftali@utep.edu>
-	* Another model added thanks to Weaselweb
-
-2005-05-12 Azael Avalos <neftali@utep.edu>
-	* Renamed KCModule to hopefully fix some issues
-	* Released 0.6
-
-2005-05-11 Azael Avalos <neftali@utep.edu>
-	* Updated es.po file
-
-2005-05-10 Azael Avalos <neftali@utep.edu>
-	* Finished hotswap functions
-
-2005-05-09 Azael Avalos <neftali@utep.edu>
-	* Some changes to getFan() function
-	* Started working on hotswap (again)
-
-2005-05-05 Azael Avalos <neftali@utep.edu>
-	* Some changes to KToshibaSMMInterface
-	* Added a checkbox so it only ask the user
-	  to send the model id once
-	* Updated README files
-
-2005-05-05 Azael Avalos <neftali@utep.edu>
-	* Added Fan and Speaker volume actions and
-	  updated KToshiba KCM
-	* Corrections on fan functions
-
-2005-05-04 Azael Avalos <neftali@utep.edu>
-	* Different Battery Save Mode settings finished
-	  (depending on battery save mode type)
-	* Deleted some unused variables
-	* Added speaker volume and fan functions to
-	  KToshibaSMMInterface
-
-2005-05-03 Azael Avalos <neftali@utep.edu>
-	* Small check on wireless anthena switch
-	* Misc corrections and cleanups
-
-2005-05-02 Azael Avalos <neftali@utep.edu>
-	* Small makefile.in cleanups
-	* Added a missing break
-	* Changed mute() function, we now use kmix to
-	  mute/unmute the soundcard
-	* Small cleanups on BlueTooth activation code
-	* Added more functions to KToshibaSMMInterface
-	  (Hyper-Threading and SpeedStep)
-
-2005-05-01 Azael Avalos <neftali@utep.edu>
-	* Small updates of desktop files
-
-2005-04-30 Azael Avalos <neftali@utep.edu>
-	* Added 2 more models thanks to Stefan Walkner
-	  and Patrick Boutilier
-	* Small correction on ktoshiba.desktop
-	* Finally found a way to disable touchpad thanks to
-	  ksynaptics and synaptics driver
-
-2005-04-29 Azael Avalos <neftali@utep.edu>
-	* Finished application calls (Kaffeine and KsCD)
-	  now the multimedia buttons work as expected
-	* Small updates to README files
-	* Released 0.5
-
-2005-04-28 Azael Avalos <neftali@utep.edu>
-	* Updated es.po, getting ready for 0.5
-	* Some small cleanups
-	* Dropped the powersave dependency, now STR and
-	  STD will be handled through ktosh_helper
-	  (now KToshiba can be used on more distros other than SuSE)
-
-2005-04-27 Azael Avalos <neftali@utep.edu>
-	* Small fix on custom Fn-Key actions, the config
-	  file was not being readed correctly
-
-2005-04-26 Azael Avalos <neftali@utep.edu>
-	* Fixed the application calls, tho it needs some rework
-	  in some areas
-	* Small fix to User Settings Battery Save Mode
-
-2005-04-25 Azael Avalos <neftali@utep.edu>
-	* Finally found why Kaffeine and KsCD were not
-	  being called when in CD/DVD Mode
-
-2005-04-11 Azael Avalos <neftali@utep.edu>
-	* Some cleans on KCM Widget
-	* Updated es.po, README and README.es files
-
-2005-04-10 Azael Avalos <neftali@utep.edu>
-	* Added the User Settings Power Saving Mode
-	  to KCM widget
-	* Finished the BSM User Settings Mode (yay!)
-
-2005-04-09 Azael Avalos <neftali@utep.edu>
-	* Cleaned up Fn-Key configuration changes
-	* Some small clean-ups
-
-2005-03-14 Azael Avalos <neftali@utep.edu>
-	* Some check on KCM code when theres no battery present
-
-2005-02-19 Azael Avalos <neftali@utep.edu>
-	* Made Fn-Keys combos configurable, now more laptops
-	  will be supported (hopefully)
-
-2005-02-08 Azael Avalos <neftali@utep.edu>
-	* Removed strerror(errno) function from 
-	  ktoshibasmminterface.cpp, hopefully it will resolve
-	  compile problems.
-	* Added Hungarian pre-translation thanks to
-	  Charles Barcza kbarcza@blackpanther.hu
-
-2005-02-05 Azael Avalos <neftali@utep.edu>
-	* Finished README.es
-	* Released 0.4
-
-2005-02-04 Azael Avalos <neftali@utep.edu>
-	* Started README.es (sí, en español ;)
-
-2005-02-03 Azael Avalos <neftali@utep.edu>
-	* Fixed ktoshiba.desktop file
-	  (now it _really_ appears under Utilities menu)
-	* Added 22x22 systray icons, hopefully it will
-	  be displayed correctly now
-	* Updated README file and started spanish translation
-
-2005-01-20 Azael Avalos <neftali@utep.edu>
-	* Added support for kscd as cd player on
-	  CD/DVD mode
-
-2005-01-14 Azael Avalos <neftali@utep.edu>
-	* Small cleanups and preparatives for 0.4
-
-2005-01-13 Azael Avalos <neftali@utep.edu>
-	* Added support for JuK and updated KCM widget
-	  (I should have done this sooner... anyway)
-	* Small changes to selectBayLock function
-
-2005-01-08 Azael Avalos <neftali@utep.edu>
-	* Updated powersave specific call changes in functions
-
-2005-01-05 Azael Avalos <neftali@utep.edu>
-	* Added checkbox on KCM widget for enabling Bluetooth
-	  device at KToshiba start-up (if laptop supports it)
-	* ktosh_helper now activates/deactivates ath0 device
-	  if not found activates/deactivates wlan0 device
-
-2005-01-04 Azael Avalos <neftali@utep.edu>
-	* Added a bunch of model ids
-	* Added pre-eliminary support for enabling Bluetooth
-	  on newer models
-	* Some small corrections (fixes?)
-
-2005-01-02 Azael Avalos <neftali@utep.edu>
-	* Added the whole spanish translation, only KCM
-	  widget was translated before
-	* Added support for amaroK as audio player and kaffeine
-	  as video player
-	* Updated KCM widget to set prefered audio application
-	  (currently only XMMS and amaroK)
-
-2004-11-22 Azael Avalos <neftali@utep.edu>
-	* Added the icons for MousePad to the widget
-	* Removed code for HotSwapping since the Toshiba
-	  I got to test had a Phoenix BIOS, therefore
-	  unsupported by toshiba kernel module
-
-2004-11-21 Azael Avalos <neftali@utep.edu>
-	* Added a new widget showing MousePad, Speakers
-	  and Brightness status
-	* Removed the speakers status from the settings widget
-	* Updated settings widget
-
-2004-11-04 Azael Avalos <neftali@utep.edu>
-	* Small checks
-	* Helper application now checks for wlan device
-	  and disables/enables eth0 device
-	* Small code cleanup
-
-2004-10-31 Azael Avalos <neftali@utep.edu>
-	* Added new functions to KToshibaSMMInterface
-	* First steps to get HotSwapping working
-
-2004-10-29 Azael Avalos <neftali@utep.edu>
-	* Got brightness working with Battery Save Mode
-	  so it reflects changes made to BSM
-	* Small code cleanup
-	* Added tooltips to KCM widget
-
-2004-10-25 Azael Avalos <neftali@utep.edu>
-	* Started Battery Save Mode options
-
-2004-10-20 Azael Avalos <neftali@utep.edu>
+2014-08-17 Azael Avalos <coproscefalo@gmail.com>
+	* Added menu option and widget to change the
+	  HDD protection level
+	* A bit of reorganization in the constructor code
+	* Updated spanish translation
+
+2014-08-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added a KNotify event when HDD movement is detected
+	* Bumped version to 4.1
+
+2014-08-15 Azael Avalos <coproscefalo@gmail.com>
+	* HDD monitoring changed to receive netlink events,
+	  thanks go to the hal team, since I shamelessly
+	  stole (used?) part of their code :-)
+
+2014-08-09 Azael Avalos <coproscefalo@gmail.com>
+	* HDD monitoring code moved to own class
+
+2014-07-31 Azael Avalos <coproscefalo@gmail.com>
+	* Added HDD monitoring features
+
+2014-07-18 Azael Avalos <coproscefalo@gmail.com>
+	* Missing semicolon in desktop file
+
+2014-07-17 Azael Avalos <coproscefalo@gmail.com>
+	* Merged deviceexists with leddeviceexists,
+	  code adapted
+	* isXXXSupported functions turned into variables and
+	  function code renamed to checkXXX, this is to avoid
+	  calling the KAuth helper many times
+	* Changed kbdtimeoutwidget window icon, last change before
+	  4.0.1 tagging
+
+2014-07-16 Azael Avalos <coproscefalo@gmail.com>
+	* Bumped version to 4.0.1
+
+2014-07-15 Azael Avalos <coproscefalo@gmail.com>
+	* Updated COPYING file address
+	* Changed udev rule installation from /lib/udev/rules.d
+	  to /usr/lib/udev/rules.d
+
+2014-07-14 Azael Avalos <coproscefalo@gmail.com>
+	* Small changes to desktop file and removed duplicated entry
+
+2014-07-11 Azael Avalos <coproscefalo@gmail.com>
+	* m_widgetTimer is now being deleted on destructor
+	* Some small changes to INSTALL file
+	* FnActions now check for supported devices, somehow
+	  forgot to add those checks earlier
+	* Change KDE dependecy to 4.6.0 on CMakeLists
+	* Fixed an issue where the KBD Mode text was not being
+	  changed correctly
+	* Removed unused code from KToshibaDBusInterface
+	  setBrightness function
+	* Changed version number in ktoshiba.h
+
+2014-07-10 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to KAuth helper includes
+	* Small change to KBD Mode notification, we now show
+	  the black keyboard icon
+	* Fixed a bug where two notifications were being
+	  fired instead of just one
+
+2014-07-09 Azael Avalos <coproscefalo@gmail.com>
+	* Re-added AutoStart functionality (I guess I had a
+	  brain fart when I removed it...)
+	* Removed <doc..tt> entries from xml file, as they
+	  were causing incomplete DBus calls
+	* Fixed an issue with getKBDTimeout DBus call, we now
+	  check for kbd bl mode to be Auto to return the actual
+	  timeout, or -1 if it is set to FN-Z
+	* Fixes to Switch Keyboard Backlight Mode menu entry
+	* Fixed a typo in Icons.qrc, now the black keyboard
+	  will be shown along with the timeout
+	* Changed StatusWidget text color to a tone of grey
+
+2014-07-08 Azael Avalos <coproscefalo@gmail.com>
+	* Added two new functions to KAuth helper that check
+	  for devices and led devices
+	* Removed check for device existence on all KAuth helper
+	  calls, we are now assuming that deviceexists and
+	  leddeviceexists have been called before making the calls
+	* KToshibaDBusInterface calls now check for supported
+	  devices and do nothing if they're not
+	* Added error descriptions and removed errno.h dependecy
+	  from KAuth helper
+	* Added getKBDMode and getKBDTimeout calls to KToshibaDBusInterface
+	* Removed autostart entries from .desktop file
+	* Added black keyboard icon to statuswidget
+
+2014-07-07 Azael Avalos <coproscefalo@gmail.com>
+	* Added eco and illumination GET calls to
+	  KAuth helper, HelperActions and KToshibaDBusInterface
+	* Removed unused KToshibaDBusInterface signals
+	* Added KAuth helper kbdModeChanged signal
+	* Some small changes here and there
+
+2014-07-03 Azael Avalos <coproscefalo@gmail.com>
+	* Changed KToshHelper to set ang get calls,
+	  removing some duplicated code from FnActions,
+	  code adapted
+	* Re-added widget Timer
+	* Removed unused icons and StatusWidget pages
+	* Sub classed helper calls to HelperActions
+	* Added setIllumination DBus call
+
+2014-07-02 Azael Avalos <coproscefalo@gmail.com>
+	* Some minor changes to declarations (dec -> m_dec)
+
+2014-06-28 Azael Avalos <coproscefalo@gmail.com>
+	* Changed DBus object registration name from "/"
+	  to "/net/sourceforge/KToshiba"
+	* Removed gotKey DBus call stub
+	* Added four new DBus calls, changeKBDMode, setKBDTimeout,
+	  toggleTouchPad and setECOLed
+
+2014-06-26 Azael Avalos <coproscefalo@gmail.com>
 	* Code cleanup
-	* Added a button to set helper application set suid
 
-2004-10-17 Azael Avalos <neftali@utep.edu>
-	* Update to version 0.3
-	* Added widget showing video status
-	* Added more functions to KToshibaSMMInterface
-	* Borrowed icons from crystal set
-	* Small fixes here and there
-	* Many things I don't remember
+2014-06-24 Azael Avalos <coproscefalo@gmail.com>
+	* Removed a lot of files not used anymore
+	* Misc changes here and there
+	* Added udev rule, forgot to do it...
+	* Removed screenBrightness function from FnActions
+	  and KAuth helper, code adapted
 
-2004-10-16 Azael Avalos <neftali@utep.edu>
-	* Added widget showing powersave status
-	* Borrowed icons from toshutils
-	* Added more functions to KToshibaSMMInterface
-	* Small fixes here and there
-	* Asked my friend to let me use his Toshiba laptop ;)
+2014-06-21 Azael Avalos <coproscefalo@gmail.com>
+	* NM code was dropped
+	* Accel code was dropped also
+	* udev rules updated (and now are installed by default)
+	* ktoshhelper converted to KAuth helper
+	* Translation updated
+	* Lots more...
 
-2004-10-15 Azael Avalos <neftali@utep.edu>
-	* Updated to KDE 3.3.1, KDevelop 3.1.1
-	* KDevelop is not creating packages correctly ;(
+2013-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Removed KBD Backlight on/off code and icons,
+	  KDE4 now handles it for us
 
-2004-10-10 Azael Avalos <neftali@utep.edu>
-	* Converted KToshibaSMMInterface into a library
-	* Finally got the KControl Center Module working
+2013-10-07 Azael Avalos <coproscefalo@gmail.com>
+	* Updated udev rules files
 
-2004-10-09 Azael Avalos <neftali@utep.edu>
-	* Config widget not working... it causes a crash
+2013-10-05 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted code to new changes on toshiba_acpi
+	  for KBD Backlight status
 
-2004-10-08 Azael Avalos <neftali@utep.edu>
-	* Converted config Widget into Kcontrol Center Module
+2013-10-03 Azael Avalos <coproscefalo@gmail.com>
+	* Updated INSTALL instructions
 
-2004-10-01 Azael Avalos <neftali@utep.edu>
-	* Updated to version 0.2
-	* Small fixes here and there
-	* Many things I don't remember
+2013-09-30 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed touchpad enable/disable code
+	* Added cmake checks for input.h, udev and
+	  NetworkManager-KDE4
 
-2004-09-06 Azael Avalos <neftali@utep.edu>
-	* Small fixes here and there
+2013-09-20 Azael Avalos <coproscefalo@gmail.com>
+	* Lots of code cleanup here and there
 
-2004-09-06 Azael Avalos <neftali@utep.edu>
-	* Initial Release 0.1
+2013-09-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added icons and adapted code for KBD Illumination
+
+2013-09-15 Azael Avalos <coproscefalo@gmail.com>
+	* Added icons and adapted code for ECO mode
+
+2013-09-06 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the led handling by executing a shell
+	  script, QFile write handling was removed because
+	  we needed root access...
+	* Profiles are now "complete", they dim the screen,
+	  inhibit screen power management when in Presentation
+	  mode, etc.
+
+2013-09-04 Azael Avalos <coproscefalo@gmail.com>
+	* Key handling converted to a class
+	* Removed the DBus call, left there the skeleton
+	  for future use
+
+2013-09-03 Azael Avalos <coproscefalo@gmail.com>
+	* Removed X11 stuff
+	* Added pkgconfig and libudev as requirement
+	* We now query hotkeys directly from input devices
+	* Added ktoshhelper
+	* Added some extra checks to KToshibaDBusInterface and
+	  exported our keys interface using XML tools
+
+2013-09-01 Azael Avalos <coproscefalo@gmail.com>
+	* Removed all media player handling stuff
+	* Added Zoom handling functions and code
+	* Added icons for power profiles and wireless status
+	  (thanks to the oxygen team, I shamelessly stole 'em)
+
+2013-08-31 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to key grab stuff
+	* Adapted Solid Networking stuff
+
+2011-02-21 Azael Avalos <coproscefalo@gmail.com>
+	* We now use XGrabKeys and x11EventFilter to
+	  get hotkeys
+	* Replaced KProcess with KToolInvocation
+	* Bumped KToshiba to 0.4.0
+
+2011-01-28 Azael Avalos <coproscefalo@gmail.com>
+	* Removed touchpad.{cpp, h} and added synaptiks (0.4.0)
+	  as a replacement (shipped on most distros by default)
+
+2011-01-27 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted PowerDevil D-Bus paths and methods
+	  to reflect changes made to new KDE SC release (4.6.0)
+	* Removed HAL functions and calls since its now
+	  deprecated
+
+2010-12-04 Azael Avalos <coproscefalo@gmail.com>
+	* Added an option to not monitor MediaPlayer keys
+
+2010-10-14 Azael Avalos <coproscefalo@gmail.com>
+	* Removed cmake/modules/FindLibKNotificationItem-1.cmake
+	  since it's not needed anymore
+
+2010-10-13 Azael Avalos <coproscefalo@gmail.com>
+	* Added udev rules to map Satellite X205 series
+	  hotkeys
+	* Removed unused brightness icons and stack pages
+	  from StatusWidget
+	* Implemented a new function (findProperty) in
+	  touchpad.{cpp, h} to avoid duplicating code
+	  between setProperty and getProperty
+
+2010-10-06 Azael Avalos <coproscefalo@gmail.com>
+	* Removed brightness stuff since KDE does it
+	  for us now since KDE >= 4.5.0
+
+2010-04-10 Azael Avalos <coproscefalo@gmail.com>
+	* XQueryInputVersion doesn't exist anymore,
+	  remove it from touchpad.cpp
+
+2010-03-28 Azael Avalos <coproscefalo@gmail.com>
+	* Shamelessly stole KMess code to update translation files
+	* Added spanish translation
+	* Tagged code for RC2 release
+
+2010-03-24 Azael Avalos <coproscefalo@gmail.com>
+	* Added a sub-menu for toggling between
+	  MultiMedia players (Amarok->Kaffeine-JuK)
+
+2010-02-21 Azael Avalos <coproscefalo@gmail.com>
+	* Added "Kaffeine" to the MessageBox, it was
+	  only showing "Amarok" and "JuK"
+
+2010-02-14 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed Zoom and friends names in QHash list
+
+2010-02-11 Azael Avalos <coproscefalo@gmail.com>
+	* Addapted Play/Pause for Kaffeine since it is
+	  not supported yet
+
+2010-02-07 Azael Avalos <coproscefalo@gmail.com>
+	* Added DBus calls to control Kaffeine (we
+	  need Kaffeine 1.0 >= pre3)
+
+2010-01-08 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted code to KStatusNotifierItem, we no
+	  longer need Experimental::KNotifierItem,
+	  and as such, we now require KDE 4.4
+
+2009-12-06 Azael Avalos <coproscefalo@gmail.com>
+	* Small change to CMakeLists.txt
+
+2009-11-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added toshiba_acpi input support
+
+2009-11-06 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed endless loop if no supported input
+	  device was found
+
+2009-11-04 Azael Avalos <coproscefalo@gmail.com>
+	* Added function to check for supported input
+	  devices
+
+2009-10-28 Azael Avalos <coproscefalo@gmail.com>
+	* Finally got profiles working, profileChangedSlot
+	  was being emitted instead of profileChanged
+	  (and then I wonder why things go haywire...)
+
+2009-10-10 Azael Avalos <coproscefalo@gmail.com>
+	* Added a function to check for composite status
+	* Adjusted StatusWidget size
+	* Again, fixed an issue in touchpad.cpp, also
+	  added the function name from where the errors
+	  printed come from
+
+2009-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Adapted touchpad.cpp to XI2, since
+	  XServer 1.7.0 was released recently
+
+2009-09-25 Azael Avalos <coproscefalo@gmail.com>
+	* Small changes on touchpad.{cpp, h}
+
+2009-09-21 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed TouchPad enable/disable code (I was
+	  discarding the property instead of using it...)
+	* Added cmake option to enable the TouchPad
+	  functionality (-DENABLE_TOUCHPAD_FUNCTIONALITY)
+	* Tagged code for RC1 release
+	* Changed code to use Amarok's PlayPause D-Bus
+	  call (introduced on Beta 2)
+
+2009-09-20 Azael Avalos <coproscefalo@gmail.com>
+	* Began initial implementation of TouchPad
+	  Enable/Disable via XInputExtension
+	  (we now require synaptics_drv >= 1.0 and
+	  XServer >= 1.6 for it to work)
+	* Updated widget to show status of TouchPad
+	* Added Kaffeine to the supported MediaPlayers
+	  and updated code accordingly ('tho it does
+	  nothing for the time being...)
+
+2009-09-12 Azael Avalos <coproscefalo@gmail.com>
+	* Added hotkey (Fn-C) to toggle between Media
+	  Players and adjusted the widget to inform
+	  the user which one is currently being used
+	* Added an example HAL fdi file to map some
+	  extra buttons
+
+2009-08-25 Azael Avalos <coproscefalo@gmail.com>
+	* Added initial implementation to control JuK
+	  (via multi media keys)
+
+2009-08-23 Azael Avalos <coproscefalo@gmail.com>
+	* Added a timer to delay a bit the Media Player
+	  action if it is not running yet
+
+2009-08-22 Azael Avalos <coproscefalo@gmail.com>
+	* Moved some of the Media Player functions to
+	  FnActions class instead (KToshibaDBusInterface
+	  should only deal with D-Bus calls)
+
+2009-08-11 Azael Avalos <coproscefalo@gmail.com>
+	* AutoStart is now working, implemented basic
+	  configuration file
+	* Added missing cmake parameter to INSTALL file
+	  (-DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`)
+	* Updated INSTALL file, and fixed a typo...
+
+2009-08-10 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed some KToshiba menu icons not showing
+	* Added option to toggle AutoStart, 'tho it does
+	  nothing as of yet...
+
+2009-08-08 Azael Avalos <coproscefalo@gmail.com>
+	* Reverted SRT and STD to use PowerDevil
+	* Added partial support to control media players
+	  via multimedia keys (for now, just Amarok)
+
+2009-07-27 Azael Avalos <coproscefalo@gmail.com>
+	* Removed uneeded fuctions from DBusInterface
+	* Added PowerDevil calls to DBusInterface to change
+	  profiles, now we just need to use them...
+	* Fn-F2 (battery) is now working
+
+2009-07-27 Azael Avalos <coproscefalo@gmail.com>
+	* Suspend To {RAM, Disk} is now being handled using
+	  solid as well
+
+2009-07-25 Azael Avalos <coproscefalo@gmail.com>
+	* Wireless enable/disable is now being handled using
+	  solid, we now depend on workspace-devel also
+
+2009-07-24 Azael Avalos <coproscefalo@gmail.com>
+	* Added status widget and friends (I still don't know
+	  if it will stay or not in favor of a plasma one,
+	  or nothing at all...)
+
+2009-07-19 Azael Avalos <coproscefalo@gmail.com>
+	* Thanks to Rolf Eike Beer for porting KToshiba
+	  to the new SystemTray Framework. Sweet
+	* Added interface and reply checks to all D-Bus calls,
+	  now we know what happened if something fails
+	* Added Fn-F8 functionality (WLAN enable/disable)
+
+2009-07-18 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed STR and STD interface calls
+
+2009-07-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added STR and STD support to DBusInterface
+	* Added LockScreen functionality
+
+2009-07-15 Azael Avalos <coproscefalo@gmail.com>
+	* Implemented FnActions partially
+
+2009-07-14 Azael Avalos <coproscefalo@gmail.com>
+	* KDE4 rewrite started, program loads, but do nothing
+	* Initial DBus connector that receives hotkey events

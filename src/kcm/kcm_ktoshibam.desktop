@@ -1,0 +1,20 @@
+[Desktop Entry]
+Exec=kcmshell4 kcm_ktoshibam
+Icon=ktoshiba
+Type=Service
+Categories=Qt;KDE;X-KDE-settings-system;X-KDE-settings-hardware;
+OnlyShowIn=KDE;
+
+X-KDE-ServiceTypes=KCModule,KCModuleInit
+X-KDE-ParentApp=kcontrol
+X-KDE-System-Settings-Parent-Category=settings-hardware
+X-KDE-Library=kcm_ktoshibam
+
+Name=KToshiba System Settings
+Name[es]=Preferencias del Sistema de KToshiba
+
+Comment=Toshiba System Settings
+Comment[es]=Preferencias del Sistema de Toshiba
+
+X-KDE-Keywords=Toshiba,KToshiba
+X-KDE-Keywords[es]=Toshiba,KToshiba

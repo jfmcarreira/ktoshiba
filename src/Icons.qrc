@@ -1,0 +1,14 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file>images/green_world.svg</file>
+    <file>images/performance_64.png</file>
+    <file>images/powersave_64.png</file>
+    <file>images/presentation_64.png</file>
+    <file>images/disabled_64.png</file>
+    <file>images/fn.png</file>
+    <file>images/mpad_64.png</file>
+    <file>images/keyboard_black_on_64.png</file>
+    <file>images/keyboard_black_off_64.png</file>
+    <file>images/keyboard_timer_64.png</file>
+  </qresource>
+</RCC>

@@ -1,76 +1,83 @@
-/***************************************************************************
- *   Copyright (C) 2006 by Azael Avalos                                    *
- *   coproscefalo@gmail.com                                                *
- *                                                                         *
- *   Based on dbusPowersave.h from KPowersave                              *
- *   Copyright (C) 2005,2006 by Danny Kukawka                              *
- *                            <dkukawka@suse.de>, <danny.kukawka@web.de>   *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+/*
+   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
 
-#ifndef KTOSHIBA_DBUSINTERFACE_H
-#define KTOSHIBA_DBUSINTERFACE_H
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2 of the License, or
+   (at your option) any later version.
 
-#ifndef DBUS_API_SUBJECT_TO_CHANGE
-#define DBUS_API_SUBJECT_TO_CHANGE
-#endif
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, see
+   <http://www.gnu.org/licenses/>.
+*/
 
-#include <qobject.h>
+#ifndef KTOSHIBA_DBUS_INTERFACE_H
+#define KTOSHIBA_DBUS_INTERFACE_H
 
-#include <dbus/message.h>
-#include <dbus/connection.h>
+#include <QObject>
+#include <QDBusAbstractAdaptor>
 
-enum msg_type {
-    DBUS_EVENT,
-    HAL_EVENT
-};
+class FnActions;
 
-/**
- * @short KToshiba D-Bus Interafce
- * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 0.2
- */
-class KToshibaDBUSInterface : public QObject
+class KToshibaDBusInterface : public QObject
 {
     Q_OBJECT
+
+    Q_CLASSINFO("KToshiba D-Bus Interface", "net.sourceforge.KToshiba")
+
 public:
-    KToshibaDBUSInterface();
-    ~KToshibaDBUSInterface();
+    KToshibaDBusInterface(FnActions *parent);
+    ~KToshibaDBusInterface();
+    void init();
 
-    DBusConnection *getDBUSConnection();
-    void emitMsgReceived(msg_type, QString);
-    bool methodCall(QString, QString, QString, QString, void *, int, int, ...);
-    bool isConnected();
-    bool reconnect();
+    void lockScreen();
+    void setBrightness(int);
+    void setKBDBacklight(int);
+    void setZoom(int);
 
-signals:
-    void msgReceived(msg_type, QString);
+Q_SIGNALS:
+    void configChanged();
+
+public Q_SLOTS:
+    Q_NOREPLY void configFileChanged();
+    int getTouchPad();
+    void setTouchPad(int);
+    int getECOLed();
+    void setECOLed(int);
+    int getIllumination();
+    void setIllumination(int);
+    int getKBDType();
+    int getKBDMode();
+    void setKBDMode(int);
+    int getKBDTimeout();
+    void setKBDTimeout(int);
+    int getUSBSleepCharge();
+    void setUSBSleepCharge(int);
+    int getUSBSleepFunctionsBatLvl();
+    void setUSBSleepFunctionsBatLvl(int);
+    int getUSBRapidCharge();
+    void setUSBRapidCharge(int);
+    int getUSBSleepMusic();
+    void setUSBSleepMusic(int);
+    int getKBDFunctions();
+    void setKBDFunctions(int);
+    int getPanelPowerON();
+    void setPanelPowerON(int);
+    int getUSBThree();
+    void setUSBThree(int);
+    int getProtectionLevel();
+    void setProtectionLevel(int);
+
 private:
-    DBusQt::Connection *m_DBUSQtConnection;
-    DBusConnection *dbus_connection;
-    bool initDBUS();
-    bool close();
-    bool is_connected;
+    FnActions *m_fn;
+
+    bool m_service;
+    bool m_object;
 };
 
-DBusHandlerResult filter_function(DBusConnection *, DBusMessage *, void *);
-
-#endif // KTOSHIBA_DBUSINTERFACE_H
+#endif	// KTOSHIBA_DBUS_INTERFACE_H
