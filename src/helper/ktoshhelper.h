@@ -1,0 +1,71 @@
+/*
+   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
+
+#ifndef KTOSHHELPER_H
+#define KTOSHHELPER_H
+
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QFile>
+
+#include <kauth.h>
+
+using namespace KAuth;
+
+class KToshHelper : public QObject
+{
+    Q_OBJECT
+
+public:
+    KToshHelper(QObject *parent = 0);
+
+public slots:
+    /*
+     * System Information call
+     */
+    ActionReply dumpsysinfo(QVariantMap args);
+    /*
+     * Hardware calls
+     */
+    ActionReply setillumination(QVariantMap args);
+    ActionReply settouchpad(QVariantMap args);
+    ActionReply seteco(QVariantMap args);
+    ActionReply setkbdtimeout(QVariantMap args);
+    ActionReply setkbdmode(QVariantMap args);
+    ActionReply setusbsleepcharge(QVariantMap args);
+    ActionReply setusbsleepfunctionsbatlvl(QVariantMap args);
+    ActionReply setusbrapidcharge(QVariantMap args);
+    ActionReply setusbsleepmusic(QVariantMap args);
+    ActionReply setkbdfunctions(QVariantMap args);
+    ActionReply setpanelpoweron(QVariantMap args);
+    ActionReply setusbthree(QVariantMap args);
+    /*
+     * HDD Protection calls
+     */
+    ActionReply setprotectionlevel(QVariantMap args);
+    ActionReply unloadheads(QVariantMap args);
+
+private:
+    QString findDriverPath();
+
+    QString m_driverPath;
+    QFile m_file;
+};
+
+#endif // KTOSHHELPER_H
