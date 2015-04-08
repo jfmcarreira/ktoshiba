@@ -16,9 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtDBus>
+#include <QDebug>
 
-#include <KDebug>
 #include <KWindowSystem>
 
 #include "ktoshibadbusinterface.h"
@@ -42,7 +41,7 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
 
     if (m_service)
         if (!dbus.unregisterService("net.sourceforge.KToshiba"))
-            kError() << "Could not unregister DBus service";
+            qCritical() << "Could not unregister DBus service";
 }
 
 void KToshibaDBusInterface::init()
@@ -51,11 +50,11 @@ void KToshibaDBusInterface::init()
     QDBusConnection dbus = QDBusConnection::sessionBus();
     m_service = dbus.registerService("net.sourceforge.KToshiba");
     if (!m_service)
-        kError() << "Could not register DBus service";
+        qCritical() << "Could not register DBus service";
 
     m_object = dbus.registerObject("/net/sourceforge/KToshiba", this);
     if (!m_object)
-        kError() << "Could not register DBus object";
+        qCritical() << "Could not register DBus object";
 }
 
 void KToshibaDBusInterface::configFileChanged()
@@ -263,8 +262,8 @@ void KToshibaDBusInterface::lockScreen()
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
 
         return;
     }
@@ -272,8 +271,8 @@ void KToshibaDBusInterface::lockScreen()
     QDBusReply<void> reply = iface.call("Lock");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
     }
 }
 
@@ -285,8 +284,8 @@ void KToshibaDBusInterface::setBrightness(int level)
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
 
         return;
     }
@@ -294,8 +293,8 @@ void KToshibaDBusInterface::setBrightness(int level)
     QDBusReply<void> reply = iface.call("setBrightness", level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
     }
 }
 
@@ -307,8 +306,8 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
 
         return;
     }
@@ -317,15 +316,15 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
     reply = iface.call("keyboardBrightness", state);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
     }
 }
 
 void KToshibaDBusInterface::setZoom(int zoom)
 {
     if (!KWindowSystem::compositingActive()) {
-        kWarning() << "Compositing have been disabled, Zoom actions cannot be activated" << endl;
+        qWarning() << "Compositing have been disabled, Zoom actions cannot be activated" << endl;
 
         return;
     }
@@ -336,8 +335,8 @@ void KToshibaDBusInterface::setZoom(int zoom)
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
 
         return;
     }
@@ -357,8 +356,8 @@ void KToshibaDBusInterface::setZoom(int zoom)
 
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        kError() << err.name() << endl
-                 << "Message:" << err.message();
+        qCritical() << err.name() << endl
+                    << "Message:" << err.message();
     }
 }
 

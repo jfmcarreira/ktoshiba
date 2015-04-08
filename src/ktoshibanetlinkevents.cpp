@@ -17,8 +17,7 @@
 */
 
 #include <QSocketNotifier>
-
-#include <KDebug>
+#include <QDebug>
 
 extern "C" {
 #include <sys/socket.h>
@@ -96,11 +95,11 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
     if (len <= 0)
         return;
 
-    kDebug() << "Data received from socket:" << socket;
+    qDebug() << "Data received from socket:" << socket;
 
     genlmsghdr = (struct genlmsghdr *)(event_buf + NLMSG_HDRLEN);
     if ((genlmsghdr->cmd != ACPI_GENL_CMD_EVENT) || (genlmsghdr->version != ACPI_GENL_VERSION)) {
-        kDebug() << "Event not valid";
+        qDebug() << "Event not valid";
 
         return;
     }
@@ -111,27 +110,27 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
         if ((nlattrhdr->nla_type != ACPI_GENL_ATTR_EVENT)
                 || (NLA_ALIGN(nlattrhdr->nla_len) != NLA_ALIGN(NLA_HDRLEN
                     + sizeof(struct acpi_genl_event)))) {
-            kDebug() << "Event not valid";
+            qDebug() << "Event not valid";
 
             return;
         } else {
-            kDebug() << "Valid event";
+            qDebug() << "Valid event";
             event = (struct acpi_genl_event *)(event_buf + attroffset + NLA_HDRLEN);
         }
         attroffset += NLA_ALIGN(nlattrhdr->nla_len);
     }
 
     if (attroffset < len)
-        kDebug() << "Multiple ACPI events detected";
+        qDebug() << "Multiple ACPI events detected";
 
-    kDebug() << "Class:" << event->device_class << "Bus:" << event->bus_id
+    qDebug() << "Class:" << event->device_class << "Bus:" << event->bus_id
              << "Type:" << hex << event->type << "Data:" << event->data;
 
     if (QString(event->bus_id) == TOSHIBA_HAPS) {
-        kDebug() << "HAPS event detected";
+        qDebug() << "HAPS event detected";
         emit hapsEvent(event->type);
     } else if (QString(event->bus_id) == m_deviceHID) {
-        kDebug() << "TVAP event detected";
+        qDebug() << "TVAP event detected";
         emit tvapEvent(event->type);
     }
 }
@@ -146,18 +145,18 @@ bool KToshibaNetlinkEvents::attach()
 
     m_socket = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
     if (m_socket < 0) {
-        kError() << "Cannot open netlink socket:" << strerror(errno);
+        qCritical() << "Cannot open netlink socket:" << strerror(errno);
 
         return false;
     }
 
     if (::bind(m_socket, (struct sockaddr *) &nl, sizeof(nl)) < 0) {
-        kError() << "Netlink socket bind failed:" << strerror(errno);
+        qCritical() << "Netlink socket bind failed:" << strerror(errno);
         ::close(m_socket);
 
         return false;
     }
-    kDebug() << "Binded to socket" << m_socket << "for events monitoring";
+    qDebug() << "Binded to socket" << m_socket << "for events monitoring";
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 

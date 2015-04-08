@@ -20,11 +20,11 @@
 #ifndef KTOSHHELPER_H
 #define KTOSHHELPER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QFile>
+#include <QObject>
+#include <QString>
+#include <QFile>
 
-#include <kauth.h>
+#include <KAuth/KAuth>
 
 using namespace KAuth;
 

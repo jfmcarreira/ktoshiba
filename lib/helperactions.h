@@ -24,7 +24,9 @@
 #include <QStringList>
 #include <QFile>
 
-class HelperActions : public QObject
+#include "ktoshibaprivate_export.h"
+
+class KTOSHIBAPRIVATE_EXPORT HelperActions : public QObject
 {
     Q_OBJECT
 

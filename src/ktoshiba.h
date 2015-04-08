@@ -25,7 +25,6 @@
 class QAction;
 class QMenu;
 
-class KMenu;
 class KAboutData;
 class KHelpMenu;
 class KStatusNotifierItem;
@@ -97,7 +96,7 @@ private:
 
     KSharedConfigPtr m_config;
 
-    KMenu *m_popupMenu;
+    QMenu *m_popupMenu;
     static KAboutData* m_about;
     KHelpMenu *m_helpMenu;
 };

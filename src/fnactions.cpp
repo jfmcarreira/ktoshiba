@@ -18,12 +18,13 @@
 
 #include <QDesktopWidget>
 #include <QTimer>
+#include <QDebug>
 
-#include <KLocale>
-#include <KDebug>
+
+#include <KLocalizedString>
 #include <KWindowSystem>
 
-#include <solid/powermanagement.h>
+#include <Solid/Power>
 
 extern "C" {
 #include <linux/input.h>
@@ -34,7 +35,7 @@ extern "C" {
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
-using namespace Solid::PowerManagement;
+//using namespace Solid::PowerManagement;
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
@@ -80,7 +81,7 @@ bool FnActions::init()
         return false;
 
     if (!m_helper->init()) {
-        kError() << "Could not communicate with helper, hardware changes will not be possible";
+        qCritical() << "Could not communicate with helper, hardware changes will not be possible";
 
         return false;
     }
@@ -166,7 +167,7 @@ void FnActions::changeProfile(QString profile)
                 m_helper->setKBDMode(ON);
         }
         m_dBus->setBrightness(71);
-        m_cookie = beginSuppressingScreenPowerManagement(profile);
+        //m_cookie = beginSuppressingScreenPowerManagement(profile);
     } else if (profile == "ECO") {
         showWidget(ECO);
         if (m_helper->isECOSupported)
@@ -181,11 +182,11 @@ void FnActions::changeProfile(QString profile)
         }
         m_dBus->setBrightness(57);
     }
-    kDebug() << "Changed battery profile to:" << profile;
+    qDebug() << "Changed battery profile to:" << profile;
 
-    if (m_cookie != 0)
-        if (stopSuppressingScreenPowerManagement(m_cookie))
-            m_cookie = 0;
+    //if (m_cookie != 0)
+    //    if (stopSuppressingScreenPowerManagement(m_cookie))
+    //        m_cookie = 0;
 }
 
 void FnActions::kbdBacklight()
@@ -207,7 +208,7 @@ void FnActions::kbdBacklight()
             icon = QIcon(":images/keyboard_black_on_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(time));
         } else {
-            kDebug() << "Keyboard backlight mode is set to FN-Z";
+            qDebug() << "Keyboard backlight mode is set to FN-Z";
 
             return;
         }

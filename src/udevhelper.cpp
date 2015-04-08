@@ -16,7 +16,7 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <KDebug>
+#include <QDebug>
 
 #include "udevhelper.h"
 
@@ -30,7 +30,7 @@ bool UDevHelper::initUDev()
     // Create the udev object
     udev = udev_new();
     if (!udev) {
-        kError() << "Cannot create the udev object";
+        qCritical() << "Cannot create the udev object";
 
         return false;
     }
@@ -38,14 +38,14 @@ bool UDevHelper::initUDev()
     // Create the udev monitor
     monitor = udev_monitor_new_from_netlink(udev, "udev");
     if (!monitor) {
-        kError() << "Cannot create the udev monitor";
+        qCritical() << "Cannot create the udev monitor";
 
         return false;
     }
     
     // Add filters
     if (udev_monitor_filter_add_match_subsystem_devtype(monitor, "input", NULL) < 0) {
-        kError() << "Cannot add udev filter";
+        qCritical() << "Cannot add udev filter";
 
         return false;
     }
@@ -81,7 +81,7 @@ QString UDevHelper::findDevice(QStringList namePhys)
         QString phys(udev_device_get_sysattr_value(dev, "phys"));
         if (name == namePhys.at(0) && phys == namePhys.at(1)) {
             node = nodepath;
-            kDebug() << "Found device:" << nodepath << endl
+            qDebug() << "Found device:" << nodepath << endl
                      << "  Name:" << name << endl
                      << "  Phys:" << phys << endl;
         }

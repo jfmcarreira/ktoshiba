@@ -1,0 +1,25 @@
+
+set(SystemSettings_SRCS
+    systemsettings.cpp
+)
+
+qt5_wrap_ui(SystemSettings_SRCS
+	sysinfo.ui
+	general.ui
+	hddprotect.ui
+	sleeputils.ui
+	keyboard.ui
+)
+
+add_library(kcm_ktoshibam MODULE ${SystemSettings_SRCS})
+
+target_link_libraries(kcm_ktoshibam
+	ktoshibaprivate
+	KF5::KCMUtils
+	KF5::I18n
+	Qt5::DBus
+)
+
+install(TARGETS kcm_ktoshibam DESTINATION ${PLUGIN_INSTALL_DIR})
+
+install(FILES kcm_ktoshibam.desktop DESTINATION ${SERVICES_INSTALL_DIR})

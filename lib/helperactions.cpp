@@ -17,13 +17,15 @@
 */
 
 #include <QTextStream>
+#include <QDebug>
 
-#include <KAuth/Action>
-#include <KDebug>
+#include <KAuth/KAuth>
 
 #include "helperactions.h"
 
 #define HELPER_ID "net.sourceforge.ktoshiba.ktoshhelper"
+
+using namespace KAuth;
 
 HelperActions::HelperActions(QObject *parent)
     : QObject( parent )
@@ -83,7 +85,7 @@ QString HelperActions::findDriverPath()
         current++;
     }
 
-    kWarning() << "No known kernel interface found" << endl;
+    qWarning() << "No known kernel interface found" << endl;
 
     return QString("");
 }
@@ -105,7 +107,7 @@ bool HelperActions::deviceExists(QString device)
     } else if (device == "haps") {
         m_file.setFileName(m_hapsPath + "protection_level");
     } else {
-        kError() << "Invalid device name" << "(" << device << ")";
+        qCritical() << "Invalid device name" << "(" << device << ")";
 
         return false;
     }
@@ -175,20 +177,21 @@ bool HelperActions::checkHAPS()
 
 void HelperActions::getSysInfo()
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo");
-    action.setHelperID(HELPER_ID);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo");
+    action.setHelperId(HELPER_ID);
+    ExecuteJob *job = action.execute();
+    //job->exec();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
 
         return;
     }
 
     m_file.setFileName("/var/tmp/dmidecode");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getSysInfo failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getSysInfo failed" << endl
+                    << m_file.errorString() << "(" << m_file.error() << ")";
 
         return;
     }
@@ -229,18 +232,18 @@ QString HelperActions::getDriverVersion()
 {
     m_file.setFileName(m_driverPath + "version");
     if (!m_file.exists()) {
-        kWarning() << "An older driver found, some functionality won't be available."
+        qWarning() << "An older driver found, some functionality won't be available."
                    << "Please see the file README.toshiba_acpi for upgrading instructions";
         m_file.setFileName("/proc/acpi/toshiba/version");
         if (!m_file.exists()) {
-            kError() << "No version file detected";
+            qCritical() << "No version file detected";
 
             return QString("Unknown");
         }
 
         if (!m_file.open(QIODevice::ReadOnly)) {
-            kError() << "getDriverVersion failed" << endl
-                     << m_file.errorString() << "(" << m_file.error() << ")";
+            qCritical() << "getDriverVersion failed" << endl;
+                        //<< m_file.errorString() << "(" << m_file.error() << ")";
 
             return QString("Unknown");
        }
@@ -253,8 +256,8 @@ QString HelperActions::getDriverVersion()
         return split[1].trimmed();
     } else {
         if (!m_file.open(QIODevice::ReadOnly)) {
-            kError() << "getDriverVersion failed" << endl
-                     << m_file.errorString() << "(" << m_file.error() << ")";
+            qCritical() << "getDriverVersion failed" << endl;
+                        //<< m_file.errorString() << "(" << m_file.error() << ")";
 
             return QString("Unknown");
        }
@@ -273,8 +276,8 @@ int HelperActions::getTouchPad()
 {
     m_file.setFileName(m_driverPath + "touchpad");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getTouchpad failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getTouchpad failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -288,13 +291,13 @@ int HelperActions::getTouchPad()
 
 void HelperActions::setTouchPad(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.settouchpad");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.settouchpad");
+    action.setHelperId(HELPER_ID);
     action.addArgument("state", state);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed" << endl;
+                    //< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 
     emit touchpadToggled(state);
@@ -304,8 +307,8 @@ int HelperActions::getIllumination()
 {
     m_file.setFileName(m_ledsPath + "illumination/brightness");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getIllumination failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getIllumination failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -319,13 +322,13 @@ int HelperActions::getIllumination()
 
 void HelperActions::setIllumination(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setillumination");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setillumination");
+    action.setHelperId(HELPER_ID);
     action.addArgument("state", state);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -333,8 +336,8 @@ int HelperActions::getEcoLed()
 {
     m_file.setFileName(m_ledsPath + "eco_mode/brightness");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getEcoLed failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getEcoLed failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -348,13 +351,13 @@ int HelperActions::getEcoLed()
 
 void HelperActions::setEcoLed(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.seteco");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.seteco");
+    action.setHelperId(HELPER_ID);
     action.addArgument("state", state);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -362,8 +365,8 @@ int HelperActions::getKBDType()
 {
     m_file.setFileName(m_driverPath + "kbd_type");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getKBDType failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getKBDType failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -379,8 +382,8 @@ int HelperActions::getKBDMode()
 {
     m_file.setFileName(m_driverPath + "kbd_backlight_mode");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getKBDMode failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getKBDMode failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -394,13 +397,13 @@ int HelperActions::getKBDMode()
 
 void HelperActions::setKBDMode(int mode)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdmode");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdmode");
+    action.setHelperId(HELPER_ID);
     action.addArgument("mode", mode);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
 
         return;
     }
@@ -410,8 +413,8 @@ int HelperActions::getKBDTimeout()
 {
     m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getKBDTimeout failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getKBDTimeout failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -425,13 +428,13 @@ int HelperActions::getKBDTimeout()
 
 void HelperActions::setKBDTimeout(int time)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout");
+    action.setHelperId(HELPER_ID);
     action.addArgument("time", time);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -439,8 +442,8 @@ int HelperActions::getUSBSleepCharge()
 {
     m_file.setFileName(m_driverPath + "usb_sleep_charge");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getUSBSleepCharge failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getUSBSleepCharge failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -454,13 +457,13 @@ int HelperActions::getUSBSleepCharge()
 
 void HelperActions::setUSBSleepCharge(int mode)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge");
+    action.setHelperId(HELPER_ID);
     action.addArgument("mode", mode);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -468,8 +471,8 @@ QStringList HelperActions::getUSBSleepFunctionsBatLvl()
 {
     m_file.setFileName(m_driverPath + "sleep_functions_on_battery");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getUSBSleepFunctionsBatLvl failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getUSBSleepFunctionsBatLvl failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return QStringList();
     }
@@ -483,13 +486,13 @@ QStringList HelperActions::getUSBSleepFunctionsBatLvl()
 
 void HelperActions::setUSBSleepFunctionsBatLvl(int level)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl");
+    action.setHelperId(HELPER_ID);
     action.addArgument("level", level);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -497,8 +500,8 @@ int HelperActions::getUSBRapidCharge()
 {
     m_file.setFileName(m_driverPath + "usb_rapid_charge");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getUSBRapidCharge failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getUSBRapidCharge failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -512,13 +515,13 @@ int HelperActions::getUSBRapidCharge()
 
 void HelperActions::setUSBRapidCharge(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge");
+    action.setHelperId(HELPER_ID);
     action.addArgument("state", state);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -526,8 +529,8 @@ int HelperActions::getUSBSleepMusic()
 {
     m_file.setFileName(m_driverPath + "usb_sleep_music");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getUSBSleepMusic failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getUSBSleepMusic failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -541,13 +544,13 @@ int HelperActions::getUSBSleepMusic()
 
 void HelperActions::setUSBSleepMusic(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic");
+    action.setHelperId(HELPER_ID);
     action.addArgument("state", state);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -555,8 +558,8 @@ int HelperActions::getKBDFunctions()
 {
     m_file.setFileName(m_driverPath + "kbd_function_keys");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getKBDFunctions failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getKBDFunctions failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -570,13 +573,13 @@ int HelperActions::getKBDFunctions()
 
 void HelperActions::setKBDFunctions(int mode)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions");
+    action.setHelperId(HELPER_ID);
     action.addArgument("mode", mode);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -584,8 +587,8 @@ int HelperActions::getPanelPowerON()
 {
     m_file.setFileName(m_driverPath + "panel_power_on");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getPanelPowerON failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getPanelPowerON failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -599,13 +602,13 @@ int HelperActions::getPanelPowerON()
 
 void HelperActions::setPanelPowerON(int state)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron");
+    action.setHelperId(HELPER_ID);
     action.addArgument("state", state);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -613,8 +616,8 @@ int HelperActions::getUSBThree()
 {
     m_file.setFileName(m_driverPath + "usb_three");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getUSBThree failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getUSBThree failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -628,13 +631,13 @@ int HelperActions::getUSBThree()
 
 void HelperActions::setUSBThree(int mode)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbthree");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbthree");
+    action.setHelperId(HELPER_ID);
     action.addArgument("mode", mode);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setusbthree failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbthree failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
@@ -642,8 +645,8 @@ int HelperActions::getProtectionLevel()
 {
     m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        kError() << "getProtectionLevel failed" << endl
-                 << m_file.errorString() << "(" << m_file.error() << ")";
+        qCritical() << "getProtectionLevel failed" << endl;
+                    //<< m_file.errorString() << "(" << m_file.error() << ")";
 
         return -1;
     }
@@ -657,25 +660,25 @@ int HelperActions::getProtectionLevel()
 
 void HelperActions::setProtectionLevel(int level)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
+    action.setHelperId(HELPER_ID);
     action.addArgument("level", level);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 
 void HelperActions::unloadHeads(int timeout)
 {
-    KAuth::Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
-    action.setHelperID(HELPER_ID);
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
+    action.setHelperId(HELPER_ID);
     action.addArgument("timeout", timeout);
-    KAuth::ActionReply reply = action.execute();
-    if (reply.failed()) {
-        kError() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed" << endl
-                 << reply.errorDescription() << "(" << reply.errorCode() << ")";
+    ExecuteJob *job = action.execute();
+    if (job->error()) {
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed" << endl;
+                    //<< reply.errorDescription() << "(" << reply.errorCode() << ")";
     }
 }
 

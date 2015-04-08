@@ -28,7 +28,7 @@
 #include "ui_sleeputils.h"
 #include "ui_keyboard.h"
 
-class KTabWidget;
+class QTabWidget;
 class KMessageWidget;
 
 class HelperActions;
@@ -60,7 +60,7 @@ private:
     HelperActions *m_helper;
     bool m_helperAttached;
 
-    KTabWidget *m_tabWidget;
+    QTabWidget *m_tabWidget;
     KMessageWidget *m_message;
     KSharedConfigPtr m_config;
 

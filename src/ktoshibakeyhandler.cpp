@@ -17,8 +17,7 @@
 */
 
 #include <QSocketNotifier>
-
-#include <KDebug>
+#include <QDebug>
 
 extern "C" {
 #include <linux/input.h>
@@ -53,19 +52,19 @@ bool KToshibaKeyHandler::attach()
 
     m_device = m_udevHelper->findDevice(m_namePhys);
     if (m_device.isNull() || m_device.isEmpty()) {
-        kError() << "No device to monitor...";
+        qCritical() << "No device to monitor...";
 
         return false;
     }
 
     m_socket = ::open(m_device.toLocal8Bit().constData(), O_RDONLY, 0);
     if (m_socket < 0) {
-        kError() << "Cannot open" << m_device << "for hotkeys input."
-                 << strerror(errno);
+        qCritical() << "Cannot open" << m_device << "for hotkeys input."
+                    << strerror(errno);
 
         return false;
     }
-    kDebug() << "Opened" << m_device << "as keyboard input";
+    qDebug() << "Opened" << m_device << "as keyboard input";
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
@@ -95,15 +94,15 @@ void KToshibaKeyHandler::readData(int socket)
 
     int n = read(socket, &event, sizeof(struct input_event));
     if (n != sizeof(struct input_event)) {
-        kError() << "Error reading hotkeys" << n;
+        qCritical() << "Error reading hotkeys" << n;
 
         return;
     }
 
-    kDebug() << "Received data from socket:" << socket;
+    qDebug() << "Received data from socket:" << socket;
 
     if (event.type == EV_KEY) {
-        kDebug() << "Key received:" << endl
+        qDebug() << "Key received:" << endl
                  << "  code=" << event.code << endl
                  << "  value=" << event.value
                  << ((event.value != 0) ? "(pressed)" : "(released)");
