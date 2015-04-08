@@ -16,15 +16,17 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <KMenu>
+#include <QDebug>
+#include <QIcon>
+#include <QMenu>
+#include <QStandardPaths>
+
 #include <KHelpMenu>
-#include <KStandardDirs>
-#include <KDebug>
 #include <KNotification>
 #include <KAboutData>
 #include <KConfigGroup>
-#include <KIcon>
 #include <KProcess>
+#include <KLocalizedString>
 
 #include "ktoshiba.h"
 #include "fnactions.h"
@@ -64,7 +66,7 @@ bool KToshiba::initialize()
 {
     m_fnConnected = m_fn->init();
     if (!m_fnConnected) {
-        kError() << "Could not continue loading, cleaning up...";
+        qCritical() << "Could not continue loading, cleaning up...";
         cleanup();
 
         return false;
@@ -82,7 +84,7 @@ bool KToshiba::initialize()
         if (m_fn->m_helper->isHAPSSupported && m_monitorHDD)
             connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
     } else {
-        kError() << "Events monitoring will not be possible";
+        qCritical() << "Events monitoring will not be possible";
     }
 
     doMenu();
@@ -99,11 +101,10 @@ void KToshiba::cleanup()
 
 bool KToshiba::checkConfig()
 {
-    KStandardDirs kstd;
-    QString config = kstd.findResource("config", CONFIG_FILE);
+    QString config = QStandardPaths::locate(QStandardPaths::ConfigLocation, CONFIG_FILE);
 
     if (config.isEmpty()) {
-        kDebug() << "Configuration file not found.";
+        qDebug() << "Configuration file not found.";
         m_fn->m_helper->getSysInfo();
 
         return false;
@@ -114,7 +115,7 @@ bool KToshiba::checkConfig()
 
 void KToshiba::loadConfig()
 {
-    kDebug() << "Loading configuration file...";
+    qDebug() << "Loading configuration file...";
     // General group
     KConfigGroup generalGroup( m_config, "General" );
     m_batteryProfiles = generalGroup.readEntry( "BatteryProfiles", true );
@@ -126,7 +127,7 @@ void KToshiba::loadConfig()
 
 void KToshiba::createConfig()
 {
-    kDebug() << "Default configuration file created.";
+    qDebug() << "Default configuration file created.";
     // General group
     KConfigGroup generalGroup( m_config, "General" );
     generalGroup.writeEntry( "BatteryProfiles", true );
@@ -151,7 +152,7 @@ void KToshiba::doMenu()
 {
     m_batteryMenu = new QMenu(m_popupMenu);
     m_batteryMenu->setTitle( i18n("Battery Profiles") );
-    m_popupMenu->addMenu( m_batteryMenu )->setIcon( KIcon( "battery" ) );
+    m_popupMenu->addMenu( m_batteryMenu )->setIcon( QIcon::fromTheme( "battery" ).pixmap(16, 16) );
     m_batDisabled = m_batteryMenu->addAction( i18n("Disabled") );
     m_batDisabled->setIcon( QIcon( ":images/disabled_64.png" ) );
     m_batDisabled->setCheckable( true );
@@ -176,14 +177,14 @@ void KToshiba::doMenu()
     connect( m_batECO, SIGNAL( triggered() ), this, SLOT( ecoClicked() ) );
 
     m_configure = m_popupMenu->addAction( i18n("Configure") );
-    m_configure->setIcon( KIcon( "configure" ) );
+    m_configure->setIcon( QIcon::fromTheme( "configure" ).pixmap(16, 16) );
     connect( m_configure, SIGNAL( triggered() ), this, SLOT( configureClicked() ) );
 
     m_popupMenu->addSeparator();
-    m_helpMenu = new KHelpMenu( m_popupMenu, aboutData());
-    m_popupMenu->addMenu( m_helpMenu->menu() )->setIcon( KIcon( "help-contents" ) );
+    /*m_helpMenu = new KHelpMenu( m_popupMenu, aboutData());
+    m_popupMenu->addMenu( m_helpMenu->menu() )->setIcon( QIcon::fromTheme( "help-contents" ) );
     m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
-    m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );
+    m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );*/
 }
 
 void KToshiba::configChanged()
@@ -208,12 +209,12 @@ void KToshiba::notifyHDDMovement()
 void KToshiba::protectHDD(int event)
 {
     if (event == HDD_VIBRATED) {
-        kDebug() << "Vibration detected";
+        qDebug() << "Vibration detected";
         m_fn->m_helper->unloadHeads(5000);
         if (m_notifyHDD)
             notifyHDDMovement();
     } else if (event == HDD_STABILIZED) {
-        kDebug() << "Vibration stabilized";
+        qDebug() << "Vibration stabilized";
         m_fn->m_helper->unloadHeads(0);
     }
 }
@@ -255,13 +256,13 @@ void KToshiba::ecoClicked()
 void KToshiba::configureClicked()
 {
     KProcess p;
-    p.setProgram(KStandardDirs::findExe("kcmshell4"), QStringList() << "ktoshibam");
+    p.setProgram(QStandardPaths::findExecutable("kcmshell4"), QStringList() << "ktoshibam");
     p.startDetached();
 }
 
 void KToshiba::parseTVAPEvents(int event)
 {
-    kDebug() << "Received event 0x" << hex << event;
+    qDebug() << "Received event 0x" << hex << event;
     switch(event) {
     case 0x80:	// Hotkeys and some system events
         break;
@@ -281,7 +282,7 @@ void KToshiba::parseTVAPEvents(int event)
         emit kbdModeChanged();
         break;
     default:
-        kDebug() << "Unknown event";
+        qDebug() << "Unknown event";
     }
 }
 
@@ -290,19 +291,27 @@ static const char * const description =
 
 void KToshiba::createAboutData()
 {
-    m_about = new KAboutData("KToshiba", 0, ki18n("KToshiba"), ktoshiba_version,
-			ki18n(description), KAboutData::License_GPL_V2,
-			ki18n("Copyright © 2004-2015, Azael Avalos"), KLocalizedString(),
+    m_about = new KAboutData("KToshiba",
+			i18n(description),
+			ktoshiba_version,
+			QString(),
+			KAboutLicense::GPL_V2,
+			i18n("Copyright © 2004-2015 Azael Avalos"),
+			QString(),
 			"http://ktoshiba.sourceforge.net/",
 			"coproscefalo@gmail.com");
-    m_about->setProgramIconName("ktoshiba");
 
-    m_about->addAuthor( ki18n("Azael Avalos"),
-			ki18n("Original Author"), "coproscefalo@gmail.com" );
-    m_about->addCredit( ki18n("KDE Team"), ki18n("Some ideas and pieces of code"), 0,
-                    "http://www.kde.org/" );
-    m_about->addCredit( ki18n("Mauricio Duque"), ki18n("Green world icon"),
-		    "info@snap2objects.com", "http://www.snap2objects.com/" );
+    m_about->addAuthor( i18n("Azael Avalos"),
+			i18n("Original Author"),
+			"coproscefalo@gmail.com" );
+    m_about->addCredit( i18n("KDE Team"),
+			i18n("Some ideas and pieces of code"),
+			QString(),
+			"http://www.kde.org/" );
+    m_about->addCredit( i18n("Mauricio Duque"),
+			i18n("Green world icon"),
+			"info@snap2objects.com",
+			"http://www.snap2objects.com/" );
 }
 
 void KToshiba::destroyAboutData()

@@ -20,7 +20,7 @@
 #define KTOSHIBA_DBUS_INTERFACE_H
 
 #include <QObject>
-#include <QDBusAbstractAdaptor>
+#include <QtDBus/QDBusAbstractAdaptor>
 
 class FnActions;
 

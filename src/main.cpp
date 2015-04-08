@@ -16,11 +16,10 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
+#include <QApplication>
 
-#include <KUniqueApplication>
 #include <KAboutData>
-#include <KCmdLineArgs>
+#include <KDBusAddons/KDBusService>
 
 #include "ktoshiba.h"
 #include "version.h"
@@ -31,24 +30,18 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(ktoshiba_version);
     QCoreApplication::setOrganizationDomain("sourceforge.net");
 
+    QApplication app(argc, argv);
+
     KToshiba::createAboutData();
-    KCmdLineArgs::init(argc, argv, KToshiba::aboutData());
-    KUniqueApplication::addCmdLineOptions();
-
-    if (!KUniqueApplication::start()) {
-        qDebug() << "KToshiba is already running!";
-
-        return 0;
-    }
-
-    KUniqueApplication app;
-    app.setQuitOnLastWindowClosed( false );
+    //KAboutData::setApplicationData(KToshiba::aboutData());
 
     KToshiba *ktoshiba = new KToshiba();
     if (!ktoshiba->initialize()) {
         delete ktoshiba;
-        return -1;
+        exit(-1);
     }
+
+    KDBusService service(KDBusService::Unique);
 
     return app.exec();
 }

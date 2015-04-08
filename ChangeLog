@@ -1,3 +1,17 @@
+2015-04-08 Azael Avalos <coproscefalo@gmail.com>
+	* Moved HelperActions class to lib subdir in root directory
+	  and made it a lib
+	* Small porting tid bits here and there
+	* Code compiles, tho' Solid features are disabled (not yet ported),
+	  and ui filesneed to be ported too
+
+2015-04-07 Azael Avalos <coproscefalo@gmail.com>
+	* Started porting CMakeLists.txt files
+	* Icons renamed to new format
+	* KDebug changed to QDebug
+	* KToshHelper ported to new KAuth API
+	* Moved kcm subdir to root directory
+
 2015-04-06 Azael Avalos <coproscefalo@gmail.com>
 	* Fix an issue with getDriverVersion function, we are now
 	  officially on 4.3

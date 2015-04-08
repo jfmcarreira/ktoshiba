@@ -17,42 +17,42 @@
  */
 
 #include <QLayout>
-#include <QtDBus>
+#include <QDebug>
+#include <QTabWidget>
+#include <QtDBus/QtDBus>
 
 #include <KPluginFactory>
 #include <KAboutData>
-#include <KTabWidget>
+#include <KLocalizedString>
 #include <KConfigGroup>
 #include <KMessageWidget>
-#include <KDebug>
 
 #include "systemsettings.h"
-#include "../helperactions.h"
-#include "../version.h"
+#include "helperactions.h"
+#include "src/version.h"
 
 #define CONFIG_FILE "ktoshibarc"
 
-K_PLUGIN_FACTORY(KToshibaSystemSettingsFactory, registerPlugin<KToshibaSystemSettings>();)
-K_EXPORT_PLUGIN(KToshibaSystemSettingsFactory("kcm_ktoshibam"))
+K_PLUGIN_FACTORY( KToshibaSystemSettingsFactory, registerPlugin<KToshibaSystemSettings>(); )
 
 KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantList &args )
-    : KCModule( KToshibaSystemSettingsFactory::componentData(), parent, args ),
+    : KCModule( parent, args ),
       m_helper( new HelperActions(this) ),
       m_helperAttached( false ),
       m_config( KSharedConfig::openConfig( CONFIG_FILE ) )
 {
     KAboutData *about = new KAboutData("kcm_ktoshibam",
-				QByteArray(),
-				ki18n("KToshiba KCM"),
+				i18n("KToshiba System Settings"),
 				ktoshiba_version,
-				ki18n("KToshiba System Settings"),
-				KAboutData::License_GPL_V2,
-				ki18n("Copyright © 2015 Azael Avalos"),
-				KLocalizedString(),
-				"http://ktoshiba.sourceforge.net/");
+				QString(),
+				KAboutLicense::GPL_V2,
+				i18n("Copyright © 2015 Azael Avalos"),
+				QString(),
+				"http://ktoshiba.sourceforge.net/",
+				"coproscefalo@gmail.com");
 
-    about->addAuthor(ki18n("Azael Avalos"),
-		     ki18n("Original author"),
+    about->addAuthor(i18n("Azael Avalos"),
+		     i18n("Original author"),
 		     "coproscefalo@gmail.com");
 
     setAboutData(about);
@@ -65,7 +65,7 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     m_message->setVisible(false);
     message->addWidget(m_message);
 
-    m_tabWidget = new KTabWidget(this);
+    m_tabWidget = new QTabWidget(this);
     layout->addWidget(m_tabWidget, 1, 0, 0);
 
     m_helperAttached = m_helper->init();
@@ -128,7 +128,7 @@ void KToshibaSystemSettings::load()
     if (!m_helperAttached)
         return;
 
-    kDebug() << "load called";
+    qDebug() << "load called";
     // System Information tab
     KConfigGroup sysinfo( m_config, "SystemInformation" );
     if (!sysinfo.exists()) {
@@ -301,7 +301,7 @@ void KToshibaSystemSettings::load()
 
 void KToshibaSystemSettings::save()
 {
-    kDebug() << "save called";
+    qDebug() << "save called";
     // General tab
     int tmp;
     if (m_helper->isTouchPadSupported) {
@@ -434,7 +434,7 @@ void KToshibaSystemSettings::defaults()
     if (!m_helperAttached)
         return;
 
-    kDebug() << "defaults called";
+    qDebug() << "defaults called";
     // General tab
     if (m_helper->isTouchPadSupported) {
         if (!m_touchpad)
