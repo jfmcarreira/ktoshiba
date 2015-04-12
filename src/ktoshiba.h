@@ -26,7 +26,6 @@ class QAction;
 class QMenu;
 
 class KAboutData;
-class KHelpMenu;
 class KStatusNotifierItem;
 
 class FnActions;
@@ -46,9 +45,6 @@ public:
     virtual ~KToshiba();
 
     bool initialize();
-    static void createAboutData();
-    static void destroyAboutData();
-    static KAboutData *aboutData();
 
 Q_SIGNALS:
     void batteryProfilesToggled(bool);
@@ -97,8 +93,6 @@ private:
     KSharedConfigPtr m_config;
 
     QMenu *m_popupMenu;
-    static KAboutData* m_about;
-    KHelpMenu *m_helpMenu;
 };
 
 #endif // KTOSHIBA_H

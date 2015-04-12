@@ -42,7 +42,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Pointing device:</string>
+          <string>Poin&amp;ting device:</string>
          </property>
          <property name="buddy">
           <cstring>touchpad_checkbox</cstring>
@@ -97,7 +97,7 @@
           </size>
          </property>
          <property name="text">
-          <string>USB Rapid Charge:</string>
+          <string>&amp;USB Rapid Charge:</string>
          </property>
          <property name="buddy">
           <cstring>rapid_charge_checkbox</cstring>
@@ -139,7 +139,7 @@
           </size>
          </property>
          <property name="text">
-          <string>USB 3:</string>
+          <string>USB &amp;3:</string>
          </property>
          <property name="buddy">
           <cstring>usb_three_checkbox</cstring>
@@ -181,7 +181,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Panel Power ON:</string>
+          <string>Pane&amp;l Power ON:</string>
          </property>
          <property name="buddy">
           <cstring>panel_power_checkbox</cstring>

@@ -1,3 +1,10 @@
+2015-04-11 Azael Avalos <coproscefalo@gmail.com>
+	* Updated KCM desktop file to call
+	* Moved all KAboutData stuff from KToshiba class and added to main.cpp
+	* Fixed KCM not being able to load from Configure action in KToshiba menu
+	* Fixed error strings from KToshHelper functions
+	* Updated error strings from HelperActions class
+
 2015-04-08 Azael Avalos <coproscefalo@gmail.com>
 	* Moved HelperActions class to lib subdir in root directory
 	  and made it a lib
