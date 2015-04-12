@@ -42,7 +42,7 @@
           </size>
          </property>
          <property name="text">
-          <string>USB Sleep and Charge:</string>
+          <string>&amp;USB Sleep and Charge:</string>
          </property>
          <property name="buddy">
           <cstring>sleep_charge_checkbox</cstring>
@@ -126,7 +126,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Battery Level:</string>
+          <string>Battery &amp;Level:</string>
          </property>
          <property name="buddy">
           <cstring>battery_level_slider</cstring>
@@ -135,17 +135,17 @@
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="battery_level">
-         <property name="toolTip">
-          <string>The current battery level at which the sleep functions will be disabled.</string>
-         </property>
-         <property name="whatsThis">
-          <string>The current battery level at which the sleep functions will be disabled.</string>
-         </property>
          <property name="minimumSize">
           <size>
            <width>130</width>
            <height>30</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>The current battery level at which the sleep functions will be disabled.</string>
+         </property>
+         <property name="whatsThis">
+          <string>The current battery level at which the sleep functions will be disabled.</string>
          </property>
          <property name="text">
           <string/>

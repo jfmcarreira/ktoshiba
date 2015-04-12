@@ -94,7 +94,6 @@ bool KToshiba::initialize()
 
 void KToshiba::cleanup()
 {
-    destroyAboutData();
     delete m_nl; m_nl = NULL;
     delete m_fn; m_fn = NULL;
 }
@@ -179,12 +178,6 @@ void KToshiba::doMenu()
     m_configure = m_popupMenu->addAction( i18n("Configure") );
     m_configure->setIcon( QIcon::fromTheme( "configure" ).pixmap(16, 16) );
     connect( m_configure, SIGNAL( triggered() ), this, SLOT( configureClicked() ) );
-
-    m_popupMenu->addSeparator();
-    /*m_helpMenu = new KHelpMenu( m_popupMenu, aboutData());
-    m_popupMenu->addMenu( m_helpMenu->menu() )->setIcon( QIcon::fromTheme( "help-contents" ) );
-    m_helpMenu->action( KHelpMenu::menuHelpContents )->setVisible( false );
-    m_helpMenu->action( KHelpMenu::menuWhatsThis )->setVisible( false );*/
 }
 
 void KToshiba::configChanged()
@@ -256,7 +249,7 @@ void KToshiba::ecoClicked()
 void KToshiba::configureClicked()
 {
     KProcess p;
-    p.setProgram(QStandardPaths::findExecutable("kcmshell4"), QStringList() << "ktoshibam");
+    p.setProgram(QStandardPaths::findExecutable("kcmshell5"), QStringList() << "ktoshibam");
     p.startDetached();
 }
 
@@ -284,47 +277,6 @@ void KToshiba::parseTVAPEvents(int event)
     default:
         qDebug() << "Unknown event";
     }
-}
-
-static const char * const description =
-    I18N_NOOP("Fn key monitoring for Toshiba laptops.");
-
-void KToshiba::createAboutData()
-{
-    m_about = new KAboutData("KToshiba",
-			i18n(description),
-			ktoshiba_version,
-			QString(),
-			KAboutLicense::GPL_V2,
-			i18n("Copyright © 2004-2015 Azael Avalos"),
-			QString(),
-			"http://ktoshiba.sourceforge.net/",
-			"coproscefalo@gmail.com");
-
-    m_about->addAuthor( i18n("Azael Avalos"),
-			i18n("Original Author"),
-			"coproscefalo@gmail.com" );
-    m_about->addCredit( i18n("KDE Team"),
-			i18n("Some ideas and pieces of code"),
-			QString(),
-			"http://www.kde.org/" );
-    m_about->addCredit( i18n("Mauricio Duque"),
-			i18n("Green world icon"),
-			"info@snap2objects.com",
-			"http://www.snap2objects.com/" );
-}
-
-void KToshiba::destroyAboutData()
-{
-    delete m_about;
-    m_about = NULL;
-}
-
-KAboutData* KToshiba::m_about;
-
-KAboutData* KToshiba::aboutData()
-{
-    return m_about;
 }
 
 

@@ -42,7 +42,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Function Keys mode:</string>
+          <string>F&amp;unction Keys mode:</string>
          </property>
          <property name="buddy">
           <cstring>kbd_functions_combobox</cstring>
@@ -91,7 +91,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Keyboard Backlight mode:</string>
+          <string>&amp;Keyboard Backlight mode:</string>
          </property>
          <property name="buddy">
           <cstring>kbd_backlight_combobox</cstring>
@@ -130,7 +130,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Keyboard Backlight timeout:</string>
+          <string>Keyboard Backlight &amp;timeout:</string>
          </property>
          <property name="buddy">
           <cstring>kbd_timeout_slider</cstring>

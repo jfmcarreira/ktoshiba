@@ -42,7 +42,7 @@
           </size>
          </property>
          <property name="text">
-          <string>HDD Protection:</string>
+          <string>HDD Pro&amp;tection:</string>
          </property>
          <property name="buddy">
           <cstring>hdd_protect_checkbox</cstring>
@@ -84,7 +84,7 @@
           </size>
          </property>
          <property name="text">
-          <string>HDD Protection Notification:</string>
+          <string>HDD Protection &amp;Notification:</string>
          </property>
          <property name="buddy">
           <cstring>hdd_notification_checkbox</cstring>
@@ -126,7 +126,7 @@
           </size>
          </property>
          <property name="text">
-          <string>HDD Protection Level:</string>
+          <string>HDD Protection &amp;Level:</string>
          </property>
          <property name="buddy">
           <cstring>protection_level_slider</cstring>
@@ -135,17 +135,17 @@
        </item>
        <item row="2" column="2">
         <widget class="QLabel" name="protection_level">
-         <property name="toolTip">
-          <string>The current HDD protection level.</string>
-         </property>
-         <property name="whatsThis">
-          <string>The current HDD protection level.</string>
-         </property>
          <property name="minimumSize">
           <size>
            <width>130</width>
            <height>30</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>The current HDD protection level.</string>
+         </property>
+         <property name="whatsThis">
+          <string>The current HDD protection level.</string>
          </property>
          <property name="text">
           <string/>

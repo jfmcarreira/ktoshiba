@@ -19,6 +19,7 @@
 #include <QApplication>
 
 #include <KAboutData>
+#include <KLocalizedString>
 #include <KDBusAddons/KDBusService>
 
 #include "ktoshiba.h"
@@ -29,11 +30,32 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("KToshiba");
     QCoreApplication::setApplicationVersion(ktoshiba_version);
     QCoreApplication::setOrganizationDomain("sourceforge.net");
+    
+    KAboutData aboutData(QLatin1String("KToshiba"),
+			i18n("KToshiba"),
+			ktoshiba_version,
+			i18n("Fn key monitoring for Toshiba laptops"),
+			KAboutLicense::GPL_V2,
+			QString(),
+			i18n("Copyright © 2004-2015 Azael Avalos"),
+			QLatin1String("http://ktoshiba.sourceforge.net/"),
+			QLatin1String("coproscefalo@gmail.com"));
+
+    aboutData.addAuthor( i18n("Azael Avalos"),
+			i18n("Original Author"),
+			QLatin1String("coproscefalo@gmail.com"));
+    aboutData.addCredit( i18n("KDE Team"),
+			i18n("Some ideas and pieces of code"),
+			QString(),
+			QLatin1String("http://www.kde.org/"));
+    aboutData.addCredit( i18n("Mauricio Duque"),
+			i18n("Green world icon"),
+			QLatin1String("info@snap2objects.com"),
+			QLatin1String("http://www.snap2objects.com/"));
 
     QApplication app(argc, argv);
 
-    KToshiba::createAboutData();
-    //KAboutData::setApplicationData(KToshiba::aboutData());
+    KAboutData::setApplicationData(aboutData);
 
     KToshiba *ktoshiba = new KToshiba();
     if (!ktoshiba->initialize()) {

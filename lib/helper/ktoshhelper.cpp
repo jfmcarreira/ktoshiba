@@ -42,11 +42,8 @@ QString KToshHelper::findDriverPath()
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
     for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
         m_file.setFileName(path.arg(m_devices.at(current)));
-        if (m_file.open(QIODevice::ReadOnly)) {
-            m_file.close();
-
+        if (m_file.exists())
             return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
-        }
 
         current++;
     }
@@ -75,7 +72,7 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
         qWarning() << "dumpsysinfo failed with error code"
-                   << dump.error() << dump.errorString();
+                          << dump.error() << dump.errorString();
 
         return reply;
     }
@@ -102,7 +99,7 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
         reply = ActionReply::HelperErrorReply();
         reply.setErrorDescription(i18n("Can't open file"));
         qWarning() << "settouchpad failed with error code"
-                   << m_file.error() << m_file.errorString();
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -122,7 +119,7 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
                 reply = ActionReply(ActionReply::HelperErrorType);
                 reply.setErrorDescription(i18n("Can't open file"));
                 qWarning() << "settouchpad failed with eror code"
-                           << m_file.error() << m_file.errorString();
+                                  << m_file.error() << m_file.errorString();
 
                 return reply;
             }
@@ -153,7 +150,7 @@ ActionReply KToshHelper::setillumination(QVariantMap args)
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
         qWarning() << "setillumination failed with error code"
-                   << m_file.error() << m_file.errorString();
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -182,7 +179,7 @@ ActionReply KToshHelper::seteco(QVariantMap args)
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
         qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -211,7 +208,7 @@ ActionReply KToshHelper::setkbdmode(QVariantMap args)
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
         qWarning() << "setkbdmode failed with error code"
-                   << m_file.error() << m_file.errorString();
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -239,8 +236,8 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setkbdtimeout failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -268,8 +265,8 @@ ActionReply KToshHelper::setusbsleepcharge(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setusbsleepcharge failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -297,8 +294,8 @@ ActionReply KToshHelper::setusbsleepfunctionsbatlvl(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setusbsleepfunctionsbatlvl failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -326,8 +323,8 @@ ActionReply KToshHelper::setusbrapidcharge(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setusbrapidcharge failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -355,8 +352,8 @@ ActionReply KToshHelper::setusbsleepmusic(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setusbsleepmusic failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -384,8 +381,8 @@ ActionReply KToshHelper::setkbdfunctions(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setkbdfunctions failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -413,8 +410,8 @@ ActionReply KToshHelper::setpanelpoweron(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setpanelpoweron failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -442,8 +439,8 @@ ActionReply KToshHelper::setusbthree(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setusbthree failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -474,8 +471,8 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
         reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                   << m_file.error() << m_file.errorString();
+        qWarning() << "setprotectionlevel failed with error code"
+                          << m_file.error() << m_file.errorString();
 
         return reply;
     }
