@@ -5,9 +5,9 @@ Type=Service
 Categories=Qt;KDE;X-KDE-settings-hardware;
 OnlyShowIn=KDE;
 
-X-KDE-ServiceTypes=KCModule,KCModuleInit
+X-KDE-ServiceTypes=KCModule
 X-KDE-ParentApp=kcontrol
-X-KDE-System-Settings-Parent-Category=settings-hardware
+X-KDE-System-Settings-Parent-Category=hardware
 X-KDE-Library=kcm_ktoshibam
 
 Name=KToshiba System Settings
