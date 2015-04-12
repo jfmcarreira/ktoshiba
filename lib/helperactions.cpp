@@ -287,10 +287,8 @@ void HelperActions::setTouchPad(int state)
     action.addArgument("state", state);
     ExecuteJob *job = action.execute();
     job->exec();
-    if (job->error()) {
+    if (job->error())
         qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed";
-                        //<< reply.errorDescription();
-    }
 
     emit touchpadToggled(state);
 }

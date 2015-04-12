@@ -4,6 +4,9 @@
 	* Fixed KCM not being able to load from Configure action in KToshiba menu
 	* Fixed error strings from KToshHelper functions
 	* Updated error strings from HelperActions class
+	* Fixed KCM desktop file category, had a wrong one and was not appearing
+	* Shamelessly stole (and modified) the preferences-desktop-keyboard icon,
+	  thanks goes to the breeze guys
 
 2015-04-08 Azael Avalos <coproscefalo@gmail.com>
 	* Moved HelperActions class to lib subdir in root directory

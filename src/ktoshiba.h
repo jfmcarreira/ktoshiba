@@ -34,7 +34,7 @@ class KToshibaNetlinkEvents;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 4.3
+ * @version 5.0
  */
 class KToshiba : public KStatusNotifierItem
 {

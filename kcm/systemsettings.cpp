@@ -41,19 +41,19 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
       m_helperAttached( false ),
       m_config( KSharedConfig::openConfig( CONFIG_FILE ) )
 {
-    KAboutData *about = new KAboutData("kcm_ktoshibam",
+    KAboutData *about = new KAboutData(QLatin1String("kcm_ktoshibam"),
 				i18n("KToshiba System Settings"),
 				ktoshiba_version,
-				QString(),
+				i18n("Configures Toshiba laptop related hardware settings"),
 				KAboutLicense::GPL_V2,
 				i18n("Copyright © 2015 Azael Avalos"),
 				QString(),
-				"http://ktoshiba.sourceforge.net/",
-				"coproscefalo@gmail.com");
+				QLatin1String("http://ktoshiba.sourceforge.net/"),
+				QLatin1String("coproscefalo@gmail.com"));
 
     about->addAuthor(i18n("Azael Avalos"),
 		     i18n("Original author"),
-		     "coproscefalo@gmail.com");
+		     QLatin1String("coproscefalo@gmail.com"));
 
     setAboutData(about);
 
