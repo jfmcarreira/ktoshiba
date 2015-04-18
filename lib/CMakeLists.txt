@@ -1,5 +1,5 @@
 
-set(ktoshibapriv_SRCS helperactions.cpp)
+set(ktoshibapriv_SRCS ktoshibahardware.cpp)
 
 add_library(ktoshibaprivate SHARED ${ktoshibapriv_SRCS})
 

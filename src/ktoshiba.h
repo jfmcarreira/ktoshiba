@@ -25,9 +25,6 @@
 class QAction;
 class QMenu;
 
-class KAboutData;
-class KStatusNotifierItem;
-
 class FnActions;
 class KToshibaNetlinkEvents;
 
@@ -72,10 +69,7 @@ private:
     void doMenu();
 
     FnActions *m_fn;
-    bool m_fnConnected;
-
     KToshibaNetlinkEvents *m_nl;
-    bool m_nlAttached;
 
     bool m_monitorHDD;
     bool m_notifyHDD;
@@ -91,6 +85,7 @@ private:
     QAction *m_configure;
 
     KSharedConfigPtr m_config;
+    bool m_sysinfo;
 
     QMenu *m_popupMenu;
 };

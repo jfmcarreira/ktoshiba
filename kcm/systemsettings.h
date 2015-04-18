@@ -29,9 +29,10 @@
 #include "ui_keyboard.h"
 
 class QTabWidget;
+
 class KMessageWidget;
 
-class HelperActions;
+class KToshibaHardware;
 
 class KToshibaSystemSettings : public KCModule
 {
@@ -52,13 +53,14 @@ private Q_SLOTS:
     void protectionLevelChanged(int);
     void batteryLevelChanged(int);
     void kbdTimeoutChanged(int);
+    void updateTouchPad(int);
 
 private:
     void addTabs();
     void showRebootMessage();
 
-    HelperActions *m_helper;
-    bool m_helperAttached;
+    KToshibaHardware *m_hw;
+    bool m_hwAttached;
 
     QTabWidget *m_tabWidget;
     KMessageWidget *m_message;

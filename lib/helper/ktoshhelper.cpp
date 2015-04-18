@@ -22,8 +22,7 @@
 #include <QStringList>
 #include <QProcess>
 #include <QByteArray>
-
-#include <KLocalizedString>
+#include <QStandardPaths>
 
 #include "ktoshhelper.h"
 
@@ -59,10 +58,20 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
 
     ActionReply reply;
 
+    QStringList paths = QStringList() << "/sbin" << "/usr/sbin" << "/usr/local/sbin";
+    QString dmidecode = QStandardPaths::findExecutable("dmidecode", paths);
+    if (dmidecode.isEmpty()) {
+        reply = ActionReply(ActionReply::HelperErrorType);
+        qWarning() << "dmidecode binary not found, system info could not be parsed";
+
+        return reply;
+    }
+
     QProcess p;
-    p.start("/usr/sbin/dmidecode");
+    p.start(dmidecode);
     if (!p.waitForFinished(-1)) {
         reply = ActionReply::HelperErrorReply();
+        qWarning() << "dmidecode failed with error code" << p.error();
 
         return reply;
     }
@@ -70,9 +79,7 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
     QFile dump("/var/tmp/dmidecode");
     if (!dump.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "dumpsysinfo failed with error code"
-                          << dump.error() << dump.errorString();
+        qWarning() << "dumpsysinfo failed with error code" << dump.error() << dump.errorString();
 
         return reply;
     }
@@ -89,7 +96,7 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -97,9 +104,7 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
     m_file.setFileName(m_driverPath + "touchpad");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply::HelperErrorReply();
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "settouchpad failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "settouchpad failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -117,9 +122,7 @@ ActionReply KToshHelper::settouchpad(QVariantMap args)
         if (!state) {
             if (!m_file.open(QIODevice::WriteOnly)) {
                 reply = ActionReply(ActionReply::HelperErrorType);
-                reply.setErrorDescription(i18n("Can't open file"));
-                qWarning() << "settouchpad failed with eror code"
-                                  << m_file.error() << m_file.errorString();
+                qWarning() << "settouchpad failed with eror code" << m_file.error() << m_file.errorString();
 
                 return reply;
             }
@@ -140,7 +143,7 @@ ActionReply KToshHelper::setillumination(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -148,9 +151,7 @@ ActionReply KToshHelper::setillumination(QVariantMap args)
     m_file.setFileName("/sys/class/leds/toshiba::illumination/brightness");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setillumination failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setillumination failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -169,7 +170,7 @@ ActionReply KToshHelper::seteco(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -177,9 +178,7 @@ ActionReply KToshHelper::seteco(QVariantMap args)
     m_file.setFileName("/sys/class/leds/toshiba::eco_mode/brightness");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "seteco failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "seteco failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -198,7 +197,7 @@ ActionReply KToshHelper::setkbdmode(QVariantMap args)
 
     if (mode != 1 && mode != 2 && mode != 8 && mode != 0x10) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -206,9 +205,7 @@ ActionReply KToshHelper::setkbdmode(QVariantMap args)
     m_file.setFileName(m_driverPath + "kbd_backlight_mode");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setkbdmode failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setkbdmode failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -227,7 +224,7 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
 
     if (time < 1 || time > 60) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -235,9 +232,7 @@ ActionReply KToshHelper::setkbdtimeout(QVariantMap args)
     m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setkbdtimeout failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setkbdtimeout failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -256,7 +251,7 @@ ActionReply KToshHelper::setusbsleepcharge(QVariantMap args)
 
     if (mode < 0 || mode > 2) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -264,9 +259,7 @@ ActionReply KToshHelper::setusbsleepcharge(QVariantMap args)
     m_file.setFileName(m_driverPath + "usb_sleep_charge");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setusbsleepcharge failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setusbsleepcharge failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -285,7 +278,7 @@ ActionReply KToshHelper::setusbsleepfunctionsbatlvl(QVariantMap args)
 
     if (level < 0 || level > 100) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -293,9 +286,7 @@ ActionReply KToshHelper::setusbsleepfunctionsbatlvl(QVariantMap args)
     m_file.setFileName(m_driverPath + "sleep_functions_on_battery");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setusbsleepfunctionsbatlvl failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setusbsleepfunctionsbatlvl failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -314,7 +305,7 @@ ActionReply KToshHelper::setusbrapidcharge(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -322,9 +313,7 @@ ActionReply KToshHelper::setusbrapidcharge(QVariantMap args)
     m_file.setFileName(m_driverPath + "usb_rapid_charge");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setusbrapidcharge failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setusbrapidcharge failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -343,7 +332,7 @@ ActionReply KToshHelper::setusbsleepmusic(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -351,9 +340,7 @@ ActionReply KToshHelper::setusbsleepmusic(QVariantMap args)
     m_file.setFileName(m_driverPath + "usb_sleep_music");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setusbsleepmusic failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setusbsleepmusic failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -372,7 +359,7 @@ ActionReply KToshHelper::setkbdfunctions(QVariantMap args)
 
     if (mode < 0 || mode > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -380,9 +367,7 @@ ActionReply KToshHelper::setkbdfunctions(QVariantMap args)
     m_file.setFileName(m_driverPath + "kbd_function_keys");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setkbdfunctions failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setkbdfunctions failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -401,7 +386,7 @@ ActionReply KToshHelper::setpanelpoweron(QVariantMap args)
 
     if (state < 0 || state > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -409,9 +394,7 @@ ActionReply KToshHelper::setpanelpoweron(QVariantMap args)
     m_file.setFileName(m_driverPath + "panel_power_on");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setpanelpoweron failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setpanelpoweron failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -430,7 +413,7 @@ ActionReply KToshHelper::setusbthree(QVariantMap args)
 
     if (mode < 0 || mode > 1) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -438,9 +421,7 @@ ActionReply KToshHelper::setusbthree(QVariantMap args)
     m_file.setFileName(m_driverPath + "usb_three");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setusbthree failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setusbthree failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -462,7 +443,7 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
 
     if (level < 0 || level > 3) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }
@@ -470,9 +451,7 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
     m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
     if (!m_file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("Can't open file"));
-        qWarning() << "setprotectionlevel failed with error code"
-                          << m_file.error() << m_file.errorString();
+        qWarning() << "setprotectionlevel failed with error code" << m_file.error() << m_file.errorString();
 
         return reply;
     }
@@ -491,7 +470,7 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
 
     if (timeout != 0 && timeout != 5000) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        reply.setErrorDescription(i18n("The value was out of range"));
+        qWarning() << "The value was out of range";
 
         return reply;
     }

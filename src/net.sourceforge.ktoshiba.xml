@@ -303,6 +303,48 @@
       </doc:doc>
     </method>
 
+    <method name="getUSBSleepFunctionsBatState">
+      <arg name="state" type="i" direction="out">
+        <doc:doc>
+          <doc:summary>
+            The sleep functions under battery state.
+            Returns -1 when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Get the state of the sleep functions under battery.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while getting the sleep functions under battery state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
+    <method name="setUSBSleepFunctionsBatState">
+      <arg name="state" type="i" direction="in">
+        <doc:doc>
+          <doc:summary>
+            The sleep functions under battery state.
+            Does nothing when not supported.
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Set the battery level to disable the USB sleep functions.
+          </doc:para>
+        </doc:description>
+        <doc:errors>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while setting the sleep functions under battery state</doc:error>
+        </doc:errors>
+      </doc:doc>
+    </method>
+
     <method name="getUSBSleepFunctionsBatLvl">
       <arg name="level" type="i" direction="out">
         <doc:doc>

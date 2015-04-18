@@ -3,7 +3,7 @@ set(SystemSettings_SRCS
     systemsettings.cpp
 )
 
-qt5_wrap_ui(SystemSettings_SRCS
+ki18n_wrap_ui(SystemSettings_SRCS
 	sysinfo.ui
 	general.ui
 	hddprotect.ui

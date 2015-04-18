@@ -27,17 +27,13 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setApplicationName("KToshiba");
-    QCoreApplication::setApplicationVersion(ktoshiba_version);
-    QCoreApplication::setOrganizationDomain("sourceforge.net");
-    
     KAboutData aboutData(QLatin1String("KToshiba"),
 			i18n("KToshiba"),
 			ktoshiba_version,
 			i18n("Fn key monitoring for Toshiba laptops"),
 			KAboutLicense::GPL_V2,
 			QString(),
-			i18n("Copyright © 2004-2015 Azael Avalos"),
+			i18n("Copyright (C) 2004-2015 Azael Avalos"),
 			QLatin1String("http://ktoshiba.sourceforge.net/"),
 			QLatin1String("coproscefalo@gmail.com"));
 
@@ -54,13 +50,17 @@ int main(int argc, char *argv[])
 			QLatin1String("http://www.snap2objects.com/"));
 
     QApplication app(argc, argv);
+    app.setApplicationName("KToshiba");
+    app.setApplicationVersion(ktoshiba_version);
+    app.setOrganizationDomain("sourceforge.net");
 
     KAboutData::setApplicationData(aboutData);
 
     KToshiba *ktoshiba = new KToshiba();
     if (!ktoshiba->initialize()) {
         delete ktoshiba;
-        exit(-1);
+
+        return -1;
     }
 
     KDBusService service(KDBusService::Unique);

@@ -23,13 +23,15 @@
 #include <QString>
 #include <QStringList>
 
+#include <Solid/InhibitionJob>
+
 #include "ui_statuswidget.h"
 
 class QTimer;
 
 class KToshibaDBusInterface;
 class KToshibaKeyHandler;
-class HelperActions;
+class KToshibaHardware;
 
 class FnActions : public QObject
 {
@@ -48,7 +50,8 @@ public:
 
     void changeProfile(QString);
 
-    HelperActions *m_helper;
+    KToshibaHardware *hw() const
+    { return m_hw; }
 
 public Q_SLOTS:
     void batMonitorChanged(bool);
@@ -66,6 +69,7 @@ private:
 
     KToshibaDBusInterface *m_dBus;
     KToshibaKeyHandler *m_hotkeys;
+    KToshibaHardware *m_hw;
     Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
     QTimer *m_widgetTimer;
@@ -73,9 +77,9 @@ private:
     QList<int> m_modes;
     QString m_profile;
     QString m_version;
+    Solid::InhibitionJob *m_job;
     bool m_batKeyPressed;
     bool m_batMonitor;
-    int m_cookie;
     int m_type;
     int m_mode;
     int m_time;
