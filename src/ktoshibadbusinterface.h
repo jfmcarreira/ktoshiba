@@ -58,6 +58,8 @@ public Q_SLOTS:
     void setKBDTimeout(int);
     int getUSBSleepCharge();
     void setUSBSleepCharge(int);
+    int getUSBSleepFunctionsBatState();
+    void setUSBSleepFunctionsBatState(int);
     int getUSBSleepFunctionsBatLvl();
     void setUSBSleepFunctionsBatLvl(int);
     int getUSBRapidCharge();

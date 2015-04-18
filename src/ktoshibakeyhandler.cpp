@@ -59,12 +59,13 @@ bool KToshibaKeyHandler::attach()
 
     m_socket = ::open(m_device.toLocal8Bit().constData(), O_RDONLY, 0);
     if (m_socket < 0) {
-        qCritical() << "Cannot open" << m_device << "for hotkeys input."
+        qCritical() << "Could not open" << m_device << "for hotkeys input."
                     << strerror(errno);
 
         return false;
     }
-    qDebug() << "Opened" << m_device << "as keyboard input";
+
+    qDebug() << "Opened" << m_device << "for hotkeys input";
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
@@ -94,7 +95,7 @@ void KToshibaKeyHandler::readData(int socket)
 
     int n = read(socket, &event, sizeof(struct input_event));
     if (n != sizeof(struct input_event)) {
-        qCritical() << "Error reading hotkeys" << n;
+        qCritical() << "Error reading hotkeys." << strerror(errno);
 
         return;
     }
@@ -102,10 +103,7 @@ void KToshibaKeyHandler::readData(int socket)
     qDebug() << "Received data from socket:" << socket;
 
     if (event.type == EV_KEY) {
-        qDebug() << "Key received:" << endl
-                 << "  code=" << event.code << endl
-                 << "  value=" << event.value
-                 << ((event.value != 0) ? "(pressed)" : "(released)");
+        qDebug() << "Key" << hex << event.code << (event.value != 0 ? "pressed" : "released");
 
         // Act only if we get a key press
         if (event.value == 1)

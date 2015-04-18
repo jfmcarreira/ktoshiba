@@ -16,8 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HELPERACTIONS_H
-#define HELPERACTIONS_H
+#ifndef KTOSHIBAHARDWARE_H
+#define KTOSHIBAHARDWARE_H
 
 #include <QObject>
 #include <QString>
@@ -26,12 +26,12 @@
 
 #include "ktoshibaprivate_export.h"
 
-class KTOSHIBAPRIVATE_EXPORT HelperActions : public QObject
+class KTOSHIBAPRIVATE_EXPORT KToshibaHardware : public QObject
 {
     Q_OBJECT
 
 public:
-    HelperActions(QObject *parent = 0);
+    KToshibaHardware(QObject *parent = 0);
     bool init();
 
     QStringList sysinfo;
@@ -52,7 +52,7 @@ public Q_SLOTS:
     /*
      * System Information call
      */
-    void getSysInfo();
+    bool getSysInfo();
     QString getDriverVersion();
     QString getDeviceHID();
     /*
@@ -116,4 +116,4 @@ private:
     QFile m_file;
 };
 
-#endif // HELPERACTIONS_H
+#endif // KTOSHIBAHARDWARE_H

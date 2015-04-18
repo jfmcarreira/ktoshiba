@@ -1,3 +1,36 @@
+2015-04-18 Azael Avalos <coproscefalo@gmail.com>
+	* Removed i18n strings from KToshHelper class
+	* Updated translation script, and in turn he translations were
+	  divided into two files now, kcm_ktoshibam and ktoshiba
+	* Changed copyright symbol with (C) to avoid translation warnings
+	* Removed old translation scripts
+	* Removed CMakeLists from po direcory, we are now using the
+	  ki18n_install macro
+	* Updates cmake install instructions
+	* Fixed KCM touchpad signal and slot type (bool -> int)
+
+2015-04-17 Azael Avalos <coproscefalo@gmail.com>
+	* Added stub calls to screen power management, disabled for
+	  now until a segfault is resolved...
+	* Moved statuswidget to top-center to avoid overlapping with
+	  KDE brightness widget
+	* Added DBus calls to query and set the Sleep Functions under
+	  battery state
+
+2015-04-16 Azael Avalos <coproscefalo@gmail.com>
+	* Updated FindLibUDev.cmake and CMakeLists files
+	* Removed leftover class KAboutData from ktoshiba.h
+	* Renamed HelperActions class to KToshibaHardware to better reflect
+	  what this library does
+	* KCM now updates the TouchPad status if changed via library
+
+2015-04-12 Azael Avalos <coproscefalo@gmail.com>
+	* Changed dmidecode hard path to findExecutable 
+	* Fixed an issue when the dmidecode binary was not found and
+	  the default config was created, causing a segfault
+	* Set the app name and domain to app.XXX instead of QCoreApplication
+	  in main.cpp
+
 2015-04-11 Azael Avalos <coproscefalo@gmail.com>
 	* Updated KCM desktop file to call
 	* Moved all KAboutData stuff from KToshiba class and added to main.cpp

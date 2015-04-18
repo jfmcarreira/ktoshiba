@@ -13,8 +13,8 @@ X-KDE-Library=kcm_ktoshibam
 Name=KToshiba System Settings
 Name[es]=Preferencias del Sistema de KToshiba
 
-Comment=Toshiba System Settings
-Comment[es]=Preferencias del Sistema de Toshiba
+Comment=Configures Toshiba laptop related hardware settings
+Comment[es]=Configura el hardware relacionado con el portátil Toshiba
 
-X-KDE-Keywords=Toshiba,KToshiba
-X-KDE-Keywords[es]=Toshiba,KToshiba
+X-KDE-Keywords=Toshiba,KToshiba, Hardware
+X-KDE-Keywords[es]=Toshiba,KToshiba,Hardware

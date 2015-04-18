@@ -30,7 +30,7 @@
 
 #include "ktoshiba.h"
 #include "fnactions.h"
-#include "helperactions.h"
+#include "ktoshibahardware.h"
 #include "ktoshibanetlinkevents.h"
 #include "version.h"
 
@@ -42,10 +42,9 @@
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
       m_fn( new FnActions( this ) ),
-      m_fnConnected( false ),
       m_nl( new KToshibaNetlinkEvents( this ) ),
-      m_nlAttached( false ),
-      m_config( KSharedConfig::openConfig( CONFIG_FILE ) )
+      m_config( KSharedConfig::openConfig( CONFIG_FILE ) ),
+      m_sysinfo( false )
 {
     setTitle( i18n("KToshiba") );
     setIconByName( "ktoshiba" );
@@ -64,8 +63,7 @@ KToshiba::~KToshiba()
 
 bool KToshiba::initialize()
 {
-    m_fnConnected = m_fn->init();
-    if (!m_fnConnected) {
+    if (!m_fn->init()) {
         qCritical() << "Could not continue loading, cleaning up...";
         cleanup();
 
@@ -77,11 +75,10 @@ bool KToshiba::initialize()
     else
         createConfig();
 
-    m_nl->setDeviceHID(m_fn->m_helper->getDeviceHID());
-    m_nlAttached = m_nl->attach();
-    if (m_nlAttached) {
+    m_nl->setDeviceHID(m_fn->hw()->getDeviceHID());
+    if (m_nl->attach()) {
         connect( m_nl, SIGNAL( tvapEvent(int) ), this, SLOT( parseTVAPEvents(int) ) );
-        if (m_fn->m_helper->isHAPSSupported && m_monitorHDD)
+        if (m_fn->hw()->isHAPSSupported && m_monitorHDD)
             connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
     } else {
         qCritical() << "Events monitoring will not be possible";
@@ -104,7 +101,7 @@ bool KToshiba::checkConfig()
 
     if (config.isEmpty()) {
         qDebug() << "Configuration file not found.";
-        m_fn->m_helper->getSysInfo();
+        m_sysinfo = m_fn->hw()->getSysInfo();
 
         return false;
     }
@@ -130,21 +127,21 @@ void KToshiba::createConfig()
     // General group
     KConfigGroup generalGroup( m_config, "General" );
     generalGroup.writeEntry( "BatteryProfiles", true );
-    generalGroup.config()->sync();
+    generalGroup.sync();
     // System Information group
     KConfigGroup sysinfoGroup( m_config, "SystemInformation" );
-    sysinfoGroup.writeEntry( "ModelFamily", m_fn->m_helper->sysinfo[4] );
-    sysinfoGroup.writeEntry( "ModelNumber", m_fn->m_helper->sysinfo[5] );
-    sysinfoGroup.writeEntry( "BIOSVersion", m_fn->m_helper->sysinfo[1] );
-    sysinfoGroup.writeEntry( "BIOSDate", m_fn->m_helper->sysinfo[2] );
-    sysinfoGroup.writeEntry( "BIOSManufacturer", m_fn->m_helper->sysinfo[0] );
-    sysinfoGroup.writeEntry( "ECVersion", m_fn->m_helper->sysinfo[3] );
-    sysinfoGroup.config()->sync();
+    sysinfoGroup.writeEntry( "ModelFamily", m_sysinfo ? m_fn->hw()->sysinfo[4] : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "ModelNumber", m_sysinfo ? m_fn->hw()->sysinfo[5] : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "BIOSVersion", m_sysinfo ? m_fn->hw()->sysinfo[1] : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "BIOSDate", m_sysinfo ? m_fn->hw()->sysinfo[2] : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "BIOSManufacturer", m_sysinfo ? m_fn->hw()->sysinfo[0] : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "ECVersion", m_sysinfo ? m_fn->hw()->sysinfo[3] : i18n("Unknown") );
+    sysinfoGroup.sync();
     // HDD Protection group
     KConfigGroup hddGroup( m_config, "HDDProtection" );
     hddGroup.writeEntry( "MonitorHDD", true );
     hddGroup.writeEntry( "NotifyHDDMovement", true );
-    hddGroup.config()->sync();
+    hddGroup.sync();
 }
 
 void KToshiba::doMenu()
@@ -186,7 +183,7 @@ void KToshiba::configChanged()
 
     if (m_monitorHDD)
         connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
-    else if (!m_monitorHDD)
+    else
         disconnect( this, SLOT( protectHDD(int) ) );
 }
 
@@ -203,12 +200,12 @@ void KToshiba::protectHDD(int event)
 {
     if (event == HDD_VIBRATED) {
         qDebug() << "Vibration detected";
-        m_fn->m_helper->unloadHeads(5000);
+        m_fn->hw()->unloadHeads(5000);
         if (m_notifyHDD)
             notifyHDDMovement();
     } else if (event == HDD_STABILIZED) {
         qDebug() << "Vibration stabilized";
-        m_fn->m_helper->unloadHeads(0);
+        m_fn->hw()->unloadHeads(0);
     }
 }
 

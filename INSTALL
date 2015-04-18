@@ -21,7 +21,7 @@ and then type the following on a Konsole or Terminal:
 
 cd ktoshiba-0.X.Y
 mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DKDE_INSTALL_PLUGINDIR=/usr/lib64/qt5/plugins -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt5/plugins ..
 su -c "make install"
 
 

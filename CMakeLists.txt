@@ -49,7 +49,7 @@ include_directories(
 
 configure_file(config-ktoshiba.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktoshiba.h)
 
-add_definitions(${LIBUDEV_DEFINITIONS} -DHAVE_CONFIG_H=1 -D_DEFAULT_SOURCE)
+add_definitions(-DHAVE_CONFIG_H=1 -D_DEFAULT_SOURCE)
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
@@ -58,6 +58,7 @@ add_subdirectory( lib )
 add_subdirectory( kcm )
 add_subdirectory( src )
 add_subdirectory( icons )
-add_subdirectory( po )
+
+ki18n_install( po )
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

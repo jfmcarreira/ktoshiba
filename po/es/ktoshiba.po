@@ -1,120 +1,121 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Azael_Avalos
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Spanisg translation of ktoshiba.
+# Copyright (C) 2014-2015 Azael_Avalos
+# This file is distributed under the same license as the KToshiba package.
+# Azael Avalos <coproscefalo@gmail.com>, 2014-2015.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
 "POT-Creation-Date: 2015-04-18 13:55-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2015-04-18 13:59-0600\n"
+"Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
+"Language-Team: ES <es_mx@li.org>\n"
+"Language: ES_MX\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Azael Avalos"
 
 #: rc.cpp:2
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "coproscefalo@gmail.com"
 
 #. i18n: file: src/statuswidget.ui:32
 #. i18n: ectx: property (windowTitle), widget (QWidget, StatusWidget)
 #: rc.cpp:5
 msgid "StatusWidget"
-msgstr ""
+msgstr "Widget de Estado"
 
 #: src/ktoshiba.cpp:49 src/ktoshiba.cpp:51 src/main.cpp:31
 msgid "KToshiba"
-msgstr ""
+msgstr "KToshiba"
 
 #: src/ktoshiba.cpp:51 src/main.cpp:33
 msgid "Fn key monitoring for Toshiba laptops"
-msgstr ""
+msgstr "Monitor de teclas Fn para laptops Toshiba"
 
 #: src/ktoshiba.cpp:133 src/ktoshiba.cpp:134 src/ktoshiba.cpp:135
 #: src/ktoshiba.cpp:136 src/ktoshiba.cpp:137 src/ktoshiba.cpp:138
 msgid "Unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #: src/ktoshiba.cpp:150
 msgid "Battery Profiles"
-msgstr ""
+msgstr "Perfiles de Batería"
 
 #: src/ktoshiba.cpp:152
 msgid "Disabled"
-msgstr ""
+msgstr "Deshabilitado"
 
 #: src/ktoshiba.cpp:156
 msgid "Performance"
-msgstr ""
+msgstr "Alto Desempeño"
 
 #: src/ktoshiba.cpp:159
 msgid "Powersave"
-msgstr ""
+msgstr "Ahorro de Energía"
 
 #: src/ktoshiba.cpp:162
 msgid "Presentation"
-msgstr ""
+msgstr "Presentación"
 
 #: src/ktoshiba.cpp:165
 msgid "ECO"
-msgstr ""
+msgstr "ECO"
 
 #: src/ktoshiba.cpp:175
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #: src/ktoshiba.cpp:193
 msgid "KToshiba - HDD Monitor"
-msgstr ""
+msgstr "KToshiba - Monitor de disco duro"
 
 #: src/ktoshiba.cpp:194
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
+"Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
 #: src/fnactions.cpp:245
 msgid "OFF"
-msgstr ""
+msgstr "APAGADO"
 
 #: src/fnactions.cpp:249
 msgid "ON"
-msgstr ""
+msgstr "ENCENDIDO"
 
 #: src/main.cpp:36
 msgid "Copyright (C) 2004-2015 Azael Avalos"
-msgstr ""
+msgstr "Derechos de autor (C) 2004-2015, Azael Avalos"
 
 #: src/main.cpp:40
 msgid "Azael Avalos"
-msgstr ""
+msgstr "Azael Avalos"
 
 #: src/main.cpp:41
 msgid "Original Author"
-msgstr ""
+msgstr "Autor original"
 
 #: src/main.cpp:43
 msgid "KDE Team"
-msgstr ""
+msgstr "El equipo de KDE"
 
 #: src/main.cpp:44
 msgid "Some ideas and pieces of code"
-msgstr ""
+msgstr "Algunas ideas y segmentos de codigo"
 
 #: src/main.cpp:47
 msgid "Mauricio Duque"
-msgstr ""
+msgstr "Mauricio Duque"
 
 #: src/main.cpp:48
 msgid "Green world icon"
-msgstr ""
+msgstr "Icono del mundo verde"

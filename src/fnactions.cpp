@@ -25,27 +25,28 @@
 #include <KWindowSystem>
 
 #include <Solid/Power>
+#include <Solid/Inhibition>
 
 extern "C" {
 #include <linux/input.h>
 }
 
 #include "fnactions.h"
-#include "helperactions.h"
+#include "ktoshibahardware.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
-//using namespace Solid::PowerManagement;
+using namespace Solid;
 
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
-      m_helper( new HelperActions( this ) ),
       m_dBus( new KToshibaDBusInterface( this ) ),
       m_hotkeys( new KToshibaKeyHandler( this ) ),
+      m_hw( new KToshibaHardware( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
+      m_job( NULL ),
       m_batKeyPressed( false ),
-      m_cookie( 0 ),
       m_type( 1 ),
       m_mode( TIMER ),
       m_time( 15 )
@@ -68,11 +69,12 @@ FnActions::FnActions(QObject *parent)
 
 FnActions::~FnActions()
 {
+    delete m_job;
     delete m_widget; m_widget = NULL;
     delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_hotkeys; m_hotkeys = NULL;
-    delete m_helper; m_helper = NULL;
+    delete m_hw; m_hw = NULL;
 }
 
 bool FnActions::init()
@@ -80,18 +82,18 @@ bool FnActions::init()
     if (!m_hotkeys->attach())
         return false;
 
-    if (!m_helper->init()) {
-        qCritical() << "Could not communicate with helper, hardware changes will not be possible";
+    if (!m_hw->init()) {
+         qCritical() << "Could not communicate with library, hardware changes will not be possible";
 
         return false;
     }
 
     m_dBus->init();
 
-    if (m_helper->isKBDBacklightSupported) {
-        m_mode = m_helper->getKBDMode();
-        if (m_helper->isKBDTypeSupported)
-            m_type = m_helper->getKBDType();
+    if (m_hw->isKBDBacklightSupported) {
+        m_mode = m_hw->getKBDMode();
+        if (m_hw->isKBDTypeSupported)
+            m_type = m_hw->getKBDType();
 
         if (m_type == 2)
             m_modes << OFF << ON << TIMER;
@@ -114,10 +116,10 @@ void FnActions::batMonitorChanged(bool state)
 
 void FnActions::toggleTouchPad()
 {
-    if (!m_helper->isTouchPadSupported)
+    if (!m_hw->isTouchPadSupported)
         return;
 
-    m_helper->setTouchPad(!m_helper->getTouchPad());
+    m_hw->setTouchPad(!m_hw->getTouchPad());
 }
 
 void FnActions::toggleProfiles()
@@ -142,56 +144,69 @@ void FnActions::changeProfile(QString profile)
         return;
     }
 
+    //bool inhib = false;
     if (profile == "Powersave") {
         showWidget(Powersave);
-        if (m_helper->isECOSupported)
-            m_helper->setEcoLed(Off);
-        if (m_helper->isIlluminationSupported)
-            m_helper->setIllumination(Off);
+        if (m_hw->isECOSupported)
+            m_hw->setEcoLed(Off);
+        if (m_hw->isIlluminationSupported)
+            m_hw->setIllumination(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
-        if (m_helper->isECOSupported)
-            m_helper->setEcoLed(Off);
-        if (m_helper->isIlluminationSupported)
-            m_helper->setIllumination(On);
+        if (m_hw->isECOSupported)
+            m_hw->setEcoLed(Off);
+        if (m_hw->isIlluminationSupported)
+            m_hw->setIllumination(On);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
-        if (m_helper->isECOSupported)
-            m_helper->setEcoLed(Off);
-        if (m_helper->isIlluminationSupported)
-            m_helper->setIllumination(On);
-        if (m_helper->isKBDBacklightSupported) {
+        if (m_hw->isECOSupported)
+            m_hw->setEcoLed(Off);
+        if (m_hw->isIlluminationSupported)
+            m_hw->setIllumination(On);
+        if (m_hw->isKBDBacklightSupported) {
             if (m_type == 1 && m_mode == FNZ)
                 m_dBus->setKBDBacklight(On);
             else if (m_type == 2)
-                m_helper->setKBDMode(ON);
+                m_hw->setKBDMode(ON);
         }
         m_dBus->setBrightness(71);
-        //m_cookie = beginSuppressingScreenPowerManagement(profile);
+        //inhib = true;
     } else if (profile == "ECO") {
         showWidget(ECO);
-        if (m_helper->isECOSupported)
-            m_helper->setEcoLed(On);
-        if (m_helper->isIlluminationSupported)
-            m_helper->setIllumination(Off);
-        if (m_helper->isKBDBacklightSupported) {
+        if (m_hw->isECOSupported)
+            m_hw->setEcoLed(On);
+        if (m_hw->isIlluminationSupported)
+            m_hw->setIllumination(Off);
+        if (m_hw->isKBDBacklightSupported) {
             if (m_type == 1 && m_mode == FNZ)
                 m_dBus->setKBDBacklight(Off);
             else if (m_type == 2)
-                m_helper->setKBDMode(OFF);
+                m_hw->setKBDMode(OFF);
         }
         m_dBus->setBrightness(57);
     }
-    qDebug() << "Changed battery profile to:" << profile;
 
-    //if (m_cookie != 0)
-    //    if (stopSuppressingScreenPowerManagement(m_cookie))
-    //        m_cookie = 0;
+    /*if (inhib) {
+        m_job = new InhibitionJob(this);
+        m_job->setInhibitions(Power::Screen);
+        m_job->setDescription(i18n("Presentation"));
+        if (!m_job->exec())
+            qWarning() << "Could not start screen power management inhibition job";
+    } else {
+        if (m_job) {
+            // We are suppose to delete the job once we finish,
+            // but somehow this is causing a segfault...
+            delete m_job;
+            m_job = NULL;
+        }
+    }*/
+
+    qDebug() << "Changed battery profile to:" << profile;
 }
 
 void FnActions::kbdBacklight()
 {
-    if (!m_helper->isKBDBacklightSupported)
+    if (!m_hw->isKBDBacklightSupported)
         return;
 
     QIcon icon;
@@ -200,11 +215,11 @@ void FnActions::kbdBacklight()
 			      %1\
 			      </span></p></body></html>");
 
-    m_mode = m_helper->getKBDMode();
+    m_mode = m_hw->getKBDMode();
 
     if (m_type == 1) {
         if (m_mode == TIMER) {
-            int time = m_helper->getKBDTimeout();
+            int time = m_hw->getKBDTimeout();
             icon = QIcon(":images/keyboard_black_on_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(time));
         } else {
@@ -223,7 +238,7 @@ void FnActions::kbdBacklight()
             m_mode = m_modes.at(current);
         }
 
-        m_helper->setKBDMode(m_mode);
+        m_hw->setKBDMode(m_mode);
         switch (m_mode) {
         case OFF:
             icon = QIcon(":images/keyboard_black_off_64.png");
@@ -235,7 +250,7 @@ void FnActions::kbdBacklight()
             break;
         case TIMER:
             icon = QIcon(":images/keyboard_black_on_64.png");
-            int time = m_helper->getKBDTimeout();
+            int time = m_hw->getKBDTimeout();
             m_statusWidget.kbdStatusText->setText(format.arg(time));
             break;
         }
@@ -248,11 +263,10 @@ void FnActions::kbdBacklight()
 void FnActions::showWidget(int wid)
 {
     QRect r = QApplication::desktop()->geometry();
-    m_widget->move(r.center() -
-                QPoint(m_widget->width() / 2, m_widget->height() / 2));
+    m_widget->move((r.width() / 2) - (m_widget->width() / 2), r.top());
     m_widget->show();
 
-    m_statusWidget.stackedWidget->setCurrentWidget( m_statusWidget.stackedWidget->widget(wid) );
+    m_statusWidget.stackedWidget->setCurrentIndex( wid );
 
     if (m_widgetTimer->isActive())
         m_widgetTimer->setInterval( 900 );
