@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QTabWidget>
 #include <QtDBus/QtDBus>
+#include <QIcon>
 
 #include <KPluginFactory>
 #include <KAboutData>
@@ -72,10 +73,14 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     if (m_hwAttached) {
         addTabs();
         m_message->setMessageType(KMessageWidget::Information);
+        m_message->setCloseButtonVisible(false);
         m_message->setText(i18n("Please reboot for hardware changes to take effect"));
+        m_message->setIcon(QIcon::fromTheme("dialog-information"));
     } else {
         m_message->setMessageType(KMessageWidget::Error);
-        m_message->setText(i18n("Could not communicate with helper, hardware changes will not be possible"));
+        m_message->setCloseButtonVisible(false);
+        m_message->setText(i18n("Could not communicate with library, hardware changes will not be possible"));
+        m_message->setIcon(QIcon::fromTheme("dialog-error"));
         m_message->setVisible(true);
     }
 }

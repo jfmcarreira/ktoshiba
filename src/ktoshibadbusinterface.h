@@ -20,6 +20,7 @@
 #define KTOSHIBA_DBUS_INTERFACE_H
 
 #include <QObject>
+#include <QString>
 #include <QtDBus/QDBusAbstractAdaptor>
 
 class FnActions;
@@ -39,6 +40,8 @@ public:
     void setBrightness(int);
     void setKBDBacklight(int);
     void setZoom(int);
+    uint inhibitPowerManagement(QString);
+    void unInhibitPowerManagement(uint);
 
 Q_SIGNALS:
     void configChanged();

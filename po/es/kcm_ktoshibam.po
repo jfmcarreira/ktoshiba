@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-18 13:55-0600\n"
+"POT-Creation-Date: 2015-04-22 10:38-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -29,7 +29,7 @@ msgstr "coproscefalo@gmail.com"
 
 #. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: rc.cpp:5 kcm/systemsettings.cpp:112
+#: rc.cpp:5 kcm/systemsettings.cpp:117
 msgid "Sleep Utilities"
 msgstr "Utilidades de Reposo"
 
@@ -160,7 +160,7 @@ msgstr "Versión del controlador:"
 
 #. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: rc.cpp:71 kcm/systemsettings.cpp:99
+#: rc.cpp:71 kcm/systemsettings.cpp:104
 msgid "General Settings"
 msgstr "Ajustes Generales"
 
@@ -280,7 +280,7 @@ msgstr "Fija el nivel de protección del disco duro."
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:146 kcm/systemsettings.cpp:119
+#: rc.cpp:146 kcm/systemsettings.cpp:124
 msgid "Keyboard Settings"
 msgstr "Ajustes de Teclado"
 
@@ -348,86 +348,85 @@ msgstr ""
 "Fija el tiempo en el que la luz del teclado se apagará despues de la ultima "
 "tecla presionada."
 
-#: kcm/systemsettings.cpp:45
+#: kcm/systemsettings.cpp:46
 msgid "KToshiba System Settings"
 msgstr "Ajustes del Sistema de KToshiba"
 
-#: kcm/systemsettings.cpp:47
+#: kcm/systemsettings.cpp:48
 msgid "Configures Toshiba laptop related hardware settings"
 msgstr "Configura el hardware relacionado con el portátil Toshiba"
 
-#: kcm/systemsettings.cpp:49
+#: kcm/systemsettings.cpp:50
 msgid "Copyright (C) 2015 Azael Avalos"
 msgstr "Derechos de autor (C) 2015 Azael Avalos"
 
-#: kcm/systemsettings.cpp:54
+#: kcm/systemsettings.cpp:55
 msgid "Azael Avalos"
 msgstr "Azael Avalos"
 
-#: kcm/systemsettings.cpp:55
+#: kcm/systemsettings.cpp:56
 msgid "Original author"
 msgstr "Autor original"
 
-#: kcm/systemsettings.cpp:75
+#: kcm/systemsettings.cpp:77
 msgid "Please reboot for hardware changes to take effect"
-msgstr ""
-"Por favor reinicia para que los cambios en el hardware hagan efecto"
+msgstr "Por favor reinicia para que los cambios en el hardware hagan efecto"
 
-#: kcm/systemsettings.cpp:78
+#: kcm/systemsettings.cpp:82
 msgid ""
-"Could not communicate with helper, hardware changes will not be possible"
+"Could not communicate with library, hardware changes will not be possible"
 msgstr ""
-"No se pudo comunicar con el programa ayudante, los cambios en el hardware "
-"no serán posibles"
+"No se pudo comunicar con la librería, los cambios en el hardware no serán "
+"posibles"
 
-#: kcm/systemsettings.cpp:94
+#: kcm/systemsettings.cpp:99
 msgid "System Information"
 msgstr "Información del Sistema"
 
-#: kcm/systemsettings.cpp:104
+#: kcm/systemsettings.cpp:109
 msgid "HDD Protection"
 msgstr "Protección del Disco Duro"
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "Off"
 msgstr "Apagado"
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "Low"
 msgstr "Bajo"
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "Medium"
 msgstr "Medio"
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "High"
 msgstr "Alto"
 
-#: kcm/systemsettings.cpp:121
+#: kcm/systemsettings.cpp:126
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: kcm/systemsettings.cpp:121
+#: kcm/systemsettings.cpp:126
 msgid "OFF"
 msgstr "APAGADO"
 
-#: kcm/systemsettings.cpp:143 kcm/systemsettings.cpp:145
-#: kcm/systemsettings.cpp:147 kcm/systemsettings.cpp:149
-#: kcm/systemsettings.cpp:151 kcm/systemsettings.cpp:153
+#: kcm/systemsettings.cpp:148 kcm/systemsettings.cpp:150
+#: kcm/systemsettings.cpp:152 kcm/systemsettings.cpp:154
+#: kcm/systemsettings.cpp:156 kcm/systemsettings.cpp:158
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: kcm/systemsettings.cpp:161
+#: kcm/systemsettings.cpp:166
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
 "Advertencia: Esta opción deshabilita el panel táctil vía hardware.\n"
-"Para deshabilitarlo vía software ir a: Hardware->Dispositivos de Entrada"
-"->Panel táctil"
+"Para deshabilitarlo vía software ir a: Hardware->Dispositivos de Entrada-"
+">Panel táctil"
 
-#: kcm/systemsettings.cpp:283 kcm/systemsettings.cpp:407
-#: kcm/systemsettings.cpp:539
+#: kcm/systemsettings.cpp:288 kcm/systemsettings.cpp:412
+#: kcm/systemsettings.cpp:544
 msgid " sec"
 msgstr " seg"

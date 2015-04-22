@@ -23,9 +23,8 @@ qt5_wrap_ui(KToshibaSources statuswidget.ui)
 add_executable(ktoshiba ${KToshibaSources} ${IconResource_SRCS} ${Adaptor_SRCS})
 
 target_link_libraries(ktoshiba
-	ktoshibaprivate
+	ktoshibahardware
 	KF5::WidgetsAddons
-	KF5::Solid
 	KF5::WindowSystem
 	KF5::I18n
 	KF5::XmlGui

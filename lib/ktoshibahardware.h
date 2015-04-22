@@ -24,9 +24,9 @@
 #include <QStringList>
 #include <QFile>
 
-#include "ktoshibaprivate_export.h"
+#include "ktoshibahardware_export.h"
 
-class KTOSHIBAPRIVATE_EXPORT KToshibaHardware : public QObject
+class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 {
     Q_OBJECT
 
@@ -50,7 +50,7 @@ public:
 
 public Q_SLOTS:
     /*
-     * System Information call
+     * System Information calls
      */
     bool getSysInfo();
     QString getDriverVersion();
@@ -96,18 +96,6 @@ Q_SIGNALS:
 private:
     QString findDriverPath();
     bool deviceExists(QString);
-    bool checkTouchPad();
-    bool checkIllumination();
-    bool checkECO();
-    bool checkKBDBacklight();
-    bool checkKBDType();
-    bool checkUSBSleepCharge();
-    bool checkUSBRapidCharge();
-    bool checkUSBSleepMusic();
-    bool checkKBDFunctions();
-    bool checkPanelPowerON();
-    bool checkUSBThree();
-    bool checkHAPS();
 
     QString m_device;
     QString m_driverPath;

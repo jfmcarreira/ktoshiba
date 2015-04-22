@@ -23,8 +23,6 @@
 #include <QString>
 #include <QStringList>
 
-#include <Solid/InhibitionJob>
-
 #include "ui_statuswidget.h"
 
 class QTimer;
@@ -77,9 +75,9 @@ private:
     QList<int> m_modes;
     QString m_profile;
     QString m_version;
-    Solid::InhibitionJob *m_job;
     bool m_batKeyPressed;
     bool m_batMonitor;
+    uint m_cookie;
     int m_type;
     int m_mode;
     int m_time;

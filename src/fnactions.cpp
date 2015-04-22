@@ -20,12 +20,8 @@
 #include <QTimer>
 #include <QDebug>
 
-
 #include <KLocalizedString>
 #include <KWindowSystem>
-
-#include <Solid/Power>
-#include <Solid/Inhibition>
 
 extern "C" {
 #include <linux/input.h>
@@ -36,8 +32,6 @@ extern "C" {
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
-using namespace Solid;
-
 FnActions::FnActions(QObject *parent)
     : QObject( parent ),
       m_dBus( new KToshibaDBusInterface( this ) ),
@@ -45,8 +39,8 @@ FnActions::FnActions(QObject *parent)
       m_hw( new KToshibaHardware( this ) ),
       m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
       m_widgetTimer( new QTimer( this ) ),
-      m_job( NULL ),
       m_batKeyPressed( false ),
+      m_cookie( 0 ),
       m_type( 1 ),
       m_mode( TIMER ),
       m_time( 15 )
@@ -69,7 +63,8 @@ FnActions::FnActions(QObject *parent)
 
 FnActions::~FnActions()
 {
-    delete m_job;
+    if (m_cookie)
+        m_dBus->unInhibitPowerManagement(m_cookie);
     delete m_widget; m_widget = NULL;
     delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_dBus; m_dBus = NULL;
@@ -116,10 +111,8 @@ void FnActions::batMonitorChanged(bool state)
 
 void FnActions::toggleTouchPad()
 {
-    if (!m_hw->isTouchPadSupported)
-        return;
-
-    m_hw->setTouchPad(!m_hw->getTouchPad());
+    if (m_hw->isTouchPadSupported)
+        m_hw->setTouchPad(!m_hw->getTouchPad());
 }
 
 void FnActions::toggleProfiles()
@@ -144,7 +137,7 @@ void FnActions::changeProfile(QString profile)
         return;
     }
 
-    //bool inhib = false;
+    bool inhib = false;
     if (profile == "Powersave") {
         showWidget(Powersave);
         if (m_hw->isECOSupported)
@@ -169,8 +162,8 @@ void FnActions::changeProfile(QString profile)
             else if (m_type == 2)
                 m_hw->setKBDMode(ON);
         }
-        m_dBus->setBrightness(71);
-        //inhib = true;
+        m_cookie = m_dBus->inhibitPowerManagement(i18n("Presentation"));
+        inhib = true;
     } else if (profile == "ECO") {
         showWidget(ECO);
         if (m_hw->isECOSupported)
@@ -186,20 +179,10 @@ void FnActions::changeProfile(QString profile)
         m_dBus->setBrightness(57);
     }
 
-    /*if (inhib) {
-        m_job = new InhibitionJob(this);
-        m_job->setInhibitions(Power::Screen);
-        m_job->setDescription(i18n("Presentation"));
-        if (!m_job->exec())
-            qWarning() << "Could not start screen power management inhibition job";
-    } else {
-        if (m_job) {
-            // We are suppose to delete the job once we finish,
-            // but somehow this is causing a segfault...
-            delete m_job;
-            m_job = NULL;
-        }
-    }*/
+    if (m_cookie && !inhib) {
+        m_dBus->unInhibitPowerManagement(m_cookie);
+        m_cookie = 0;
+    }
 
     qDebug() << "Changed battery profile to:" << profile;
 }
