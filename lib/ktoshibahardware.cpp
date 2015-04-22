@@ -53,18 +53,18 @@ bool KToshibaHardware::init()
     m_ledsPath = "/sys/class/leds/toshiba::";
     m_hapsPath = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/";
 
-    isTouchPadSupported = checkTouchPad();
-    isIlluminationSupported = checkIllumination();
-    isECOSupported = checkECO();
-    isKBDBacklightSupported = checkKBDBacklight();
-    isKBDTypeSupported = checkKBDType();
-    isUSBSleepChargeSupported = checkUSBSleepCharge();
-    isUSBRapidChargeSupported = checkUSBRapidCharge();
-    isUSBSleepMusicSupported = checkUSBSleepMusic();
-    isKBDFunctionsSupported = checkKBDFunctions();
-    isPanelPowerONSupported = checkPanelPowerON();
-    isUSBThreeSupported = checkUSBThree();
-    isHAPSSupported = checkHAPS();
+    isTouchPadSupported = deviceExists("touchpad");
+    isIlluminationSupported = deviceExists("illumination");
+    isECOSupported = deviceExists("eco_mode");
+    isKBDBacklightSupported = deviceExists("kbd_backlight_mode");
+    isKBDTypeSupported = deviceExists("kbd_type");
+    isUSBSleepChargeSupported = deviceExists("usb_sleep_charge");
+    isUSBRapidChargeSupported = deviceExists("usb_rapid_charge");
+    isUSBSleepMusicSupported = deviceExists("usb_sleep_music");
+    isKBDFunctionsSupported = deviceExists("kbd_function_keys");
+    isPanelPowerONSupported = deviceExists("panel_power_on");
+    isUSBThreeSupported = deviceExists("usb_three");
+    isHAPSSupported = deviceExists("haps");
 
     return true;
 }
@@ -79,7 +79,7 @@ QString KToshibaHardware::findDriverPath()
         if (m_file.exists()) {
             m_device = m_devices.at(current);
 
-            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
+            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_device);
         }
 
         current++;
@@ -105,66 +105,6 @@ bool KToshibaHardware::deviceExists(QString device)
         m_file.setFileName(m_driverPath + device);
 
     return m_file.exists();
-}
-
-bool KToshibaHardware::checkTouchPad()
-{
-    return deviceExists("touchpad");
-}
-
-bool KToshibaHardware::checkIllumination()
-{
-    return deviceExists("illumination");
-}
-
-bool KToshibaHardware::checkECO()
-{
-    return deviceExists("eco_mode");
-}
-
-bool KToshibaHardware::checkKBDBacklight()
-{
-    return deviceExists("kbd_backlight_mode");
-}
-
-bool KToshibaHardware::checkKBDType()
-{
-    return deviceExists("kbd_type");
-}
-
-bool KToshibaHardware::checkUSBSleepCharge()
-{
-    return deviceExists("usb_sleep_charge");
-}
-
-bool KToshibaHardware::checkUSBRapidCharge()
-{
-    return deviceExists("usb_rapid_charge");
-}
-
-bool KToshibaHardware::checkUSBSleepMusic()
-{
-    return deviceExists("usb_sleep_music");
-}
-
-bool KToshibaHardware::checkKBDFunctions()
-{
-    return deviceExists("kbd_function_keys");
-}
-
-bool KToshibaHardware::checkPanelPowerON()
-{
-    return deviceExists("panel_power_on");
-}
-
-bool KToshibaHardware::checkUSBThree()
-{
-    return deviceExists("usb_three");
-}
-
-bool KToshibaHardware::checkHAPS()
-{
-    return deviceExists("haps");
 }
 
 bool KToshibaHardware::getSysInfo()

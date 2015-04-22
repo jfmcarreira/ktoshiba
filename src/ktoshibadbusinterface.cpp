@@ -280,8 +280,7 @@ void KToshibaDBusInterface::lockScreen()
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -289,8 +288,7 @@ void KToshibaDBusInterface::lockScreen()
     QDBusReply<void> reply = iface.call("Lock");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
     }
 }
 
@@ -302,8 +300,7 @@ void KToshibaDBusInterface::setBrightness(int level)
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -311,8 +308,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     QDBusReply<void> reply = iface.call("setBrightness", level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
     }
 }
 
@@ -324,8 +320,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -334,15 +329,14 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
     reply = iface.call("keyboardBrightness", state);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
     }
 }
 
 void KToshibaDBusInterface::setZoom(int zoom)
 {
     if (!KWindowSystem::compositingActive()) {
-        qWarning() << "Compositing have been disabled, Zoom actions cannot be activated" << endl;
+        qWarning() << "Compositing have been disabled, Zoom actions cannot be activated";
 
         return;
     }
@@ -353,8 +347,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
 			 QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -374,8 +367,53 @@ void KToshibaDBusInterface::setZoom(int zoom)
 
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << endl
-                    << "Message:" << err.message();
+        qCritical() << err.name() << "Message:" << err.message();
+    }
+}
+
+uint KToshibaDBusInterface::inhibitPowerManagement(QString reason)
+{
+    QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
+			 "/org/freedesktop/PowerManagement/Inhibit",
+			 "org.freedesktop.PowerManagement.Inhibit",
+			 QDBusConnection::sessionBus(), this);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return 0;
+    }
+
+    QDBusReply<uint> reply;
+    reply = iface.call("Inhibit", QString("KToshiba"), reason);
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return 0;
+    }
+
+    return reply;
+}
+
+void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
+{
+    QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
+			 "/org/freedesktop/PowerManagement/Inhibit",
+			 "org.freedesktop.PowerManagement.Inhibit",
+			 QDBusConnection::sessionBus(), this);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return;
+    }
+
+    QDBusReply<void> reply;
+    reply = iface.call("UnInhibit", cookie);
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
     }
 }
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-18 13:55-0600\n"
+"POT-Creation-Date: 2015-04-22 10:38-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: rc.cpp:5 kcm/systemsettings.cpp:112
+#: rc.cpp:5 kcm/systemsettings.cpp:117
 msgid "Sleep Utilities"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 
 #. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: rc.cpp:71 kcm/systemsettings.cpp:99
+#: rc.cpp:71 kcm/systemsettings.cpp:104
 msgid "General Settings"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:146 kcm/systemsettings.cpp:119
+#: rc.cpp:146 kcm/systemsettings.cpp:124
 msgid "Keyboard Settings"
 msgstr ""
 
@@ -329,80 +329,80 @@ msgid ""
 "Sets the time the keyboard backlight will turn off after the last keypress."
 msgstr ""
 
-#: kcm/systemsettings.cpp:45
+#: kcm/systemsettings.cpp:46
 msgid "KToshiba System Settings"
 msgstr ""
 
-#: kcm/systemsettings.cpp:47
+#: kcm/systemsettings.cpp:48
 msgid "Configures Toshiba laptop related hardware settings"
 msgstr ""
 
-#: kcm/systemsettings.cpp:49
+#: kcm/systemsettings.cpp:50
 msgid "Copyright (C) 2015 Azael Avalos"
 msgstr ""
 
-#: kcm/systemsettings.cpp:54
+#: kcm/systemsettings.cpp:55
 msgid "Azael Avalos"
 msgstr ""
 
-#: kcm/systemsettings.cpp:55
+#: kcm/systemsettings.cpp:56
 msgid "Original author"
 msgstr ""
 
-#: kcm/systemsettings.cpp:75
+#: kcm/systemsettings.cpp:77
 msgid "Please reboot for hardware changes to take effect"
 msgstr ""
 
-#: kcm/systemsettings.cpp:78
+#: kcm/systemsettings.cpp:82
 msgid ""
-"Could not communicate with helper, hardware changes will not be possible"
+"Could not communicate with library, hardware changes will not be possible"
 msgstr ""
 
-#: kcm/systemsettings.cpp:94
+#: kcm/systemsettings.cpp:99
 msgid "System Information"
 msgstr ""
 
-#: kcm/systemsettings.cpp:104
+#: kcm/systemsettings.cpp:109
 msgid "HDD Protection"
 msgstr ""
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "Off"
 msgstr ""
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "Low"
 msgstr ""
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "Medium"
 msgstr ""
 
-#: kcm/systemsettings.cpp:105
+#: kcm/systemsettings.cpp:110
 msgid "High"
 msgstr ""
 
-#: kcm/systemsettings.cpp:121
+#: kcm/systemsettings.cpp:126
 msgid "ON"
 msgstr ""
 
-#: kcm/systemsettings.cpp:121
+#: kcm/systemsettings.cpp:126
 msgid "OFF"
 msgstr ""
 
-#: kcm/systemsettings.cpp:143 kcm/systemsettings.cpp:145
-#: kcm/systemsettings.cpp:147 kcm/systemsettings.cpp:149
-#: kcm/systemsettings.cpp:151 kcm/systemsettings.cpp:153
+#: kcm/systemsettings.cpp:148 kcm/systemsettings.cpp:150
+#: kcm/systemsettings.cpp:152 kcm/systemsettings.cpp:154
+#: kcm/systemsettings.cpp:156 kcm/systemsettings.cpp:158
 msgid "Unknown"
 msgstr ""
 
-#: kcm/systemsettings.cpp:161
+#: kcm/systemsettings.cpp:166
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
 
-#: kcm/systemsettings.cpp:283 kcm/systemsettings.cpp:407
-#: kcm/systemsettings.cpp:539
+#: kcm/systemsettings.cpp:288 kcm/systemsettings.cpp:412
+#: kcm/systemsettings.cpp:544
 msgid " sec"
 msgstr ""

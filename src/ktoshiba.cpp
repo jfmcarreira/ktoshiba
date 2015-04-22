@@ -252,7 +252,7 @@ void KToshiba::configureClicked()
 
 void KToshiba::parseTVAPEvents(int event)
 {
-    qDebug() << "Received event 0x" << hex << event;
+    qDebug() << "Received event" << hex << event;
     switch(event) {
     case 0x80:	// Hotkeys and some system events
         break;

@@ -20,6 +20,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 	Core
 	Widgets
 	DBus
+	Gui
 )
 
 find_package(KF5 REQUIRED COMPONENTS
@@ -27,7 +28,6 @@ find_package(KF5 REQUIRED COMPONENTS
 	WidgetsAddons
 	Auth
 	DBusAddons
-	Solid
 	KCMUtils
 	I18n
 	WindowSystem

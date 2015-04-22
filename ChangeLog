@@ -1,3 +1,18 @@
+2015-04-22 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed some typos in Messages.sh and updated spanish translation
+	* Added 2 new functions to KToshibaDBusInterface class to deal
+	  with power management inhibition
+	* Removed Solid dependency and used the DBus method calls instead
+
+2015-04-21 Azael Avalos <coproscefalo@gmail.com>
+	* Added QTGui as a dependecy in CMakeLists
+	* Removed a lot of uneeded functions from lib
+	* Library was renamed from *private to *hardware, code adapted
+
+2015-04-20 Azael Avalos <coproscefalo@gmail.com>
+	* Removed the close button on the KCM's message widget and
+	  added an icon
+
 2015-04-18 Azael Avalos <coproscefalo@gmail.com>
 	* Removed i18n strings from KToshHelper class
 	* Updated translation script, and in turn he translations were

@@ -55,14 +55,15 @@ for lang in $LANGS; do
   echo "- Processing $lang"
   $MSGMERGE -o $lang/tmp.po $lang/ktoshiba.po ktoshiba.pot
   mv $lang/tmp.po $lang/ktoshiba.po
-  mv $lang/ktoshiba.po $lang/koshiba.po.orig
+  mv $lang/ktoshiba.po $lang/ktoshiba.po.orig
   sed -e 's,^"Content-Type: text/plain; charset=CHARSET\\n"$,"Content-Type: text/plain; charset=UTF-8\\n",' < $lang/ktoshiba.po.orig > $lang/ktoshiba.po
-  rm -f $lang/koshiba.po.orig
+  rm -f $lang/ktoshiba.po.orig
+
   $MSGMERGE -o $lang/tmp.po $lang/kcm_ktoshibam.po kcm_ktoshibam.pot
   mv $lang/tmp.po $lang/kcm_ktoshibam.po
   mv $lang/kcm_ktoshibam.po $lang/kcm_ktoshibam.po.orig
   sed -e 's,^"Content-Type: text/plain; charset=CHARSET\\n"$,"Content-Type: text/plain; charset=UTF-8\\n",' < $lang/kcm_ktoshibam.po.orig > $lang/kcm_ktoshibam.po
-  rm -f $lang/kcm_koshibam.po.orig
+  rm -f $lang/kcm_ktoshibam.po.orig
 done
 
 echo "Done"

@@ -14,7 +14,7 @@ ki18n_wrap_ui(SystemSettings_SRCS
 add_library(kcm_ktoshibam MODULE ${SystemSettings_SRCS})
 
 target_link_libraries(kcm_ktoshibam
-	ktoshibaprivate
+	ktoshibahardware
 	KF5::KCMUtils
 	KF5::I18n
 	Qt5::DBus
