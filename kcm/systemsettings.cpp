@@ -57,6 +57,7 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
 		     QLatin1String("coproscefalo@gmail.com"));
 
     setAboutData(about);
+    setButtons(Apply | Default);
 
     QGridLayout *layout = new QGridLayout(this);
     QVBoxLayout *message = new QVBoxLayout();

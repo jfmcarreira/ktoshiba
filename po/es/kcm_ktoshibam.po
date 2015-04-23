@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-22 10:38-0600\n"
+"POT-Creation-Date: 2015-04-22 15:39-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -29,7 +29,7 @@ msgstr "coproscefalo@gmail.com"
 
 #. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: rc.cpp:5 kcm/systemsettings.cpp:117
+#: rc.cpp:5 kcm/systemsettings.cpp:118
 msgid "Sleep Utilities"
 msgstr "Utilidades de Reposo"
 
@@ -160,7 +160,7 @@ msgstr "Versión del controlador:"
 
 #. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: rc.cpp:71 kcm/systemsettings.cpp:104
+#: rc.cpp:71 kcm/systemsettings.cpp:105
 msgid "General Settings"
 msgstr "Ajustes Generales"
 
@@ -206,7 +206,7 @@ msgstr "USB 3:"
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, usb_three_checkbox)
 #: rc.cpp:95 rc.cpp:98
 msgid "Disables USB 3 functionality, acting as a regular USB 2."
-msgstr "Deshabilita la funcionalidad del USB 3, actuando como un puerto USB 2."
+msgstr "Deshabilita la funcionalidad del USB 3, actuando como USB 2."
 
 #. i18n: file: kcm/general.ui:184
 #. i18n: ectx: property (text), widget (QLabel, panel_power_label)
@@ -280,7 +280,7 @@ msgstr "Fija el nivel de protección del disco duro."
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:146 kcm/systemsettings.cpp:124
+#: rc.cpp:146 kcm/systemsettings.cpp:125
 msgid "Keyboard Settings"
 msgstr "Ajustes de Teclado"
 
@@ -337,11 +337,23 @@ msgstr "Selecciona el modo de operación de la luz del teclado:"
 msgid "Keyboard Backlight &timeout:"
 msgstr "Tiempo de apagado de la Luz del Teclado:"
 
-#. i18n: file: kcm/keyboard.ui:169
-#. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
-#. i18n: file: kcm/keyboard.ui:172
-#. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
+#. i18n: file: kcm/keyboard.ui:156
+#. i18n: ectx: property (toolTip), widget (QLabel, kbd_timeout)
+#. i18n: file: kcm/keyboard.ui:159
+#. i18n: ectx: property (whatsThis), widget (QLabel, kbd_timeout)
 #: rc.cpp:176 rc.cpp:179
+msgid ""
+"The current timeout at which the keyboard backlight will turn off after the "
+"last keypress."
+msgstr ""
+"El tiempo actual en el que la luz del teclado se apagará despues de la "
+"ultima tecla presionada."
+
+#. i18n: file: kcm/keyboard.ui:175
+#. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
+#. i18n: file: kcm/keyboard.ui:178
+#. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
+#: rc.cpp:182 rc.cpp:185
 msgid ""
 "Sets the time the keyboard backlight will turn off after the last keypress."
 msgstr ""
@@ -368,56 +380,56 @@ msgstr "Azael Avalos"
 msgid "Original author"
 msgstr "Autor original"
 
-#: kcm/systemsettings.cpp:77
+#: kcm/systemsettings.cpp:78
 msgid "Please reboot for hardware changes to take effect"
 msgstr "Por favor reinicia para que los cambios en el hardware hagan efecto"
 
-#: kcm/systemsettings.cpp:82
+#: kcm/systemsettings.cpp:83
 msgid ""
 "Could not communicate with library, hardware changes will not be possible"
 msgstr ""
 "No se pudo comunicar con la librería, los cambios en el hardware no serán "
 "posibles"
 
-#: kcm/systemsettings.cpp:99
+#: kcm/systemsettings.cpp:100
 msgid "System Information"
 msgstr "Información del Sistema"
 
-#: kcm/systemsettings.cpp:109
+#: kcm/systemsettings.cpp:110
 msgid "HDD Protection"
 msgstr "Protección del Disco Duro"
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "Off"
 msgstr "Apagado"
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "Low"
 msgstr "Bajo"
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "Medium"
 msgstr "Medio"
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "High"
 msgstr "Alto"
 
-#: kcm/systemsettings.cpp:126
+#: kcm/systemsettings.cpp:127
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: kcm/systemsettings.cpp:126
+#: kcm/systemsettings.cpp:127
 msgid "OFF"
 msgstr "APAGADO"
 
-#: kcm/systemsettings.cpp:148 kcm/systemsettings.cpp:150
-#: kcm/systemsettings.cpp:152 kcm/systemsettings.cpp:154
-#: kcm/systemsettings.cpp:156 kcm/systemsettings.cpp:158
+#: kcm/systemsettings.cpp:149 kcm/systemsettings.cpp:151
+#: kcm/systemsettings.cpp:153 kcm/systemsettings.cpp:155
+#: kcm/systemsettings.cpp:157 kcm/systemsettings.cpp:159
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: kcm/systemsettings.cpp:166
+#: kcm/systemsettings.cpp:167
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
@@ -426,7 +438,7 @@ msgstr ""
 "Para deshabilitarlo vía software ir a: Hardware->Dispositivos de Entrada-"
 ">Panel táctil"
 
-#: kcm/systemsettings.cpp:288 kcm/systemsettings.cpp:412
-#: kcm/systemsettings.cpp:544
+#: kcm/systemsettings.cpp:289 kcm/systemsettings.cpp:413
+#: kcm/systemsettings.cpp:545
 msgid " sec"
 msgstr " seg"

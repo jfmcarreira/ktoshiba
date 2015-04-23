@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-22 10:38-0600\n"
+"POT-Creation-Date: 2015-04-22 15:39-0600\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -62,7 +62,7 @@ msgstr "Alto Desempeño"
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/ktoshiba.cpp:162
+#: src/ktoshiba.cpp:162 src/fnactions.cpp:165
 msgid "Presentation"
 msgstr "Presentación"
 
@@ -84,11 +84,11 @@ msgid ""
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: src/fnactions.cpp:245
+#: src/fnactions.cpp:228
 msgid "OFF"
 msgstr "APAGADO"
 
-#: src/fnactions.cpp:249
+#: src/fnactions.cpp:232
 msgid "ON"
 msgstr "ENCENDIDO"
 

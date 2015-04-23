@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-22 10:38-0600\n"
+"POT-Creation-Date: 2015-04-22 15:39-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: rc.cpp:5 kcm/systemsettings.cpp:117
+#: rc.cpp:5 kcm/systemsettings.cpp:118
 msgid "Sleep Utilities"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 
 #. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: rc.cpp:71 kcm/systemsettings.cpp:104
+#: rc.cpp:71 kcm/systemsettings.cpp:105
 msgid "General Settings"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:146 kcm/systemsettings.cpp:124
+#: rc.cpp:146 kcm/systemsettings.cpp:125
 msgid "Keyboard Settings"
 msgstr ""
 
@@ -320,11 +320,21 @@ msgstr ""
 msgid "Keyboard Backlight &timeout:"
 msgstr ""
 
-#. i18n: file: kcm/keyboard.ui:169
-#. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
-#. i18n: file: kcm/keyboard.ui:172
-#. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
+#. i18n: file: kcm/keyboard.ui:156
+#. i18n: ectx: property (toolTip), widget (QLabel, kbd_timeout)
+#. i18n: file: kcm/keyboard.ui:159
+#. i18n: ectx: property (whatsThis), widget (QLabel, kbd_timeout)
 #: rc.cpp:176 rc.cpp:179
+msgid ""
+"The current timeout at which the keyboard backlight will turn off after the "
+"last keypress."
+msgstr ""
+
+#. i18n: file: kcm/keyboard.ui:175
+#. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
+#. i18n: file: kcm/keyboard.ui:178
+#. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
+#: rc.cpp:182 rc.cpp:185
 msgid ""
 "Sets the time the keyboard backlight will turn off after the last keypress."
 msgstr ""
@@ -349,60 +359,60 @@ msgstr ""
 msgid "Original author"
 msgstr ""
 
-#: kcm/systemsettings.cpp:77
+#: kcm/systemsettings.cpp:78
 msgid "Please reboot for hardware changes to take effect"
 msgstr ""
 
-#: kcm/systemsettings.cpp:82
+#: kcm/systemsettings.cpp:83
 msgid ""
 "Could not communicate with library, hardware changes will not be possible"
 msgstr ""
 
-#: kcm/systemsettings.cpp:99
+#: kcm/systemsettings.cpp:100
 msgid "System Information"
 msgstr ""
 
-#: kcm/systemsettings.cpp:109
+#: kcm/systemsettings.cpp:110
 msgid "HDD Protection"
 msgstr ""
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "Off"
 msgstr ""
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "Low"
 msgstr ""
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "Medium"
 msgstr ""
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:111
 msgid "High"
 msgstr ""
 
-#: kcm/systemsettings.cpp:126
+#: kcm/systemsettings.cpp:127
 msgid "ON"
 msgstr ""
 
-#: kcm/systemsettings.cpp:126
+#: kcm/systemsettings.cpp:127
 msgid "OFF"
 msgstr ""
 
-#: kcm/systemsettings.cpp:148 kcm/systemsettings.cpp:150
-#: kcm/systemsettings.cpp:152 kcm/systemsettings.cpp:154
-#: kcm/systemsettings.cpp:156 kcm/systemsettings.cpp:158
+#: kcm/systemsettings.cpp:149 kcm/systemsettings.cpp:151
+#: kcm/systemsettings.cpp:153 kcm/systemsettings.cpp:155
+#: kcm/systemsettings.cpp:157 kcm/systemsettings.cpp:159
 msgid "Unknown"
 msgstr ""
 
-#: kcm/systemsettings.cpp:166
+#: kcm/systemsettings.cpp:167
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
 
-#: kcm/systemsettings.cpp:288 kcm/systemsettings.cpp:412
-#: kcm/systemsettings.cpp:544
+#: kcm/systemsettings.cpp:289 kcm/systemsettings.cpp:413
+#: kcm/systemsettings.cpp:545
 msgid " sec"
 msgstr ""

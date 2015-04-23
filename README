@@ -1,0 +1,61 @@
+KToshiba
+========
+KToshiba features a Graphical User Interface (UI) highly integrated with KDE,
+managing those function keys not handled by KDE (Screen lock, TouchPad toggle,
+Battery profiles, Zoom keys and Keyboard backlight).
+
+Also provides a System Settings module for easy access and configuration of
+Toshiba laptops related hardware like TouchPad, Accelerometer, Keyboard
+backlight, Sleep Utilities and more.
+
+
+
+License
+=======
+KToshiba is currently covered under the GPL version 2 or later. A copy of this
+license can be found in a file named COPYING, in the toplevel directory.
+
+
+
+Installation
+============
+For installation instructions, please see the file named INSTALL, found in
+the top level directory.
+
+
+
+Usage
+=====
+If installation went right you can find KToshiba under the Utilities menu,
+click on it and then an icon should appear on the taskbar, and your extra
+function keys are now being monitored and appropriate actions are executed.
+
+Click (or right click) on it and a menu will appear where you have three
+choices, Quit, Configure and Battery Profiles.
+- Quit: Quits the application (self explanatory).
+- Configure: A new window should appear (a KCModule) where you can configure
+  the hardware available to your laptop (greyed out items means your laptop
+  has no support for it), you can also access this module in the System
+  Settings, under the Hardware category.
+- Battery Profiles: Here you can change to the four different battery profiles
+  available (Performance, Powersave, Presentation, ECO) or simply disable the
+  feature. 
+
+
+
+Support, Bugs & Requests
+========================
+If you have found a bug or want some features on a future
+release please send an email to the below e-mail address
+with the description of the problem or the feature request.
+
+
+
+Contact
+=======
+You can reach me by mail at 
+coproscefalo@gmail.com
+
+The project homepage is hosted at SourceForge.net
+http://sourceforge.net/projects/ktoshiba
+http://ktoshiba.sourceforge.net/
