@@ -1,8 +1,16 @@
+2015-04-23 Azael Avalos <coproscefalo@gmail.com>
+	* Added a README file
+	* Updated INSTALL file
+
 2015-04-22 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed some typos in Messages.sh and updated spanish translation
 	* Added 2 new functions to KToshibaDBusInterface class to deal
 	  with power management inhibition
 	* Removed Solid dependency and used the DBus method calls instead
+	* Removed Help button from KCM, the tooltips give enough info on
+	  what each item does
+	* Added tooltip to the keyboard timeout label in KCM (some how I
+	  forgot to add it), spanish tranlation updated
 
 2015-04-21 Azael Avalos <coproscefalo@gmail.com>
 	* Added QTGui as a dependecy in CMakeLists
