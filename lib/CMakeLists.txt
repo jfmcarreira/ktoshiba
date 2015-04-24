@@ -5,7 +5,6 @@ add_library(ktoshibahardware SHARED ${libktoshiba_SRCS})
 
 target_link_libraries(ktoshibahardware PUBLIC
 	KF5::CoreAddons
-	KF5::I18n
 	KF5::Auth
 )
 

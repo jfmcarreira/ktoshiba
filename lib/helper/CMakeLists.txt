@@ -6,7 +6,6 @@ add_executable(ktoshhelper ktoshhelper.cpp)
 target_link_libraries(ktoshhelper
 	KF5::CoreAddons
 	KF5::Auth
-	KF5::I18n
 )
 
 install(TARGETS ktoshhelper DESTINATION ${KAUTH_HELPER_INSTALL_DIR})

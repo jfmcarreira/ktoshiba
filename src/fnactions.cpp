@@ -56,8 +56,6 @@ FnActions::FnActions(QObject *parent)
 
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
     connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
-    connect( parent, SIGNAL( batteryProfilesToggled(bool) ), this, SLOT( batMonitorChanged(bool) ) );
-    connect( parent, SIGNAL( kbdModeChanged() ), this, SLOT( kbdBacklight() ) );
     connect( m_dBus, SIGNAL( configChanged() ), parent, SLOT( configChanged() ) );
 }
 
@@ -187,7 +185,7 @@ void FnActions::changeProfile(QString profile)
     qDebug() << "Changed battery profile to:" << profile;
 }
 
-void FnActions::kbdBacklight()
+void FnActions::updateKBDBacklight()
 {
     if (!m_hw->isKBDBacklightSupported)
         return;
@@ -276,7 +274,7 @@ void FnActions::processHotkey(int hotkey)
         toggleTouchPad();
         break;
     case KEY_KBDILLUMTOGGLE:
-        kbdBacklight();
+        updateKBDBacklight();
         break;
     case KEY_ZOOMRESET:
         m_dBus->setZoom( Reset );

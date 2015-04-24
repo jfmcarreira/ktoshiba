@@ -22,6 +22,7 @@
 #include <KStatusNotifierItem>
 #include <KSharedConfig>
 
+class QActionGroup;
 class QAction;
 class QMenu;
 
@@ -42,10 +43,6 @@ public:
     virtual ~KToshiba();
 
     bool initialize();
-
-Q_SIGNALS:
-    void batteryProfilesToggled(bool);
-    void kbdModeChanged();
     
 public Q_SLOTS:
     void configChanged();
@@ -54,10 +51,7 @@ private Q_SLOTS:
     void protectHDD(int);
     void notifyHDDMovement();
     void disabledClicked(bool);
-    void performanceClicked();
-    void powersaveClicked();
-    void presentationClicked();
-    void ecoClicked();
+    void setBatteryProfile(QAction *);
     void configureClicked();
     void parseTVAPEvents(int);
 
@@ -75,6 +69,7 @@ private:
     bool m_notifyHDD;
 
     QMenu *m_batteryMenu;
+    QActionGroup *m_batteryGroup;
     QAction *m_batDisabled;
     QAction *m_batPerformance;
     QAction *m_batPowersave;
