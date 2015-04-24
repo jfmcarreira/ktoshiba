@@ -47,6 +47,7 @@ public:
     bool init();
 
     void changeProfile(QString);
+    void updateKBDBacklight();
 
     KToshibaHardware *hw() const
     { return m_hw; }
@@ -58,7 +59,6 @@ private Q_SLOTS:
     void hideWidget();
     void processHotkey(int);
     void compositingChanged(bool);
-    void kbdBacklight();
 
 private:
     void showWidget(int);

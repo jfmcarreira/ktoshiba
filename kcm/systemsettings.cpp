@@ -350,14 +350,16 @@ void KToshibaSystemSettings::save()
             hddGroup.writeEntry( "MonitorHDD", tmp2 );
             hddGroup.config()->sync();
             m_monitorHDD = tmp2;
-            iface.call("configFileChanged");
+            if (iface.isValid())
+                iface.call("configFileChanged");
         }
         tmp2 = m_hdd.hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
         if (m_notifyHDD != tmp2) {
             hddGroup.writeEntry( "NotifyHDDMovement", tmp2 );
             hddGroup.config()->sync();
             m_notifyHDD = tmp2;
-            iface.call("configFileChanged");
+            if (iface.isValid())
+                iface.call("configFileChanged");
         }
         tmp = m_hdd.protection_level_slider->value();
         if (m_level != tmp) {

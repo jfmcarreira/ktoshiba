@@ -20,6 +20,7 @@
 #include <QIcon>
 #include <QMenu>
 #include <QStandardPaths>
+#include <QActionGroup>
 
 #include <KHelpMenu>
 #include <KNotification>
@@ -43,6 +44,9 @@ KToshiba::KToshiba()
     : KStatusNotifierItem(),
       m_fn( new FnActions( this ) ),
       m_nl( new KToshibaNetlinkEvents( this ) ),
+      m_monitorHDD( true ),
+      m_notifyHDD( true ),
+      m_batteryProfiles( true ),
       m_config( KSharedConfig::openConfig( CONFIG_FILE ) ),
       m_sysinfo( false )
 {
@@ -149,28 +153,43 @@ void KToshiba::doMenu()
     m_batteryMenu = new QMenu(m_popupMenu);
     m_batteryMenu->setTitle( i18n("Battery Profiles") );
     m_popupMenu->addMenu( m_batteryMenu )->setIcon( QIcon::fromTheme( "battery" ).pixmap(16, 16) );
+
     m_batDisabled = m_batteryMenu->addAction( i18n("Disabled") );
     m_batDisabled->setIcon( QIcon( ":images/disabled_64.png" ) );
     m_batDisabled->setCheckable( true );
     m_batDisabled->setChecked( m_batteryProfiles );
+    connect( m_batDisabled, SIGNAL( toggled(bool) ), m_fn, SLOT( batMonitorChanged(bool) ) );
+    connect( m_batDisabled, SIGNAL( toggled(bool) ), this, SLOT( disabledClicked(bool) ) );
+
     m_batPerformance = m_batteryMenu->addAction( i18n("Performance") );
     m_batPerformance->setIcon( QIcon( ":images/performance_64.png" ) );
     m_batPerformance->setEnabled( !m_batteryProfiles );
+    m_batPerformance->setCheckable( true );
+
     m_batPowersave = m_batteryMenu->addAction( i18n("Powersave") );
     m_batPowersave->setIcon( QIcon( ":images/powersave_64.png" ) );
     m_batPowersave->setEnabled( !m_batteryProfiles );
+    m_batPowersave->setCheckable( true );
+
     m_batPresentation = m_batteryMenu->addAction( i18n("Presentation") );
     m_batPresentation->setIcon( QIcon( ":images/presentation_64.png" ) );
     m_batPresentation->setEnabled( !m_batteryProfiles );
+    m_batPresentation->setCheckable( true );
+
     m_batECO = m_batteryMenu->addAction( i18n("ECO") );
     m_batECO->setIcon( QIcon( ":images/green_world.svg" ) );
     m_batECO->setEnabled( !m_batteryProfiles );
+    m_batECO->setCheckable( true );
+
+    m_batteryGroup = new QActionGroup(m_batteryMenu);
+    m_batteryGroup->addAction(m_batPerformance);
+    m_batteryGroup->addAction(m_batPowersave);
+    m_batteryGroup->addAction(m_batPresentation);
+    m_batteryGroup->addAction(m_batECO);
+    connect( m_batteryGroup, SIGNAL( triggered(QAction *) ), this, SLOT( setBatteryProfile(QAction *) ) );
+
+    // Set the initial battery monitoring status
     m_fn->batMonitorChanged(m_batteryProfiles);
-    connect( m_batDisabled, SIGNAL( toggled(bool) ), this, SLOT( disabledClicked(bool) ) );
-    connect( m_batPerformance, SIGNAL( triggered() ), this, SLOT( performanceClicked() ) );
-    connect( m_batPowersave, SIGNAL( triggered() ), this, SLOT( powersaveClicked() ) );
-    connect( m_batPresentation, SIGNAL( triggered() ), this, SLOT( presentationClicked() ) );
-    connect( m_batECO, SIGNAL( triggered() ), this, SLOT( ecoClicked() ) );
 
     m_configure = m_popupMenu->addAction( i18n("Configure") );
     m_configure->setIcon( QIcon::fromTheme( "configure" ).pixmap(16, 16) );
@@ -219,28 +238,18 @@ void KToshiba::disabledClicked(bool enabled)
     m_batPresentation->setEnabled( !enabled );
     m_batECO->setEnabled( !enabled );
     m_batteryProfiles = enabled;
-
-    emit batteryProfilesToggled(enabled);
 }
 
-void KToshiba::performanceClicked()
+void KToshiba::setBatteryProfile(QAction *action)
 {
-    m_fn->changeProfile("Performance");
-}
-
-void KToshiba::powersaveClicked()
-{
-    m_fn->changeProfile("Powersave");
-}
-
-void KToshiba::presentationClicked()
-{
-    m_fn->changeProfile("Presentation");
-}
-
-void KToshiba::ecoClicked()
-{
-    m_fn->changeProfile("ECO");
+    if (action == m_batPerformance)
+        m_fn->changeProfile("Performance");
+    else if (action == m_batPowersave)
+        m_fn->changeProfile("Powersave");
+    else if (action == m_batPresentation)
+        m_fn->changeProfile("Presentation");
+    else if (action == m_batECO)
+        m_fn->changeProfile("ECO");
 }
 
 void KToshiba::configureClicked()
@@ -269,7 +278,7 @@ void KToshiba::parseTVAPEvents(int event)
     case 0x8c:
         break;
     case 0x92:	// KBD backlight event
-        emit kbdModeChanged();
+        m_fn->updateKBDBacklight();
         break;
     default:
         qDebug() << "Unknown event";

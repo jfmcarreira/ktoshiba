@@ -1,3 +1,11 @@
+2015-04-24 Azael Avalos <coproscefalo@gmail.com>
+	* Only trigger the DBus call if the iface is valid in KCM
+	* Removed leftover ki18n dependency from ktoshhelper and lib
+	* Created a QActionGroup for battery profiles
+	* Removed kbdModeChanged signal, code adapted
+	* Initialize local variables in constructor in case the config
+	  file is not found (first time run)
+
 2015-04-23 Azael Avalos <coproscefalo@gmail.com>
 	* Added a README file
 	* Updated INSTALL file
