@@ -132,25 +132,28 @@ bool KToshibaHardware::getSysInfo()
         QStringList split = line.split(":");
         // BIOS Information
         if (split[0].contains("Vendor")) {
-            sysinfo << split[1].trimmed();
+            biosManufacturer = split[1].trimmed();
             continue;
         }
         if (split[0].contains("Version")) {
-            sysinfo << split[1].trimmed();
+            if (count == 0)
+                biosVersion = split[1].trimmed();
+            else
+                modelNumber = split[1].trimmed();
             count++;
             continue;
         }
         if (split[0].contains("Release Date")) {
-            sysinfo << split[1].trimmed();
+            biosDate = split[1].trimmed();
             continue;
         }
         if (split[0].contains("Firmware Revision")) {
-            sysinfo << split[1].trimmed();
+            ecVersion = split[1].trimmed();
             continue;
         }
         // System Information
         if (split[0].contains("Product Name")) {
-            sysinfo << split[1].trimmed();
+            modelFamily = split[1].trimmed();
             continue;
         }
     };

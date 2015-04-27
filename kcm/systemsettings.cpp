@@ -138,12 +138,12 @@ void KToshibaSystemSettings::load()
     // System Information tab
     KConfigGroup sysinfo( m_config, "SystemInformation" );
     if (!sysinfo.exists() && m_hw->getSysInfo()) {
-        sysinfo.writeEntry( "ModelFamily", m_hw->sysinfo[4] );
-        sysinfo.writeEntry( "ModelNumber", m_hw->sysinfo[5] );
-        sysinfo.writeEntry( "BIOSVersion", m_hw->sysinfo[1] );
-        sysinfo.writeEntry( "BIOSDate", m_hw->sysinfo[2] );
-        sysinfo.writeEntry( "BIOSManufacturer", m_hw->sysinfo[0] );
-        sysinfo.writeEntry( "ECVersion", m_hw->sysinfo[3] );
+        sysinfo.writeEntry( "ModelFamily", m_hw->modelFamily );
+        sysinfo.writeEntry( "ModelNumber", m_hw->modelNumber );
+        sysinfo.writeEntry( "BIOSVersion", m_hw->biosVersion );
+        sysinfo.writeEntry( "BIOSDate", m_hw->biosDate );
+        sysinfo.writeEntry( "BIOSManufacturer", m_hw->biosManufacturer );
+        sysinfo.writeEntry( "ECVersion", m_hw->ecVersion );
         sysinfo.sync();
     }
     m_modelFamily = sysinfo.readEntry("ModelFamily", i18n("Unknown"));
@@ -269,7 +269,10 @@ void KToshibaSystemSettings::load()
     if (m_hw->isKBDBacklightSupported) {
         m_index = 0;
         m_mode = m_hw->getKBDMode();
-        m_type = m_hw->getKBDType();
+        if (m_hw->isKBDTypeSupported)
+            m_type = m_hw->getKBDType();
+        else
+            m_type = 1;
         if (m_type == 1) {
             m_kbd.kbd_backlight_combobox->addItems(m_type1);
             m_index = m_mode == 1 ? 0 : 1;
@@ -293,8 +296,12 @@ void KToshibaSystemSettings::load()
             m_kbd.kbd_timeout_slider->setEnabled(false);
         }
 
-        connect( m_kbd.kbd_backlight_combobox, SIGNAL( currentIndexChanged(int) ),
-		 this, SLOT( configChanged() ) );
+        if (m_type == 1)
+            connect( m_kbd.kbd_backlight_combobox, SIGNAL( currentIndexChanged(int) ),
+		     this, SLOT( configChangedReboot() ) );
+        else if (m_type == 2)
+            connect( m_kbd.kbd_backlight_combobox, SIGNAL( currentIndexChanged(int) ),
+		     this, SLOT( configChanged() ) );
         connect( m_kbd.kbd_timeout_slider, SIGNAL( valueChanged(int) ),
 		 this, SLOT( kbdTimeoutChanged(int) ) );
     } else {

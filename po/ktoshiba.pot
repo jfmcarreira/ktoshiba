@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-22 15:39-0600\n"
+"POT-Creation-Date: 2015-04-27 10:03-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,61 +33,61 @@ msgstr ""
 msgid "StatusWidget"
 msgstr ""
 
-#: src/ktoshiba.cpp:49 src/ktoshiba.cpp:51 src/main.cpp:31
+#: src/ktoshiba.cpp:53 src/ktoshiba.cpp:55 src/main.cpp:31
 msgid "KToshiba"
 msgstr ""
 
-#: src/ktoshiba.cpp:51 src/main.cpp:33
+#: src/ktoshiba.cpp:55 src/main.cpp:33
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr ""
 
-#: src/ktoshiba.cpp:133 src/ktoshiba.cpp:134 src/ktoshiba.cpp:135
-#: src/ktoshiba.cpp:136 src/ktoshiba.cpp:137 src/ktoshiba.cpp:138
+#: src/ktoshiba.cpp:137 src/ktoshiba.cpp:138 src/ktoshiba.cpp:139
+#: src/ktoshiba.cpp:140 src/ktoshiba.cpp:141 src/ktoshiba.cpp:142
 msgid "Unknown"
 msgstr ""
 
-#: src/ktoshiba.cpp:150
+#: src/ktoshiba.cpp:154
 msgid "Battery Profiles"
 msgstr ""
 
-#: src/ktoshiba.cpp:152
+#: src/ktoshiba.cpp:157
 msgid "Disabled"
 msgstr ""
 
-#: src/ktoshiba.cpp:156
+#: src/ktoshiba.cpp:164
 msgid "Performance"
 msgstr ""
 
-#: src/ktoshiba.cpp:159
+#: src/ktoshiba.cpp:169
 msgid "Powersave"
 msgstr ""
 
-#: src/ktoshiba.cpp:162 src/fnactions.cpp:165
+#: src/ktoshiba.cpp:174 src/fnactions.cpp:163
 msgid "Presentation"
 msgstr ""
 
-#: src/ktoshiba.cpp:165
+#: src/ktoshiba.cpp:179
 msgid "ECO"
 msgstr ""
 
-#: src/ktoshiba.cpp:175
+#: src/ktoshiba.cpp:194
 msgid "Configure"
 msgstr ""
 
-#: src/ktoshiba.cpp:193
+#: src/ktoshiba.cpp:212
 msgid "KToshiba - HDD Monitor"
 msgstr ""
 
-#: src/ktoshiba.cpp:194
+#: src/ktoshiba.cpp:213
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 
-#: src/fnactions.cpp:228
+#: src/fnactions.cpp:226
 msgid "OFF"
 msgstr ""
 
-#: src/fnactions.cpp:232
+#: src/fnactions.cpp:230
 msgid "ON"
 msgstr ""
 
