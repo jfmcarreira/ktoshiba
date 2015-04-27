@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-22 15:39-0600\n"
+"POT-Creation-Date: 2015-04-27 10:03-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -412,7 +412,7 @@ msgid ""
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
 
-#: kcm/systemsettings.cpp:289 kcm/systemsettings.cpp:413
-#: kcm/systemsettings.cpp:545
+#: kcm/systemsettings.cpp:292 kcm/systemsettings.cpp:422
+#: kcm/systemsettings.cpp:554
 msgid " sec"
 msgstr ""

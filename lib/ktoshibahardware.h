@@ -34,7 +34,13 @@ public:
     KToshibaHardware(QObject *parent = 0);
     bool init();
 
-    QStringList sysinfo;
+    QString modelFamily;
+    QString modelNumber;
+    QString biosVersion;
+    QString biosDate;
+    QString biosManufacturer;
+    QString ecVersion;
+
     bool isTouchPadSupported;
     bool isIlluminationSupported;
     bool isECOSupported;

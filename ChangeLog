@@ -1,3 +1,15 @@
+2015-04-27 Azael Avalos <coproscefalo@gmail.com>
+	* We're now officially in 5.0, tag comming
+
+2015-04-26 Azael Avalos <coproscefalo@gmail.com>
+	* Changed lib to assign sysinfo string individually instead
+	  of a QStringList, since some BIOS don't provide the EC
+	  version and was causing crashes on such machines, thanks
+	  to Moises Holguin for the report and testing
+	* Fixed an issue with KBD backlight not loading the correct
+	  values in KCM if kbd_type was not found
+	* Fixed the reboot dialog not shown for type 1 KBD backlight
+
 2015-04-24 Azael Avalos <coproscefalo@gmail.com>
 	* Only trigger the DBus call if the iface is valid in KCM
 	* Removed leftover ki18n dependency from ktoshhelper and lib

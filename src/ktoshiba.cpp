@@ -134,12 +134,12 @@ void KToshiba::createConfig()
     generalGroup.sync();
     // System Information group
     KConfigGroup sysinfoGroup( m_config, "SystemInformation" );
-    sysinfoGroup.writeEntry( "ModelFamily", m_sysinfo ? m_fn->hw()->sysinfo[4] : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "ModelNumber", m_sysinfo ? m_fn->hw()->sysinfo[5] : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "BIOSVersion", m_sysinfo ? m_fn->hw()->sysinfo[1] : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "BIOSDate", m_sysinfo ? m_fn->hw()->sysinfo[2] : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "BIOSManufacturer", m_sysinfo ? m_fn->hw()->sysinfo[0] : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "ECVersion", m_sysinfo ? m_fn->hw()->sysinfo[3] : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "ModelFamily", m_sysinfo ? m_fn->hw()->modelFamily : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "ModelNumber", m_sysinfo ? m_fn->hw()->modelNumber : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "BIOSVersion", m_sysinfo ? m_fn->hw()->biosVersion : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "BIOSDate", m_sysinfo ? m_fn->hw()->biosDate : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "BIOSManufacturer", m_sysinfo ? m_fn->hw()->biosManufacturer : i18n("Unknown") );
+    sysinfoGroup.writeEntry( "ECVersion", m_sysinfo ? m_fn->hw()->ecVersion : i18n("Unknown") );
     sysinfoGroup.sync();
     // HDD Protection group
     KConfigGroup hddGroup( m_config, "HDDProtection" );
