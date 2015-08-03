@@ -76,15 +76,15 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
         return reply;
     }
 
-    QFile dump("/var/tmp/dmidecode");
-    if (!dump.open(QIODevice::WriteOnly)) {
+    QFile file("/var/tmp/dmidecode");
+    if (!file.open(QIODevice::WriteOnly)) {
         reply = ActionReply(ActionReply::HelperErrorType);
-        qWarning() << "dumpsysinfo failed with error code" << dump.error() << dump.errorString();
+        qWarning() << "dumpsysinfo failed with error code" << file.error() << file.errorString();
 
         return reply;
     }
-    dump.write(p.readAll());
-    dump.close();
+    file.write(p.readAll());
+    file.close();
         
     return reply;
 }

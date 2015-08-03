@@ -22,7 +22,6 @@
 #include <QStandardPaths>
 #include <QActionGroup>
 
-#include <KHelpMenu>
 #include <KNotification>
 #include <KAboutData>
 #include <KConfigGroup>
@@ -34,9 +33,6 @@
 #include "ktoshibahardware.h"
 #include "ktoshibanetlinkevents.h"
 #include "version.h"
-
-#define HDD_VIBRATED   0x80
-#define HDD_STABILIZED 0x81
 
 #define CONFIG_FILE "ktoshibarc"
 
@@ -217,12 +213,12 @@ void KToshiba::notifyHDDMovement()
 
 void KToshiba::protectHDD(int event)
 {
-    if (event == HDD_VIBRATED) {
+    if (event == KToshibaNetlinkEvents::Vibrated) {
         qDebug() << "Vibration detected";
         m_fn->hw()->unloadHeads(5000);
         if (m_notifyHDD)
             notifyHDDMovement();
-    } else if (event == HDD_STABILIZED) {
+    } else if (event == KToshibaNetlinkEvents::Stabilized) {
         qDebug() << "Vibration stabilized";
         m_fn->hw()->unloadHeads(0);
     }
@@ -263,21 +259,21 @@ void KToshiba::parseTVAPEvents(int event)
 {
     qDebug() << "Received event" << hex << event;
     switch(event) {
-    case 0x80:	// Hotkeys and some system events
+    case KToshibaNetlinkEvents::Hotkey:
         break;
-    case 0x81:	// Dock events
-    case 0x82:
-    case 0x83: 
+    case KToshibaNetlinkEvents::DockDocked:
+    case KToshibaNetlinkEvents::DockUndocked:
+    case KToshibaNetlinkEvents::DockStatusChanged: 
         break;
-    case 0x88:	// Thermal event
+    case KToshibaNetlinkEvents::Thermal:
         break;
-    case 0x8f:	// LID closed
-    case 0x90:	// LID is closed and Dock has been ejected
+    case KToshibaNetlinkEvents::LIDClosed:
+    case KToshibaNetlinkEvents::LIDClosedDockEjected:
         break;
-    case 0x8b:	// SATA power events
-    case 0x8c:
+    case KToshibaNetlinkEvents::SATAPower1:
+    case KToshibaNetlinkEvents::SATAPower2:
         break;
-    case 0x92:	// KBD backlight event
+    case KToshibaNetlinkEvents::KBDBacklight:
         m_fn->updateKBDBacklight();
         break;
     default:

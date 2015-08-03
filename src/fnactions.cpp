@@ -21,7 +21,6 @@
 #include <QDebug>
 
 #include <KLocalizedString>
-#include <KWindowSystem>
 
 extern "C" {
 #include <linux/input.h>
@@ -49,14 +48,12 @@ FnActions::FnActions(QObject *parent)
     m_widget->clearFocus();
     // Only enable Translucency if composite is enabled
     // otherwise an ugly black background will appear
-    m_widget->setAttribute( Qt::WA_TranslucentBackground, KWindowSystem::compositingActive() );
+    m_widget->setAttribute( Qt::WA_TranslucentBackground, m_dBus->getCompositingState() );
 
     // We're just going to care about these profiles
     m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
 
     connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
-    connect( KWindowSystem::self(), SIGNAL( compositingChanged(bool) ), this, SLOT( compositingChanged(bool) ) );
-    connect( m_dBus, SIGNAL( configChanged() ), parent, SLOT( configChanged() ) );
 }
 
 FnActions::~FnActions()
@@ -92,6 +89,7 @@ bool FnActions::init()
             m_modes << OFF << ON << TIMER;
     }
 
+    connect( m_dBus, SIGNAL( configChanged() ), QObject::parent(), SLOT( configChanged() ) );
     connect( m_hotkeys, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
 
     return true;

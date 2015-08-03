@@ -18,8 +18,6 @@
 
 #include <QDebug>
 
-#include <KWindowSystem>
-
 #include "ktoshibadbusinterface.h"
 #include "ktoshibadbusadaptor.h"
 #include "fnactions.h"
@@ -30,7 +28,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(FnActions *parent)
       m_service( false ),
       m_object( false )
 {
-    m_fn = qobject_cast<FnActions *>(parent);
+    m_fn = qobject_cast<FnActions *>(QObject::parent());
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
@@ -55,6 +53,8 @@ void KToshibaDBusInterface::init()
     m_object = dbus.registerObject("/net/sourceforge/KToshiba", this);
     if (!m_object)
         qCritical() << "Could not register DBus object";
+
+    dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing", "compositingToggled", m_fn, SLOT(compositingChanged(bool)));
 }
 
 void KToshibaDBusInterface::configFileChanged()
@@ -335,7 +335,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
 
 void KToshibaDBusInterface::setZoom(int zoom)
 {
-    if (!KWindowSystem::compositingActive()) {
+    if (!getCompositingState()) {
         qWarning() << "Compositing have been disabled, Zoom actions cannot be activated";
 
         return;
@@ -415,6 +415,22 @@ void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
     }
+}
+
+bool KToshibaDBusInterface::getCompositingState()
+{
+    QDBusInterface iface("org.kde.KWin",
+			 "/Compositor",
+			 "org.kde.kwin.Compositing",
+			 QDBusConnection::sessionBus(), this);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return false;
+    }
+
+    return iface.property("active").toBool();
 }
 
 

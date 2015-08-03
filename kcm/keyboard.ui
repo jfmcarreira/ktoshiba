@@ -112,14 +112,7 @@
         </spacer>
        </item>
        <item row="1" column="2">
-        <widget class="QComboBox" name="kbd_backlight_combobox">
-         <property name="toolTip">
-          <string>Select the keyboard backlight operation mode.</string>
-         </property>
-         <property name="whatsThis">
-          <string>Select the keyboard backlight operation mode.</string>
-         </property>
-        </widget>
+        <widget class="QComboBox" name="kbd_backlight_combobox"/>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="kbd_timeout_label">
@@ -152,17 +145,17 @@
        </item>
        <item row="2" column="2">
         <widget class="QLabel" name="kbd_timeout">
-         <property name="toolTip">
-          <string>The current timeout at which the keyboard backlight will turn off after the last keypress.</string>
-         </property>
-         <property name="whatsThis">
-          <string>The current timeout at which the keyboard backlight will turn off after the last keypress.</string>
-         </property>
          <property name="minimumSize">
           <size>
            <width>200</width>
            <height>30</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>The current timeout at which the keyboard backlight will turn off after the last keypress.</string>
+         </property>
+         <property name="whatsThis">
+          <string>The current timeout at which the keyboard backlight will turn off after the last keypress.</string>
          </property>
          <property name="text">
           <string/>

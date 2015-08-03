@@ -26,6 +26,12 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -166,48 +172,6 @@
          </property>
          <property name="whatsThis">
           <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="panel_power_label">
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Pane&amp;l Power ON:</string>
-         </property>
-         <property name="buddy">
-          <cstring>panel_power_checkbox</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <spacer name="panel_power_spacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>300</width>
-           <height>30</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="2">
-        <widget class="QCheckBox" name="panel_power_checkbox">
-         <property name="toolTip">
-          <string>Turns ON the laptop whenever you open the LID.</string>
-         </property>
-         <property name="whatsThis">
-          <string>Turns ON the laptop whenever you open the LID.</string>
          </property>
          <property name="text">
           <string/>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-27 10:03-0600\n"
+"POT-Creation-Date: 2015-05-26 10:29-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Powersave"
 msgstr ""
 
-#: src/ktoshiba.cpp:174 src/fnactions.cpp:163
+#: src/ktoshiba.cpp:174 src/fnactions.cpp:161
 msgid "Presentation"
 msgstr ""
 
@@ -83,11 +83,11 @@ msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 
-#: src/fnactions.cpp:226
+#: src/fnactions.cpp:224
 msgid "OFF"
 msgstr ""
 
-#: src/fnactions.cpp:230
+#: src/fnactions.cpp:228
 msgid "ON"
 msgstr ""
 

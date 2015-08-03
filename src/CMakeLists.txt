@@ -25,11 +25,10 @@ add_executable(ktoshiba ${KToshibaSources} ${IconResource_SRCS} ${Adaptor_SRCS})
 target_link_libraries(ktoshiba
 	ktoshibahardware
 	KF5::WidgetsAddons
-	KF5::WindowSystem
 	KF5::I18n
-	KF5::XmlGui
 	KF5::Notifications
 	KF5::DBusAddons
+	KF5::ConfigCore
 	${LIBUDEV_LIBRARY}
 )
 

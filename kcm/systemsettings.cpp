@@ -21,6 +21,7 @@
 #include <QTabWidget>
 #include <QtDBus/QtDBus>
 #include <QIcon>
+#include <QComboBox>
 
 #include <KPluginFactory>
 #include <KAboutData>
@@ -28,6 +29,7 @@
 #include <KConfigGroup>
 #include <KMessageWidget>
 
+#include "bootorder.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"
 #include "src/version.h"
@@ -40,6 +42,7 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     : KCModule( parent, args ),
       m_hw( new KToshibaHardware(this) ),
       m_hwAttached( false ),
+      m_devOpened( false ),
       m_config( KSharedConfig::openConfig( CONFIG_FILE ) )
 {
     KAboutData *about = new KAboutData(QLatin1String("kcm_ktoshibam"),
@@ -65,6 +68,7 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
 
     m_message = new KMessageWidget(this);
     m_message->setVisible(false);
+    m_message->setCloseButtonVisible(false);
     message->addWidget(m_message);
 
     m_tabWidget = new QTabWidget(this);
@@ -74,12 +78,10 @@ KToshibaSystemSettings::KToshibaSystemSettings( QWidget *parent, const QVariantL
     if (m_hwAttached) {
         addTabs();
         m_message->setMessageType(KMessageWidget::Information);
-        m_message->setCloseButtonVisible(false);
         m_message->setText(i18n("Please reboot for hardware changes to take effect"));
         m_message->setIcon(QIcon::fromTheme("dialog-information"));
     } else {
         m_message->setMessageType(KMessageWidget::Error);
-        m_message->setCloseButtonVisible(false);
         m_message->setText(i18n("Could not communicate with library, hardware changes will not be possible"));
         m_message->setIcon(QIcon::fromTheme("dialog-error"));
         m_message->setVisible(true);
@@ -127,6 +129,12 @@ void KToshibaSystemSettings::addTabs()
     m_type2 << "TIMER" << i18n("ON") << i18n("OFF");
     if (!m_hw->isKBDFunctionsSupported && !m_hw->isKBDBacklightSupported)
         m_tabWidget->setTabEnabled(4, false);
+
+    m_boot = new BootOrder(this);
+    m_boot->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(m_boot, i18n("Boot Settings"));
+    if (!m_hw->isSMMSupported && !m_hw->isPanelPowerONSupported)
+        m_tabWidget->setTabEnabled(5, false);
 }
 
 void KToshibaSystemSettings::load()
@@ -135,6 +143,7 @@ void KToshibaSystemSettings::load()
         return;
 
     qDebug() << "load called";
+
     // System Information tab
     KConfigGroup sysinfo( m_config, "SystemInformation" );
     if (!sysinfo.exists() && m_hw->getSysInfo()) {
@@ -193,16 +202,6 @@ void KToshibaSystemSettings::load()
     } else {
         m_general.usb_three_label->setEnabled(false);
         m_general.usb_three_checkbox->setEnabled(false);
-    }
-    if (m_hw->isPanelPowerONSupported) {
-        m_panelpower = m_hw->getPanelPowerON();
-        m_general.panel_power_checkbox->setChecked( m_panelpower ? true : false );
-
-        connect( m_general.panel_power_checkbox, SIGNAL( stateChanged(int) ),
-		 this, SLOT( configChangedReboot() ) );
-    } else {
-        m_general.panel_power_label->setEnabled(false);
-        m_general.panel_power_checkbox->setEnabled(false);
     }
     // HDD Protection tab
     if (m_hw->isHAPSSupported) {
@@ -276,6 +275,7 @@ void KToshibaSystemSettings::load()
         if (m_type == 1) {
             m_kbd.kbd_backlight_combobox->addItems(m_type1);
             m_index = m_mode == 1 ? 0 : 1;
+            m_tooltip = i18n("Select the keyboard backlight operation mode. FN-Z: User toggles the keyboard backlight. AUTO: Keyboard backlight turns on/off automatically.");
         } else if (m_type == 2) {
             m_kbd.kbd_backlight_combobox->addItems(m_type2);
             if (m_mode == 2)
@@ -284,8 +284,11 @@ void KToshibaSystemSettings::load()
                 m_index = 1;
             else if (m_mode == 16)
                 m_index = 2;
+            m_tooltip = i18n("Select the keyboard backlight operation mode. TIMER: Keyboard backlight turns on/off automatically. ON: Keyboard backlight is turned on. OFF: Keyboard backlight is turned off.");
         }
         m_kbd.kbd_backlight_combobox->setCurrentIndex( m_index );
+        m_kbd.kbd_backlight_combobox->setToolTip(m_tooltip);
+        m_kbd.kbd_backlight_combobox->setWhatsThis(m_tooltip);
 
         if (m_mode == 2) {
             m_time = m_hw->getKBDTimeout();
@@ -310,11 +313,33 @@ void KToshibaSystemSettings::load()
         m_kbd.kbd_timeout_label->setEnabled(false);
         m_kbd.kbd_timeout_slider->setEnabled(false);
     }
+    // Boot Settings
+    m_bootOrderSupported = m_boot->isBootOrderSupported();
+    if (m_bootOrderSupported) {
+        m_boot->load();
+
+        connect( m_boot, SIGNAL( changed() ), this, SLOT( changed() ) );
+    } else {
+        m_boot->deviceList->setEnabled(false);
+        m_boot->deferButton->setEnabled(false);
+        m_boot->preferButton->setEnabled(false);
+    }
+    if (m_hw->isPanelPowerONSupported) {
+        m_panelpower = m_hw->getPanelPowerON();
+        m_boot->panel_power_checkbox->setChecked( m_panelpower ? true : false );
+
+        connect( m_boot->panel_power_checkbox, SIGNAL( stateChanged(int) ),
+		 this, SLOT( configChangedReboot() ) );
+    } else {
+        m_boot->panel_power_label->setEnabled(false);
+        m_boot->panel_power_checkbox->setEnabled(false);
+    }
 }
 
 void KToshibaSystemSettings::save()
 {
     qDebug() << "save called";
+
     // General tab
     int tmp;
     if (m_hw->isTouchPadSupported) {
@@ -336,13 +361,6 @@ void KToshibaSystemSettings::save()
         if (m_usbthree != tmp) {
             m_hw->setUSBThree(tmp);
             m_usbthree = tmp;
-        }
-    }
-    if (m_hw->isPanelPowerONSupported) {
-        tmp = m_general.panel_power_checkbox->checkState() == Qt::Checked ? 1 : 0;
-        if (m_panelpower != tmp) {
-            m_hw->setPanelPowerON(tmp);
-            m_panelpower = tmp;
         }
     }
     // HDD Protection tab
@@ -442,6 +460,16 @@ void KToshibaSystemSettings::save()
             }
         }
     }
+    // Boot Settings
+    if (m_bootOrderSupported)
+        m_boot->save();
+    if (m_hw->isPanelPowerONSupported) {
+        tmp = m_boot->panel_power_checkbox->checkState() == Qt::Checked ? 1 : 0;
+        if (m_panelpower != tmp) {
+            m_hw->setPanelPowerON(tmp);
+            m_panelpower = tmp;
+        }
+    }
 }
 
 void KToshibaSystemSettings::defaults()
@@ -450,6 +478,7 @@ void KToshibaSystemSettings::defaults()
         return;
 
     qDebug() << "defaults called";
+
     // General tab
     if (m_hw->isTouchPadSupported) {
         if (!m_touchpad)
@@ -464,12 +493,6 @@ void KToshibaSystemSettings::defaults()
     if (m_hw->isUSBThreeSupported) {
         if (!m_usbthree) {
             m_general.usb_three_checkbox->setChecked( true );
-            showRebootMessage();
-        }
-    }
-    if (m_hw->isPanelPowerONSupported) {
-        if (m_panelpower) {
-            m_general.panel_power_checkbox->setChecked( false );
             showRebootMessage();
         }
     }
@@ -512,6 +535,15 @@ void KToshibaSystemSettings::defaults()
         }
         if (m_time != 15 && m_mode == 2)
             m_kbd.kbd_timeout_slider->setValue(15);
+    }
+    // Boot Settings
+    if (m_bootOrderSupported)
+        m_boot->defaults();
+    if (m_hw->isPanelPowerONSupported) {
+        if (m_panelpower) {
+            m_boot->panel_power_checkbox->setChecked( false );
+            showRebootMessage();
+        }
     }
 
     emit changed(true);
