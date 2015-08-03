@@ -42,6 +42,7 @@ public:
     void setZoom(int);
     uint inhibitPowerManagement(QString);
     void unInhibitPowerManagement(uint);
+    bool getCompositingState();
 
 Q_SIGNALS:
     void configChanged();

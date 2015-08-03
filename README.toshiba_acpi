@@ -4,7 +4,7 @@ If you are reading this file, it means that KToshiba warned you about
 an "old" driver being used, or simply you wanted to take a look at
 the contents of this file :-)
 
-If it if the first case, I have a more recent toshiba_acpi kernel
+If it is the first case, I have a more recent toshiba_acpi kernel
 driver uploaded to pastebin, as well as a Makefile for it, but before
 we proceed, you need to install a few packages in order to build the
 newer module, how to install those packages is highly dependent on
@@ -13,7 +13,7 @@ here (Google is your friend).
 
 
 Packages
--------
+--------
 The needed packages to build the newer module are:
 - gcc
 - make

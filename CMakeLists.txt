@@ -3,7 +3,7 @@ project(ktoshiba)
 set(PROJECT_VERSION "5.0")
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-set(QT_MIN_VERSION "5.4.0")
+set(QT_MIN_VERSION "5.3.2")
 
 find_package(ECM 1.2.0 REQUIRED NO_MODULE)
 
@@ -30,9 +30,8 @@ find_package(KF5 REQUIRED COMPONENTS
 	DBusAddons
 	KCMUtils
 	I18n
-	WindowSystem
-	XmlGui
 	Notifications
+	Config
 )
 
 find_package(LibUDev REQUIRED)

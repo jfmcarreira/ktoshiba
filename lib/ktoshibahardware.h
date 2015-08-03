@@ -24,7 +24,25 @@
 #include <QStringList>
 #include <QFile>
 
+extern "C" {
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+
+#include <linux/toshiba.h>
+}
+
 #include "ktoshibahardware_export.h"
+
+/* TODO: Remove these entries once upstream toshiba_acpi module
+ *       gets updated.
+ */
+#define TOSHIBA_ACPI_DEV	"/dev/toshiba_acpi"
+#define TOSHIBA_ACPI_SCI	_IOWR('t', 0x91, SMMRegisters)
 
 class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 {
@@ -53,6 +71,7 @@ public:
     bool isPanelPowerONSupported;
     bool isUSBThreeSupported;
     bool isHAPSSupported;
+    bool isSMMSupported;
 
 public Q_SLOTS:
     /*
@@ -95,6 +114,10 @@ public Q_SLOTS:
     int getProtectionLevel();
     void setProtectionLevel(int);
     void unloadHeads(int);
+    /*
+     * TCI access calls
+     */
+    int tci_raw(const SMMRegisters *);
 
 Q_SIGNALS:
     void touchpadToggled(int);

@@ -31,6 +31,24 @@ public:
     KToshibaNetlinkEvents(QObject *parent);
     ~KToshibaNetlinkEvents();
 
+    enum HDDState {
+        Vibrated   = 0x80,
+        Stabilized = 0x81
+    };
+
+    enum SysEvents {
+        Hotkey               = 0x80,
+        DockDocked           = 0x81,
+        DockUndocked         = 0x82,
+        DockStatusChanged    = 0x83,
+        Thermal              = 0x88,
+        SATAPower1           = 0x8b,
+        SATAPower2           = 0x8c,
+        LIDClosed            = 0x8f,
+        LIDClosedDockEjected = 0x90,
+        KBDBacklight         = 0x92
+    };
+
     bool attach();
     void detach();
     void setDeviceHID(QString);

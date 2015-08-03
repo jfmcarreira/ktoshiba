@@ -1,3 +1,33 @@
+2015-06- Azael Avalos <coproscefalo@gmail.com>
+	* 
+
+2015-06-02 Azael Avalos <coproscefalo@gmail.com>
+	* Boot Settings is now complete
+	* Moved Panel Power ON from General to Boot Settings tab
+
+2015-06-01 Azael Avalos <coproscefalo@gmail.com>
+	* Boot Settings loading complete, now just save and
+	  default setings are missing
+
+2015-05-26 Azael Avalos <coproscefalo@gmail.com>
+	* Dropped tooltip and whatsthis from kbd_backlight_combobox,
+	  they are added at tab creation according to the keyboard
+	  backlight type, spanish translation updated
+	* Added KF5Config as dependency
+	* Removed KHelpMenu include and in turn, XMLGui dependency
+	* Moved Netlink events to enums
+
+2015-05-11 Azael Avalos <coproscefalo@gmail.com>
+	* Dropped dependency on WindowSystem, we were using it only
+	  to get the composite status, we are using a DBus call now
+	* Added call to access the toshiba_acpi SMM device to the
+	  library
+
+2015-05-04 Azael Avalos <coproscefalo@gmail.com>
+	* Updated README.toshiba_acpi and INSTALL files
+	* Lowered the Qt requirement from 5.4.0 to 5.3.2
+	* Removed some icons that were creating conflicts on OBS
+
 2015-04-27 Azael Avalos <coproscefalo@gmail.com>
 	* We're now officially in 5.0, tag comming
 

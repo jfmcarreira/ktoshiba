@@ -1,6 +1,10 @@
-# Input rules for KToshiba
+# UDev rules for KToshiba
 # By default, this rule will change the group of the
-# Toshiba input devices to "users" and its permissions
-# to read-write, however, you might want to change this
-# to the group "input" for example.
+# Toshiba input and misc device to "users" and its
+# permissions to read-write, however, you might want
+# to change this to the group "input" or "ktoshiba"
+# for example.
+
 SUBSYSTEMS=="input", ATTRS{name}=="Toshiba input device", MODE="0660", GROUP="users"
+
+KERNEL=="toshiba_acpi", MODE="0660", GROUP="users"

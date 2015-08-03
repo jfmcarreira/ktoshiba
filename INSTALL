@@ -16,6 +16,25 @@ and uses D-Bus and ktoshhelper to perform the actions.
 
 Installation
 ============
+
+OBS
+---
+For openSUSE users (13.2 onwards), I have precompiled packages
+under my OBS home project for KToshba and an updated toshiba_acpi
+kernel module, simply run as root (or sudo):
+
+zypper ar -f -c http://download.opensuse.org/repositories/home:/Coproscefalo/openSUSE_%version
+
+Replacing %version with your current openSUSE version, once done
+simply run as root (or sudo):
+
+zypper in ktoshiba toshiba_acpi-kmp
+
+And zypper will take care of pulling all needed dependencies.
+
+
+SOURCE
+------
 If you have everything that is needed, then the install
 process is very simple, extract the downloaded archive
 and then type the following on a Konsole or Terminal:

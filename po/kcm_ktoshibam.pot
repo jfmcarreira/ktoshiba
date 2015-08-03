@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-04-27 10:03-0600\n"
+"POT-Creation-Date: 2015-05-26 10:29-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: rc.cpp:5 kcm/systemsettings.cpp:118
+#: rc.cpp:5 kcm/systemsettings.cpp:122
 msgid "Sleep Utilities"
 msgstr ""
 
@@ -149,63 +149,69 @@ msgstr ""
 
 #. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, General)
-#: rc.cpp:71 kcm/systemsettings.cpp:105
+#: rc.cpp:71 kcm/systemsettings.cpp:109
 msgid "General Settings"
 msgstr ""
 
-#. i18n: file: kcm/general.ui:45
+#. i18n: file: kcm/general.ui:51
 #. i18n: ectx: property (text), widget (QLabel, touchpad_label)
 #: rc.cpp:74
 msgid "Poin&ting device:"
 msgstr ""
 
-#. i18n: file: kcm/general.ui:68
+#. i18n: file: kcm/general.ui:74
 #. i18n: ectx: property (toolTip), widget (QCheckBox, touchpad_checkbox)
-#. i18n: file: kcm/general.ui:71
+#. i18n: file: kcm/general.ui:77
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, touchpad_checkbox)
 #: rc.cpp:77 rc.cpp:80
 msgid "Disables the touchpad (and trackpoint, if available) via hardware."
 msgstr ""
 
-#. i18n: file: kcm/general.ui:100
+#. i18n: file: kcm/general.ui:106
 #. i18n: ectx: property (text), widget (QLabel, rapid_charge_label)
 #: rc.cpp:83
 msgid "&USB Rapid Charge:"
 msgstr ""
 
-#. i18n: file: kcm/general.ui:123
+#. i18n: file: kcm/general.ui:129
 #. i18n: ectx: property (toolTip), widget (QCheckBox, rapid_charge_checkbox)
-#. i18n: file: kcm/general.ui:126
+#. i18n: file: kcm/general.ui:132
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, rapid_charge_checkbox)
 #: rc.cpp:86 rc.cpp:89
 msgid "Toggles the USB rapid charge feature."
 msgstr ""
 
-#. i18n: file: kcm/general.ui:142
+#. i18n: file: kcm/general.ui:148
 #. i18n: ectx: property (text), widget (QLabel, usb_three_label)
 #: rc.cpp:92
 msgid "USB &3:"
 msgstr ""
 
-#. i18n: file: kcm/general.ui:165
+#. i18n: file: kcm/general.ui:171
 #. i18n: ectx: property (toolTip), widget (QCheckBox, usb_three_checkbox)
-#. i18n: file: kcm/general.ui:168
+#. i18n: file: kcm/general.ui:174
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, usb_three_checkbox)
 #: rc.cpp:95 rc.cpp:98
 msgid "Disables USB 3 functionality, acting as a regular USB 2."
 msgstr ""
 
-#. i18n: file: kcm/general.ui:184
+#. i18n: file: kcm/general.ui:190
 #. i18n: ectx: property (text), widget (QLabel, panel_power_label)
-#: rc.cpp:101
+#. i18n: file: kcm/bootorder.ui:83
+#. i18n: ectx: property (text), widget (QLabel, panel_power_label)
+#: rc.cpp:101 rc.cpp:191
 msgid "Pane&l Power ON:"
 msgstr ""
 
-#. i18n: file: kcm/general.ui:207
+#. i18n: file: kcm/general.ui:213
 #. i18n: ectx: property (toolTip), widget (QCheckBox, panel_power_checkbox)
-#. i18n: file: kcm/general.ui:210
+#. i18n: file: kcm/general.ui:216
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, panel_power_checkbox)
-#: rc.cpp:104 rc.cpp:107
+#. i18n: file: kcm/bootorder.ui:106
+#. i18n: ectx: property (toolTip), widget (QCheckBox, panel_power_checkbox)
+#. i18n: file: kcm/bootorder.ui:109
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, panel_power_checkbox)
+#: rc.cpp:104 rc.cpp:107 rc.cpp:194 rc.cpp:197
 msgid "Turns ON the laptop whenever you open the LID."
 msgstr ""
 
@@ -267,7 +273,7 @@ msgstr ""
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:146 kcm/systemsettings.cpp:125
+#: rc.cpp:146 kcm/systemsettings.cpp:129
 msgid "Keyboard Settings"
 msgstr ""
 
@@ -306,113 +312,136 @@ msgstr ""
 msgid "&Keyboard Backlight mode:"
 msgstr ""
 
-#. i18n: file: kcm/keyboard.ui:117
-#. i18n: ectx: property (toolTip), widget (QComboBox, kbd_backlight_combobox)
-#. i18n: file: kcm/keyboard.ui:120
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kbd_backlight_combobox)
-#: rc.cpp:167 rc.cpp:170
-msgid "Select the keyboard backlight operation mode."
-msgstr ""
-
-#. i18n: file: kcm/keyboard.ui:133
+#. i18n: file: kcm/keyboard.ui:126
 #. i18n: ectx: property (text), widget (QLabel, kbd_timeout_label)
-#: rc.cpp:173
+#: rc.cpp:167
 msgid "Keyboard Backlight &timeout:"
 msgstr ""
 
-#. i18n: file: kcm/keyboard.ui:156
+#. i18n: file: kcm/keyboard.ui:155
 #. i18n: ectx: property (toolTip), widget (QLabel, kbd_timeout)
-#. i18n: file: kcm/keyboard.ui:159
+#. i18n: file: kcm/keyboard.ui:158
 #. i18n: ectx: property (whatsThis), widget (QLabel, kbd_timeout)
-#: rc.cpp:176 rc.cpp:179
+#: rc.cpp:170 rc.cpp:173
 msgid ""
 "The current timeout at which the keyboard backlight will turn off after the "
 "last keypress."
 msgstr ""
 
-#. i18n: file: kcm/keyboard.ui:175
+#. i18n: file: kcm/keyboard.ui:168
 #. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
-#. i18n: file: kcm/keyboard.ui:178
+#. i18n: file: kcm/keyboard.ui:171
 #. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
-#: rc.cpp:182 rc.cpp:185
+#: rc.cpp:176 rc.cpp:179
 msgid ""
 "Sets the time the keyboard backlight will turn off after the last keypress."
 msgstr ""
 
-#: kcm/systemsettings.cpp:46
+#. i18n: file: kcm/bootorder.ui:15
+#. i18n: ectx: property (windowTitle), widget (QWidget, BootOrder)
+#: rc.cpp:182
+msgid "Boot Settings"
+msgstr ""
+
+#. i18n: file: kcm/bootorder.ui:59
+#. i18n: ectx: property (text), widget (QPushButton, deferButton)
+#: rc.cpp:185
+msgid "Defer"
+msgstr ""
+
+#. i18n: file: kcm/bootorder.ui:66
+#. i18n: ectx: property (text), widget (QPushButton, preferButton)
+#: rc.cpp:188
+msgid "Prefer"
+msgstr ""
+
+#: kcm/systemsettings.cpp:47
 msgid "KToshiba System Settings"
 msgstr ""
 
-#: kcm/systemsettings.cpp:48
+#: kcm/systemsettings.cpp:49
 msgid "Configures Toshiba laptop related hardware settings"
 msgstr ""
 
-#: kcm/systemsettings.cpp:50
+#: kcm/systemsettings.cpp:51
 msgid "Copyright (C) 2015 Azael Avalos"
 msgstr ""
 
-#: kcm/systemsettings.cpp:55
+#: kcm/systemsettings.cpp:56
 msgid "Azael Avalos"
 msgstr ""
 
-#: kcm/systemsettings.cpp:56
+#: kcm/systemsettings.cpp:57
 msgid "Original author"
 msgstr ""
 
-#: kcm/systemsettings.cpp:78
+#: kcm/systemsettings.cpp:79
 msgid "Please reboot for hardware changes to take effect"
 msgstr ""
 
-#: kcm/systemsettings.cpp:83
+#: kcm/systemsettings.cpp:85
 msgid ""
 "Could not communicate with library, hardware changes will not be possible"
 msgstr ""
 
-#: kcm/systemsettings.cpp:100
+#: kcm/systemsettings.cpp:104
 msgid "System Information"
 msgstr ""
 
-#: kcm/systemsettings.cpp:110
+#: kcm/systemsettings.cpp:114
 msgid "HDD Protection"
 msgstr ""
 
-#: kcm/systemsettings.cpp:111
+#: kcm/systemsettings.cpp:115
 msgid "Off"
 msgstr ""
 
-#: kcm/systemsettings.cpp:111
+#: kcm/systemsettings.cpp:115
 msgid "Low"
 msgstr ""
 
-#: kcm/systemsettings.cpp:111
+#: kcm/systemsettings.cpp:115
 msgid "Medium"
 msgstr ""
 
-#: kcm/systemsettings.cpp:111
+#: kcm/systemsettings.cpp:115
 msgid "High"
 msgstr ""
 
-#: kcm/systemsettings.cpp:127
+#: kcm/systemsettings.cpp:131
 msgid "ON"
 msgstr ""
 
-#: kcm/systemsettings.cpp:127
+#: kcm/systemsettings.cpp:131
 msgid "OFF"
 msgstr ""
 
-#: kcm/systemsettings.cpp:149 kcm/systemsettings.cpp:151
-#: kcm/systemsettings.cpp:153 kcm/systemsettings.cpp:155
-#: kcm/systemsettings.cpp:157 kcm/systemsettings.cpp:159
+#: kcm/systemsettings.cpp:163 kcm/systemsettings.cpp:165
+#: kcm/systemsettings.cpp:167 kcm/systemsettings.cpp:169
+#: kcm/systemsettings.cpp:171 kcm/systemsettings.cpp:173
 msgid "Unknown"
 msgstr ""
 
-#: kcm/systemsettings.cpp:167
+#: kcm/systemsettings.cpp:181
 msgid ""
 "Warning: This option disables the pointing device via hardware.\n"
 "To disable via software go to: Hardware->Input Devices->Touchpad"
 msgstr ""
 
-#: kcm/systemsettings.cpp:292 kcm/systemsettings.cpp:422
-#: kcm/systemsettings.cpp:554
+#: kcm/systemsettings.cpp:293
+msgid ""
+"Select the keyboard backlight operation mode. FN-Z: User toggles the "
+"keyboard backlight. AUTO: Keyboard backlight turns on/off automatically."
+msgstr ""
+
+#: kcm/systemsettings.cpp:302
+msgid ""
+"Select the keyboard backlight operation mode. TIMER: Keyboard backlight "
+"turns on/off automatically. ON: Keyboard backlight is turned on. OFF: "
+"Keyboard backlight is turned off."
+msgstr ""
+
+#: kcm/systemsettings.cpp:310 kcm/systemsettings.cpp:440
+#: kcm/systemsettings.cpp:572
 msgid " sec"
 msgstr ""

@@ -65,6 +65,7 @@ bool KToshibaHardware::init()
     isPanelPowerONSupported = deviceExists("panel_power_on");
     isUSBThreeSupported = deviceExists("usb_three");
     isHAPSSupported = deviceExists("haps");
+    isSMMSupported = deviceExists("toshiba_acpi");
 
     return true;
 }
@@ -101,6 +102,8 @@ bool KToshibaHardware::deviceExists(QString device)
         m_file.setFileName(m_ledsPath + device + "/brightness");
     else if (device == "haps")
         m_file.setFileName(m_hapsPath + "protection_level");
+    else if (device == "toshiba_acpi")
+        m_file.setFileName("/dev/toshiba_acpi");
     else
         m_file.setFileName(m_driverPath + device);
 
@@ -568,6 +571,31 @@ void KToshibaHardware::unloadHeads(int timeout)
     ExecuteJob *job = action.execute();
     if (!job->exec())
         qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed";
+}
+
+int KToshibaHardware::tci_raw(const SMMRegisters *regs)
+{
+    int m_fd = ::open(TOSHIBA_ACPI_DEV, O_RDWR);
+    if (m_fd < 0) {
+        qCritical() << "Error while openning toshiba_acpi device:" << strerror(errno);
+
+        return m_fd;
+    }
+
+    int ret;
+    if (regs->eax == 0xf300 || regs->eax == 0xf400)
+        ret = ioctl(m_fd, TOSHIBA_ACPI_SCI, regs);
+    else if (regs->eax == 0xfe00 || regs->eax == 0xff00)
+        ret = ioctl(m_fd, TOSH_SMM, regs);
+
+    ::close(m_fd);
+    if (ret < 0) {
+        qCritical() << "Error while accessing toshiba_acpi device:" << strerror(errno);
+
+        return ret;
+    }
+
+    return 0;
 }
 
 
