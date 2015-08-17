@@ -1,5 +1,13 @@
-2015-06- Azael Avalos <coproscefalo@gmail.com>
-	* 
+2015-08-17 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed BootOrder class to BootSettings
+
+2015-08-07 Azael Avalos <coproscefalo@gmail.com>
+	* Finished WOK and WOL support
+
+2015-08-06 Azael Avalos <coproscefalo@gmail.com>
+	* Added initial code support for WOK and WOL, however,
+	  this needs toshiba_acpi driver version 0.23 or up
+	  (comming up in Linux 4.3)
 
 2015-06-02 Azael Avalos <coproscefalo@gmail.com>
 	* Boot Settings is now complete

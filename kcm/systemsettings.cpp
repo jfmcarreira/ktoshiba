@@ -29,7 +29,7 @@
 #include <KConfigGroup>
 #include <KMessageWidget>
 
-#include "bootorder.h"
+#include "bootsettings.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"
 #include "src/version.h"
@@ -130,7 +130,7 @@ void KToshibaSystemSettings::addTabs()
     if (!m_hw->isKBDFunctionsSupported && !m_hw->isKBDBacklightSupported)
         m_tabWidget->setTabEnabled(4, false);
 
-    m_boot = new BootOrder(this);
+    m_boot = new BootSettings(this);
     m_boot->setContentsMargins(20, 20, 20, 20);
     m_tabWidget->addTab(m_boot, i18n("Boot Settings"));
     if (!m_hw->isSMMSupported && !m_hw->isPanelPowerONSupported)
@@ -314,15 +314,14 @@ void KToshibaSystemSettings::load()
         m_kbd.kbd_timeout_slider->setEnabled(false);
     }
     // Boot Settings
-    m_bootOrderSupported = m_boot->isBootOrderSupported();
-    if (m_bootOrderSupported) {
+    if (m_hw->isSMMSupported) {
         m_boot->load();
 
         connect( m_boot, SIGNAL( changed() ), this, SLOT( changed() ) );
-    } else {
-        m_boot->deviceList->setEnabled(false);
-        m_boot->deferButton->setEnabled(false);
-        m_boot->preferButton->setEnabled(false);
+        connect( m_boot->wok_checkbox, SIGNAL( stateChanged(int) ),
+		 this, SLOT( configChangedReboot() ) );
+        connect( m_boot->wol_checkbox, SIGNAL( stateChanged(int) ),
+		 this, SLOT( configChangedReboot() ) );
     }
     if (m_hw->isPanelPowerONSupported) {
         m_panelpower = m_hw->getPanelPowerON();
@@ -461,7 +460,7 @@ void KToshibaSystemSettings::save()
         }
     }
     // Boot Settings
-    if (m_bootOrderSupported)
+    if (m_hw->isSMMSupported)
         m_boot->save();
     if (m_hw->isPanelPowerONSupported) {
         tmp = m_boot->panel_power_checkbox->checkState() == Qt::Checked ? 1 : 0;
@@ -537,7 +536,7 @@ void KToshibaSystemSettings::defaults()
             m_kbd.kbd_timeout_slider->setValue(15);
     }
     // Boot Settings
-    if (m_bootOrderSupported)
+    if (m_hw->isSMMSupported)
         m_boot->defaults();
     if (m_hw->isPanelPowerONSupported) {
         if (m_panelpower) {
