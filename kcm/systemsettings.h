@@ -32,7 +32,7 @@ class QTabWidget;
 
 class KMessageWidget;
 
-class BootOrder;
+class BootSettings;
 class KToshibaHardware;
 
 class KToshibaSystemSettings : public KCModule
@@ -73,7 +73,7 @@ private:
     Ui::HDDProtect m_hdd;
     Ui::SleepUtils m_sleep;
     Ui::Keyboard m_kbd;
-    BootOrder *m_boot;
+    BootSettings *m_boot;
 
     QString m_modelFamily;
     QString m_modelNumber;
@@ -106,8 +106,6 @@ private:
     int m_mode;
     int m_index;
     int m_time;
-
-    bool m_bootOrderSupported;
 };
 
 #endif // KTOSHIBASYSTEMSETTINGS_H

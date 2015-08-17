@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <author>Azael Avalos &lt;coproscefalo@gmail.com&gt;</author>
- <class>BootOrder</class>
- <widget class="QWidget" name="BootOrder">
+ <class>BootSettings</class>
+ <widget class="QWidget" name="BootSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -114,6 +114,90 @@
          </property>
          <property name="whatsThis">
           <string>Turns ON the laptop whenever you open the LID.</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="wok_label">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Wake on Keyboard (WOK):</string>
+         </property>
+         <property name="buddy">
+          <cstring>wok_checkbox</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="wok_spacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>300</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="2">
+        <widget class="QCheckBox" name="wok_checkbox">
+         <property name="toolTip">
+          <string>Awakens the laptop whenever you press the keyboard, when the computer is asleep.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Awakens the laptop whenever you press the keyboard, when the computer is asleep.</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="wol_label">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Wake on LAN (WOL):</string>
+         </property>
+         <property name="buddy">
+          <cstring>wol_checkbox</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <spacer name="wol_spacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>300</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="2">
+        <widget class="QCheckBox" name="wol_checkbox">
+         <property name="toolTip">
+          <string>Turns ON or awakens the laptop by a network message.</string>
+         </property>
+         <property name="whatsThis">
+          <string>Turns ON or awakens the laptop by a network message.</string>
          </property>
          <property name="text">
           <string/>

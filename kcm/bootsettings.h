@@ -16,23 +16,21 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BOOTORDER_H
-#define BOOTORDER_H
+#ifndef BOOTSETTINGS_H
+#define BOOTSETTINGS_H
 
-#include "ui_bootorder.h"
+#include "ui_bootsettings.h"
 
 class DeviceModel;
 class KToshibaHardware;
 
-class BootOrder : public QWidget, public Ui::BootOrder
+class BootSettings : public QWidget, public Ui::BootSettings
 {
     Q_OBJECT
 
 public:
-    explicit BootOrder(QWidget *parent = 0);
-    virtual ~BootOrder();
-
-    bool isBootOrderSupported();
+    explicit BootSettings(QWidget *parent = 0);
+    virtual ~BootSettings();
 
     void load();
     void save();
@@ -46,13 +44,27 @@ private Q_SLOTS:
     void preferClicked();
 
 private:
-    quint32 getDeviceOrder();
+    bool isBootOrderSupported();
     void setDeviceOrder(quint32);
+    bool isWOKSupported();
+    void setWOK(quint32);
+    bool isWOLSupported();
+    void setWOL(quint32);
 
     KToshibaHardware *m_hw;
+
     DeviceModel *m_model;
     quint32 m_order;
     quint32 m_default;
+    bool m_bootOrderSupported;
+
+    quint32 m_wok;
+    quint32 m_defaultWOK;
+    bool m_wokSupported;
+
+    quint32 m_wol;
+    quint32 m_defaultWOL;
+    bool m_wolSupported;
 };
 
-#endif // BOOTORDER_H
+#endif // BOOTSETTINGS_H

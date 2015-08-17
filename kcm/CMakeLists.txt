@@ -1,7 +1,7 @@
 
 set(SystemSettings_SRCS
     devicemodel.cpp
-    bootorder.cpp
+    bootsettings.cpp
     systemsettings.cpp
 )
 
@@ -11,7 +11,7 @@ ki18n_wrap_ui(SystemSettings_SRCS
 	hddprotect.ui
 	sleeputils.ui
 	keyboard.ui
-	bootorder.ui
+	bootsettings.ui
 )
 
 add_library(kcm_ktoshibam MODULE ${SystemSettings_SRCS})
