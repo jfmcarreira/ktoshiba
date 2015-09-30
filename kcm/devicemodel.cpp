@@ -23,8 +23,8 @@
 #include "devicemodel.h"
 
 DeviceModel::DeviceModel(QObject *parent)
-    : QAbstractListModel( parent ),
-      m_supported( MAX_BOOT_DEVICES )
+    : QAbstractListModel(parent),
+      m_supported(MAX_BOOT_DEVICES)
 {
     m_map[FDD] = "FDD";
     m_map[HDD1] = "HDD/SSD 1";
@@ -51,7 +51,7 @@ QString DeviceModel::tooltip(int value) const
 {
     QString tooltip;
 
-    switch(value) {
+    switch (value) {
     case FDD:
         tooltip = i18n("Floppy Disk Drive");
         break;

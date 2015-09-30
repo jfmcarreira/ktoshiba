@@ -1,3 +1,19 @@
+2015-09-30 Azael Avalos <coproscefalo@gmail.com>
+	* Added get/set Cooling Method calls to library
+	* Added get/set Boot Order, WOL and WOK calls to library,
+	  code adapted
+	* Misc changes to KCM items, now certain items become enabled/disabled
+	  when its parent options become enabled/disabled
+
+2015-09-29 Azael Avalos <coproscefalo@gmail.com>
+	* Minor cosmetic change to getDriverVersion function
+	* Removed Toshiba SMM definitions
+	* Added PowerSave class
+
+2015-09-28 Azael Avalos <coproscefalo@gmail.com>
+	* Changed coding style with astyle
+	* Added m_driverVersion variable to KCM
+
 2015-08-17 Azael Avalos <coproscefalo@gmail.com>
 	* Renamed BootOrder class to BootSettings
 

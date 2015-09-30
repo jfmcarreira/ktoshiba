@@ -86,4 +86,4 @@ private:
     bool m_object;
 };
 
-#endif	// KTOSHIBA_DBUS_INTERFACE_H
+#endif  // KTOSHIBA_DBUS_INTERFACE_H

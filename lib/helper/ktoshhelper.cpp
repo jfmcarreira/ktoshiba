@@ -85,7 +85,7 @@ ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
     }
     file.write(p.readAll());
     file.close();
-        
+
     return reply;
 }
 
@@ -486,8 +486,8 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
             stream << timeout;
             m_file.close();
         } else {
-           qWarning() << "Could not protect" << hdds.at(current) << "heads";
-           qWarning() << "Received error code" << m_file.error() << m_file.errorString();
+            qWarning() << "Could not protect" << hdds.at(current) << "heads";
+            qWarning() << "Received error code" << m_file.error() << m_file.errorString();
         }
     }
 

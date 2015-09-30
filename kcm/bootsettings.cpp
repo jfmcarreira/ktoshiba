@@ -29,8 +29,8 @@ extern "C" {
 #include "ktoshibahardware.h"
 
 BootSettings::BootSettings(QWidget *parent)
-    : QWidget( parent ),
-      m_hw( qobject_cast<KToshibaHardware *>(QObject::parent()) )
+    : QWidget(parent),
+      m_hw(qobject_cast<KToshibaHardware * >(QObject::parent()))
 {
     setupUi(this);
 
@@ -44,8 +44,8 @@ BootSettings::BootSettings(QWidget *parent)
     deviceList->setAlternatingRowColors(false);
     deviceList->setRootIsDecorated(false);
 
-    connect( deferButton, SIGNAL( clicked() ), this, SLOT( deferClicked() ) );
-    connect( preferButton, SIGNAL( clicked() ), this, SLOT( preferClicked() ) );
+    connect(deferButton, SIGNAL(clicked()), this, SLOT(deferClicked()));
+    connect(preferButton, SIGNAL(clicked()), this, SLOT(preferClicked()));
 }
 
 BootSettings::~BootSettings()
@@ -55,59 +55,34 @@ BootSettings::~BootSettings()
 
 bool BootSettings::isBootOrderSupported()
 {
-    SMMRegisters regs = { 0xf300, 0x0157, 0, 0, 0, 0 };
+    quint32 result = m_hw->getBootOrder(&m_order, &m_maxdev, &m_default);
 
-    if (m_hw->tci_raw(&regs) < 0)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
 
-    if (regs.eax != 0)
-        return false;
-
-    m_order = regs.ecx;
-    m_default = regs.esi;
-    m_model->setSupportedDevices(regs.edx);
+    m_model->setSupportedDevices(m_maxdev);
 
     return true;
 }
 
 bool BootSettings::isWOKSupported()
 {
-    SMMRegisters regs = { 0xf300, 0x0137, 0, 0, 0, 0 };
+    quint32 result = m_hw->getWakeOnKeyboard(&m_wok, &m_defaultWOK);
 
-    if (m_hw->tci_raw(&regs) < 0)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
-
-    if (regs.eax != 0 && regs.eax != 1)
-        return false;
-
-    m_wok = regs.ecx;
-    m_defaultWOK = regs.esi;
 
     return true;
 }
 
 bool BootSettings::isWOLSupported()
 {
-    SMMRegisters regs = { 0xf300, 0x0700, 0x0800, 0, 0, 0 };
+    quint32 result = m_hw->getWakeOnLAN(&m_wol, &m_defaultWOL);
 
-    if (m_hw->tci_raw(&regs) < 0)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
-
-    if (regs.eax != 0 && regs.eax != 1)
-        return false;
-
-    m_wol = regs.ecx;
-    m_defaultWOL = regs.esi;
 
     return true;
-}
-
-void BootSettings::setDeviceOrder(quint32 order)
-{
-    SMMRegisters regs = { 0xf400, 0x0157, order, 0, 0, 0 };
-
-    if (m_hw->tci_raw(&regs) < 0)
-        qCritical() << "Could not set Boot Order";
 }
 
 void BootSettings::deferClicked()
@@ -120,22 +95,6 @@ void BootSettings::preferClicked()
 {
     m_model->moveUp(deviceList->currentIndex());
     emit changed();
-}
-
-void BootSettings::setWOK(quint32 state)
-{
-    SMMRegisters regs = { 0xf400, 0x0137, state, 0, 0, 0 };
-
-    if (m_hw->tci_raw(&regs) < 0)
-        qCritical() << "Could not set WOK state";
-}
-
-void BootSettings::setWOL(quint32 state)
-{
-    SMMRegisters regs = { 0xf300, 0x0700, state, 0, 0, 0 };
-
-    if (m_hw->tci_raw(&regs) < 0)
-        qCritical() << "Could not set WOL state";
 }
 
 void BootSettings::load()
@@ -152,7 +111,7 @@ void BootSettings::load()
     // Wake on Keyboard
     m_wokSupported = isWOKSupported();
     if (m_wokSupported) {
-        wol_checkbox->setChecked( m_wok ? true : false );
+        wol_checkbox->setChecked(m_wok ? true : false);
     } else {
         wok_label->setEnabled(false);
         wok_checkbox->setEnabled(false);
@@ -160,7 +119,7 @@ void BootSettings::load()
     // Wake on LAN
     m_wolSupported = isWOLSupported();
     if (m_wolSupported) {
-        wol_checkbox->setChecked( m_wol == 0x0801 ? true : false );
+        wol_checkbox->setChecked(m_wol == 0x0801 ? true : false);
     } else {
         wol_label->setEnabled(false);
         wol_checkbox->setEnabled(false);
@@ -175,7 +134,7 @@ void BootSettings::save()
     if (m_bootOrderSupported) {
         tmp = m_model->getDeviceData();
         if (m_order != tmp) {
-            setDeviceOrder(tmp);
+            m_hw->setBootOrder(tmp);
             m_order = tmp;
         }
     }
@@ -183,7 +142,7 @@ void BootSettings::save()
     if (m_wokSupported) {
         tmp = wok_checkbox->checkState() == Qt::Checked ? 1 : 0;
         if (m_wok != tmp) {
-            setWOK(tmp);
+            m_hw->setWakeOnKeyboard(tmp);
             m_wok = tmp;
         }
     }
@@ -191,7 +150,7 @@ void BootSettings::save()
     if (m_wolSupported) {
         tmp = wol_checkbox->checkState() == Qt::Checked ? 0x0801 : 0x0800;
         if (m_wol != tmp) {
-            setWOL(tmp);
+            m_hw->setWakeOnLAN(tmp);
             m_wol = tmp;
         }
     }

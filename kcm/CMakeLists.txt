@@ -2,6 +2,7 @@
 set(SystemSettings_SRCS
     devicemodel.cpp
     bootsettings.cpp
+    powersave.cpp
     systemsettings.cpp
 )
 
@@ -12,6 +13,7 @@ ki18n_wrap_ui(SystemSettings_SRCS
 	sleeputils.ui
 	keyboard.ui
 	bootsettings.ui
+	powersave.ui
 )
 
 add_library(kcm_ktoshibam MODULE ${SystemSettings_SRCS})

@@ -38,22 +38,22 @@
 
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
-      m_fn( new FnActions( this ) ),
-      m_nl( new KToshibaNetlinkEvents( this ) ),
-      m_monitorHDD( true ),
-      m_notifyHDD( true ),
-      m_batteryProfiles( true ),
-      m_config( KSharedConfig::openConfig( CONFIG_FILE ) ),
-      m_sysinfo( false )
+      m_fn(new FnActions(this)),
+      m_nl(new KToshibaNetlinkEvents(this)),
+      m_monitorHDD(true),
+      m_notifyHDD(true),
+      m_batteryProfiles(true),
+      m_config(KSharedConfig::openConfig(CONFIG_FILE)),
+      m_sysinfo(false)
 {
-    setTitle( i18n("KToshiba") );
-    setIconByName( "ktoshiba" );
-    setToolTip( "ktoshiba", i18n("KToshiba"), i18n("Fn key monitoring for Toshiba laptops") );
-    setCategory( Hardware );
-    setStatus( Passive );
+    setTitle(i18n("KToshiba"));
+    setIconByName("ktoshiba");
+    setToolTip("ktoshiba", i18n("KToshiba"), i18n("Fn key monitoring for Toshiba laptops"));
+    setCategory(Hardware);
+    setStatus(Passive);
 
     m_popupMenu = contextMenu();
-    setAssociatedWidget( m_popupMenu );
+    setAssociatedWidget(m_popupMenu);
 }
 
 KToshiba::~KToshiba()
@@ -77,9 +77,9 @@ bool KToshiba::initialize()
 
     m_nl->setDeviceHID(m_fn->hw()->getDeviceHID());
     if (m_nl->attach()) {
-        connect( m_nl, SIGNAL( tvapEvent(int) ), this, SLOT( parseTVAPEvents(int) ) );
+        connect(m_nl, SIGNAL(tvapEvent(int)), this, SLOT(parseTVAPEvents(int)));
         if (m_fn->hw()->isHAPSSupported && m_monitorHDD)
-            connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
+            connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(protectHDD(int)));
     } else {
         qCritical() << "Events monitoring will not be possible";
     }
@@ -113,83 +113,89 @@ void KToshiba::loadConfig()
 {
     qDebug() << "Loading configuration file...";
     // General group
-    KConfigGroup generalGroup( m_config, "General" );
-    m_batteryProfiles = generalGroup.readEntry( "BatteryProfiles", true );
+    KConfigGroup generalGroup(m_config, "General");
+    m_batteryProfiles = generalGroup.readEntry("BatteryProfiles", true);
     // HDD Protection group
-    KConfigGroup hddGroup( m_config, "HDDProtection" );
-    m_monitorHDD = hddGroup.readEntry( "MonitorHDD", true );
-    m_notifyHDD = hddGroup.readEntry( "NotifyHDDMovement", true );
+    KConfigGroup hddGroup(m_config, "HDDProtection");
+    m_monitorHDD = hddGroup.readEntry("MonitorHDD", true);
+    m_notifyHDD = hddGroup.readEntry("NotifyHDDMovement", true);
 }
 
 void KToshiba::createConfig()
 {
     qDebug() << "Default configuration file created.";
     // General group
-    KConfigGroup generalGroup( m_config, "General" );
-    generalGroup.writeEntry( "BatteryProfiles", true );
+    KConfigGroup generalGroup(m_config, "General");
+    generalGroup.writeEntry("BatteryProfiles", true);
     generalGroup.sync();
     // System Information group
-    KConfigGroup sysinfoGroup( m_config, "SystemInformation" );
-    sysinfoGroup.writeEntry( "ModelFamily", m_sysinfo ? m_fn->hw()->modelFamily : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "ModelNumber", m_sysinfo ? m_fn->hw()->modelNumber : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "BIOSVersion", m_sysinfo ? m_fn->hw()->biosVersion : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "BIOSDate", m_sysinfo ? m_fn->hw()->biosDate : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "BIOSManufacturer", m_sysinfo ? m_fn->hw()->biosManufacturer : i18n("Unknown") );
-    sysinfoGroup.writeEntry( "ECVersion", m_sysinfo ? m_fn->hw()->ecVersion : i18n("Unknown") );
+    KConfigGroup sysinfoGroup(m_config, "SystemInformation");
+    sysinfoGroup.writeEntry("ModelFamily", m_sysinfo ? m_fn->hw()->modelFamily : i18n("Unknown"));
+    sysinfoGroup.writeEntry("ModelNumber", m_sysinfo ? m_fn->hw()->modelNumber : i18n("Unknown"));
+    sysinfoGroup.writeEntry("BIOSVersion", m_sysinfo ? m_fn->hw()->biosVersion : i18n("Unknown"));
+    sysinfoGroup.writeEntry("BIOSDate", m_sysinfo ? m_fn->hw()->biosDate : i18n("Unknown"));
+    sysinfoGroup.writeEntry("BIOSManufacturer", m_sysinfo ? m_fn->hw()->biosManufacturer : i18n("Unknown"));
+    sysinfoGroup.writeEntry("ECVersion", m_sysinfo ? m_fn->hw()->ecVersion : i18n("Unknown"));
     sysinfoGroup.sync();
     // HDD Protection group
-    KConfigGroup hddGroup( m_config, "HDDProtection" );
-    hddGroup.writeEntry( "MonitorHDD", true );
-    hddGroup.writeEntry( "NotifyHDDMovement", true );
+    KConfigGroup hddGroup(m_config, "HDDProtection");
+    hddGroup.writeEntry("MonitorHDD", true);
+    hddGroup.writeEntry("NotifyHDDMovement", true);
     hddGroup.sync();
+    // Power Save
+    KConfigGroup powersave(m_config, "PowerSave");
+    powersave.writeEntry("ManageCoolingMethod", true);
+    powersave.writeEntry("CoolingMethodOnBattery", 1);
+    powersave.writeEntry("CoolingMethodPluggedIn", 0);
+    powersave.sync();
 }
 
 void KToshiba::doMenu()
 {
     m_batteryMenu = new QMenu(m_popupMenu);
-    m_batteryMenu->setTitle( i18n("Battery Profiles") );
-    m_popupMenu->addMenu( m_batteryMenu )->setIcon( QIcon::fromTheme( "battery" ).pixmap(16, 16) );
+    m_batteryMenu->setTitle(i18n("Battery Profiles"));
+    m_popupMenu->addMenu(m_batteryMenu)->setIcon(QIcon::fromTheme("battery").pixmap(16, 16));
 
-    m_batDisabled = m_batteryMenu->addAction( i18n("Disabled") );
-    m_batDisabled->setIcon( QIcon( ":images/disabled_64.png" ) );
-    m_batDisabled->setCheckable( true );
-    m_batDisabled->setChecked( m_batteryProfiles );
-    connect( m_batDisabled, SIGNAL( toggled(bool) ), m_fn, SLOT( batMonitorChanged(bool) ) );
-    connect( m_batDisabled, SIGNAL( toggled(bool) ), this, SLOT( disabledClicked(bool) ) );
+    m_batDisabled = m_batteryMenu->addAction(i18n("Disabled"));
+    m_batDisabled->setIcon(QIcon(":images/disabled_64.png"));
+    m_batDisabled->setCheckable(true);
+    m_batDisabled->setChecked(m_batteryProfiles);
+    connect(m_batDisabled, SIGNAL(toggled(bool)), m_fn, SLOT(batMonitorChanged(bool)));
+    connect(m_batDisabled, SIGNAL(toggled(bool)), this, SLOT(disabledClicked(bool)));
 
-    m_batPerformance = m_batteryMenu->addAction( i18n("Performance") );
-    m_batPerformance->setIcon( QIcon( ":images/performance_64.png" ) );
-    m_batPerformance->setEnabled( !m_batteryProfiles );
-    m_batPerformance->setCheckable( true );
+    m_batPerformance = m_batteryMenu->addAction(i18n("Performance"));
+    m_batPerformance->setIcon(QIcon(":images/performance_64.png"));
+    m_batPerformance->setEnabled(!m_batteryProfiles);
+    m_batPerformance->setCheckable(true);
 
-    m_batPowersave = m_batteryMenu->addAction( i18n("Powersave") );
-    m_batPowersave->setIcon( QIcon( ":images/powersave_64.png" ) );
-    m_batPowersave->setEnabled( !m_batteryProfiles );
-    m_batPowersave->setCheckable( true );
+    m_batPowersave = m_batteryMenu->addAction(i18n("Powersave"));
+    m_batPowersave->setIcon(QIcon(":images/powersave_64.png"));
+    m_batPowersave->setEnabled(!m_batteryProfiles);
+    m_batPowersave->setCheckable(true);
 
-    m_batPresentation = m_batteryMenu->addAction( i18n("Presentation") );
-    m_batPresentation->setIcon( QIcon( ":images/presentation_64.png" ) );
-    m_batPresentation->setEnabled( !m_batteryProfiles );
-    m_batPresentation->setCheckable( true );
+    m_batPresentation = m_batteryMenu->addAction(i18n("Presentation"));
+    m_batPresentation->setIcon(QIcon(":images/presentation_64.png"));
+    m_batPresentation->setEnabled(!m_batteryProfiles);
+    m_batPresentation->setCheckable(true);
 
-    m_batECO = m_batteryMenu->addAction( i18n("ECO") );
-    m_batECO->setIcon( QIcon( ":images/green_world.svg" ) );
-    m_batECO->setEnabled( !m_batteryProfiles );
-    m_batECO->setCheckable( true );
+    m_batECO = m_batteryMenu->addAction(i18n("ECO"));
+    m_batECO->setIcon(QIcon(":images/green_world.svg"));
+    m_batECO->setEnabled(!m_batteryProfiles);
+    m_batECO->setCheckable(true);
 
     m_batteryGroup = new QActionGroup(m_batteryMenu);
     m_batteryGroup->addAction(m_batPerformance);
     m_batteryGroup->addAction(m_batPowersave);
     m_batteryGroup->addAction(m_batPresentation);
     m_batteryGroup->addAction(m_batECO);
-    connect( m_batteryGroup, SIGNAL( triggered(QAction *) ), this, SLOT( setBatteryProfile(QAction *) ) );
+    connect(m_batteryGroup, SIGNAL(triggered(QAction *)), this, SLOT(setBatteryProfile(QAction *)));
 
     // Set the initial battery monitoring status
     m_fn->batMonitorChanged(m_batteryProfiles);
 
-    m_configure = m_popupMenu->addAction( i18n("Configure") );
-    m_configure->setIcon( QIcon::fromTheme( "configure" ).pixmap(16, 16) );
-    connect( m_configure, SIGNAL( triggered() ), this, SLOT( configureClicked() ) );
+    m_configure = m_popupMenu->addAction(i18n("Configure"));
+    m_configure->setIcon(QIcon::fromTheme("configure").pixmap(16, 16));
+    connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
 }
 
 void KToshiba::configChanged()
@@ -197,17 +203,17 @@ void KToshiba::configChanged()
     loadConfig();
 
     if (m_monitorHDD)
-        connect( m_nl, SIGNAL( hapsEvent(int) ), this, SLOT( protectHDD(int) ) );
+        connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(protectHDD(int)));
     else
-        disconnect( this, SLOT( protectHDD(int) ) );
+        disconnect(this, SLOT(protectHDD(int)));
 }
 
 void KToshiba::notifyHDDMovement()
 {
     KNotification *notification =
-		KNotification::event(KNotification::Notification, i18n("KToshiba - HDD Monitor"),
-				     i18n("Vibration has been detected and the HDD has been stopped to prevent damage"),
-				     QIcon::fromTheme("drive-harddisk").pixmap(48, 48), 0, KNotification::Persistent);
+        KNotification::event(KNotification::Notification, i18n("KToshiba - HDD Monitor"),
+                             i18n("Vibration has been detected and the HDD has been stopped to prevent damage"),
+                             QIcon::fromTheme("drive-harddisk").pixmap(48, 48), 0, KNotification::Persistent);
     notification->sendEvent();
 }
 
@@ -226,13 +232,13 @@ void KToshiba::protectHDD(int event)
 
 void KToshiba::disabledClicked(bool enabled)
 {
-    KConfigGroup generalGroup( m_config, "General" );
-    generalGroup.writeEntry( "BatteryProfiles", enabled );
+    KConfigGroup generalGroup(m_config, "General");
+    generalGroup.writeEntry("BatteryProfiles", enabled);
     generalGroup.config()->sync();
-    m_batPerformance->setEnabled( !enabled );
-    m_batPowersave->setEnabled( !enabled );
-    m_batPresentation->setEnabled( !enabled );
-    m_batECO->setEnabled( !enabled );
+    m_batPerformance->setEnabled(!enabled);
+    m_batPowersave->setEnabled(!enabled);
+    m_batPresentation->setEnabled(!enabled);
+    m_batECO->setEnabled(!enabled);
     m_batteryProfiles = enabled;
 }
 
@@ -258,12 +264,12 @@ void KToshiba::configureClicked()
 void KToshiba::parseTVAPEvents(int event)
 {
     qDebug() << "Received event" << hex << event;
-    switch(event) {
+    switch (event) {
     case KToshibaNetlinkEvents::Hotkey:
         break;
     case KToshibaNetlinkEvents::DockDocked:
     case KToshibaNetlinkEvents::DockUndocked:
-    case KToshibaNetlinkEvents::DockStatusChanged: 
+    case KToshibaNetlinkEvents::DockStatusChanged:
         break;
     case KToshibaNetlinkEvents::Thermal:
         break;

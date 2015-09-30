@@ -43,7 +43,7 @@ public:
     virtual ~KToshiba();
 
     bool initialize();
-    
+
 public Q_SLOTS:
     void configChanged();
 

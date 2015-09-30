@@ -21,7 +21,7 @@
 #include "udevhelper.h"
 
 UDevHelper::UDevHelper(QObject *parent)
-    : QObject( parent )
+    : QObject(parent)
 {
 }
 
@@ -42,7 +42,7 @@ bool UDevHelper::initUDev()
 
         return false;
     }
-    
+
     // Add filters
     if (udev_monitor_filter_add_match_subsystem_devtype(monitor, "input", NULL) < 0) {
         qCritical() << "Cannot add udev filter";

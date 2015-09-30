@@ -24,9 +24,9 @@
 #include "ktoshibahardware.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(FnActions *parent)
-    : QObject( parent ),
-      m_service( false ),
-      m_object( false )
+    : QObject(parent),
+      m_service(false),
+      m_object(false)
 {
     m_fn = qobject_cast<FnActions *>(QObject::parent());
 }
@@ -275,9 +275,9 @@ void KToshibaDBusInterface::setProtectionLevel(int level)
 void KToshibaDBusInterface::lockScreen()
 {
     QDBusInterface iface("org.freedesktop.ScreenSaver",
-			 "/ScreenSaver",
-			 "org.freedesktop.ScreenSaver",
-			 QDBusConnection::sessionBus(), this);
+                         "/ScreenSaver",
+                         "org.freedesktop.ScreenSaver",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -295,9 +295,9 @@ void KToshibaDBusInterface::lockScreen()
 void KToshibaDBusInterface::setBrightness(int level)
 {
     QDBusInterface iface("org.kde.Solid.PowerManagement",
-			 "/org/kde/Solid/PowerManagement/Actions/BrightnessControl",
-			 "org.kde.Solid.PowerManagement.Actions.BrightnessControl",
-			 QDBusConnection::sessionBus(), this);
+                         "/org/kde/Solid/PowerManagement/Actions/BrightnessControl",
+                         "org.kde.Solid.PowerManagement.Actions.BrightnessControl",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -315,9 +315,9 @@ void KToshibaDBusInterface::setBrightness(int level)
 void KToshibaDBusInterface::setKBDBacklight(int state)
 {
     QDBusInterface iface("org.kde.Solid.PowerManagement",
-			 "/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl",
-			 "org.kde.Solid.PowerManagement.Actions.KeyboardBrightnessControl",
-			 QDBusConnection::sessionBus(), this);
+                         "/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl",
+                         "org.kde.Solid.PowerManagement.Actions.KeyboardBrightnessControl",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -342,9 +342,9 @@ void KToshibaDBusInterface::setZoom(int zoom)
     }
 
     QDBusInterface iface("org.kde.kglobalaccel",
-			 "/component/kwin",
-			 "org.kde.kglobalaccel.Component",
-			 QDBusConnection::sessionBus(), this);
+                         "/component/kwin",
+                         "org.kde.kglobalaccel.Component",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -353,7 +353,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
     }
 
     QDBusReply<void> reply;
-    switch(zoom) {
+    switch (zoom) {
     case FnActions::Reset:
         reply = iface.call("invokeShortcut", "view_actual_size");
         break;
@@ -374,9 +374,9 @@ void KToshibaDBusInterface::setZoom(int zoom)
 uint KToshibaDBusInterface::inhibitPowerManagement(QString reason)
 {
     QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
-			 "/org/freedesktop/PowerManagement/Inhibit",
-			 "org.freedesktop.PowerManagement.Inhibit",
-			 QDBusConnection::sessionBus(), this);
+                         "/org/freedesktop/PowerManagement/Inhibit",
+                         "org.freedesktop.PowerManagement.Inhibit",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -399,9 +399,9 @@ uint KToshibaDBusInterface::inhibitPowerManagement(QString reason)
 void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
 {
     QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
-			 "/org/freedesktop/PowerManagement/Inhibit",
-			 "org.freedesktop.PowerManagement.Inhibit",
-			 QDBusConnection::sessionBus(), this);
+                         "/org/freedesktop/PowerManagement/Inhibit",
+                         "org.freedesktop.PowerManagement.Inhibit",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -420,9 +420,9 @@ void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
 bool KToshibaDBusInterface::getCompositingState()
 {
     QDBusInterface iface("org.kde.KWin",
-			 "/Compositor",
-			 "org.kde.kwin.Compositing",
-			 QDBusConnection::sessionBus(), this);
+                         "/Compositor",
+                         "org.kde.kwin.Compositing",
+                         QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();

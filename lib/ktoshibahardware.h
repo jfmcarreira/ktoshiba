@@ -23,6 +23,7 @@
 #include <QString>
 #include <QStringList>
 #include <QFile>
+#include <QMap>
 
 extern "C" {
 #include <sys/types.h>
@@ -38,12 +39,6 @@ extern "C" {
 
 #include "ktoshibahardware_export.h"
 
-/* TODO: Remove these entries once upstream toshiba_acpi module
- *       gets updated.
- */
-#define TOSHIBA_ACPI_DEV	"/dev/toshiba_acpi"
-#define TOSHIBA_ACPI_SCI	_IOWR('t', 0x91, SMMRegisters)
-
 class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 {
     Q_OBJECT
@@ -51,6 +46,19 @@ class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 public:
     KToshibaHardware(QObject *parent = 0);
     bool init();
+
+    enum TCIReturnCodes {
+        SUCCESS            = 0x0000,
+        SUCCESS2           = 0x0001,
+        FAILURE            = 0x1000,
+        NOT_SUPPORTED      = 0x8000,
+        INPUT_DATA_ERROR   = 0x8300,
+        WRITE_PROTECTED    = 0x8400,
+        NOT_READY          = 0x8c00,
+        DATA_NOT_AVAILABLE = 0x8d20,
+        NOT_INITIALIZED    = 0x8d50,
+        NOT_INSTALLED      = 0x8e00
+    };
 
     QString modelFamily;
     QString modelNumber;
@@ -81,7 +89,17 @@ public Q_SLOTS:
     QString getDriverVersion();
     QString getDeviceHID();
     /*
-     * Hardware calls
+     * HDD protection functions
+     */
+    int getProtectionLevel();
+    void setProtectionLevel(int);
+    void unloadHeads(int);
+    /*
+     * Toshiba Configuration Interface (TCI) access function
+     */
+    int tci_raw(const SMMRegisters *);
+    /*
+     * Hardware access functions
      */
     int getTouchPad();
     void setTouchPad(int);
@@ -108,21 +126,21 @@ public Q_SLOTS:
     void setPanelPowerON(int);
     int getUSBThree();
     void setUSBThree(int);
-    /*
-     * HDD protection calls
-     */
-    int getProtectionLevel();
-    void setProtectionLevel(int);
-    void unloadHeads(int);
-    /*
-     * TCI access calls
-     */
-    int tci_raw(const SMMRegisters *);
+    quint32 getBootOrder(quint32 *, quint32 *, quint32 *);
+    void setBootOrder(quint32);
+    quint32 getWakeOnKeyboard(quint32 *, quint32 *);
+    void setWakeOnKeyboard(quint32);
+    quint32 getWakeOnLAN(quint32 *, quint32 *);
+    void setWakeOnLAN(quint32);
+    quint32 getCoolingMethod(quint32 *, quint32 *);
+    void setCoolingMethod(quint32);
 
 Q_SIGNALS:
     void touchpadToggled(int);
 
 private:
+    QMap<int, QString> m_errors;
+
     QString findDriverPath();
     bool deviceExists(QString);
 

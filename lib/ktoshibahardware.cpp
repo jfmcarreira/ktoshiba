@@ -28,7 +28,7 @@
 using namespace KAuth;
 
 KToshibaHardware::KToshibaHardware(QObject *parent)
-    : QObject( parent )
+    : QObject(parent)
 {
     isTouchPadSupported = false;
     isIlluminationSupported = false;
@@ -42,7 +42,59 @@ KToshibaHardware::KToshibaHardware(QObject *parent)
     isPanelPowerONSupported = false;
     isUSBThreeSupported = false;
     isHAPSSupported = false;
+
+    m_errors[FAILURE] = "HCI/SCI call could not be completed";
+    m_errors[NOT_SUPPORTED] = "Feature is not supported";
+    m_errors[INPUT_DATA_ERROR] = "Invalid parameters";
+    m_errors[WRITE_PROTECTED] = "Device is write protected";
+    m_errors[NOT_READY] = "Device is not ready";
+    m_errors[DATA_NOT_AVAILABLE] = "Data is not available";
+    m_errors[NOT_INITIALIZED] = "Device is not initialized";
+    m_errors[NOT_INSTALLED] = "Device is not installed";
 }
+
+/*
+ * Internal functions
+ */
+
+QString KToshibaHardware::findDriverPath()
+{
+    QStringList m_devices;
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
+    for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
+        m_file.setFileName(path.arg(m_devices.at(current)));
+        if (m_file.exists()) {
+            m_device = m_devices.at(current);
+
+            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_device);
+        }
+
+        current++;
+    }
+
+    qWarning() << "No known kernel interface found" << endl;
+
+    return QString();
+}
+
+bool KToshibaHardware::deviceExists(QString device)
+{
+    if (device == "illumination" || device == "eco_mode")
+        m_file.setFileName(m_ledsPath + device + "/brightness");
+    else if (device == "haps")
+        m_file.setFileName(m_hapsPath + "protection_level");
+    else if (device == "toshiba_acpi")
+        m_file.setFileName("/dev/toshiba_acpi");
+    else
+        m_file.setFileName(m_driverPath + device);
+
+    return m_file.exists();
+}
+
+/*
+ * INIT function
+ */
 
 bool KToshibaHardware::init()
 {
@@ -70,45 +122,9 @@ bool KToshibaHardware::init()
     return true;
 }
 
-QString KToshibaHardware::findDriverPath()
-{
-    QStringList m_devices;
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
-    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
-    for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
-        m_file.setFileName(path.arg(m_devices.at(current)));
-        if (m_file.exists()) {
-            m_device = m_devices.at(current);
-
-            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_device);
-        }
-
-        current++;
-    }
-
-    qWarning() << "No known kernel interface found" << endl;
-
-    return QString();
-}
-
-QString KToshibaHardware::getDeviceHID()
-{
-    return m_device;
-}
-
-bool KToshibaHardware::deviceExists(QString device)
-{
-    if (device == "illumination" || device == "eco_mode")
-        m_file.setFileName(m_ledsPath + device + "/brightness");
-    else if (device == "haps")
-        m_file.setFileName(m_hapsPath + "protection_level");
-    else if (device == "toshiba_acpi")
-        m_file.setFileName("/dev/toshiba_acpi");
-    else
-        m_file.setFileName(m_driverPath + device);
-
-    return m_file.exists();
-}
+/*
+ * System Information functions
+ */
 
 bool KToshibaHardware::getSysInfo()
 {
@@ -168,35 +184,7 @@ bool KToshibaHardware::getSysInfo()
 QString KToshibaHardware::getDriverVersion()
 {
     m_file.setFileName(m_driverPath + "version");
-    if (!m_file.exists()) {
-        qWarning() << "An older driver found, some functionality won't be available."
-                   << "Please see the file README.toshiba_acpi for upgrading instructions";
-        m_file.setFileName("/proc/acpi/toshiba/version");
-        if (!m_file.exists()) {
-            qCritical() << "No version file detected";
-
-            return QString("Unknown");
-        }
-
-        if (!m_file.open(QIODevice::ReadOnly)) {
-            qCritical() << "getDriverVersion failed with error code" << m_file.error() << m_file.errorString();
-
-            return QString("Unknown");
-       }
-
-        QTextStream in(&m_file);
-        QString line = in.readLine();
-        QStringList split = line.split(":");
-        m_file.close();
-
-        return split[1].trimmed();
-    } else {
-        if (!m_file.open(QIODevice::ReadOnly)) {
-            qCritical() << "getDriverVersion failed with error code" << m_file.error() << m_file.errorString();
-
-            return QString("Unknown");
-       }
-
+    if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
         QTextStream in(&m_file);
         QString version = in.readAll();
         m_file.close();
@@ -204,8 +192,101 @@ QString KToshibaHardware::getDriverVersion()
         return version;
     }
 
-    return QString("Unknown");
+    m_file.setFileName("/proc/acpi/toshiba/version");
+    if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
+        qWarning() << "An older driver found, some functionality won't be available."
+                   << "Please see the file README.toshiba_acpi for upgrading instructions";
+
+        QTextStream in(&m_file);
+        QString line = in.readLine();
+        QStringList split = line.split(":");
+        m_file.close();
+
+        return split[1].trimmed();
+    }
+
+    qCritical() << "No version file detected or toshiba_acpi module not loaded";
+
+    return QString("0.0");
 }
+
+QString KToshibaHardware::getDeviceHID()
+{
+    return m_device;
+}
+
+/*
+ * HDD protection functions
+ */
+
+int KToshibaHardware::getProtectionLevel()
+{
+    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    if (!m_file.open(QIODevice::ReadOnly)) {
+        qCritical() << "getProtectionLevel failed with error code" << m_file.error() << m_file.errorString();
+
+        return -1;
+    }
+
+    QTextStream stream(&m_file);
+    int level = stream.readAll().toInt();
+    m_file.close();
+
+    return level;
+}
+
+void KToshibaHardware::setProtectionLevel(int level)
+{
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
+    action.setHelperId(HELPER_ID);
+    action.addArgument("level", level);
+    ExecuteJob *job = action.execute();
+    if (!job->exec())
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel failed";
+}
+
+void KToshibaHardware::unloadHeads(int timeout)
+{
+    Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
+    action.setHelperId(HELPER_ID);
+    action.addArgument("timeout", timeout);
+    ExecuteJob *job = action.execute();
+    if (!job->exec())
+        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed";
+}
+
+/*
+ * Toshiba Configuration Interface (TCI) access function
+ */
+
+int KToshibaHardware::tci_raw(const SMMRegisters *regs)
+{
+    int m_fd = ::open(TOSHIBA_ACPI_DEVICE, O_RDWR);
+    if (m_fd < 0) {
+        qCritical() << "Error while openning toshiba_acpi device:" << strerror(errno);
+
+        return m_fd;
+    }
+
+    int ret;
+    if (regs->eax == 0xf300 || regs->eax == 0xf400)
+        ret = ioctl(m_fd, TOSHIBA_ACPI_SCI, regs);
+    else if (regs->eax == 0xfe00 || regs->eax == 0xff00)
+        ret = ioctl(m_fd, TOSH_SMM, regs);
+
+    ::close(m_fd);
+    if (ret < 0) {
+        qCritical() << "Error while accessing toshiba_acpi device:" << strerror(errno);
+
+        return ret;
+    }
+
+    return 0;
+}
+
+/*
+ * Hardware access funtions
+ */
 
 int KToshibaHardware::getTouchPad()
 {
@@ -537,65 +618,145 @@ void KToshibaHardware::setUSBThree(int mode)
         qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbthree failed";
 }
 
-int KToshibaHardware::getProtectionLevel()
+quint32 KToshibaHardware::getBootOrder(quint32 *val, quint32 *maxval, quint32 *defval)
 {
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getProtectionLevel failed with error code" << m_file.error() << m_file.errorString();
+    SMMRegisters regs = { 0xf300, 0x0157, 0, 0, 0, 0 };
 
-        return -1;
+    if (tci_raw(&regs) < 0) {
+        qCritical() << "getBootOrder failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+        return FAILURE;
     }
 
-    QTextStream stream(&m_file);
-    int level = stream.readAll().toInt();
-    m_file.close();
-
-    return level;
-}
-
-void KToshibaHardware::setProtectionLevel(int level)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("level", level);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel failed";
-}
-
-void KToshibaHardware::unloadHeads(int timeout)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("timeout", timeout);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed";
-}
-
-int KToshibaHardware::tci_raw(const SMMRegisters *regs)
-{
-    int m_fd = ::open(TOSHIBA_ACPI_DEV, O_RDWR);
-    if (m_fd < 0) {
-        qCritical() << "Error while openning toshiba_acpi device:" << strerror(errno);
-
-        return m_fd;
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        qCritical() << "getBootOrder failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+    } else {
+        *val = regs.ecx;
+        *maxval = regs.edx;
+        *defval = regs.esi;
     }
 
-    int ret;
-    if (regs->eax == 0xf300 || regs->eax == 0xf400)
-        ret = ioctl(m_fd, TOSHIBA_ACPI_SCI, regs);
-    else if (regs->eax == 0xfe00 || regs->eax == 0xff00)
-        ret = ioctl(m_fd, TOSH_SMM, regs);
+    return regs.eax;
+}
 
-    ::close(m_fd);
-    if (ret < 0) {
-        qCritical() << "Error while accessing toshiba_acpi device:" << strerror(errno);
+void KToshibaHardware::setBootOrder(quint32 order)
+{
+    SMMRegisters regs = { 0xf300, 0x0157, order, 0, 0, 0 };
 
-        return ret;
+    if (tci_raw(&regs) < 0)
+        qCritical() << "setBootOrder failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        qCritical() << "setBootOrder failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+}
+
+quint32 KToshibaHardware::getWakeOnKeyboard(quint32 *val, quint32 *defval)
+{
+    SMMRegisters regs = { 0xf300, 0x0137, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        qCritical() << "getWakeOnKeyboard failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+        return FAILURE;
     }
 
-    return 0;
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        qCritical() << "getWakeOnKeyboard failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+    } else {
+        *val = regs.ecx;
+        *defval = regs.esi;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setWakeOnKeyboard(quint32 state)
+{
+    SMMRegisters regs = { 0xf300, 0x0137, state, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0)
+        qCritical() << "setWakeOnKeyboard failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        qCritical() << "setWakeOnKeyboard failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+}
+
+quint32 KToshibaHardware::getWakeOnLAN(quint32 *val, quint32 *defval)
+{
+    SMMRegisters regs = { 0xf300, 0x0700, 0x0800, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        qCritical() << "getWakeOnLAN failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        qCritical() << "getWakeOnLAN failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+    } else {
+        *val = regs.ecx;
+        *defval = regs.esi;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setWakeOnLAN(quint32 state)
+{
+    SMMRegisters regs = { 0xf300, 0x0700, state, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0)
+        qCritical() << "setWakeOnLAN failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        qCritical() << "setWakeOnLAN failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+}
+
+quint32 KToshibaHardware::getCoolingMethod(quint32 *val, quint32 *maxval)
+{
+    SMMRegisters regs = { 0xfe00, 0x007f, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        qCritical() << "getCoolingMethod failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        qCritical() << "getCoolingMethod failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+    } else {
+        *val = regs.ecx;
+        *maxval = regs.edx;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setCoolingMethod(quint32 mode)
+{
+    SMMRegisters regs = { 0xfe00, 0x007f, mode, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0)
+        qCritical() << "setCoolingMethod failed with error code"
+                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        qCritical() << "setCoolingMethod failed with error code"
+                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
 }
 
 

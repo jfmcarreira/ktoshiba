@@ -45,16 +45,14 @@ private Q_SLOTS:
 
 private:
     bool isBootOrderSupported();
-    void setDeviceOrder(quint32);
     bool isWOKSupported();
-    void setWOK(quint32);
     bool isWOLSupported();
-    void setWOL(quint32);
 
     KToshibaHardware *m_hw;
 
     DeviceModel *m_model;
     quint32 m_order;
+    quint32 m_maxdev;
     quint32 m_default;
     bool m_bootOrderSupported;
 
