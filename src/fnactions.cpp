@@ -32,28 +32,28 @@ extern "C" {
 #include "ktoshibakeyhandler.h"
 
 FnActions::FnActions(QObject *parent)
-    : QObject( parent ),
-      m_dBus( new KToshibaDBusInterface( this ) ),
-      m_hotkeys( new KToshibaKeyHandler( this ) ),
-      m_hw( new KToshibaHardware( this ) ),
-      m_widget( new QWidget( 0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ) ),
-      m_widgetTimer( new QTimer( this ) ),
-      m_batKeyPressed( false ),
-      m_cookie( 0 ),
-      m_type( 1 ),
-      m_mode( TIMER ),
-      m_time( 15 )
+    : QObject(parent),
+      m_dBus(new KToshibaDBusInterface(this)),
+      m_hotkeys(new KToshibaKeyHandler(this)),
+      m_hw(new KToshibaHardware(this)),
+      m_widget(new QWidget(0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)),
+      m_widgetTimer(new QTimer(this)),
+      m_batKeyPressed(false),
+      m_cookie(0),
+      m_type(1),
+      m_mode(TIMER),
+      m_time(15)
 {
-    m_statusWidget.setupUi( m_widget );
+    m_statusWidget.setupUi(m_widget);
     m_widget->clearFocus();
     // Only enable Translucency if composite is enabled
     // otherwise an ugly black background will appear
-    m_widget->setAttribute( Qt::WA_TranslucentBackground, m_dBus->getCompositingState() );
+    m_widget->setAttribute(Qt::WA_TranslucentBackground, m_dBus->getCompositingState());
 
     // We're just going to care about these profiles
     m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
 
-    connect( m_widgetTimer, SIGNAL( timeout() ), this, SLOT( hideWidget() ) );
+    connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hideWidget()));
 }
 
 FnActions::~FnActions()
@@ -73,7 +73,7 @@ bool FnActions::init()
         return false;
 
     if (!m_hw->init()) {
-         qCritical() << "Could not communicate with library, hardware changes will not be possible";
+        qCritical() << "Could not communicate with library, hardware changes will not be possible";
 
         return false;
     }
@@ -89,15 +89,15 @@ bool FnActions::init()
             m_modes << OFF << ON << TIMER;
     }
 
-    connect( m_dBus, SIGNAL( configChanged() ), QObject::parent(), SLOT( configChanged() ) );
-    connect( m_hotkeys, SIGNAL( hotkeyPressed(int) ), this, SLOT( processHotkey(int) ) );
+    connect(m_dBus, SIGNAL(configChanged()), QObject::parent(), SLOT(configChanged()));
+    connect(m_hotkeys, SIGNAL(hotkeyPressed(int)), this, SLOT(processHotkey(int)));
 
     return true;
 }
 
 void FnActions::compositingChanged(bool state)
 {
-    m_widget->setAttribute( Qt::WA_TranslucentBackground, state );
+    m_widget->setAttribute(Qt::WA_TranslucentBackground, state);
 }
 
 void FnActions::batMonitorChanged(bool state)
@@ -245,12 +245,12 @@ void FnActions::showWidget(int wid)
     m_widget->move((r.width() / 2) - (m_widget->width() / 2), r.top());
     m_widget->show();
 
-    m_statusWidget.stackedWidget->setCurrentIndex( wid );
+    m_statusWidget.stackedWidget->setCurrentIndex(wid);
 
     if (m_widgetTimer->isActive())
-        m_widgetTimer->setInterval( 900 );
+        m_widgetTimer->setInterval(900);
     else
-        m_widgetTimer->start( 900 );
+        m_widgetTimer->start(900);
 }
 
 void FnActions::hideWidget()
@@ -260,7 +260,7 @@ void FnActions::hideWidget()
 
 void FnActions::processHotkey(int hotkey)
 {
-    switch ( hotkey ) {
+    switch (hotkey) {
     case KEY_COFFEE:
         m_dBus->lockScreen();
         break;
@@ -268,20 +268,20 @@ void FnActions::processHotkey(int hotkey)
         m_batKeyPressed = true;
         toggleProfiles();
         break;
-    case KEY_TOUCHPAD_TOGGLE: 
+    case KEY_TOUCHPAD_TOGGLE:
         toggleTouchPad();
         break;
     case KEY_KBDILLUMTOGGLE:
         updateKBDBacklight();
         break;
     case KEY_ZOOMRESET:
-        m_dBus->setZoom( Reset );
+        m_dBus->setZoom(Reset);
         break;
     case KEY_ZOOMOUT:
-        m_dBus->setZoom( Out );
+        m_dBus->setZoom(Out);
         break;
     case KEY_ZOOMIN:
-        m_dBus->setZoom( In );
+        m_dBus->setZoom(In);
         break;
     }
 }

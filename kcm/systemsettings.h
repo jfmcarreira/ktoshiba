@@ -33,6 +33,7 @@ class QTabWidget;
 class KMessageWidget;
 
 class BootSettings;
+class PowerSave;
 class KToshibaHardware;
 
 class KToshibaSystemSettings : public KCModule
@@ -41,7 +42,7 @@ class KToshibaSystemSettings : public KCModule
 
 public:
     explicit KToshibaSystemSettings(QWidget *parent,
-                            const QVariantList &args = QVariantList());
+                                    const QVariantList &args = QVariantList());
     ~KToshibaSystemSettings();
 
     void load();
@@ -51,10 +52,14 @@ public:
 private Q_SLOTS:
     void configChanged();
     void configChangedReboot();
+    void hddProtectChanged(int);
     void protectionLevelChanged(int);
     void batteryLevelChanged(int);
+    void sleepUtilsOnBatteryChanged(int);
+    void kbdBacklightChanged(int);
     void kbdTimeoutChanged(int);
     void updateTouchPad(int);
+    void coolingMethodChanged(int);
 
 private:
     void addTabs();
@@ -74,6 +79,7 @@ private:
     Ui::SleepUtils m_sleep;
     Ui::Keyboard m_kbd;
     BootSettings *m_boot;
+    PowerSave *m_power;
 
     QString m_modelFamily;
     QString m_modelNumber;
@@ -81,6 +87,7 @@ private:
     QString m_biosDate;
     QString m_biosManufacturer;
     QString m_ecVersion;
+    QString m_driverVersion;
 
     int m_touchpad;
     int m_usbthree;

@@ -35,7 +35,7 @@ extern "C" {
  * The following structs and declarations were taken from
  * linux ACPI event.c
  */
-typedef char acpi_device_class[20]; 
+typedef char acpi_device_class[20];
 
 struct acpi_genl_event {
     acpi_device_class device_class;
@@ -58,14 +58,14 @@ enum {
 };
 #define ACPI_GENL_CMD_MAX (__ACPI_GENL_CMD_MAX - 1)
 
-#define ACPI_GENL_FAMILY_NAME		"acpi_event"
-#define ACPI_GENL_VERSION		0x01
-#define ACPI_GENL_MCAST_GROUP_NAME	"acpi_mc_group"
+#define ACPI_GENL_FAMILY_NAME       "acpi_event"
+#define ACPI_GENL_VERSION       0x01
+#define ACPI_GENL_MCAST_GROUP_NAME  "acpi_mc_group"
 
 KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
-    : QObject( parent ),
-      m_notifier( NULL ),
-      m_socket( 0 )
+    : QObject(parent),
+      m_notifier(NULL),
+      m_socket(0)
 {
 }
 
@@ -108,7 +108,7 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
     if (attroffset < len) {
         nlattrhdr = (struct nlattr *)(event_buf + attroffset);
         if ((nlattrhdr->nla_type != ACPI_GENL_ATTR_EVENT)
-                || (NLA_ALIGN(nlattrhdr->nla_len) != NLA_ALIGN(NLA_HDRLEN
+            || (NLA_ALIGN(nlattrhdr->nla_len) != NLA_ALIGN(NLA_HDRLEN
                     + sizeof(struct acpi_genl_event)))) {
             qDebug() << "Event not valid";
 
@@ -160,7 +160,7 @@ bool KToshibaNetlinkEvents::attach()
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
-    connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( parseEvents(int) ) );
+    connect(m_notifier, SIGNAL(activated(int)), this, SLOT(parseEvents(int)));
 
     return true;
 }

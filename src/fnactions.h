@@ -50,7 +50,9 @@ public:
     void updateKBDBacklight();
 
     KToshibaHardware *hw() const
-    { return m_hw; }
+    {
+        return m_hw;
+    }
 
 public Q_SLOTS:
     void batMonitorChanged(bool);

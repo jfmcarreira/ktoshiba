@@ -31,10 +31,10 @@ extern "C" {
 #include "udevhelper.h"
 
 KToshibaKeyHandler::KToshibaKeyHandler(QObject *parent)
-    : QObject( parent ),
-      m_udevHelper( new UDevHelper( this ) ),
-      m_notifier( NULL ),
-      m_socket( 0 )
+    : QObject(parent),
+      m_udevHelper(new UDevHelper(this)),
+      m_notifier(NULL),
+      m_socket(0)
 {
     m_namePhys << TOSHNAME << TOSHPHYS;
 }
@@ -69,7 +69,7 @@ bool KToshibaKeyHandler::attach()
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
-    connect( m_notifier, SIGNAL( activated(int) ), this, SLOT( readData(int) ) );
+    connect(m_notifier, SIGNAL(activated(int)), this, SLOT(readData(int)));
 
     return true;
 }
