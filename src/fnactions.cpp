@@ -41,7 +41,7 @@ FnActions::FnActions(QObject *parent)
       m_batKeyPressed(false),
       m_cookie(0),
       m_type(1),
-      m_mode(TIMER),
+      m_mode(KToshibaHardware::TIMER),
       m_time(15)
 {
     m_statusWidget.setupUi(m_widget);
@@ -81,15 +81,16 @@ bool FnActions::init()
     m_dBus->init();
 
     if (m_hw->isKBDBacklightSupported) {
-        m_mode = m_hw->getKBDMode();
-        if (m_hw->isKBDTypeSupported)
-            m_type = m_hw->getKBDType();
+        if (m_hw->getKBDBacklight(&m_mode, &m_time, &m_type) != KToshibaHardware::SUCCESS)
+            qCritical() << "Could not get Keyboard Backlight status";
 
         if (m_type == 2)
-            m_modes << OFF << ON << TIMER;
+            m_modes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
     }
 
     connect(m_dBus, SIGNAL(configChanged()), QObject::parent(), SLOT(configChanged()));
+    connect(m_dBus, SIGNAL(batteryProfileChanged(QString)),
+            QObject::parent(), SLOT(batteryProfileChanged(QString)));
     connect(m_hotkeys, SIGNAL(hotkeyPressed(int)), this, SLOT(processHotkey(int)));
 
     return true;
@@ -124,6 +125,11 @@ void FnActions::toggleProfiles()
     changeProfile(m_profile);
 }
 
+QString FnActions::getProfile()
+{
+    return m_dBus->getBatteryProfile();
+}
+
 void FnActions::changeProfile(QString profile)
 {
     if (m_batMonitor) {
@@ -153,10 +159,11 @@ void FnActions::changeProfile(QString profile)
         if (m_hw->isIlluminationSupported)
             m_hw->setIllumination(On);
         if (m_hw->isKBDBacklightSupported) {
-            if (m_type == 1 && m_mode == FNZ)
+            if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
                 m_dBus->setKBDBacklight(On);
-            else if (m_type == 2)
-                m_hw->setKBDMode(ON);
+            } else if (m_type == 2) {
+                m_hw->setKBDBacklight(KToshibaHardware::ON, m_time);
+            }
         }
         m_cookie = m_dBus->inhibitPowerManagement(i18n("Presentation"));
         inhib = true;
@@ -167,10 +174,11 @@ void FnActions::changeProfile(QString profile)
         if (m_hw->isIlluminationSupported)
             m_hw->setIllumination(Off);
         if (m_hw->isKBDBacklightSupported) {
-            if (m_type == 1 && m_mode == FNZ)
+            if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
                 m_dBus->setKBDBacklight(Off);
-            else if (m_type == 2)
-                m_hw->setKBDMode(OFF);
+            } else if (m_type == 2) {
+                m_hw->setKBDBacklight(KToshibaHardware::OFF, m_time);
+            }
         }
         m_dBus->setBrightness(57);
     }
@@ -194,13 +202,13 @@ void FnActions::updateKBDBacklight()
 			      %1\
 			      </span></p></body></html>");
 
-    m_mode = m_hw->getKBDMode();
+    if (m_hw->getKBDBacklight(&m_mode, &m_time, &m_type) != KToshibaHardware::SUCCESS)
+        qCritical() << "Could not get Keyboard Backlight status";
 
     if (m_type == 1) {
-        if (m_mode == TIMER) {
-            int time = m_hw->getKBDTimeout();
+        if (m_mode == KToshibaHardware::TIMER) {
             icon = QIcon(":images/keyboard_black_on_64.png");
-            m_statusWidget.kbdStatusText->setText(format.arg(time));
+            m_statusWidget.kbdStatusText->setText(format.arg(m_time));
         } else {
             qDebug() << "Keyboard backlight mode is set to FN-Z";
 
@@ -217,20 +225,19 @@ void FnActions::updateKBDBacklight()
             m_mode = m_modes.at(current);
         }
 
-        m_hw->setKBDMode(m_mode);
+        m_hw->setKBDBacklight(m_mode, m_time);
         switch (m_mode) {
-        case OFF:
+        case KToshibaHardware::OFF:
             icon = QIcon(":images/keyboard_black_off_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(i18n("OFF")));
             break;
-        case ON:
+        case KToshibaHardware::ON:
             icon = QIcon(":images/keyboard_black_on_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(i18n("ON")));
             break;
-        case TIMER:
+        case KToshibaHardware::TIMER:
             icon = QIcon(":images/keyboard_black_on_64.png");
-            int time = m_hw->getKBDTimeout();
-            m_statusWidget.kbdStatusText->setText(format.arg(time));
+            m_statusWidget.kbdStatusText->setText(format.arg(m_time));
             break;
         }
     }
@@ -285,6 +292,3 @@ void FnActions::processHotkey(int hotkey)
         break;
     }
 }
-
-
-#include "fnactions.moc"

@@ -38,7 +38,6 @@ class FnActions : public QObject
 public:
     enum WidgetIcons { Disabled, Performance, Powersave, Presentation, ECO, KBDStatus, Blank };
     enum Zoom { Reset, In, Out = -1 };
-    enum KbdBacklight { FNZ = 1, TIMER = 2, ON = 8, OFF = 16 };
     enum ToogleActions { Off, On };
 
 public:
@@ -47,6 +46,7 @@ public:
     bool init();
 
     void changeProfile(QString);
+    QString getProfile();
     void updateKBDBacklight();
 
     KToshibaHardware *hw() const

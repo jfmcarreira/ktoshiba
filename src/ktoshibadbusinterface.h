@@ -43,41 +43,17 @@ public:
     uint inhibitPowerManagement(QString);
     void unInhibitPowerManagement(uint);
     bool getCompositingState();
+    QString getBatteryProfile();
 
 Q_SIGNALS:
     void configChanged();
+    void batteryProfileChanged(QString);
 
 public Q_SLOTS:
     Q_NOREPLY void configFileChanged();
-    int getTouchPad();
-    void setTouchPad(int);
-    int getECOLed();
-    void setECOLed(int);
-    int getIllumination();
-    void setIllumination(int);
-    int getKBDType();
-    int getKBDMode();
-    void setKBDMode(int);
-    int getKBDTimeout();
-    void setKBDTimeout(int);
-    int getUSBSleepCharge();
-    void setUSBSleepCharge(int);
-    int getUSBSleepFunctionsBatState();
-    void setUSBSleepFunctionsBatState(int);
-    int getUSBSleepFunctionsBatLvl();
-    void setUSBSleepFunctionsBatLvl(int);
-    int getUSBRapidCharge();
-    void setUSBRapidCharge(int);
-    int getUSBSleepMusic();
-    void setUSBSleepMusic(int);
-    int getKBDFunctions();
-    void setKBDFunctions(int);
-    int getPanelPowerON();
-    void setPanelPowerON(int);
-    int getUSBThree();
-    void setUSBThree(int);
-    int getProtectionLevel();
-    void setProtectionLevel(int);
+
+private Q_SLOTS:
+    void profileChanged(QString);
 
 private:
     FnActions *m_fn;

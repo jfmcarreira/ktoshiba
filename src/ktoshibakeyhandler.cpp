@@ -110,6 +110,3 @@ void KToshibaKeyHandler::readData(int socket)
             emit hotkeyPressed(event.code);
     }
 }
-
-
-#include "ktoshibakeyhandler.moc"

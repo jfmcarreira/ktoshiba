@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Azael Avalos &lt;coproscefalo@gmail.com&gt;</author>
+ <class>PowerSave</class>
+ <widget class="QWidget" name="PowerSave">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>520</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Power Save</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string comment="Manage the laptop fan Cooling Method">Cooling Method</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="toolTip">
+      <string>Toggles the Cooling Method monitoring feature.  The laptop fan changes its speed according to the method selected.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Toggles the Cooling Method monitoring feature.  The laptop fan changes its speed according to the method selected.</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="2">
+       <widget class="QComboBox" name="cooling_method_battery_combobox">
+        <property name="toolTip">
+         <string>Changes the fan Cooling Method when the laptop is running on battery.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the fan Cooling Method when the laptop is running on battery.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="cooling_battery_spacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="cooling_method_battery_label">
+        <property name="text">
+         <string>Cooling Method on battery:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="cooling_method_plugged_label">
+        <property name="text">
+         <string>Cooling Method plugged in:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <spacer name="cooling_plugged_spacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="2">
+       <widget class="QComboBox" name="cooling_method_plugged_combobox">
+        <property name="toolTip">
+         <string>Changes the fan Cooling Method when the laptop is connected to AC.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the fan Cooling Method when the laptop is connected to AC.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

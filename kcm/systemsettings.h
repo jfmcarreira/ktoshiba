@@ -49,17 +49,19 @@ public:
     void save();
     void defaults();
 
+    KToshibaHardware *hw() const
+    {
+        return m_hw;
+    }
+
 private Q_SLOTS:
     void configChanged();
     void configChangedReboot();
-    void hddProtectChanged(int);
     void protectionLevelChanged(int);
     void batteryLevelChanged(int);
-    void sleepUtilsOnBatteryChanged(int);
     void kbdBacklightChanged(int);
     void kbdTimeoutChanged(int);
     void updateTouchPad(int);
-    void coolingMethodChanged(int);
 
 private:
     void addTabs();
@@ -67,7 +69,6 @@ private:
 
     KToshibaHardware *m_hw;
     bool m_hwAttached;
-    bool m_devOpened;
 
     QTabWidget *m_tabWidget;
     KMessageWidget *m_message;
@@ -99,6 +100,7 @@ private:
     int m_level;
 
     int m_sleepcharge;
+    int m_defaultsc;
     int m_sleepmusic;
     QStringList m_sleeponbat;
     int m_batenabled;

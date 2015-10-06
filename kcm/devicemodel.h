@@ -32,7 +32,7 @@ public:
     ~DeviceModel();
 
     void setDeviceData(const quint32 value);
-    quint32 getDeviceData() const;
+    int getDeviceData() const;
     void setSupportedDevices(int sup_devices);
     void moveUp(const QModelIndex &index);
     void moveDown(const QModelIndex &index);

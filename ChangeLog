@@ -1,3 +1,27 @@
+2015-10-06 Azael Avalos <coproscefalo@gmail.com>
+	* Polished KCM UIs, they now expand properly
+	* Refactored KCM code a bit due to changes in UI files
+	* Fixed a typo in library that was preventing to get the Sleep & Charge
+	  battery level status
+	* Added tooltips and whatsthis to the Power Save tab
+
+2015-10-05 Azael Avalos <coproscefalo@gmail.com>
+	* We now monitor and set the desired Cooling Method
+
+2015-10-04 Azael Avalos <coproscefalo@gmail.com>
+	* Slight change to setKBDBacklight function
+	* Misc changes to some library functions
+	* Moved the KBD backlight mode enun to library
+
+2015-10-01 Azael Avalos <coproscefalo@gmail.com>
+	* Added convenience function to library that prints TCI errors
+	* Removed unneeded moc includes from *.cpp files
+	* get* functions from library now return FAILURE instead of -1,
+	  code adapted accordingly
+	* Removed all DBus hardware calls as we are duplicating what the KCM does
+	* Changed (most of) the library functions to use SMM calls
+	* Removed unneeded functions from helper
+
 2015-09-30 Azael Avalos <coproscefalo@gmail.com>
 	* Added get/set Cooling Method calls to library
 	* Added get/set Boot Order, WOL and WOK calls to library,
