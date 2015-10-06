@@ -92,6 +92,12 @@ bool KToshibaHardware::deviceExists(QString device)
     return m_file.exists();
 }
 
+void KToshibaHardware::printSMMError(QString function, quint32 error)
+{
+    qCritical() << function << "failed with error code"
+                << QString::number(error, 16) << m_errors.value(error);
+}
+
 /*
  * INIT function
  */
@@ -225,7 +231,7 @@ int KToshibaHardware::getProtectionLevel()
     if (!m_file.open(QIODevice::ReadOnly)) {
         qCritical() << "getProtectionLevel failed with error code" << m_file.error() << m_file.errorString();
 
-        return -1;
+        return FAILURE;
     }
 
     QTextStream stream(&m_file);
@@ -268,370 +274,491 @@ int KToshibaHardware::tci_raw(const SMMRegisters *regs)
         return m_fd;
     }
 
-    int ret;
+    int ret = -1;
     if (regs->eax == 0xf300 || regs->eax == 0xf400)
         ret = ioctl(m_fd, TOSHIBA_ACPI_SCI, regs);
     else if (regs->eax == 0xfe00 || regs->eax == 0xff00)
         ret = ioctl(m_fd, TOSH_SMM, regs);
 
     ::close(m_fd);
-    if (ret < 0) {
+    if (ret < 0)
         qCritical() << "Error while accessing toshiba_acpi device:" << strerror(errno);
 
-        return ret;
-    }
-
-    return 0;
+    return ret;
 }
 
 /*
  * Hardware access funtions
  */
 
-int KToshibaHardware::getTouchPad()
+quint32 KToshibaHardware::getTouchPad()
 {
-    m_file.setFileName(m_driverPath + "touchpad");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getTouchpad failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    return state;
-}
-
-void KToshibaHardware::setTouchPad(int state)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.settouchpad");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("state", state);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.settouchpad failed";
-
-    emit touchpadToggled(state);
-}
-
-int KToshibaHardware::getIllumination()
-{
-    m_file.setFileName(m_ledsPath + "illumination/brightness");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getIllumination failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    return state;
-}
-
-void KToshibaHardware::setIllumination(int state)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setillumination");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("state", state);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setillumination failed";
-}
-
-int KToshibaHardware::getEcoLed()
-{
-    m_file.setFileName(m_ledsPath + "eco_mode/brightness");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getEcoLed failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    return state;
-}
-
-void KToshibaHardware::setEcoLed(int state)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.seteco");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("state", state);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.seteco failed";
-}
-
-int KToshibaHardware::getKBDType()
-{
-    m_file.setFileName(m_driverPath + "kbd_type");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getKBDType failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int type = stream.readAll().toInt();
-    m_file.close();
-
-    return type;
-}
-
-int KToshibaHardware::getKBDMode()
-{
-    m_file.setFileName(m_driverPath + "kbd_backlight_mode");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getKBDMode failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int mode = stream.readAll().toInt();
-    m_file.close();
-
-    return mode;
-}
-
-void KToshibaHardware::setKBDMode(int mode)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdmode");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("mode", mode);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdmode failed";
-}
-
-int KToshibaHardware::getKBDTimeout()
-{
-    m_file.setFileName(m_driverPath + "kbd_backlight_timeout");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getKBDTimeout failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int timeout = stream.readAll().toInt();
-    m_file.close();
-
-    return timeout;
-}
-
-void KToshibaHardware::setKBDTimeout(int time)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("time", time);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdtimeout failed";
-}
-
-int KToshibaHardware::getUSBSleepCharge()
-{
-    m_file.setFileName(m_driverPath + "usb_sleep_charge");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getUSBSleepCharge failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int mode = stream.readAll().toInt();
-    m_file.close();
-
-    return mode;
-}
-
-void KToshibaHardware::setUSBSleepCharge(int mode)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("mode", mode);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepcharge failed";
-}
-
-QStringList KToshibaHardware::getUSBSleepFunctionsBatLvl()
-{
-    m_file.setFileName(m_driverPath + "sleep_functions_on_battery");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getUSBSleepFunctionsBatLvl failed with error code" << m_file.error() << m_file.errorString();
-
-        return QStringList();
-    }
-
-    QTextStream stream(&m_file);
-    QString line = stream.readAll();
-    m_file.close();
-
-    return line.split(" ");
-}
-
-void KToshibaHardware::setUSBSleepFunctionsBatLvl(int level)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("level", level);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepfunctionsbatlvl failed";
-}
-
-int KToshibaHardware::getUSBRapidCharge()
-{
-    m_file.setFileName(m_driverPath + "usb_rapid_charge");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getUSBRapidCharge failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    return state;
-}
-
-void KToshibaHardware::setUSBRapidCharge(int state)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("state", state);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbrapidcharge failed";
-}
-
-int KToshibaHardware::getUSBSleepMusic()
-{
-    m_file.setFileName(m_driverPath + "usb_sleep_music");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getUSBSleepMusic failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    return state;
-}
-
-void KToshibaHardware::setUSBSleepMusic(int state)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("state", state);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbsleepmusic failed";
-}
-
-int KToshibaHardware::getKBDFunctions()
-{
-    m_file.setFileName(m_driverPath + "kbd_function_keys");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getKBDFunctions failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int mode = stream.readAll().toInt();
-    m_file.close();
-
-    return mode;
-}
-
-void KToshibaHardware::setKBDFunctions(int mode)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("mode", mode);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setkbdfunctions failed";
-}
-
-int KToshibaHardware::getPanelPowerON()
-{
-    m_file.setFileName(m_driverPath + "panel_power_on");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getPanelPowerON failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int state = stream.readAll().toInt();
-    m_file.close();
-
-    return state;
-}
-
-void KToshibaHardware::setPanelPowerON(int state)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("state", state);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setpanelpoweron failed";
-}
-
-int KToshibaHardware::getUSBThree()
-{
-    m_file.setFileName(m_driverPath + "usb_three");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getUSBThree failed with error code" << m_file.error() << m_file.errorString();
-
-        return -1;
-    }
-
-    QTextStream stream(&m_file);
-    int mode = stream.readAll().toInt();
-    m_file.close();
-
-    return mode;
-}
-
-void KToshibaHardware::setUSBThree(int mode)
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setusbthree");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("mode", mode);
-    ExecuteJob *job = action.execute();
-    if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setusbthree failed";
-}
-
-quint32 KToshibaHardware::getBootOrder(quint32 *val, quint32 *maxval, quint32 *defval)
-{
-    SMMRegisters regs = { 0xf300, 0x0157, 0, 0, 0, 0 };
+    SMMRegisters regs = { 0xf300, 0x050e, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        qCritical() << "getBootOrder failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+        printSMMError("getTouchPad", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        qCritical() << "getBootOrder failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("getTouchPad", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setTouchPad(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x050e, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setTouchPad", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setTouchPad", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setTouchPad", regs.eax);
+}
+
+quint32 KToshibaHardware::getIllumination()
+{
+    SMMRegisters regs = { 0xf300, 0x014e, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getIllumination", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getIllumination", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setIllumination(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x014e, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setIllumination", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setIllumination", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setIllumination", regs.eax);
+}
+
+quint32 KToshibaHardware::getEcoLed()
+{
+    SMMRegisters regs = { 0xfe00, 0x97, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getEcoLed", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != INPUT_DATA_ERROR) {
+        printSMMError("getEcoLed", regs.eax);
+
+        return regs.eax;
+    }
+
+    regs = { 0xfe00, 0x97, 0, 1, 0, 0 };
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getEcoLed", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getEcoLed", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setEcoLed(quint32 state)
+{
+    SMMRegisters regs = { 0xff00, 0x97, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setEcoLed", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setEcoLed", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setEcoLed", regs.eax);
+}
+
+quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
+{
+    SMMRegisters regs = { 0xf300, 0x015c, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getKBDBacklight", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getKBDBacklight", regs.eax);
+    } else {
+        *mode = (regs.ecx & 0x1f);
+        *time = regs.ecx >> 0x10;
+        if (regs.edx == 0x3c0003)
+            *type = 1;
+        else if (regs.edx == 0x3c001a)
+            *type = 2;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setKBDBacklight(int mode, int time)
+{
+    SMMRegisters regs = { 0xf400, 0x015c, 0, 0, 0, 0 };
+
+    if (time < 0 || time > 100) {
+        printSMMError("setKBDBacklight", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    regs.ecx = time << 0x10;
+    regs.ecx |= mode;
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setKBDBacklight", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setKBDBacklight", regs.eax);
+}
+
+quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *defval)
+{
+    SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getUSBSleepCharge", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getUSBSleepCharge", regs.eax);
+    } else {
+        *val = regs.ecx;
+        *defval = regs.esi;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setUSBSleepCharge(int mode, int base)
+{
+    SMMRegisters regs = { 0xf400, 0x0150, 0, 0, 0, 0 };
+
+    if (mode != 0 && mode != 1) {
+        printSMMError("setUSBSleepCharge", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    regs.ecx = base | mode;
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setUSBSleepCharge", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setUSBSleepCharge", regs.eax);
+}
+
+quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
+{
+    SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0x0200 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getUSBSleepFunctionsBatLvl", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getUSBSleepFunctionsBatLvl", regs.eax);
+    } else {
+        int tmp = regs.ecx & 0x7;
+        *state = (tmp == 0x4) ? 1 : 0;
+        *level = regs.ecx >> 0x10;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setUSBSleepFunctionsBatLvl(int level)
+{
+    SMMRegisters regs = { 0xf400, 0x0150, 0, 0, 0, 0x0200 };
+
+    if (level < 0 || level > 100) {
+        printSMMError("setUSBSleepFunctionsBatLvl", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    regs.ecx = level << 0x10;
+    regs.ecx |= (level == 0 ? 0x1 : 0x4);
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setUSBSleepFunctionsBatLvl", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setUSBSleepFunctionsBatLvl", regs.eax);
+}
+
+quint32 KToshibaHardware::getUSBRapidCharge()
+{
+    SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0x0300 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getUSBRapidCharge", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getUSBRapidCharge", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setUSBRapidCharge(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x0150, state, 0, 0, 0x0300 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setUSBRapidCharge", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setUSBRapidCharge", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setUSBRapidCharge", regs.eax);
+}
+
+quint32 KToshibaHardware::getUSBSleepMusic()
+{
+    SMMRegisters regs = { 0xf300, 0x015e, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getUSBSleepMusic", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getUSBSleepMusic", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setUSBSleepMusic(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x015e, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setUSBSleepMusic", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setUSBSleepMusic", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setUSBSleepMusic", regs.eax);
+}
+
+quint32 KToshibaHardware::getKBDFunctions()
+{
+    SMMRegisters regs = { 0xf300, 0x0522, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getKBDFunctions", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getKBDFunctions", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setKBDFunctions(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x0522, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setKBDFunctions", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setKBDFunctions", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setKBDFunctions", regs.eax);
+}
+
+quint32 KToshibaHardware::getPanelPowerON()
+{
+    SMMRegisters regs = { 0xf300, 0x010d, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getPanelPowerON", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getPanelPowerON", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setPanelPowerON(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x010d, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setPanelPowerON", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setPanelPowerON", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setPanelPowerON", regs.eax);
+}
+
+quint32 KToshibaHardware::getUSBThree()
+{
+    SMMRegisters regs = { 0xf300, 0x0169, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getUSBThree", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getUSBThree", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setUSBThree(quint32 state)
+{
+    SMMRegisters regs = { 0xf400, 0x0169, state, 0, 0, 0 };
+
+    if (state != 0 && state != 1) {
+        printSMMError("setUSBThree", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setPanelPowerON", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setPanelPowerON", regs.eax);
+}
+
+quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)
+{
+    SMMRegisters regs = { 0xf300, 0x0157, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getBootOrder", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getBootOrder", regs.eax);
     } else {
         *val = regs.ecx;
         *maxval = regs.edx;
@@ -643,31 +770,30 @@ quint32 KToshibaHardware::getBootOrder(quint32 *val, quint32 *maxval, quint32 *d
 
 void KToshibaHardware::setBootOrder(quint32 order)
 {
-    SMMRegisters regs = { 0xf300, 0x0157, order, 0, 0, 0 };
+    SMMRegisters regs = { 0xf400, 0x0157, order, 0, 0, 0 };
 
-    if (tci_raw(&regs) < 0)
-        qCritical() << "setBootOrder failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setBootOrder", FAILURE);
+
+        return;
+    }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        qCritical() << "setBootOrder failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("setBootOrder", regs.eax);
 }
 
-quint32 KToshibaHardware::getWakeOnKeyboard(quint32 *val, quint32 *defval)
+quint32 KToshibaHardware::getWakeOnKeyboard(int *val, int *defval)
 {
     SMMRegisters regs = { 0xf300, 0x0137, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        qCritical() << "getWakeOnKeyboard failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+        printSMMError("getWakeOnKeyboard", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        qCritical() << "getWakeOnKeyboard failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("getWakeOnKeyboard", regs.eax);
     } else {
         *val = regs.ecx;
         *defval = regs.esi;
@@ -678,31 +804,36 @@ quint32 KToshibaHardware::getWakeOnKeyboard(quint32 *val, quint32 *defval)
 
 void KToshibaHardware::setWakeOnKeyboard(quint32 state)
 {
-    SMMRegisters regs = { 0xf300, 0x0137, state, 0, 0, 0 };
+    SMMRegisters regs = { 0xf400, 0x0137, state, 0, 0, 0 };
 
-    if (tci_raw(&regs) < 0)
-        qCritical() << "setWakeOnKeyboard failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+    if (state != 0 && state != 1) {
+        printSMMError("setWakeOnKeyboard", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setWakeOnKeyboard", FAILURE);
+
+        return;
+    }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        qCritical() << "setWakeOnKeyboard failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("setWakeOnKeyboard", regs.eax);
 }
 
-quint32 KToshibaHardware::getWakeOnLAN(quint32 *val, quint32 *defval)
+quint32 KToshibaHardware::getWakeOnLAN(int *val, int *defval)
 {
     SMMRegisters regs = { 0xf300, 0x0700, 0x0800, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        qCritical() << "getWakeOnLAN failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+        printSMMError("getWakeOnLAN", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        qCritical() << "getWakeOnLAN failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("getWakeOnLAN", regs.eax);
     } else {
         *val = regs.ecx;
         *defval = regs.esi;
@@ -713,31 +844,36 @@ quint32 KToshibaHardware::getWakeOnLAN(quint32 *val, quint32 *defval)
 
 void KToshibaHardware::setWakeOnLAN(quint32 state)
 {
-    SMMRegisters regs = { 0xf300, 0x0700, state, 0, 0, 0 };
+    SMMRegisters regs = { 0xf400, 0x0700, state, 0, 0, 0 };
 
-    if (tci_raw(&regs) < 0)
-        qCritical() << "setWakeOnLAN failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+    if (state != 0 && state != 1) {
+        printSMMError("setWakeOnLAN", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setWakeOnLAN", FAILURE);
+
+        return;
+    }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        qCritical() << "setWakeOnLAN failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("setWakeOnLAN", regs.eax);
 }
 
-quint32 KToshibaHardware::getCoolingMethod(quint32 *val, quint32 *maxval)
+quint32 KToshibaHardware::getCoolingMethod(int *val, int *maxval)
 {
     SMMRegisters regs = { 0xfe00, 0x007f, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        qCritical() << "getCoolingMethod failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+        printSMMError("getCoolingMethod", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        qCritical() << "getCoolingMethod failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("getCoolingMethod", regs.eax);
     } else {
         *val = regs.ecx;
         *maxval = regs.edx;
@@ -746,18 +882,23 @@ quint32 KToshibaHardware::getCoolingMethod(quint32 *val, quint32 *maxval)
     return regs.eax;
 }
 
-void KToshibaHardware::setCoolingMethod(quint32 mode)
+void KToshibaHardware::setCoolingMethod(int mode)
 {
-    SMMRegisters regs = { 0xfe00, 0x007f, mode, 0, 0, 0 };
+    SMMRegisters regs = { 0xff00, 0x007f, 0, 0, 0, 0 };
 
-    if (tci_raw(&regs) < 0)
-        qCritical() << "setCoolingMethod failed with error code"
-                    << QString().setNum(FAILURE, 16) << m_errors.value(FAILURE);
+    if (mode != 0 && mode != 1 && mode != 2) {
+        printSMMError("setCoolingMethod", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    regs.ecx = mode;
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setCoolingMethod", FAILURE);
+
+        return;
+    }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        qCritical() << "setCoolingMethod failed with error code"
-                    << QString().setNum(regs.eax, 16) << m_errors.value(regs.eax);
+        printSMMError("setCoolingMethod", regs.eax);
 }
-
-
-#include "ktoshibahardware.moc"

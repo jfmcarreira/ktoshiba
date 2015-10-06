@@ -86,6 +86,8 @@ bool KToshiba::initialize()
 
     doMenu();
 
+    batteryProfileChanged(m_fn->getProfile());
+
     return true;
 }
 
@@ -119,6 +121,9 @@ void KToshiba::loadConfig()
     KConfigGroup hddGroup(m_config, "HDDProtection");
     m_monitorHDD = hddGroup.readEntry("MonitorHDD", true);
     m_notifyHDD = hddGroup.readEntry("NotifyHDDMovement", true);
+    // Power Save
+    KConfigGroup powersave(m_config, "PowerSave");
+    m_manageCoolingMethod = powersave.readEntry("ManageCoolingMethod", true);
 }
 
 void KToshiba::createConfig()
@@ -242,6 +247,23 @@ void KToshiba::disabledClicked(bool enabled)
     m_batteryProfiles = enabled;
 }
 
+void KToshiba::batteryProfileChanged(QString profile)
+{
+    if (!m_manageCoolingMethod)
+        return;
+
+    KConfigGroup powersave(m_config, "PowerSave");
+    int coolingMethod = KToshibaHardware::MAXIMUM_PERFORMANCE;
+    if (profile == "AC")
+        coolingMethod = powersave.readEntry("CoolingMethodPluggedIn", 0);
+    else if (profile == "Battery")
+        coolingMethod = powersave.readEntry("CoolingMethodOnBattery", 1);
+    else
+        return;
+
+    m_fn->hw()->setCoolingMethod(coolingMethod);
+}
+
 void KToshiba::setBatteryProfile(QAction *action)
 {
     if (action == m_batPerformance)
@@ -286,6 +308,3 @@ void KToshiba::parseTVAPEvents(int event)
         qDebug() << "Unknown event";
     }
 }
-
-
-#include "ktoshiba.moc"

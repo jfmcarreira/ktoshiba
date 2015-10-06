@@ -175,6 +175,3 @@ void KToshibaNetlinkEvents::detach()
         ::close(m_socket);
     m_socket = -1;
 }
-
-
-#include "ktoshibanetlinkevents.moc"

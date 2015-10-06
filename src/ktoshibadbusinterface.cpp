@@ -54,7 +54,11 @@ void KToshibaDBusInterface::init()
     if (!m_object)
         qCritical() << "Could not register DBus object";
 
-    dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing", "compositingToggled", m_fn, SLOT(compositingChanged(bool)));
+    dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing",
+                 "compositingToggled", m_fn, SLOT(compositingChanged(bool)));
+    dbus.connect("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement",
+                 "org.kde.Solid.PowerManagement", "profileChanged",
+                 this, SLOT(profileChanged(QString)));
 }
 
 void KToshibaDBusInterface::configFileChanged()
@@ -62,214 +66,9 @@ void KToshibaDBusInterface::configFileChanged()
     emit configChanged();
 }
 
-int KToshibaDBusInterface::getTouchPad()
+void KToshibaDBusInterface::profileChanged(QString profile)
 {
-    if (m_fn->hw()->isTouchPadSupported)
-        return m_fn->hw()->getTouchPad();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setTouchPad(int state)
-{
-    if (m_fn->hw()->isTouchPadSupported)
-        m_fn->hw()->setTouchPad(state);
-}
-
-int KToshibaDBusInterface::getECOLed()
-{
-    if (m_fn->hw()->isECOSupported)
-        return m_fn->hw()->getEcoLed();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setECOLed(int state)
-{
-    if (m_fn->hw()->isECOSupported)
-        m_fn->hw()->setEcoLed(state);
-}
-
-int KToshibaDBusInterface::getIllumination()
-{
-    if (m_fn->hw()->isIlluminationSupported)
-        return m_fn->hw()->getIllumination();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setIllumination(int state)
-{
-    if (m_fn->hw()->isIlluminationSupported)
-        m_fn->hw()->setIllumination(state);
-}
-
-int KToshibaDBusInterface::getKBDType()
-{
-    if (m_fn->hw()->isKBDTypeSupported)
-        return m_fn->hw()->getKBDType();
-
-    return -1;
-}
-
-int KToshibaDBusInterface::getKBDMode()
-{
-    if (m_fn->hw()->isKBDBacklightSupported)
-        return m_fn->hw()->getKBDMode();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setKBDMode(int mode)
-{
-    if (m_fn->hw()->isKBDBacklightSupported)
-        m_fn->hw()->setKBDMode(mode);
-}
-
-int KToshibaDBusInterface::getKBDTimeout()
-{
-    if (m_fn->hw()->isKBDBacklightSupported)
-        return (getKBDMode() == FnActions::TIMER) ? m_fn->hw()->getKBDTimeout() : 0;
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setKBDTimeout(int time)
-{
-    if (m_fn->hw()->isKBDBacklightSupported)
-        m_fn->hw()->setKBDTimeout(time);
-}
-
-int KToshibaDBusInterface::getUSBSleepCharge()
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported)
-        return m_fn->hw()->getUSBSleepCharge();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setUSBSleepCharge(int mode)
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported)
-        m_fn->hw()->setUSBSleepCharge(mode);
-}
-
-int KToshibaDBusInterface::getUSBSleepFunctionsBatState()
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported) {
-        QStringList values = m_fn->hw()->getUSBSleepFunctionsBatLvl();
-
-        return values[0].toInt();
-    }
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setUSBSleepFunctionsBatState(int state)
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported)
-        m_fn->hw()->setUSBSleepFunctionsBatLvl(state);
-}
-
-int KToshibaDBusInterface::getUSBSleepFunctionsBatLvl()
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported) {
-        QStringList values = m_fn->hw()->getUSBSleepFunctionsBatLvl();
-
-        return values[1].toInt();
-    }
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setUSBSleepFunctionsBatLvl(int level)
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported)
-        m_fn->hw()->setUSBSleepFunctionsBatLvl(level);
-}
-
-int KToshibaDBusInterface::getUSBRapidCharge()
-{
-    if (m_fn->hw()->isUSBRapidChargeSupported)
-        return m_fn->hw()->getUSBRapidCharge();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setUSBRapidCharge(int state)
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported)
-        m_fn->hw()->setUSBRapidCharge(state);
-}
-
-int KToshibaDBusInterface::getUSBSleepMusic()
-{
-    if (m_fn->hw()->isUSBSleepMusicSupported)
-        return m_fn->hw()->getUSBSleepMusic();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setUSBSleepMusic(int state)
-{
-    if (m_fn->hw()->isUSBSleepChargeSupported)
-        m_fn->hw()->setUSBSleepMusic(state);
-}
-
-int KToshibaDBusInterface::getKBDFunctions()
-{
-    if (m_fn->hw()->isKBDFunctionsSupported)
-        return m_fn->hw()->getKBDFunctions();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setKBDFunctions(int mode)
-{
-    if (m_fn->hw()->isKBDFunctionsSupported)
-        m_fn->hw()->setKBDFunctions(mode);
-}
-
-int KToshibaDBusInterface::getPanelPowerON()
-{
-    if (m_fn->hw()->isPanelPowerONSupported)
-        return m_fn->hw()->getPanelPowerON();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setPanelPowerON(int state)
-{
-    if (m_fn->hw()->isPanelPowerONSupported)
-        m_fn->hw()->setPanelPowerON(state);
-}
-
-int KToshibaDBusInterface::getUSBThree()
-{
-    if (m_fn->hw()->isUSBThreeSupported)
-        return m_fn->hw()->getUSBThree();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setUSBThree(int mode)
-{
-    if (m_fn->hw()->isUSBThreeSupported)
-        m_fn->hw()->setUSBThree(mode);
-}
-
-int KToshibaDBusInterface::getProtectionLevel()
-{
-    if (m_fn->hw()->isHAPSSupported)
-        return m_fn->hw()->getProtectionLevel();
-
-    return -1;
-}
-
-void KToshibaDBusInterface::setProtectionLevel(int level)
-{
-    if (m_fn->hw()->isHAPSSupported)
-        m_fn->hw()->setProtectionLevel(level);
+    emit batteryProfileChanged(profile);
 }
 
 void KToshibaDBusInterface::lockScreen()
@@ -325,8 +124,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
         return;
     }
 
-    QDBusReply<void> reply;
-    reply = iface.call("keyboardBrightness", state);
+    QDBusReply<void> reply = iface.call("keyboardBrightness", state);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -384,8 +182,7 @@ uint KToshibaDBusInterface::inhibitPowerManagement(QString reason)
         return 0;
     }
 
-    QDBusReply<uint> reply;
-    reply = iface.call("Inhibit", QString("KToshiba"), reason);
+    QDBusReply<uint> reply = iface.call("Inhibit", QString("KToshiba"), reason);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -409,8 +206,7 @@ void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
         return;
     }
 
-    QDBusReply<void> reply;
-    reply = iface.call("UnInhibit", cookie);
+    QDBusReply<void> reply = iface.call("UnInhibit", cookie);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -433,5 +229,26 @@ bool KToshibaDBusInterface::getCompositingState()
     return iface.property("active").toBool();
 }
 
+QString KToshibaDBusInterface::getBatteryProfile()
+{
+    QDBusInterface iface("org.kde.Solid.PowerManagement",
+                         "/org/kde/Solid/PowerManagement",
+                         "org.kde.Solid.PowerManagement",
+                         QDBusConnection::sessionBus(), this);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
 
-#include "ktoshibadbusinterface.moc"
+        return QString();
+    }
+
+    QDBusReply<QString> reply = iface.call("currentProfile");
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return QString();
+    }
+
+    return reply;
+}

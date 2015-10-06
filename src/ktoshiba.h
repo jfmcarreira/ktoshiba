@@ -51,6 +51,7 @@ private Q_SLOTS:
     void protectHDD(int);
     void notifyHDDMovement();
     void disabledClicked(bool);
+    void batteryProfileChanged(QString);
     void setBatteryProfile(QAction *);
     void configureClicked();
     void parseTVAPEvents(int);
@@ -67,6 +68,8 @@ private:
 
     bool m_monitorHDD;
     bool m_notifyHDD;
+    bool m_manageCoolingMethod;
+    int m_coolingMethod;
 
     QMenu *m_batteryMenu;
     QActionGroup *m_batteryGroup;

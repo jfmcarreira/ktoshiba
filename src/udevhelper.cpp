@@ -93,6 +93,3 @@ QString UDevHelper::findDevice(QStringList namePhys)
 
     return node;
 }
-
-
-#include "udevhelper.moc"

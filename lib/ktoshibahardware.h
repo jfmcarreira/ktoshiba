@@ -60,6 +60,21 @@ public:
         NOT_INSTALLED      = 0x8e00
     };
 
+    enum KbdBacklightMode {
+        FNZ   = 0x01,
+        TIMER = 0x02,
+        ON    = 0x08,
+        OFF   = 0x10
+    };
+
+    enum CoolingMethods {
+        MAXIMUM_PERFORMANCE = 0,
+        BATTERY_OPTIMIZED   = 1,
+        HIGH_PERFORMANCE    = 0,
+        BALANCED            = 1,
+        POWER_SAVER         = 2,
+    };
+
     QString modelFamily;
     QString modelNumber;
     QString biosVersion;
@@ -101,44 +116,43 @@ public Q_SLOTS:
     /*
      * Hardware access functions
      */
-    int getTouchPad();
-    void setTouchPad(int);
-    int getIllumination();
-    void setIllumination(int);
-    int getEcoLed();
-    void setEcoLed(int);
-    int getKBDType();
-    int getKBDMode();
-    void setKBDMode(int);
-    int getKBDTimeout();
-    void setKBDTimeout(int);
-    int getUSBSleepCharge();
-    void setUSBSleepCharge(int);
-    QStringList getUSBSleepFunctionsBatLvl();
+    quint32 getTouchPad();
+    void setTouchPad(quint32);
+    quint32 getIllumination();
+    void setIllumination(quint32);
+    quint32 getEcoLed();
+    void setEcoLed(quint32);
+    quint32 getKBDBacklight(int *, int *, int *);
+    void setKBDBacklight(int, int);
+    quint32 getUSBSleepCharge(int *, int *);
+    void setUSBSleepCharge(int, int);
+    quint32 getUSBSleepFunctionsBatLvl(int *, int *);
     void setUSBSleepFunctionsBatLvl(int);
-    int getUSBRapidCharge();
-    void setUSBRapidCharge(int);
-    int getUSBSleepMusic();
-    void setUSBSleepMusic(int);
-    int getKBDFunctions();
-    void setKBDFunctions(int);
-    int getPanelPowerON();
-    void setPanelPowerON(int);
-    int getUSBThree();
-    void setUSBThree(int);
-    quint32 getBootOrder(quint32 *, quint32 *, quint32 *);
+    quint32 getUSBRapidCharge();
+    void setUSBRapidCharge(quint32);
+    quint32 getUSBSleepMusic();
+    void setUSBSleepMusic(quint32);
+    quint32 getKBDFunctions();
+    void setKBDFunctions(quint32);
+    quint32 getPanelPowerON();
+    void setPanelPowerON(quint32);
+    quint32 getUSBThree();
+    void setUSBThree(quint32);
+    quint32 getBootOrder(int *, int *, int *);
     void setBootOrder(quint32);
-    quint32 getWakeOnKeyboard(quint32 *, quint32 *);
+    quint32 getWakeOnKeyboard(int *, int *);
     void setWakeOnKeyboard(quint32);
-    quint32 getWakeOnLAN(quint32 *, quint32 *);
+    quint32 getWakeOnLAN(int *, int *);
     void setWakeOnLAN(quint32);
-    quint32 getCoolingMethod(quint32 *, quint32 *);
-    void setCoolingMethod(quint32);
+    quint32 getCoolingMethod(int *, int *);
+    void setCoolingMethod(int);
 
 Q_SIGNALS:
     void touchpadToggled(int);
 
 private:
+    void printSMMError(QString, quint32);
+
     QMap<int, QString> m_errors;
 
     QString findDriverPath();

@@ -26,11 +26,12 @@ extern "C" {
 
 #include "bootsettings.h"
 #include "devicemodel.h"
+#include "systemsettings.h"
 #include "ktoshibahardware.h"
 
 BootSettings::BootSettings(QWidget *parent)
     : QWidget(parent),
-      m_hw(qobject_cast<KToshibaHardware * >(QObject::parent()))
+      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent()))
 {
     setupUi(this);
 
@@ -44,8 +45,9 @@ BootSettings::BootSettings(QWidget *parent)
     deviceList->setAlternatingRowColors(false);
     deviceList->setRootIsDecorated(false);
 
-    connect(deferButton, SIGNAL(clicked()), this, SLOT(deferClicked()));
-    connect(preferButton, SIGNAL(clicked()), this, SLOT(preferClicked()));
+    m_bootOrderSupported = isBootOrderSupported();
+    m_wokSupported = isWOKSupported();
+    m_wolSupported = isWOLSupported();
 }
 
 BootSettings::~BootSettings()
@@ -55,7 +57,7 @@ BootSettings::~BootSettings()
 
 bool BootSettings::isBootOrderSupported()
 {
-    quint32 result = m_hw->getBootOrder(&m_order, &m_maxdev, &m_default);
+    quint32 result = m_sys->hw()->getBootOrder(&m_order, &m_maxdev, &m_default);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
@@ -67,7 +69,7 @@ bool BootSettings::isBootOrderSupported()
 
 bool BootSettings::isWOKSupported()
 {
-    quint32 result = m_hw->getWakeOnKeyboard(&m_wok, &m_defaultWOK);
+    quint32 result = m_sys->hw()->getWakeOnKeyboard(&m_wok, &m_defaultWOK);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
@@ -77,7 +79,7 @@ bool BootSettings::isWOKSupported()
 
 bool BootSettings::isWOLSupported()
 {
-    quint32 result = m_hw->getWakeOnLAN(&m_wol, &m_defaultWOL);
+    quint32 result = m_sys->hw()->getWakeOnLAN(&m_wol, &m_defaultWOL);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
@@ -99,17 +101,17 @@ void BootSettings::preferClicked()
 
 void BootSettings::load()
 {
+    qDebug() << "bootorder load";
     // Boot Order
-    m_bootOrderSupported = isBootOrderSupported();
     if (m_bootOrderSupported) {
         m_model->setDeviceData(m_order);
+
+        connect(deferButton, SIGNAL(clicked()), this, SLOT(deferClicked()));
+        connect(preferButton, SIGNAL(clicked()), this, SLOT(preferClicked()));
     } else {
-        deviceList->setEnabled(false);
-        deferButton->setEnabled(false);
-        preferButton->setEnabled(false);
+        bootorderGroupBox->setEnabled(false);
     }
     // Wake on Keyboard
-    m_wokSupported = isWOKSupported();
     if (m_wokSupported) {
         wol_checkbox->setChecked(m_wok ? true : false);
     } else {
@@ -117,7 +119,6 @@ void BootSettings::load()
         wok_checkbox->setEnabled(false);
     }
     // Wake on LAN
-    m_wolSupported = isWOLSupported();
     if (m_wolSupported) {
         wol_checkbox->setChecked(m_wol == 0x0801 ? true : false);
     } else {
@@ -128,13 +129,13 @@ void BootSettings::load()
 
 void BootSettings::save()
 {
-    quint32 tmp;
+    int tmp;
 
     // Boot Order
     if (m_bootOrderSupported) {
         tmp = m_model->getDeviceData();
         if (m_order != tmp) {
-            m_hw->setBootOrder(tmp);
+            m_sys->hw()->setBootOrder(tmp);
             m_order = tmp;
         }
     }
@@ -142,7 +143,7 @@ void BootSettings::save()
     if (m_wokSupported) {
         tmp = wok_checkbox->checkState() == Qt::Checked ? 1 : 0;
         if (m_wok != tmp) {
-            m_hw->setWakeOnKeyboard(tmp);
+            m_sys->hw()->setWakeOnKeyboard(tmp);
             m_wok = tmp;
         }
     }
@@ -150,7 +151,7 @@ void BootSettings::save()
     if (m_wolSupported) {
         tmp = wol_checkbox->checkState() == Qt::Checked ? 0x0801 : 0x0800;
         if (m_wol != tmp) {
-            m_hw->setWakeOnLAN(tmp);
+            m_sys->hw()->setWakeOnLAN(tmp);
             m_wol = tmp;
         }
     }
@@ -168,6 +169,3 @@ void BootSettings::defaults()
     if (m_wolSupported)
         wol_checkbox->setChecked(false);
 }
-
-
-#include "bootsettings.moc"

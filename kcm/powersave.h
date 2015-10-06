@@ -16,54 +16,43 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BOOTSETTINGS_H
-#define BOOTSETTINGS_H
+#ifndef POWERSAVE_H
+#define POWERSAVE_H
 
-#include "ui_bootsettings.h"
+#include <KSharedConfig>
 
-class DeviceModel;
+#include "ui_powersave.h"
+
 class KToshibaSystemSettings;
 
-class BootSettings : public QWidget, public Ui::BootSettings
+class PowerSave : public QWidget, public Ui::PowerSave
 {
     Q_OBJECT
 
 public:
-    explicit BootSettings(QWidget *parent = 0);
-    virtual ~BootSettings();
+    explicit PowerSave(QWidget *parent = 0);
+    virtual ~PowerSave();
 
     void load();
     void save();
     void defaults();
 
-    bool m_bootOrderSupported;
-    bool m_wokSupported;
-    bool m_wolSupported;
-
-Q_SIGNALS:
-    void changed();
-
-private Q_SLOTS:
-    void deferClicked();
-    void preferClicked();
+    bool m_coolingMethodSupported;
 
 private:
-    bool isBootOrderSupported();
-    bool isWOKSupported();
-    bool isWOLSupported();
+    bool isCoolingMethodSupported();
 
     KToshibaSystemSettings *m_sys;
+    KSharedConfigPtr m_config;
 
-    DeviceModel *m_model;
-    int m_order;
-    int m_maxdev;
-    int m_default;
-
-    int m_wok;
-    int m_defaultWOK;
-
-    int m_wol;
-    int m_defaultWOL;
+    QStringList m_type1;
+    QStringList m_type2;
+    int m_coolingMethod;
+    int m_maxCoolingMethod;
+    int m_defaultCoolingMethod;
+    bool m_manageCoolingMethod;
+    int m_coolingMethodBattery;
+    int m_coolingMethodPlugged;
 };
 
-#endif // BOOTSETTINGS_H
+#endif // POWERSAVE_H

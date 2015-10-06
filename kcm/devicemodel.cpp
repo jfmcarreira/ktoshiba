@@ -132,9 +132,9 @@ int DeviceModel::rowCount(const QModelIndex &parent) const
     return m_list.count();
 }
 
-quint32 DeviceModel::getDeviceData() const
+int DeviceModel::getDeviceData() const
 {
-    quint32 value = 0;
+    int value = 0;
     for (int i = 0; i < MAX_BOOT_DEVICES; i++) {
         if (i < m_supported)
             value |= (m_devices.at(i) << (4 * i));
