@@ -26,7 +26,7 @@
      <property name="checked">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="sleep_charge_label">
         <property name="text">
@@ -99,7 +99,7 @@
    <item>
     <widget class="QGroupBox" name="batteryGroupBox">
      <property name="title">
-      <string comment="">Sleep Utilities under battery</string>
+      <string>Sleep Utilities under battery</string>
      </property>
      <property name="flat">
       <bool>true</bool>
@@ -111,12 +111,12 @@
       <bool>true</bool>
      </property>
      <property name="toolTip">
-      <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
+      <string>Allows the sleep functions to operate when the computer is under battery power.</string>
      </property>
      <property name="whatsThis">
-      <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
+      <string>Allows the sleep functions to operate when the computer is under battery power.</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QGridLayout" name="batteryGridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="battery_level_label">
         <property name="text">
@@ -124,7 +124,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="0" column="1" alignment="Qt::AlignRight">
        <widget class="QLabel" name="battery_level">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

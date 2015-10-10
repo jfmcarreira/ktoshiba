@@ -23,8 +23,10 @@
 
 #include <libudev.h>
 
-#define TOSHNAME "Toshiba input device"
-#define TOSHPHYS "toshiba_acpi/input0"
+#define TOSHNAME   "Toshiba input device"
+#define TOSHPHYS   "toshiba_acpi/input0"
+#define TOSWMINAME "Toshiba WMI hotkeys"
+#define TOSWMIPHYS "wmi/input0"
 
 class UDevHelper : public QObject
 {

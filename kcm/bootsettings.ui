@@ -35,6 +35,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip">
+         <string>Boot devices supported by this laptop.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Boot devices supported by this laptop.</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -60,6 +66,12 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="toolTip">
+           <string>No preference for the selected device</string>
+          </property>
+          <property name="whatsThis">
+           <string>No preference for the selected device</string>
+          </property>
           <property name="text">
            <string>Defer</string>
           </property>
@@ -72,6 +84,12 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Prefer the selected device</string>
+          </property>
+          <property name="whatsThis">
+           <string>Prefer the selected device</string>
           </property>
           <property name="text">
            <string>Prefer</string>

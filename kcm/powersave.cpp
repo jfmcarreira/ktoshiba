@@ -61,9 +61,9 @@ void PowerSave::load()
 {
     qDebug() << "powersave load";
     // Boot Order
-    if (!m_coolingMethodSupported) {
-        m_type1 << "Maximum Performance" << "Battery Optimized";
-        m_type2 << "High Performance" << "Balanced" << "Power Saver";
+    if (m_coolingMethodSupported) {
+        m_type1 << i18n("Maximum Performance") << i18n("Battery Optimized");
+        m_type2 << i18n("High Performance") << i18n("Balanced") << i18n("Power Saver");
         if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED) {
             cooling_method_battery_combobox->addItems(m_type1);
             cooling_method_plugged_combobox->addItems(m_type1);
