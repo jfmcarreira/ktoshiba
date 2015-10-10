@@ -36,7 +36,7 @@ KToshibaKeyHandler::KToshibaKeyHandler(QObject *parent)
       m_notifier(NULL),
       m_socket(0)
 {
-    m_namePhys << TOSHNAME << TOSHPHYS;
+    m_namePhys << TOSHNAME << TOSHPHYS << TOSWMINAME << TOSWMIPHYS;
 }
 
 KToshibaKeyHandler::~KToshibaKeyHandler()

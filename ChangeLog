@@ -1,3 +1,15 @@
+2015-10-09 Azael Avalos <coproscefalo@gmail.com>
+	* Added tooltips and whatsthis to Boot Settings buttons and device selection box
+	* Spanish translation updated
+	* Added support for WMI event laptops, 'tho support will come out in linux 4.4
+
+2015-10-07 Azael Avalos <coproscefalo@gmail.com>
+	* Forgot to uncomment and update save and defaults functions in systemsettings.cpp
+	* Fixed sleeputils.ui whatsthis and tooltip
+	* Fixed Power Save always disabled and made the Cooling Methods translatable
+	* Removed comments from some UI files
+	* Updated PO files and Spanish translation
+
 2015-10-06 Azael Avalos <coproscefalo@gmail.com>
 	* Polished KCM UIs, they now expand properly
 	* Refactored KCM code a bit due to changes in UI files

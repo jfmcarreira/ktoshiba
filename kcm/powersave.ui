@@ -18,7 +18,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string comment="Manage the laptop fan Cooling Method">Cooling Method</string>
+      <string>Cooling Method</string>
      </property>
      <property name="flat">
       <bool>true</bool>

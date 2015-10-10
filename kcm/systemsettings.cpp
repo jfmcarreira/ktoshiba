@@ -369,8 +369,7 @@ void KToshibaSystemSettings::save()
                              "/net/sourceforge/KToshiba",
                              "net.sourceforge.KToshiba",
                              QDBusConnection::sessionBus(), this);
-        //bool tmp2 = m_hdd.hdd_protect_checkbox->checkState() == Qt::Checked ? true : false;
-        bool tmp2 = true;
+        bool tmp2 = m_hdd.groupBox->isChecked();
         if (m_monitorHDD != tmp2) {
             hddGroup.writeEntry("MonitorHDD", tmp2);
             hddGroup.config()->sync();
@@ -404,8 +403,7 @@ void KToshibaSystemSettings::save()
             m_hw->setUSBSleepFunctionsBatLvl(tmp);
             m_batlevel = tmp;
         }
-        //tmp = m_sleep.battery_level_checkbox->checkState() == Qt::Checked ? 1 : 0;
-        tmp = 1;
+        tmp = m_sleep.batteryGroupBox->isChecked();
         if (m_batenabled != tmp) {
             m_hw->setUSBSleepFunctionsBatLvl(tmp);
             m_batenabled = tmp;
@@ -430,10 +428,10 @@ void KToshibaSystemSettings::save()
         tmp = m_kbd.kbd_backlight_combobox->currentIndex();
         int mode;
         if (m_index != tmp) {
-            if (m_type == 1 && tmp == 0) {        // FN-Z
-                mode = 1;
-            } else if (m_type == 1 && tmp == 1) { // AUTO
-                mode = 2;
+            // 1st gen. backlit keyboards
+            if (m_type == 1) {
+                mode = (tmp == 0) ? 1 : 2;
+            // 2nd gen. backlit keyboards
             } else if (m_type == 2 && tmp == 0) { // TIMER
                 mode = 2;
                 m_kbd.kbd_timeout_label->setEnabled(true);
@@ -463,7 +461,7 @@ void KToshibaSystemSettings::save()
         }
     }
     // Boot Settings
-    if (m_hw->isSMMSupported && m_driverVersion.toFloat() >= 0.23)
+    if (m_boot->m_bootOrderSupported || m_boot->m_wokSupported || m_boot->m_wolSupported)
         m_boot->save();
     if (m_hw->isPanelPowerONSupported) {
         tmp = m_boot->panel_power_checkbox->checkState() == Qt::Checked ? 1 : 0;
@@ -473,7 +471,7 @@ void KToshibaSystemSettings::save()
         }
     }
     // Power Save
-    if (m_hw->isSMMSupported && m_driverVersion.toFloat() >= 0.23)
+    if (m_power->m_coolingMethodSupported)
         m_power->save();
 }
 
@@ -504,7 +502,7 @@ void KToshibaSystemSettings::defaults()
     // HDD Protection tab
     if (m_hw->isHAPSSupported) {
         if (!m_monitorHDD || !m_notifyHDD) {
-            //m_hdd.hdd_protect_checkbox->setChecked(true);
+            m_hdd.groupBox->setChecked(true);
             m_hdd.hdd_notification_checkbox->setChecked(true);
             m_hdd.protection_level->setText(m_levels.at(2));
             m_hdd.protection_level_slider->setValue(2);
@@ -515,7 +513,7 @@ void KToshibaSystemSettings::defaults()
         if (m_sleepcharge)
             m_sleep.sleep_charge_checkbox->setChecked(false);
         if (!m_batenabled || m_batlevel != 10) {
-            //m_sleep.battery_level_checkbox->setChecked(true);
+            m_sleep.batteryGroupBox->setChecked(true);
             m_sleep.battery_level->setText(QString::number(10) + "%");
             m_sleep.battery_level_slider->setValue(10);
         }
@@ -551,7 +549,7 @@ void KToshibaSystemSettings::defaults()
         }
     }
     // Power Save
-    if (m_hw->isSMMSupported && m_driverVersion.toFloat() >= 0.23)
+    if (m_power->m_coolingMethodSupported)
         m_power->defaults();
 
     emit changed(true);

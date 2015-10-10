@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-05-26 10:29-0600\n"
+"POT-Creation-Date: 2015-10-09 19:08-0600\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -18,11 +18,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: rc.cpp:1
+#, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Azael Avalos"
 
 #: rc.cpp:2
+#, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "coproscefalo@gmail.com"
@@ -30,92 +32,114 @@ msgstr "coproscefalo@gmail.com"
 #. i18n: file: src/statuswidget.ui:32
 #. i18n: ectx: property (windowTitle), widget (QWidget, StatusWidget)
 #: rc.cpp:5
+#, kde-format
 msgid "StatusWidget"
 msgstr "Widget de Estado"
 
-#: src/ktoshiba.cpp:53 src/ktoshiba.cpp:55 src/main.cpp:31
+#: src/ktoshiba.cpp:49 src/ktoshiba.cpp:51 src/main.cpp:31
+#, kde-format
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: src/ktoshiba.cpp:55 src/main.cpp:33
+#: src/ktoshiba.cpp:51 src/main.cpp:33
+#, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: src/ktoshiba.cpp:137 src/ktoshiba.cpp:138 src/ktoshiba.cpp:139
-#: src/ktoshiba.cpp:140 src/ktoshiba.cpp:141 src/ktoshiba.cpp:142
+#: src/ktoshiba.cpp:138 src/ktoshiba.cpp:139 src/ktoshiba.cpp:140
+#: src/ktoshiba.cpp:141 src/ktoshiba.cpp:142 src/ktoshiba.cpp:143
+#, kde-format
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: src/ktoshiba.cpp:154
+#: src/ktoshiba.cpp:161
+#, kde-format
 msgid "Battery Profiles"
 msgstr "Perfiles de Batería"
 
-#: src/ktoshiba.cpp:157
+#: src/ktoshiba.cpp:164
+#, kde-format
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: src/ktoshiba.cpp:164
+#: src/ktoshiba.cpp:171
+#, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/ktoshiba.cpp:169
+#: src/ktoshiba.cpp:176
+#, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/ktoshiba.cpp:174 src/fnactions.cpp:161
+#: src/ktoshiba.cpp:181 src/fnactions.cpp:168
+#, kde-format
 msgid "Presentation"
 msgstr "Presentación"
 
-#: src/ktoshiba.cpp:179
+#: src/ktoshiba.cpp:186
+#, kde-format
 msgid "ECO"
 msgstr "ECO"
 
-#: src/ktoshiba.cpp:194
+#: src/ktoshiba.cpp:201
+#, kde-format
 msgid "Configure"
 msgstr "Configurar"
 
-#: src/ktoshiba.cpp:212
+#: src/ktoshiba.cpp:219
+#, kde-format
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: src/ktoshiba.cpp:213
+#: src/ktoshiba.cpp:220
+#, kde-format
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: src/fnactions.cpp:224
+#: src/fnactions.cpp:232
+#, kde-format
 msgid "OFF"
 msgstr "APAGADO"
 
-#: src/fnactions.cpp:228
+#: src/fnactions.cpp:236
+#, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"
 
 #: src/main.cpp:36
+#, kde-format
 msgid "Copyright (C) 2004-2015 Azael Avalos"
 msgstr "Derechos de autor (C) 2004-2015, Azael Avalos"
 
 #: src/main.cpp:40
+#, kde-format
 msgid "Azael Avalos"
 msgstr "Azael Avalos"
 
 #: src/main.cpp:41
+#, kde-format
 msgid "Original Author"
 msgstr "Autor original"
 
 #: src/main.cpp:43
+#, kde-format
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
 #: src/main.cpp:44
+#, kde-format
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"
 
 #: src/main.cpp:47
+#, kde-format
 msgid "Mauricio Duque"
 msgstr "Mauricio Duque"
 
 #: src/main.cpp:48
+#, kde-format
 msgid "Green world icon"
 msgstr "Icono del mundo verde"

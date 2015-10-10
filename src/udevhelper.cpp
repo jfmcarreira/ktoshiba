@@ -84,6 +84,11 @@ QString UDevHelper::findDevice(QStringList namePhys)
             qDebug() << "Found device:" << nodepath << endl
                      << "  Name:" << name << endl
                      << "  Phys:" << phys << endl;
+        } else if (name == namePhys.at(2) && phys == namePhys.at(3)) {
+            node = nodepath;
+            qDebug() << "Found device:" << nodepath << endl
+                     << "  Name:" << name << endl
+                     << "  Phys:" << phys << endl;
         }
 
         udev_device_unref(dev);
