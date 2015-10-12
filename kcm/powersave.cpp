@@ -60,6 +60,7 @@ bool PowerSave::isCoolingMethodSupported()
 void PowerSave::load()
 {
     qDebug() << "powersave load";
+
     // Boot Order
     if (m_coolingMethodSupported) {
         m_type1 << i18n("Maximum Performance") << i18n("Battery Optimized");
@@ -90,6 +91,8 @@ void PowerSave::load()
 
 void PowerSave::save()
 {
+    qDebug() << "powersave save";
+
     if (m_coolingMethodSupported) {
         KConfigGroup powersave(m_config, "PowerSave");
         QDBusInterface iface("net.sourceforge.KToshiba",
@@ -127,9 +130,14 @@ void PowerSave::save()
 
 void PowerSave::defaults()
 {
+    qDebug() << "powersave defaults";
+
     if (m_coolingMethodSupported) {
-        groupBox->setChecked(true);
-        cooling_method_battery_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
-        cooling_method_plugged_combobox->setCurrentIndex(KToshibaHardware::BATTERY_OPTIMIZED);
+        if (!m_manageCoolingMethod)
+            groupBox->setChecked(true);
+        if (m_coolingMethodBattery != KToshibaHardware::MAXIMUM_PERFORMANCE)
+            cooling_method_battery_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
+        if (m_coolingMethodPlugged != KToshibaHardware::BATTERY_OPTIMIZED)
+            cooling_method_plugged_combobox->setCurrentIndex(KToshibaHardware::BATTERY_OPTIMIZED);
     }
 }

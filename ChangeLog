@@ -1,3 +1,10 @@
+2015-10-11 Azael Avalos <coproscefalo@gmail.com>
+	* More KCM UI polishing, we got rid of a few unneeded labels
+	* Updated KCM Spanish translation
+	* Fixed potential bugs in touchpad, usb rapid charge, usb 3 and
+	  sleep and music code in KCM load
+	* Refactored code in KToshibaSystemSettings class
+
 2015-10-09 Azael Avalos <coproscefalo@gmail.com>
 	* Added tooltips and whatsthis to Boot Settings buttons and device selection box
 	* Spanish translation updated

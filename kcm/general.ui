@@ -14,101 +14,44 @@
   <property name="windowTitle">
    <string>General Settings</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="flat">
-      <bool>true</bool>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="touchpad_checkbox">
+     <property name="toolTip">
+      <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
      </property>
-     <property name="checkable">
-      <bool>false</bool>
+     <property name="whatsThis">
+      <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
      </property>
-     <property name="checked">
-      <bool>false</bool>
+     <property name="text">
+      <string>Disable the pointing device</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="touchpad_label">
-        <property name="text">
-         <string>Pointing device:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <spacer name="touchpad_spacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="2" alignment="Qt::AlignRight">
-       <widget class="QCheckBox" name="touchpad_checkbox">
-        <property name="toolTip">
-         <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="rapid_charge_label">
-        <property name="text">
-         <string>USB Rapid Charge:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <spacer name="rapid_charge_spacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="2" alignment="Qt::AlignRight">
-       <widget class="QCheckBox" name="rapid_charge_checkbox">
-        <property name="toolTip">
-         <string>Toggles the USB rapid charge feature.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Toggles the USB rapid charge feature.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="usb_three_label">
-        <property name="text">
-         <string>USB 3:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <spacer name="usb_three_spacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="2" column="2" alignment="Qt::AlignRight">
-       <widget class="QCheckBox" name="usb_three_checkbox">
-        <property name="toolTip">
-         <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="rapid_charge_checkbox">
+     <property name="toolTip">
+      <string>Toggles the USB rapid charge feature.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Toggles the USB rapid charge feature.</string>
+     </property>
+     <property name="text">
+      <string>USB Rapid Charge</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="usb_three_checkbox">
+     <property name="toolTip">
+      <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
+     </property>
+     <property name="text">
+      <string>USB 3</string>
+     </property>
     </widget>
    </item>
   </layout>
