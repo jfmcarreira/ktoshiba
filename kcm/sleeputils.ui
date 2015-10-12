@@ -14,109 +14,54 @@
   <property name="windowTitle">
    <string>Sleep Utilities</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="flat">
-      <bool>true</bool>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="sleep_charge_checkbox">
+     <property name="toolTip">
+      <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
      </property>
-     <property name="checkable">
-      <bool>false</bool>
+     <property name="whatsThis">
+      <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
      </property>
-     <property name="checked">
-      <bool>false</bool>
+     <property name="text">
+      <string>USB Sleep and Charge</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="sleep_charge_label">
-        <property name="text">
-         <string>USB Sleep and Charge:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <spacer name="sleep_charge_spacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="2" alignment="Qt::AlignRight">
-       <widget class="QCheckBox" name="sleep_charge_checkbox">
-        <property name="toolTip">
-         <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="sleep_music_label">
-        <property name="text">
-         <string>Sleep and Music:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <spacer name="sleep_music_spacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="2" alignment="Qt::AlignRight">
-       <widget class="QCheckBox" name="sleep_music_checkbox">
-        <property name="toolTip">
-         <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QGroupBox" name="batteryGroupBox">
-     <property name="title">
-      <string>Sleep Utilities under battery</string>
+   <item row="1" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="sleep_music_checkbox">
+     <property name="toolTip">
+      <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
      </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="whatsThis">
+      <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
+     <property name="text">
+      <string>Sleep and Music</string>
      </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBox">
      <property name="toolTip">
       <string>Allows the sleep functions to operate when the computer is under battery power.</string>
      </property>
      <property name="whatsThis">
       <string>Allows the sleep functions to operate when the computer is under battery power.</string>
      </property>
-     <layout class="QGridLayout" name="batteryGridLayout">
+     <property name="title">
+      <string>Sleep Utilities under battery</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="battery_level_label">
         <property name="text">
@@ -158,7 +103,7 @@
          <number>1</number>
         </property>
         <property name="sliderPosition">
-         <number>20</number>
+         <number>0</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

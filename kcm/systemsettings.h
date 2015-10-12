@@ -91,23 +91,24 @@ private:
     QString m_driverVersion;
 
     int m_touchpad;
+    int m_rapidcharge;
     int m_usbthree;
-    int m_panelpower;
 
-    QStringList m_levels;
     bool m_monitorHDD;
     bool m_notifyHDD;
+    QStringList m_levels;
     int m_level;
 
+    quint32 sleep_charge;
     int m_sleepcharge;
     int m_defaultsc;
     int m_sleepmusic;
     QStringList m_sleeponbat;
     int m_batenabled;
     int m_batlevel;
-    int m_rapidcharge;
 
     int m_functions;
+    QString m_functionsToolTip;
     int m_type;
     QStringList m_type1;
     QStringList m_type2;

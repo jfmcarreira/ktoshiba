@@ -37,6 +37,7 @@ public:
     void defaults();
 
     bool m_bootOrderSupported;
+    bool m_panelPowerOnSupported;
     bool m_wokSupported;
     bool m_wolSupported;
 
@@ -49,6 +50,7 @@ private Q_SLOTS:
 
 private:
     bool isBootOrderSupported();
+    bool isPanelPowerOnSupported();
     bool isWOKSupported();
     bool isWOLSupported();
 
@@ -58,6 +60,8 @@ private:
     int m_order;
     int m_maxdev;
     int m_default;
+
+    int m_panelpower;
 
     int m_wok;
     int m_defaultWOK;

@@ -45,7 +45,11 @@ BootSettings::BootSettings(QWidget *parent)
     deviceList->setAlternatingRowColors(false);
     deviceList->setRootIsDecorated(false);
 
+    connect(deferButton, SIGNAL(clicked()), this, SLOT(deferClicked()));
+    connect(preferButton, SIGNAL(clicked()), this, SLOT(preferClicked()));
+
     m_bootOrderSupported = isBootOrderSupported();
+    m_panelPowerOnSupported = isPanelPowerOnSupported();
     m_wokSupported = isWOKSupported();
     m_wolSupported = isWOLSupported();
 }
@@ -63,6 +67,18 @@ bool BootSettings::isBootOrderSupported()
         return false;
 
     m_model->setSupportedDevices(m_maxdev);
+
+    return true;
+}
+
+bool BootSettings::isPanelPowerOnSupported()
+{
+    quint32 result = m_sys->hw()->getPanelPowerON();
+
+    if (result != 0 && result != 1)
+        return false;
+
+    m_panelpower = result;
 
     return true;
 }
@@ -101,34 +117,34 @@ void BootSettings::preferClicked()
 
 void BootSettings::load()
 {
-    qDebug() << "bootorder load";
-    // Boot Order
-    if (m_bootOrderSupported) {
-        m_model->setDeviceData(m_order);
+    qDebug() << "bootsettings load";
 
-        connect(deferButton, SIGNAL(clicked()), this, SLOT(deferClicked()));
-        connect(preferButton, SIGNAL(clicked()), this, SLOT(preferClicked()));
-    } else {
-        bootorderGroupBox->setEnabled(false);
-    }
+    // Boot Order
+    if (m_bootOrderSupported)
+        m_model->setDeviceData(m_order);
+    else
+        groupBox->setEnabled(false);
+    // Panel Power ON
+    if (m_panelPowerOnSupported)
+        panel_power_checkbox->setChecked(m_panelpower ? true : false);
+    else
+        panel_power_checkbox->setEnabled(false);
     // Wake on Keyboard
-    if (m_wokSupported) {
+    if (m_wokSupported)
         wol_checkbox->setChecked(m_wok ? true : false);
-    } else {
-        wok_label->setEnabled(false);
+    else
         wok_checkbox->setEnabled(false);
-    }
     // Wake on LAN
-    if (m_wolSupported) {
+    if (m_wolSupported)
         wol_checkbox->setChecked(m_wol == 0x0801 ? true : false);
-    } else {
-        wol_label->setEnabled(false);
+    else
         wol_checkbox->setEnabled(false);
-    }
 }
 
 void BootSettings::save()
 {
+    qDebug() << "bootsettings save";
+
     int tmp;
 
     // Boot Order
@@ -137,6 +153,14 @@ void BootSettings::save()
         if (m_order != tmp) {
             m_sys->hw()->setBootOrder(tmp);
             m_order = tmp;
+        }
+    }
+    // Panel Power ON
+    if (m_panelPowerOnSupported) {
+        tmp = panel_power_checkbox->checkState() == Qt::Checked ? 1 : 0;
+        if (m_panelpower != tmp) {
+            m_sys->hw()->setPanelPowerON(tmp);
+            m_panelpower = tmp;
         }
     }
     // Wake on Keyboard
@@ -159,13 +183,18 @@ void BootSettings::save()
 
 void BootSettings::defaults()
 {
+    qDebug() << "bootsettings defaults";
+
     // Boot Order
-    if (m_bootOrderSupported)
+    if (m_bootOrderSupported && m_order != m_default)
         m_model->setDeviceData(m_default);
+    // Panel Power ON
+    if (m_panelPowerOnSupported && m_panelpower)
+        panel_power_checkbox->setChecked(false);
     // Wake on Keyboard
-    if (m_wokSupported)
+    if (m_wokSupported && m_wok)
         wok_checkbox->setChecked(false);
     // Wake on LAN
-    if (m_wolSupported)
+    if (m_wolSupported && m_wol)
         wol_checkbox->setChecked(false);
 }
