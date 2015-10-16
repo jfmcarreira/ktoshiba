@@ -100,10 +100,9 @@ void KToshibaKeyHandler::readData(int socket)
         return;
     }
 
-    qDebug() << "Received data from socket:" << socket;
-
     if (event.type == EV_KEY) {
-        qDebug() << "Key" << hex << event.code << (event.value != 0 ? "pressed" : "released");
+        qDebug() << "Received data from socket:" << socket << endl
+                 << "Key" << hex << event.code << (event.value != 0 ? "pressed" : "released");
 
         // Act only if we get a key press
         if (event.value == 1)

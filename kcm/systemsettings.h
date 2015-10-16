@@ -23,15 +23,15 @@
 #include <KSharedConfig>
 
 #include "ui_sysinfo.h"
-#include "ui_general.h"
-#include "ui_hddprotect.h"
-#include "ui_sleeputils.h"
-#include "ui_keyboard.h"
 
 class QTabWidget;
 
 class KMessageWidget;
 
+class GeneralSettings;
+class HDDProtection;
+class SleepUtilities;
+class KeyboardSettings;
 class BootSettings;
 class PowerSave;
 class KToshibaHardware;
@@ -75,10 +75,10 @@ private:
     KSharedConfigPtr m_config;
 
     Ui::SysInfo m_sysinfo;
-    Ui::General m_general;
-    Ui::HDDProtect m_hdd;
-    Ui::SleepUtils m_sleep;
-    Ui::Keyboard m_kbd;
+    GeneralSettings *m_general;
+    HDDProtection *m_hdd;
+    SleepUtilities *m_sleep;
+    KeyboardSettings *m_kbd;
     BootSettings *m_boot;
     PowerSave *m_power;
 
@@ -89,33 +89,6 @@ private:
     QString m_biosManufacturer;
     QString m_ecVersion;
     QString m_driverVersion;
-
-    int m_touchpad;
-    int m_rapidcharge;
-    int m_usbthree;
-
-    bool m_monitorHDD;
-    bool m_notifyHDD;
-    QStringList m_levels;
-    int m_level;
-
-    quint32 sleep_charge;
-    int m_sleepcharge;
-    int m_defaultsc;
-    int m_sleepmusic;
-    QStringList m_sleeponbat;
-    int m_batenabled;
-    int m_batlevel;
-
-    int m_functions;
-    QString m_functionsToolTip;
-    int m_type;
-    QStringList m_type1;
-    QStringList m_type2;
-    QString m_tooltip;
-    int m_mode;
-    int m_index;
-    int m_time;
 };
 
 #endif // KTOSHIBASYSTEMSETTINGS_H

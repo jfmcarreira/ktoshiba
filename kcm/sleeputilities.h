@@ -16,42 +16,40 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef POWERSAVE_H
-#define POWERSAVE_H
+#ifndef SLEEPUTILITIES_H
+#define SLEEPUTILITIES_H
 
-#include <KSharedConfig>
-
-#include "ui_powersave.h"
+#include "ui_sleeputils.h"
 
 class KToshibaSystemSettings;
 
-class PowerSave : public QWidget, public Ui::PowerSave
+class SleepUtilities : public QWidget, public Ui::SleepUtils
 {
     Q_OBJECT
 
 public:
-    explicit PowerSave(QWidget *parent = 0);
+    explicit SleepUtilities(QWidget *parent = 0);
 
     void load();
     void save();
     void defaults();
 
-    bool m_coolingMethodSupported;
-
 private:
-    bool isCoolingMethodSupported();
+    bool isSleepChargeSupported();
+    bool isSleepMusicSupported();
 
     KToshibaSystemSettings *m_sys;
-    KSharedConfigPtr m_config;
 
-    QStringList m_type1;
-    QStringList m_type2;
-    int m_coolingMethod;
-    int m_maxCoolingMethod;
-    int m_defaultCoolingMethod;
-    bool m_manageCoolingMethod;
-    int m_coolingMethodBattery;
-    int m_coolingMethodPlugged;
+    bool m_sleepChargeSupported;
+    int m_sleepcharge;
+    int m_defaultsc;
+    int m_sleepmusic;
+    QStringList m_sleeponbat;
+    int m_batenabled;
+    int m_batlevel;
+
+    bool m_sleepMusicSupported;
+
 };
 
-#endif // POWERSAVE_H
+#endif // SLEEPUTILITIES_H

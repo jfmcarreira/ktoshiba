@@ -29,8 +29,12 @@
 #include <KConfigGroup>
 #include <KMessageWidget>
 
-#include "powersave.h"
+#include "generalsettings.h"
+#include "hddprotection.h"
+#include "sleeputilities.h"
+#include "keyboardsettings.h"
 #include "bootsettings.h"
+#include "powersave.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"
 #include "src/version.h"
@@ -90,7 +94,6 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
 
 KToshibaSystemSettings::~KToshibaSystemSettings()
 {
-    delete m_power; m_power = NULL;
     delete m_boot; m_boot = NULL;
     delete m_message; m_message = NULL;
     delete m_tabWidget; m_tabWidget = NULL;
@@ -103,25 +106,21 @@ void KToshibaSystemSettings::addTabs()
     sysinfo_widget->setContentsMargins(20, 20, 20, 20);
     m_tabWidget->addTab(sysinfo_widget, i18n("System Information"));
 
-    QWidget *gen_widget = new QWidget(this);
-    m_general.setupUi(gen_widget);
-    gen_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(gen_widget, i18n("General Settings"));
+    m_general = new GeneralSettings(this);
+    m_general->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(m_general, i18n("General Settings"));
 
-    QWidget *hdd_widget = new QWidget(this);
-    m_hdd.setupUi(hdd_widget);
-    hdd_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(hdd_widget, i18n("HDD Protection"));
+    m_hdd = new HDDProtection(this);
+    m_hdd->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(m_hdd, i18n("HDD Protection"));
 
-    QWidget *sleep_widget = new QWidget(this);
-    m_sleep.setupUi(sleep_widget);
-    sleep_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(sleep_widget, i18n("Sleep Utilities"));
+    m_sleep = new SleepUtilities(this);
+    m_sleep->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(m_sleep, i18n("Sleep Utilities"));
 
-    QWidget *kbd_widget = new QWidget(this);
-    m_kbd.setupUi(kbd_widget);
-    kbd_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(kbd_widget, i18n("Keyboard Settings"));
+    m_kbd = new KeyboardSettings(this);
+    m_kbd->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(m_kbd, i18n("Keyboard Settings"));
 
     m_boot = new BootSettings(this);
     m_boot->setContentsMargins(20, 20, 20, 20);
@@ -136,8 +135,6 @@ void KToshibaSystemSettings::load()
 {
     if (!m_hwAttached)
         return;
-
-    qDebug() << "load called";
 
     /*
      * System Information tab
@@ -169,166 +166,51 @@ void KToshibaSystemSettings::load()
     /*
      * General tab
      */
-    m_touchpad = m_hw->getTouchPad();
-    if (m_touchpad == 0 || m_touchpad == 1) {
-        m_general.touchpad_checkbox->setChecked(m_touchpad ? true : false);
+    m_general->load();
 
-        connect(m_general.touchpad_checkbox, SIGNAL(stateChanged(int)),
-                this, SLOT(configChanged()));
-        connect(m_hw, SIGNAL(touchpadToggled(int)), this, SLOT(updateTouchPad(int)));
-    } else {
-        m_general.touchpad_checkbox->setEnabled(false);
-        m_touchpad = 0;
-    }
-    m_rapidcharge = m_hw->getUSBRapidCharge();
-    if (m_rapidcharge == 0 || m_rapidcharge == 1) {
-        m_general.rapid_charge_checkbox->setChecked(m_rapidcharge ? true : false);
-
-        connect(m_general.rapid_charge_checkbox, SIGNAL(stateChanged(int)),
-                this, SLOT(configChangedReboot()));
-    } else {
-        m_general.rapid_charge_checkbox->setEnabled(false);
-	m_rapidcharge = 0;
-    }
-    m_usbthree = m_hw->getUSBThree();
-    if (m_usbthree == 0 || m_usbthree == 1) {
-        m_general.usb_three_checkbox->setChecked(m_usbthree ? true : false);
-
-        connect(m_general.usb_three_checkbox, SIGNAL(stateChanged(int)),
-                this, SLOT(configChangedReboot()));
-    } else {
-        m_general.usb_three_checkbox->setEnabled(false);
-	m_usbthree = 0;
-    }
+    connect(m_general->touchpad_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChanged()));
+    connect(m_hw, SIGNAL(touchpadToggled(int)), this, SLOT(updateTouchPad(int)));
+    connect(m_general->rapid_charge_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChangedReboot()));
+    connect(m_general->usb_three_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChangedReboot()));
     /*
      * HDD Protection tab
      */
-    if ((m_level = m_hw->getProtectionLevel()) != KToshibaHardware::FAILURE) {
-        m_levels << i18n("Off") << i18n("Low") << i18n("Medium") << i18n("High");
-        KConfigGroup hdd(m_config, "HDDProtection");
-        m_monitorHDD = hdd.readEntry("MonitorHDD", true);
-        m_hdd.groupBox->setChecked(m_monitorHDD);
-        m_notifyHDD = hdd.readEntry("NotifyHDDMovement", true);
-        m_hdd.hdd_notification_checkbox->setChecked(m_notifyHDD);
-        m_hdd.protection_level->setText(m_levels.at(m_level));
-        m_hdd.protection_level_slider->setValue(m_level);
+    m_hdd->load();
 
-        connect(m_hdd.groupBox, SIGNAL(toggled(bool)),
-                this, SLOT(configChanged()));
-        connect(m_hdd.hdd_notification_checkbox, SIGNAL(stateChanged(int)),
-                this, SLOT(configChanged()));
-        connect(m_hdd.protection_level_slider, SIGNAL(valueChanged(int)),
-                this, SLOT(protectionLevelChanged(int)));
-    } else {
-        m_hdd.groupBox->setEnabled(false);
-    }
+    connect(m_hdd->groupBox, SIGNAL(toggled(bool)),
+            this, SLOT(configChanged()));
+    connect(m_hdd->hdd_notification_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChanged()));
+    connect(m_hdd->protection_level_slider, SIGNAL(valueChanged(int)),
+            this, SLOT(protectionLevelChanged(int)));
     /*
      * Sleep Utilities tab
      */
-    quint32 sleep_charge = m_hw->getUSBSleepCharge(&m_sleepcharge, &m_defaultsc);
-    if (sleep_charge == KToshibaHardware::SUCCESS || sleep_charge == KToshibaHardware::SUCCESS2) {
-        m_sleep.sleep_charge_checkbox->setChecked(m_sleepcharge ? true : false);
-        quint32 sleep_on_bat = m_hw->getUSBSleepFunctionsBatLvl(&m_batenabled, &m_batlevel);
-        if (sleep_on_bat == KToshibaHardware::SUCCESS
-            || sleep_on_bat == KToshibaHardware::SUCCESS2) {
-            m_sleep.groupBox->setChecked(m_batenabled ? true : false);
-            m_sleep.battery_level->setText(QString::number(m_batlevel) + "%");
-            m_sleep.battery_level_slider->setValue(m_batlevel);
-        } else {
-            m_sleep.groupBox->setEnabled(false);
-        }
+    m_sleep->load();
 
-        connect(m_sleep.sleep_charge_checkbox, SIGNAL(stateChanged(int)),
-                this, SLOT(configChanged()));
-        connect(m_sleep.groupBox, SIGNAL(toggled(bool)),
-                this, SLOT(configChanged()));
-        connect(m_sleep.battery_level_slider, SIGNAL(valueChanged(int)),
-                this, SLOT(batteryLevelChanged(int)));
-    } else {
-        m_sleep.groupBox->setEnabled(false);
-        m_sleep.sleep_charge_checkbox->setEnabled(false);
-        m_sleepcharge = 0;
-        m_batenabled = 0;
-        m_batlevel = 0;
-    }
-    m_sleepmusic = m_hw->getUSBSleepMusic();
-    if (m_sleepmusic == 0 || m_sleepmusic == 1) {
-        m_sleep.sleep_music_checkbox->setChecked(m_sleepmusic ? true : false);
-
-        connect(m_sleep.sleep_music_checkbox, SIGNAL(stateChanged(int)),
-                this, SLOT(configChanged()));
-    } else {
-        m_sleep.sleep_music_checkbox->setEnabled(false);
-        m_sleepmusic = 0;
-    }
+    connect(m_sleep->sleep_charge_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChanged()));
+    connect(m_sleep->groupBox, SIGNAL(toggled(bool)),
+            this, SLOT(configChanged()));
+    connect(m_sleep->battery_level_slider, SIGNAL(valueChanged(int)),
+            this, SLOT(batteryLevelChanged(int)));
+    connect(m_sleep->sleep_music_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChanged()));
     /*
      * Keyboard Settings tab
      */
-    m_functions = m_hw->getKBDFunctions();
-    if (m_functions == 0 || m_functions == 1) {
-        m_kbd.kbd_functions_combobox->setCurrentIndex(m_functions);
-        m_functionsToolTip = i18n("Select how the keyboard Function keys operate.<br/>"
-                                  "Normal: The F{1-12} keys are as usual and the hotkeys are accessed via FN-F{1-12}.<br/>"
-                                  "Function: The F{1-12} keys trigger the hotkey and the F{1-12} keys are accessed via FN-F{1-12}.");
-        m_kbd.kbd_functions_combobox->setToolTip(m_functionsToolTip);
-        m_kbd.kbd_functions_combobox->setWhatsThis(m_functionsToolTip);
+    m_kbd->load();
 
-        connect(m_kbd.kbd_functions_combobox, SIGNAL(currentIndexChanged(int)),
+    connect(m_kbd->kbd_timeout_slider, SIGNAL(valueChanged(int)),
+            this, SLOT(kbdTimeoutChanged(int)));
+    connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(kbdBacklightChanged(int)));
+    if (m_kbd->m_type == 1)
+        connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(configChangedReboot()));
-    } else {
-        m_kbd.function_keys_label->setEnabled(false);
-        m_kbd.kbd_functions_combobox->setEnabled(false);
-        m_functions = 0;
-    }
-    quint32 kbd_backlight = m_hw->getKBDBacklight(&m_mode, &m_time, &m_type);
-    if (kbd_backlight == KToshibaHardware::SUCCESS || kbd_backlight == KToshibaHardware::SUCCESS2) {
-        m_type1 << "FN-Z" << "AUTO";
-        m_type2 << i18n("TIMER") << i18n("ON") << i18n("OFF");
-        m_index = 0;
-        if (m_type == 1) {
-            m_kbd.kbd_backlight_combobox->addItems(m_type1);
-            m_index = m_mode == 1 ? 0 : 1;
-            m_tooltip = i18n("Select the keyboard backlight operation mode.<br/>"
-                             "FN-Z: User toggles the keyboard backlight.<br/>"
-                             "AUTO: Keyboard backlight turns on/off automatically.");
-        } else if (m_type == 2) {
-            m_kbd.kbd_backlight_combobox->addItems(m_type2);
-            if (m_mode == 2)
-                m_index = 0;
-            else if (m_mode == 8)
-                m_index = 1;
-            else if (m_mode == 16)
-                m_index = 2;
-            m_tooltip = i18n("Select the keyboard backlight operation mode.<br/>"
-                             "TIMER: Keyboard backlight turns on/off automatically.<br/>"
-                             "ON: Keyboard backlight is turned on.<br/>"
-                             "OFF: Keyboard backlight is turned off.");
-        }
-        m_kbd.kbd_backlight_combobox->setCurrentIndex(m_index);
-        m_kbd.kbd_backlight_combobox->setToolTip(m_tooltip);
-        m_kbd.kbd_backlight_combobox->setWhatsThis(m_tooltip);
-
-        if (m_mode == 2) {
-            m_kbd.kbd_timeout->setText(QString::number(m_time) + i18n(" sec"));
-            m_kbd.kbd_timeout_slider->setValue(m_time);
-        } else {
-            m_kbd.kbd_timeout_label->setEnabled(false);
-            m_kbd.kbd_timeout_slider->setEnabled(false);
-        }
-
-        connect(m_kbd.kbd_timeout_slider, SIGNAL(valueChanged(int)),
-                this, SLOT(kbdTimeoutChanged(int)));
-        connect(m_kbd.kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
-                this, SLOT(kbdBacklightChanged(int)));
-        if (m_type == 1)
-            connect(m_kbd.kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
-                    this, SLOT(configChangedReboot()));
-    } else {
-        m_kbd.groupBox->setEnabled(false);
-        m_mode = 0;
-        m_time = 0;
-        m_type = 0;
-    }
     /*
      * Boot Settings tab
      */
@@ -356,129 +238,29 @@ void KToshibaSystemSettings::load()
 
 void KToshibaSystemSettings::save()
 {
-    qDebug() << "save called";
-
-    int tmp;
-
     /*
      * General tab
      */
-    tmp = m_general.touchpad_checkbox->checkState() == Qt::Checked ? 1 : 0;
-    if (m_touchpad != tmp) {
-        m_hw->setTouchPad(tmp);
-        m_touchpad = tmp;
-    }
-    tmp = m_general.rapid_charge_checkbox->checkState() == Qt::Checked ? 1 : 0;
-    if (m_rapidcharge != tmp) {
-        m_hw->setUSBRapidCharge(tmp);
-        m_rapidcharge = tmp;
-    }
-    tmp = m_general.usb_three_checkbox->checkState() == Qt::Checked ? 1 : 0;
-    if (m_usbthree != tmp) {
-        m_hw->setUSBThree(tmp);
-        m_usbthree = tmp;
-    }
+    m_general->save();
     /*
      * HDD Protection tab
      */
-    if (m_level != KToshibaHardware::FAILURE) {
-        KConfigGroup hddGroup(m_config, "HDDProtection");
-        QDBusInterface iface("net.sourceforge.KToshiba",
-                             "/net/sourceforge/KToshiba",
-                             "net.sourceforge.KToshiba",
-                             QDBusConnection::sessionBus(), this);
-        bool tmp2 = m_hdd.groupBox->isChecked();
-        if (m_monitorHDD != tmp2) {
-            hddGroup.writeEntry("MonitorHDD", tmp2);
-            hddGroup.config()->sync();
-            m_monitorHDD = tmp2;
-            if (iface.isValid())
-                iface.call("configFileChanged");
-        }
-        tmp2 = m_hdd.hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
-        if (m_notifyHDD != tmp2) {
-            hddGroup.writeEntry("NotifyHDDMovement", tmp2);
-            hddGroup.config()->sync();
-            m_notifyHDD = tmp2;
-            if (iface.isValid())
-                iface.call("configFileChanged");
-        }
-        tmp = m_hdd.protection_level_slider->value();
-        if (m_level != tmp) {
-            m_hw->setProtectionLevel(tmp);
-            m_level = tmp;
-        }
-    }
+    m_hdd->save();
     /*
      * Sleep Utilities tab
      */
-    tmp = m_sleep.sleep_charge_checkbox->checkState() == Qt::Checked ? 1 : 0;
-    if (m_sleepcharge != tmp) {
-        m_hw->setUSBSleepCharge(tmp, m_defaultsc);
-        m_sleepcharge = tmp;
-    }
-    tmp = m_sleep.battery_level_slider->value();
-    if (m_batlevel != tmp) {
-        m_hw->setUSBSleepFunctionsBatLvl(tmp);
-        m_batlevel = tmp;
-    }
-    tmp = m_sleep.groupBox->isChecked() ? 1 : 0;
-    if (m_batenabled != tmp) {
-        m_hw->setUSBSleepFunctionsBatLvl(tmp);
-        m_batenabled = tmp;
-    }
-    tmp = m_sleep.sleep_music_checkbox->checkState() == Qt::Checked ? 1 : 0;
-    if (m_sleepmusic != tmp) {
-        m_hw->setUSBSleepMusic(tmp);
-        m_sleepmusic = tmp;
-    }
+    m_sleep->save();
     /*
      * Keyboard Settings tab
      */
-    tmp = m_kbd.kbd_functions_combobox->currentIndex();
-    if (m_functions != tmp) {
-        m_hw->setKBDFunctions(tmp);
-        m_functions = tmp;
-    }
-    if (m_mode != 0 && m_time != 0 && m_type != 0) {
-        tmp = m_kbd.kbd_backlight_combobox->currentIndex();
-        int mode;
-        if (m_index != tmp) {
-            // 1st gen. backlit keyboards
-            if (m_type == 1) {
-                mode = (tmp == 0) ? 1 : 2;
-            // 2nd gen. backlit keyboards
-            } else if (m_type == 2 && tmp == 0) { // TIMER
-                mode = 2;
-                m_kbd.kbd_timeout_label->setEnabled(true);
-                m_kbd.kbd_timeout_slider->setEnabled(true);
-                m_kbd.kbd_timeout->setText(QString::number(m_time) + i18n(" sec"));
-                m_kbd.kbd_timeout_slider->setValue(m_time);
-            } else if (m_type == 2 && tmp == 1) { // ON
-                mode = 8;
-                m_kbd.kbd_timeout_label->setEnabled(false);
-                m_kbd.kbd_timeout_slider->setEnabled(false);
-                m_kbd.kbd_timeout->setEnabled(false);
-            } else if (m_type == 2 && tmp == 2) { // OFF
-                mode = 16;
-                m_kbd.kbd_timeout_label->setEnabled(false);
-                m_kbd.kbd_timeout_slider->setEnabled(false);
-                m_kbd.kbd_timeout->setEnabled(false);
-            }
-            m_hw->setKBDBacklight(m_type == 1 ? m_mode : mode, m_time);
-            m_index = tmp;
-        }
-        if (m_type == 2 && m_mode == 2) {
-            tmp = m_kbd.kbd_timeout_slider->value();
-            if (m_time != tmp) {
-                m_hw->setKBDBacklight(mode, tmp);
-                m_time = tmp;
-            }
-        }
-    }
-    // Boot Settings
+    m_kbd->save();
+    /*
+     * Boot Settings
+     */
     m_boot->save();
-    // Power Save
+    /*
+     * Power Save
+     */
     m_power->save();
 }
 
@@ -487,48 +269,22 @@ void KToshibaSystemSettings::defaults()
     if (!m_hwAttached)
         return;
 
-    qDebug() << "defaults called";
-
     /*
      * General tab
      */
-    if (m_touchpad == 0 || m_touchpad == 1)
-        m_general.touchpad_checkbox->setChecked(true);
-    if (m_rapidcharge == 0 || m_rapidcharge == 1)
-        m_general.rapid_charge_checkbox->setChecked(false);
-    if (m_usbthree == 0 || m_usbthree == 1)
-        m_general.usb_three_checkbox->setChecked(true);
+    m_general->defaults();
     /*
      * HDD Protection tab
      */
-    if (!m_monitorHDD || !m_notifyHDD) {
-        m_hdd.groupBox->setChecked(true);
-        m_hdd.hdd_notification_checkbox->setChecked(true);
-        m_hdd.protection_level->setText(m_levels.at(2));
-        m_hdd.protection_level_slider->setValue(2);
-    }
+    m_hdd->defaults();
     /*
      * Sleep Utilities tab
      */
-    if (m_sleepcharge == 0 || m_sleepcharge == 1)
-        m_sleep.sleep_charge_checkbox->setChecked(false);
-    if (m_batenabled == 0 || m_batenabled == 1)
-        m_sleep.groupBox->setChecked(true);
-    if (m_batlevel != 10) {
-        m_sleep.battery_level->setText(QString::number(10) + "%");
-        m_sleep.battery_level_slider->setValue(10);
-    }
-    if (m_sleepmusic == 0 || m_sleepmusic == 1)
-        m_sleep.sleep_music_checkbox->setChecked(false);
+    m_sleep->defaults();
     /*
      * Keyboard Settings tab
      */
-    if (m_functions == 0 || m_functions == 1)
-        m_kbd.kbd_functions_combobox->setCurrentIndex(1);
-    if (m_mode != 0)
-        m_kbd.kbd_backlight_combobox->setCurrentIndex(m_type == 1 ? 2 : 0);
-    if (m_time != 15)
-        m_kbd.kbd_timeout_slider->setValue(15);
+    m_kbd->defaults();
     /*
      * Boot Settings
      */
@@ -559,30 +315,30 @@ void KToshibaSystemSettings::configChangedReboot()
 
 void KToshibaSystemSettings::protectionLevelChanged(int level)
 {
-    m_hdd.protection_level->setText(m_levels.at(level));
+    m_hdd->protection_level->setText(m_hdd->m_levels.at(level));
 
     emit changed(true);
 }
 
 void KToshibaSystemSettings::batteryLevelChanged(int level)
 {
-    m_sleep.battery_level->setText(QString::number(level) + "%");
+    m_sleep->battery_level->setText(QString::number(level) + "%");
 
     emit changed(true);
 }
 
 void KToshibaSystemSettings::kbdBacklightChanged(int mode)
 {
-    if (m_type == 1) {
-        m_kbd.kbd_timeout_label->setEnabled(mode != 1 ? false : true);
-        m_kbd.kbd_timeout->setEnabled(mode != 1 ? false : true);
-        m_kbd.kbd_timeout_slider->setEnabled(mode != 1 ? false : true);
+    if (m_kbd->m_type == 1) {
+        m_kbd->kbd_timeout_label->setEnabled(mode != 1 ? false : true);
+        m_kbd->kbd_timeout->setEnabled(mode != 1 ? false : true);
+        m_kbd->kbd_timeout_slider->setEnabled(mode != 1 ? false : true);
 
         showRebootMessage();
-    } else if (m_type == 2) {
-        m_kbd.kbd_timeout_label->setEnabled(mode != 0 ? false : true);
-        m_kbd.kbd_timeout->setEnabled(mode != 0 ? false : true);
-        m_kbd.kbd_timeout_slider->setEnabled(mode != 0 ? false : true);
+    } else if (m_kbd->m_type == 2) {
+        m_kbd->kbd_timeout_label->setEnabled(mode != 0 ? false : true);
+        m_kbd->kbd_timeout->setEnabled(mode != 0 ? false : true);
+        m_kbd->kbd_timeout_slider->setEnabled(mode != 0 ? false : true);
     }
 
     emit changed(true);
@@ -590,14 +346,14 @@ void KToshibaSystemSettings::kbdBacklightChanged(int mode)
 
 void KToshibaSystemSettings::kbdTimeoutChanged(int time)
 {
-    m_kbd.kbd_timeout->setText(QString::number(time) + i18n(" sec"));
+    m_kbd->kbd_timeout->setText(QString::number(time) + i18n(" sec"));
 
     emit changed(true);
 }
 
 void KToshibaSystemSettings::updateTouchPad(int state)
 {
-    m_general.touchpad_checkbox->setChecked(state ? true : false);
+    m_general->touchpad_checkbox->setChecked(state ? true : false);
 }
 
 

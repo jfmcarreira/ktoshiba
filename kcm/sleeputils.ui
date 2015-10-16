@@ -16,19 +16,6 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0" alignment="Qt::AlignLeft">
-    <widget class="QCheckBox" name="sleep_charge_checkbox">
-     <property name="toolTip">
-      <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
-     </property>
-     <property name="whatsThis">
-      <string>Toggles the USB Sleep and Charge feature.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
-     </property>
-     <property name="text">
-      <string>USB Sleep and Charge</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" alignment="Qt::AlignLeft">
     <widget class="QCheckBox" name="sleep_music_checkbox">
      <property name="toolTip">
       <string>Toggles the Sleep and Music feature.  The laptop speakers remain powered and the line-in jack is used to connect an external device to use the laptop speakers when the computer is asleep or turned off.</string>
@@ -38,6 +25,49 @@
      </property>
      <property name="text">
       <string>Sleep and Music</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" alignment="Qt::AlignLeft">
+    <widget class="QLabel" name="sleep_charge_label">
+     <property name="text">
+      <string>USB Sleep and Charge:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="sleep_charge_combobox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>Disabled</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Alternate</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Typical</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Auto</string>
+      </property>
+     </item>
+     <property name="toolTip">
+      <string>Select the USB Sleep and Charge mode.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Select the USB Sleep and Charge mode.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
      </property>
     </widget>
    </item>

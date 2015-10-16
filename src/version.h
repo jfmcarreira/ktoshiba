@@ -19,7 +19,7 @@
 #ifndef _VERSION_H_
 #define _VERSION_H_
 
-static const char * const ktoshiba_version = "5.0";
+static const char * const ktoshiba_version = "5.1";
 
 
 #endif

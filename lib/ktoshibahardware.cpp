@@ -30,19 +30,6 @@ using namespace KAuth;
 KToshibaHardware::KToshibaHardware(QObject *parent)
     : QObject(parent)
 {
-    isTouchPadSupported = false;
-    isIlluminationSupported = false;
-    isECOSupported = false;
-    isKBDBacklightSupported = false;
-    isKBDTypeSupported = false;
-    isUSBSleepChargeSupported = false;
-    isUSBRapidChargeSupported = false;
-    isUSBSleepMusicSupported = false;
-    isKBDFunctionsSupported = false;
-    isPanelPowerONSupported = false;
-    isUSBThreeSupported = false;
-    isHAPSSupported = false;
-
     m_errors[FAILURE] = "HCI/SCI call could not be completed";
     m_errors[NOT_SUPPORTED] = "Feature is not supported";
     m_errors[INPUT_DATA_ERROR] = "Invalid parameters";
@@ -78,20 +65,6 @@ QString KToshibaHardware::findDriverPath()
     return QString();
 }
 
-bool KToshibaHardware::deviceExists(QString device)
-{
-    if (device == "illumination" || device == "eco_mode")
-        m_file.setFileName(m_ledsPath + device + "/brightness");
-    else if (device == "haps")
-        m_file.setFileName(m_hapsPath + "protection_level");
-    else if (device == "toshiba_acpi")
-        m_file.setFileName("/dev/toshiba_acpi");
-    else
-        m_file.setFileName(m_driverPath + device);
-
-    return m_file.exists();
-}
-
 void KToshibaHardware::printSMMError(QString function, quint32 error)
 {
     qCritical() << function << "failed with error code"
@@ -110,20 +83,6 @@ bool KToshibaHardware::init()
 
     m_ledsPath = "/sys/class/leds/toshiba::";
     m_hapsPath = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/";
-
-    isTouchPadSupported = deviceExists("touchpad");
-    isIlluminationSupported = deviceExists("illumination");
-    isECOSupported = deviceExists("eco_mode");
-    isKBDBacklightSupported = deviceExists("kbd_backlight_mode");
-    isKBDTypeSupported = deviceExists("kbd_type");
-    isUSBSleepChargeSupported = deviceExists("usb_sleep_charge");
-    isUSBRapidChargeSupported = deviceExists("usb_rapid_charge");
-    isUSBSleepMusicSupported = deviceExists("usb_sleep_music");
-    isKBDFunctionsSupported = deviceExists("kbd_function_keys");
-    isPanelPowerONSupported = deviceExists("panel_power_on");
-    isUSBThreeSupported = deviceExists("usb_three");
-    isHAPSSupported = deviceExists("haps");
-    isSMMSupported = deviceExists("toshiba_acpi");
 
     return true;
 }
@@ -267,6 +226,13 @@ void KToshibaHardware::unloadHeads(int timeout)
 
 int KToshibaHardware::tci_raw(const SMMRegisters *regs)
 {
+    m_file.setFileName(TOSHIBA_ACPI_DEVICE);
+    if (!m_file.exists()) {
+        qCritical() << "The toshiba_acpi device does not exist, perhaps an older driver is loaded?";
+
+        return -1;
+    }
+    
     int m_fd = ::open(TOSHIBA_ACPI_DEVICE, O_RDWR);
     if (m_fd < 0) {
         qCritical() << "Error while openning toshiba_acpi device:" << strerror(errno);
@@ -481,7 +447,7 @@ quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *defval)
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("getUSBSleepCharge", regs.eax);
     } else {
-        *val = regs.ecx;
+        *val = regs.ecx & 0xff;
         *defval = regs.esi;
     }
 
@@ -491,12 +457,6 @@ quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *defval)
 void KToshibaHardware::setUSBSleepCharge(int mode, int base)
 {
     SMMRegisters regs = { 0xf400, 0x0150, 0, 0, 0, 0 };
-
-    if (mode != 0 && mode != 1) {
-        printSMMError("setUSBSleepCharge", INPUT_DATA_ERROR);
-
-        return;
-    }
 
     regs.ecx = base | mode;
     if (tci_raw(&regs) < 0) {
@@ -738,13 +698,13 @@ void KToshibaHardware::setUSBThree(quint32 state)
     }
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("setPanelPowerON", FAILURE);
+        printSMMError("setUSBThree", FAILURE);
 
         return;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        printSMMError("setPanelPowerON", regs.eax);
+        printSMMError("setUSBThree", regs.eax);
 }
 
 quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)

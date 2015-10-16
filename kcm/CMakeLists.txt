@@ -1,5 +1,9 @@
 
 set(SystemSettings_SRCS
+    generalsettings.cpp
+    hddprotection.cpp
+    sleeputilities.cpp
+    keyboardsettings.cpp
     devicemodel.cpp
     bootsettings.cpp
     powersave.cpp

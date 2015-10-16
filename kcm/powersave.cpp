@@ -43,10 +43,6 @@ PowerSave::PowerSave(QWidget *parent)
     m_coolingMethodSupported = isCoolingMethodSupported();
 }
 
-PowerSave::~PowerSave()
-{
-}
-
 bool PowerSave::isCoolingMethodSupported()
 {
     quint32 result = m_sys->hw()->getCoolingMethod(&m_coolingMethod, &m_maxCoolingMethod);
@@ -59,8 +55,6 @@ bool PowerSave::isCoolingMethodSupported()
 
 void PowerSave::load()
 {
-    qDebug() << "powersave load";
-
     // Boot Order
     if (m_coolingMethodSupported) {
         m_type1 << i18n("Maximum Performance") << i18n("Battery Optimized");
@@ -91,8 +85,6 @@ void PowerSave::load()
 
 void PowerSave::save()
 {
-    qDebug() << "powersave save";
-
     if (m_coolingMethodSupported) {
         KConfigGroup powersave(m_config, "PowerSave");
         QDBusInterface iface("net.sourceforge.KToshiba",
@@ -130,8 +122,6 @@ void PowerSave::save()
 
 void PowerSave::defaults()
 {
-    qDebug() << "powersave defaults";
-
     if (m_coolingMethodSupported) {
         if (!m_manageCoolingMethod)
             groupBox->setChecked(true);

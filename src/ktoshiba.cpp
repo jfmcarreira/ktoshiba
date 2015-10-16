@@ -78,7 +78,8 @@ bool KToshiba::initialize()
     m_nl->setDeviceHID(m_fn->hw()->getDeviceHID());
     if (m_nl->attach()) {
         connect(m_nl, SIGNAL(tvapEvent(int)), this, SLOT(parseTVAPEvents(int)));
-        if (m_fn->hw()->isHAPSSupported && m_monitorHDD)
+        int lvl = m_fn->hw()->getProtectionLevel();
+        if (lvl != KToshibaHardware::FAILURE && m_monitorHDD)
             connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(protectHDD(int)));
     } else {
         qCritical() << "Events monitoring will not be possible";
