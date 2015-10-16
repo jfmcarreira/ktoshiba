@@ -117,8 +117,6 @@ void BootSettings::preferClicked()
 
 void BootSettings::load()
 {
-    qDebug() << "bootsettings load";
-
     // Boot Order
     if (m_bootOrderSupported)
         m_model->setDeviceData(m_order);
@@ -143,8 +141,6 @@ void BootSettings::load()
 
 void BootSettings::save()
 {
-    qDebug() << "bootsettings save";
-
     int tmp;
 
     // Boot Order
@@ -183,8 +179,6 @@ void BootSettings::save()
 
 void BootSettings::defaults()
 {
-    qDebug() << "bootsettings defaults";
-
     // Boot Order
     if (m_bootOrderSupported && m_order != m_default)
         m_model->setDeviceData(m_default);

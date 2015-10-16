@@ -1,3 +1,16 @@
+2015-10-15 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed USB Sleep and Charge, we were only trying to enable/disable it,
+	  but they support different modes
+	* Slight changes to KToshibaNetlinkEvents class
+
+2015-10-12 Azael Avalos <coproscefalo@gmail.com>
+	* Added classes to all the UI files (except sysinfo) to get a finer control over
+	  what's and what's not supported
+	* Spanish translation updated
+	* Removed deprecated code from library, code adapted
+	* Added a check for existence of /dev/toshiba_acpi device to library SMM function
+	* Bumped version number to 5.1, testing comming and the tag will follow soon
+
 2015-10-11 Azael Avalos <coproscefalo@gmail.com>
 	* More KCM UI polishing, we got rid of a few unneeded labels
 	* Updated KCM Spanish translation

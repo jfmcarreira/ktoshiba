@@ -1,6 +1,6 @@
 
 project(ktoshiba)
-set(PROJECT_VERSION "5.0")
+set(PROJECT_VERSION "5.1")
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.3.2")
@@ -50,7 +50,7 @@ configure_file(config-ktoshiba.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktoshi
 
 add_definitions(-DHAVE_CONFIG_H=1 -D_DEFAULT_SOURCE)
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0 ${LIBNL3_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
 
 add_subdirectory( lib )

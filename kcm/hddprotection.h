@@ -16,42 +16,38 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef POWERSAVE_H
-#define POWERSAVE_H
+#ifndef HDDPROTECTION_H
+#define HDDPROTECTION_H
 
 #include <KSharedConfig>
 
-#include "ui_powersave.h"
+#include "ui_hddprotect.h"
 
 class KToshibaSystemSettings;
 
-class PowerSave : public QWidget, public Ui::PowerSave
+class HDDProtection : public QWidget, public Ui::HDDProtect
 {
     Q_OBJECT
 
 public:
-    explicit PowerSave(QWidget *parent = 0);
+    explicit HDDProtection(QWidget *parent = 0);
 
     void load();
     void save();
     void defaults();
 
-    bool m_coolingMethodSupported;
+    QStringList m_levels;
 
 private:
-    bool isCoolingMethodSupported();
+    bool isHDDProtectionSupported();
 
     KToshibaSystemSettings *m_sys;
     KSharedConfigPtr m_config;
 
-    QStringList m_type1;
-    QStringList m_type2;
-    int m_coolingMethod;
-    int m_maxCoolingMethod;
-    int m_defaultCoolingMethod;
-    bool m_manageCoolingMethod;
-    int m_coolingMethodBattery;
-    int m_coolingMethodPlugged;
+    bool m_hddprotectionSupported;
+    bool m_monitorHDD;
+    bool m_notifyHDD;
+    int m_protectionLevel;
 };
 
-#endif // POWERSAVE_H
+#endif // HDDPROTECTION_H

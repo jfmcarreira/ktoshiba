@@ -66,6 +66,15 @@ private:
     void showWidget(int);
     void toggleProfiles();
     void toggleTouchPad();
+    bool isTouchPadSupported();
+    bool isIlluminationSupported();
+    bool isECOSupported();
+    bool isKBDBacklightSupported();
+
+    bool m_touchpad;
+    bool m_illumination;
+    bool m_eco;
+    bool m_kbdBacklight;
 
     KToshibaDBusInterface *m_dBus;
     KToshibaKeyHandler *m_hotkeys;

@@ -57,14 +57,24 @@ public:
         NOT_READY          = 0x8c00,
         DATA_NOT_AVAILABLE = 0x8d20,
         NOT_INITIALIZED    = 0x8d50,
-        NOT_INSTALLED      = 0x8e00
+        NOT_INSTALLED      = 0x8e00,
+    };
+
+    enum USBSleepChargeModes {
+        DISABLED  = 0x00,
+        //MODE1     = 0x,
+        //MODE2     = 0x,
+        ALTERNATE = 0x09,
+        TYPICAL   = 0x11,
+        AUTO      = 0x21,
+        //TABLET    = 0x,
     };
 
     enum KbdBacklightMode {
         FNZ   = 0x01,
         TIMER = 0x02,
         ON    = 0x08,
-        OFF   = 0x10
+        OFF   = 0x10,
     };
 
     enum CoolingMethods {
@@ -81,20 +91,6 @@ public:
     QString biosDate;
     QString biosManufacturer;
     QString ecVersion;
-
-    bool isTouchPadSupported;
-    bool isIlluminationSupported;
-    bool isECOSupported;
-    bool isKBDBacklightSupported;
-    bool isKBDTypeSupported;
-    bool isUSBSleepChargeSupported;
-    bool isUSBRapidChargeSupported;
-    bool isUSBSleepMusicSupported;
-    bool isKBDFunctionsSupported;
-    bool isPanelPowerONSupported;
-    bool isUSBThreeSupported;
-    bool isHAPSSupported;
-    bool isSMMSupported;
 
 public Q_SLOTS:
     /*
@@ -156,7 +152,6 @@ private:
     QMap<int, QString> m_errors;
 
     QString findDriverPath();
-    bool deviceExists(QString);
 
     QString m_device;
     QString m_driverPath;

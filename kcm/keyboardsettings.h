@@ -16,42 +16,43 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef POWERSAVE_H
-#define POWERSAVE_H
+#ifndef KEYBOARDSETTINGS_H
+#define KEYBOARDSETTINGS_H
 
-#include <KSharedConfig>
-
-#include "ui_powersave.h"
+#include "ui_keyboard.h"
 
 class KToshibaSystemSettings;
 
-class PowerSave : public QWidget, public Ui::PowerSave
+class KeyboardSettings : public QWidget, public Ui::Keyboard
 {
     Q_OBJECT
 
 public:
-    explicit PowerSave(QWidget *parent = 0);
+    explicit KeyboardSettings(QWidget *parent = 0);
 
     void load();
     void save();
     void defaults();
 
-    bool m_coolingMethodSupported;
+    int m_type;
 
 private:
-    bool isCoolingMethodSupported();
+    bool isKeyboardFunctionsSupported();
+    bool isKeyboardBacklightSupported();
 
     KToshibaSystemSettings *m_sys;
-    KSharedConfigPtr m_config;
 
+    bool m_kbdFunctionsSupported;
+    QString m_functionsToolTip;
+    int m_kbdfunctions;
+
+    bool m_kbdBacklightSupported;
     QStringList m_type1;
     QStringList m_type2;
-    int m_coolingMethod;
-    int m_maxCoolingMethod;
-    int m_defaultCoolingMethod;
-    bool m_manageCoolingMethod;
-    int m_coolingMethodBattery;
-    int m_coolingMethodPlugged;
+    QString m_tooltip;
+    int m_mode;
+    int m_index;
+    int m_time;
 };
 
-#endif // POWERSAVE_H
+#endif // KEYBOARDSETTINGS_H

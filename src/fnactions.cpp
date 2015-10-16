@@ -80,13 +80,12 @@ bool FnActions::init()
 
     m_dBus->init();
 
-    if (m_hw->isKBDBacklightSupported) {
-        if (m_hw->getKBDBacklight(&m_mode, &m_time, &m_type) != KToshibaHardware::SUCCESS)
-            qCritical() << "Could not get Keyboard Backlight status";
-
-        if (m_type == 2)
+    m_touchpad = isTouchPadSupported();
+    m_illumination = isIlluminationSupported();
+    m_eco = isECOSupported();
+    m_kbdBacklight = isKBDBacklightSupported();
+    if (m_kbdBacklight && m_type == 2)
             m_modes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
-    }
 
     connect(m_dBus, SIGNAL(configChanged()), QObject::parent(), SLOT(configChanged()));
     connect(m_dBus, SIGNAL(batteryProfileChanged(QString)),
@@ -108,7 +107,7 @@ void FnActions::batMonitorChanged(bool state)
 
 void FnActions::toggleTouchPad()
 {
-    if (m_hw->isTouchPadSupported)
+    if (m_touchpad)
         m_hw->setTouchPad(!m_hw->getTouchPad());
 }
 
@@ -142,23 +141,23 @@ void FnActions::changeProfile(QString profile)
     bool inhib = false;
     if (profile == "Powersave") {
         showWidget(Powersave);
-        if (m_hw->isECOSupported)
+        if (m_eco)
             m_hw->setEcoLed(Off);
-        if (m_hw->isIlluminationSupported)
+        if (m_illumination)
             m_hw->setIllumination(Off);
     } else if (profile == "Performance") {
         showWidget(Performance);
-        if (m_hw->isECOSupported)
+        if (m_eco)
             m_hw->setEcoLed(Off);
-        if (m_hw->isIlluminationSupported)
+        if (m_illumination)
             m_hw->setIllumination(On);
     } else if (profile == "Presentation") {
         showWidget(Presentation);
-        if (m_hw->isECOSupported)
+        if (m_eco)
             m_hw->setEcoLed(Off);
-        if (m_hw->isIlluminationSupported)
+        if (m_illumination)
             m_hw->setIllumination(On);
-        if (m_hw->isKBDBacklightSupported) {
+        if (m_kbdBacklight) {
             if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
                 m_dBus->setKBDBacklight(On);
             } else if (m_type == 2) {
@@ -169,11 +168,11 @@ void FnActions::changeProfile(QString profile)
         inhib = true;
     } else if (profile == "ECO") {
         showWidget(ECO);
-        if (m_hw->isECOSupported)
+        if (m_eco)
             m_hw->setEcoLed(On);
-        if (m_hw->isIlluminationSupported)
+        if (m_illumination)
             m_hw->setIllumination(Off);
-        if (m_hw->isKBDBacklightSupported) {
+        if (m_kbdBacklight) {
             if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
                 m_dBus->setKBDBacklight(Off);
             } else if (m_type == 2) {
@@ -191,9 +190,45 @@ void FnActions::changeProfile(QString profile)
     qDebug() << "Changed battery profile to:" << profile;
 }
 
+bool FnActions::isTouchPadSupported()
+{
+    quint32 tp = m_hw->getTouchPad();
+    if (tp != 0 && tp != 1)
+        return false;
+
+    return true;
+}
+
+bool FnActions::isIlluminationSupported()
+{
+    quint32 illum = m_hw->getIllumination();
+    if (illum != 0 && illum != 1)
+        return false;
+
+    return true;
+}
+
+bool FnActions::isECOSupported()
+{
+    quint32 eco = m_hw->getEcoLed();
+    if (eco != 0 && eco != 1)
+        return false;
+
+    return true;
+}
+
+bool FnActions::isKBDBacklightSupported()
+{
+    quint32 kbdbl = m_hw->getKBDBacklight(&m_mode, &m_time, &m_type);
+    if (kbdbl != KToshibaHardware::SUCCESS && kbdbl != KToshibaHardware::SUCCESS2)
+        return false;
+
+    return true;
+}
+
 void FnActions::updateKBDBacklight()
 {
-    if (!m_hw->isKBDBacklightSupported)
+    if (!m_kbdBacklight)
         return;
 
     QIcon icon;

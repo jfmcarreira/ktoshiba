@@ -16,42 +16,39 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef POWERSAVE_H
-#define POWERSAVE_H
+#ifndef GENERALSETTINGS_H
+#define GENERALSETTINGS_H
 
-#include <KSharedConfig>
-
-#include "ui_powersave.h"
+#include "ui_general.h"
 
 class KToshibaSystemSettings;
 
-class PowerSave : public QWidget, public Ui::PowerSave
+class GeneralSettings : public QWidget, public Ui::GeneralSettings
 {
     Q_OBJECT
 
 public:
-    explicit PowerSave(QWidget *parent = 0);
+    explicit GeneralSettings(QWidget *parent = 0);
 
     void load();
     void save();
     void defaults();
 
-    bool m_coolingMethodSupported;
-
 private:
-    bool isCoolingMethodSupported();
+    bool isTouchPadSupported();
+    bool isRapidChargeSupported();
+    bool isUSBThreeSupported();
 
     KToshibaSystemSettings *m_sys;
-    KSharedConfigPtr m_config;
 
-    QStringList m_type1;
-    QStringList m_type2;
-    int m_coolingMethod;
-    int m_maxCoolingMethod;
-    int m_defaultCoolingMethod;
-    bool m_manageCoolingMethod;
-    int m_coolingMethodBattery;
-    int m_coolingMethodPlugged;
+    bool m_touchpadSupported;
+    quint32 m_touchpad;
+
+    bool m_rapidchargeSupported;
+    quint32 m_rapidcharge;
+
+    bool m_usbthreeSupported;
+    quint32 m_usbthree;
 };
 
-#endif // POWERSAVE_H
+#endif // GENERALSETTINGS_H
