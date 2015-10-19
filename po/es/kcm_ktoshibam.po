@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-12 15:15-0600\n"
+"POT-Creation-Date: 2015-10-19 15:49-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -37,30 +37,10 @@ msgid "Sleep Utilities"
 msgstr "Utilidades de Reposo"
 
 #. i18n: file: kcm/sleeputils.ui:21
-#. i18n: ectx: property (toolTip), widget (QCheckBox, sleep_charge_checkbox)
-#. i18n: file: kcm/sleeputils.ui:24
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, sleep_charge_checkbox)
-#: rc.cpp:8 rc.cpp:11
-#, kde-format
-msgid ""
-"Toggles the USB Sleep and Charge feature.  The computer USB ports will "
-"remain powered when the computer is asleep or turned off."
-msgstr ""
-"Alterna la carga en reposo.  Los puertos USB del ordenador permanecerán "
-"activados cuando el ordenador se encuentre apagado ó en reposo."
-
-#. i18n: file: kcm/sleeputils.ui:27
-#. i18n: ectx: property (text), widget (QCheckBox, sleep_charge_checkbox)
-#: rc.cpp:14
-#, kde-format
-msgid "USB Sleep and Charge"
-msgstr "Carga en reposo del USB"
-
-#. i18n: file: kcm/sleeputils.ui:34
 #. i18n: ectx: property (toolTip), widget (QCheckBox, sleep_music_checkbox)
-#. i18n: file: kcm/sleeputils.ui:37
+#. i18n: file: kcm/sleeputils.ui:24
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, sleep_music_checkbox)
-#: rc.cpp:17 rc.cpp:20
+#: rc.cpp:8 rc.cpp:11
 #, kde-format
 msgid ""
 "Toggles the Sleep and Music feature.  The laptop speakers remain powered and "
@@ -72,16 +52,37 @@ msgstr ""
 "dispositivos externos para usar los altavoces del portátil cuando se "
 "encuentre apagado ó en reposo."
 
-#. i18n: file: kcm/sleeputils.ui:40
+#. i18n: file: kcm/sleeputils.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, sleep_music_checkbox)
-#: rc.cpp:23
+#: rc.cpp:14
 #, kde-format
 msgid "Sleep and Music"
 msgstr "Musica en reposo"
 
+#. i18n: file: kcm/sleeputils.ui:34
+#. i18n: ectx: property (text), widget (QLabel, sleep_charge_label)
+#: rc.cpp:17
+#, kde-format
+msgid "USB Sleep and Charge:"
+msgstr "Carga en reposo del USB:"
+
 #. i18n: file: kcm/sleeputils.ui:47
-#. i18n: ectx: property (toolTip), widget (QGroupBox, groupBox)
+#. i18n: ectx: property (toolTip), widget (QComboBox, sleep_charge_combobox)
 #. i18n: file: kcm/sleeputils.ui:50
+#. i18n: ectx: property (whatsThis), widget (QComboBox, sleep_charge_combobox)
+#: rc.cpp:20 rc.cpp:23
+#, kde-format
+msgid ""
+"Select the USB Sleep and Charge mode.  The computer USB ports will remain "
+"powered when the computer is asleep or turned off."
+msgstr ""
+"Selecciona el modo de operación de la carga en reposo.  Los puertos USB del "
+"ordenador permanecerán activados cuando el ordenador se encuentre apagado ó "
+"en reposo."
+
+#. i18n: file: kcm/sleeputils.ui:57
+#. i18n: ectx: property (toolTip), widget (QGroupBox, groupBox)
+#. i18n: file: kcm/sleeputils.ui:60
 #. i18n: ectx: property (whatsThis), widget (QGroupBox, groupBox)
 #: rc.cpp:26 rc.cpp:29
 #, kde-format
@@ -92,23 +93,23 @@ msgstr ""
 "Permite operar a las funciones de reposo cuando el ordenador se encuentre "
 "bajo el poder de la batería."
 
-#. i18n: file: kcm/sleeputils.ui:53
+#. i18n: file: kcm/sleeputils.ui:63
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: rc.cpp:32
 #, kde-format
 msgid "Sleep Utilities under battery"
 msgstr "Utilidades de Reposo"
 
-#. i18n: file: kcm/sleeputils.ui:68
+#. i18n: file: kcm/sleeputils.ui:78
 #. i18n: ectx: property (text), widget (QLabel, battery_level_label)
 #: rc.cpp:35
 #, kde-format
 msgid "Battery Level:"
 msgstr "Nivel de Batería:"
 
-#. i18n: file: kcm/sleeputils.ui:81
+#. i18n: file: kcm/sleeputils.ui:91
 #. i18n: ectx: property (toolTip), widget (QLabel, battery_level)
-#. i18n: file: kcm/sleeputils.ui:84
+#. i18n: file: kcm/sleeputils.ui:94
 #. i18n: ectx: property (whatsThis), widget (QLabel, battery_level)
 #: rc.cpp:38 rc.cpp:41
 #, kde-format
@@ -117,9 +118,9 @@ msgid ""
 msgstr ""
 "El nivel de la batería en el cual las funciones de reposo serán desactivadas."
 
-#. i18n: file: kcm/sleeputils.ui:94
+#. i18n: file: kcm/sleeputils.ui:104
 #. i18n: ectx: property (toolTip), widget (QSlider, battery_level_slider)
-#. i18n: file: kcm/sleeputils.ui:97
+#. i18n: file: kcm/sleeputils.ui:107
 #. i18n: ectx: property (whatsThis), widget (QSlider, battery_level_slider)
 #: rc.cpp:44 rc.cpp:47
 #, kde-format
@@ -489,10 +490,74 @@ msgid "Power Save"
 msgstr "Ahorro de Energía"
 
 #. i18n: file: kcm/powersave.ui:21
-#. i18n: ectx: property (toolTip), widget (QGroupBox, groupBox)
+#. i18n: ectx: property (toolTip), widget (QGroupBox, batteryGroupBox)
 #. i18n: file: kcm/powersave.ui:24
-#. i18n: ectx: property (whatsThis), widget (QGroupBox, groupBox)
+#. i18n: ectx: property (whatsThis), widget (QGroupBox, batteryGroupBox)
 #: rc.cpp:233 rc.cpp:236
+#, kde-format
+msgid ""
+"Toggles the Battery Profile monitoring feature.  Check this if you want "
+"KToshiba to manage additional power saving features."
+msgstr ""
+"Alterna el monitoreo de los perfiles de batería.  Selecciona esto si "
+"deseas que KToshiba administre perfiles de ahorro de batería adicionales."
+
+#. i18n: file: kcm/powersave.ui:27
+#. i18n: ectx: property (title), widget (QGroupBox, batteryGroupBox)
+#: rc.cpp:239
+#, kde-format
+msgid "Manage Battery Profiles"
+msgstr "Administra los perfiles de batería"
+
+#. i18n: file: kcm/powersave.ui:42
+#. i18n: ectx: property (text), widget (QLabel, battery_profiles_label)
+#: rc.cpp:242
+#, kde-format
+msgid "Battery Profile:"
+msgstr "Perfil de Batería:"
+
+#. i18n: file: kcm/powersave.ui:49
+#. i18n: ectx: property (toolTip), widget (QComboBox, battery_profiles_combobox)
+#. i18n: file: kcm/powersave.ui:52
+#. i18n: ectx: property (whatsThis), widget (QComboBox, battery_profiles_combobox)
+#: rc.cpp:245 rc.cpp:248
+#, kde-format
+msgid "Changes the current Battery Profile."
+msgstr "Cambia el perfil de ahorro de batería."
+
+#. i18n: file: kcm/powersave.ui:56
+#. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
+#: rc.cpp:251
+#, kde-format
+msgid "Performance"
+msgstr "Rendimiento Alto"
+
+#. i18n: file: kcm/powersave.ui:61
+#. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
+#: rc.cpp:254
+#, kde-format
+msgid "Powersave"
+msgstr "Ahorro de Energía"
+
+#. i18n: file: kcm/powersave.ui:66
+#. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
+#: rc.cpp:257
+#, kde-format
+msgid "Presentation"
+msgstr "Presentación"
+
+#. i18n: file: kcm/powersave.ui:71
+#. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
+#: rc.cpp:260
+#, kde-format
+msgid "ECO"
+msgstr "ECO"
+
+#. i18n: file: kcm/powersave.ui:82
+#. i18n: ectx: property (toolTip), widget (QGroupBox, coolingGroupBox)
+#. i18n: file: kcm/powersave.ui:85
+#. i18n: ectx: property (whatsThis), widget (QGroupBox, coolingGroupBox)
+#: rc.cpp:263 rc.cpp:266
 #, kde-format
 msgid ""
 "Toggles the Cooling Method monitoring feature.  The laptop fan changes its "
@@ -501,43 +566,43 @@ msgstr ""
 "Alterna el monitoreo del Método de Enfriamiento.  El abanico del portátil "
 "cambia su velocidad dependiendo del método seleccionado."
 
-#. i18n: file: kcm/powersave.ui:27
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: rc.cpp:239
+#. i18n: file: kcm/powersave.ui:88
+#. i18n: ectx: property (title), widget (QGroupBox, coolingGroupBox)
+#: rc.cpp:269
 #, kde-format
 msgid "Cooling Method"
 msgstr "Método de Enfriamiento"
 
-#. i18n: file: kcm/powersave.ui:42
+#. i18n: file: kcm/powersave.ui:103
 #. i18n: ectx: property (text), widget (QLabel, cooling_method_battery_label)
-#: rc.cpp:242
+#: rc.cpp:272
 #, kde-format
 msgid "Cooling Method on battery:"
 msgstr "Método de Enfriamiento en batería:"
 
-#. i18n: file: kcm/powersave.ui:49
+#. i18n: file: kcm/powersave.ui:110
 #. i18n: ectx: property (toolTip), widget (QComboBox, cooling_method_battery_combobox)
-#. i18n: file: kcm/powersave.ui:52
+#. i18n: file: kcm/powersave.ui:113
 #. i18n: ectx: property (whatsThis), widget (QComboBox, cooling_method_battery_combobox)
-#: rc.cpp:245 rc.cpp:248
+#: rc.cpp:275 rc.cpp:278
 #, kde-format
 msgid "Changes the fan Cooling Method when the laptop is running on battery."
 msgstr ""
 "Cambia el Método de Enfriamiento del abanico cuando el portátil se encuentra "
 "usando la batería."
 
-#. i18n: file: kcm/powersave.ui:59
+#. i18n: file: kcm/powersave.ui:120
 #. i18n: ectx: property (text), widget (QLabel, cooling_method_plugged_label)
-#: rc.cpp:251
+#: rc.cpp:281
 #, kde-format
 msgid "Cooling Method plugged in:"
 msgstr "Método de Enfriamiento conectada:"
 
-#. i18n: file: kcm/powersave.ui:66
+#. i18n: file: kcm/powersave.ui:127
 #. i18n: ectx: property (toolTip), widget (QComboBox, cooling_method_plugged_combobox)
-#. i18n: file: kcm/powersave.ui:69
+#. i18n: file: kcm/powersave.ui:130
 #. i18n: ectx: property (whatsThis), widget (QComboBox, cooling_method_plugged_combobox)
-#: rc.cpp:254 rc.cpp:257
+#: rc.cpp:284 rc.cpp:287
 #, kde-format
 msgid "Changes the fan Cooling Method when the laptop is connected to AC."
 msgstr ""
@@ -594,7 +659,7 @@ msgstr "Información del Sistema"
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: kcm/systemsettings.cpp:349 kcm/keyboardsettings.cpp:103
+#: kcm/systemsettings.cpp:353 kcm/keyboardsettings.cpp:103
 #: kcm/keyboardsettings.cpp:139
 #, kde-format
 msgid " sec"
@@ -660,47 +725,47 @@ msgstr "Unidad de Disco Duro/Unidad de Disco Solido 3"
 msgid "Boot Devices"
 msgstr "Dispositivos de Arranque"
 
-#: kcm/powersave.cpp:62
+#: kcm/powersave.cpp:74
 #, kde-format
 msgid "Maximum Performance"
 msgstr "Rendimiento Máximo"
 
-#: kcm/powersave.cpp:62
+#: kcm/powersave.cpp:74
 #, kde-format
 msgid "Battery Optimized"
 msgstr "Optimizado para Batería"
 
-#: kcm/powersave.cpp:63
+#: kcm/powersave.cpp:75
 #, kde-format
 msgid "High Performance"
 msgstr "Rendimiento Alto"
 
-#: kcm/powersave.cpp:63
+#: kcm/powersave.cpp:75
 #, kde-format
 msgid "Balanced"
 msgstr "Balanceado"
 
-#: kcm/powersave.cpp:63
+#: kcm/powersave.cpp:75
 #, kde-format
 msgid "Power Saver"
 msgstr "Ahorrador de Energía"
 
-#: kcm/hddprotection.cpp:40
+#: kcm/hddprotection.cpp:38
 #, kde-format
 msgid "Off"
 msgstr "Apagado"
 
-#: kcm/hddprotection.cpp:40
+#: kcm/hddprotection.cpp:38
 #, kde-format
 msgid "Low"
 msgstr "Bajo"
 
-#: kcm/hddprotection.cpp:40
+#: kcm/hddprotection.cpp:38
 #, kde-format
 msgid "Medium"
 msgstr "Medio"
 
-#: kcm/hddprotection.cpp:40
+#: kcm/hddprotection.cpp:38
 #, kde-format
 msgid "High"
 msgstr "Alto"
@@ -754,3 +819,23 @@ msgstr ""
 "retroiluminación del teclado se enciende/apaga automaticamente.<br/"
 ">ENCENDIDO:La retroiluminación del teclado es encendida.<br/>APAGADO: La "
 "retroiluminación del teclado es apagada."
+
+#: kcm/sleeputilities.cpp:53
+#, kde-format
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+#: kcm/sleeputilities.cpp:57
+#, kde-format
+msgid "Alternate"
+msgstr "Alterno"
+
+#: kcm/sleeputilities.cpp:62
+#, kde-format
+msgid "Typical"
+msgstr "Típico"
+
+#: kcm/sleeputilities.cpp:67
+#, kde-format
+msgid "Auto"
+msgstr "Automatico"

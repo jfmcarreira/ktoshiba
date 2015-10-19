@@ -21,6 +21,7 @@
 #include <QDebug>
 
 #include <KLocalizedString>
+#include <KConfigGroup>
 
 extern "C" {
 #include <linux/input.h>
@@ -31,14 +32,17 @@ extern "C" {
 #include "ktoshibadbusinterface.h"
 #include "ktoshibakeyhandler.h"
 
+#define CONFIG_FILE "ktoshibarc"
+
 FnActions::FnActions(QObject *parent)
     : QObject(parent),
+      m_config(KSharedConfig::openConfig(CONFIG_FILE)),
       m_dBus(new KToshibaDBusInterface(this)),
       m_hotkeys(new KToshibaKeyHandler(this)),
       m_hw(new KToshibaHardware(this)),
       m_widget(new QWidget(0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)),
       m_widgetTimer(new QTimer(this)),
-      m_batKeyPressed(false),
+      m_batteryKeyPressed(false),
       m_cookie(0),
       m_type(1),
       m_mode(KToshibaHardware::TIMER),
@@ -49,9 +53,6 @@ FnActions::FnActions(QObject *parent)
     // Only enable Translucency if composite is enabled
     // otherwise an ugly black background will appear
     m_widget->setAttribute(Qt::WA_TranslucentBackground, m_dBus->getCompositingState());
-
-    // We're just going to care about these profiles
-    m_profiles << "Performance" << "Presentation" << "ECO" << "Powersave";
 
     connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hideWidget()));
 }
@@ -80,16 +81,24 @@ bool FnActions::init()
 
     m_dBus->init();
 
+    m_profiles << Performance << Powersave << Presentation << ECO;
+    updateBatteryProfile(true);
     m_touchpad = isTouchPadSupported();
     m_illumination = isIlluminationSupported();
     m_eco = isECOSupported();
     m_kbdBacklight = isKBDBacklightSupported();
     if (m_kbdBacklight && m_type == 2)
-            m_modes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
+            m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
+    m_cooling = isCoolingMethodSupported();
+    if (m_cooling) {
+        updateCoolingMethod(m_dBus->getBatteryProfile());
 
+        connect(m_dBus, SIGNAL(batteryProfileChanged(QString)),
+                this, SLOT(updateCoolingMethod(QString)));
+    }
+
+    connect(m_dBus, SIGNAL(configChanged()), this, SLOT(updateBatteryProfile()));
     connect(m_dBus, SIGNAL(configChanged()), QObject::parent(), SLOT(configChanged()));
-    connect(m_dBus, SIGNAL(batteryProfileChanged(QString)),
-            QObject::parent(), SLOT(batteryProfileChanged(QString)));
     connect(m_hotkeys, SIGNAL(hotkeyPressed(int)), this, SLOT(processHotkey(int)));
 
     return true;
@@ -105,91 +114,6 @@ void FnActions::batMonitorChanged(bool state)
     m_batMonitor = state;
 }
 
-void FnActions::toggleTouchPad()
-{
-    if (m_touchpad)
-        m_hw->setTouchPad(!m_hw->getTouchPad());
-}
-
-void FnActions::toggleProfiles()
-{
-    int current = m_profiles.indexOf(m_profile);
-    if (current == m_profiles.indexOf(m_profiles.last())) {
-        m_profile = m_profiles.first();
-    } else {
-        current++;
-        m_profile = m_profiles.at(current);
-    }
-
-    changeProfile(m_profile);
-}
-
-QString FnActions::getProfile()
-{
-    return m_dBus->getBatteryProfile();
-}
-
-void FnActions::changeProfile(QString profile)
-{
-    if (m_batMonitor) {
-        if (m_batKeyPressed)
-            showWidget(Disabled);
-
-        return;
-    }
-
-    bool inhib = false;
-    if (profile == "Powersave") {
-        showWidget(Powersave);
-        if (m_eco)
-            m_hw->setEcoLed(Off);
-        if (m_illumination)
-            m_hw->setIllumination(Off);
-    } else if (profile == "Performance") {
-        showWidget(Performance);
-        if (m_eco)
-            m_hw->setEcoLed(Off);
-        if (m_illumination)
-            m_hw->setIllumination(On);
-    } else if (profile == "Presentation") {
-        showWidget(Presentation);
-        if (m_eco)
-            m_hw->setEcoLed(Off);
-        if (m_illumination)
-            m_hw->setIllumination(On);
-        if (m_kbdBacklight) {
-            if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
-                m_dBus->setKBDBacklight(On);
-            } else if (m_type == 2) {
-                m_hw->setKBDBacklight(KToshibaHardware::ON, m_time);
-            }
-        }
-        m_cookie = m_dBus->inhibitPowerManagement(i18n("Presentation"));
-        inhib = true;
-    } else if (profile == "ECO") {
-        showWidget(ECO);
-        if (m_eco)
-            m_hw->setEcoLed(On);
-        if (m_illumination)
-            m_hw->setIllumination(Off);
-        if (m_kbdBacklight) {
-            if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
-                m_dBus->setKBDBacklight(Off);
-            } else if (m_type == 2) {
-                m_hw->setKBDBacklight(KToshibaHardware::OFF, m_time);
-            }
-        }
-        m_dBus->setBrightness(57);
-    }
-
-    if (m_cookie && !inhib) {
-        m_dBus->unInhibitPowerManagement(m_cookie);
-        m_cookie = 0;
-    }
-
-    qDebug() << "Changed battery profile to:" << profile;
-}
-
 bool FnActions::isTouchPadSupported()
 {
     quint32 tp = m_hw->getTouchPad();
@@ -197,6 +121,44 @@ bool FnActions::isTouchPadSupported()
         return false;
 
     return true;
+}
+
+void FnActions::toggleTouchPad()
+{
+    if (m_touchpad)
+        m_hw->setTouchPad(!m_hw->getTouchPad());
+}
+
+bool FnActions::isCoolingMethodSupported()
+{
+    quint32 result = m_hw->getCoolingMethod(&m_coolingMethod, &m_maxCoolingMethod);
+
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+        return false;
+
+    return true;
+}
+
+void FnActions::updateCoolingMethod(QString profile)
+{
+    if (!m_cooling)
+        return;
+
+    KConfigGroup powersave(m_config, "PowerSave");
+    m_manageCoolingMethod = powersave.readEntry("ManageCoolingMethod", true);
+
+    if (!m_manageCoolingMethod)
+        return;
+
+    int coolingMethod = KToshibaHardware::MAXIMUM_PERFORMANCE;
+    if (profile == "AC")
+        coolingMethod = powersave.readEntry("CoolingMethodPluggedIn", 0);
+    else if (profile == "Battery")
+        coolingMethod = powersave.readEntry("CoolingMethodOnBattery", 1);
+    else
+        return;
+
+    m_hw->setCoolingMethod(coolingMethod);
 }
 
 bool FnActions::isIlluminationSupported()
@@ -226,52 +188,150 @@ bool FnActions::isKBDBacklightSupported()
     return true;
 }
 
-void FnActions::updateKBDBacklight()
+void FnActions::updateBatteryProfile(bool init)
 {
-    if (!m_kbdBacklight)
+    KConfigGroup powersave(m_config, "PowerSave");
+    bool batterymonitor = powersave.readEntry("BatteryProfiles", true);
+    if (m_batMonitor != batterymonitor)
+        m_batMonitor = batterymonitor;
+
+    if (!m_batMonitor)
         return;
 
-    QIcon icon;
+    m_batteryProfile = powersave.readEntry("CurrentProfile", 0);
+
+    changeProfile(m_batteryProfile, init);
+}
+
+void FnActions::toggleProfiles()
+{
+    int current = m_profiles.indexOf(m_batteryProfile);
+    if (current == m_profiles.indexOf(m_profiles.last())) {
+        m_batteryProfile = m_profiles.first();
+    } else {
+        current++;
+        m_batteryProfile = m_profiles.at(current);
+    }
+
+    changeProfile(m_batteryProfile, false);
+}
+
+void FnActions::changeProfile(int profile, bool init)
+{
+    if (!m_batMonitor) {
+        if (m_batteryKeyPressed)
+            showWidget(Disabled);
+
+        return;
+    }
+
+    QIcon icon = QIcon::fromTheme("computer-laptop");
     QString format = QString("<html><head/><body><p align=\"center\">\
 			      <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
 			      %1\
 			      </span></p></body></html>");
 
-    if (m_hw->getKBDBacklight(&m_mode, &m_time, &m_type) != KToshibaHardware::SUCCESS)
-        qCritical() << "Could not get Keyboard Backlight status";
-
-    if (m_type == 1) {
-        if (m_mode == KToshibaHardware::TIMER) {
-            icon = QIcon(":images/keyboard_black_on_64.png");
-            m_statusWidget.kbdStatusText->setText(format.arg(m_time));
-        } else {
-            qDebug() << "Keyboard backlight mode is set to FN-Z";
-
-            return;
+    bool inhib = false;
+    switch (profile) {
+    case Performance:
+        m_statusWidget.batteryProfileLabel->setText(format.arg(i18n("Performance")));
+        if (m_eco)
+            m_hw->setEcoLed(Off);
+        if (m_illumination)
+            m_hw->setIllumination(On);
+        break;
+    case Powersave:
+        m_statusWidget.batteryProfileLabel->setText(format.arg(i18n("Powersave")));
+        if (m_eco)
+            m_hw->setEcoLed(Off);
+        if (m_illumination)
+            m_hw->setIllumination(Off);
+        break;
+    case Presentation:
+        m_statusWidget.batteryProfileLabel->setText(format.arg(i18n("Presentation")));
+        if (m_eco)
+            m_hw->setEcoLed(Off);
+        if (m_illumination)
+            m_hw->setIllumination(On);
+        if (m_kbdBacklight) {
+            if (m_type == 1 && m_mode == KToshibaHardware::FNZ)
+                m_dBus->setKBDBacklight(On);
+            else if (m_type == 2)
+                m_hw->setKBDBacklight(KToshibaHardware::ON, m_time);
         }
+        m_cookie = m_dBus->inhibitPowerManagement(i18n("Presentation"));
+        inhib = true;
+        break;
+    case ECO:
+        m_statusWidget.batteryProfileLabel->setText(format.arg("ECO"));
+        if (m_eco)
+            m_hw->setEcoLed(On);
+        if (m_illumination)
+            m_hw->setIllumination(Off);
+        if (m_kbdBacklight) {
+            if (m_type == 1 && m_mode == KToshibaHardware::FNZ) {
+                m_dBus->setKBDBacklight(Off);
+            } else if (m_type == 2) {
+                m_hw->setKBDBacklight(KToshibaHardware::OFF, m_time);
+            }
+        }
+        m_dBus->setBrightness(57);
+        break;
     }
 
-    if (m_type == 2) {
-        int current = m_modes.indexOf(m_mode);
-        if (current == m_modes.indexOf(m_modes.last())) {
-            m_mode = m_modes.first();
+    if (m_cookie && !inhib) {
+        m_dBus->unInhibitPowerManagement(m_cookie);
+        m_cookie = 0;
+    }
+
+    m_statusWidget.batteryProfileIcon->setPixmap(icon.pixmap(64, 64));
+    if (!init)
+        showWidget(BatteryProfile);
+
+    qDebug() << "Changed battery profile to:" << profile;
+}
+
+void FnActions::updateKBDBacklight()
+{
+    if (!m_kbdBacklight)
+        return;
+
+    quint32 result = m_hw->getKBDBacklight(&m_mode, &m_time, &m_type);
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
+        qCritical() << "Could not get Keyboard Backlight status";
+
+        return;
+    }
+
+    QIcon icon = QIcon::fromTheme("input-keyboard");
+    QString format = QString("<html><head/><body><p align=\"center\">\
+			      <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
+			      %1\
+			      </span></p></body></html>");
+
+    if (m_type == 1) {
+        if (m_mode == KToshibaHardware::TIMER)
+            m_statusWidget.kbdStatusText->setText(format.arg(m_time));
+        else
+            return;
+    } else if (m_type == 2) {
+        int current = m_keyboardModes.indexOf(m_mode);
+        if (current == m_keyboardModes.indexOf(m_keyboardModes.last())) {
+            m_mode = m_keyboardModes.first();
         } else {
             current++;
-            m_mode = m_modes.at(current);
+            m_mode = m_keyboardModes.at(current);
         }
 
         m_hw->setKBDBacklight(m_mode, m_time);
         switch (m_mode) {
         case KToshibaHardware::OFF:
-            icon = QIcon(":images/keyboard_black_off_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(i18n("OFF")));
             break;
         case KToshibaHardware::ON:
-            icon = QIcon(":images/keyboard_black_on_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(i18n("ON")));
             break;
         case KToshibaHardware::TIMER:
-            icon = QIcon(":images/keyboard_black_on_64.png");
             m_statusWidget.kbdStatusText->setText(format.arg(m_time));
             break;
         }
@@ -307,7 +367,7 @@ void FnActions::processHotkey(int hotkey)
         m_dBus->lockScreen();
         break;
     case KEY_BATTERY:
-        m_batKeyPressed = true;
+        m_batteryKeyPressed = true;
         toggleProfiles();
         break;
     case KEY_TOUCHPAD_TOGGLE:

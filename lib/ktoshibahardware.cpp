@@ -434,7 +434,7 @@ void KToshibaHardware::setKBDBacklight(int mode, int time)
         printSMMError("setKBDBacklight", regs.eax);
 }
 
-quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *defval)
+quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *maxval, int *defval)
 {
     SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0 };
 
@@ -448,6 +448,7 @@ quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *defval)
         printSMMError("getUSBSleepCharge", regs.eax);
     } else {
         *val = regs.ecx & 0xff;
+        *maxval = regs.edx & 0xff;
         *defval = regs.esi;
     }
 

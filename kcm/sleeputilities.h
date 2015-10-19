@@ -41,15 +41,17 @@ private:
     KToshibaSystemSettings *m_sys;
 
     bool m_sleepChargeSupported;
-    int m_sleepcharge;
-    int m_defaultsc;
-    int m_sleepmusic;
-    QStringList m_sleeponbat;
-    int m_batenabled;
-    int m_batlevel;
+    int m_sleepCharge;
+    int m_maxSleepCharge;
+    int m_defaultSC;
+    QMap<int, int> m_map;
+    QStringList m_modes;
+    QStringList m_sleepOnBat;
+    int m_batEnabled;
+    int m_batLevel;
 
     bool m_sleepMusicSupported;
-
+    int m_sleepMusic;
 };
 
 #endif // SLEEPUTILITIES_H

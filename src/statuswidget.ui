@@ -32,9 +32,9 @@
    <string>StatusWidget</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/images/images/fn.png</normaloff>
-    <normalon>:/images/images/fn.png</normalon>:/images/images/fn.png</iconset>
+   <iconset resource="Icons.qrc">
+    <normaloff>:/images/ktoshiba.svgz</normaloff>
+    <normalon>:/images/ktoshiba.svgz</normalon>:/images/ktoshiba.svgz</iconset>
   </property>
   <property name="whatsThis">
    <string/>
@@ -48,382 +48,233 @@
   <property name="windowFilePath">
    <string notr="true"/>
   </property>
-  <widget class="QStackedWidget" name="stackedWidget">
-   <property name="geometry">
-    <rect>
-     <x>7</x>
-     <y>4</y>
-     <width>72</width>
-     <height>72</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>72</width>
-     <height>72</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>72</width>
-     <height>72</height>
-    </size>
-   </property>
-   <property name="currentIndex">
-    <number>5</number>
-   </property>
-   <widget class="QWidget" name="disabledPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="disabledLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QStackedWidget" name="stackedWidget">
      <property name="minimumSize">
       <size>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </size>
      </property>
-     <property name="text">
-      <string/>
+     <property name="currentIndex">
+      <number>1</number>
      </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/disabled_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
+     <widget class="QWidget" name="disabledPage">
+      <property name="minimumSize">
+       <size>
+        <width>72</width>
+        <height>72</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>72</width>
+        <height>72</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="disabledLabel">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="Icons.qrc">:/images/disabled_64.png</pixmap>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="batteryProfilePage">
+      <property name="minimumSize">
+       <size>
+        <width>72</width>
+        <height>72</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>72</width>
+        <height>72</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="batteryProfileIcon">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap>:/images/performance_64.png</pixmap>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="batteryProfileLabel">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>64</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string notr="true">15</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="keyboardPage">
+      <property name="minimumSize">
+       <size>
+        <width>72</width>
+        <height>72</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>72</width>
+        <height>72</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QLabel" name="kbdStatusIcon">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="kbdStatusText">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>64</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string notr="true">15</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </widget>
-   <widget class="QWidget" name="performancePage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="performanceLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/performance_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="powersavePage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="powersaveLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/powersave_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="presentationPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="presentationLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/presentation_64.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="ecoPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="ecoLabel">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/green_world.svg</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="keyboardPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <widget class="QLabel" name="kbdStatusIcon">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>4</y>
-       <width>64</width>
-       <height>64</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>64</height>
-      </size>
-     </property>
-     <property name="text">
-      <string notr="true"/>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::AutoText</enum>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="Icons.qrc">:/images/keyboard_black_on_64.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>false</bool>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLabel" name="kbdStatusText">
-     <property name="geometry">
-      <rect>
-       <x>4</x>
-       <y>40</y>
-       <width>64</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>64</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>64</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="text">
-      <string notr="true">15</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::RichText</enum>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="blankPage">
-    <property name="minimumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>72</width>
-      <height>72</height>
-     </size>
-    </property>
-   </widget>
-  </widget>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="Icons.qrc"/>

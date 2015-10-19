@@ -20,6 +20,7 @@
 #define HDDPROTECTION_H
 
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "ui_hddprotect.h"
 
@@ -43,6 +44,7 @@ private:
 
     KToshibaSystemSettings *m_sys;
     KSharedConfigPtr m_config;
+    KConfigGroup hdd;
 
     bool m_hddprotectionSupported;
     bool m_monitorHDD;

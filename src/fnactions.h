@@ -23,6 +23,8 @@
 #include <QString>
 #include <QStringList>
 
+#include <KSharedConfig>
+
 #include "ui_statuswidget.h"
 
 class QTimer;
@@ -36,17 +38,16 @@ class FnActions : public QObject
     Q_OBJECT
 
 public:
-    enum WidgetIcons { Disabled, Performance, Powersave, Presentation, ECO, KBDStatus, Blank };
+    enum WidgetIcons { Disabled, BatteryProfile, KBDStatus };
     enum Zoom { Reset, In, Out = -1 };
     enum ToogleActions { Off, On };
+    enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
 
 public:
     FnActions(QObject *parent);
     ~FnActions();
     bool init();
 
-    void changeProfile(QString);
-    QString getProfile();
     void updateKBDBacklight();
 
     KToshibaHardware *hw() const
@@ -61,20 +62,28 @@ private Q_SLOTS:
     void hideWidget();
     void processHotkey(int);
     void compositingChanged(bool);
+    void updateBatteryProfile(bool init = false);
+    void updateCoolingMethod(QString);
 
 private:
     void showWidget(int);
+    void changeProfile(int, bool);
     void toggleProfiles();
     void toggleTouchPad();
     bool isTouchPadSupported();
     bool isIlluminationSupported();
     bool isECOSupported();
     bool isKBDBacklightSupported();
+    bool isCoolingMethodSupported();
+
+    KSharedConfigPtr m_config;
 
     bool m_touchpad;
     bool m_illumination;
     bool m_eco;
     bool m_kbdBacklight;
+    bool m_batMonitor;
+    bool m_cooling;
 
     KToshibaDBusInterface *m_dBus;
     KToshibaKeyHandler *m_hotkeys;
@@ -82,16 +91,18 @@ private:
     Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
     QTimer *m_widgetTimer;
-    QStringList m_profiles;
-    QList<int> m_modes;
-    QString m_profile;
+    QList<int> m_profiles;
+    QList<int> m_keyboardModes;
     QString m_version;
-    bool m_batKeyPressed;
-    bool m_batMonitor;
+    bool m_batteryKeyPressed;
+    bool m_manageCoolingMethod;
     uint m_cookie;
     int m_type;
     int m_mode;
     int m_time;
+    int m_batteryProfile;
+    int m_coolingMethod;
+    int m_maxCoolingMethod;
 };
 
 #endif // FN_ACTIONS_H

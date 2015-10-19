@@ -16,7 +16,68 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0" colspan="2">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="batteryGroupBox">
+     <property name="toolTip">
+      <string>Toggles the Battery Profile monitoring feature.  Check this if you want KToshiba to manage additional power saving features.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Toggles the Battery Profile monitoring feature.  Check this if you want KToshiba to manage additional power saving features.</string>
+     </property>
+     <property name="title">
+      <string>Manage Battery Profiles</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <layout class="QFormLayout" name="formLayout_1">
+      <item row="0" column="0">
+       <widget class="QLabel" name="battery_profiles_label">
+        <property name="text">
+         <string>Battery Profile:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="battery_profiles_combobox">
+        <property name="toolTip">
+         <string>Changes the current Battery Profile.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the current Battery Profile.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Performance</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Powersave</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Presentation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ECO</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="coolingGroupBox">
      <property name="toolTip">
       <string>Toggles the Cooling Method monitoring feature.  The laptop fan changes its speed according to the method selected.</string>
      </property>
