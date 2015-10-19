@@ -18,8 +18,6 @@
 
 #include <QtDBus/QtDBus>
 
-#include <KConfigGroup>
-
 extern "C" {
 #include <linux/toshiba.h>
 }
@@ -40,6 +38,13 @@ HDDProtection::HDDProtection(QWidget *parent)
     m_levels << i18n("Off") << i18n("Low") << i18n("Medium") << i18n("High");
 
     m_hddprotectionSupported = isHDDProtectionSupported();
+
+    hdd = KConfigGroup(m_config, "HDDProtection");
+    if (!hdd.exists()) {
+        hdd.writeEntry("MonitorHDD", true);
+        hdd.writeEntry("NotifyHDDMovement", true);
+        hdd.sync();
+    }
 }
 
 bool HDDProtection::isHDDProtectionSupported()
@@ -59,8 +64,6 @@ void HDDProtection::load()
 
         return;
     }
-
-    KConfigGroup hdd(m_config, "HDDProtection");
     m_monitorHDD = hdd.readEntry("MonitorHDD", true);
     m_notifyHDD = hdd.readEntry("NotifyHDDMovement", true);
 
@@ -75,7 +78,6 @@ void HDDProtection::save()
     if (!m_hddprotectionSupported)
         return;
 
-    KConfigGroup hddGroup(m_config, "HDDProtection");
     QDBusInterface iface("net.sourceforge.KToshiba",
                          "/net/sourceforge/KToshiba",
                          "net.sourceforge.KToshiba",
@@ -83,16 +85,14 @@ void HDDProtection::save()
                          this);
 
     if (m_monitorHDD != groupBox->isChecked()) {
-        hddGroup.writeEntry("MonitorHDD", !m_monitorHDD);
-        hddGroup.config()->sync();
+        hdd.writeEntry("MonitorHDD", !m_monitorHDD);
         m_monitorHDD = groupBox->isChecked();
         if (iface.isValid())
             iface.call("configFileChanged");
     }
     bool tmp = hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
     if (m_notifyHDD != tmp) {
-        hddGroup.writeEntry("NotifyHDDMovement", tmp);
-        hddGroup.config()->sync();
+        hdd.writeEntry("NotifyHDDMovement", tmp);
         m_notifyHDD = tmp;
         if (iface.isValid())
             iface.call("configFileChanged");
@@ -102,6 +102,7 @@ void HDDProtection::save()
         m_sys->hw()->setProtectionLevel(tmp2);
         m_protectionLevel = tmp2;
     }
+    hdd.sync();
 }
 
 void HDDProtection::defaults()

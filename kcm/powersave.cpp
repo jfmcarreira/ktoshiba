@@ -21,7 +21,6 @@
 #include <QtDBus/QtDBus>
 
 #include <KLocalizedString>
-#include <KConfigGroup>
 
 extern "C" {
 #include <linux/toshiba.h>
@@ -41,6 +40,16 @@ PowerSave::PowerSave(QWidget *parent)
     setupUi(this);
 
     m_coolingMethodSupported = isCoolingMethodSupported();
+
+    powersave = KConfigGroup(m_config, "Powersave");
+    if (!powersave.exists()) {
+        powersave.writeEntry("BatteryProfiles", true);
+        powersave.writeEntry("CurrentProfile", 0);
+        powersave.writeEntry("ManageCoolingMethod", true);
+        powersave.writeEntry("CoolingMethodOnBattery", 1);
+        powersave.writeEntry("CoolingMethodPluggedIn", 0);
+        powersave.sync();
+    }
 }
 
 bool PowerSave::isCoolingMethodSupported()
@@ -55,7 +64,12 @@ bool PowerSave::isCoolingMethodSupported()
 
 void PowerSave::load()
 {
-    // Boot Order
+    // Battery Profiles
+    m_manageBatteryProfiles = powersave.readEntry("BatteryProfiles", true);
+    batteryGroupBox->setChecked(m_manageBatteryProfiles);
+    m_batteryProfile = powersave.readEntry("CurrentProfile", 0);
+    battery_profiles_combobox->setCurrentIndex(m_batteryProfile);
+    // Cooling Method
     if (m_coolingMethodSupported) {
         m_type1 << i18n("Maximum Performance") << i18n("Battery Optimized");
         m_type2 << i18n("High Performance") << i18n("Balanced") << i18n("Power Saver");
@@ -67,64 +81,80 @@ void PowerSave::load()
             cooling_method_plugged_combobox->addItems(m_type2);
         }
 
-        KConfigGroup powersave(m_config, "PowerSave");
         if (!powersave.exists()) {
-            powersave.writeEntry("ManageCoolingMethod", true);
-            powersave.writeEntry("CoolingMethodOnBattery", 1);
-            powersave.writeEntry("CoolingMethodPluggedIn", 0);
             powersave.sync();
         }
         m_manageCoolingMethod = powersave.readEntry("ManageCoolingMethod", true);
-        groupBox->setChecked(m_manageCoolingMethod);
+        coolingGroupBox->setChecked(m_manageCoolingMethod);
         m_coolingMethodBattery = powersave.readEntry("CoolingMethodOnBattery", 0);
         cooling_method_battery_combobox->setCurrentIndex(m_coolingMethodBattery);
         m_coolingMethodPlugged = powersave.readEntry("CoolingMethodPluggedIn", 1);
         cooling_method_plugged_combobox->setCurrentIndex(m_coolingMethodPlugged);
+    } else {
+        coolingGroupBox->setEnabled(false);
     }
 }
 
 void PowerSave::save()
 {
+    QDBusInterface iface("net.sourceforge.KToshiba",
+                         "/net/sourceforge/KToshiba",
+                         "net.sourceforge.KToshiba",
+                         QDBusConnection::sessionBus(), this);
+
+    // Battery Profiles
+    bool tmp = batteryGroupBox->isChecked();
+    if (m_manageBatteryProfiles != tmp) {
+        powersave.writeEntry("BatteryProfiles", tmp);
+        m_manageBatteryProfiles = tmp;
+        if (iface.isValid())
+            iface.call("configFileChanged");
+    }
+    int tmp2 = battery_profiles_combobox->currentIndex();
+    if (m_batteryProfile != tmp2) {
+        powersave.writeEntry("CurrentProfile", tmp2);
+        m_batteryProfile = tmp2;
+        if (iface.isValid())
+            iface.call("configFileChanged");
+    }
+    // Cooling Method
     if (m_coolingMethodSupported) {
-        KConfigGroup powersave(m_config, "PowerSave");
-        QDBusInterface iface("net.sourceforge.KToshiba",
-                             "/net/sourceforge/KToshiba",
-                             "net.sourceforge.KToshiba",
-                             QDBusConnection::sessionBus(), this);
-        bool tmp = groupBox->isChecked();
+        tmp = coolingGroupBox->isChecked();
         if (m_manageCoolingMethod != tmp) {
             powersave.writeEntry("ManageCoolingMethod", tmp);
-            powersave.sync();
             m_manageCoolingMethod = tmp;
             if (iface.isValid())
                 iface.call("configFileChanged");
         }
-        int tmp2 = cooling_method_battery_combobox->currentIndex();
+        tmp2 = cooling_method_battery_combobox->currentIndex();
         if (m_coolingMethodBattery != tmp2) {
             powersave.writeEntry("CoolingMethodOnBattery", tmp2);
-            powersave.sync();
             m_coolingMethodBattery = tmp2;
             if (iface.isValid())
                 iface.call("configFileChanged");
         }
-        tmp = cooling_method_plugged_combobox->currentIndex();
+        tmp2 = cooling_method_plugged_combobox->currentIndex();
         if (m_coolingMethodPlugged != tmp2) {
             powersave.writeEntry("CoolingMethodPluggedIn", tmp2);
-            powersave.sync();
             m_coolingMethodPlugged = tmp2;
             if (iface.isValid())
                 iface.call("configFileChanged");
         }
-    } else {
-        groupBox->setEnabled(false);
     }
+    powersave.sync();
 }
 
 void PowerSave::defaults()
 {
+    // Battery Profiles
+    if (!m_manageBatteryProfiles)
+        batteryGroupBox->setChecked(true);
+    if (m_batteryProfile != 0)
+        battery_profiles_combobox->setCurrentIndex(0);
+    // Cooling Method
     if (m_coolingMethodSupported) {
         if (!m_manageCoolingMethod)
-            groupBox->setChecked(true);
+            coolingGroupBox->setChecked(true);
         if (m_coolingMethodBattery != KToshibaHardware::MAXIMUM_PERFORMANCE)
             cooling_method_battery_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
         if (m_coolingMethodPlugged != KToshibaHardware::BATTERY_OPTIMIZED)

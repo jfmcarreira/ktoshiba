@@ -50,9 +50,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void protectHDD(int);
     void notifyHDDMovement();
-    void disabledClicked(bool);
-    void batteryProfileChanged(QString);
-    void setBatteryProfile(QAction *);
     void configureClicked();
     void parseTVAPEvents(int);
 
@@ -61,24 +58,12 @@ private:
     bool checkConfig();
     void loadConfig();
     void createConfig();
-    void doMenu();
 
     FnActions *m_fn;
     KToshibaNetlinkEvents *m_nl;
 
     bool m_monitorHDD;
     bool m_notifyHDD;
-    bool m_manageCoolingMethod;
-    int m_coolingMethod;
-
-    QMenu *m_batteryMenu;
-    QActionGroup *m_batteryGroup;
-    QAction *m_batDisabled;
-    QAction *m_batPerformance;
-    QAction *m_batPowersave;
-    QAction *m_batPresentation;
-    QAction *m_batECO;
-    bool m_batteryProfiles;
 
     QAction *m_configure;
 

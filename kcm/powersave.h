@@ -20,6 +20,7 @@
 #define POWERSAVE_H
 
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "ui_powersave.h"
 
@@ -43,6 +44,10 @@ private:
 
     KToshibaSystemSettings *m_sys;
     KSharedConfigPtr m_config;
+    KConfigGroup powersave;
+
+    bool m_manageBatteryProfiles;
+    int m_batteryProfile;
 
     QStringList m_type1;
     QStringList m_type2;

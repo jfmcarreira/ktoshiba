@@ -1,7 +1,23 @@
+2015-10-19 Azael Avalos <coproscefalo@gmail.com>
+	* Moved Battery Profiles configuration from KToshiba class to KCM Power Save tab
+	* Moved Cooling Method code to FnActions class
+	* Slight changes to Battery Profile code
+	* Updated Spanish translation
+
+2015-10-18 Azael Avalos <coproscefalo@gmail.com>
+	* Misc changes to the status widget, an icon was updated and others removed,
+	  we are now using plasma (or any theme) provided ones
+
+2015-10-17 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed Sleep & Charge mode code (again), we now only display the current laptop
+	  supported Sleep & Charge modes instead of showing all of them
+	* Updated Spanish translation (this time I remembered XD)
+
 2015-10-15 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed USB Sleep and Charge, we were only trying to enable/disable it,
 	  but they support different modes
 	* Slight changes to KToshibaNetlinkEvents class
+	* Forgot to update translations...
 
 2015-10-12 Azael Avalos <coproscefalo@gmail.com>
 	* Added classes to all the UI files (except sysinfo) to get a finer control over

@@ -43,26 +43,6 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <item>
-      <property name="text">
-       <string>Disabled</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Alternate</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Typical</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Auto</string>
-      </property>
-     </item>
      <property name="toolTip">
       <string>Select the USB Sleep and Charge mode.  The computer USB ports will remain powered when the computer is asleep or turned off.</string>
      </property>

@@ -120,7 +120,7 @@ public Q_SLOTS:
     void setEcoLed(quint32);
     quint32 getKBDBacklight(int *, int *, int *);
     void setKBDBacklight(int, int);
-    quint32 getUSBSleepCharge(int *, int *);
+    quint32 getUSBSleepCharge(int *, int *, int *);
     void setUSBSleepCharge(int, int);
     quint32 getUSBSleepFunctionsBatLvl(int *, int *);
     void setUSBSleepFunctionsBatLvl(int);

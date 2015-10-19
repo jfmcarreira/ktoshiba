@@ -228,7 +228,11 @@ void KToshibaSystemSettings::load()
      */
     m_power->load();
 
-    connect(m_power->groupBox, SIGNAL(toggled(bool)),
+    connect(m_power->batteryGroupBox, SIGNAL(toggled(bool)),
+            this, SLOT(configChanged()));
+    connect(m_power->battery_profiles_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChanged()));
+    connect(m_power->coolingGroupBox, SIGNAL(toggled(bool)),
             this, SLOT(configChanged()));
     connect(m_power->cooling_method_battery_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
