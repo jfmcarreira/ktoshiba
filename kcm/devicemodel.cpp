@@ -26,23 +26,23 @@ DeviceModel::DeviceModel(QObject *parent)
     : QAbstractListModel(parent),
       m_supported(MAX_BOOT_DEVICES)
 {
-    m_map[FDD] = "FDD";
-    m_map[HDD1] = "HDD/SSD 1";
-    m_map[ODD] = "ODD";
-    m_map[LAN] = "LAN";
-    m_map[USB_MEMORY] = "USB MEMORY";
-    m_map[HDD2] = "HDD/SSD 2";
-    m_map[eSATA] = "eSATA";
-    m_map[USB_ODD] = "USB ODD";
-    m_map[SD] = "SD";
-    m_map[USB] = "USB";
-    m_map[HDD3] = "HDD/SSD 3";
-    m_map[NO_DEVICE] = "NO DEVICE";
+    m_devicesMap[FDD] = "FDD";
+    m_devicesMap[HDD1] = "HDD/SSD 1";
+    m_devicesMap[ODD] = "ODD";
+    m_devicesMap[LAN] = "LAN";
+    m_devicesMap[USB_MEMORY] = "USB MEMORY";
+    m_devicesMap[HDD2] = "HDD/SSD 2";
+    m_devicesMap[eSATA] = "eSATA";
+    m_devicesMap[USB_ODD] = "USB ODD";
+    m_devicesMap[SD] = "SD";
+    m_devicesMap[USB] = "USB";
+    m_devicesMap[HDD3] = "HDD/SSD 3";
+    m_devicesMap[NO_DEVICE] = "NO DEVICE";
 }
 
 DeviceModel::~DeviceModel()
 {
-    m_map.clear();
+    m_devicesMap.clear();
     m_list.clear();
     m_devices.clear();
 }
@@ -158,7 +158,7 @@ void DeviceModel::setDeviceData(const quint32 value)
 
     for (int i = 0; i < m_supported; i++) {
         m_devices << ((value >> (4 * i)) & 0xf);
-        m_list << m_map.value(m_devices.at(i));
+        m_list << m_devicesMap.value(m_devices.at(i));
     }
     emit endResetModel();
 }

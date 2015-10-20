@@ -71,14 +71,14 @@ void PowerSave::load()
     battery_profiles_combobox->setCurrentIndex(m_batteryProfile);
     // Cooling Method
     if (m_coolingMethodSupported) {
-        m_type1 << i18n("Maximum Performance") << i18n("Battery Optimized");
-        m_type2 << i18n("High Performance") << i18n("Balanced") << i18n("Power Saver");
+        m_coolingMethodType1 << i18n("Maximum Performance") << i18n("Battery Optimized");
+        m_coolingMethodType2 << i18n("High Performance") << i18n("Balanced") << i18n("Power Saver");
         if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED) {
-            cooling_method_battery_combobox->addItems(m_type1);
-            cooling_method_plugged_combobox->addItems(m_type1);
+            cooling_method_battery_combobox->addItems(m_coolingMethodType1);
+            cooling_method_plugged_combobox->addItems(m_coolingMethodType1);
         } else if (m_maxCoolingMethod == KToshibaHardware::POWER_SAVER) {
-            cooling_method_battery_combobox->addItems(m_type2);
-            cooling_method_plugged_combobox->addItems(m_type2);
+            cooling_method_battery_combobox->addItems(m_coolingMethodType2);
+            cooling_method_plugged_combobox->addItems(m_coolingMethodType2);
         }
 
         if (!powersave.exists()) {
@@ -149,8 +149,8 @@ void PowerSave::defaults()
     // Battery Profiles
     if (!m_manageBatteryProfiles)
         batteryGroupBox->setChecked(true);
-    if (m_batteryProfile != 0)
-        battery_profiles_combobox->setCurrentIndex(0);
+    if (m_batteryProfile != Performance)
+        battery_profiles_combobox->setCurrentIndex(Performance);
     // Cooling Method
     if (m_coolingMethodSupported) {
         if (!m_manageCoolingMethod)

@@ -115,7 +115,7 @@ void HDDProtection::defaults()
     if (!m_notifyHDD)
         hdd_notification_checkbox->setChecked(true);
     if (m_protectionLevel != 2) {
-        protection_level->setText(m_levels.at(2));
-        protection_level_slider->setValue(2);
+        protection_level->setText(m_levels.at(Medium));
+        protection_level_slider->setValue(Medium);
     }
 }

@@ -30,6 +30,7 @@
 class QTimer;
 
 class KToshibaDBusInterface;
+class KToshibaNetlinkEvents;
 class KToshibaKeyHandler;
 class KToshibaHardware;
 
@@ -39,15 +40,18 @@ class FnActions : public QObject
 
 public:
     enum WidgetIcons { Disabled, BatteryProfile, KBDStatus };
-    enum Zoom { Reset, In, Out = -1 };
+    enum ZoomActions { Reset, In, Out };
     enum ToogleActions { Off, On };
     enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
+    enum KeyboardBacklightGenerations { FirstKeyboardGen = 1, SecondKeyboardGen = 2 };
 
 public:
     FnActions(QObject *parent);
     ~FnActions();
     bool init();
 
+    bool checkConfig();
+    void createConfig();
     void updateKBDBacklight();
 
     KToshibaHardware *hw() const
@@ -55,14 +59,17 @@ public:
         return m_hw;
     }
 
-public Q_SLOTS:
-    void batMonitorChanged(bool);
+Q_SIGNALS:
+    void vibrationDetected();
 
 private Q_SLOTS:
+    void loadConfig();
     void hideWidget();
-    void processHotkey(int);
     void compositingChanged(bool);
-    void updateBatteryProfile(bool init = false);
+    void processHotkey(int);
+    void parseTVAPEvents(int);
+    void protectHDD(int);
+    void updateBatteryProfile();
     void updateCoolingMethod(QString);
 
 private:
@@ -78,31 +85,37 @@ private:
 
     KSharedConfigPtr m_config;
 
+    bool m_sysinfo;
     bool m_touchpad;
     bool m_illumination;
     bool m_eco;
     bool m_kbdBacklight;
-    bool m_batMonitor;
     bool m_cooling;
+    int m_hdd;
 
     KToshibaDBusInterface *m_dBus;
+    KToshibaNetlinkEvents *m_nl;
     KToshibaKeyHandler *m_hotkeys;
     KToshibaHardware *m_hw;
     Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
     QTimer *m_widgetTimer;
-    QList<int> m_profiles;
+    QList<int> m_batteryProfiles;
     QList<int> m_keyboardModes;
     QString m_version;
     bool m_batteryKeyPressed;
+    bool m_monitorBatteryProfiles;
     bool m_manageCoolingMethod;
+    bool m_monitorHDD;
+    bool m_notifyHDD;
     uint m_cookie;
-    int m_type;
-    int m_mode;
-    int m_time;
+    int m_keyboardType;
+    int m_keyboardMode;
+    int m_keyboardTime;
     int m_batteryProfile;
-    int m_coolingMethod;
     int m_maxCoolingMethod;
+    int m_coolingMethodPluggedIn;
+    int m_coolingMethodOnBattery;
 };
 
 #endif // FN_ACTIONS_H

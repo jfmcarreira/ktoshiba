@@ -61,12 +61,12 @@ BootSettings::~BootSettings()
 
 bool BootSettings::isBootOrderSupported()
 {
-    quint32 result = m_sys->hw()->getBootOrder(&m_order, &m_maxdev, &m_default);
+    quint32 result = m_sys->hw()->getBootOrder(&m_bootOrder, &m_maxDevices, &m_defaultBootOrder);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
 
-    m_model->setSupportedDevices(m_maxdev);
+    m_model->setSupportedDevices(m_maxDevices);
 
     return true;
 }
@@ -75,10 +75,10 @@ bool BootSettings::isPanelPowerOnSupported()
 {
     quint32 result = m_sys->hw()->getPanelPowerON();
 
-    if (result != 0 && result != 1)
+    if (result != KToshibaHardware::TCI_DISABLED && result != KToshibaHardware::TCI_ENABLED)
         return false;
 
-    m_panelpower = result;
+    m_panelPowerON = result;
 
     return true;
 }
@@ -119,12 +119,12 @@ void BootSettings::load()
 {
     // Boot Order
     if (m_bootOrderSupported)
-        m_model->setDeviceData(m_order);
+        m_model->setDeviceData(m_bootOrder);
     else
         groupBox->setEnabled(false);
     // Panel Power ON
     if (m_panelPowerOnSupported)
-        panel_power_checkbox->setChecked(m_panelpower ? true : false);
+        panel_power_checkbox->setChecked(m_panelPowerON ? true : false);
     else
         panel_power_checkbox->setEnabled(false);
     // Wake on Keyboard
@@ -146,22 +146,24 @@ void BootSettings::save()
     // Boot Order
     if (m_bootOrderSupported) {
         tmp = m_model->getDeviceData();
-        if (m_order != tmp) {
+        if (m_bootOrder != tmp) {
             m_sys->hw()->setBootOrder(tmp);
-            m_order = tmp;
+            m_bootOrder = tmp;
         }
     }
     // Panel Power ON
     if (m_panelPowerOnSupported) {
-        tmp = panel_power_checkbox->checkState() == Qt::Checked ? 1 : 0;
-        if (m_panelpower != tmp) {
+        tmp = (panel_power_checkbox->checkState() == Qt::Checked) ?
+                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+        if (m_panelPowerON != tmp) {
             m_sys->hw()->setPanelPowerON(tmp);
-            m_panelpower = tmp;
+            m_panelPowerON = tmp;
         }
     }
     // Wake on Keyboard
     if (m_wokSupported) {
-        tmp = wok_checkbox->checkState() == Qt::Checked ? 1 : 0;
+        tmp = (wok_checkbox->checkState() == Qt::Checked) ?
+                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
         if (m_wok != tmp) {
             m_sys->hw()->setWakeOnKeyboard(tmp);
             m_wok = tmp;
@@ -169,7 +171,7 @@ void BootSettings::save()
     }
     // Wake on LAN
     if (m_wolSupported) {
-        tmp = wol_checkbox->checkState() == Qt::Checked ? 0x0801 : 0x0800;
+        tmp = (wol_checkbox->checkState() == Qt::Checked) ? 0x0801 : 0x0800;
         if (m_wol != tmp) {
             m_sys->hw()->setWakeOnLAN(tmp);
             m_wol = tmp;
@@ -180,10 +182,10 @@ void BootSettings::save()
 void BootSettings::defaults()
 {
     // Boot Order
-    if (m_bootOrderSupported && m_order != m_default)
-        m_model->setDeviceData(m_default);
+    if (m_bootOrderSupported && m_bootOrder != m_defaultBootOrder)
+        m_model->setDeviceData(m_defaultBootOrder);
     // Panel Power ON
-    if (m_panelPowerOnSupported && m_panelpower)
+    if (m_panelPowerOnSupported && m_panelPowerON)
         panel_power_checkbox->setChecked(false);
     // Wake on Keyboard
     if (m_wokSupported && m_wok)

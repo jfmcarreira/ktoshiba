@@ -280,7 +280,7 @@ void KToshibaHardware::setTouchPad(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x050e, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setTouchPad", INPUT_DATA_ERROR);
 
         return;
@@ -320,7 +320,7 @@ void KToshibaHardware::setIllumination(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x014e, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setIllumination", INPUT_DATA_ERROR);
 
         return;
@@ -372,7 +372,7 @@ void KToshibaHardware::setEcoLed(quint32 state)
 {
     SMMRegisters regs = { 0xff00, 0x97, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setEcoLed", INPUT_DATA_ERROR);
 
         return;
@@ -484,7 +484,7 @@ quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
         printSMMError("getUSBSleepFunctionsBatLvl", regs.eax);
     } else {
         int tmp = regs.ecx & 0x7;
-        *state = (tmp == 0x4) ? 1 : 0;
+        *state = (tmp == 0x4) ? TCI_ENABLED : TCI_DISABLED;
         *level = regs.ecx >> 0x10;
     }
 
@@ -536,7 +536,7 @@ void KToshibaHardware::setUSBRapidCharge(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x0150, state, 0, 0, 0x0300 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setUSBRapidCharge", INPUT_DATA_ERROR);
 
         return;
@@ -575,7 +575,7 @@ void KToshibaHardware::setUSBSleepMusic(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x015e, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setUSBSleepMusic", INPUT_DATA_ERROR);
 
         return;
@@ -614,7 +614,7 @@ void KToshibaHardware::setKBDFunctions(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x0522, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setKBDFunctions", INPUT_DATA_ERROR);
 
         return;
@@ -653,7 +653,7 @@ void KToshibaHardware::setPanelPowerON(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x010d, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setPanelPowerON", INPUT_DATA_ERROR);
 
         return;
@@ -692,7 +692,7 @@ void KToshibaHardware::setUSBThree(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x0169, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setUSBThree", INPUT_DATA_ERROR);
 
         return;
@@ -767,7 +767,7 @@ void KToshibaHardware::setWakeOnKeyboard(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x0137, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setWakeOnKeyboard", INPUT_DATA_ERROR);
 
         return;
@@ -807,7 +807,7 @@ void KToshibaHardware::setWakeOnLAN(quint32 state)
 {
     SMMRegisters regs = { 0xf400, 0x0700, state, 0, 0, 0 };
 
-    if (state != 0 && state != 1) {
+    if (state != TCI_DISABLED && state != TCI_ENABLED) {
         printSMMError("setWakeOnLAN", INPUT_DATA_ERROR);
 
         return;

@@ -43,12 +43,11 @@ private:
     bool m_sleepChargeSupported;
     int m_sleepCharge;
     int m_maxSleepCharge;
-    int m_defaultSC;
-    QMap<int, int> m_map;
-    QStringList m_modes;
-    QStringList m_sleepOnBat;
-    int m_batEnabled;
-    int m_batLevel;
+    int m_defaultSleepCharge;
+    QMap<int, int> m_sleepModesMap;
+    QStringList m_sleepModes;
+    int m_batteryEnabled;
+    int m_batteryLevel;
 
     bool m_sleepMusicSupported;
     int m_sleepMusic;

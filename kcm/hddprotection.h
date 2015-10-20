@@ -37,6 +37,8 @@ public:
     void save();
     void defaults();
 
+    enum ProtectionLevels { Disabled, Low, Medium, High };
+
     QStringList m_levels;
 
 private:

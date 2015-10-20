@@ -31,15 +31,15 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     setupUi(this);
 
     m_touchpadSupported = isTouchPadSupported();
-    m_rapidchargeSupported = isRapidChargeSupported();
-    m_usbthreeSupported = isUSBThreeSupported();
+    m_rapidChargeSupported = isRapidChargeSupported();
+    m_usbThreeSupported = isUSBThreeSupported();
 }
 
 bool GeneralSettings::isTouchPadSupported()
 {
     m_touchpad = m_sys->hw()->getTouchPad();
 
-    if (m_touchpad != 0 && m_touchpad != 1)
+    if (m_touchpad != KToshibaHardware::TCI_DISABLED && m_touchpad != KToshibaHardware::TCI_ENABLED)
         return false;
 
     return true;
@@ -47,9 +47,9 @@ bool GeneralSettings::isTouchPadSupported()
 
 bool GeneralSettings::isRapidChargeSupported()
 {
-    m_rapidcharge = m_sys->hw()->getUSBRapidCharge();
+    m_rapidCharge = m_sys->hw()->getUSBRapidCharge();
 
-    if (m_rapidcharge != 0 && m_rapidcharge != 1)
+    if (m_rapidCharge != KToshibaHardware::TCI_DISABLED && m_rapidCharge != KToshibaHardware::TCI_ENABLED)
         return false;
 
     return true;
@@ -57,9 +57,9 @@ bool GeneralSettings::isRapidChargeSupported()
 
 bool GeneralSettings::isUSBThreeSupported()
 {
-    m_usbthree = m_sys->hw()->getUSBThree();
+    m_usbThree = m_sys->hw()->getUSBThree();
 
-    if (m_usbthree != 0 && m_usbthree != 1)
+    if (m_usbThree != KToshibaHardware::TCI_DISABLED && m_usbThree != KToshibaHardware::TCI_ENABLED)
         return false;
 
     return true;
@@ -73,13 +73,13 @@ void GeneralSettings::load()
     else
         touchpad_checkbox->setEnabled(false);
     // USB Rapid Charge
-    if (m_rapidchargeSupported)
-        rapid_charge_checkbox->setChecked(m_rapidcharge ? true : false);
+    if (m_rapidChargeSupported)
+        rapid_charge_checkbox->setChecked(m_rapidCharge ? true : false);
     else
         rapid_charge_checkbox->setEnabled(false);
     // USB Three
-    if (m_usbthreeSupported)
-        usb_three_checkbox->setChecked(m_usbthree ? true : false);
+    if (m_usbThreeSupported)
+        usb_three_checkbox->setChecked(m_usbThree ? true : false);
     else
         usb_three_checkbox->setEnabled(false);
 }
@@ -90,26 +90,29 @@ void GeneralSettings::save()
 
     // TouchPad
     if (m_touchpadSupported) {
-        tmp = touchpad_checkbox->checkState() == Qt::Checked ? 1 : 0;
+        tmp = (touchpad_checkbox->checkState() == Qt::Checked) ?
+                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
         if (m_touchpad != tmp) {
             m_sys->hw()->setTouchPad(tmp);
             m_touchpad = tmp;
         }
     }
     // USB Rapid Charge
-    if (m_rapidchargeSupported) {
-        tmp = rapid_charge_checkbox->checkState() == Qt::Checked ? 1 : 0;
-        if (m_rapidcharge != tmp) {
+    if (m_rapidChargeSupported) {
+        tmp = (rapid_charge_checkbox->checkState() == Qt::Checked) ?
+                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+        if (m_rapidCharge != tmp) {
             m_sys->hw()->setUSBRapidCharge(tmp);
-            m_rapidcharge = tmp;
+            m_rapidCharge = tmp;
         }
     }
     // USB Three
-    if (m_usbthreeSupported) {
-        tmp = usb_three_checkbox->checkState() == Qt::Checked ? 1 : 0;
-        if (m_usbthree != tmp) {
+    if (m_usbThreeSupported) {
+        tmp = (usb_three_checkbox->checkState() == Qt::Checked) ?
+                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+        if (m_usbThree != tmp) {
             m_sys->hw()->setUSBThree(tmp);
-            m_usbthree = tmp;
+            m_usbThree = tmp;
         }
     }
 }
@@ -120,9 +123,9 @@ void GeneralSettings::defaults()
     if (m_touchpadSupported && !m_touchpad)
         touchpad_checkbox->setChecked(true);
     // USB Rapid Charge
-    if (m_rapidchargeSupported && m_rapidcharge)
+    if (m_rapidChargeSupported && m_rapidCharge)
         rapid_charge_checkbox->setChecked(false);
     // USB Three
-    if (m_usbthreeSupported && !m_usbthree)
+    if (m_usbThreeSupported && !m_usbThree)
         usb_three_checkbox->setChecked(true);
 }

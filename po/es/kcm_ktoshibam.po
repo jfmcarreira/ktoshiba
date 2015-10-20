@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ktoshiba 5.0\n"
+"Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-19 15:49-0600\n"
+"POT-Creation-Date: 2015-10-20 16:10-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -499,8 +499,8 @@ msgid ""
 "Toggles the Battery Profile monitoring feature.  Check this if you want "
 "KToshiba to manage additional power saving features."
 msgstr ""
-"Alterna el monitoreo de los perfiles de batería.  Selecciona esto si "
-"deseas que KToshiba administre perfiles de ahorro de batería adicionales."
+"Alterna el monitoreo de los perfiles de batería.  Selecciona esto si deseas "
+"que KToshiba administre perfiles de ahorro de batería adicionales."
 
 #. i18n: file: kcm/powersave.ui:27
 #. i18n: ectx: property (title), widget (QGroupBox, batteryGroupBox)
@@ -659,8 +659,8 @@ msgstr "Información del Sistema"
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: kcm/systemsettings.cpp:353 kcm/keyboardsettings.cpp:103
-#: kcm/keyboardsettings.cpp:139
+#: kcm/systemsettings.cpp:353 kcm/keyboardsettings.cpp:104
+#: kcm/keyboardsettings.cpp:140
 #, kde-format
 msgid " sec"
 msgstr " seg"
@@ -785,7 +785,7 @@ msgstr "ENCENDIDO"
 msgid "OFF"
 msgstr "APAGADO"
 
-#: kcm/keyboardsettings.cpp:67
+#: kcm/keyboardsettings.cpp:68
 #, kde-format
 msgid ""
 "Select how the keyboard Function keys operate.<br/>Normal: The F{1-12} keys "
@@ -798,7 +798,7 @@ msgstr ""
 "<br/>Función: Las teclas F{1-12} hacen funcionar los accesos rápidos y las "
 "teclas F{1-12} se accesan vía FN-F{1-12}."
 
-#: kcm/keyboardsettings.cpp:82
+#: kcm/keyboardsettings.cpp:83
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>FN-Z: User toggles the "
@@ -808,7 +808,7 @@ msgstr ""
 "alterna la retroiluminación del teclado.<br/>AUTO: La retroiluminación del "
 "teclado se enciende/apaga automaticamente."
 
-#: kcm/keyboardsettings.cpp:93
+#: kcm/keyboardsettings.cpp:94
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>TIMER: Keyboard backlight "

@@ -34,7 +34,10 @@ public:
     void save();
     void defaults();
 
-    int m_type;
+    enum KeyboardBacklightGenerations { FirstKeyboardGen = 1, SecondKeyboardGen = 2 };
+    enum KeyboardIndexModes { FNZ = 0, AUTO = 1, TIMER = 0, ON = 1, OFF = 2 };
+
+    int m_keyboardType;
 
 private:
     bool isKeyboardFunctionsSupported();
@@ -42,17 +45,17 @@ private:
 
     KToshibaSystemSettings *m_sys;
 
-    bool m_kbdFunctionsSupported;
-    QString m_functionsToolTip;
-    int m_kbdfunctions;
+    bool m_keyboardFunctionsSupported;
+    QString m_keyboardFunctionsToolTip;
+    int m_keyboardFunctions;
 
     bool m_kbdBacklightSupported;
-    QStringList m_type1;
-    QStringList m_type2;
+    QStringList m_keyboardModesGen1;
+    QStringList m_keyboardModesGen2;
     QString m_tooltip;
-    int m_mode;
-    int m_index;
-    int m_time;
+    int m_keyboardMode;
+    int m_keyboardIndex;
+    int m_keyboardTime;
 };
 
 #endif // KEYBOARDSETTINGS_H

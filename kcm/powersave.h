@@ -37,6 +37,8 @@ public:
     void save();
     void defaults();
 
+    enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
+
     bool m_coolingMethodSupported;
 
 private:
@@ -49,11 +51,10 @@ private:
     bool m_manageBatteryProfiles;
     int m_batteryProfile;
 
-    QStringList m_type1;
-    QStringList m_type2;
+    QStringList m_coolingMethodType1;
+    QStringList m_coolingMethodType2;
     int m_coolingMethod;
     int m_maxCoolingMethod;
-    int m_defaultCoolingMethod;
     bool m_manageCoolingMethod;
     int m_coolingMethodBattery;
     int m_coolingMethodPlugged;
