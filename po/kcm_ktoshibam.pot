@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Azael_Avalos
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the ktoshiba package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ktoshiba 5.0\n"
+"Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-19 15:49-0600\n"
+"POT-Creation-Date: 2015-10-20 16:10-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -629,8 +629,8 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: kcm/systemsettings.cpp:353 kcm/keyboardsettings.cpp:103
-#: kcm/keyboardsettings.cpp:139
+#: kcm/systemsettings.cpp:353 kcm/keyboardsettings.cpp:104
+#: kcm/keyboardsettings.cpp:140
 #, kde-format
 msgid " sec"
 msgstr ""
@@ -755,7 +755,7 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:67
+#: kcm/keyboardsettings.cpp:68
 #, kde-format
 msgid ""
 "Select how the keyboard Function keys operate.<br/>Normal: The F{1-12} keys "
@@ -764,14 +764,14 @@ msgid ""
 "F{1-12}."
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:82
+#: kcm/keyboardsettings.cpp:83
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>FN-Z: User toggles the "
 "keyboard backlight.<br/>AUTO: Keyboard backlight turns on/off automatically."
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:93
+#: kcm/keyboardsettings.cpp:94
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>TIMER: Keyboard backlight "

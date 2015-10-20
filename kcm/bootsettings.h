@@ -36,11 +36,6 @@ public:
     void save();
     void defaults();
 
-    bool m_bootOrderSupported;
-    bool m_panelPowerOnSupported;
-    bool m_wokSupported;
-    bool m_wolSupported;
-
 Q_SIGNALS:
     void changed();
 
@@ -57,15 +52,19 @@ private:
     KToshibaSystemSettings *m_sys;
 
     DeviceModel *m_model;
-    int m_order;
-    int m_maxdev;
-    int m_default;
+    bool m_bootOrderSupported;
+    int m_bootOrder;
+    int m_maxDevices;
+    int m_defaultBootOrder;
 
-    int m_panelpower;
+    bool m_panelPowerOnSupported;
+    int m_panelPowerON;
 
+    bool m_wokSupported;
     int m_wok;
     int m_defaultWOK;
 
+    bool m_wolSupported;
     int m_wol;
     int m_defaultWOL;
 };

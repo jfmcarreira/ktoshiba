@@ -1,13 +1,13 @@
-# Spanisg translation of ktoshiba.
+# Spanish translation of ktoshiba.
 # Copyright (C) 2014-2015 Azael_Avalos
 # This file is distributed under the same license as the KToshiba package.
 # Azael Avalos <coproscefalo@gmail.com>, 2014-2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ktoshiba 5.0\n"
+"Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-19 15:49-0600\n"
+"POT-Creation-Date: 2015-10-20 16:10-0600\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -36,60 +36,60 @@ msgstr "coproscefalo@gmail.com"
 msgid "StatusWidget"
 msgstr "Widget de Estado"
 
-#: src/ktoshiba.cpp:48 src/ktoshiba.cpp:50 src/main.cpp:31
+#: src/ktoshiba.cpp:37 src/ktoshiba.cpp:39 src/main.cpp:31
 #, kde-format
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: src/ktoshiba.cpp:50 src/main.cpp:33
+#: src/ktoshiba.cpp:39 src/main.cpp:33
 #, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: src/ktoshiba.cpp:87
+#: src/ktoshiba.cpp:61
 #, kde-format
 msgid "Configure"
 msgstr "Configurar"
 
-#: src/ktoshiba.cpp:128 src/ktoshiba.cpp:129 src/ktoshiba.cpp:130
-#: src/ktoshiba.cpp:131 src/ktoshiba.cpp:132 src/ktoshiba.cpp:133
-#, kde-format
-msgid "Unknown"
-msgstr "Desconocido"
-
-#: src/ktoshiba.cpp:163
+#: src/ktoshiba.cpp:78
 #, kde-format
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: src/ktoshiba.cpp:164
+#: src/ktoshiba.cpp:79
 #, kde-format
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: src/fnactions.cpp:237
+#: src/fnactions.cpp:168 src/fnactions.cpp:169 src/fnactions.cpp:170
+#: src/fnactions.cpp:171 src/fnactions.cpp:172 src/fnactions.cpp:173
+#, kde-format
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: src/fnactions.cpp:296
 #, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/fnactions.cpp:244
+#: src/fnactions.cpp:303
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/fnactions.cpp:251 src/fnactions.cpp:262
+#: src/fnactions.cpp:310 src/fnactions.cpp:321
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
 
-#: src/fnactions.cpp:329
+#: src/fnactions.cpp:388
 #, kde-format
 msgid "OFF"
 msgstr "APAGADO"
 
-#: src/fnactions.cpp:332
+#: src/fnactions.cpp:391
 #, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"

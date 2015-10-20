@@ -47,7 +47,7 @@ public:
     KToshibaHardware(QObject *parent = 0);
     bool init();
 
-    enum TCIReturnCodes {
+    enum ReturnCodes {
         SUCCESS            = 0x0000,
         SUCCESS2           = 0x0001,
         FAILURE            = 0x1000,
@@ -70,7 +70,7 @@ public:
         //TABLET    = 0x,
     };
 
-    enum KbdBacklightMode {
+    enum KeyboardBacklightModes {
         FNZ   = 0x01,
         TIMER = 0x02,
         ON    = 0x08,
@@ -85,14 +85,11 @@ public:
         POWER_SAVER         = 2,
     };
 
-    QString modelFamily;
-    QString modelNumber;
-    QString biosVersion;
-    QString biosDate;
-    QString biosManufacturer;
-    QString ecVersion;
+    enum DeviceState {
+        TCI_DISABLED,
+        TCI_ENABLED,
+    };
 
-public Q_SLOTS:
     /*
      * System Information calls
      */
@@ -142,6 +139,13 @@ public Q_SLOTS:
     void setWakeOnLAN(quint32);
     quint32 getCoolingMethod(int *, int *);
     void setCoolingMethod(int);
+
+    QString modelFamily;
+    QString modelNumber;
+    QString biosVersion;
+    QString biosDate;
+    QString biosManufacturer;
+    QString ecVersion;
 
 Q_SIGNALS:
     void touchpadToggled(int);

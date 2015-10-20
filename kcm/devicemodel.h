@@ -37,7 +37,7 @@ public:
     void moveUp(const QModelIndex &index);
     void moveDown(const QModelIndex &index);
 
-    enum Devices {
+    enum BootDevices {
         FDD        = 0x0,
         HDD1       = 0x1,
         ODD        = 0x2,
@@ -60,7 +60,7 @@ public:
 private:
     QString tooltip(int value) const;
 
-    QMap<int, QString> m_map;
+    QMap<int, QString> m_devicesMap;
     QList<int> m_devices;
     QStringList m_list;
     int m_supported;

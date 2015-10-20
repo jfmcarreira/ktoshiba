@@ -38,7 +38,7 @@ SleepUtilities::SleepUtilities(QWidget *parent)
 
 bool SleepUtilities::isSleepChargeSupported()
 {
-    quint32 result = m_sys->hw()->getUSBSleepCharge(&m_sleepCharge, &m_maxSleepCharge, &m_defaultSC);
+    quint32 result = m_sys->hw()->getUSBSleepCharge(&m_sleepCharge, &m_maxSleepCharge, &m_defaultSleepCharge);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
@@ -49,22 +49,22 @@ bool SleepUtilities::isSleepChargeSupported()
      * laptop supports, however, "Disabled" is always supported.
      */
     int index = 0;
-    m_map[index] = KToshibaHardware::DISABLED;
-    m_modes << i18n("Disabled");
+    m_sleepModesMap[index] = KToshibaHardware::DISABLED;
+    m_sleepModes << i18n("Disabled");
     index++;
     if ((m_maxSleepCharge & KToshibaHardware::ALTERNATE) != 1) {
-        m_map[index] = KToshibaHardware::ALTERNATE;
-        m_modes << i18n("Alternate");
+        m_sleepModesMap[index] = KToshibaHardware::ALTERNATE;
+        m_sleepModes << i18n("Alternate");
         index++;
     }
     if ((m_maxSleepCharge & KToshibaHardware::TYPICAL) != 1) {
-        m_map[index] = KToshibaHardware::TYPICAL;
-        m_modes << i18n("Typical");
+        m_sleepModesMap[index] = KToshibaHardware::TYPICAL;
+        m_sleepModes << i18n("Typical");
         index++;
     }
     if ((m_maxSleepCharge & KToshibaHardware::AUTO) != 1) {
-        m_map[index] = KToshibaHardware::AUTO;
-        m_modes << i18n("Auto");
+        m_sleepModesMap[index] = KToshibaHardware::AUTO;
+        m_sleepModes << i18n("Auto");
         index++;
     }
 
@@ -75,7 +75,8 @@ bool SleepUtilities::isSleepMusicSupported()
 {
     m_sleepMusic = m_sys->hw()->getUSBSleepMusic();
 
-    if (m_sleepMusic != 0 && m_sleepMusic != 1)
+    if (m_sleepMusic != KToshibaHardware::TCI_DISABLED
+        && m_sleepMusic != KToshibaHardware::TCI_ENABLED)
         return false;
 
     return true;
@@ -85,15 +86,15 @@ void SleepUtilities::load()
 {
     // Sleep and Charge
     if (m_sleepChargeSupported) {
-        sleep_charge_combobox->addItems(m_modes);
-        sleep_charge_combobox->setCurrentIndex(m_map.key(m_sleepCharge));
+        sleep_charge_combobox->addItems(m_sleepModes);
+        sleep_charge_combobox->setCurrentIndex(m_sleepModesMap.key(m_sleepCharge));
 
-        quint32 sleep_on_bat = m_sys->hw()->getUSBSleepFunctionsBatLvl(&m_batEnabled, &m_batLevel);
+        quint32 sleep_on_bat = m_sys->hw()->getUSBSleepFunctionsBatLvl(&m_batteryEnabled, &m_batteryLevel);
         if (sleep_on_bat == KToshibaHardware::SUCCESS
             || sleep_on_bat == KToshibaHardware::SUCCESS2) {
-            groupBox->setChecked(m_batEnabled ? true : false);
-            battery_level->setText(QString::number(m_batLevel) + "%");
-            battery_level_slider->setValue(m_batLevel);
+            groupBox->setChecked(m_batteryEnabled ? true : false);
+            battery_level->setText(QString::number(m_batteryLevel) + "%");
+            battery_level_slider->setValue(m_batteryLevel);
         } else {
             groupBox->setEnabled(false);
         }
@@ -115,25 +116,26 @@ void SleepUtilities::save()
 
     // Sleep and Charge
     if (m_sleepChargeSupported) {
-        tmp = m_map.value(sleep_charge_combobox->currentIndex());
+        tmp = m_sleepModesMap.value(sleep_charge_combobox->currentIndex());
         if (m_sleepCharge != tmp) {
-            m_sys->hw()->setUSBSleepCharge(tmp, m_defaultSC);
+            m_sys->hw()->setUSBSleepCharge(tmp, m_defaultSleepCharge);
             m_sleepCharge = tmp;
         }
-        tmp = groupBox->isChecked() ? 1 : 0;
-        if (m_batEnabled != tmp) {
-            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp == 0 ? tmp : m_batLevel);
-            m_batEnabled = tmp;
+        tmp = groupBox->isChecked() ? KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+        if (m_batteryEnabled != tmp) {
+            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp == KToshibaHardware::TCI_DISABLED ? tmp : m_batteryLevel);
+            m_batteryEnabled = tmp;
         }
         tmp = battery_level_slider->value();
-        if (m_batLevel != tmp) {
+        if (m_batteryLevel != tmp) {
             m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp);
-            m_batLevel = tmp;
+            m_batteryLevel = tmp;
         }
     }
     // Sleep and Music
     if (m_sleepMusicSupported) {
-        tmp = sleep_music_checkbox->checkState() == Qt::Checked ? 1 : 0;
+        tmp = (sleep_music_checkbox->checkState() == Qt::Checked) ?
+                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
         if (m_sleepMusic != tmp) {
             m_sys->hw()->setUSBSleepMusic(tmp);
             m_sleepMusic = tmp;
@@ -147,15 +149,15 @@ void SleepUtilities::defaults()
     if (m_sleepChargeSupported) {
         if (m_sleepCharge != KToshibaHardware::AUTO)
             sleep_charge_combobox->setCurrentIndex(3);
-        if (m_batEnabled != 1)
+        if (m_batteryEnabled != KToshibaHardware::TCI_ENABLED)
             groupBox->setChecked(true);
-        if (m_batLevel != 10) {
+        if (m_batteryLevel != 10) {
             battery_level->setText(QString::number(10) + "%");
             battery_level_slider->setValue(10);
         }
     }
     // Sleep and Music
     if (m_sleepMusicSupported)
-        if (m_sleepMusic != 0)
+        if (m_sleepMusic != KToshibaHardware::TCI_DISABLED)
             sleep_music_checkbox->setChecked(false);
 }

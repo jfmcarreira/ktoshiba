@@ -44,11 +44,11 @@ private:
     bool m_touchpadSupported;
     quint32 m_touchpad;
 
-    bool m_rapidchargeSupported;
-    quint32 m_rapidcharge;
+    bool m_rapidChargeSupported;
+    quint32 m_rapidCharge;
 
-    bool m_usbthreeSupported;
-    quint32 m_usbthree;
+    bool m_usbThreeSupported;
+    quint32 m_usbThree;
 };
 
 #endif // GENERALSETTINGS_H

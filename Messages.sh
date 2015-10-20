@@ -29,7 +29,7 @@ DIRS="kcm src"
 XGETTEXTOPT="--from-code=UTF-8 -C --kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1 \
 	      -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 -kI18N_NOOP2_NOSTRIP:1c,2 -kaliasLocale -kki18n:1 -kki18nc:1c,2 \
 	      -kki18np:1,2 -kki18ncp:1c,2,3 --msgid-bugs-address=http://sourceforge.net/p/ktoshiba/support-requests/ \
-	      --copyright-holder=Azael_Avalos --package-name=ktoshiba --package-version=5.0"
+	      --copyright-holder=Azael_Avalos --package-name=ktoshiba --package-version=5.1"
 
 echo "Extracting messages"
 for subdir in $DIRS; do

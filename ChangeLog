@@ -1,3 +1,7 @@
+2015-10-20 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed a bunch of variables, let's follow the KDE coding style
+	* Moved netlink events class and configuration related code to FnActions
+
 2015-10-19 Azael Avalos <coproscefalo@gmail.com>
 	* Moved Battery Profiles configuration from KToshiba class to KCM Power Save tab
 	* Moved Cooling Method code to FnActions class

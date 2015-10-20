@@ -208,7 +208,7 @@ void KToshibaSystemSettings::load()
             this, SLOT(kbdTimeoutChanged(int)));
     connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(kbdBacklightChanged(int)));
-    if (m_kbd->m_type == 1)
+    if (m_kbd->m_keyboardType == KeyboardSettings::FirstKeyboardGen)
         connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(configChangedReboot()));
     /*
@@ -331,18 +331,18 @@ void KToshibaSystemSettings::batteryLevelChanged(int level)
     emit changed(true);
 }
 
-void KToshibaSystemSettings::kbdBacklightChanged(int mode)
+void KToshibaSystemSettings::kbdBacklightChanged(int index)
 {
-    if (m_kbd->m_type == 1) {
-        m_kbd->kbd_timeout_label->setEnabled(mode != 1 ? false : true);
-        m_kbd->kbd_timeout->setEnabled(mode != 1 ? false : true);
-        m_kbd->kbd_timeout_slider->setEnabled(mode != 1 ? false : true);
+    if (m_kbd->m_keyboardType == KeyboardSettings::FirstKeyboardGen) {
+        m_kbd->kbd_timeout_label->setEnabled(index != KeyboardSettings::AUTO ? false : true);
+        m_kbd->kbd_timeout->setEnabled(index != KeyboardSettings::AUTO ? false : true);
+        m_kbd->kbd_timeout_slider->setEnabled(index != KeyboardSettings::AUTO ? false : true);
 
         showRebootMessage();
-    } else if (m_kbd->m_type == 2) {
-        m_kbd->kbd_timeout_label->setEnabled(mode != 0 ? false : true);
-        m_kbd->kbd_timeout->setEnabled(mode != 0 ? false : true);
-        m_kbd->kbd_timeout_slider->setEnabled(mode != 0 ? false : true);
+    } else if (m_kbd->m_keyboardType == KeyboardSettings::SecondKeyboardGen) {
+        m_kbd->kbd_timeout_label->setEnabled(index != KeyboardSettings::TIMER ? false : true);
+        m_kbd->kbd_timeout->setEnabled(index != KeyboardSettings::TIMER ? false : true);
+        m_kbd->kbd_timeout_slider->setEnabled(index != KeyboardSettings::TIMER ? false : true);
     }
 
     emit changed(true);
@@ -357,7 +357,7 @@ void KToshibaSystemSettings::kbdTimeoutChanged(int time)
 
 void KToshibaSystemSettings::updateTouchPad(int state)
 {
-    m_general->touchpad_checkbox->setChecked(state ? true : false);
+    m_general->touchpad_checkbox->setChecked(state == Qt::Checked ? true : false);
 }
 
 

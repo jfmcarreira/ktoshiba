@@ -20,14 +20,11 @@
 #define KTOSHIBA_H
 
 #include <KStatusNotifierItem>
-#include <KSharedConfig>
 
-class QActionGroup;
 class QAction;
 class QMenu;
 
 class FnActions;
-class KToshibaNetlinkEvents;
 
 /**
  * @short Hotkeys monitoring for Toshiba laptops
@@ -44,33 +41,18 @@ public:
 
     bool initialize();
 
-public Q_SLOTS:
-    void configChanged();
-
 private Q_SLOTS:
-    void protectHDD(int);
     void notifyHDDMovement();
     void configureClicked();
-    void parseTVAPEvents(int);
 
 private:
     void cleanup();
-    bool checkConfig();
-    void loadConfig();
-    void createConfig();
 
     FnActions *m_fn;
-    KToshibaNetlinkEvents *m_nl;
-
-    bool m_monitorHDD;
-    bool m_notifyHDD;
 
     QAction *m_configure;
-
-    KSharedConfigPtr m_config;
-    bool m_sysinfo;
-
     QMenu *m_popupMenu;
+
 };
 
 #endif // KTOSHIBA_H
