@@ -44,10 +44,6 @@ int main(int argc, char *argv[])
                         i18n("Some ideas and pieces of code"),
                         QString(),
                         QLatin1String("http://www.kde.org/"));
-    aboutData.addCredit(i18n("Mauricio Duque"),
-                        i18n("Green world icon"),
-                        QLatin1String("info@snap2objects.com"),
-                        QLatin1String("http://www.snap2objects.com/"));
 
     QApplication app(argc, argv);
     app.setApplicationName("KToshiba");
@@ -56,14 +52,18 @@ int main(int argc, char *argv[])
 
     KAboutData::setApplicationData(aboutData);
 
+    KDBusService service(KDBusService::Unique);
+
     KToshiba *ktoshiba = new KToshiba();
+
+    QObject::connect(&service, SIGNAL(activateRequested(QStringList, QString)),
+                     ktoshiba, SLOT(showApplication()));
+
     if (!ktoshiba->initialize()) {
         delete ktoshiba;
 
         return -1;
     }
-
-    KDBusService service(KDBusService::Unique);
 
     return app.exec();
 }

@@ -16,10 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-extern "C" {
-#include <linux/toshiba.h>
-}
-
 #include "generalsettings.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"

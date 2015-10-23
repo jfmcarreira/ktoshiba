@@ -21,9 +21,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QtDBus/QDBusAbstractAdaptor>
-
-class FnActions;
+#include <QDBusConnection>
 
 class KToshibaDBusInterface : public QObject
 {
@@ -32,7 +30,7 @@ class KToshibaDBusInterface : public QObject
     Q_CLASSINFO("KToshiba D-Bus Interface", "net.sourceforge.KToshiba")
 
 public:
-    KToshibaDBusInterface(FnActions *parent);
+    KToshibaDBusInterface(QObject *parent);
     ~KToshibaDBusInterface();
     void init();
 
@@ -47,16 +45,12 @@ public:
 
 Q_SIGNALS:
     void configChanged();
-    void batteryProfileChanged(QString);
 
 public Q_SLOTS:
     Q_NOREPLY void configFileChanged();
 
-private Q_SLOTS:
-    void profileChanged(QString);
-
 private:
-    FnActions *m_fn;
+    QDBusConnection m_dbus;
 
     bool m_service;
     bool m_object;

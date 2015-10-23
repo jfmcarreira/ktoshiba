@@ -21,6 +21,7 @@
 #include <QMenu>
 #include <QStandardPaths>
 #include <QActionGroup>
+#include <QTimer>
 
 #include <KNotification>
 #include <KProcess>
@@ -32,7 +33,8 @@
 
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
-      m_fn(new FnActions(this))
+      m_fn(new FnActions(this)),
+      m_statusTimer(new QTimer(this))
 {
     setTitle(i18n("KToshiba"));
     setIconByName("ktoshiba");
@@ -42,18 +44,22 @@ KToshiba::KToshiba()
 
     m_popupMenu = contextMenu();
     setAssociatedWidget(m_popupMenu);
+
+    connect(m_statusTimer, SIGNAL(timeout()), this, SLOT(changeStatus()));
 }
 
 KToshiba::~KToshiba()
 {
-    cleanup();
+    delete m_fn; m_fn = NULL;
+    delete m_statusTimer; m_statusTimer = NULL;
 }
 
 bool KToshiba::initialize()
 {
     if (!m_fn->init()) {
         qCritical() << "Could not continue loading, cleaning up...";
-        cleanup();
+        delete m_fn; m_fn = NULL;
+        delete m_statusTimer; m_statusTimer = NULL;
 
         return false;
     }
@@ -65,11 +71,6 @@ bool KToshiba::initialize()
     connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
 
     return true;
-}
-
-void KToshiba::cleanup()
-{
-    delete m_fn; m_fn = NULL;
 }
 
 void KToshiba::notifyHDDMovement()
@@ -86,4 +87,15 @@ void KToshiba::configureClicked()
     KProcess p;
     p.setProgram(QStandardPaths::findExecutable("kcmshell5"), QStringList() << "ktoshibam");
     p.startDetached();
+}
+
+void KToshiba::changeStatus()
+{
+    setStatus(Passive);
+}
+
+void KToshiba::showApplication()
+{
+    setStatus(NeedsAttention);
+    m_statusTimer->start(4000);
 }

@@ -19,6 +19,8 @@
 #ifndef KEYBOARDSETTINGS_H
 #define KEYBOARDSETTINGS_H
 
+#include <QStringList>
+
 #include "ui_keyboard.h"
 
 class KToshibaSystemSettings;
@@ -37,7 +39,10 @@ public:
     enum KeyboardBacklightGenerations { FirstKeyboardGen = 1, SecondKeyboardGen = 2 };
     enum KeyboardIndexModes { FNZ = 0, AUTO = 1, TIMER = 0, ON = 1, OFF = 2 };
 
-    int m_keyboardType;
+    int getKeyboardType()
+    {
+        return m_keyboardType;
+    }
 
 private:
     bool isKeyboardFunctionsSupported();
@@ -54,8 +59,9 @@ private:
     QStringList m_keyboardModesGen2;
     QString m_tooltip;
     int m_keyboardMode;
-    int m_keyboardIndex;
     int m_keyboardTime;
+    int m_keyboardType;
+    int m_keyboardIndex;
 };
 
 #endif // KEYBOARDSETTINGS_H

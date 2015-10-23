@@ -16,26 +16,16 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-#include <QStringList>
-#include <QtDBus/QtDBus>
-
 #include <KLocalizedString>
-
-extern "C" {
-#include <linux/toshiba.h>
-}
 
 #include "powersave.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"
 
-#define CONFIG_FILE "ktoshibarc"
-
 PowerSave::PowerSave(QWidget *parent)
     : QWidget(parent),
       m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent())),
-      m_config(KSharedConfig::openConfig(CONFIG_FILE))
+      m_config(KSharedConfig::openConfig("ktoshibarc"))
 {
     setupUi(this);
 
@@ -97,25 +87,18 @@ void PowerSave::load()
 
 void PowerSave::save()
 {
-    QDBusInterface iface("net.sourceforge.KToshiba",
-                         "/net/sourceforge/KToshiba",
-                         "net.sourceforge.KToshiba",
-                         QDBusConnection::sessionBus(), this);
-
     // Battery Profiles
     bool tmp = batteryGroupBox->isChecked();
     if (m_manageBatteryProfiles != tmp) {
         powersave.writeEntry("BatteryProfiles", tmp);
         m_manageBatteryProfiles = tmp;
-        if (iface.isValid())
-            iface.call("configFileChanged");
+        emit configFileChanged();
     }
     int tmp2 = battery_profiles_combobox->currentIndex();
     if (m_batteryProfile != tmp2) {
         powersave.writeEntry("CurrentProfile", tmp2);
         m_batteryProfile = tmp2;
-        if (iface.isValid())
-            iface.call("configFileChanged");
+        emit configFileChanged();
     }
     // Cooling Method
     if (m_coolingMethodSupported) {
@@ -123,22 +106,19 @@ void PowerSave::save()
         if (m_manageCoolingMethod != tmp) {
             powersave.writeEntry("ManageCoolingMethod", tmp);
             m_manageCoolingMethod = tmp;
-            if (iface.isValid())
-                iface.call("configFileChanged");
+            emit configFileChanged();
         }
         tmp2 = cooling_method_battery_combobox->currentIndex();
         if (m_coolingMethodBattery != tmp2) {
             powersave.writeEntry("CoolingMethodOnBattery", tmp2);
             m_coolingMethodBattery = tmp2;
-            if (iface.isValid())
-                iface.call("configFileChanged");
+            emit configFileChanged();
         }
         tmp2 = cooling_method_plugged_combobox->currentIndex();
         if (m_coolingMethodPlugged != tmp2) {
             powersave.writeEntry("CoolingMethodPluggedIn", tmp2);
             m_coolingMethodPlugged = tmp2;
-            if (iface.isValid())
-                iface.call("configFileChanged");
+            emit configFileChanged();
         }
     }
     powersave.sync();

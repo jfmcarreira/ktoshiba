@@ -23,42 +23,40 @@
 #include "fnactions.h"
 #include "ktoshibahardware.h"
 
-KToshibaDBusInterface::KToshibaDBusInterface(FnActions *parent)
+KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject(parent),
+      m_dbus(QDBusConnection::sessionBus()),
       m_service(false),
       m_object(false)
 {
-    m_fn = qobject_cast<FnActions *>(QObject::parent());
+    m_dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing",
+                   "compositingToggled", QObject::parent(), SLOT(compositingChanged(bool)));
+    m_dbus.connect("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement",
+                   "org.kde.Solid.PowerManagement", "profileChanged",
+                   QObject::parent(), SLOT(updateCoolingMethod(QString)));
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
 {
-    QDBusConnection dbus = QDBusConnection::sessionBus();
     if (m_object)
-        dbus.unregisterObject("/net/sourceforge/KToshiba");
+        m_dbus.unregisterObject("/Config");
 
     if (m_service)
-        if (!dbus.unregisterService("net.sourceforge.KToshiba"))
+        if (!m_dbus.unregisterService("net.sourceforge.KToshiba"))
             qCritical() << "Could not unregister DBus service";
 }
 
 void KToshibaDBusInterface::init()
 {
     new KToshibaDBusAdaptor(this);
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    m_service = dbus.registerService("net.sourceforge.KToshiba");
-    if (!m_service)
-        qCritical() << "Could not register DBus service";
 
-    m_object = dbus.registerObject("/net/sourceforge/KToshiba", this);
+    m_object = m_dbus.registerObject("/Config", this);
     if (!m_object)
         qCritical() << "Could not register DBus object";
 
-    dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing",
-                 "compositingToggled", m_fn, SLOT(compositingChanged(bool)));
-    dbus.connect("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement",
-                 "org.kde.Solid.PowerManagement", "profileChanged",
-                 this, SLOT(profileChanged(QString)));
+    m_service = m_dbus.registerService("net.sourceforge.KToshiba");
+    if (!m_service)
+        qCritical() << "Could not register DBus service";
 }
 
 void KToshibaDBusInterface::configFileChanged()
@@ -66,17 +64,12 @@ void KToshibaDBusInterface::configFileChanged()
     emit configChanged();
 }
 
-void KToshibaDBusInterface::profileChanged(QString profile)
-{
-    emit batteryProfileChanged(profile);
-}
-
 void KToshibaDBusInterface::lockScreen()
 {
     QDBusInterface iface("org.freedesktop.ScreenSaver",
                          "/ScreenSaver",
                          "org.freedesktop.ScreenSaver",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -96,7 +89,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     QDBusInterface iface("org.kde.Solid.PowerManagement",
                          "/org/kde/Solid/PowerManagement/Actions/BrightnessControl",
                          "org.kde.Solid.PowerManagement.Actions.BrightnessControl",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -116,7 +109,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
     QDBusInterface iface("org.kde.Solid.PowerManagement",
                          "/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl",
                          "org.kde.Solid.PowerManagement.Actions.KeyboardBrightnessControl",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -142,7 +135,7 @@ void KToshibaDBusInterface::setZoom(int zoom)
     QDBusInterface iface("org.kde.kglobalaccel",
                          "/component/kwin",
                          "org.kde.kglobalaccel.Component",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -174,7 +167,7 @@ uint KToshibaDBusInterface::inhibitPowerManagement(QString reason)
     QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
                          "/org/freedesktop/PowerManagement/Inhibit",
                          "org.freedesktop.PowerManagement.Inhibit",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -198,7 +191,7 @@ void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
     QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
                          "/org/freedesktop/PowerManagement/Inhibit",
                          "org.freedesktop.PowerManagement.Inhibit",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -218,7 +211,7 @@ bool KToshibaDBusInterface::getCompositingState()
     QDBusInterface iface("org.kde.KWin",
                          "/Compositor",
                          "org.kde.kwin.Compositing",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -234,7 +227,7 @@ QString KToshibaDBusInterface::getBatteryProfile()
     QDBusInterface iface("org.kde.Solid.PowerManagement",
                          "/org/kde/Solid/PowerManagement",
                          "org.kde.Solid.PowerManagement",
-                         QDBusConnection::sessionBus(), this);
+                         m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();

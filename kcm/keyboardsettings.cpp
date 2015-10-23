@@ -18,10 +18,6 @@
 
 #include <KLocalizedString>
 
-extern "C" {
-#include <linux/toshiba.h>
-}
-
 #include "keyboardsettings.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"

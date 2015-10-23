@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-20 16:10-0600\n"
+"POT-Creation-Date: 2015-10-22 14:51-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "coproscefalo@gmail.com"
 
 #. i18n: file: kcm/sleeputils.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, SleepUtils)
-#: rc.cpp:5 kcm/systemsettings.cpp:119
+#: rc.cpp:5 kcm/systemsettings.cpp:111
 #, kde-format
 msgid "Sleep Utilities"
 msgstr "Utilidades de Reposo"
@@ -187,7 +187,7 @@ msgstr "Versión del controlador:"
 
 #. i18n: file: kcm/general.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, GeneralSettings)
-#: rc.cpp:74 kcm/systemsettings.cpp:111
+#: rc.cpp:74 kcm/systemsettings.cpp:103
 #, kde-format
 msgid "General Settings"
 msgstr "Ajustes Generales"
@@ -253,7 +253,7 @@ msgstr "USB 3"
 #. i18n: ectx: property (windowTitle), widget (QWidget, HDDProtect)
 #. i18n: file: kcm/hddprotect.ui:27
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: rc.cpp:107 rc.cpp:116 kcm/systemsettings.cpp:115
+#: rc.cpp:107 rc.cpp:116 kcm/systemsettings.cpp:107
 #, kde-format
 msgid "HDD Protection"
 msgstr "Protección del Disco Duro"
@@ -310,7 +310,7 @@ msgstr "Fija el nivel de protección del disco duro."
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:143 kcm/systemsettings.cpp:123
+#: rc.cpp:143 kcm/systemsettings.cpp:115
 #, kde-format
 msgid "Keyboard Settings"
 msgstr "Ajustes de Teclado"
@@ -384,7 +384,7 @@ msgstr ""
 
 #. i18n: file: kcm/bootsettings.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, BootSettings)
-#: rc.cpp:176 kcm/systemsettings.cpp:127
+#: rc.cpp:176 kcm/systemsettings.cpp:119
 #, kde-format
 msgid "Boot Settings"
 msgstr "Ajustes de Arranque"
@@ -484,7 +484,7 @@ msgstr "Reactivación mediante red"
 
 #. i18n: file: kcm/powersave.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, PowerSave)
-#: rc.cpp:230 kcm/systemsettings.cpp:131
+#: rc.cpp:230 kcm/systemsettings.cpp:123
 #, kde-format
 msgid "Power Save"
 msgstr "Ahorro de Energía"
@@ -609,183 +609,175 @@ msgstr ""
 "Cambia el Método de Enfriamiento del abanico cuando el portátil se encuentra "
 "conectada a la corriente."
 
-#: kcm/systemsettings.cpp:53
+#: kcm/systemsettings.cpp:50
 #, kde-format
 msgid "KToshiba System Settings"
 msgstr "Ajustes del Sistema de KToshiba"
 
-#: kcm/systemsettings.cpp:55
+#: kcm/systemsettings.cpp:52
 #, kde-format
 msgid "Configures Toshiba laptop related hardware settings"
 msgstr "Configura el hardware relacionado con el portátil Toshiba"
 
-#: kcm/systemsettings.cpp:57
+#: kcm/systemsettings.cpp:54
 #, kde-format
 msgid "Copyright (C) 2015 Azael Avalos"
 msgstr "Derechos de autor (C) 2015 Azael Avalos"
 
-#: kcm/systemsettings.cpp:62
+#: kcm/systemsettings.cpp:59
 #, kde-format
 msgid "Azael Avalos"
 msgstr "Azael Avalos"
 
-#: kcm/systemsettings.cpp:63
+#: kcm/systemsettings.cpp:60
 #, kde-format
 msgid "Original author"
 msgstr "Autor original"
 
-#: kcm/systemsettings.cpp:85
+#: kcm/systemsettings.cpp:73
 #, kde-format
 msgid "Please reboot for hardware changes to take effect"
 msgstr "Por favor reinicia para que los cambios en el hardware hagan efecto"
 
-#: kcm/systemsettings.cpp:89
-#, kde-format
-msgid ""
-"Could not communicate with library, hardware changes will not be possible"
-msgstr ""
-"No se pudo comunicar con la librería, los cambios en el hardware no serán "
-"posibles"
-
-#: kcm/systemsettings.cpp:107
+#: kcm/systemsettings.cpp:99
 #, kde-format
 msgid "System Information"
 msgstr "Información del Sistema"
 
-#: kcm/systemsettings.cpp:152 kcm/systemsettings.cpp:154
-#: kcm/systemsettings.cpp:156 kcm/systemsettings.cpp:158
-#: kcm/systemsettings.cpp:160 kcm/systemsettings.cpp:162
+#: kcm/systemsettings.cpp:141 kcm/systemsettings.cpp:143
+#: kcm/systemsettings.cpp:145 kcm/systemsettings.cpp:147
+#: kcm/systemsettings.cpp:149 kcm/systemsettings.cpp:151
 #, kde-format
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: kcm/systemsettings.cpp:353 kcm/keyboardsettings.cpp:104
-#: kcm/keyboardsettings.cpp:140
+#: kcm/systemsettings.cpp:358 kcm/keyboardsettings.cpp:100
+#: kcm/keyboardsettings.cpp:136
 #, kde-format
 msgid " sec"
 msgstr " seg"
 
-#: kcm/devicemodel.cpp:56
+#: kcm/devicemodel.cpp:54
 #, kde-format
 msgid "Floppy Disk Drive"
 msgstr "Unidad de Disquete"
 
-#: kcm/devicemodel.cpp:59
+#: kcm/devicemodel.cpp:57
 #, kde-format
 msgid "Hard Disk Drive/Solid State Drive 1"
 msgstr "Unidad de Disco Duro/Unidad de Disco Solido 1"
 
-#: kcm/devicemodel.cpp:62
+#: kcm/devicemodel.cpp:60
 #, kde-format
 msgid "Optical Disk Drive"
 msgstr "Unidad de Disco Óptico"
 
-#: kcm/devicemodel.cpp:65
+#: kcm/devicemodel.cpp:63
 #, kde-format
 msgid "Local Area Network"
 msgstr "Red de Área Local"
 
-#: kcm/devicemodel.cpp:68
+#: kcm/devicemodel.cpp:66
 #, kde-format
 msgid "USB Memory"
 msgstr "Memoria USB"
 
-#: kcm/devicemodel.cpp:71
+#: kcm/devicemodel.cpp:69
 #, kde-format
 msgid "Hard Disk Drive/Solid State Drive 2"
 msgstr "Unidad de Disco Duro/Unidad de Disco Solido 2"
 
-#: kcm/devicemodel.cpp:74
+#: kcm/devicemodel.cpp:72
 #, kde-format
 msgid "External SATA Drive"
 msgstr "Disco Externo SATA"
 
-#: kcm/devicemodel.cpp:77
+#: kcm/devicemodel.cpp:75
 #, kde-format
 msgid "USB Optical Disk Drive"
 msgstr "Unidad de Disco Óptico USB"
 
-#: kcm/devicemodel.cpp:80
+#: kcm/devicemodel.cpp:78
 #, kde-format
 msgid "Secure Digital Card"
 msgstr "Tarjeta Secure Digital (SD)"
 
-#: kcm/devicemodel.cpp:83
+#: kcm/devicemodel.cpp:81
 #, kde-format
 msgid "USB Device"
 msgstr "Dispositivo USB"
 
-#: kcm/devicemodel.cpp:86
+#: kcm/devicemodel.cpp:84
 #, kde-format
 msgid "Hard Disk Drive/Solid State Drive 3"
 msgstr "Unidad de Disco Duro/Unidad de Disco Solido 3"
 
-#: kcm/devicemodel.cpp:124
+#: kcm/devicemodel.cpp:122
 #, kde-format
 msgid "Boot Devices"
 msgstr "Dispositivos de Arranque"
 
-#: kcm/powersave.cpp:74
+#: kcm/powersave.cpp:64
 #, kde-format
 msgid "Maximum Performance"
 msgstr "Rendimiento Máximo"
 
-#: kcm/powersave.cpp:74
+#: kcm/powersave.cpp:64
 #, kde-format
 msgid "Battery Optimized"
 msgstr "Optimizado para Batería"
 
-#: kcm/powersave.cpp:75
+#: kcm/powersave.cpp:65
 #, kde-format
 msgid "High Performance"
 msgstr "Rendimiento Alto"
 
-#: kcm/powersave.cpp:75
+#: kcm/powersave.cpp:65
 #, kde-format
 msgid "Balanced"
 msgstr "Balanceado"
 
-#: kcm/powersave.cpp:75
+#: kcm/powersave.cpp:65
 #, kde-format
 msgid "Power Saver"
 msgstr "Ahorrador de Energía"
 
-#: kcm/hddprotection.cpp:38
+#: kcm/hddprotection.cpp:30
 #, kde-format
 msgid "Off"
 msgstr "Apagado"
 
-#: kcm/hddprotection.cpp:38
+#: kcm/hddprotection.cpp:30
 #, kde-format
 msgid "Low"
 msgstr "Bajo"
 
-#: kcm/hddprotection.cpp:38
+#: kcm/hddprotection.cpp:30
 #, kde-format
 msgid "Medium"
 msgstr "Medio"
 
-#: kcm/hddprotection.cpp:38
+#: kcm/hddprotection.cpp:30
 #, kde-format
 msgid "High"
 msgstr "Alto"
 
-#: kcm/keyboardsettings.cpp:36
+#: kcm/keyboardsettings.cpp:32
 #, kde-format
 msgid "TIMER"
 msgstr "TEMPORIZADOR"
 
-#: kcm/keyboardsettings.cpp:36
+#: kcm/keyboardsettings.cpp:32
 #, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: kcm/keyboardsettings.cpp:36
+#: kcm/keyboardsettings.cpp:32
 #, kde-format
 msgid "OFF"
 msgstr "APAGADO"
 
-#: kcm/keyboardsettings.cpp:68
+#: kcm/keyboardsettings.cpp:64
 #, kde-format
 msgid ""
 "Select how the keyboard Function keys operate.<br/>Normal: The F{1-12} keys "
@@ -798,7 +790,7 @@ msgstr ""
 "<br/>Función: Las teclas F{1-12} hacen funcionar los accesos rápidos y las "
 "teclas F{1-12} se accesan vía FN-F{1-12}."
 
-#: kcm/keyboardsettings.cpp:83
+#: kcm/keyboardsettings.cpp:79
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>FN-Z: User toggles the "
@@ -808,7 +800,7 @@ msgstr ""
 "alterna la retroiluminación del teclado.<br/>AUTO: La retroiluminación del "
 "teclado se enciende/apaga automaticamente."
 
-#: kcm/keyboardsettings.cpp:94
+#: kcm/keyboardsettings.cpp:90
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>TIMER: Keyboard backlight "
@@ -820,22 +812,22 @@ msgstr ""
 ">ENCENDIDO:La retroiluminación del teclado es encendida.<br/>APAGADO: La "
 "retroiluminación del teclado es apagada."
 
-#: kcm/sleeputilities.cpp:53
+#: kcm/sleeputilities.cpp:49
 #, kde-format
 msgid "Disabled"
 msgstr "Deshabilitado"
 
-#: kcm/sleeputilities.cpp:57
+#: kcm/sleeputilities.cpp:53
 #, kde-format
 msgid "Alternate"
 msgstr "Alterno"
 
-#: kcm/sleeputilities.cpp:62
+#: kcm/sleeputilities.cpp:58
 #, kde-format
 msgid "Typical"
 msgstr "Típico"
 
-#: kcm/sleeputilities.cpp:67
+#: kcm/sleeputilities.cpp:63
 #, kde-format
 msgid "Auto"
 msgstr "Automatico"

@@ -20,6 +20,8 @@
 #define DEVICEMODEL_H
 
 #include <QAbstractListModel>
+#include <QStringList>
+#include <QMap>
 
 #define MAX_BOOT_DEVICES 8
 
@@ -61,9 +63,9 @@ private:
     QString tooltip(int value) const;
 
     QMap<int, QString> m_devicesMap;
-    QList<int> m_devices;
-    QStringList m_list;
-    int m_supported;
+    QList<int> m_devicesList;
+    QStringList m_modelList;
+    int m_supportedDevices;
 };
 
 #endif // DEVICEMODEL_H

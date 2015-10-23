@@ -16,8 +16,6 @@ qt5_add_dbus_interface(ktoshibadbusinterface.cpp net.sourceforge.ktoshiba.xml kt
 qt5_add_dbus_adaptor(Adaptor_SRCS net.sourceforge.ktoshiba.xml
     ktoshibadbusinterface.h KToshibaDBusInterface ktoshibadbusadaptor KToshibaDBusAdaptor)
 
-qt5_add_resources(IconResource_SRCS Icons.qrc)
-
 qt5_wrap_ui(KToshibaSources statuswidget.ui)
 
 add_executable(ktoshiba ${KToshibaSources} ${IconResource_SRCS} ${Adaptor_SRCS})

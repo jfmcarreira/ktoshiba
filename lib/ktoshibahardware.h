@@ -21,19 +21,10 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
 #include <QFile>
 #include <QMap>
 
 extern "C" {
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-
 #include <linux/toshiba.h>
 }
 
@@ -45,7 +36,6 @@ class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 
 public:
     KToshibaHardware(QObject *parent = 0);
-    bool init();
 
     enum ReturnCodes {
         SUCCESS            = 0x0000,
@@ -159,8 +149,6 @@ private:
 
     QString m_device;
     QString m_driverPath;
-    QString m_ledsPath;
-    QString m_hapsPath;
     QFile m_file;
 };
 

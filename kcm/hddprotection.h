@@ -19,6 +19,8 @@
 #ifndef HDDPROTECTION_H
 #define HDDPROTECTION_H
 
+#include <QStringList>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -39,7 +41,13 @@ public:
 
     enum ProtectionLevels { Disabled, Low, Medium, High };
 
-    QStringList m_levels;
+    QStringList getProtectionLevels()
+    {
+        return m_levels;
+    }
+
+Q_SIGNALS:
+    void configFileChanged();
 
 private:
     bool isHDDProtectionSupported();
@@ -52,6 +60,7 @@ private:
     bool m_monitorHDD;
     bool m_notifyHDD;
     int m_protectionLevel;
+    QStringList m_levels;
 };
 
 #endif // HDDPROTECTION_H

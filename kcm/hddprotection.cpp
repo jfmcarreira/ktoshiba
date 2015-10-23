@@ -16,22 +16,14 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QtDBus/QtDBus>
-
-extern "C" {
-#include <linux/toshiba.h>
-}
-
 #include "hddprotection.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"
 
-#define CONFIG_FILE "ktoshibarc"
-
 HDDProtection::HDDProtection(QWidget *parent)
     : QWidget(parent),
       m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent())),
-      m_config(KSharedConfig::openConfig(CONFIG_FILE))
+      m_config(KSharedConfig::openConfig("ktoshibarc"))
 {
     setupUi(this);
 
@@ -78,24 +70,16 @@ void HDDProtection::save()
     if (!m_hddprotectionSupported)
         return;
 
-    QDBusInterface iface("net.sourceforge.KToshiba",
-                         "/net/sourceforge/KToshiba",
-                         "net.sourceforge.KToshiba",
-                         QDBusConnection::sessionBus(),
-                         this);
-
     if (m_monitorHDD != groupBox->isChecked()) {
         hdd.writeEntry("MonitorHDD", !m_monitorHDD);
         m_monitorHDD = groupBox->isChecked();
-        if (iface.isValid())
-            iface.call("configFileChanged");
+        emit configFileChanged();
     }
     bool tmp = hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
     if (m_notifyHDD != tmp) {
         hdd.writeEntry("NotifyHDDMovement", tmp);
         m_notifyHDD = tmp;
-        if (iface.isValid())
-            iface.call("configFileChanged");
+        emit configFileChanged();
     }
     int tmp2 = protection_level_slider->value();
     if (m_protectionLevel != tmp2) {

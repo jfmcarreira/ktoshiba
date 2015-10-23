@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-20 16:10-0600\n"
+"POT-Creation-Date: 2015-10-22 14:51-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,68 +29,68 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 
-#. i18n: file: src/statuswidget.ui:32
+#. i18n: file: src/statuswidget.ui:26
 #. i18n: ectx: property (windowTitle), widget (QWidget, StatusWidget)
 #: rc.cpp:5
 #, kde-format
 msgid "StatusWidget"
 msgstr ""
 
-#: src/ktoshiba.cpp:37 src/ktoshiba.cpp:39 src/main.cpp:31
+#: src/ktoshiba.cpp:39 src/ktoshiba.cpp:41 src/main.cpp:31
 #, kde-format
 msgid "KToshiba"
 msgstr ""
 
-#: src/ktoshiba.cpp:39 src/main.cpp:33
+#: src/ktoshiba.cpp:41 src/main.cpp:33
 #, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr ""
 
-#: src/ktoshiba.cpp:61
+#: src/ktoshiba.cpp:67
 #, kde-format
 msgid "Configure"
 msgstr ""
 
-#: src/ktoshiba.cpp:78
+#: src/ktoshiba.cpp:79
 #, kde-format
 msgid "KToshiba - HDD Monitor"
 msgstr ""
 
-#: src/ktoshiba.cpp:79
+#: src/ktoshiba.cpp:80
 #, kde-format
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 
+#: src/fnactions.cpp:165 src/fnactions.cpp:166 src/fnactions.cpp:167
 #: src/fnactions.cpp:168 src/fnactions.cpp:169 src/fnactions.cpp:170
-#: src/fnactions.cpp:171 src/fnactions.cpp:172 src/fnactions.cpp:173
 #, kde-format
 msgid "Unknown"
 msgstr ""
 
-#: src/fnactions.cpp:296
+#: src/fnactions.cpp:207 src/fnactions.cpp:391
 #, kde-format
-msgid "Performance"
+msgid "ON"
 msgstr ""
 
-#: src/fnactions.cpp:303
-#, kde-format
-msgid "Powersave"
-msgstr ""
-
-#: src/fnactions.cpp:310 src/fnactions.cpp:321
-#, kde-format
-msgid "Presentation"
-msgstr ""
-
-#: src/fnactions.cpp:388
+#: src/fnactions.cpp:207 src/fnactions.cpp:388
 #, kde-format
 msgid "OFF"
 msgstr ""
 
-#: src/fnactions.cpp:391
+#: src/fnactions.cpp:301
 #, kde-format
-msgid "ON"
+msgid "Performance"
+msgstr ""
+
+#: src/fnactions.cpp:308
+#, kde-format
+msgid "Powersave"
+msgstr ""
+
+#: src/fnactions.cpp:315 src/fnactions.cpp:326
+#, kde-format
+msgid "Presentation"
 msgstr ""
 
 #: src/main.cpp:36
@@ -116,14 +116,4 @@ msgstr ""
 #: src/main.cpp:44
 #, kde-format
 msgid "Some ideas and pieces of code"
-msgstr ""
-
-#: src/main.cpp:47
-#, kde-format
-msgid "Mauricio Duque"
-msgstr ""
-
-#: src/main.cpp:48
-#, kde-format
-msgid "Green world icon"
 msgstr ""
