@@ -16,15 +16,13 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
 #include <KLocalizedString>
 
 #include "devicemodel.h"
 
 DeviceModel::DeviceModel(QObject *parent)
     : QAbstractListModel(parent),
-      m_supported(MAX_BOOT_DEVICES)
+      m_supportedDevices(MAX_BOOT_DEVICES)
 {
     m_devicesMap[FDD] = "FDD";
     m_devicesMap[HDD1] = "HDD/SSD 1";
@@ -43,8 +41,8 @@ DeviceModel::DeviceModel(QObject *parent)
 DeviceModel::~DeviceModel()
 {
     m_devicesMap.clear();
-    m_list.clear();
-    m_devices.clear();
+    m_modelList.clear();
+    m_devicesList.clear();
 }
 
 QString DeviceModel::tooltip(int value) const
@@ -92,15 +90,15 @@ QString DeviceModel::tooltip(int value) const
 
 QVariant DeviceModel::data(const QModelIndex& index, int role) const
 {
-    if (index.row() < 0 || index.row() >= m_list.size())
+    if (index.row() < 0 || index.row() >= m_modelList.size())
         return QVariant();
 
-    int device = m_devices.at(index.row());
+    int device = m_devicesList.at(index.row());
 
     if (role == Qt::ToolTipRole)
         return tooltip(device);
     else if (role == Qt::DisplayRole)
-        return m_list.at(index.row());
+        return m_modelList.at(index.row());
 
     return QVariant();
 }
@@ -129,15 +127,15 @@ int DeviceModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_list.count();
+    return m_modelList.count();
 }
 
 int DeviceModel::getDeviceData() const
 {
     int value = 0;
     for (int i = 0; i < MAX_BOOT_DEVICES; i++) {
-        if (i < m_supported)
-            value |= (m_devices.at(i) << (4 * i));
+        if (i < m_supportedDevices)
+            value |= (m_devicesList.at(i) << (4 * i));
         else
             value |= (0xf << (4 * i));
     }
@@ -151,32 +149,32 @@ void DeviceModel::setDeviceData(const quint32 value)
         return;
 
     emit beginResetModel();
-    if (!m_devices.isEmpty()) {
-        m_devices.clear();
-        m_list.clear();
+    if (!m_devicesList.isEmpty()) {
+        m_devicesList.clear();
+        m_modelList.clear();
     }
 
-    for (int i = 0; i < m_supported; i++) {
-        m_devices << ((value >> (4 * i)) & 0xf);
-        m_list << m_devicesMap.value(m_devices.at(i));
+    for (int i = 0; i < m_supportedDevices; i++) {
+        m_devicesList << ((value >> (4 * i)) & 0xf);
+        m_modelList << m_devicesMap.value(m_devicesList.at(i));
     }
     emit endResetModel();
 }
 
-void DeviceModel::setSupportedDevices(int sup_devices)
+void DeviceModel::setSupportedDevices(int num_devices)
 {
-    m_supported = sup_devices;
+    m_supportedDevices = num_devices;
 }
 
 void DeviceModel::moveUp(const QModelIndex &index)
 {
-    if (!index.isValid() || index.row() >= m_devices.size() || index.row() < 1 || index.column() != 0)
+    if (!index.isValid() || index.row() >= m_devicesList.size() || index.row() < 1 || index.column() != 0)
         return;
 
     emit layoutAboutToBeChanged();
     QModelIndex above = index.sibling(index.row() - 1, index.column());
-    m_devices.swap(index.row(), above.row());
-    m_list.swap(index.row(), above.row());
+    m_devicesList.swap(index.row(), above.row());
+    m_modelList.swap(index.row(), above.row());
     QModelIndexList from, to;
     from << index << above;
     to << above << index;
@@ -186,13 +184,13 @@ void DeviceModel::moveUp(const QModelIndex &index)
 
 void DeviceModel::moveDown(const QModelIndex &index)
 {
-    if (!index.isValid() || index.row() >= m_devices.size() - 1 || index.column() != 0)
+    if (!index.isValid() || index.row() >= m_devicesList.size() - 1 || index.column() != 0)
         return;
 
     emit layoutAboutToBeChanged();
     QModelIndex below = index.sibling(index.row() + 1, index.column());
-    m_devices.swap(index.row(), below.row());
-    m_list.swap(index.row(), below.row());
+    m_devicesList.swap(index.row(), below.row());
+    m_modelList.swap(index.row(), below.row());
     QModelIndexList from, to;
     from << index << below;
     to << below << index;

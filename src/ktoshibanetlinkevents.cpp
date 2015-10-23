@@ -54,17 +54,25 @@ enum {
 KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
     : QObject(parent),
       m_notifier(NULL),
-      m_socket(0)
+      m_socket(-1)
 {
 }
 
 KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
 {
-    detach();
+    if (m_notifier->isEnabled())
+        m_notifier->setEnabled(false);
+    delete m_notifier; m_notifier = NULL;
+    if (m_socket)
+        ::close(m_socket);
+    m_socket = -1;
 }
 
 void KToshibaNetlinkEvents::setDeviceHID(QString hid)
 {
+    if (hid.isEmpty() || hid.isNull())
+        qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
+
     m_deviceHID = hid;
 }
 
@@ -145,14 +153,4 @@ bool KToshibaNetlinkEvents::attach()
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
     return connect(m_notifier, SIGNAL(activated(int)), this, SLOT(parseEvents(int)));
-}
-
-void KToshibaNetlinkEvents::detach()
-{
-    if (m_notifier)
-        m_notifier->setEnabled(false);
-    delete m_notifier; m_notifier = NULL;
-    if (m_socket)
-        ::close(m_socket);
-    m_socket = -1;
 }

@@ -17,7 +17,6 @@
  */
 
 #include <QLayout>
-#include <QDebug>
 #include <QTabWidget>
 #include <QtDBus/QtDBus>
 #include <QIcon>
@@ -39,15 +38,13 @@
 #include "ktoshibahardware.h"
 #include "src/version.h"
 
-#define CONFIG_FILE "ktoshibarc"
-
 K_PLUGIN_FACTORY(KToshibaSystemSettingsFactory, registerPlugin<KToshibaSystemSettings>();)
 
 KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args),
       m_hw(new KToshibaHardware(this)),
-      m_hwAttached(false),
-      m_config(KSharedConfig::openConfig(CONFIG_FILE))
+      m_config(KSharedConfig::openConfig("ktoshibarc")),
+      m_configFileChanged(false)
 {
     KAboutData *about = new KAboutData(QLatin1String("kcm_ktoshibam"),
                                        i18n("KToshiba System Settings"),
@@ -71,25 +68,20 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
     layout->addLayout(message, 0, 0, 0);
 
     m_message = new KMessageWidget(this);
-    m_message->setVisible(false);
     m_message->setCloseButtonVisible(false);
+    m_message->setMessageType(KMessageWidget::Information);
+    m_message->setText(i18n("Please reboot for hardware changes to take effect"));
+    m_message->setIcon(QIcon::fromTheme("dialog-information"));
+    m_message->setVisible(false);
     message->addWidget(m_message);
 
     m_tabWidget = new QTabWidget(this);
     layout->addWidget(m_tabWidget, 1, 0, 0);
 
-    m_hwAttached = m_hw->init();
-    if (m_hwAttached) {
-        addTabs();
-        m_message->setMessageType(KMessageWidget::Information);
-        m_message->setText(i18n("Please reboot for hardware changes to take effect"));
-        m_message->setIcon(QIcon::fromTheme("dialog-information"));
-    } else {
-        m_message->setMessageType(KMessageWidget::Error);
-        m_message->setText(i18n("Could not communicate with library, hardware changes will not be possible"));
-        m_message->setIcon(QIcon::fromTheme("dialog-error"));
-        m_message->setVisible(true);
-    }
+    addTabs();
+
+    connect(m_hdd, SIGNAL(configFileChanged()), this, SLOT(flagConfigFileChanged()));
+    connect(m_power, SIGNAL(configFileChanged()), this, SLOT(flagConfigFileChanged()));
 }
 
 KToshibaSystemSettings::~KToshibaSystemSettings()
@@ -133,9 +125,6 @@ void KToshibaSystemSettings::addTabs()
 
 void KToshibaSystemSettings::load()
 {
-    if (!m_hwAttached)
-        return;
-
     /*
      * System Information tab
      */
@@ -208,7 +197,7 @@ void KToshibaSystemSettings::load()
             this, SLOT(kbdTimeoutChanged(int)));
     connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(kbdBacklightChanged(int)));
-    if (m_kbd->m_keyboardType == KeyboardSettings::FirstKeyboardGen)
+    if (m_kbd->getKeyboardType() == KeyboardSettings::FirstKeyboardGen)
         connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(configChangedReboot()));
     /*
@@ -266,13 +255,13 @@ void KToshibaSystemSettings::save()
      * Power Save
      */
     m_power->save();
+
+    if (m_configFileChanged)
+        notifyConfigFileChanged();
 }
 
 void KToshibaSystemSettings::defaults()
 {
-    if (!m_hwAttached)
-        return;
-
     /*
      * General tab
      */
@@ -317,9 +306,25 @@ void KToshibaSystemSettings::configChangedReboot()
     emit changed(true);
 }
 
+void KToshibaSystemSettings::flagConfigFileChanged()
+{
+    m_configFileChanged = true;
+}
+
+void KToshibaSystemSettings::notifyConfigFileChanged()
+{
+    QDBusInterface iface("net.sourceforge.KToshiba",
+                         "/Config",
+                         "net.sourceforge.KToshiba",
+                         QDBusConnection::sessionBus(), this);
+
+    if (iface.isValid())
+        iface.call("configFileChanged");
+}
+
 void KToshibaSystemSettings::protectionLevelChanged(int level)
 {
-    m_hdd->protection_level->setText(m_hdd->m_levels.at(level));
+    m_hdd->protection_level->setText(m_hdd->getProtectionLevels().at(level));
 
     emit changed(true);
 }
@@ -333,13 +338,13 @@ void KToshibaSystemSettings::batteryLevelChanged(int level)
 
 void KToshibaSystemSettings::kbdBacklightChanged(int index)
 {
-    if (m_kbd->m_keyboardType == KeyboardSettings::FirstKeyboardGen) {
+    if (m_kbd->getKeyboardType() == KeyboardSettings::FirstKeyboardGen) {
         m_kbd->kbd_timeout_label->setEnabled(index != KeyboardSettings::AUTO ? false : true);
         m_kbd->kbd_timeout->setEnabled(index != KeyboardSettings::AUTO ? false : true);
         m_kbd->kbd_timeout_slider->setEnabled(index != KeyboardSettings::AUTO ? false : true);
 
         showRebootMessage();
-    } else if (m_kbd->m_keyboardType == KeyboardSettings::SecondKeyboardGen) {
+    } else if (m_kbd->getKeyboardType() == KeyboardSettings::SecondKeyboardGen) {
         m_kbd->kbd_timeout_label->setEnabled(index != KeyboardSettings::TIMER ? false : true);
         m_kbd->kbd_timeout->setEnabled(index != KeyboardSettings::TIMER ? false : true);
         m_kbd->kbd_timeout_slider->setEnabled(index != KeyboardSettings::TIMER ? false : true);

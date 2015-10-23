@@ -19,6 +19,8 @@
 #ifndef KTOSHIBASYSTEMSETTINGS_H
 #define KTOSHIBASYSTEMSETTINGS_H
 
+#include <QString>
+
 #include <KCModule>
 #include <KSharedConfig>
 
@@ -57,6 +59,7 @@ public:
 private Q_SLOTS:
     void configChanged();
     void configChangedReboot();
+    void flagConfigFileChanged();
     void protectionLevelChanged(int);
     void batteryLevelChanged(int);
     void kbdBacklightChanged(int);
@@ -66,9 +69,9 @@ private Q_SLOTS:
 private:
     void addTabs();
     void showRebootMessage();
+    void notifyConfigFileChanged();
 
     KToshibaHardware *m_hw;
-    bool m_hwAttached;
 
     QTabWidget *m_tabWidget;
     KMessageWidget *m_message;
@@ -89,6 +92,8 @@ private:
     QString m_biosManufacturer;
     QString m_ecVersion;
     QString m_driverVersion;
+
+    bool m_configFileChanged;
 };
 
 #endif // KTOSHIBASYSTEMSETTINGS_H

@@ -18,10 +18,6 @@
 
 #include <KLocalizedString>
 
-extern "C" {
-#include <linux/toshiba.h>
-}
-
 #include "sleeputilities.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"

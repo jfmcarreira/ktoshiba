@@ -59,6 +59,11 @@ FnActions::FnActions(QObject *parent)
     // otherwise an ugly black background will appear
     m_widget->setAttribute(Qt::WA_TranslucentBackground, m_dBus->getCompositingState());
 
+    m_iconText = QString("<html><head/><body><p align=\"center\">\
+                          <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
+                          %1\
+                          </span></p></body></html>");
+
     connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hideWidget()));
 }
 
@@ -79,11 +84,11 @@ bool FnActions::init()
     if (!m_hotkeys->attach())
         return false;
 
-    if (!m_hw->init()) {
-        qCritical() << "Could not communicate with library, hardware changes will not be possible";
-
-        return false;
-    }
+    m_touchpad = isTouchPadSupported();
+    m_illumination = isIlluminationSupported();
+    m_eco = isECOSupported();
+    m_kbdBacklight = isKBDBacklightSupported();
+    m_cooling = isCoolingMethodSupported();
 
     if (checkConfig()) {
         loadConfig();
@@ -91,37 +96,29 @@ bool FnActions::init()
         createConfig();
         loadConfig();
     }
+    m_previousBatteryProfile = m_batteryProfile;
 
-    m_nl->setDeviceHID(m_hw->getDeviceHID());
+    m_batteryProfiles << Performance << Powersave << Presentation << ECO;
+    changeProfile(m_batteryProfile, true);
+
     if (m_nl->attach()) {
+        m_nl->setDeviceHID(m_hw->getDeviceHID());
         m_hdd = m_hw->getProtectionLevel();
 
         connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(protectHDD(int)));
         connect(m_nl, SIGNAL(tvapEvent(int)), this, SLOT(parseTVAPEvents(int)));
     } else {
-        qCritical() << "Events monitoring will not be possible";
+        qCritical() << "Netlink events monitoring will not be possible";
     }
 
     m_dBus->init();
 
-    m_batteryProfiles << Performance << Powersave << Presentation << ECO;
-    changeProfile(m_batteryProfile, true);
-    m_touchpad = isTouchPadSupported();
-    m_illumination = isIlluminationSupported();
-    m_eco = isECOSupported();
-    m_kbdBacklight = isKBDBacklightSupported();
-    m_cooling = isCoolingMethodSupported();
-
     if (m_kbdBacklight && m_keyboardType == SecondKeyboardGen)
         m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
 
-    if (m_cooling) {
-        // Set initial Cooling Method state
+    // Set initial Cooling Method state (if supported)
+    if (m_cooling)
         updateCoolingMethod(m_dBus->getBatteryProfile());
-
-        connect(m_dBus, SIGNAL(batteryProfileChanged(QString)),
-                this, SLOT(updateCoolingMethod(QString)));
-    }
 
     connect(m_dBus, SIGNAL(configChanged()), this, SLOT(loadConfig()));
     connect(m_dBus, SIGNAL(configChanged()), this, SLOT(updateBatteryProfile()));
@@ -203,8 +200,16 @@ bool FnActions::isTouchPadSupported()
 
 void FnActions::toggleTouchPad()
 {
-    if (m_touchpad)
-        m_hw->setTouchPad(!m_hw->getTouchPad());
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
+    if (m_touchpad) {
+        bool enabled = m_hw->getTouchPad();
+        m_hw->setTouchPad(!enabled);
+        m_statusWidget.statusLabel->setText(m_iconText.arg(!enabled ? i18n("ON") : i18n("OFF")));
+    } else {
+        m_statusWidget.statusLabel->setText("");
+    }
+
+    showWidget();
 }
 
 bool FnActions::isCoolingMethodSupported()
@@ -259,6 +264,9 @@ void FnActions::updateBatteryProfile()
     if (!m_monitorBatteryProfiles)
         return;
 
+    if (m_batteryProfile == m_previousBatteryProfile)
+        return;
+
     changeProfile(m_batteryProfile, false);
 }
 
@@ -278,36 +286,33 @@ void FnActions::toggleProfiles()
 void FnActions::changeProfile(int profile, bool init)
 {
     if (!m_monitorBatteryProfiles) {
-        if (m_batteryKeyPressed)
-            showWidget(Disabled);
+        if (m_batteryKeyPressed) {
+            m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("dialog-cancel").pixmap(64, 64));
+            m_statusWidget.statusLabel->setText("");
+            showWidget();
+        }
 
         return;
     }
 
-    QIcon icon = QIcon::fromTheme("computer-laptop");
-    QString format = QString("<html><head/><body><p align=\"center\">\
-			      <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
-			      %1\
-			      </span></p></body></html>");
-
     bool inhib = false;
     switch (profile) {
     case Performance:
-        m_statusWidget.batteryProfileLabel->setText(format.arg(i18n("Performance")));
+        m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("Performance")));
         if (m_eco)
             m_hw->setEcoLed(Off);
         if (m_illumination)
             m_hw->setIllumination(On);
         break;
     case Powersave:
-        m_statusWidget.batteryProfileLabel->setText(format.arg(i18n("Powersave")));
+        m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("Powersave")));
         if (m_eco)
             m_hw->setEcoLed(Off);
         if (m_illumination)
             m_hw->setIllumination(Off);
         break;
     case Presentation:
-        m_statusWidget.batteryProfileLabel->setText(format.arg(i18n("Presentation")));
+        m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("Presentation")));
         if (m_eco)
             m_hw->setEcoLed(Off);
         if (m_illumination)
@@ -322,7 +327,7 @@ void FnActions::changeProfile(int profile, bool init)
         inhib = true;
         break;
     case ECO:
-        m_statusWidget.batteryProfileLabel->setText(format.arg("ECO"));
+        m_statusWidget.statusLabel->setText(m_iconText.arg("ECO"));
         if (m_eco)
             m_hw->setEcoLed(On);
         if (m_illumination)
@@ -343,11 +348,12 @@ void FnActions::changeProfile(int profile, bool init)
         m_cookie = 0;
     }
 
-    m_statusWidget.batteryProfileIcon->setPixmap(icon.pixmap(64, 64));
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(64, 64));
     if (!init)
-        showWidget(BatteryProfile);
+        showWidget();
 
     qDebug() << "Changed battery profile to:" << profile;
+    m_previousBatteryProfile = m_batteryProfile;
 }
 
 void FnActions::updateKBDBacklight()
@@ -362,15 +368,9 @@ void FnActions::updateKBDBacklight()
         return;
     }
 
-    QIcon icon = QIcon::fromTheme("input-keyboard");
-    QString format = QString("<html><head/><body><p align=\"center\">\
-			      <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
-			      %1\
-			      </span></p></body></html>");
-
     if (m_keyboardType == FirstKeyboardGen) {
         if (m_keyboardMode == KToshibaHardware::TIMER)
-            m_statusWidget.kbdStatusText->setText(format.arg(m_keyboardTime));
+            m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
         else
             return;
     } else if (m_keyboardType == SecondKeyboardGen) {
@@ -385,28 +385,26 @@ void FnActions::updateKBDBacklight()
         m_hw->setKBDBacklight(m_keyboardMode, m_keyboardTime);
         switch (m_keyboardMode) {
         case KToshibaHardware::OFF:
-            m_statusWidget.kbdStatusText->setText(format.arg(i18n("OFF")));
+            m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("OFF")));
             break;
         case KToshibaHardware::ON:
-            m_statusWidget.kbdStatusText->setText(format.arg(i18n("ON")));
+            m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("ON")));
             break;
         case KToshibaHardware::TIMER:
-            m_statusWidget.kbdStatusText->setText(format.arg(m_keyboardTime));
+            m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
             break;
         }
     }
 
-    m_statusWidget.kbdStatusIcon->setPixmap(icon.pixmap(64, 64));
-    showWidget(KBDStatus);
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-keyboard").pixmap(64, 64));
+    showWidget();
 }
 
-void FnActions::showWidget(int wid)
+void FnActions::showWidget()
 {
     QRect r = QApplication::desktop()->geometry();
     m_widget->move((r.width() / 2) - (m_widget->width() / 2), r.top());
     m_widget->show();
-
-    m_statusWidget.stackedWidget->setCurrentIndex(wid);
 
     if (m_widgetTimer->isActive())
         m_widgetTimer->setInterval(900);

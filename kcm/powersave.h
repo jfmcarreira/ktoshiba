@@ -19,6 +19,8 @@
 #ifndef POWERSAVE_H
 #define POWERSAVE_H
 
+#include <QStringList>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -39,7 +41,8 @@ public:
 
     enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
 
-    bool m_coolingMethodSupported;
+Q_SIGNALS:
+    void configFileChanged();
 
 private:
     bool isCoolingMethodSupported();
@@ -51,6 +54,7 @@ private:
     bool m_manageBatteryProfiles;
     int m_batteryProfile;
 
+    bool m_coolingMethodSupported;
     QStringList m_coolingMethodType1;
     QStringList m_coolingMethodType2;
     int m_coolingMethod;

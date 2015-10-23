@@ -22,21 +22,23 @@ The needed packages to build the newer module are:
 
 Pastebin files
 --------------
-- Makefile	->	http://pastebin.com/bt7EjuUi
-- toshiba_acpi	->	http://pastebin.com/k3DpPaPJ
+- Makefile		->	http://pastebin.com/bt7EjuUi
+- toshiba_acpi.c	->	http://pastebin.com/k3DpPaPJ
+- toshiba_h.patch	->	http://pastebin.com/NJLMqmyj
 
 
 Installation
 ------------
-Once the needed packages are installed and the previous two files
+Once the needed packages are installed and the previous three files
 are downloaded, open a terminal (Konsole) and change to the directory
-were the previous two files were donwloaded, and do the following:
+were the previous three files were donwloaded, and do the following:
 
 > cd /place/to/where/you/downloaded/your/files
+> sudo patch < toshiba_h.patch
 > make
 > sudo make install
 > sudo make load
-
+> make clean
 
 Once all the above has been done successfuly, simply restart KToshiba
 and enjoy the new functionality :-)

@@ -16,10 +16,21 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QStringList>
 #include <QTextStream>
 #include <QDebug>
 
 #include <KAuth/KAuth>
+
+extern "C" {
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+}
 
 #include "ktoshibahardware.h"
 
@@ -30,6 +41,10 @@ using namespace KAuth;
 KToshibaHardware::KToshibaHardware(QObject *parent)
     : QObject(parent)
 {
+    m_driverPath = findDriverPath();
+    if (m_driverPath.isEmpty())
+        qCritical() << "Could not find driver path";
+
     m_errors[FAILURE] = "HCI/SCI call could not be completed";
     m_errors[NOT_SUPPORTED] = "Feature is not supported";
     m_errors[INPUT_DATA_ERROR] = "Invalid parameters";
@@ -46,8 +61,7 @@ KToshibaHardware::KToshibaHardware(QObject *parent)
 
 QString KToshibaHardware::findDriverPath()
 {
-    QStringList m_devices;
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+    QStringList m_devices = QStringList() << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
     for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
         m_file.setFileName(path.arg(m_devices.at(current)));
@@ -69,22 +83,6 @@ void KToshibaHardware::printSMMError(QString function, quint32 error)
 {
     qCritical() << function << "failed with error code"
                 << QString::number(error, 16) << m_errors.value(error);
-}
-
-/*
- * INIT function
- */
-
-bool KToshibaHardware::init()
-{
-    m_driverPath = findDriverPath();
-    if (m_driverPath.isEmpty())
-        return false;
-
-    m_ledsPath = "/sys/class/leds/toshiba::";
-    m_hapsPath = "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/";
-
-    return true;
 }
 
 /*

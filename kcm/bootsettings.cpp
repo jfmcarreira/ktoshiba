@@ -16,14 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
-#include <KLocalizedString>
-
-extern "C" {
-#include <linux/toshiba.h>
-}
-
 #include "bootsettings.h"
 #include "devicemodel.h"
 #include "systemsettings.h"

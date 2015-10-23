@@ -25,9 +25,10 @@
           </doc:para>
         </doc:description>
         <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while notifiying the configuration change</doc:error>
+          <doc:error name="&ERROR_GENERAL;">if an error occured while notifiying the configuration file changed</doc:error>
         </doc:errors>
       </doc:doc>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
 
   </interface>

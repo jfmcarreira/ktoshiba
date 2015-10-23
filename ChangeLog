@@ -1,3 +1,22 @@
+2015-10-22 Azael Avalos <coproscefalo@gmail.com>
+	* Removed the init function from library, code moved to constructor
+	* Removed detach function from KToshibaNetlinkEvents class, code moved to destructor
+	* StatusWidget was updated to show only one pixmap and one text entry, instead of nesting
+	  a lot of icons and/or text, we are now using the current theme icons
+	* Removed no longer needed icons and qrc file
+	* Changed config DBus object name
+	* Updated README.toshiba_acpi file, instructions for patching toshiba.h were added
+
+2015-10-21 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the way we handled the notification of a configuration file change,
+	  we now fire one signal per save instead of many
+	* Added missing includes and removed unneeded toshiba.h include from KCM classes
+	* Misc changes to KCM classes
+	* Misc changes to FnActions class
+	* Fixed an issue when trying to launch a new instance of KToshiba when one was
+	  already running
+	* Removed some unneeded variables from library
+
 2015-10-20 Azael Avalos <coproscefalo@gmail.com>
 	* Renamed a bunch of variables, let's follow the KDE coding style
 	* Moved netlink events class and configuration related code to FnActions

@@ -19,6 +19,9 @@
 #ifndef SLEEPUTILITIES_H
 #define SLEEPUTILITIES_H
 
+#include <QMap>
+#include <QStringList>
+
 #include "ui_sleeputils.h"
 
 class KToshibaSystemSettings;

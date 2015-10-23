@@ -23,6 +23,7 @@
 
 class QAction;
 class QMenu;
+class QTimer;
 
 class FnActions;
 
@@ -41,18 +42,20 @@ public:
 
     bool initialize();
 
+public Q_SLOTS:
+    void showApplication();
+
 private Q_SLOTS:
+    void changeStatus();
     void notifyHDDMovement();
     void configureClicked();
 
 private:
-    void cleanup();
-
     FnActions *m_fn;
 
     QAction *m_configure;
     QMenu *m_popupMenu;
-
+    QTimer *m_statusTimer;
 };
 
 #endif // KTOSHIBA_H

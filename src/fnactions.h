@@ -39,20 +39,14 @@ class FnActions : public QObject
     Q_OBJECT
 
 public:
-    enum WidgetIcons { Disabled, BatteryProfile, KBDStatus };
-    enum ZoomActions { Reset, In, Out };
-    enum ToogleActions { Off, On };
-    enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
-    enum KeyboardBacklightGenerations { FirstKeyboardGen = 1, SecondKeyboardGen = 2 };
-
-public:
     FnActions(QObject *parent);
     ~FnActions();
     bool init();
 
-    bool checkConfig();
-    void createConfig();
-    void updateKBDBacklight();
+    enum ZoomActions { Reset, In, Out };
+    enum ToogleActions { Off, On };
+    enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
+    enum KeyboardBacklightGenerations { FirstKeyboardGen = 1, SecondKeyboardGen = 2 };
 
     KToshibaHardware *hw() const
     {
@@ -63,7 +57,9 @@ Q_SIGNALS:
     void vibrationDetected();
 
 private Q_SLOTS:
+    bool checkConfig();
     void loadConfig();
+    void createConfig();
     void hideWidget();
     void compositingChanged(bool);
     void processHotkey(int);
@@ -73,10 +69,11 @@ private Q_SLOTS:
     void updateCoolingMethod(QString);
 
 private:
-    void showWidget(int);
+    void showWidget();
     void changeProfile(int, bool);
     void toggleProfiles();
     void toggleTouchPad();
+    void updateKBDBacklight();
     bool isTouchPadSupported();
     bool isIlluminationSupported();
     bool isECOSupported();
@@ -103,6 +100,7 @@ private:
     QList<int> m_batteryProfiles;
     QList<int> m_keyboardModes;
     QString m_version;
+    QString m_iconText;
     bool m_batteryKeyPressed;
     bool m_monitorBatteryProfiles;
     bool m_manageCoolingMethod;
@@ -113,6 +111,7 @@ private:
     int m_keyboardMode;
     int m_keyboardTime;
     int m_batteryProfile;
+    int m_previousBatteryProfile;
     int m_maxCoolingMethod;
     int m_coolingMethodPluggedIn;
     int m_coolingMethodOnBattery;

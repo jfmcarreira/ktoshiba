@@ -68,7 +68,6 @@ public:
     };
 
     bool attach();
-    void detach();
     void setDeviceHID(QString);
 
 Q_SIGNALS:
