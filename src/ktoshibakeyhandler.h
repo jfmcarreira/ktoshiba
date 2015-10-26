@@ -33,7 +33,6 @@ public:
     KToshibaKeyHandler(QObject *parent);
     ~KToshibaKeyHandler();
     bool attach();
-    void detach();
 
 Q_SIGNALS:
     void hotkeyPressed(int);

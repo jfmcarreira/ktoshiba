@@ -43,10 +43,9 @@ public:
     ~FnActions();
     bool init();
 
-    enum ZoomActions { Reset, In, Out };
     enum ToogleActions { Off, On };
     enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
-    enum KeyboardBacklightGenerations { FirstKeyboardGen = 1, SecondKeyboardGen = 2 };
+    enum KeyboardBacklightGenerations { FirstGeneration = 1, SecondGeneration = 2 };
 
     KToshibaHardware *hw() const
     {

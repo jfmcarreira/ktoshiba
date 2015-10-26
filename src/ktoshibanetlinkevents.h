@@ -85,8 +85,7 @@ private:
 
     QSocketNotifier *m_notifier;
     QString m_deviceHID;
-    const int m_buffer = 16 * 1024 * 1024;
-    char m_event_buf[1024];
+    char m_eventBuffer[1024];
     int m_socket;
 };
 

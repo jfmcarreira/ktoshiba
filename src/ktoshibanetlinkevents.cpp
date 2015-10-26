@@ -60,12 +60,12 @@ KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
 
 KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
 {
-    if (m_notifier->isEnabled())
+    if (m_notifier->isEnabled()) {
         m_notifier->setEnabled(false);
-    delete m_notifier; m_notifier = NULL;
+        delete m_notifier; m_notifier = NULL;
+    }
     if (m_socket)
         ::close(m_socket);
-    m_socket = -1;
 }
 
 void KToshibaNetlinkEvents::setDeviceHID(QString hid)
@@ -81,7 +81,7 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
     if (socket < 0)
         return;
 
-    ssize_t len = ::recv(m_socket, m_event_buf, 1024, 0);
+    ssize_t len = ::recv(m_socket, m_eventBuffer, 1024, 0);
     if (len <= 0) {
         qCritical() << "Could not receive netlink data:" << strerror(errno);
 
@@ -90,7 +90,7 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
 
     qDebug() << "Data received from socket:" << socket;
 
-    m_genlmsghdr = (struct genlmsghdr *)(m_event_buf + NLMSG_HDRLEN);
+    m_genlmsghdr = (struct genlmsghdr *)(m_eventBuffer + NLMSG_HDRLEN);
     if ((m_genlmsghdr->cmd != ACPI_GENL_CMD_EVENT) || (m_genlmsghdr->version != ACPI_GENL_VERSION)) {
         qDebug() << "Not an ACPI netlink event";
 
@@ -99,7 +99,7 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
 
     ssize_t attroffset = NLMSG_HDRLEN + GENL_HDRLEN;
     while (attroffset < len) {
-        m_nlattrhdr = (struct nlattr *)(m_event_buf + attroffset);
+        m_nlattrhdr = (struct nlattr *)(m_eventBuffer + attroffset);
         if ((m_nlattrhdr->nla_type != ACPI_GENL_ATTR_EVENT)
             || (NLA_ALIGN(m_nlattrhdr->nla_len) != NLA_ALIGN(NLA_HDRLEN
                     + sizeof(struct acpi_genl_event)))) {
@@ -109,7 +109,7 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
         }
 
         qDebug() << "Valid ACPI netlink event";
-        m_event = (struct acpi_genl_event *)(m_event_buf + attroffset + NLA_HDRLEN);
+        m_event = (struct acpi_genl_event *)(m_eventBuffer + attroffset + NLA_HDRLEN);
 
         qDebug() << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
                  << "Type:" << hex << m_event->type << "Data:" << m_event->data;
@@ -132,6 +132,7 @@ bool KToshibaNetlinkEvents::attach()
     m_nl.nl_family = AF_NETLINK;
     m_nl.nl_pid = QCoreApplication::applicationPid();
     m_nl.nl_groups = 0;
+    const int buffer = 16 * 1024 * 1024;
 
     m_socket = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
     if (m_socket < 0) {
@@ -140,7 +141,7 @@ bool KToshibaNetlinkEvents::attach()
         return false;
     }
 
-    setsockopt(m_socket, SOL_SOCKET, SO_RCVBUFFORCE, &m_buffer, sizeof(struct sockaddr_nl));
+    setsockopt(m_socket, SOL_SOCKET, SO_RCVBUFFORCE, &buffer, sizeof(struct sockaddr_nl));
 
     if (::bind(m_socket, (struct sockaddr *) &m_nl, sizeof(struct sockaddr_nl)) < 0) {
         qCritical() << "Could not bind to netlink socket:" << strerror(errno);

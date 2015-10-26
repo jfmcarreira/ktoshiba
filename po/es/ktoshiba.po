@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-10-22 14:51-0600\n"
+"POT-Creation-Date: 2015-10-25 21:52-0600\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -69,27 +69,27 @@ msgstr ""
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: src/fnactions.cpp:207 src/fnactions.cpp:391
+#: src/fnactions.cpp:206 src/fnactions.cpp:386
 #, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: src/fnactions.cpp:207 src/fnactions.cpp:388
+#: src/fnactions.cpp:206 src/fnactions.cpp:383
 #, kde-format
 msgid "OFF"
 msgstr "APAGADO"
 
-#: src/fnactions.cpp:301
+#: src/fnactions.cpp:295
 #, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/fnactions.cpp:308
+#: src/fnactions.cpp:299
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/fnactions.cpp:315 src/fnactions.cpp:326
+#: src/fnactions.cpp:302 src/fnactions.cpp:310
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
