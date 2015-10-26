@@ -20,8 +20,6 @@
 
 #include "ktoshibadbusinterface.h"
 #include "ktoshibadbusadaptor.h"
-#include "fnactions.h"
-#include "ktoshibahardware.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject(parent),
@@ -124,7 +122,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
     }
 }
 
-void KToshibaDBusInterface::setZoom(int zoom)
+void KToshibaDBusInterface::setZoom(ZoomActions zoom)
 {
     if (!getCompositingState()) {
         qWarning() << "Compositing have been disabled, Zoom actions cannot be activated";
@@ -145,13 +143,13 @@ void KToshibaDBusInterface::setZoom(int zoom)
 
     QDBusReply<void> reply;
     switch (zoom) {
-    case FnActions::Reset:
+    case Reset:
         reply = iface.call("invokeShortcut", "view_actual_size");
         break;
-    case FnActions::In:
+    case In:
         reply = iface.call("invokeShortcut", "view_zoom_in");
         break;
-    case FnActions::Out:
+    case Out:
         reply = iface.call("invokeShortcut", "view_zoom_out");
         break;
     }

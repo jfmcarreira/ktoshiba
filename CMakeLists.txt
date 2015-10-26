@@ -36,7 +36,7 @@ find_package(KF5 REQUIRED COMPONENTS
 
 find_package(LibUDev REQUIRED)
 
-find_package(Input REQUIRED)
+find_package(LinuxIncludes REQUIRED)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}

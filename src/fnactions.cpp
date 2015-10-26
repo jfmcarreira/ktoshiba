@@ -49,7 +49,7 @@ FnActions::FnActions(QObject *parent)
       m_monitorHDD(true),
       m_notifyHDD(true),
       m_cookie(0),
-      m_keyboardType(FirstKeyboardGen),
+      m_keyboardType(FirstGeneration),
       m_keyboardMode(KToshibaHardware::TIMER),
       m_keyboardTime(15)
 {
@@ -113,7 +113,7 @@ bool FnActions::init()
 
     m_dBus->init();
 
-    if (m_kbdBacklight && m_keyboardType == SecondKeyboardGen)
+    if (m_kbdBacklight && m_keyboardType == SecondGeneration)
         m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
 
     // Set initial Cooling Method state (if supported)
@@ -200,13 +200,14 @@ bool FnActions::isTouchPadSupported()
 
 void FnActions::toggleTouchPad()
 {
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
     if (m_touchpad) {
         bool enabled = m_hw->getTouchPad();
         m_hw->setTouchPad(!enabled);
         m_statusWidget.statusLabel->setText(m_iconText.arg(!enabled ? i18n("ON") : i18n("OFF")));
+        m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
     } else {
         m_statusWidget.statusLabel->setText("");
+        m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("dialog-cancel").pixmap(64, 64));
     }
 
     showWidget();
@@ -250,15 +251,6 @@ bool FnActions::isECOSupported()
     return true;
 }
 
-bool FnActions::isKBDBacklightSupported()
-{
-    quint32 kbdbl = m_hw->getKBDBacklight(&m_keyboardMode, &m_keyboardTime, &m_keyboardType);
-    if (kbdbl != KToshibaHardware::SUCCESS && kbdbl != KToshibaHardware::SUCCESS2)
-        return false;
-
-    return true;
-}
-
 void FnActions::updateBatteryProfile()
 {
     if (!m_monitorBatteryProfiles)
@@ -296,31 +288,23 @@ void FnActions::changeProfile(int profile, bool init)
     }
 
     bool inhib = false;
+    int eco = Off;
+    int illum = Off;
     switch (profile) {
     case Performance:
         m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("Performance")));
-        if (m_eco)
-            m_hw->setEcoLed(Off);
-        if (m_illumination)
-            m_hw->setIllumination(On);
+        illum = On;
         break;
     case Powersave:
         m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("Powersave")));
-        if (m_eco)
-            m_hw->setEcoLed(Off);
-        if (m_illumination)
-            m_hw->setIllumination(Off);
         break;
     case Presentation:
         m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("Presentation")));
-        if (m_eco)
-            m_hw->setEcoLed(Off);
-        if (m_illumination)
-            m_hw->setIllumination(On);
+        illum = On;
         if (m_kbdBacklight) {
-            if (m_keyboardType == FirstKeyboardGen && m_keyboardMode == KToshibaHardware::FNZ)
+            if (m_keyboardType == FirstGeneration && m_keyboardMode == KToshibaHardware::FNZ)
                 m_dBus->setKBDBacklight(On);
-            else if (m_keyboardType == SecondKeyboardGen)
+            else if (m_keyboardType == SecondGeneration)
                 m_hw->setKBDBacklight(KToshibaHardware::ON, m_keyboardTime);
         }
         m_cookie = m_dBus->inhibitPowerManagement(i18n("Presentation"));
@@ -328,12 +312,9 @@ void FnActions::changeProfile(int profile, bool init)
         break;
     case ECO:
         m_statusWidget.statusLabel->setText(m_iconText.arg("ECO"));
-        if (m_eco)
-            m_hw->setEcoLed(On);
-        if (m_illumination)
-            m_hw->setIllumination(Off);
+        eco = On;
         if (m_kbdBacklight) {
-            if (m_keyboardType == FirstKeyboardGen && m_keyboardMode == KToshibaHardware::FNZ) {
+            if (m_keyboardType == FirstGeneration && m_keyboardMode == KToshibaHardware::FNZ) {
                 m_dBus->setKBDBacklight(Off);
             } else if (m_keyboardType == 2) {
                 m_hw->setKBDBacklight(KToshibaHardware::OFF, m_keyboardTime);
@@ -342,6 +323,11 @@ void FnActions::changeProfile(int profile, bool init)
         m_dBus->setBrightness(57);
         break;
     }
+
+    if (m_eco)
+        m_hw->setEcoLed(eco);
+    if (m_illumination)
+        m_hw->setIllumination(illum);
 
     if (m_cookie && !inhib) {
         m_dBus->unInhibitPowerManagement(m_cookie);
@@ -356,6 +342,15 @@ void FnActions::changeProfile(int profile, bool init)
     m_previousBatteryProfile = m_batteryProfile;
 }
 
+bool FnActions::isKBDBacklightSupported()
+{
+    quint32 kbdbl = m_hw->getKBDBacklight(&m_keyboardMode, &m_keyboardTime, &m_keyboardType);
+    if (kbdbl != KToshibaHardware::SUCCESS && kbdbl != KToshibaHardware::SUCCESS2)
+        return false;
+
+    return true;
+}
+
 void FnActions::updateKBDBacklight()
 {
     if (!m_kbdBacklight)
@@ -368,12 +363,12 @@ void FnActions::updateKBDBacklight()
         return;
     }
 
-    if (m_keyboardType == FirstKeyboardGen) {
+    if (m_keyboardType == FirstGeneration) {
         if (m_keyboardMode == KToshibaHardware::TIMER)
             m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
         else
             return;
-    } else if (m_keyboardType == SecondKeyboardGen) {
+    } else if (m_keyboardType == SecondGeneration) {
         int current = m_keyboardModes.indexOf(m_keyboardMode);
         if (current == m_keyboardModes.indexOf(m_keyboardModes.last())) {
             m_keyboardMode = m_keyboardModes.first();
@@ -434,13 +429,13 @@ void FnActions::processHotkey(int hotkey)
         updateKBDBacklight();
         break;
     case KEY_ZOOMRESET:
-        m_dBus->setZoom(Reset);
+        m_dBus->setZoom(KToshibaDBusInterface::Reset);
         break;
     case KEY_ZOOMOUT:
-        m_dBus->setZoom(Out);
+        m_dBus->setZoom(KToshibaDBusInterface::Out);
         break;
     case KEY_ZOOMIN:
-        m_dBus->setZoom(In);
+        m_dBus->setZoom(KToshibaDBusInterface::In);
         break;
     }
 }

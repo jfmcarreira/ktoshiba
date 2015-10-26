@@ -19,7 +19,6 @@
 #ifndef KTOSHIBA_DBUS_INTERFACE_H
 #define KTOSHIBA_DBUS_INTERFACE_H
 
-#include <QObject>
 #include <QString>
 #include <QDBusConnection>
 
@@ -34,10 +33,12 @@ public:
     ~KToshibaDBusInterface();
     void init();
 
+    enum ZoomActions { Reset, In, Out };
+
     void lockScreen();
     void setBrightness(int);
     void setKBDBacklight(int);
-    void setZoom(int);
+    void setZoom(ZoomActions);
     uint inhibitPowerManagement(QString);
     void unInhibitPowerManagement(uint);
     bool getCompositingState();

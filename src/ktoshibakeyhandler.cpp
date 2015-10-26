@@ -34,14 +34,21 @@ KToshibaKeyHandler::KToshibaKeyHandler(QObject *parent)
     : QObject(parent),
       m_udevHelper(new UDevHelper(this)),
       m_notifier(NULL),
-      m_socket(0)
+      m_socket(-1)
 {
     m_namePhys << TOSHNAME << TOSHPHYS << TOSWMINAME << TOSWMIPHYS;
 }
 
 KToshibaKeyHandler::~KToshibaKeyHandler()
 {
-    detach();
+    if (m_notifier) {
+        m_notifier->setEnabled(false);
+        delete m_notifier; m_notifier = NULL;
+    }
+    if (m_socket)
+        ::close(m_socket);
+
+    delete m_udevHelper; m_udevHelper = NULL;
 }
 
 bool KToshibaKeyHandler::attach()
@@ -72,18 +79,6 @@ bool KToshibaKeyHandler::attach()
     connect(m_notifier, SIGNAL(activated(int)), this, SLOT(readData(int)));
 
     return true;
-}
-
-void KToshibaKeyHandler::detach()
-{
-    if (m_notifier) {
-        m_notifier->setEnabled(false);
-        delete m_notifier;
-    }
-    if (m_socket)
-        ::close(m_socket);
-
-    delete m_udevHelper; m_udevHelper = NULL;
 }
 
 void KToshibaKeyHandler::readData(int socket)
