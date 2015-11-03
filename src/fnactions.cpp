@@ -38,7 +38,6 @@ extern "C" {
 FnActions::FnActions(QObject *parent)
     : QObject(parent),
       m_config(KSharedConfig::openConfig(CONFIG_FILE)),
-      m_sysinfo(false),
       m_dBus(new KToshibaDBusInterface(this)),
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hotkeys(new KToshibaKeyHandler(this)),
@@ -71,12 +70,12 @@ FnActions::~FnActions()
 {
     if (m_cookie)
         m_dBus->unInhibitPowerManagement(m_cookie);
+
     delete m_widget; m_widget = NULL;
     delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_hotkeys; m_hotkeys = NULL;
     delete m_nl; m_nl = NULL;
-    delete m_hw; m_hw = NULL;
 }
 
 bool FnActions::init()
@@ -84,7 +83,7 @@ bool FnActions::init()
     if (!m_hotkeys->attach())
         return false;
 
-    m_touchpad = isTouchPadSupported();
+    m_pointing = isPointingDeviceSupported();
     m_illumination = isIlluminationSupported();
     m_eco = isECOSupported();
     m_kbdBacklight = isKBDBacklightSupported();
@@ -102,7 +101,6 @@ bool FnActions::init()
     changeProfile(m_batteryProfile, true);
 
     if (m_nl->attach()) {
-        m_nl->setDeviceHID(m_hw->getDeviceHID());
         m_hdd = m_hw->getProtectionLevel();
 
         connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(protectHDD(int)));
@@ -120,8 +118,8 @@ bool FnActions::init()
     if (m_cooling)
         updateCoolingMethod(m_dBus->getBatteryProfile());
 
-    connect(m_dBus, SIGNAL(configChanged()), this, SLOT(loadConfig()));
-    connect(m_dBus, SIGNAL(configChanged()), this, SLOT(updateBatteryProfile()));
+    connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(loadConfig()));
+    connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(updateBatteryProfile()));
     connect(m_hotkeys, SIGNAL(hotkeyPressed(int)), this, SLOT(processHotkey(int)));
 
     return true;
@@ -133,7 +131,6 @@ bool FnActions::checkConfig()
 
     if (config.isEmpty()) {
         qDebug() << "Configuration file not found.";
-        m_sysinfo = m_hw->getSysInfo();
 
         return false;
     }
@@ -160,15 +157,6 @@ void FnActions::loadConfig()
 void FnActions::createConfig()
 {
     qDebug() << "Default configuration file created.";
-    // System Information group
-    KConfigGroup sysinfoGroup(m_config, "SystemInformation");
-    sysinfoGroup.writeEntry("ModelFamily", m_sysinfo ? m_hw->modelFamily : i18n("Unknown"));
-    sysinfoGroup.writeEntry("ModelNumber", m_sysinfo ? m_hw->modelNumber : i18n("Unknown"));
-    sysinfoGroup.writeEntry("BIOSVersion", m_sysinfo ? m_hw->biosVersion : i18n("Unknown"));
-    sysinfoGroup.writeEntry("BIOSDate", m_sysinfo ? m_hw->biosDate : i18n("Unknown"));
-    sysinfoGroup.writeEntry("BIOSManufacturer", m_sysinfo ? m_hw->biosManufacturer : i18n("Unknown"));
-    sysinfoGroup.writeEntry("ECVersion", m_sysinfo ? m_hw->ecVersion : i18n("Unknown"));
-    sysinfoGroup.sync();
     // HDD Protection group
     KConfigGroup hddGroup(m_config, "HDDProtection");
     hddGroup.writeEntry("MonitorHDD", true);
@@ -189,10 +177,10 @@ void FnActions::compositingChanged(bool state)
     m_widget->setAttribute(Qt::WA_TranslucentBackground, state);
 }
 
-bool FnActions::isTouchPadSupported()
+bool FnActions::isPointingDeviceSupported()
 {
-    quint32 tp = m_hw->getTouchPad();
-    if (tp != KToshibaHardware::TCI_DISABLED && tp != KToshibaHardware::TCI_ENABLED)
+    quint32 tp = m_hw->getPointingDevice();
+    if (tp != KToshibaHardware::DEACTIVATED && tp != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -200,9 +188,9 @@ bool FnActions::isTouchPadSupported()
 
 void FnActions::toggleTouchPad()
 {
-    if (m_touchpad) {
-        bool enabled = m_hw->getTouchPad();
-        m_hw->setTouchPad(!enabled);
+    if (m_pointing) {
+        bool enabled = m_hw->getPointingDevice() ? true : false;
+        m_hw->setPointingDevice(!enabled);
         m_statusWidget.statusLabel->setText(m_iconText.arg(!enabled ? i18n("ON") : i18n("OFF")));
         m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
     } else {
@@ -236,7 +224,7 @@ void FnActions::updateCoolingMethod(QString profile)
 bool FnActions::isIlluminationSupported()
 {
     quint32 illum = m_hw->getIllumination();
-    if (illum != KToshibaHardware::TCI_DISABLED && illum != KToshibaHardware::TCI_ENABLED)
+    if (illum != KToshibaHardware::DEACTIVATED && illum != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -245,7 +233,7 @@ bool FnActions::isIlluminationSupported()
 bool FnActions::isECOSupported()
 {
     quint32 eco = m_hw->getEcoLed();
-    if (eco != KToshibaHardware::TCI_DISABLED && eco != KToshibaHardware::TCI_ENABLED)
+    if (eco != KToshibaHardware::DEACTIVATED && eco != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;

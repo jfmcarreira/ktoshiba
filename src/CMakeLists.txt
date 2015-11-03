@@ -5,7 +5,6 @@ set(KToshibaSources
     ktoshibadbusinterface.cpp
     ktoshibakeyhandler.cpp
     ktoshibanetlinkevents.cpp
-    udevhelper.cpp
     fnactions.cpp
     ktoshiba.cpp
     main.cpp

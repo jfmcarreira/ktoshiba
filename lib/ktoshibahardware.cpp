@@ -19,6 +19,8 @@
 #include <QStringList>
 #include <QTextStream>
 #include <QDebug>
+#include <QDir>
+#include <QStringBuilder>
 
 #include <KAuth/KAuth>
 
@@ -41,9 +43,11 @@ using namespace KAuth;
 KToshibaHardware::KToshibaHardware(QObject *parent)
     : QObject(parent)
 {
-    m_driverPath = findDriverPath();
-    if (m_driverPath.isEmpty())
-        qCritical() << "Could not find driver path";
+    m_file.setFileName(TOSHIBA_ACPI_DEVICE);
+    m_devDeviceExist = m_file.exists();
+    if (!m_devDeviceExist)
+        qCritical() << "The toshiba_acpi device does not exist, perhaps an older driver is loaded?"
+                    << "Please see the file README.toshiba_acpi for upgrading instructions";
 
     m_errors[FAILURE] = "HCI/SCI call could not be completed";
     m_errors[NOT_SUPPORTED] = "Feature is not supported";
@@ -56,28 +60,8 @@ KToshibaHardware::KToshibaHardware(QObject *parent)
 }
 
 /*
- * Internal functions
+ * Error printing function
  */
-
-QString KToshibaHardware::findDriverPath()
-{
-    QStringList m_devices = QStringList() << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
-    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
-    for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
-        m_file.setFileName(path.arg(m_devices.at(current)));
-        if (m_file.exists()) {
-            m_device = m_devices.at(current);
-
-            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_device);
-        }
-
-        current++;
-    }
-
-    qWarning() << "No known kernel interface found" << endl;
-
-    return QString();
-}
 
 void KToshibaHardware::printSMMError(QString function, quint32 error)
 {
@@ -86,96 +70,22 @@ void KToshibaHardware::printSMMError(QString function, quint32 error)
 }
 
 /*
- * System Information functions
+ * System Information function
  */
-
-bool KToshibaHardware::getSysInfo()
-{
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo");
-    action.setHelperId(HELPER_ID);
-    ExecuteJob *job = action.execute();
-    if (!job->exec()) {
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.dumpsysinfo failed";
-
-        return false;
-    }
-
-    m_file.setFileName("/var/tmp/dmidecode");
-    if (!m_file.open(QIODevice::ReadOnly)) {
-        qCritical() << "getSysInfo failed with error code" << m_file.error() << m_file.errorString();
-
-        return false;
-    }
-
-    QTextStream in(&m_file);
-    int count = 0;
-    while (count < 2) {
-        QString line = in.readLine();
-        QStringList split = line.split(":");
-        // BIOS Information
-        if (split[0].contains("Vendor")) {
-            biosManufacturer = split[1].trimmed();
-            continue;
-        }
-        if (split[0].contains("Version")) {
-            if (count == 0)
-                biosVersion = split[1].trimmed();
-            else
-                modelNumber = split[1].trimmed();
-            count++;
-            continue;
-        }
-        if (split[0].contains("Release Date")) {
-            biosDate = split[1].trimmed();
-            continue;
-        }
-        if (split[0].contains("Firmware Revision")) {
-            ecVersion = split[1].trimmed();
-            continue;
-        }
-        // System Information
-        if (split[0].contains("Product Name")) {
-            modelFamily = split[1].trimmed();
-            continue;
-        }
-    };
-    m_file.close();
-
-    return true;
-}
-
-QString KToshibaHardware::getDriverVersion()
-{
-    m_file.setFileName(m_driverPath + "version");
-    if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
-        QTextStream in(&m_file);
-        QString version = in.readAll();
-        m_file.close();
-
-        return version;
-    }
-
-    m_file.setFileName("/proc/acpi/toshiba/version");
-    if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
-        qWarning() << "An older driver found, some functionality won't be available."
-                   << "Please see the file README.toshiba_acpi for upgrading instructions";
-
-        QTextStream in(&m_file);
-        QString line = in.readLine();
-        QStringList split = line.split(":");
-        m_file.close();
-
-        return split[1].trimmed();
-    }
-
-    qCritical() << "No version file detected or toshiba_acpi module not loaded";
-
-    return QString("0.0");
-}
 
 QString KToshibaHardware::getDeviceHID()
 {
-    return m_device;
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+
+    QDir dir;
+    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/");
+    foreach (const QString &device, m_devices)
+        if (dir.exists(path.arg(device)))
+            return device;
+
+    qWarning() << "No known kernel interface found" << endl;
+
+    return QString();
 }
 
 /*
@@ -224,13 +134,9 @@ void KToshibaHardware::unloadHeads(int timeout)
 
 int KToshibaHardware::tci_raw(const SMMRegisters *regs)
 {
-    m_file.setFileName(TOSHIBA_ACPI_DEVICE);
-    if (!m_file.exists()) {
-        qCritical() << "The toshiba_acpi device does not exist, perhaps an older driver is loaded?";
-
+    if (!m_devDeviceExist)
         return -1;
-    }
-    
+
     int m_fd = ::open(TOSHIBA_ACPI_DEVICE, O_RDWR);
     if (m_fd < 0) {
         qCritical() << "Error while openning toshiba_acpi device:" << strerror(errno);
@@ -239,9 +145,9 @@ int KToshibaHardware::tci_raw(const SMMRegisters *regs)
     }
 
     int ret = -1;
-    if (regs->eax == 0xf300 || regs->eax == 0xf400)
+    if (regs->eax == SCI_READ || regs->eax == SCI_WRITE)
         ret = ioctl(m_fd, TOSHIBA_ACPI_SCI, regs);
-    else if (regs->eax == 0xfe00 || regs->eax == 0xff00)
+    else if (regs->eax == HCI_READ || regs->eax == HCI_WRITE)
         ret = ioctl(m_fd, TOSH_SMM, regs);
 
     ::close(m_fd);
@@ -255,18 +161,18 @@ int KToshibaHardware::tci_raw(const SMMRegisters *regs)
  * Hardware access funtions
  */
 
-quint32 KToshibaHardware::getTouchPad()
+quint32 KToshibaHardware::getPointingDevice()
 {
-    SMMRegisters regs = { 0xf300, 0x050e, 0, 0, 0, 0 };
+    regs = { SCI_READ, POINTING_DEVICE, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("getTouchPad", FAILURE);
+        printSMMError("getPointingDevice", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        printSMMError("getTouchPad", regs.eax);
+        printSMMError("getPointingDevice", regs.eax);
 
         return regs.eax;
     }
@@ -274,30 +180,30 @@ quint32 KToshibaHardware::getTouchPad()
     return regs.ecx;
 }
 
-void KToshibaHardware::setTouchPad(quint32 state)
+void KToshibaHardware::setPointingDevice(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x050e, state, 0, 0, 0 };
+    regs = { SCI_WRITE, POINTING_DEVICE, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
-        printSMMError("setTouchPad", INPUT_DATA_ERROR);
+    if (state != DEACTIVATED && state != ACTIVATED) {
+        printSMMError("setPointingDevice", INPUT_DATA_ERROR);
 
         return;
     }
 
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("setTouchPad", FAILURE);
+        printSMMError("setPointingDevice", FAILURE);
 
         return;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        printSMMError("setTouchPad", regs.eax);
+        printSMMError("setPointingDevice", regs.eax);
 }
 
 quint32 KToshibaHardware::getIllumination()
 {
-    SMMRegisters regs = { 0xf300, 0x014e, 0, 0, 0, 0 };
+    regs = { SCI_READ, ILLUMINATION_LED, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getIllumination", FAILURE);
@@ -316,9 +222,9 @@ quint32 KToshibaHardware::getIllumination()
 
 void KToshibaHardware::setIllumination(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x014e, state, 0, 0, 0 };
+    regs = { SCI_WRITE, ILLUMINATION_LED, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setIllumination", INPUT_DATA_ERROR);
 
         return;
@@ -336,7 +242,7 @@ void KToshibaHardware::setIllumination(quint32 state)
 
 quint32 KToshibaHardware::getEcoLed()
 {
-    SMMRegisters regs = { 0xfe00, 0x97, 0, 0, 0, 0 };
+    regs = { HCI_READ, ECO_LED, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getEcoLed", FAILURE);
@@ -350,7 +256,7 @@ quint32 KToshibaHardware::getEcoLed()
         return regs.eax;
     }
 
-    regs = { 0xfe00, 0x97, 0, 1, 0, 0 };
+    regs = { HCI_READ, 0x97, 0, 1, 0, 0 };
     if (tci_raw(&regs) < 0) {
         printSMMError("getEcoLed", FAILURE);
 
@@ -368,9 +274,9 @@ quint32 KToshibaHardware::getEcoLed()
 
 void KToshibaHardware::setEcoLed(quint32 state)
 {
-    SMMRegisters regs = { 0xff00, 0x97, state, 0, 0, 0 };
+    regs = { HCI_WRITE, ECO_LED, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setEcoLed", INPUT_DATA_ERROR);
 
         return;
@@ -388,7 +294,7 @@ void KToshibaHardware::setEcoLed(quint32 state)
 
 quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
 {
-    SMMRegisters regs = { 0xf300, 0x015c, 0, 0, 0, 0 };
+    regs = { SCI_READ, KBD_ILLUM_STATUS, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getKBDBacklight", FAILURE);
@@ -412,7 +318,7 @@ quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
 
 void KToshibaHardware::setKBDBacklight(int mode, int time)
 {
-    SMMRegisters regs = { 0xf400, 0x015c, 0, 0, 0, 0 };
+    regs = { SCI_WRITE, KBD_ILLUM_STATUS, 0, 0, 0, 0 };
 
     if (time < 0 || time > 100) {
         printSMMError("setKBDBacklight", INPUT_DATA_ERROR);
@@ -434,7 +340,7 @@ void KToshibaHardware::setKBDBacklight(int mode, int time)
 
 quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *maxval, int *defval)
 {
-    SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0 };
+    regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBSleepCharge", FAILURE);
@@ -455,7 +361,7 @@ quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *maxval, int *defval)
 
 void KToshibaHardware::setUSBSleepCharge(int mode, int base)
 {
-    SMMRegisters regs = { 0xf400, 0x0150, 0, 0, 0, 0 };
+    regs = { SCI_WRITE, USB_SLEEP_CHARGE, 0, 0, 0, 0 };
 
     regs.ecx = base | mode;
     if (tci_raw(&regs) < 0) {
@@ -470,7 +376,7 @@ void KToshibaHardware::setUSBSleepCharge(int mode, int base)
 
 quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
 {
-    SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0x0200 };
+    regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBSleepFunctionsBatLvl", FAILURE);
@@ -482,7 +388,7 @@ quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
         printSMMError("getUSBSleepFunctionsBatLvl", regs.eax);
     } else {
         int tmp = regs.ecx & 0x7;
-        *state = (tmp == 0x4) ? TCI_ENABLED : TCI_DISABLED;
+        *state = (tmp == 0x4) ? ACTIVATED : DEACTIVATED;
         *level = regs.ecx >> 0x10;
     }
 
@@ -491,7 +397,7 @@ quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
 
 void KToshibaHardware::setUSBSleepFunctionsBatLvl(int level)
 {
-    SMMRegisters regs = { 0xf400, 0x0150, 0, 0, 0, 0x0200 };
+    regs = { SCI_WRITE, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
     if (level < 0 || level > 100) {
         printSMMError("setUSBSleepFunctionsBatLvl", INPUT_DATA_ERROR);
@@ -513,7 +419,7 @@ void KToshibaHardware::setUSBSleepFunctionsBatLvl(int level)
 
 quint32 KToshibaHardware::getUSBRapidCharge()
 {
-    SMMRegisters regs = { 0xf300, 0x0150, 0, 0, 0, 0x0300 };
+    regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, USB_RAPID_CHARGE };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBRapidCharge", FAILURE);
@@ -532,9 +438,9 @@ quint32 KToshibaHardware::getUSBRapidCharge()
 
 void KToshibaHardware::setUSBRapidCharge(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x0150, state, 0, 0, 0x0300 };
+    regs = { SCI_WRITE, USB_SLEEP_CHARGE, state, 0, 0, USB_RAPID_CHARGE };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setUSBRapidCharge", INPUT_DATA_ERROR);
 
         return;
@@ -552,7 +458,7 @@ void KToshibaHardware::setUSBRapidCharge(quint32 state)
 
 quint32 KToshibaHardware::getUSBSleepMusic()
 {
-    SMMRegisters regs = { 0xf300, 0x015e, 0, 0, 0, 0 };
+    regs = { SCI_READ, SLEEP_MUSIC, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBSleepMusic", FAILURE);
@@ -571,9 +477,9 @@ quint32 KToshibaHardware::getUSBSleepMusic()
 
 void KToshibaHardware::setUSBSleepMusic(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x015e, state, 0, 0, 0 };
+    regs = { SCI_WRITE, SLEEP_MUSIC, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setUSBSleepMusic", INPUT_DATA_ERROR);
 
         return;
@@ -591,7 +497,7 @@ void KToshibaHardware::setUSBSleepMusic(quint32 state)
 
 quint32 KToshibaHardware::getKBDFunctions()
 {
-    SMMRegisters regs = { 0xf300, 0x0522, 0, 0, 0, 0 };
+    regs = { SCI_READ, KBD_FUNCTION_KEYS, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getKBDFunctions", FAILURE);
@@ -610,9 +516,9 @@ quint32 KToshibaHardware::getKBDFunctions()
 
 void KToshibaHardware::setKBDFunctions(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x0522, state, 0, 0, 0 };
+    regs = { SCI_WRITE, KBD_FUNCTION_KEYS, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setKBDFunctions", INPUT_DATA_ERROR);
 
         return;
@@ -630,7 +536,7 @@ void KToshibaHardware::setKBDFunctions(quint32 state)
 
 quint32 KToshibaHardware::getPanelPowerON()
 {
-    SMMRegisters regs = { 0xf300, 0x010d, 0, 0, 0, 0 };
+    regs = { SCI_READ, PANEL_POWER_ON, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getPanelPowerON", FAILURE);
@@ -649,9 +555,9 @@ quint32 KToshibaHardware::getPanelPowerON()
 
 void KToshibaHardware::setPanelPowerON(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x010d, state, 0, 0, 0 };
+    regs = { SCI_WRITE, PANEL_POWER_ON, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setPanelPowerON", INPUT_DATA_ERROR);
 
         return;
@@ -669,7 +575,7 @@ void KToshibaHardware::setPanelPowerON(quint32 state)
 
 quint32 KToshibaHardware::getUSBThree()
 {
-    SMMRegisters regs = { 0xf300, 0x0169, 0, 0, 0, 0 };
+    regs = { SCI_READ, USB_THREE, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBThree", FAILURE);
@@ -688,9 +594,9 @@ quint32 KToshibaHardware::getUSBThree()
 
 void KToshibaHardware::setUSBThree(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x0169, state, 0, 0, 0 };
+    regs = { SCI_WRITE, USB_THREE, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setUSBThree", INPUT_DATA_ERROR);
 
         return;
@@ -708,7 +614,7 @@ void KToshibaHardware::setUSBThree(quint32 state)
 
 quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)
 {
-    SMMRegisters regs = { 0xf300, 0x0157, 0, 0, 0, 0 };
+    regs = { SCI_READ, BOOT_ORDER, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getBootOrder", FAILURE);
@@ -729,7 +635,7 @@ quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)
 
 void KToshibaHardware::setBootOrder(quint32 order)
 {
-    SMMRegisters regs = { 0xf400, 0x0157, order, 0, 0, 0 };
+    regs = { SCI_WRITE, BOOT_ORDER, order, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("setBootOrder", FAILURE);
@@ -743,7 +649,7 @@ void KToshibaHardware::setBootOrder(quint32 order)
 
 quint32 KToshibaHardware::getWakeOnKeyboard(int *val, int *defval)
 {
-    SMMRegisters regs = { 0xf300, 0x0137, 0, 0, 0, 0 };
+    regs = { SCI_READ, WAKE_ON_KEYBOARD, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getWakeOnKeyboard", FAILURE);
@@ -763,9 +669,9 @@ quint32 KToshibaHardware::getWakeOnKeyboard(int *val, int *defval)
 
 void KToshibaHardware::setWakeOnKeyboard(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x0137, state, 0, 0, 0 };
+    regs = { SCI_WRITE, WAKE_ON_KEYBOARD, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setWakeOnKeyboard", INPUT_DATA_ERROR);
 
         return;
@@ -783,7 +689,7 @@ void KToshibaHardware::setWakeOnKeyboard(quint32 state)
 
 quint32 KToshibaHardware::getWakeOnLAN(int *val, int *defval)
 {
-    SMMRegisters regs = { 0xf300, 0x0700, 0x0800, 0, 0, 0 };
+    regs = { SCI_READ, WAKE_ON_LAN, 0x0800, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getWakeOnLAN", FAILURE);
@@ -803,9 +709,9 @@ quint32 KToshibaHardware::getWakeOnLAN(int *val, int *defval)
 
 void KToshibaHardware::setWakeOnLAN(quint32 state)
 {
-    SMMRegisters regs = { 0xf400, 0x0700, state, 0, 0, 0 };
+    regs = { SCI_WRITE, WAKE_ON_LAN, state, 0, 0, 0 };
 
-    if (state != TCI_DISABLED && state != TCI_ENABLED) {
+    if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setWakeOnLAN", INPUT_DATA_ERROR);
 
         return;
@@ -823,7 +729,7 @@ void KToshibaHardware::setWakeOnLAN(quint32 state)
 
 quint32 KToshibaHardware::getCoolingMethod(int *val, int *maxval)
 {
-    SMMRegisters regs = { 0xfe00, 0x007f, 0, 0, 0, 0 };
+    regs = { HCI_READ, COOLING_METHOD, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getCoolingMethod", FAILURE);
@@ -841,17 +747,16 @@ quint32 KToshibaHardware::getCoolingMethod(int *val, int *maxval)
     return regs.eax;
 }
 
-void KToshibaHardware::setCoolingMethod(int mode)
+void KToshibaHardware::setCoolingMethod(quint32 mode)
 {
-    SMMRegisters regs = { 0xff00, 0x007f, 0, 0, 0, 0 };
+    regs = { HCI_WRITE, COOLING_METHOD, mode, 0, 0, 0 };
 
-    if (mode != 0 && mode != 1 && mode != 2) {
+    if (mode != MAXIMUM_PERFORMANCE && mode != BATTERY_OPTIMIZED && mode != POWER_SAVER) {
         printSMMError("setCoolingMethod", INPUT_DATA_ERROR);
 
         return;
     }
 
-    regs.ecx = mode;
     if (tci_raw(&regs) < 0) {
         printSMMError("setCoolingMethod", FAILURE);
 
@@ -860,4 +765,160 @@ void KToshibaHardware::setCoolingMethod(int mode)
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
         printSMMError("setCoolingMethod", regs.eax);
+}
+
+quint32 KToshibaHardware::getUSBLegacyEmulation()
+{
+    regs = { SCI_READ, USB_LEGACY_EMULATION, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getUSBLegacyEmulation", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getUSBLegacyEmulation", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setUSBLegacyEmulation(quint32 state)
+{
+    regs = { SCI_READ, USB_LEGACY_EMULATION, state, 0, 0, 0 };
+
+    if (state != DEACTIVATED && state != ACTIVATED) {
+        printSMMError("setUSBLegacyEmulation", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setUSBLegacyEmulation", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setUSBLegacyEmulation", regs.eax);
+}
+
+quint32 KToshibaHardware::getBuiltInLAN()
+{
+    regs = { SCI_READ, BUILT_IN_LAN, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getBuiltInLAN", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getBuiltInLAN", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setBuiltInLAN(quint32 state)
+{
+    regs = { SCI_READ, BUILT_IN_LAN, state, 0, 0, 0 };
+
+    if (state != DEACTIVATED && state != ACTIVATED) {
+        printSMMError("setBuiltInLAN", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setBuiltInLAN", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setBuiltInLAN", regs.eax);
+}
+
+quint32 KToshibaHardware::getSATAInterfaceSetting()
+{
+    regs = { SCI_READ, SATA_IFACE_SETTING, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getSATAInterfaceSetting", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getSATAInterfaceSetting", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setSATAInterfaceSetting(quint32 mode)
+{
+    regs = { SCI_WRITE, SATA_IFACE_SETTING, mode, 0, 0, 0 };
+
+    if (mode != PERFORMANCE && mode != BATTERY_LIFE) {
+        printSMMError("setSATAInterfaceSetting", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setSATAInterfaceSetting", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setSATAInterfaceSetting", regs.eax);
+}
+
+quint32 KToshibaHardware::getBootSpeed()
+{
+    regs = { SCI_READ, BOOT_SPEED, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getBootSpeed", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getBootSpeed", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setBootSpeed(quint32 state)
+{
+    regs = { SCI_WRITE, BOOT_SPEED, state, 0, 0, 0 };
+
+    if (state != NORMAL && state != FAST) {
+        printSMMError("setBootSpeed", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setBootSpeed", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setBootSpeed", regs.eax);
 }

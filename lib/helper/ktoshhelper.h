@@ -21,8 +21,6 @@
 #define KTOSHHELPER_H
 
 #include <QObject>
-#include <QString>
-#include <QFile>
 
 #include <KAuth/KAuth>
 
@@ -37,20 +35,13 @@ public:
 
 public slots:
     /*
-     * System Information call
-     */
-    ActionReply dumpsysinfo(QVariantMap args);
-    /*
      * HDD Protection calls
      */
-    ActionReply setprotectionlevel(QVariantMap args);
-    ActionReply unloadheads(QVariantMap args);
+    ActionReply setprotectionlevel(const QVariantMap args);
+    ActionReply unloadheads(const QVariantMap args);
 
 private:
-    QString findDriverPath();
-
-    QString m_driverPath;
-    QFile m_file;
+    bool m_supported;
 };
 
 #endif // KTOSHHELPER_H

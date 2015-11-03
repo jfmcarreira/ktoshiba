@@ -28,6 +28,8 @@ extern "C" {
 #include <netlink/genl/genl.h>
 
 #include "ktoshibanetlinkevents.h"
+#include "ktoshibahardware.h"
+#include "fnactions.h"
 
 #define TOSHIBA_HAPS   "TOS620A:00"
 
@@ -53,6 +55,7 @@ enum {
 
 KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
     : QObject(parent),
+      m_fn(qobject_cast<FnActions * >(QObject::parent())),
       m_notifier(NULL),
       m_socket(-1)
 {
@@ -60,20 +63,13 @@ KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
 
 KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
 {
-    if (m_notifier->isEnabled()) {
+    if (m_notifier) {
         m_notifier->setEnabled(false);
         delete m_notifier; m_notifier = NULL;
     }
+
     if (m_socket)
         ::close(m_socket);
-}
-
-void KToshibaNetlinkEvents::setDeviceHID(QString hid)
-{
-    if (hid.isEmpty() || hid.isNull())
-        qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
-
-    m_deviceHID = hid;
 }
 
 void KToshibaNetlinkEvents::parseEvents(int socket)
@@ -149,7 +145,12 @@ bool KToshibaNetlinkEvents::attach()
 
         return false;
     }
+
     qDebug() << "Binded to socket" << m_socket << "for events monitoring";
+
+    m_deviceHID = m_fn->hw()->getDeviceHID();
+    if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
+        qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
 
     m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 

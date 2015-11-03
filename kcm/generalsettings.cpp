@@ -22,20 +22,22 @@
 
 GeneralSettings::GeneralSettings(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent()))
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent()))
 {
     setupUi(this);
 
-    m_touchpadSupported = isTouchPadSupported();
+    m_pointingDeviceSupported = isPointingDeviceSupported();
     m_rapidChargeSupported = isRapidChargeSupported();
     m_usbThreeSupported = isUSBThreeSupported();
+    m_usbLegacySupported = isUSBLegacySupported();
+    m_builtInLANSupported = isBuiltInLANSupported();
 }
 
-bool GeneralSettings::isTouchPadSupported()
+bool GeneralSettings::isPointingDeviceSupported()
 {
-    m_touchpad = m_sys->hw()->getTouchPad();
+    m_touchpad = m_sys->hw()->getPointingDevice();
 
-    if (m_touchpad != KToshibaHardware::TCI_DISABLED && m_touchpad != KToshibaHardware::TCI_ENABLED)
+    if (m_touchpad != KToshibaHardware::DEACTIVATED && m_touchpad != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -45,7 +47,7 @@ bool GeneralSettings::isRapidChargeSupported()
 {
     m_rapidCharge = m_sys->hw()->getUSBRapidCharge();
 
-    if (m_rapidCharge != KToshibaHardware::TCI_DISABLED && m_rapidCharge != KToshibaHardware::TCI_ENABLED)
+    if (m_rapidCharge != KToshibaHardware::DEACTIVATED && m_rapidCharge != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -55,7 +57,27 @@ bool GeneralSettings::isUSBThreeSupported()
 {
     m_usbThree = m_sys->hw()->getUSBThree();
 
-    if (m_usbThree != KToshibaHardware::TCI_DISABLED && m_usbThree != KToshibaHardware::TCI_ENABLED)
+    if (m_usbThree != KToshibaHardware::DEACTIVATED && m_usbThree != KToshibaHardware::ACTIVATED)
+        return false;
+
+    return true;
+}
+
+bool GeneralSettings::isUSBLegacySupported()
+{
+    m_usbLegacy = m_sys->hw()->getUSBLegacyEmulation();
+
+    if (m_usbLegacy != KToshibaHardware::DEACTIVATED && m_usbLegacy != KToshibaHardware::ACTIVATED)
+        return false;
+
+    return true;
+}
+
+bool GeneralSettings::isBuiltInLANSupported()
+{
+    m_builtInLAN = m_sys->hw()->getBuiltInLAN();
+
+    if (m_builtInLAN != KToshibaHardware::DEACTIVATED && m_builtInLAN != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -63,11 +85,11 @@ bool GeneralSettings::isUSBThreeSupported()
 
 void GeneralSettings::load()
 {
-    // TouchPad
-    if (m_touchpadSupported)
-        touchpad_checkbox->setChecked(m_touchpad ? true : false);
+    // Pointing Device
+    if (m_pointingDeviceSupported)
+        pointing_device_checkbox->setChecked(m_touchpad ? true : false);
     else
-        touchpad_checkbox->setEnabled(false);
+        pointing_device_checkbox->setEnabled(false);
     // USB Rapid Charge
     if (m_rapidChargeSupported)
         rapid_charge_checkbox->setChecked(m_rapidCharge ? true : false);
@@ -78,25 +100,35 @@ void GeneralSettings::load()
         usb_three_checkbox->setChecked(m_usbThree ? true : false);
     else
         usb_three_checkbox->setEnabled(false);
+    // USB Legacy Emulation
+    if (m_usbLegacySupported)
+        usb_legacy_checkbox->setChecked(m_usbLegacy ? true : false);
+    else
+        usb_legacy_checkbox->setEnabled(false);
+    // Built In LAN
+    if (m_builtInLANSupported)
+        built_in_lan_checkbox->setChecked(m_builtInLAN ? true : false);
+    else
+        built_in_lan_checkbox->setEnabled(false);
 }
 
 void GeneralSettings::save()
 {
     unsigned int tmp;
 
-    // TouchPad
-    if (m_touchpadSupported) {
-        tmp = (touchpad_checkbox->checkState() == Qt::Checked) ?
-                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+    // Pointing Device
+    if (m_pointingDeviceSupported) {
+        tmp = (pointing_device_checkbox->checkState() == Qt::Checked) ?
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_touchpad != tmp) {
-            m_sys->hw()->setTouchPad(tmp);
+            m_sys->hw()->setPointingDevice(tmp);
             m_touchpad = tmp;
         }
     }
     // USB Rapid Charge
     if (m_rapidChargeSupported) {
         tmp = (rapid_charge_checkbox->checkState() == Qt::Checked) ?
-                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_rapidCharge != tmp) {
             m_sys->hw()->setUSBRapidCharge(tmp);
             m_rapidCharge = tmp;
@@ -105,23 +137,47 @@ void GeneralSettings::save()
     // USB Three
     if (m_usbThreeSupported) {
         tmp = (usb_three_checkbox->checkState() == Qt::Checked) ?
-                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_usbThree != tmp) {
             m_sys->hw()->setUSBThree(tmp);
             m_usbThree = tmp;
+        }
+    }
+    // USB Legacy Emulation
+    if (m_usbLegacySupported) {
+        tmp = (usb_legacy_checkbox->checkState() == Qt::Checked) ?
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
+        if (m_usbLegacy != tmp) {
+            m_sys->hw()->setUSBLegacyEmulation(tmp);
+            m_usbLegacy = tmp;
+        }
+    }
+    // Built In LAN
+    if (m_builtInLANSupported) {
+        tmp = (built_in_lan_checkbox->checkState() == Qt::Checked) ?
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
+        if (m_builtInLAN != tmp) {
+            m_sys->hw()->setBuiltInLAN(tmp);
+            m_builtInLAN = tmp;
         }
     }
 }
 
 void GeneralSettings::defaults()
 {
-    // TouchPad
-    if (m_touchpadSupported && !m_touchpad)
-        touchpad_checkbox->setChecked(true);
+    // Pointing Device
+    if (m_pointingDeviceSupported && !m_touchpad)
+        pointing_device_checkbox->setChecked(true);
     // USB Rapid Charge
     if (m_rapidChargeSupported && m_rapidCharge)
         rapid_charge_checkbox->setChecked(false);
     // USB Three
     if (m_usbThreeSupported && !m_usbThree)
         usb_three_checkbox->setChecked(true);
+    // USB Legacy Emulation
+    if (m_usbLegacySupported && !m_usbLegacy)
+        usb_legacy_checkbox->setChecked(true);
+    // Built In LAN
+    if (m_builtInLANSupported && !m_builtInLAN)
+        built_in_lan_checkbox->setChecked(true);
 }

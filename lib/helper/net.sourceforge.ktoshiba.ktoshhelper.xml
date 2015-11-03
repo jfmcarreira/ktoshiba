@@ -17,19 +17,6 @@
       </doc:description>
     </doc:doc>
 
-    <method name="dumpsysinfo">
-      <doc:doc>
-        <doc:description>
-          <doc:para>
-            Dumps the system information (dmidecode).
-          </doc:para>
-        </doc:description>
-        <doc:errors>
-          <doc:error name="&ERROR_GENERAL;">if an error occured while dumping the system information</doc:error>
-        </doc:errors>
-      </doc:doc>
-    </method>
-
     <method name="setprotectionlevel">
       <arg name="mode" type="i" direction="in">
         <doc:doc>

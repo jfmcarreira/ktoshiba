@@ -21,9 +21,14 @@
 
 #include <QStringList>
 
-class QSocketNotifier;
+#include <libudev.h>
 
-class UDevHelper;
+#define TOSNAME    "Toshiba input device"
+#define TOSPHYS    "toshiba_acpi/input0"
+#define TOSWMINAME "Toshiba WMI hotkeys"
+#define TOSWMIPHYS "wmi/input0"
+
+class QSocketNotifier;
 
 class KToshibaKeyHandler : public QObject
 {
@@ -38,12 +43,20 @@ Q_SIGNALS:
     void hotkeyPressed(int);
 
 private Q_SLOTS:
-    void readData(int);
+    void readHotkeys(int);
+    void readMonitorData(int);
 
 private:
-    UDevHelper *m_udevHelper;
-    QSocketNotifier *m_notifier;
-    QStringList m_namePhys;
+    bool initUDev();
+    QString findDevice();
+    bool activateHotkeys();
+    void deactivateHotkeys();
+
+    struct udev *udev;
+    struct udev_monitor *monitor;
+
+    QSocketNotifier *m_hotkeysNotifier;
+    QSocketNotifier *m_monitorNotifier;
     QString m_device;
     bool m_udevConnected;
     int m_socket;

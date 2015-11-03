@@ -22,7 +22,7 @@
 
 HDDProtection::HDDProtection(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent())),
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent())),
       m_config(KSharedConfig::openConfig("ktoshibarc"))
 {
     setupUi(this);

@@ -48,6 +48,7 @@ private:
     bool isPanelPowerOnSupported();
     bool isWOKSupported();
     bool isWOLSupported();
+    bool isBootSpeedSupported();
 
     KToshibaSystemSettings *m_sys;
 
@@ -67,6 +68,9 @@ private:
     bool m_wolSupported;
     int m_wol;
     int m_defaultWOL;
+
+    bool m_bootSpeedSupported;
+    int m_bootSpeed;
 };
 
 #endif // BOOTSETTINGS_H

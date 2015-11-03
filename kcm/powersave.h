@@ -46,6 +46,7 @@ Q_SIGNALS:
 
 private:
     bool isCoolingMethodSupported();
+    bool isSATAInterfaceSupported();
 
     KToshibaSystemSettings *m_sys;
     KSharedConfigPtr m_config;
@@ -62,6 +63,9 @@ private:
     bool m_manageCoolingMethod;
     int m_coolingMethodBattery;
     int m_coolingMethodPlugged;
+
+    bool m_sataInterfaceSupported;
+    int m_sataInterface;
 };
 
 #endif // POWERSAVE_H

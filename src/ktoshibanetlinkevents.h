@@ -41,6 +41,8 @@ struct acpi_genl_event {
 
 class QSocketNotifier;
 
+class FnActions;
+
 class KToshibaNetlinkEvents : public QObject
 {
     Q_OBJECT
@@ -68,7 +70,6 @@ public:
     };
 
     bool attach();
-    void setDeviceHID(QString);
 
 Q_SIGNALS:
     void hapsEvent(int);
@@ -82,6 +83,8 @@ private:
     struct genlmsghdr *m_genlmsghdr = NULL;
     struct nlattr *m_nlattrhdr = NULL;
     struct acpi_genl_event *m_event = NULL;
+
+    FnActions *m_fn;
 
     QSocketNotifier *m_notifier;
     QString m_deviceHID;

@@ -14,27 +14,40 @@
   <property name="windowTitle">
    <string>General Settings</string>
   </property>
-  <layout class="QFormLayout" name="formLayout_2">
-   <item row="0" column="0" alignment="Qt::AlignRight">
-    <widget class="QCheckBox" name="touchpad_checkbox">
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="pointing_device_checkbox">
      <property name="toolTip">
-      <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
+      <string>Toggles the internal pointing device(s) via hardware.</string>
      </property>
      <property name="whatsThis">
-      <string>Disables the touchpad (and trackpoint, if available) via hardware.</string>
+      <string>Toggles the internal pointing device(s) via hardware.</string>
      </property>
      <property name="text">
-      <string>Disable the pointing device</string>
+      <string>Internal Pointing device</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="1" column="0" alignment="Qt::AlignLeft">
+    <widget class="QCheckBox" name="built_in_lan_checkbox">
+     <property name="toolTip">
+      <string>Toggles the built in LAN device.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Toggles the built in LAN device.</string>
+     </property>
+     <property name="text">
+      <string>Built In LAN</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>USB Settings</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0" alignment="Qt::AlignRight">
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0" alignment="Qt::AlignLeft">
        <widget class="QCheckBox" name="rapid_charge_checkbox">
         <property name="toolTip">
          <string>Toggles the USB rapid charge feature.</string>
@@ -47,16 +60,29 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" alignment="Qt::AlignRight">
+      <item row="1" column="0" alignment="Qt::AlignLeft">
        <widget class="QCheckBox" name="usb_three_checkbox">
         <property name="toolTip">
-         <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
+         <string>Toggles USB 3 functionality, acting as a regular USB 2 when disabled.</string>
         </property>
         <property name="whatsThis">
-         <string>Disables USB 3 functionality, acting as a regular USB 2.</string>
+         <string>Toggles USB 3 functionality, acting as a regular USB 2 when disabled.</string>
         </property>
         <property name="text">
          <string>USB 3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" alignment="Qt::AlignLeft">
+       <widget class="QCheckBox" name="usb_legacy_checkbox">
+        <property name="toolTip">
+         <string>Toggles the USB Legacy Emulation feature.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Toggles the USB Legacy Emulation feature.</string>
+        </property>
+        <property name="text">
+         <string>USB Legacy Emulation</string>
         </property>
        </widget>
       </item>

@@ -18,7 +18,7 @@
 
 #include <QLayout>
 #include <QTabWidget>
-#include <QtDBus/QtDBus>
+#include <QDBusInterface>
 #include <QIcon>
 #include <QComboBox>
 
@@ -28,6 +28,7 @@
 #include <KConfigGroup>
 #include <KMessageWidget>
 
+#include "systeminformation.h"
 #include "generalsettings.h"
 #include "hddprotection.h"
 #include "sleeputilities.h"
@@ -93,34 +94,33 @@ KToshibaSystemSettings::~KToshibaSystemSettings()
 
 void KToshibaSystemSettings::addTabs()
 {
-    QWidget *sysinfo_widget = new QWidget(this);
-    m_sysinfo.setupUi(sysinfo_widget);
-    sysinfo_widget->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(sysinfo_widget, i18n("System Information"));
+    m_sysinfo = new SystemInformation(this);
+    m_sysinfo->setContentsMargins(20, 20, 20, 20);
+    m_tabWidget->addTab(m_sysinfo, m_sysinfo->windowTitle());
 
     m_general = new GeneralSettings(this);
     m_general->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(m_general, i18n("General Settings"));
+    m_tabWidget->addTab(m_general, m_general->windowTitle());
 
     m_hdd = new HDDProtection(this);
     m_hdd->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(m_hdd, i18n("HDD Protection"));
+    m_tabWidget->addTab(m_hdd, m_hdd->windowTitle());
 
     m_sleep = new SleepUtilities(this);
     m_sleep->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(m_sleep, i18n("Sleep Utilities"));
+    m_tabWidget->addTab(m_sleep, m_sleep->windowTitle());
 
     m_kbd = new KeyboardSettings(this);
     m_kbd->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(m_kbd, i18n("Keyboard Settings"));
+    m_tabWidget->addTab(m_kbd, m_kbd->windowTitle());
 
     m_boot = new BootSettings(this);
     m_boot->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(m_boot, i18n("Boot Settings"));
+    m_tabWidget->addTab(m_boot, m_boot->windowTitle());
 
     m_power = new PowerSave(this);
     m_power->setContentsMargins(20, 20, 20, 20);
-    m_tabWidget->addTab(m_power, i18n("Power Save"));
+    m_tabWidget->addTab(m_power, m_power->windowTitle());
 }
 
 void KToshibaSystemSettings::load()
@@ -128,41 +128,22 @@ void KToshibaSystemSettings::load()
     /*
      * System Information tab
      */
-    KConfigGroup sysinfo(m_config, "SystemInformation");
-    if (!sysinfo.exists() && m_hw->getSysInfo()) {
-        sysinfo.writeEntry("ModelFamily", m_hw->modelFamily);
-        sysinfo.writeEntry("ModelNumber", m_hw->modelNumber);
-        sysinfo.writeEntry("BIOSVersion", m_hw->biosVersion);
-        sysinfo.writeEntry("BIOSDate", m_hw->biosDate);
-        sysinfo.writeEntry("BIOSManufacturer", m_hw->biosManufacturer);
-        sysinfo.writeEntry("ECVersion", m_hw->ecVersion);
-        sysinfo.sync();
-    }
-    m_modelFamily = sysinfo.readEntry("ModelFamily", i18n("Unknown"));
-    m_sysinfo.model_family->setText(m_modelFamily);
-    m_modelNumber = sysinfo.readEntry("ModelNumber", i18n("Unknown"));
-    m_sysinfo.model_number->setText(m_modelNumber);
-    m_biosVersion = sysinfo.readEntry("BIOSVersion", i18n("Unknown"));
-    m_sysinfo.bios_version->setText(m_biosVersion);
-    m_biosDate = sysinfo.readEntry("BIOSDate", i18n("Unknown"));
-    m_sysinfo.bios_date->setText(m_biosDate);
-    m_biosManufacturer = sysinfo.readEntry("BIOSManufacturer", i18n("Unknown"));
-    m_sysinfo.bios_manufacturer->setText(m_biosManufacturer);
-    m_ecVersion = sysinfo.readEntry("ECVersion", i18n("Unknown"));
-    m_sysinfo.ec_version->setText(m_ecVersion);
-    m_driverVersion = m_hw->getDriverVersion();
-    m_sysinfo.driver_version->setText(m_driverVersion);
+    m_sysinfo->load();
     /*
      * General tab
      */
     m_general->load();
 
-    connect(m_general->touchpad_checkbox, SIGNAL(stateChanged(int)),
+    connect(m_general->pointing_device_checkbox, SIGNAL(stateChanged(int)),
             this, SLOT(configChanged()));
     connect(m_hw, SIGNAL(touchpadToggled(int)), this, SLOT(updateTouchPad(int)));
+    connect(m_general->built_in_lan_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChangedReboot()));
     connect(m_general->rapid_charge_checkbox, SIGNAL(stateChanged(int)),
             this, SLOT(configChangedReboot()));
     connect(m_general->usb_three_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChangedReboot()));
+    connect(m_general->usb_legacy_checkbox, SIGNAL(stateChanged(int)),
             this, SLOT(configChangedReboot()));
     /*
      * HDD Protection tab
@@ -193,6 +174,8 @@ void KToshibaSystemSettings::load()
      */
     m_kbd->load();
 
+    connect(m_kbd->kbd_functions_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChangedReboot()));
     connect(m_kbd->kbd_timeout_slider, SIGNAL(valueChanged(int)),
             this, SLOT(kbdTimeoutChanged(int)));
     connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
@@ -212,6 +195,8 @@ void KToshibaSystemSettings::load()
             this, SLOT(configChangedReboot()));
     connect(m_boot->wol_checkbox, SIGNAL(stateChanged(int)),
             this, SLOT(configChangedReboot()));
+    connect(m_boot->boot_speed_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChangedReboot()));
     /*
      * Power Save tab
      */
@@ -227,6 +212,8 @@ void KToshibaSystemSettings::load()
             this, SLOT(configChanged()));
     connect(m_power->cooling_method_plugged_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
+    connect(m_power->sata_iface_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChangedReboot()));
 }
 
 void KToshibaSystemSettings::save()
@@ -319,7 +306,7 @@ void KToshibaSystemSettings::notifyConfigFileChanged()
                          QDBusConnection::sessionBus(), this);
 
     if (iface.isValid())
-        iface.call("configFileChanged");
+        iface.call("reloadConfigFile");
 }
 
 void KToshibaSystemSettings::protectionLevelChanged(int level)
@@ -362,7 +349,7 @@ void KToshibaSystemSettings::kbdTimeoutChanged(int time)
 
 void KToshibaSystemSettings::updateTouchPad(int state)
 {
-    m_general->touchpad_checkbox->setChecked(state == Qt::Checked ? true : false);
+    m_general->pointing_device_checkbox->setChecked(state == Qt::Checked ? true : false);
 }
 
 

@@ -134,6 +134,33 @@
      </layout>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="sata_iface_label">
+      <property name="text">
+       <string>SATA Interface Setting mode:</string>
+      </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="sata_iface_combobox">
+     <property name="toolTip">
+      <string>Changes the SATA interface setting mode.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Changes the SATA interface setting mode.</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Performance</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Battery Life</string>
+      </property>
+     </item>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

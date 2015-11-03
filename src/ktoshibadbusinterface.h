@@ -45,10 +45,10 @@ public:
     QString getBatteryProfile();
 
 Q_SIGNALS:
-    void configChanged();
+    void configFileChanged();
 
 public Q_SLOTS:
-    Q_NOREPLY void configFileChanged();
+    Q_NOREPLY void reloadConfigFile();
 
 private:
     QDBusConnection m_dbus;

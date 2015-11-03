@@ -57,9 +57,9 @@ void KToshibaDBusInterface::init()
         qCritical() << "Could not register DBus service";
 }
 
-void KToshibaDBusInterface::configFileChanged()
+void KToshibaDBusInterface::reloadConfigFile()
 {
-    emit configChanged();
+    emit configFileChanged();
 }
 
 void KToshibaDBusInterface::lockScreen()

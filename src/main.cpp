@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     if (!ktoshiba->initialize()) {
         delete ktoshiba;
 
-        return -1;
+        exit(EXIT_FAILURE);
     }
 
     return app.exec();

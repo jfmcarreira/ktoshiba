@@ -35,13 +35,15 @@ public:
     void defaults();
 
 private:
-    bool isTouchPadSupported();
+    bool isPointingDeviceSupported();
     bool isRapidChargeSupported();
     bool isUSBThreeSupported();
+    bool isUSBLegacySupported();
+    bool isBuiltInLANSupported();
 
     KToshibaSystemSettings *m_sys;
 
-    bool m_touchpadSupported;
+    bool m_pointingDeviceSupported;
     quint32 m_touchpad;
 
     bool m_rapidChargeSupported;
@@ -49,6 +51,12 @@ private:
 
     bool m_usbThreeSupported;
     quint32 m_usbThree;
+
+    bool m_usbLegacySupported;
+    quint32 m_usbLegacy;
+
+    bool m_builtInLANSupported;
+    quint32 m_builtInLAN;
 };
 
 #endif // GENERALSETTINGS_H

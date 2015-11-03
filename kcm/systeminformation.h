@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,31 +16,35 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVHELPER_H
-#define UDEVHELPER_H
+#ifndef SYSTEMINFORMATION_H
+#define SYSTEMINFORMATION_H
 
-#include <QtCore/QStringList>
+#include <QFile>
+#include <QStringList>
 
-#include <libudev.h>
+#include "ui_sysinfo.h"
 
-#define TOSHNAME   "Toshiba input device"
-#define TOSHPHYS   "toshiba_acpi/input0"
-#define TOSWMINAME "Toshiba WMI hotkeys"
-#define TOSWMIPHYS "wmi/input0"
+class KToshibaSystemSettings;
 
-class UDevHelper : public QObject
+class SystemInformation : public QWidget, public Ui::SysInfo
 {
     Q_OBJECT
 
 public:
-    UDevHelper(QObject *parent);
-    bool initUDev();
+    explicit SystemInformation(QWidget *parent);
 
-    QString findDevice(QStringList);
+    void load();
 
 private:
-    struct udev *udev;
-    struct udev_monitor *monitor;
+    void getData();
+    QString getDriverVersion();
+
+    KToshibaSystemSettings *m_sys;
+
+    QFile m_file;
+    QStringList m_files;
+    QStringList m_data;
+    QString m_deviceHID;
 };
 
-#endif // UDEVHELPER_H
+#endif // SYSTEMINFORMATION_H

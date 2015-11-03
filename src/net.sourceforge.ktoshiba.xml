@@ -17,7 +17,7 @@
       </doc:description>
     </doc:doc>
 
-    <method name="configFileChanged">
+    <method name="reloadConfigFile">
       <doc:doc>
         <doc:description>
           <doc:para>

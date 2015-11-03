@@ -24,12 +24,13 @@
 
 PowerSave::PowerSave(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent())),
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent())),
       m_config(KSharedConfig::openConfig("ktoshibarc"))
 {
     setupUi(this);
 
     m_coolingMethodSupported = isCoolingMethodSupported();
+    m_sataInterfaceSupported = isSATAInterfaceSupported();
 
     powersave = KConfigGroup(m_config, "Powersave");
     if (!powersave.exists()) {
@@ -47,6 +48,17 @@ bool PowerSave::isCoolingMethodSupported()
     quint32 result = m_sys->hw()->getCoolingMethod(&m_coolingMethod, &m_maxCoolingMethod);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+        return false;
+
+    return true;
+}
+
+bool PowerSave::isSATAInterfaceSupported()
+{
+    m_sataInterface = m_sys->hw()->getSATAInterfaceSetting();
+
+    if (m_sataInterface != KToshibaHardware::PERFORMANCE
+        && m_sataInterface != KToshibaHardware::BATTERY_LIFE)
         return false;
 
     return true;
@@ -82,6 +94,13 @@ void PowerSave::load()
         cooling_method_plugged_combobox->setCurrentIndex(m_coolingMethodPlugged);
     } else {
         coolingGroupBox->setEnabled(false);
+    }
+    // SATA Interface Setting
+    if (m_sataInterfaceSupported) {
+        sata_iface_combobox->setCurrentIndex(m_sataInterface);
+    } else {
+        sata_iface_label->setEnabled(false);
+        sata_iface_combobox->setEnabled(false);
     }
 }
 
@@ -122,6 +141,14 @@ void PowerSave::save()
         }
     }
     powersave.sync();
+    // SATA Interface Setting
+    if (m_sataInterfaceSupported) {
+        tmp2 = sata_iface_combobox->currentIndex();
+        if (m_sataInterface != tmp2) {
+            m_sys->hw()->setSATAInterfaceSetting(tmp);
+            m_sataInterface = tmp2;
+        }
+    }
 }
 
 void PowerSave::defaults()
@@ -140,4 +167,7 @@ void PowerSave::defaults()
         if (m_coolingMethodPlugged != KToshibaHardware::BATTERY_OPTIMIZED)
             cooling_method_plugged_combobox->setCurrentIndex(KToshibaHardware::BATTERY_OPTIMIZED);
     }
+    // SATA Interface Setting
+    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::PERFORMANCE)
+        sata_iface_combobox->setCurrentIndex(0);
 }

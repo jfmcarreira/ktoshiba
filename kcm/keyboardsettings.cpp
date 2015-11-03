@@ -24,7 +24,7 @@
 
 KeyboardSettings::KeyboardSettings(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent()))
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent()))
 {
     setupUi(this);
 
@@ -49,8 +49,8 @@ bool KeyboardSettings::isKeyboardFunctionsSupported()
 {
     m_keyboardFunctions = m_sys->hw()->getKBDFunctions();
 
-    if (m_keyboardFunctions != KToshibaHardware::TCI_DISABLED
-        && m_keyboardFunctions != KToshibaHardware::TCI_ENABLED)
+    if (m_keyboardFunctions != KToshibaHardware::DEACTIVATED
+        && m_keyboardFunctions != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -62,8 +62,8 @@ void KeyboardSettings::load()
     if (m_keyboardFunctionsSupported) {
         kbd_functions_combobox->setCurrentIndex(m_keyboardFunctions);
         m_keyboardFunctionsToolTip = i18n("Select how the keyboard Function keys operate.<br/>"
-                                  "Normal: The F{1-12} keys are as usual and the hotkeys are accessed via FN-F{1-12}.<br/>"
-                                  "Function: The F{1-12} keys trigger the hotkey and the F{1-12} keys are accessed via FN-F{1-12}.");
+                                          "Normal: The F{1-12} keys are as usual and the hotkeys are accessed via FN-F{1-12}.<br/>"
+                                          "Function: The F{1-12} keys trigger the hotkey and the F{1-12} keys are accessed via FN-F{1-12}.");
         kbd_functions_combobox->setToolTip(m_keyboardFunctionsToolTip);
         kbd_functions_combobox->setWhatsThis(m_keyboardFunctionsToolTip);
     } else {
@@ -128,7 +128,7 @@ void KeyboardSettings::save()
             // 1st gen. backlit keyboards
             if (m_keyboardType == FirstKeyboardGen) {
                 mode = (tmp == FNZ) ? KToshibaHardware::FNZ : KToshibaHardware::TIMER;
-            // 2nd gen. backlit keyboards
+                // 2nd gen. backlit keyboards
             } else if (m_keyboardType == SecondKeyboardGen && tmp == TIMER) {
                 mode = KToshibaHardware::TIMER;
                 kbd_timeout_label->setEnabled(true);
