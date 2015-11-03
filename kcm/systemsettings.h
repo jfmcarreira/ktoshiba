@@ -24,19 +24,18 @@
 #include <KCModule>
 #include <KSharedConfig>
 
-#include "ui_sysinfo.h"
-
 class QTabWidget;
 
 class KMessageWidget;
 
+class KToshibaHardware;
+class SystemInformation;
 class GeneralSettings;
 class HDDProtection;
 class SleepUtilities;
 class KeyboardSettings;
 class BootSettings;
 class PowerSave;
-class KToshibaHardware;
 
 class KToshibaSystemSettings : public KCModule
 {
@@ -77,21 +76,13 @@ private:
     KMessageWidget *m_message;
     KSharedConfigPtr m_config;
 
-    Ui::SysInfo m_sysinfo;
+    SystemInformation *m_sysinfo;
     GeneralSettings *m_general;
     HDDProtection *m_hdd;
     SleepUtilities *m_sleep;
     KeyboardSettings *m_kbd;
     BootSettings *m_boot;
     PowerSave *m_power;
-
-    QString m_modelFamily;
-    QString m_modelNumber;
-    QString m_biosVersion;
-    QString m_biosDate;
-    QString m_biosManufacturer;
-    QString m_ecVersion;
-    QString m_driverVersion;
 
     bool m_configFileChanged;
 };

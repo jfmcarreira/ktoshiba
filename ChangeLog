@@ -1,3 +1,40 @@
+2015-11-01 Azael Avalos <coproscefalo@gmail.com>
+	* Replaced icons with better quality ones, as the provided ones were blurry
+	* Fixed a segfault when exiting KToshiba and no driver was loaded
+
+2015-10-31 Azael Avalos <coproscefalo@gmail.com>
+	* Merged UDevHelperclass into KToshibaKeyHandler class
+	* We now monitor Toshiba input devices via udev monitor (in case of a driver reload)
+
+2015-10-30 Azael Avalos <coproscefalo@gmail.com>
+	* Moved the getDriverVersion function from library to SystemInformation class
+	* Removed unneeded code from sysinfo left overs
+
+2015-10-29 Azael Avalos <coproscefalo@gmail.com>
+	* We are now using sysfs to parse DMI info instead of dmidecode, the only missing bit
+	  is the EC version, the calls as root have been reduced
+	* Created SystemInformation class and moved all code from SystemSettings class
+	* Removed unneeded function calls from KToshHelper, it is now used to set the HDD
+	  protection level and unload heads
+
+2015-10-28 Azael Avalos <coproscefalo@gmail.com>
+	* Added support for Built In LAN
+	* Fixed the Keyboard Functions mode not showing the reboot message
+	* Moved the toshiba_acpi device check to constructor to avoid printing a lot
+	  of messages about the device not being found
+	* Added support for SATA Interface Setting modes
+	* Added enums for TCI operations and registers to library
+	* Renamed Touchpad to PointingDevice as some models have a trackpoint AND a touchpad
+
+2015-10-27 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed DBus config signal and method call
+	* Added support for USB Legacy Emulation
+	* Misc changes to general.ui tooltips and whatsthis
+	* Created a global SMMRegisters instance in library
+
+2015-10-26 Azael Avalos <coproscefalo@gmail.com>
+	* Relased KToshiba 5.1
+
 2015-10-23 Azael Avalos <coproscefalo@gmail.com>
 	* Moved ZoomActions enum from FnActions to KToshibaDBusInterface
 	* Removed detach() function from KToshibaKeyHandler, code moved to destructor

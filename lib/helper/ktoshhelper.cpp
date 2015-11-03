@@ -17,76 +17,18 @@
 */
 
 #include <QDebug>
-#include <QVariantMap>
 #include <QDir>
+#include <QFile>
 #include <QStringList>
-#include <QProcess>
-#include <QByteArray>
-#include <QStandardPaths>
+#include <QTextStream>
 
 #include "ktoshhelper.h"
 
 KToshHelper::KToshHelper(QObject *parent)
     : QObject(parent)
 {
-    m_driverPath = findDriverPath();
-    if (m_driverPath.isEmpty())
-        exit(-1);
-}
-
-QString KToshHelper::findDriverPath()
-{
-    QStringList m_devices;
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
-    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/path");
-    for (int current = m_devices.indexOf(m_devices.first()); current <= m_devices.indexOf(m_devices.last());) {
-        m_file.setFileName(path.arg(m_devices.at(current)));
-        if (m_file.exists())
-            return QString("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/").arg(m_devices.at(current));
-
-        current++;
-    }
-
-    qWarning() << "No known interface found" << endl;
-
-    return QString("");
-}
-
-ActionReply KToshHelper::dumpsysinfo(QVariantMap args)
-{
-    Q_UNUSED(args)
-
-    ActionReply reply;
-
-    QStringList paths = QStringList() << "/sbin" << "/usr/sbin" << "/usr/local/sbin";
-    QString dmidecode = QStandardPaths::findExecutable("dmidecode", paths);
-    if (dmidecode.isEmpty()) {
-        reply = ActionReply(ActionReply::HelperErrorType);
-        qWarning() << "dmidecode binary not found, system info could not be parsed";
-
-        return reply;
-    }
-
-    QProcess p;
-    p.start(dmidecode);
-    if (!p.waitForFinished(-1)) {
-        reply = ActionReply::HelperErrorReply();
-        qWarning() << "dmidecode failed with error code" << p.error();
-
-        return reply;
-    }
-
-    QFile file("/var/tmp/dmidecode");
-    if (!file.open(QIODevice::WriteOnly)) {
-        reply = ActionReply(ActionReply::HelperErrorType);
-        qWarning() << "dumpsysinfo failed with error code" << file.error() << file.errorString();
-
-        return reply;
-    }
-    file.write(p.readAll());
-    file.close();
-
-    return reply;
+    QDir dir("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/");
+    m_supported = dir.exists();
 }
 
 /*
@@ -97,24 +39,30 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
     ActionReply reply;
     int level = args["level"].toInt();
 
+    if (!m_supported) {
+        reply = ActionReply::HelperErrorReply();
+
+        return reply;
+    }
+
     if (level < 0 || level > 3) {
-        reply = ActionReply(ActionReply::HelperErrorType);
         qWarning() << "The value was out of range";
+        reply = ActionReply::HelperErrorReply();
 
         return reply;
     }
 
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
-    if (!m_file.open(QIODevice::WriteOnly)) {
-        reply = ActionReply(ActionReply::HelperErrorType);
-        qWarning() << "setprotectionlevel failed with error code" << m_file.error() << m_file.errorString();
+    QFile file("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    if (!file.open(QIODevice::WriteOnly)) {
+        qWarning() << "setprotectionlevel failed with error code" << file.error() << file.errorString();
+        reply = ActionReply::HelperErrorReply();
 
         return reply;
     }
 
-    QTextStream stream(&m_file);
+    QTextStream stream(&file);
     stream << level;
-    m_file.close();
+    file.close();
 
     return reply;
 }
@@ -124,9 +72,15 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
     ActionReply reply;
     int timeout = args["timeout"].toInt();
 
+    if (!m_supported) {
+        reply = ActionReply::HelperErrorReply();
+
+        return reply;
+    }
+
     if (timeout != 0 && timeout != 5000) {
-        reply = ActionReply(ActionReply::HelperErrorType);
         qWarning() << "The value was out of range";
+        reply = ActionReply::HelperErrorReply();
 
         return reply;
     }
@@ -134,16 +88,16 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
     QDir dir("/sys/block");
     dir.setNameFilters(QStringList("sd*"));
     QStringList hdds(dir.entryList());
-    for (int current = hdds.indexOf(hdds.first()); current <= hdds.indexOf(hdds.last()); current++) {
+    foreach (const QString &hdd, hdds) {
         QString path("/sys/block/%1/device/unload_heads");
-        m_file.setFileName(path.arg(hdds.at(current)));
-        if (m_file.open(QIODevice::WriteOnly)) {
-            QTextStream stream(&m_file);
+        QFile file(path.arg(hdd));
+        if (file.open(QIODevice::WriteOnly)) {
+            QTextStream stream(&file);
             stream << timeout;
-            m_file.close();
+            file.close();
         } else {
-            qWarning() << "Could not protect" << hdds.at(current) << "heads";
-            qWarning() << "Received error code" << m_file.error() << m_file.errorString();
+            qWarning() << "Could not protect" << hdd << "heads" << endl
+                       << "Received error code" << file.error() << file.errorString();
         }
     }
 

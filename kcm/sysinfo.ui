@@ -12,7 +12,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>General</string>
+   <string>System Information</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0" colspan="2">
@@ -26,9 +26,6 @@
      </item>
      <item row="0" column="1" alignment="Qt::AlignRight">
       <widget class="QLabel" name="model_family">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
        <property name="text">
         <string/>
        </property>
@@ -43,9 +40,6 @@
      </item>
      <item row="1" column="1" alignment="Qt::AlignRight">
       <widget class="QLabel" name="model_number">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
        <property name="text">
         <string/>
        </property>
@@ -60,9 +54,6 @@
      </item>
      <item row="2" column="1" alignment="Qt::AlignRight">
       <widget class="QLabel" name="bios_version">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
        <property name="text">
         <string/>
        </property>
@@ -77,18 +68,6 @@
      </item>
      <item row="3" column="1" alignment="Qt::AlignRight">
       <widget class="QLabel" name="bios_date">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
        <property name="text">
         <string/>
        </property>
@@ -103,43 +82,20 @@
      </item>
      <item row="4" column="1" alignment="Qt::AlignRight">
       <widget class="QLabel" name="bios_manufacturer">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QLabel" name="ec_version_label">
-       <property name="text">
-        <string>EC version:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1" alignment="Qt::AlignRight">
-      <widget class="QLabel" name="ec_version">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
       <widget class="QLabel" name="driver_version_label">
        <property name="text">
         <string>Driver version:</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1" alignment="Qt::AlignRight">
+     <item row="5" column="1" alignment="Qt::AlignRight">
       <widget class="QLabel" name="driver_version">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
        <property name="text">
         <string/>
        </property>

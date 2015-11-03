@@ -28,79 +28,201 @@ extern "C" {
 }
 
 #include "ktoshibakeyhandler.h"
-#include "udevhelper.h"
 
 KToshibaKeyHandler::KToshibaKeyHandler(QObject *parent)
     : QObject(parent),
-      m_udevHelper(new UDevHelper(this)),
-      m_notifier(NULL),
+      m_hotkeysNotifier(NULL),
+      m_monitorNotifier(NULL),
       m_socket(-1)
 {
-    m_namePhys << TOSHNAME << TOSHPHYS << TOSWMINAME << TOSWMIPHYS;
 }
 
 KToshibaKeyHandler::~KToshibaKeyHandler()
 {
-    if (m_notifier) {
-        m_notifier->setEnabled(false);
-        delete m_notifier; m_notifier = NULL;
-    }
-    if (m_socket)
-        ::close(m_socket);
+    if (m_udevConnected) {
+        udev_monitor_unref(monitor);
+        udev_unref(udev);
 
-    delete m_udevHelper; m_udevHelper = NULL;
+        if (m_monitorNotifier) {
+            m_monitorNotifier->setEnabled(false);
+            delete m_monitorNotifier;
+        }
+    }
+
+    deactivateHotkeys();
 }
 
 bool KToshibaKeyHandler::attach()
 {
-    m_udevConnected = m_udevHelper->initUDev();
+    m_udevConnected = initUDev();
     if (!m_udevConnected)
         return false;
 
-    m_device = m_udevHelper->findDevice(m_namePhys);
+    m_device = findDevice();
     if (m_device.isNull() || m_device.isEmpty()) {
-        qCritical() << "No device to monitor...";
+        qCritical() << "Could not find a supported hotkeys input device, please check that the driver is loaded";
 
         return false;
     }
 
+    return activateHotkeys();
+}
+
+bool KToshibaKeyHandler::initUDev()
+{
+    // Create the udev object
+    udev = udev_new();
+    if (!udev) {
+        qCritical() << "Cannot create the udev object";
+
+        return false;
+    }
+
+    // Create the udev monitor
+    monitor = udev_monitor_new_from_netlink(udev, "udev");
+    if (!monitor) {
+        qCritical() << "Cannot create the udev monitor";
+
+        return false;
+    }
+
+    // Add filters
+    if (udev_monitor_filter_add_match_subsystem_devtype(monitor, "input", NULL) < 0) {
+        qCritical() << "Cannot add udev filter";
+
+        return false;
+    }
+
+    udev_monitor_enable_receiving(monitor);
+
+    m_monitorNotifier = new QSocketNotifier(udev_monitor_get_fd(monitor), QSocketNotifier::Read);
+
+    return connect(m_monitorNotifier, SIGNAL(activated(int)), this, SLOT(readMonitorData(int)));
+}
+
+bool KToshibaKeyHandler::activateHotkeys()
+{
     m_socket = ::open(m_device.toLocal8Bit().constData(), O_RDONLY, 0);
     if (m_socket < 0) {
-        qCritical() << "Could not open" << m_device << "for hotkeys input."
-                    << strerror(errno);
+        qCritical() << "Could not open" << m_device << "for hotkeys input." << strerror(errno);
 
         return false;
     }
 
     qDebug() << "Opened" << m_device << "for hotkeys input";
 
-    m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
+    m_hotkeysNotifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
 
-    connect(m_notifier, SIGNAL(activated(int)), this, SLOT(readData(int)));
-
-    return true;
+    return connect(m_hotkeysNotifier, SIGNAL(activated(int)), this, SLOT(readHotkeys(int)));
 }
 
-void KToshibaKeyHandler::readData(int socket)
+void KToshibaKeyHandler::deactivateHotkeys()
 {
-    if (socket < 0)
-        return;
+    if (m_hotkeysNotifier) {
+        m_hotkeysNotifier->setEnabled(false);
+        delete m_hotkeysNotifier;
+    }
+
+    if (m_socket)
+        ::close(m_socket);
+}
+
+QString KToshibaKeyHandler::findDevice()
+{
+    struct udev_enumerate *enumerate;
+    struct udev_list_entry *devices, *dev_list_entry;
+    struct udev_device *dev;
+    QString node, name, phys;
+    bool found = false;
+
+    // Create a list of the devices in the 'input' subsystem
+    enumerate = udev_enumerate_new(udev);
+    udev_enumerate_add_match_subsystem(enumerate, "input");
+    udev_enumerate_scan_devices(enumerate);
+    devices = udev_enumerate_get_list_entry(enumerate);
+    // Loop until we find the correct 'input' device
+    udev_list_entry_foreach(dev_list_entry, devices) {
+        dev = udev_device_new_from_syspath(udev, udev_list_entry_get_name(dev_list_entry));
+
+        // Get the device node path
+        node = udev_device_get_devnode(dev);
+
+        // Get the parent device
+        dev = udev_device_get_parent(dev);
+
+        // Get the sysattr values
+        name = udev_device_get_sysattr_value(dev, "name");
+        phys = udev_device_get_sysattr_value(dev, "phys");
+        if ((name == TOSNAME && phys == TOSPHYS)
+            || (name == TOSWMINAME && phys == TOSWMIPHYS)) {
+            qDebug() << "Found device:" << node << "Name:" << name << "Phys:" << phys;
+            found = true;
+            udev_device_unref(dev);
+            break;
+        }
+
+        udev_device_unref(dev);
+    }
+    udev_enumerate_unref(enumerate);
+
+    return found ? node : QString();
+}
+
+void KToshibaKeyHandler::readHotkeys(int socket)
+{
+    Q_UNUSED(socket)
 
     input_event event;
 
-    int n = read(socket, &event, sizeof(struct input_event));
+    int n = read(m_socket, &event, sizeof(struct input_event));
     if (n != sizeof(struct input_event)) {
-        qCritical() << "Error reading hotkeys." << strerror(errno);
+        qWarning() << "Error reading hotkeys." << strerror(errno);
 
         return;
     }
 
     if (event.type == EV_KEY) {
-        qDebug() << "Received data from socket:" << socket << endl
+        qDebug() << "Hotkey received from socket:" << m_socket
                  << "Key" << hex << event.code << (event.value != 0 ? "pressed" : "released");
-
         // Act only if we get a key press
         if (event.value == 1)
             emit hotkeyPressed(event.code);
     }
+}
+
+void KToshibaKeyHandler::readMonitorData(int socket)
+{
+    Q_UNUSED(socket)
+
+    m_monitorNotifier->setEnabled(false);
+    struct udev_device *dev = udev_monitor_receive_device(monitor);
+    m_monitorNotifier->setEnabled(true);
+
+    if (!dev) {
+        qDebug() << "No device from socket";
+
+        return;
+    }
+
+    QString node = udev_device_get_devnode(dev);
+    QString subsys = udev_device_get_subsystem(dev);
+    QString action = udev_device_get_action(dev);
+    if (subsys == "input" && node == m_device && action == "remove") {
+        qDebug() << "Driver unloaded, disabling hotkeys";
+        deactivateHotkeys();
+    }
+
+    if (subsys == "input" && action == "add") {
+        dev = udev_device_get_parent(dev);
+        QString name = udev_device_get_sysattr_value(dev, "name");
+        QString phys = udev_device_get_sysattr_value(dev, "phys");
+        if ((name == TOSNAME && phys == TOSPHYS)
+            || (name == TOSWMINAME && phys == TOSWMIPHYS)) {
+            qDebug() << "Driver re-loaded, re-enabling hotkeys";
+            m_device = node;
+            activateHotkeys();
+        }
+    }
+
+    udev_device_unref(dev);
 }

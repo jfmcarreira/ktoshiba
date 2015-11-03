@@ -23,7 +23,7 @@
 
 BootSettings::BootSettings(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent()))
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent()))
 {
     setupUi(this);
 
@@ -44,6 +44,7 @@ BootSettings::BootSettings(QWidget *parent)
     m_panelPowerOnSupported = isPanelPowerOnSupported();
     m_wokSupported = isWOKSupported();
     m_wolSupported = isWOLSupported();
+    m_bootSpeedSupported = isBootSpeedSupported();
 }
 
 BootSettings::~BootSettings()
@@ -65,12 +66,10 @@ bool BootSettings::isBootOrderSupported()
 
 bool BootSettings::isPanelPowerOnSupported()
 {
-    quint32 result = m_sys->hw()->getPanelPowerON();
+    m_panelPowerON = m_sys->hw()->getPanelPowerON();
 
-    if (result != KToshibaHardware::TCI_DISABLED && result != KToshibaHardware::TCI_ENABLED)
+    if (m_panelPowerON != KToshibaHardware::DEACTIVATED && m_panelPowerON != KToshibaHardware::ACTIVATED)
         return false;
-
-    m_panelPowerON = result;
 
     return true;
 }
@@ -90,6 +89,16 @@ bool BootSettings::isWOLSupported()
     quint32 result = m_sys->hw()->getWakeOnLAN(&m_wol, &m_defaultWOL);
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+        return false;
+
+    return true;
+}
+
+bool BootSettings::isBootSpeedSupported()
+{
+    m_bootSpeed = m_sys->hw()->getBootSpeed();
+
+    if (m_bootSpeed != KToshibaHardware::NORMAL && m_bootSpeed != KToshibaHardware::FAST)
         return false;
 
     return true;
@@ -129,6 +138,13 @@ void BootSettings::load()
         wol_checkbox->setChecked(m_wol == 0x0801 ? true : false);
     else
         wol_checkbox->setEnabled(false);
+    // Boot Speed
+    if (m_bootSpeedSupported) {
+        boot_speed_combobox->setCurrentIndex(m_bootSpeed);
+    } else {
+        boot_speed_label->setEnabled(false);
+        boot_speed_combobox->setEnabled(false);
+    }
 }
 
 void BootSettings::save()
@@ -146,7 +162,7 @@ void BootSettings::save()
     // Panel Power ON
     if (m_panelPowerOnSupported) {
         tmp = (panel_power_checkbox->checkState() == Qt::Checked) ?
-                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_panelPowerON != tmp) {
             m_sys->hw()->setPanelPowerON(tmp);
             m_panelPowerON = tmp;
@@ -155,7 +171,7 @@ void BootSettings::save()
     // Wake on Keyboard
     if (m_wokSupported) {
         tmp = (wok_checkbox->checkState() == Qt::Checked) ?
-                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_wok != tmp) {
             m_sys->hw()->setWakeOnKeyboard(tmp);
             m_wok = tmp;
@@ -167,6 +183,14 @@ void BootSettings::save()
         if (m_wol != tmp) {
             m_sys->hw()->setWakeOnLAN(tmp);
             m_wol = tmp;
+        }
+    }
+    // Boot Speed
+    if (m_bootSpeedSupported) {
+        tmp = boot_speed_combobox->currentIndex();
+        if (m_bootSpeed != tmp) {
+            m_sys->hw()->setBootSpeed(tmp);
+            m_bootSpeed = tmp;
         }
     }
 }
@@ -185,4 +209,7 @@ void BootSettings::defaults()
     // Wake on LAN
     if (m_wolSupported && m_wol)
         wol_checkbox->setChecked(false);
+    // Boot Speed
+    if (m_bootSpeedSupported && m_bootSpeed)
+        boot_speed_combobox->setCurrentIndex(0);
 }

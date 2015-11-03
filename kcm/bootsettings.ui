@@ -15,7 +15,40 @@
    <string>Boot Settings</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="0" colspan="2">
+   <item row="0" column="0" alignment="Qt::AlignLeft">
+    <widget class="QLabel" name="boot_speed_label">
+     <property name="text">
+      <string>Boot Speed:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="boot_speed_combobox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Selects the desired booting speed.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Selects the desired booting speed.</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Normal</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Fast</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="flat">
       <bool>true</bool>
@@ -101,7 +134,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" alignment="Qt::AlignLeft">
+   <item row="2" column="0" alignment="Qt::AlignLeft">
     <widget class="QCheckBox" name="panel_power_checkbox">
      <property name="toolTip">
       <string>Turns ON the laptop whenever you open the LID.</string>
@@ -114,7 +147,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" alignment="Qt::AlignLeft">
+   <item row="3" column="0" alignment="Qt::AlignLeft">
     <widget class="QCheckBox" name="wok_checkbox">
      <property name="toolTip">
       <string>Awakens the laptop whenever you press the keyboard, when the computer is asleep.</string>
@@ -127,7 +160,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" alignment="Qt::AlignLeft">
+   <item row="4" column="0" alignment="Qt::AlignLeft">
     <widget class="QCheckBox" name="wol_checkbox">
      <property name="toolTip">
       <string>Turns ON or awakens the laptop by a network message.</string>

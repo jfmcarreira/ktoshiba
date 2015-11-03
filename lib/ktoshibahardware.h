@@ -37,7 +37,37 @@ class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 public:
     KToshibaHardware(QObject *parent = 0);
 
-    enum ReturnCodes {
+    enum TCIOperations {
+        SCI_READ  = 0xf300,
+        SCI_WRITE = 0xf400,
+        HCI_READ  = 0xfe00,
+        HCI_WRITE = 0xff00,
+    };
+
+    enum TCIRegisters {
+        /* HCI Registers */
+        COOLING_METHOD       = 0x007f,
+        KBD_ILLUM_LED        = 0x0095,
+        ECO_LED              = 0x0097,
+        /* SCI Registers */
+        PANEL_POWER_ON       = 0x010d,
+        BUILT_IN_LAN         = 0x0130,
+        WAKE_ON_KEYBOARD     = 0x0137,
+        ILLUMINATION_LED     = 0x014e,
+        USB_SLEEP_CHARGE     = 0x0150,
+        BOOT_ORDER           = 0x0157,
+        KBD_ILLUM_STATUS     = 0x015c,
+        BOOT_SPEED           = 0x015d,
+        SLEEP_MUSIC          = 0x015e,
+        USB_THREE            = 0x0169,
+        SATA_IFACE_SETTING   = 0x0406,
+        USB_LEGACY_EMULATION = 0x050c,
+        POINTING_DEVICE      = 0x050e,
+        KBD_FUNCTION_KEYS    = 0x0522,
+        WAKE_ON_LAN          = 0x0700,
+    };
+
+    enum TCIReturnCodes {
         SUCCESS            = 0x0000,
         SUCCESS2           = 0x0001,
         FAILURE            = 0x1000,
@@ -52,12 +82,16 @@ public:
 
     enum USBSleepChargeModes {
         DISABLED  = 0x00,
-        //MODE1     = 0x,
-        //MODE2     = 0x,
         ALTERNATE = 0x09,
         TYPICAL   = 0x11,
         AUTO      = 0x21,
-        //TABLET    = 0x,
+    };
+
+    enum USBSleepChargeSubfunctions {
+        SUBFUNCTIONS_AVAILABLE     = 0x0100,
+        MAX_SLEEP_MODE             = 0x0102,
+        SLEEP_FUNCTIONS_ON_BATTERY = 0x0200,
+        USB_RAPID_CHARGE           = 0x0300,
     };
 
     enum KeyboardBacklightModes {
@@ -75,16 +109,24 @@ public:
         POWER_SAVER         = 2,
     };
 
+    enum SATAInterfaceSettingMode {
+        PERFORMANCE,
+        BATTERY_LIFE,
+    };
+
+    enum BootSpeedModes {
+        NORMAL,
+        FAST,
+    };
+
     enum DeviceState {
-        TCI_DISABLED,
-        TCI_ENABLED,
+        DEACTIVATED,
+        ACTIVATED,
     };
 
     /*
      * System Information calls
      */
-    bool getSysInfo();
-    QString getDriverVersion();
     QString getDeviceHID();
     /*
      * HDD protection functions
@@ -99,8 +141,8 @@ public:
     /*
      * Hardware access functions
      */
-    quint32 getTouchPad();
-    void setTouchPad(quint32);
+    quint32 getPointingDevice();
+    void setPointingDevice(quint32);
     quint32 getIllumination();
     void setIllumination(quint32);
     quint32 getEcoLed();
@@ -128,14 +170,15 @@ public:
     quint32 getWakeOnLAN(int *, int *);
     void setWakeOnLAN(quint32);
     quint32 getCoolingMethod(int *, int *);
-    void setCoolingMethod(int);
-
-    QString modelFamily;
-    QString modelNumber;
-    QString biosVersion;
-    QString biosDate;
-    QString biosManufacturer;
-    QString ecVersion;
+    void setCoolingMethod(quint32);
+    quint32 getUSBLegacyEmulation();
+    void setUSBLegacyEmulation(quint32);
+    quint32 getBuiltInLAN();
+    void setBuiltInLAN(quint32);
+    quint32 getSATAInterfaceSetting();
+    void setSATAInterfaceSetting(quint32);
+    quint32 getBootSpeed();
+    void setBootSpeed(quint32);
 
 Q_SIGNALS:
     void touchpadToggled(int);
@@ -143,13 +186,12 @@ Q_SIGNALS:
 private:
     void printSMMError(QString, quint32);
 
+    SMMRegisters regs;
+
     QMap<int, QString> m_errors;
-
-    QString findDriverPath();
-
-    QString m_device;
-    QString m_driverPath;
+    QStringList m_devices;
     QFile m_file;
+    bool m_devDeviceExist;
 };
 
 #endif // KTOSHIBAHARDWARE_H

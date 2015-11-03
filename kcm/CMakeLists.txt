@@ -1,5 +1,6 @@
 
 set(SystemSettings_SRCS
+    systeminformation.cpp
     generalsettings.cpp
     hddprotection.cpp
     sleeputilities.cpp

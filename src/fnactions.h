@@ -73,7 +73,7 @@ private:
     void toggleProfiles();
     void toggleTouchPad();
     void updateKBDBacklight();
-    bool isTouchPadSupported();
+    bool isPointingDeviceSupported();
     bool isIlluminationSupported();
     bool isECOSupported();
     bool isKBDBacklightSupported();
@@ -81,8 +81,7 @@ private:
 
     KSharedConfigPtr m_config;
 
-    bool m_sysinfo;
-    bool m_touchpad;
+    bool m_pointing;
     bool m_illumination;
     bool m_eco;
     bool m_kbdBacklight;

@@ -24,7 +24,7 @@
 
 SleepUtilities::SleepUtilities(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings *>(QObject::parent()))
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent()))
 {
     setupUi(this);
 
@@ -71,8 +71,8 @@ bool SleepUtilities::isSleepMusicSupported()
 {
     m_sleepMusic = m_sys->hw()->getUSBSleepMusic();
 
-    if (m_sleepMusic != KToshibaHardware::TCI_DISABLED
-        && m_sleepMusic != KToshibaHardware::TCI_ENABLED)
+    if (m_sleepMusic != KToshibaHardware::DEACTIVATED
+        && m_sleepMusic != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -117,9 +117,9 @@ void SleepUtilities::save()
             m_sys->hw()->setUSBSleepCharge(tmp, m_defaultSleepCharge);
             m_sleepCharge = tmp;
         }
-        tmp = groupBox->isChecked() ? KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+        tmp = groupBox->isChecked() ? KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_batteryEnabled != tmp) {
-            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp == KToshibaHardware::TCI_DISABLED ? tmp : m_batteryLevel);
+            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp == KToshibaHardware::DEACTIVATED ? tmp : m_batteryLevel);
             m_batteryEnabled = tmp;
         }
         tmp = battery_level_slider->value();
@@ -131,7 +131,7 @@ void SleepUtilities::save()
     // Sleep and Music
     if (m_sleepMusicSupported) {
         tmp = (sleep_music_checkbox->checkState() == Qt::Checked) ?
-                KToshibaHardware::TCI_ENABLED : KToshibaHardware::TCI_DISABLED;
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_sleepMusic != tmp) {
             m_sys->hw()->setUSBSleepMusic(tmp);
             m_sleepMusic = tmp;
@@ -145,7 +145,7 @@ void SleepUtilities::defaults()
     if (m_sleepChargeSupported) {
         if (m_sleepCharge != KToshibaHardware::AUTO)
             sleep_charge_combobox->setCurrentIndex(3);
-        if (m_batteryEnabled != KToshibaHardware::TCI_ENABLED)
+        if (m_batteryEnabled != KToshibaHardware::ACTIVATED)
             groupBox->setChecked(true);
         if (m_batteryLevel != 10) {
             battery_level->setText(QString::number(10) + "%");
@@ -154,6 +154,6 @@ void SleepUtilities::defaults()
     }
     // Sleep and Music
     if (m_sleepMusicSupported)
-        if (m_sleepMusic != KToshibaHardware::TCI_DISABLED)
+        if (m_sleepMusic != KToshibaHardware::DEACTIVATED)
             sleep_music_checkbox->setChecked(false);
 }
