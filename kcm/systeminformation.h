@@ -24,8 +24,6 @@
 
 #include "ui_sysinfo.h"
 
-class KToshibaSystemSettings;
-
 class SystemInformation : public QWidget, public Ui::SysInfo
 {
     Q_OBJECT
@@ -38,10 +36,10 @@ public:
 private:
     void getData();
     QString getDriverVersion();
-
-    KToshibaSystemSettings *m_sys;
+    QString getDeviceHID();
 
     QFile m_file;
+    QStringList m_devices;
     QStringList m_files;
     QStringList m_data;
     QString m_deviceHID;

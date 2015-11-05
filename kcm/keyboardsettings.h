@@ -55,8 +55,7 @@ private:
     int m_keyboardFunctions;
 
     bool m_kbdBacklightSupported;
-    QStringList m_keyboardModesGen1;
-    QStringList m_keyboardModesGen2;
+    QStringList m_keyboardModes;
     QString m_tooltip;
     int m_keyboardMode;
     int m_keyboardTime;

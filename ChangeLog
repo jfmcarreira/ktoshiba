@@ -1,3 +1,23 @@
+2015-11-05 Azael Avalos <coproscefalo@gmail.com>
+	* Updated README.toshiba_acpi for openSUSE users
+	* Changed sc-apps-ktoshiba.svgz icon with an uncompressed one (plain svg)
+	* Added check for state on setUSBSleepFunctionsBatLvl function
+	* Unified m_keyboardModes* QStringList variables in KeyboardSettings class
+	* Released KToshiba 5.1.1
+
+2015-11-04 Azael Avalos <coproscefalo@gmail.com>
+	* Removed a leftover include of libnl from KToshibaNetlinkEvents class
+	* Updated ktoshhelper xml description
+
+2015-11-03 Azael Avalos <coproscefalo@gmail.com>
+	* Used QStringBuilder in KCM where possible
+	* Removed unneeded include from library
+	* Append simplified() when reading from sysfs and proc files
+
+2015-11-02 Azael Avalos <coproscefalo@gmail.com>
+	* Changed setUSBSleepFunctionsBatLvl function, it now requires two parameters
+	* Fixed the Sleep & Charge default setting in KCM
+
 2015-11-01 Azael Avalos <coproscefalo@gmail.com>
 	* Replaced icons with better quality ones, as the provided ones were blurry
 	* Fixed a segfault when exiting KToshiba and no driver was loaded

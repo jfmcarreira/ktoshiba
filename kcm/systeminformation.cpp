@@ -22,13 +22,17 @@
 
 #include <KLocalizedString>
 
+extern "C" {
+#include <linux/toshiba.h>
+}
+
 #include "systeminformation.h"
-#include "systemsettings.h"
-#include "ktoshibahardware.h"
+
+#define SYSFS_DEVICE_DIR "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/"
+#define SYSFS_DMI_DIR "/sys/devices/virtual/dmi/id/"
 
 SystemInformation::SystemInformation(QWidget *parent)
-    : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent()))
+    : QWidget(parent)
 {
     setupUi(this);
 
@@ -36,13 +40,13 @@ SystemInformation::SystemInformation(QWidget *parent)
 
     getData();
 
-    m_deviceHID = m_sys->hw()->getDeviceHID();
+    m_deviceHID = getDeviceHID();
 }
 
 void SystemInformation::getData()
 {
-    QDir dir;
-    if (!dir.exists("/sys/devices/virtual/dmi/id/")) {
+    QDir dir(SYSFS_DMI_DIR);
+    if (!dir.exists()) {
         qWarning() << "DMI information directory could not be found under sysfs";
         foreach (const QString &file, m_files) {
             qDebug() << "Setting" << file;
@@ -53,9 +57,9 @@ void SystemInformation::getData()
     }
 
     foreach (const QString &file, m_files) {
-        m_file.setFileName("/sys/devices/virtual/dmi/id/" % file);
+        m_file.setFileName(SYSFS_DMI_DIR % file);
         if (m_file.open(QIODevice::ReadOnly)) {
-            m_data << m_file.readLine();
+            m_data << m_file.readLine().simplified();
             m_file.close();
         } else {
             m_data << i18n("Unknown");
@@ -63,11 +67,25 @@ void SystemInformation::getData()
     }
 }
 
+QString SystemInformation::getDeviceHID()
+{
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+
+    QDir dir;
+    foreach (const QString &device, m_devices)
+        if (dir.exists(SYSFS_DEVICE_DIR % device))
+            return device;
+
+    qWarning() << "No known kernel interface found" << endl;
+
+    return QString();
+}
+
 QString SystemInformation::getDriverVersion()
 {
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/" % m_deviceHID % "/version");
+    m_file.setFileName(SYSFS_DEVICE_DIR % m_deviceHID % "/version");
     if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
-        QString version = m_file.readLine();
+        QString version = m_file.readLine().simplified();
         m_file.close();
 
         return version;
@@ -75,7 +93,7 @@ QString SystemInformation::getDriverVersion()
 
     m_file.setFileName("/proc/acpi/toshiba/version");
     if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
-        QString line = m_file.readLine();
+        QString line = m_file.readLine().simplified();
         QStringList split = line.split(":");
         m_file.close();
 

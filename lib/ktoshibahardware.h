@@ -20,7 +20,6 @@
 #define KTOSHIBAHARDWARE_H
 
 #include <QObject>
-#include <QString>
 #include <QFile>
 #include <QMap>
 
@@ -125,10 +124,6 @@ public:
     };
 
     /*
-     * System Information calls
-     */
-    QString getDeviceHID();
-    /*
      * HDD protection functions
      */
     int getProtectionLevel();
@@ -152,7 +147,7 @@ public:
     quint32 getUSBSleepCharge(int *, int *, int *);
     void setUSBSleepCharge(int, int);
     quint32 getUSBSleepFunctionsBatLvl(int *, int *);
-    void setUSBSleepFunctionsBatLvl(int);
+    void setUSBSleepFunctionsBatLvl(int, int);
     quint32 getUSBRapidCharge();
     void setUSBRapidCharge(quint32);
     quint32 getUSBSleepMusic();
@@ -189,7 +184,6 @@ private:
     SMMRegisters regs;
 
     QMap<int, QString> m_errors;
-    QStringList m_devices;
     QFile m_file;
     bool m_devDeviceExist;
 };

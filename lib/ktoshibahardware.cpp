@@ -16,11 +16,7 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QStringList>
-#include <QTextStream>
 #include <QDebug>
-#include <QDir>
-#include <QStringBuilder>
 
 #include <KAuth/KAuth>
 
@@ -46,8 +42,8 @@ KToshibaHardware::KToshibaHardware(QObject *parent)
     m_file.setFileName(TOSHIBA_ACPI_DEVICE);
     m_devDeviceExist = m_file.exists();
     if (!m_devDeviceExist)
-        qCritical() << "The toshiba_acpi device does not exist, perhaps an older driver is loaded?"
-                    << "Please see the file README.toshiba_acpi for upgrading instructions";
+        qWarning() << "The toshiba_acpi device does not exist, perhaps an older driver is loaded?"
+                   << "Please see the file README.toshiba_acpi for upgrading instructions";
 
     m_errors[FAILURE] = "HCI/SCI call could not be completed";
     m_errors[NOT_SUPPORTED] = "Feature is not supported";
@@ -65,27 +61,8 @@ KToshibaHardware::KToshibaHardware(QObject *parent)
 
 void KToshibaHardware::printSMMError(QString function, quint32 error)
 {
-    qCritical() << function << "failed with error code"
-                << QString::number(error, 16) << m_errors.value(error);
-}
-
-/*
- * System Information function
- */
-
-QString KToshibaHardware::getDeviceHID()
-{
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
-
-    QDir dir;
-    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/");
-    foreach (const QString &device, m_devices)
-        if (dir.exists(path.arg(device)))
-            return device;
-
-    qWarning() << "No known kernel interface found" << endl;
-
-    return QString();
+    qWarning() << function << "failed with error code"
+               << QString::number(error, 16) << m_errors.value(error);
 }
 
 /*
@@ -101,8 +78,7 @@ int KToshibaHardware::getProtectionLevel()
         return FAILURE;
     }
 
-    QTextStream stream(&m_file);
-    int level = stream.readAll().toInt();
+    int level = m_file.readLine().simplified().toInt();
     m_file.close();
 
     return level;
@@ -256,7 +232,7 @@ quint32 KToshibaHardware::getEcoLed()
         return regs.eax;
     }
 
-    regs = { HCI_READ, 0x97, 0, 1, 0, 0 };
+    regs = { HCI_READ, ECO_LED, 0, 1, 0, 0 };
     if (tci_raw(&regs) < 0) {
         printSMMError("getEcoLed", FAILURE);
 
@@ -395,18 +371,18 @@ quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
     return regs.eax;
 }
 
-void KToshibaHardware::setUSBSleepFunctionsBatLvl(int level)
+void KToshibaHardware::setUSBSleepFunctionsBatLvl(int state, int level)
 {
     regs = { SCI_WRITE, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
-    if (level < 0 || level > 100) {
+    if ((level < 1 || level > 100) || (state != DEACTIVATED && state != ACTIVATED)) {
         printSMMError("setUSBSleepFunctionsBatLvl", INPUT_DATA_ERROR);
 
         return;
     }
 
     regs.ecx = level << 0x10;
-    regs.ecx |= (level == 0 ? 0x1 : 0x4);
+    regs.ecx |= (state == DEACTIVATED ? 0x1 : 0x4);
     if (tci_raw(&regs) < 0) {
         printSMMError("setUSBSleepFunctionsBatLvl", FAILURE);
 

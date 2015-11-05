@@ -16,6 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QStringBuilder>
+
 #include <KLocalizedString>
 
 #include "keyboardsettings.h"
@@ -28,9 +30,6 @@ KeyboardSettings::KeyboardSettings(QWidget *parent)
 {
     setupUi(this);
 
-    m_keyboardModesGen1 << "FN-Z" << "AUTO";
-    m_keyboardModesGen2 << i18n("TIMER") << i18n("ON") << i18n("OFF");
-
     m_keyboardFunctionsSupported = isKeyboardFunctionsSupported();
     m_kbdBacklightSupported = isKeyboardBacklightSupported();
 }
@@ -41,6 +40,11 @@ bool KeyboardSettings::isKeyboardBacklightSupported()
 
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
+
+    if (m_keyboardType == FirstKeyboardGen)
+        m_keyboardModes << "FN-Z" << "AUTO";
+    else if (m_keyboardType == SecondKeyboardGen)
+        m_keyboardModes << i18n("TIMER") << i18n("ON") << i18n("OFF");
 
     return true;
 }
@@ -73,14 +77,13 @@ void KeyboardSettings::load()
     // Keyboard Backlight
     if (m_kbdBacklightSupported) {
         m_keyboardIndex = 0;
+        kbd_backlight_combobox->addItems(m_keyboardModes);
         if (m_keyboardType == FirstKeyboardGen) {
-            kbd_backlight_combobox->addItems(m_keyboardModesGen1);
             m_keyboardIndex = m_keyboardMode == KToshibaHardware::FNZ ? FNZ : AUTO;
             m_tooltip = i18n("Select the keyboard backlight operation mode.<br/>"
                              "FN-Z: User toggles the keyboard backlight.<br/>"
                              "AUTO: Keyboard backlight turns on/off automatically.");
         } else if (m_keyboardType == SecondKeyboardGen) {
-            kbd_backlight_combobox->addItems(m_keyboardModesGen2);
             if (m_keyboardMode == KToshibaHardware::TIMER)
                 m_keyboardIndex = TIMER;
             else if (m_keyboardMode == KToshibaHardware::ON)
@@ -97,7 +100,7 @@ void KeyboardSettings::load()
         kbd_backlight_combobox->setWhatsThis(m_tooltip);
 
         if (m_keyboardMode == KToshibaHardware::TIMER) {
-            kbd_timeout->setText(QString::number(m_keyboardTime) + i18n(" sec"));
+            kbd_timeout->setText(QString::number(m_keyboardTime) % i18n(" sec"));
             kbd_timeout_slider->setValue(m_keyboardTime);
         } else {
             kbd_timeout_label->setEnabled(false);
@@ -123,8 +126,8 @@ void KeyboardSettings::save()
     // Keyboard Backlight
     if (m_kbdBacklightSupported) {
         tmp = kbd_backlight_combobox->currentIndex();
-        int mode;
         if (m_keyboardIndex != tmp) {
+            int mode = 0;
             // 1st gen. backlit keyboards
             if (m_keyboardType == FirstKeyboardGen) {
                 mode = (tmp == FNZ) ? KToshibaHardware::FNZ : KToshibaHardware::TIMER;
@@ -133,7 +136,7 @@ void KeyboardSettings::save()
                 mode = KToshibaHardware::TIMER;
                 kbd_timeout_label->setEnabled(true);
                 kbd_timeout_slider->setEnabled(true);
-                kbd_timeout->setText(QString::number(m_keyboardTime) + i18n(" sec"));
+                kbd_timeout->setText(QString::number(m_keyboardTime) % i18n(" sec"));
                 kbd_timeout_slider->setValue(m_keyboardTime);
             } else if (m_keyboardType == SecondKeyboardGen && tmp == ON) {
                 mode = KToshibaHardware::ON;
@@ -152,7 +155,7 @@ void KeyboardSettings::save()
         if (m_keyboardType == SecondKeyboardGen && m_keyboardMode == KToshibaHardware::TIMER) {
             tmp = kbd_timeout_slider->value();
             if (m_keyboardTime != tmp) {
-                m_sys->hw()->setKBDBacklight(mode, tmp);
+                m_sys->hw()->setKBDBacklight(m_keyboardMode, tmp);
                 m_keyboardTime = tmp;
             }
         }

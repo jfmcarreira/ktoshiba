@@ -21,6 +21,7 @@
 #include <QDBusInterface>
 #include <QIcon>
 #include <QComboBox>
+#include <QStringBuilder>
 
 #include <KPluginFactory>
 #include <KAboutData>
@@ -318,7 +319,7 @@ void KToshibaSystemSettings::protectionLevelChanged(int level)
 
 void KToshibaSystemSettings::batteryLevelChanged(int level)
 {
-    m_sleep->battery_level->setText(QString::number(level) + "%");
+    m_sleep->battery_level->setText(QString::number(level) % "%");
 
     emit changed(true);
 }
@@ -342,7 +343,7 @@ void KToshibaSystemSettings::kbdBacklightChanged(int index)
 
 void KToshibaSystemSettings::kbdTimeoutChanged(int time)
 {
-    m_kbd->kbd_timeout->setText(QString::number(time) + i18n(" sec"));
+    m_kbd->kbd_timeout->setText(QString::number(time) % i18n(" sec"));
 
     emit changed(true);
 }
