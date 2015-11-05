@@ -85,7 +85,7 @@ void KToshiba::notifyHDDMovement()
 void KToshiba::configureClicked()
 {
     KProcess p;
-    p.setProgram(QStandardPaths::findExecutable("kcmshell5"), QStringList() << "ktoshibam");
+    p.setProgram(QStandardPaths::findExecutable("kcmshell5"), QStringList("ktoshibam"));
     p.startDetached();
 }
 

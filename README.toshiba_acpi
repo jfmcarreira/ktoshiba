@@ -42,3 +42,11 @@ were the previous three files were donwloaded, and do the following:
 
 Once all the above has been done successfuly, simply restart KToshiba
 and enjoy the new functionality :-)
+
+
+openSUSE Users
+--------------
+I have built kmp packages for the openSUSE distribution, just head
+to http://download.opensuse.org/repositories/home:/Coproscefalo/
+and add the corresponding reposiroty or simply download the packages
+from there.

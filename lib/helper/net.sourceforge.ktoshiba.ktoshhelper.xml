@@ -11,8 +11,8 @@
         <doc:para>
           net.sourceforge.ktoshiba.ktoshhelper is a DBus interface implemented
           by KToshiba.
-          It allows several actions (if supported) to be controlled like
-          TouchPad, ECO led state and keyboard backlight mode.
+          It allows setting the HDD protection level as well as to park the HDD
+          heads in case of a harsh vibration.
         </doc:para>
       </doc:description>
     </doc:doc>

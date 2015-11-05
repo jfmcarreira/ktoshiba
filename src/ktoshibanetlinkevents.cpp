@@ -18,14 +18,15 @@
 
 #include <QCoreApplication>
 #include <QSocketNotifier>
+#include <QDir>
 #include <QDebug>
 
 extern "C" {
+#include <sys/socket.h>
+
 #include <unistd.h>
 #include <errno.h>
 }
-
-#include <netlink/genl/genl.h>
 
 #include "ktoshibanetlinkevents.h"
 #include "ktoshibahardware.h"
@@ -55,7 +56,6 @@ enum {
 
 KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
     : QObject(parent),
-      m_fn(qobject_cast<FnActions * >(QObject::parent())),
       m_notifier(NULL),
       m_socket(-1)
 {
@@ -122,6 +122,19 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
     }
 }
 
+QString KToshibaNetlinkEvents::getDeviceHID()
+{
+    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+
+    QDir dir;
+    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/");
+    foreach (const QString &device, m_devices)
+        if (dir.exists(path.arg(device)))
+            return device;
+
+    return QString();
+}
+
 bool KToshibaNetlinkEvents::attach()
 {
     memset(&m_nl, 0, sizeof(struct sockaddr_nl));
@@ -148,7 +161,7 @@ bool KToshibaNetlinkEvents::attach()
 
     qDebug() << "Binded to socket" << m_socket << "for events monitoring";
 
-    m_deviceHID = m_fn->hw()->getDeviceHID();
+    m_deviceHID = getDeviceHID();
     if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
         qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
 

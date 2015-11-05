@@ -5,7 +5,7 @@ ecm_install_icons(ICONS
 			48-apps-ktoshiba.png
 			64-apps-ktoshiba.png
 			128-apps-ktoshiba.png
-			sc-apps-ktoshiba.svgz
+			sc-apps-ktoshiba.svg
 		DESTINATION ${ICON_INSTALL_DIR}
 		THEME hicolor)
 

@@ -19,10 +19,9 @@
 #ifndef KTOSHIBANETLINKEVENTS_H
 #define KTOSHIBANETLINKEVENTS_H
 
-#include <QString>
+#include <QStringList>
 
 extern "C" {
-#include <sys/socket.h>
 #include <linux/genetlink.h>
 }
 
@@ -79,6 +78,8 @@ private Q_SLOTS:
     void parseEvents(int);
 
 private:
+    QString getDeviceHID();
+
     struct sockaddr_nl m_nl;
     struct genlmsghdr *m_genlmsghdr = NULL;
     struct nlattr *m_nlattrhdr = NULL;
@@ -87,6 +88,7 @@ private:
     FnActions *m_fn;
 
     QSocketNotifier *m_notifier;
+    QStringList m_devices;
     QString m_deviceHID;
     char m_eventBuffer[1024];
     int m_socket;

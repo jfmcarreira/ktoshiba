@@ -16,6 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QStringBuilder>
+
 #include <KLocalizedString>
 
 #include "sleeputilities.h"
@@ -89,7 +91,7 @@ void SleepUtilities::load()
         if (sleep_on_bat == KToshibaHardware::SUCCESS
             || sleep_on_bat == KToshibaHardware::SUCCESS2) {
             groupBox->setChecked(m_batteryEnabled ? true : false);
-            battery_level->setText(QString::number(m_batteryLevel) + "%");
+            battery_level->setText(QString::number(m_batteryLevel) % "%");
             battery_level_slider->setValue(m_batteryLevel);
         } else {
             groupBox->setEnabled(false);
@@ -119,12 +121,12 @@ void SleepUtilities::save()
         }
         tmp = groupBox->isChecked() ? KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_batteryEnabled != tmp) {
-            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp == KToshibaHardware::DEACTIVATED ? tmp : m_batteryLevel);
+            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp, m_batteryLevel);
             m_batteryEnabled = tmp;
         }
         tmp = battery_level_slider->value();
         if (m_batteryLevel != tmp) {
-            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp);
+            m_sys->hw()->setUSBSleepFunctionsBatLvl(m_batteryEnabled, tmp);
             m_batteryLevel = tmp;
         }
     }
@@ -144,11 +146,11 @@ void SleepUtilities::defaults()
     // Sleep and Charge
     if (m_sleepChargeSupported) {
         if (m_sleepCharge != KToshibaHardware::AUTO)
-            sleep_charge_combobox->setCurrentIndex(3);
+            sleep_charge_combobox->setCurrentIndex(m_sleepModesMap.key(KToshibaHardware::AUTO));
         if (m_batteryEnabled != KToshibaHardware::ACTIVATED)
             groupBox->setChecked(true);
         if (m_batteryLevel != 10) {
-            battery_level->setText(QString::number(10) + "%");
+            battery_level->setText(QString::number(10) % "%");
             battery_level_slider->setValue(10);
         }
     }
