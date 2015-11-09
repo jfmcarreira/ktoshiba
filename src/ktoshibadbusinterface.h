@@ -33,7 +33,7 @@ public:
     ~KToshibaDBusInterface();
     void init();
 
-    enum ZoomActions { Reset, In, Out };
+    enum ZoomActions { ZoomReset, ZoomIn, ZoomOut };
 
     void lockScreen();
     void setBrightness(int);

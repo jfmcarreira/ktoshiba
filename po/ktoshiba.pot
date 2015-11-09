@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-11-02 19:27-0700\n"
+"POT-Creation-Date: 2015-11-09 11:53-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,29 +62,34 @@ msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 
-#: src/fnactions.cpp:194 src/fnactions.cpp:374
-#, kde-format
-msgid "ON"
-msgstr ""
-
-#: src/fnactions.cpp:194 src/fnactions.cpp:371
-#, kde-format
-msgid "OFF"
-msgstr ""
-
-#: src/fnactions.cpp:283
+#: src/fnactions.cpp:288
 #, kde-format
 msgid "Performance"
 msgstr ""
 
-#: src/fnactions.cpp:287
+#: src/fnactions.cpp:296
 #, kde-format
 msgid "Powersave"
 msgstr ""
 
-#: src/fnactions.cpp:290 src/fnactions.cpp:298
+#: src/fnactions.cpp:303
 #, kde-format
 msgid "Presentation"
+msgstr ""
+
+#: src/fnactions.cpp:313
+#, kde-format
+msgid "ECO"
+msgstr ""
+
+#: src/fnactions.cpp:369 src/fnactions.cpp:420
+#, kde-format
+msgid "ON"
+msgstr ""
+
+#: src/fnactions.cpp:369 src/fnactions.cpp:417
+#, kde-format
+msgid "OFF"
 msgstr ""
 
 #: src/main.cpp:36

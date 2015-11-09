@@ -71,7 +71,7 @@ bool SleepUtilities::isSleepChargeSupported()
 
 bool SleepUtilities::isSleepMusicSupported()
 {
-    m_sleepMusic = m_sys->hw()->getUSBSleepMusic();
+    m_sleepMusic = m_sys->hw()->getSleepMusic();
 
     if (m_sleepMusic != KToshibaHardware::DEACTIVATED
         && m_sleepMusic != KToshibaHardware::ACTIVATED)
@@ -87,7 +87,8 @@ void SleepUtilities::load()
         sleep_charge_combobox->addItems(m_sleepModes);
         sleep_charge_combobox->setCurrentIndex(m_sleepModesMap.key(m_sleepCharge));
 
-        quint32 sleep_on_bat = m_sys->hw()->getUSBSleepFunctionsBatLvl(&m_batteryEnabled, &m_batteryLevel);
+        quint32 sleep_on_bat =
+                    m_sys->hw()->getSleepFunctionsOnBatteryStatus(&m_batteryEnabled, &m_batteryLevel);
         if (sleep_on_bat == KToshibaHardware::SUCCESS
             || sleep_on_bat == KToshibaHardware::SUCCESS2) {
             groupBox->setChecked(m_batteryEnabled ? true : false);
@@ -121,12 +122,12 @@ void SleepUtilities::save()
         }
         tmp = groupBox->isChecked() ? KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_batteryEnabled != tmp) {
-            m_sys->hw()->setUSBSleepFunctionsBatLvl(tmp, m_batteryLevel);
+            m_sys->hw()->setSleepFunctionsOnBatteryStatus(tmp, m_batteryLevel);
             m_batteryEnabled = tmp;
         }
         tmp = battery_level_slider->value();
         if (m_batteryLevel != tmp) {
-            m_sys->hw()->setUSBSleepFunctionsBatLvl(m_batteryEnabled, tmp);
+            m_sys->hw()->setSleepFunctionsOnBatteryStatus(m_batteryEnabled, tmp);
             m_batteryLevel = tmp;
         }
     }
@@ -135,7 +136,7 @@ void SleepUtilities::save()
         tmp = (sleep_music_checkbox->checkState() == Qt::Checked) ?
               KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
         if (m_sleepMusic != tmp) {
-            m_sys->hw()->setUSBSleepMusic(tmp);
+            m_sys->hw()->setSleepMusic(tmp);
             m_sleepMusic = tmp;
         }
     }

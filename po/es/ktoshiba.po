@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-11-02 19:27-0700\n"
+"POT-Creation-Date: 2015-11-09 11:53-0700\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -63,30 +63,35 @@ msgid ""
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: src/fnactions.cpp:194 src/fnactions.cpp:374
-#, kde-format
-msgid "ON"
-msgstr "ENCENDIDO"
-
-#: src/fnactions.cpp:194 src/fnactions.cpp:371
-#, kde-format
-msgid "OFF"
-msgstr "APAGADO"
-
-#: src/fnactions.cpp:283
+#: src/fnactions.cpp:288
 #, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/fnactions.cpp:287
+#: src/fnactions.cpp:296
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/fnactions.cpp:290 src/fnactions.cpp:298
+#: src/fnactions.cpp:303
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
+
+#: src/fnactions.cpp:313
+#, kde-format
+msgid "ECO"
+msgstr "ECO"
+
+#: src/fnactions.cpp:369 src/fnactions.cpp:420
+#, kde-format
+msgid "ON"
+msgstr "ENCENDIDO"
+
+#: src/fnactions.cpp:369 src/fnactions.cpp:417
+#, kde-format
+msgid "OFF"
+msgstr "APAGADO"
 
 #: src/main.cpp:36
 #, kde-format

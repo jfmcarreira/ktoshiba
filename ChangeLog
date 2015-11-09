@@ -1,3 +1,18 @@
+2015-11-09 Azael Avalos <coproscefalo@gmail.com>
+	* Finished the new power save settings on KToshiba
+	* Added tooltips and whatsthis to newly added Power Save items
+	* Updated Spanish translations
+
+2015-11-08 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed the Cooling Methods (the ones currently reported were wrong...)
+	* Changed the Power Save tab, now we can fine tune the settings based on the current
+	  battery profile selected
+
+2015-11-07 Azael Avalos <coproscefalo@gmail.com>
+	* Renamed a few functions from library
+	* Unified m_coolingMethod* QStringList variables in PowerSave class
+	* Added support for Optical Disc Device Power
+
 2015-11-05 Azael Avalos <coproscefalo@gmail.com>
 	* Updated README.toshiba_acpi for openSUSE users
 	* Changed sc-apps-ktoshiba.svgz icon with an uncompressed one (plain svg)

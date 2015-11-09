@@ -31,7 +31,7 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
                    "compositingToggled", QObject::parent(), SLOT(compositingChanged(bool)));
     m_dbus.connect("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement",
                    "org.kde.Solid.PowerManagement", "profileChanged",
-                   QObject::parent(), SLOT(updateCoolingMethod(QString)));
+                   QObject::parent(), SLOT(updateBatteryProfile(QString)));
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
@@ -143,13 +143,13 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
 
     QDBusReply<void> reply;
     switch (zoom) {
-    case Reset:
+    case ZoomReset:
         reply = iface.call("invokeShortcut", "view_actual_size");
         break;
-    case In:
+    case ZoomIn:
         reply = iface.call("invokeShortcut", "view_zoom_in");
         break;
-    case Out:
+    case ZoomOut:
         reply = iface.call("invokeShortcut", "view_zoom_out");
         break;
     }

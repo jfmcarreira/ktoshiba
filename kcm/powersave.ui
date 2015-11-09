@@ -14,140 +14,21 @@
   <property name="windowTitle">
    <string>Power Save</string>
   </property>
-  <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="0" colspan="2">
-    <widget class="QGroupBox" name="batteryGroupBox">
-     <property name="toolTip">
-      <string>Toggles the Battery Profile monitoring feature.  Check this if you want KToshiba to manage additional power saving features.</string>
+  <layout class="QFormLayout" name="formLayout_2">
+   <item row="0" column="0">
+    <widget class="QLabel" name="battery_profiles_label">
+     <property name="text">
+      <string>Battery Profile:</string>
      </property>
-     <property name="whatsThis">
-      <string>Toggles the Battery Profile monitoring feature.  Check this if you want KToshiba to manage additional power saving features.</string>
-     </property>
-     <property name="title">
-      <string>Manage Battery Profiles</string>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <layout class="QFormLayout" name="formLayout_1">
-      <item row="0" column="0">
-       <widget class="QLabel" name="battery_profiles_label">
-        <property name="text">
-         <string>Battery Profile:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="battery_profiles_combobox">
-        <property name="toolTip">
-         <string>Changes the current Battery Profile.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Changes the current Battery Profile.</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Performance</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Powersave</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Presentation</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ECO</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QGroupBox" name="coolingGroupBox">
+   <item row="0" column="1">
+    <widget class="QComboBox" name="battery_profiles_combobox">
      <property name="toolTip">
-      <string>Toggles the Cooling Method monitoring feature.  The laptop fan changes its speed according to the method selected.</string>
+      <string>Changes the current Battery Profile.</string>
      </property>
      <property name="whatsThis">
-      <string>Toggles the Cooling Method monitoring feature.  The laptop fan changes its speed according to the method selected.</string>
-     </property>
-     <property name="title">
-      <string>Cooling Method</string>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <layout class="QFormLayout" name="formLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="cooling_method_battery_label">
-        <property name="text">
-         <string>Cooling Method on battery:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="cooling_method_battery_combobox">
-        <property name="toolTip">
-         <string>Changes the fan Cooling Method when the laptop is running on battery.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Changes the fan Cooling Method when the laptop is running on battery.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="cooling_method_plugged_label">
-        <property name="text">
-         <string>Cooling Method plugged in:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="cooling_method_plugged_combobox">
-        <property name="toolTip">
-         <string>Changes the fan Cooling Method when the laptop is connected to AC.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Changes the fan Cooling Method when the laptop is connected to AC.</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="sata_iface_label">
-      <property name="text">
-       <string>SATA Interface Setting mode:</string>
-      </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QComboBox" name="sata_iface_combobox">
-     <property name="toolTip">
-      <string>Changes the SATA interface setting mode.</string>
-     </property>
-     <property name="whatsThis">
-      <string>Changes the SATA interface setting mode.</string>
+      <string>Changes the current Battery Profile.</string>
      </property>
      <item>
       <property name="text">
@@ -156,9 +37,135 @@
      </item>
      <item>
       <property name="text">
-       <string>Battery Life</string>
+       <string>Powersave</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Presentation</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>eco Mode</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="batteryGroupBox">
+     <property name="title">
+      <string>Battery Profile Settings</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="cooling_method_label">
+        <property name="text">
+         <string>Cooling Method:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="cooling_method_combobox">
+        <property name="toolTip">
+         <string>Changes the fan Cooling Method.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the fan Cooling Method.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="sata_iface_label">
+        <property name="text">
+         <string>SATA Interface Setting mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="sata_iface_combobox">
+        <property name="toolTip">
+         <string>Changes the SATA interface setting mode.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the SATA interface setting mode.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Performance</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Battery Life</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="odd_power_label">
+        <property name="text">
+         <string>ODD Power Support:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="odd_power_combobox">
+        <property name="toolTip">
+         <string>Changes the ODD power setting.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the ODD power setting.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Disabled</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Enabled</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="illumination_label">
+        <property name="text">
+         <string>Illumination:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="illumination_combobox">
+        <property name="toolTip">
+         <string>Changes the laptop Illumination.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Changes the laptop Illumination.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Disabled</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Enabled</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

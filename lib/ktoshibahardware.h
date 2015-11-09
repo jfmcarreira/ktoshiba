@@ -45,6 +45,7 @@ public:
 
     enum TCIRegisters {
         /* HCI Registers */
+        ODD_POWER_SUPPORT    = 0x0076,
         COOLING_METHOD       = 0x007f,
         KBD_ILLUM_LED        = 0x0095,
         ECO_LED              = 0x0097,
@@ -79,6 +80,18 @@ public:
         NOT_INSTALLED      = 0x8e00,
     };
 
+    enum ODDPowerStates {
+        ODD_DISABLED = 0x0100,
+        ODD_ENABLED  = 0x0101,
+    };
+
+    enum CoolingMethods {
+        MAXIMUM_PERFORMANCE = 0,
+        BATTERY_OPTIMIZED   = 1,
+        PERFORMANCE         = 1,
+        BATTERY_OPTIMIZED2  = 2,
+    };
+
     enum USBSleepChargeModes {
         DISABLED  = 0x00,
         ALTERNATE = 0x09,
@@ -100,17 +113,9 @@ public:
         OFF   = 0x10,
     };
 
-    enum CoolingMethods {
-        MAXIMUM_PERFORMANCE = 0,
-        BATTERY_OPTIMIZED   = 1,
-        HIGH_PERFORMANCE    = 0,
-        BALANCED            = 1,
-        POWER_SAVER         = 2,
-    };
-
     enum SATAInterfaceSettingMode {
-        PERFORMANCE,
-        BATTERY_LIFE,
+        SATA_PERFORMANCE,
+        SATA_BATTERY_LIFE,
     };
 
     enum BootSpeedModes {
@@ -138,20 +143,20 @@ public:
      */
     quint32 getPointingDevice();
     void setPointingDevice(quint32);
-    quint32 getIllumination();
-    void setIllumination(quint32);
-    quint32 getEcoLed();
-    void setEcoLed(quint32);
+    quint32 getIlluminationLED();
+    void setIlluminationLED(quint32);
+    quint32 getEcoLED();
+    void setEcoLED(quint32);
     quint32 getKBDBacklight(int *, int *, int *);
     void setKBDBacklight(int, int);
     quint32 getUSBSleepCharge(int *, int *, int *);
     void setUSBSleepCharge(int, int);
-    quint32 getUSBSleepFunctionsBatLvl(int *, int *);
-    void setUSBSleepFunctionsBatLvl(int, int);
+    quint32 getSleepFunctionsOnBatteryStatus(int *, int *);
+    void setSleepFunctionsOnBatteryStatus(int, int);
     quint32 getUSBRapidCharge();
     void setUSBRapidCharge(quint32);
-    quint32 getUSBSleepMusic();
-    void setUSBSleepMusic(quint32);
+    quint32 getSleepMusic();
+    void setSleepMusic(quint32);
     quint32 getKBDFunctions();
     void setKBDFunctions(quint32);
     quint32 getPanelPowerON();
@@ -174,6 +179,8 @@ public:
     void setSATAInterfaceSetting(quint32);
     quint32 getBootSpeed();
     void setBootSpeed(quint32);
+    quint32 getODDPower();
+    void setODDPower(quint32);
 
 Q_SIGNALS:
     void touchpadToggled(int);
