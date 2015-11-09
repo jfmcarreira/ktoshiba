@@ -16,6 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
+
 #include <KLocalizedString>
 
 #include "powersave.h"
@@ -31,14 +33,28 @@ PowerSave::PowerSave(QWidget *parent)
 
     m_coolingMethodSupported = isCoolingMethodSupported();
     m_sataInterfaceSupported = isSATAInterfaceSupported();
+    m_oddPowerSupported = isODDPowerSupported();
+    m_illuminationLEDSupported = isIlluminationLEDSupported();
 
     powersave = KConfigGroup(m_config, "Powersave");
     if (!powersave.exists()) {
-        powersave.writeEntry("BatteryProfiles", true);
-        powersave.writeEntry("CurrentProfile", 0);
-        powersave.writeEntry("ManageCoolingMethod", true);
-        powersave.writeEntry("CoolingMethodOnBattery", 1);
-        powersave.writeEntry("CoolingMethodPluggedIn", 0);
+        powersave.writeEntry("BatteryProfile", 0);
+        powersave.writeEntry("PerformanceSATAInterface", 0);
+        powersave.writeEntry("PerformanceCoolingMethod", 0);
+        powersave.writeEntry("PerformanceODDPower", 1);
+        powersave.writeEntry("PerformanceIlluminationLED", 1);
+        powersave.writeEntry("PowersaveSATAInterface", 1);
+        powersave.writeEntry("PowersaveCoolingMethod", 1);
+        powersave.writeEntry("PowersaveODDPower", 1);
+        powersave.writeEntry("PowersaveIlluminationLED", 0);
+        powersave.writeEntry("PresentationSATAInterface", 0);
+        powersave.writeEntry("PresentationCoolingMethod", 1);
+        powersave.writeEntry("PresentationODDPower", 1);
+        powersave.writeEntry("PresentationIlluminationLED", 0);
+        powersave.writeEntry("EcoSATAInterface", 1);
+        powersave.writeEntry("EcoCoolingMethod", 1);
+        powersave.writeEntry("EcoODDPower", 0);
+        powersave.writeEntry("EcoIlluminationLED", 0);
         powersave.sync();
     }
 }
@@ -50,6 +66,14 @@ bool PowerSave::isCoolingMethodSupported()
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
         return false;
 
+    m_coolingMethods << i18n("Maximum Performance");
+    if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED)
+        m_coolingMethods << i18n("Battery Optimized");
+    else if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED2)
+        m_coolingMethods << i18n("Performance") << i18n("Battery Optimized");
+
+    cooling_method_combobox->addItems(m_coolingMethods);
+
     return true;
 }
 
@@ -57,117 +81,207 @@ bool PowerSave::isSATAInterfaceSupported()
 {
     m_sataInterface = m_sys->hw()->getSATAInterfaceSetting();
 
-    if (m_sataInterface != KToshibaHardware::PERFORMANCE
-        && m_sataInterface != KToshibaHardware::BATTERY_LIFE)
+    if (m_sataInterface != KToshibaHardware::SATA_PERFORMANCE
+        && m_sataInterface != KToshibaHardware::SATA_BATTERY_LIFE)
         return false;
 
     return true;
 }
 
+bool PowerSave::isODDPowerSupported()
+{
+    m_oddPower = m_sys->hw()->getODDPower();
+
+    if (m_oddPower != KToshibaHardware::ODD_DISABLED && m_oddPower != KToshibaHardware::ODD_ENABLED)
+        return false;
+
+    return true;
+}
+
+bool PowerSave::isIlluminationLEDSupported()
+{
+    m_illuminationLED = m_sys->hw()->getIlluminationLED();
+
+    if (m_illuminationLED != KToshibaHardware::DEACTIVATED
+        && m_illuminationLED != KToshibaHardware::ACTIVATED)
+        return false;
+
+    return true;
+}
+
+void PowerSave::loadProfile(int profile)
+{
+    switch (profile) {
+    case Performance:
+        m_cooling = powersave.readEntry("PerformanceCoolingMethod", 0);
+        m_sata = powersave.readEntry("PerformanceSATAInterface", 0);
+        m_odd = powersave.readEntry("PerformanceODDPower", 1);
+        m_illumination = powersave.readEntry("PerformanceIlluminationLED", 1);
+        break;
+    case Powersave:
+        m_cooling = powersave.readEntry("PowersaveCoolingMethod", 1);
+        m_sata = powersave.readEntry("PowersaveSATAInterface", 1);
+        m_odd = powersave.readEntry("PowersaveODDPower", 1);
+        m_illumination = powersave.readEntry("PowersaveIlluminationLED", 0);
+        break;
+    case Presentation:
+        m_cooling = powersave.readEntry("PresentationCoolingMethod", 0);
+        m_sata = powersave.readEntry("PresentationSATAInterface", 1);
+        m_odd = powersave.readEntry("PresentationODDPower", 1);
+        m_illumination = powersave.readEntry("PresentationIlluminationLED", 0);
+        break;
+    case ECO:
+        m_cooling = powersave.readEntry("EcoCoolingMethod", 1);
+        m_sata = powersave.readEntry("EcoSATAInterface", 1);
+        m_odd = powersave.readEntry("EcoODDPower", 0);
+        m_illumination = powersave.readEntry("EcoIlluminationLED", 0);
+        break;
+    }
+
+    if (m_coolingMethodSupported)
+        cooling_method_combobox->setCurrentIndex(m_cooling);
+    if (m_sataInterfaceSupported)
+        sata_iface_combobox->setCurrentIndex(m_sata);
+    if (m_oddPowerSupported)
+        odd_power_combobox->setCurrentIndex(m_odd);
+    if (m_illuminationLEDSupported)
+        illumination_combobox->setCurrentIndex(m_illumination);
+}
+
+void PowerSave::saveProfile(int profile)
+{
+    switch (profile) {
+    case Performance:
+        powersave.writeEntry("PerformanceSATAInterface", 0);
+        powersave.writeEntry("PerformanceCoolingMethod", 0);
+        powersave.writeEntry("PerformanceODDPower", 1);
+        powersave.writeEntry("PerformanceIlluminationLED", 1);
+        break;
+    case Powersave:
+        powersave.writeEntry("PowersaveSATAInterface", 1);
+        powersave.writeEntry("PowersaveCoolingMethod", 1);
+        powersave.writeEntry("PowersaveODDPower", 1);
+        powersave.writeEntry("PowersaveIlluminationLED", 0);
+        break;
+    case Presentation:
+        powersave.writeEntry("PresentationSATAInterface", 0);
+        powersave.writeEntry("PresentationCoolingMethod", 1);
+        powersave.writeEntry("PresentationODDPower", 1);
+        powersave.writeEntry("PresentationIlluminationLED", 0);
+        break;
+    case ECO:
+        powersave.writeEntry("EcoSATAInterface", 1);
+        powersave.writeEntry("EcoCoolingMethod", 1);
+        powersave.writeEntry("EcoODDPower", 0);
+        powersave.writeEntry("EcoIlluminationLED", 0);
+        break;
+    }
+    powersave.sync();
+}
+
 void PowerSave::load()
 {
     // Battery Profiles
-    m_manageBatteryProfiles = powersave.readEntry("BatteryProfiles", true);
-    batteryGroupBox->setChecked(m_manageBatteryProfiles);
-    m_batteryProfile = powersave.readEntry("CurrentProfile", 0);
+    m_batteryProfile = powersave.readEntry("BatteryProfile", 0);
     battery_profiles_combobox->setCurrentIndex(m_batteryProfile);
     // Cooling Method
-    if (m_coolingMethodSupported) {
-        m_coolingMethodType1 << i18n("Maximum Performance") << i18n("Battery Optimized");
-        m_coolingMethodType2 << i18n("High Performance") << i18n("Balanced") << i18n("Power Saver");
-        if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED) {
-            cooling_method_battery_combobox->addItems(m_coolingMethodType1);
-            cooling_method_plugged_combobox->addItems(m_coolingMethodType1);
-        } else if (m_maxCoolingMethod == KToshibaHardware::POWER_SAVER) {
-            cooling_method_battery_combobox->addItems(m_coolingMethodType2);
-            cooling_method_plugged_combobox->addItems(m_coolingMethodType2);
-        }
-
-        if (!powersave.exists()) {
-            powersave.sync();
-        }
-        m_manageCoolingMethod = powersave.readEntry("ManageCoolingMethod", true);
-        coolingGroupBox->setChecked(m_manageCoolingMethod);
-        m_coolingMethodBattery = powersave.readEntry("CoolingMethodOnBattery", 0);
-        cooling_method_battery_combobox->setCurrentIndex(m_coolingMethodBattery);
-        m_coolingMethodPlugged = powersave.readEntry("CoolingMethodPluggedIn", 1);
-        cooling_method_plugged_combobox->setCurrentIndex(m_coolingMethodPlugged);
-    } else {
-        coolingGroupBox->setEnabled(false);
+    if (!m_coolingMethodSupported) {
+        cooling_method_label->setEnabled(false);
+        cooling_method_combobox->setEnabled(false);
     }
     // SATA Interface Setting
-    if (m_sataInterfaceSupported) {
-        sata_iface_combobox->setCurrentIndex(m_sataInterface);
-    } else {
+    if (!m_sataInterfaceSupported) {
         sata_iface_label->setEnabled(false);
         sata_iface_combobox->setEnabled(false);
     }
+    // Optical Disc Device (ODD) Power Support
+    if (!m_oddPowerSupported) {
+        odd_power_label->setEnabled(false);
+        odd_power_combobox->setEnabled(false);
+    }
+    // Illumunation LED
+    if (!m_illuminationLEDSupported) {
+        illumination_label->setEnabled(false);
+        illumination_combobox->setEnabled(false);
+    }
+
+    loadProfile(m_batteryProfile);
 }
 
 void PowerSave::save()
 {
+    bool config_changed = false;
+
     // Battery Profiles
-    bool tmp = batteryGroupBox->isChecked();
-    if (m_manageBatteryProfiles != tmp) {
-        powersave.writeEntry("BatteryProfiles", tmp);
-        m_manageBatteryProfiles = tmp;
-        emit configFileChanged();
-    }
-    int tmp2 = battery_profiles_combobox->currentIndex();
-    if (m_batteryProfile != tmp2) {
-        powersave.writeEntry("CurrentProfile", tmp2);
-        m_batteryProfile = tmp2;
-        emit configFileChanged();
+    int tmp = battery_profiles_combobox->currentIndex();
+    if (m_batteryProfile != tmp) {
+        config_changed = true;
+        powersave.writeEntry("BatteryProfile", tmp);
+        powersave.sync();
+        m_batteryProfile = tmp;
     }
     // Cooling Method
     if (m_coolingMethodSupported) {
-        tmp = coolingGroupBox->isChecked();
-        if (m_manageCoolingMethod != tmp) {
-            powersave.writeEntry("ManageCoolingMethod", tmp);
-            m_manageCoolingMethod = tmp;
-            emit configFileChanged();
-        }
-        tmp2 = cooling_method_battery_combobox->currentIndex();
-        if (m_coolingMethodBattery != tmp2) {
-            powersave.writeEntry("CoolingMethodOnBattery", tmp2);
-            m_coolingMethodBattery = tmp2;
-            emit configFileChanged();
-        }
-        tmp2 = cooling_method_plugged_combobox->currentIndex();
-        if (m_coolingMethodPlugged != tmp2) {
-            powersave.writeEntry("CoolingMethodPluggedIn", tmp2);
-            m_coolingMethodPlugged = tmp2;
-            emit configFileChanged();
+        m_cooling = cooling_method_combobox->currentIndex();
+        if (m_coolingMethod != m_cooling) {
+            config_changed = true;
+            m_sys->hw()->setCoolingMethod(m_cooling);
+            m_coolingMethod = m_cooling;
         }
     }
-    powersave.sync();
     // SATA Interface Setting
     if (m_sataInterfaceSupported) {
-        tmp2 = sata_iface_combobox->currentIndex();
-        if (m_sataInterface != tmp2) {
-            m_sys->hw()->setSATAInterfaceSetting(tmp);
-            m_sataInterface = tmp2;
+        m_sata = sata_iface_combobox->currentIndex();
+        if (m_sataInterface != m_sata) {
+            config_changed = true;
+            m_sys->hw()->setSATAInterfaceSetting(m_sata);
+            m_sataInterface = m_sata;
         }
     }
+    // Optical Disc Device (ODD) Power Support
+    if (m_oddPowerSupported) {
+        m_odd = odd_power_combobox->currentIndex();
+        if (m_oddPower != (0x100 | m_odd)) {
+            config_changed = true;
+            m_sys->hw()->setODDPower((0x100 | m_odd));
+            m_oddPower = (0x100 | m_odd);
+        }
+    }
+    // Illumunation LED
+    if (m_illuminationLEDSupported) {
+        m_illumination = illumination_combobox->currentIndex();
+        if (m_illuminationLED != m_illumination) {
+            config_changed = true;
+            m_sys->hw()->setIlluminationLED(m_illumination);
+            m_illuminationLED = m_illumination;
+        }
+    }
+
+    if (config_changed) {
+        saveProfile(m_batteryProfile);
+        emit configFileChanged();
+    }
+        
 }
 
 void PowerSave::defaults()
 {
     // Battery Profiles
-    if (!m_manageBatteryProfiles)
-        batteryGroupBox->setChecked(true);
-    if (m_batteryProfile != Performance)
+    if (m_batteryProfile != Performance) {
+        m_batteryProfile = Performance;
         battery_profiles_combobox->setCurrentIndex(Performance);
-    // Cooling Method
-    if (m_coolingMethodSupported) {
-        if (!m_manageCoolingMethod)
-            coolingGroupBox->setChecked(true);
-        if (m_coolingMethodBattery != KToshibaHardware::MAXIMUM_PERFORMANCE)
-            cooling_method_battery_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
-        if (m_coolingMethodPlugged != KToshibaHardware::BATTERY_OPTIMIZED)
-            cooling_method_plugged_combobox->setCurrentIndex(KToshibaHardware::BATTERY_OPTIMIZED);
     }
+    // Cooling Method
+    if (m_coolingMethodSupported)
+        if (m_coolingMethod != KToshibaHardware::MAXIMUM_PERFORMANCE)
+            cooling_method_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
     // SATA Interface Setting
-    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::PERFORMANCE)
-        sata_iface_combobox->setCurrentIndex(0);
+    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::SATA_PERFORMANCE)
+        sata_iface_combobox->setCurrentIndex(KToshibaHardware::SATA_PERFORMANCE);
+    // Optical Disc Device (ODD) Power Support
+    if (m_oddPowerSupported && m_oddPower != KToshibaHardware::ODD_ENABLED)
+        odd_power_combobox->setCurrentIndex(KToshibaHardware::ODD_ENABLED);
+    // Illumunation LED
+    if (m_illuminationLEDSupported && m_illuminationLED != KToshibaHardware::ACTIVATED)
+        illumination_combobox->setCurrentIndex(KToshibaHardware::ACTIVATED);
 }

@@ -203,18 +203,18 @@ void KToshibaSystemSettings::load()
      */
     m_power->load();
 
-    connect(m_power->batteryGroupBox, SIGNAL(toggled(bool)),
-            this, SLOT(configChanged()));
     connect(m_power->battery_profiles_combobox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(configChanged()));
-    connect(m_power->coolingGroupBox, SIGNAL(toggled(bool)),
-            this, SLOT(configChanged()));
-    connect(m_power->cooling_method_battery_combobox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(configChanged()));
-    connect(m_power->cooling_method_plugged_combobox, SIGNAL(currentIndexChanged(int)),
+            m_power, SLOT(loadProfile(int)));
+    connect(m_power->battery_profiles_combobox, SIGNAL(currentIndexChanged(int)),
+            m_power, SLOT(configChanged()));
+    connect(m_power->cooling_method_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
     connect(m_power->sata_iface_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChangedReboot()));
+    connect(m_power->odd_power_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChanged()));
+    connect(m_power->illumination_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChanged()));
 }
 
 void KToshibaSystemSettings::save()

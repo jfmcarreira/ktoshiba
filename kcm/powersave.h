@@ -44,28 +44,39 @@ public:
 Q_SIGNALS:
     void configFileChanged();
 
+public Q_SLOTS:
+    void loadProfile(int);
+
 private:
     bool isCoolingMethodSupported();
     bool isSATAInterfaceSupported();
+    bool isODDPowerSupported();
+    bool isIlluminationLEDSupported();
+    void saveProfile(int);
 
     KToshibaSystemSettings *m_sys;
     KSharedConfigPtr m_config;
     KConfigGroup powersave;
 
-    bool m_manageBatteryProfiles;
     int m_batteryProfile;
+    int m_cooling;
+    int m_sata;
+    int m_odd;
+    int m_illumination;
 
     bool m_coolingMethodSupported;
-    QStringList m_coolingMethodType1;
-    QStringList m_coolingMethodType2;
+    QStringList m_coolingMethods;
     int m_coolingMethod;
     int m_maxCoolingMethod;
-    bool m_manageCoolingMethod;
-    int m_coolingMethodBattery;
-    int m_coolingMethodPlugged;
 
     bool m_sataInterfaceSupported;
     int m_sataInterface;
+
+    bool m_oddPowerSupported;
+    int m_oddPower;
+
+    bool m_illuminationLEDSupported;
+    int m_illuminationLED;
 };
 
 #endif // POWERSAVE_H

@@ -177,7 +177,7 @@ void KToshibaHardware::setPointingDevice(quint32 state)
         printSMMError("setPointingDevice", regs.eax);
 }
 
-quint32 KToshibaHardware::getIllumination()
+quint32 KToshibaHardware::getIlluminationLED()
 {
     regs = { SCI_READ, ILLUMINATION_LED, 0, 0, 0, 0 };
 
@@ -196,7 +196,7 @@ quint32 KToshibaHardware::getIllumination()
     return regs.ecx;
 }
 
-void KToshibaHardware::setIllumination(quint32 state)
+void KToshibaHardware::setIlluminationLED(quint32 state)
 {
     regs = { SCI_WRITE, ILLUMINATION_LED, state, 0, 0, 0 };
 
@@ -216,7 +216,7 @@ void KToshibaHardware::setIllumination(quint32 state)
         printSMMError("setIllumination", regs.eax);
 }
 
-quint32 KToshibaHardware::getEcoLed()
+quint32 KToshibaHardware::getEcoLED()
 {
     regs = { HCI_READ, ECO_LED, 0, 0, 0, 0 };
 
@@ -248,7 +248,7 @@ quint32 KToshibaHardware::getEcoLed()
     return regs.ecx;
 }
 
-void KToshibaHardware::setEcoLed(quint32 state)
+void KToshibaHardware::setEcoLED(quint32 state)
 {
     regs = { HCI_WRITE, ECO_LED, state, 0, 0, 0 };
 
@@ -350,7 +350,7 @@ void KToshibaHardware::setUSBSleepCharge(int mode, int base)
         printSMMError("setUSBSleepCharge", regs.eax);
 }
 
-quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
+quint32 KToshibaHardware::getSleepFunctionsOnBatteryStatus(int *state, int *level)
 {
     regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
@@ -371,7 +371,7 @@ quint32 KToshibaHardware::getUSBSleepFunctionsBatLvl(int *state, int *level)
     return regs.eax;
 }
 
-void KToshibaHardware::setUSBSleepFunctionsBatLvl(int state, int level)
+void KToshibaHardware::setSleepFunctionsOnBatteryStatus(int state, int level)
 {
     regs = { SCI_WRITE, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
@@ -432,7 +432,7 @@ void KToshibaHardware::setUSBRapidCharge(quint32 state)
         printSMMError("setUSBRapidCharge", regs.eax);
 }
 
-quint32 KToshibaHardware::getUSBSleepMusic()
+quint32 KToshibaHardware::getSleepMusic()
 {
     regs = { SCI_READ, SLEEP_MUSIC, 0, 0, 0, 0 };
 
@@ -451,7 +451,7 @@ quint32 KToshibaHardware::getUSBSleepMusic()
     return regs.ecx;
 }
 
-void KToshibaHardware::setUSBSleepMusic(quint32 state)
+void KToshibaHardware::setSleepMusic(quint32 state)
 {
     regs = { SCI_WRITE, SLEEP_MUSIC, state, 0, 0, 0 };
 
@@ -727,7 +727,7 @@ void KToshibaHardware::setCoolingMethod(quint32 mode)
 {
     regs = { HCI_WRITE, COOLING_METHOD, mode, 0, 0, 0 };
 
-    if (mode != MAXIMUM_PERFORMANCE && mode != BATTERY_OPTIMIZED && mode != POWER_SAVER) {
+    if (mode != MAXIMUM_PERFORMANCE && mode != BATTERY_OPTIMIZED && mode != PERFORMANCE) {
         printSMMError("setCoolingMethod", INPUT_DATA_ERROR);
 
         return;
@@ -844,7 +844,7 @@ void KToshibaHardware::setSATAInterfaceSetting(quint32 mode)
 {
     regs = { SCI_WRITE, SATA_IFACE_SETTING, mode, 0, 0, 0 };
 
-    if (mode != PERFORMANCE && mode != BATTERY_LIFE) {
+    if (mode != SATA_PERFORMANCE && mode != SATA_BATTERY_LIFE) {
         printSMMError("setSATAInterfaceSetting", INPUT_DATA_ERROR);
 
         return;
@@ -897,4 +897,43 @@ void KToshibaHardware::setBootSpeed(quint32 state)
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
         printSMMError("setBootSpeed", regs.eax);
+}
+
+quint32 KToshibaHardware::getODDPower()
+{
+    regs = { HCI_READ, ODD_POWER_SUPPORT, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getODDPower", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getODDPower", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setODDPower(quint32 state)
+{
+    regs = { HCI_WRITE, ODD_POWER_SUPPORT, state, 0, 0, 0 };
+
+    if (state != ODD_DISABLED && state != ODD_ENABLED) {
+        printSMMError("setODDPower", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setODDPower", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+        printSMMError("setODDPower", regs.eax);
 }

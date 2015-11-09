@@ -24,10 +24,12 @@
 #include <QStringList>
 
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "ui_statuswidget.h"
 
 class QTimer;
+class QWidget;
 
 class KToshibaDBusInterface;
 class KToshibaNetlinkEvents;
@@ -43,8 +45,8 @@ public:
     ~FnActions();
     bool init();
 
-    enum ToogleActions { Off, On };
     enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
+    Q_ENUM(BatteryProfiles)
     enum KeyboardBacklightGenerations { FirstGeneration = 1, SecondGeneration = 2 };
 
     KToshibaHardware *hw() const
@@ -56,63 +58,71 @@ Q_SIGNALS:
     void vibrationDetected();
 
 private Q_SLOTS:
-    bool checkConfig();
-    void loadConfig();
-    void createConfig();
+    void reloadConfig();
     void hideWidget();
     void compositingChanged(bool);
     void processHotkey(int);
     void parseTVAPEvents(int);
     void protectHDD(int);
-    void updateBatteryProfile();
-    void updateCoolingMethod(QString);
+    void updateBatteryProfile(QString);
 
 private:
+    bool checkConfig();
+    void loadConfig();
+    void createConfig();
     void showWidget();
     void changeProfile(int, bool);
     void toggleProfiles();
+    BatteryProfiles toBatteryProfiles(int);
     void toggleTouchPad();
     void updateKBDBacklight();
     bool isPointingDeviceSupported();
+    bool isKBDBacklightSupported();
+    bool isSATAInterfaceSupported();
+    bool isCoolingMethodSupported();
+    bool isODDPowerSupported();
     bool isIlluminationSupported();
     bool isECOSupported();
-    bool isKBDBacklightSupported();
-    bool isCoolingMethodSupported();
-
-    KSharedConfigPtr m_config;
-
-    bool m_pointing;
-    bool m_illumination;
-    bool m_eco;
-    bool m_kbdBacklight;
-    bool m_cooling;
-    int m_hdd;
 
     KToshibaDBusInterface *m_dBus;
     KToshibaNetlinkEvents *m_nl;
     KToshibaKeyHandler *m_hotkeys;
     KToshibaHardware *m_hw;
     Ui::StatusWidget m_statusWidget;
+    KSharedConfigPtr m_config;
+    KConfigGroup powersave;
+    KConfigGroup hdd;
+
     QWidget *m_widget;
     QTimer *m_widgetTimer;
-    QList<int> m_batteryProfiles;
-    QList<int> m_keyboardModes;
-    QString m_version;
     QString m_iconText;
-    bool m_batteryKeyPressed;
-    bool m_monitorBatteryProfiles;
-    bool m_manageCoolingMethod;
-    bool m_monitorHDD;
-    bool m_notifyHDD;
-    uint m_cookie;
+
+    bool m_pointingSupported;
+    int m_pointing;
+
+    QList<int> m_keyboardModes;
+    bool m_kbdBacklightSupported;
     int m_keyboardType;
     int m_keyboardMode;
     int m_keyboardTime;
+
+    QList<int> m_batteryProfiles;
+    bool m_sataInterfaceSupported;
+    bool m_coolingMethodSupported;
+    bool m_oddPowerSupported;
+    bool m_illuminationSupported;
+    bool m_ecoSupported;
     int m_batteryProfile;
     int m_previousBatteryProfile;
-    int m_maxCoolingMethod;
-    int m_coolingMethodPluggedIn;
-    int m_coolingMethodOnBattery;
+    int m_sata;
+    int m_cooling;
+    int m_odd;
+    int m_illumination;
+
+    bool m_monitorHDD;
+    bool m_notifyHDD;
+    uint m_cookie;
+    int m_hdd;
 };
 
 #endif // FN_ACTIONS_H
