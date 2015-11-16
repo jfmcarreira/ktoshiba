@@ -27,6 +27,7 @@ target_link_libraries(ktoshiba
 	KF5::DBusAddons
 	KF5::ConfigCore
 	${LIBUDEV_LIBRARY}
+	${LIBMNL_LIBRARIES}
 )
 
 install(TARGETS ktoshiba ${INSTALL_TARGETS_DEFAULT_ARGS})

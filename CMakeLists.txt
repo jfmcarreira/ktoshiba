@@ -38,19 +38,22 @@ find_package(LibUDev REQUIRED)
 
 find_package(LinuxIncludes REQUIRED)
 
+find_package(LibMNL REQUIRED)
+
 include_directories(
 	${CMAKE_SOURCE_DIR}
 	${CMAKE_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
 	${CMAKE_CURRENT_BINARY_DIR}/lib
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${LIBMNL_INCLUDE_DIRS}
 )
 
 configure_file(config-ktoshiba.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktoshiba.h)
 
 add_definitions(-DHAVE_CONFIG_H=1 -D_DEFAULT_SOURCE)
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0 ${LIBNL3_FLAGS}")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0 ${LIBMNL_CFLAGS}")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
 
 add_subdirectory( lib )

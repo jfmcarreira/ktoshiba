@@ -25,22 +25,9 @@ extern "C" {
 #include <linux/genetlink.h>
 }
 
-/*
- * The following struct was taken from
- * linux ACPI event.c
- */
-typedef char acpi_device_class[20];
-
-struct acpi_genl_event {
-    acpi_device_class device_class;
-    char bus_id[15];
-    unsigned int type;
-    unsigned int data;
-};
+#include <libmnl/libmnl.h>
 
 class QSocketNotifier;
-
-class FnActions;
 
 class KToshibaNetlinkEvents : public QObject
 {
@@ -50,12 +37,12 @@ public:
     KToshibaNetlinkEvents(QObject *parent);
     ~KToshibaNetlinkEvents();
 
-    enum HDDState {
+    enum HAPSEvents {
         Vibrated   = 0x80,
         Stabilized = 0x81
     };
 
-    enum SystemEvents {
+    enum TVAPEvents {
         Hotkey               = 0x80,
         Docked               = 0x81,
         Undocked             = 0x82,
@@ -80,18 +67,12 @@ private Q_SLOTS:
 private:
     QString getDeviceHID();
 
-    struct sockaddr_nl m_nl;
-    struct genlmsghdr *m_genlmsghdr = NULL;
-    struct nlattr *m_nlattrhdr = NULL;
-    struct acpi_genl_event *m_event = NULL;
-
-    FnActions *m_fn;
+    struct mnl_socket *m_nl;
 
     QSocketNotifier *m_notifier;
     QStringList m_devices;
     QString m_deviceHID;
     char m_eventBuffer[1024];
-    int m_socket;
 };
 
 #endif // KTOSHIBANETLINKEVENTS_H

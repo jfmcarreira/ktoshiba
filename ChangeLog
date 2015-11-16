@@ -1,3 +1,12 @@
+2015-11-15 Azael Avalos <coproscefalo@gmail.com>
+	* We are now using libmnl for netlink communication
+
+2015-11-13 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the function names, but not the error strings...
+
+2015-11-11 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the error strings of the library helper function calls to match the rest
+
 2015-11-09 Azael Avalos <coproscefalo@gmail.com>
 	* Finished the new power save settings on KToshiba
 	* Added tooltips and whatsthis to newly added Power Save items
