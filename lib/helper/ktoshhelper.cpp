@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QStringList>
@@ -41,21 +40,25 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
 
     if (!m_supported) {
         reply = ActionReply::HelperErrorReply();
+        //reply.setErrorCode(0x8000);
+        reply.setErrorDescription("Feature is not supported");
 
         return reply;
     }
 
     if (level < 0 || level > 3) {
-        qWarning() << "The value was out of range";
         reply = ActionReply::HelperErrorReply();
+        //reply.setErrorCode(0x8300);
+        reply.setErrorDescription("Invalid parameters");
 
         return reply;
     }
 
     QFile file("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
     if (!file.open(QIODevice::WriteOnly)) {
-        qWarning() << "setprotectionlevel failed with error code" << file.error() << file.errorString();
         reply = ActionReply::HelperErrorReply();
+        //reply.setErrorCode(file.error());
+        reply.setErrorDescription(file.errorString());
 
         return reply;
     }
@@ -74,13 +77,16 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
 
     if (!m_supported) {
         reply = ActionReply::HelperErrorReply();
+        //reply.setErrorCode(0x8000);
+        reply.setErrorDescription("Feature is not supported");
 
         return reply;
     }
 
     if (timeout != 0 && timeout != 5000) {
-        qWarning() << "The value was out of range";
         reply = ActionReply::HelperErrorReply();
+        //reply.setErrorCode(0x8300);
+        reply.setErrorDescription("Invalid parameters");
 
         return reply;
     }
@@ -96,8 +102,9 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
             stream << timeout;
             file.close();
         } else {
-            qWarning() << "Could not protect" << hdd << "heads" << endl
-                       << "Received error code" << file.error() << file.errorString();
+            reply = ActionReply::HelperErrorReply();
+            //reply.setErrorCode(file.error());
+            reply.setErrorDescription(file.errorString());
         }
     }
 

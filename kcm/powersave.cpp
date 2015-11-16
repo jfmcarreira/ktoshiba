@@ -16,8 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
 #include <KLocalizedString>
 
 #include "powersave.h"

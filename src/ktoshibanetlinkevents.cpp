@@ -16,21 +16,15 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QCoreApplication>
 #include <QSocketNotifier>
 #include <QDir>
 #include <QDebug>
 
 extern "C" {
-#include <sys/socket.h>
-
-#include <unistd.h>
 #include <errno.h>
 }
 
 #include "ktoshibanetlinkevents.h"
-#include "ktoshibahardware.h"
-#include "fnactions.h"
 
 #define TOSHIBA_HAPS   "TOS620A:00"
 
@@ -38,26 +32,16 @@ extern "C" {
  * The following enums and defines were taken from
  * linux ACPI event.c
  */
-enum {
-    ACPI_GENL_ATTR_UNSPEC,
-    ACPI_GENL_ATTR_EVENT,
-    __ACPI_GENL_ATTR_MAX,
+struct acpi_genl_event {
+    char device_class[20];
+    char bus_id[15];
+    __u32 type;
+    __u32 data;
 };
-#define ACPI_GENL_ATTR_MAX (__ACPI_GENL_ATTR_MAX - 1)
-
-enum {
-    ACPI_GENL_CMD_UNSPEC,
-    ACPI_GENL_CMD_EVENT,
-    __ACPI_GENL_CMD_MAX,
-};
-#define ACPI_GENL_CMD_MAX (__ACPI_GENL_CMD_MAX - 1)
-
-#define ACPI_GENL_VERSION 0x01
 
 KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
     : QObject(parent),
-      m_notifier(NULL),
-      m_socket(-1)
+      m_notifier(NULL)
 {
 }
 
@@ -65,19 +49,53 @@ KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
 {
     if (m_notifier) {
         m_notifier->setEnabled(false);
-        delete m_notifier; m_notifier = NULL;
+        delete m_notifier;
     }
 
-    if (m_socket)
-        ::close(m_socket);
+    if (m_nl)
+        mnl_socket_close(m_nl);
+}
+
+static struct acpi_genl_event *m_event;
+
+static int callback_data(const struct nlmsghdr *nlh, void *data)
+{
+    Q_UNUSED(data)
+
+    if (nlh->nlmsg_type != 0x16) {
+        qWarning() << "Not an ACPI event message";
+
+        return MNL_CB_STOP;
+    }
+
+    int len = nlh->nlmsg_len;
+
+    len -= NLMSG_LENGTH(GENL_HDRLEN);
+    if (len < 0) {
+        qWarning() << "Wrong message len" << len;
+
+        return MNL_CB_ERROR;
+    }
+
+    ssize_t attroffset = GENL_HDRLEN + NLA_HDRLEN;
+
+    m_event = (acpi_genl_event *)mnl_nlmsg_get_payload_offset(nlh, attroffset);
+
+    qDebug() << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
+             << "Type:" << hex << m_event->type << "Data:" << m_event->data;
+
+    return MNL_CB_OK;
 }
 
 void KToshibaNetlinkEvents::parseEvents(int socket)
 {
-    if (socket < 0)
-        return;
+    if (socket < 0) {
+        qWarning() << "No socket to receive from...";
 
-    ssize_t len = ::recv(m_socket, m_eventBuffer, 1024, 0);
+        return;
+    }
+
+    ssize_t len = mnl_socket_recvfrom(m_nl, m_eventBuffer, sizeof(m_eventBuffer));
     if (len <= 0) {
         qCritical() << "Could not receive netlink data:" << strerror(errno);
 
@@ -86,40 +104,16 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
 
     qDebug() << "Data received from socket:" << socket;
 
-    m_genlmsghdr = (struct genlmsghdr *)(m_eventBuffer + NLMSG_HDRLEN);
-    if ((m_genlmsghdr->cmd != ACPI_GENL_CMD_EVENT) || (m_genlmsghdr->version != ACPI_GENL_VERSION)) {
-        qDebug() << "Not an ACPI netlink event";
+    if (mnl_cb_run(m_eventBuffer, len, 0, 0, callback_data, NULL) != MNL_CB_OK) {
+        qWarning() << "Callback error";
 
         return;
     }
 
-    ssize_t attroffset = NLMSG_HDRLEN + GENL_HDRLEN;
-    while (attroffset < len) {
-        m_nlattrhdr = (struct nlattr *)(m_eventBuffer + attroffset);
-        if ((m_nlattrhdr->nla_type != ACPI_GENL_ATTR_EVENT)
-            || (NLA_ALIGN(m_nlattrhdr->nla_len) != NLA_ALIGN(NLA_HDRLEN
-                    + sizeof(struct acpi_genl_event)))) {
-            qDebug() << "ACPI netlink event not valid";
-
-            return;
-        }
-
-        qDebug() << "Valid ACPI netlink event";
-        m_event = (struct acpi_genl_event *)(m_eventBuffer + attroffset + NLA_HDRLEN);
-
-        qDebug() << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
-                 << "Type:" << hex << m_event->type << "Data:" << m_event->data;
-
-        if (QString(m_event->bus_id) == TOSHIBA_HAPS) {
-            qDebug() << "HAPS event detected";
-            emit hapsEvent(m_event->type);
-        } else if (QString(m_event->bus_id) == m_deviceHID) {
-            qDebug() << "TVAP event detected";
-            emit tvapEvent(m_event->type);
-        }
-
-        attroffset += NLA_ALIGN(m_nlattrhdr->nla_len);
-    }
+    if (QString(m_event->bus_id) == TOSHIBA_HAPS)
+        emit hapsEvent(m_event->type);
+    else if (QString(m_event->bus_id) == m_deviceHID)
+        emit tvapEvent(m_event->type);
 }
 
 QString KToshibaNetlinkEvents::getDeviceHID()
@@ -137,35 +131,34 @@ QString KToshibaNetlinkEvents::getDeviceHID()
 
 bool KToshibaNetlinkEvents::attach()
 {
-    memset(&m_nl, 0, sizeof(struct sockaddr_nl));
-    m_nl.nl_family = AF_NETLINK;
-    m_nl.nl_pid = QCoreApplication::applicationPid();
-    m_nl.nl_groups = 0;
-    const int buffer = 16 * 1024 * 1024;
-
-    m_socket = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
-    if (m_socket < 0) {
+    m_nl = mnl_socket_open(NETLINK_GENERIC);
+    if (m_nl == NULL) {
         qCritical() << "Could not open netlink socket:" << strerror(errno);
 
         return false;
     }
 
-    setsockopt(m_socket, SOL_SOCKET, SO_RCVBUFFORCE, &buffer, sizeof(struct sockaddr_nl));
-
-    if (::bind(m_socket, (struct sockaddr *) &m_nl, sizeof(struct sockaddr_nl)) < 0) {
+    int group = 0x2;
+    if (mnl_socket_bind(m_nl, group, MNL_SOCKET_AUTOPID) < 0) {
         qCritical() << "Could not bind to netlink socket:" << strerror(errno);
-        ::close(m_socket);
 
         return false;
     }
 
-    qDebug() << "Binded to socket" << m_socket << "for events monitoring";
+    int socket = mnl_socket_get_fd(m_nl);
+    qDebug() << "Binded to socket" << socket << "for events monitoring";
+
+    if (mnl_socket_setsockopt(m_nl, NETLINK_ADD_MEMBERSHIP, &group, sizeof(int)) < 0) {
+        qCritical() << "Could not set socket options:" << strerror(errno);
+
+        return false;
+    }
 
     m_deviceHID = getDeviceHID();
     if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
         qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
 
-    m_notifier = new QSocketNotifier(m_socket, QSocketNotifier::Read, this);
+    m_notifier = new QSocketNotifier(socket, QSocketNotifier::Read, this);
 
     return connect(m_notifier, SIGNAL(activated(int)), this, SLOT(parseEvents(int)));
 }

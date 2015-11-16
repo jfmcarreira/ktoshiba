@@ -493,7 +493,6 @@ void FnActions::protectHDD(int event)
 
 void FnActions::parseTVAPEvents(int event)
 {
-    qDebug() << "Received event" << hex << event;
     switch (event) {
     case KToshibaNetlinkEvents::Hotkey:
         break;

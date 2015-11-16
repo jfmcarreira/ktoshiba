@@ -91,7 +91,7 @@ void KToshibaHardware::setProtectionLevel(int level)
     action.addArgument("level", level);
     ExecuteJob *job = action.execute();
     if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel failed";
+        qCritical() << "setProtectionLevel failed with error code" << job->error() << job->errorString();
 }
 
 void KToshibaHardware::unloadHeads(int timeout)
@@ -101,7 +101,7 @@ void KToshibaHardware::unloadHeads(int timeout)
     action.addArgument("timeout", timeout);
     ExecuteJob *job = action.execute();
     if (!job->exec())
-        qCritical() << "net.sourceforge.ktoshiba.ktoshhelper.unloadheads failed";
+        qCritical() << "unloadHeads failed with error code" << job->error() << job->errorString();
 }
 
 /*
@@ -182,13 +182,13 @@ quint32 KToshibaHardware::getIlluminationLED()
     regs = { SCI_READ, ILLUMINATION_LED, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("getIllumination", FAILURE);
+        printSMMError("getIlluminationLED", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        printSMMError("getIllumination", regs.eax);
+        printSMMError("getIlluminationLED", regs.eax);
 
         return regs.eax;
     }
@@ -201,19 +201,19 @@ void KToshibaHardware::setIlluminationLED(quint32 state)
     regs = { SCI_WRITE, ILLUMINATION_LED, state, 0, 0, 0 };
 
     if (state != DEACTIVATED && state != ACTIVATED) {
-        printSMMError("setIllumination", INPUT_DATA_ERROR);
+        printSMMError("setIlluminationLED", INPUT_DATA_ERROR);
 
         return;
     }
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("setIllumination", FAILURE);
+        printSMMError("setIlluminationLED", FAILURE);
 
         return;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        printSMMError("setIllumination", regs.eax);
+        printSMMError("setIlluminationLED", regs.eax);
 }
 
 quint32 KToshibaHardware::getEcoLED()
@@ -221,26 +221,26 @@ quint32 KToshibaHardware::getEcoLED()
     regs = { HCI_READ, ECO_LED, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("getEcoLed", FAILURE);
+        printSMMError("getEcoLED", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != INPUT_DATA_ERROR) {
-        printSMMError("getEcoLed", regs.eax);
+        printSMMError("getEcoLED", regs.eax);
 
         return regs.eax;
     }
 
     regs = { HCI_READ, ECO_LED, 0, 1, 0, 0 };
     if (tci_raw(&regs) < 0) {
-        printSMMError("getEcoLed", FAILURE);
+        printSMMError("getEcoLED", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        printSMMError("getEcoLed", regs.eax);
+        printSMMError("getEcoLED", regs.eax);
 
         return regs.eax;
     }
@@ -253,19 +253,19 @@ void KToshibaHardware::setEcoLED(quint32 state)
     regs = { HCI_WRITE, ECO_LED, state, 0, 0, 0 };
 
     if (state != DEACTIVATED && state != ACTIVATED) {
-        printSMMError("setEcoLed", INPUT_DATA_ERROR);
+        printSMMError("setEcoLED", INPUT_DATA_ERROR);
 
         return;
     }
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("setEcoLed", FAILURE);
+        printSMMError("setEcoLED", FAILURE);
 
         return;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        printSMMError("setEcoLed", regs.eax);
+        printSMMError("setEcoLED", regs.eax);
 }
 
 quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
@@ -355,13 +355,13 @@ quint32 KToshibaHardware::getSleepFunctionsOnBatteryStatus(int *state, int *leve
     regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("getUSBSleepFunctionsBatLvl", FAILURE);
+        printSMMError("getSleepFunctionsOnBatteryStatus", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        printSMMError("getUSBSleepFunctionsBatLvl", regs.eax);
+        printSMMError("getSleepFunctionsOnBatteryStatus", regs.eax);
     } else {
         int tmp = regs.ecx & 0x7;
         *state = (tmp == 0x4) ? ACTIVATED : DEACTIVATED;
@@ -376,7 +376,7 @@ void KToshibaHardware::setSleepFunctionsOnBatteryStatus(int state, int level)
     regs = { SCI_WRITE, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
     if ((level < 1 || level > 100) || (state != DEACTIVATED && state != ACTIVATED)) {
-        printSMMError("setUSBSleepFunctionsBatLvl", INPUT_DATA_ERROR);
+        printSMMError("setSleepFunctionsOnBatteryStatus", INPUT_DATA_ERROR);
 
         return;
     }
@@ -384,13 +384,13 @@ void KToshibaHardware::setSleepFunctionsOnBatteryStatus(int state, int level)
     regs.ecx = level << 0x10;
     regs.ecx |= (state == DEACTIVATED ? 0x1 : 0x4);
     if (tci_raw(&regs) < 0) {
-        printSMMError("setUSBSleepFunctionsBatLvl", FAILURE);
+        printSMMError("setSleepFunctionsOnBatteryStatus", FAILURE);
 
         return;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        printSMMError("setUSBSleepFunctionsBatLvl", regs.eax);
+        printSMMError("setSleepFunctionsOnBatteryStatus", regs.eax);
 }
 
 quint32 KToshibaHardware::getUSBRapidCharge()
@@ -437,13 +437,13 @@ quint32 KToshibaHardware::getSleepMusic()
     regs = { SCI_READ, SLEEP_MUSIC, 0, 0, 0, 0 };
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("getUSBSleepMusic", FAILURE);
+        printSMMError("getSleepMusic", FAILURE);
 
         return FAILURE;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
-        printSMMError("getUSBSleepMusic", regs.eax);
+        printSMMError("getSleepMusic", regs.eax);
 
         return regs.eax;
     }
@@ -456,19 +456,19 @@ void KToshibaHardware::setSleepMusic(quint32 state)
     regs = { SCI_WRITE, SLEEP_MUSIC, state, 0, 0, 0 };
 
     if (state != DEACTIVATED && state != ACTIVATED) {
-        printSMMError("setUSBSleepMusic", INPUT_DATA_ERROR);
+        printSMMError("setSleepMusic", INPUT_DATA_ERROR);
 
         return;
     }
 
     if (tci_raw(&regs) < 0) {
-        printSMMError("setUSBSleepMusic", FAILURE);
+        printSMMError("setSleepMusic", FAILURE);
 
         return;
     }
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
-        printSMMError("setUSBSleepMusic", regs.eax);
+        printSMMError("setSleepMusic", regs.eax);
 }
 
 quint32 KToshibaHardware::getKBDFunctions()
