@@ -5,6 +5,6 @@
 # to change this to the group "input" or "ktoshiba"
 # for example.
 
-SUBSYSTEMS=="input", ATTRS{name}=="Toshiba input device", MODE="0660", GROUP="users"
+#SUBSYSTEMS=="input", ATTRS{name}=="Toshiba input device", MODE="0660", GROUP="users"
 
 KERNEL=="toshiba_acpi", MODE="0660", GROUP="users"

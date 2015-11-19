@@ -206,7 +206,7 @@ void KToshibaSystemSettings::load()
     connect(m_power->battery_profiles_combobox, SIGNAL(currentIndexChanged(int)),
             m_power, SLOT(loadProfile(int)));
     connect(m_power->battery_profiles_combobox, SIGNAL(currentIndexChanged(int)),
-            m_power, SLOT(configChanged()));
+            this, SLOT(configChanged()));
     connect(m_power->cooling_method_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
     connect(m_power->sata_iface_combobox, SIGNAL(currentIndexChanged(int)),

@@ -21,10 +21,6 @@
 
 #include <QStringList>
 
-extern "C" {
-#include <linux/genetlink.h>
-}
-
 #include <libmnl/libmnl.h>
 
 class QSocketNotifier;
@@ -59,7 +55,8 @@ public:
 
 Q_SIGNALS:
     void hapsEvent(int);
-    void tvapEvent(int);
+    void tvapEvent(int, int);
+    void acAdapterChanged(int);
 
 private Q_SLOTS:
     void parseEvents(int);

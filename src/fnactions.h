@@ -33,7 +33,6 @@ class QWidget;
 
 class KToshibaDBusInterface;
 class KToshibaNetlinkEvents;
-class KToshibaKeyHandler;
 class KToshibaHardware;
 
 class FnActions : public QObject
@@ -47,12 +46,8 @@ public:
 
     enum BatteryProfiles { Performance, Powersave, Presentation, ECO };
     Q_ENUM(BatteryProfiles)
+    enum ACAdapterState { Disconnected, Connected };
     enum KeyboardBacklightGenerations { FirstGeneration = 1, SecondGeneration = 2 };
-
-    KToshibaHardware *hw() const
-    {
-        return m_hw;
-    }
 
 Q_SIGNALS:
     void vibrationDetected();
@@ -62,20 +57,20 @@ private Q_SLOTS:
     void hideWidget();
     void compositingChanged(bool);
     void processHotkey(int);
-    void parseTVAPEvents(int);
+    void parseTVAPEvents(int, int);
     void protectHDD(int);
-    void updateBatteryProfile(QString);
+    void updateBatteryProfile(int);
 
 private:
     bool checkConfig();
     void loadConfig();
     void createConfig();
     void showWidget();
-    void changeProfile(int, bool);
-    void toggleProfiles();
-    BatteryProfiles toBatteryProfiles(int);
+    void changeBatteryProfile(int, bool);
+    void toggleBatteryProfiles();
     void toggleTouchPad();
     void updateKBDBacklight();
+    void toggleKBDBacklight();
     bool isPointingDeviceSupported();
     bool isKBDBacklightSupported();
     bool isSATAInterfaceSupported();
@@ -83,10 +78,10 @@ private:
     bool isODDPowerSupported();
     bool isIlluminationSupported();
     bool isECOSupported();
+    bool isKeyboardFunctionsSupported();
 
     KToshibaDBusInterface *m_dBus;
     KToshibaNetlinkEvents *m_nl;
-    KToshibaKeyHandler *m_hotkeys;
     KToshibaHardware *m_hw;
     Ui::StatusWidget m_statusWidget;
     KSharedConfigPtr m_config;
@@ -123,6 +118,8 @@ private:
     bool m_notifyHDD;
     uint m_cookie;
     int m_hdd;
+
+    bool m_keyboardFunctionsSupported;
 };
 
 #endif // FN_ACTIONS_H
