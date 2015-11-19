@@ -21,6 +21,8 @@
 #include <QDebug>
 
 extern "C" {
+#include <linux/genetlink.h>
+
 #include <errno.h>
 }
 
@@ -29,8 +31,7 @@ extern "C" {
 #define TOSHIBA_HAPS   "TOS620A:00"
 
 /*
- * The following enums and defines were taken from
- * linux ACPI event.c
+ * The following struct was taken from linux ACPI event.c
  */
 struct acpi_genl_event {
     char device_class[20];
@@ -41,6 +42,7 @@ struct acpi_genl_event {
 
 KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
     : QObject(parent),
+      m_nl(NULL),
       m_notifier(NULL)
 {
 }
@@ -77,9 +79,9 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
         return MNL_CB_ERROR;
     }
 
-    ssize_t attroffset = GENL_HDRLEN + NLA_HDRLEN;
+    ssize_t offset = GENL_HDRLEN + NLA_HDRLEN;
 
-    m_event = (acpi_genl_event *)mnl_nlmsg_get_payload_offset(nlh, attroffset);
+    m_event = (acpi_genl_event *)mnl_nlmsg_get_payload_offset(nlh, offset);
 
     qDebug() << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
              << "Type:" << hex << m_event->type << "Data:" << m_event->data;
@@ -102,8 +104,6 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
         return;
     }
 
-    qDebug() << "Data received from socket:" << socket;
-
     if (mnl_cb_run(m_eventBuffer, len, 0, 0, callback_data, NULL) != MNL_CB_OK) {
         qWarning() << "Callback error";
 
@@ -113,7 +113,9 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
     if (QString(m_event->bus_id) == TOSHIBA_HAPS)
         emit hapsEvent(m_event->type);
     else if (QString(m_event->bus_id) == m_deviceHID)
-        emit tvapEvent(m_event->type);
+        emit tvapEvent(m_event->type, m_event->data);
+    else if (QString(m_event->device_class) == "ac_adapter")
+        emit acAdapterChanged(m_event->data);
 }
 
 QString KToshibaNetlinkEvents::getDeviceHID()
@@ -146,7 +148,7 @@ bool KToshibaNetlinkEvents::attach()
     }
 
     int socket = mnl_socket_get_fd(m_nl);
-    qDebug() << "Binded to socket" << socket << "for events monitoring";
+    qDebug() << "Binded to socket" << socket << "for genetlink ACPI events monitoring";
 
     if (mnl_socket_setsockopt(m_nl, NETLINK_ADD_MEMBERSHIP, &group, sizeof(int)) < 0) {
         qCritical() << "Could not set socket options:" << strerror(errno);

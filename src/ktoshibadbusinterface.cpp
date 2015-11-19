@@ -29,9 +29,6 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 {
     m_dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing",
                    "compositingToggled", QObject::parent(), SLOT(compositingChanged(bool)));
-    m_dbus.connect("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement",
-                   "org.kde.Solid.PowerManagement", "profileChanged",
-                   QObject::parent(), SLOT(updateBatteryProfile(QString)));
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()

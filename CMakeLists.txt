@@ -34,10 +34,6 @@ find_package(KF5 REQUIRED COMPONENTS
 	Config
 )
 
-find_package(LibUDev REQUIRED)
-
-find_package(LinuxIncludes REQUIRED)
-
 find_package(LibMNL REQUIRED)
 
 include_directories(

@@ -3,7 +3,6 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules ${
 
 set(KToshibaSources
     ktoshibadbusinterface.cpp
-    ktoshibakeyhandler.cpp
     ktoshibanetlinkevents.cpp
     fnactions.cpp
     ktoshiba.cpp
@@ -26,7 +25,6 @@ target_link_libraries(ktoshiba
 	KF5::Notifications
 	KF5::DBusAddons
 	KF5::ConfigCore
-	${LIBUDEV_LIBRARY}
 	${LIBMNL_LIBRARIES}
 )
 

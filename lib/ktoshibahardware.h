@@ -24,7 +24,7 @@
 #include <QMap>
 
 extern "C" {
-#include <linux/toshiba.h>
+#include "toshiba.h"
 }
 
 #include "ktoshibahardware_export.h"

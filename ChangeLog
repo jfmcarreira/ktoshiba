@@ -1,3 +1,21 @@
+2015-11-19 Azael Avalos <coproscefalo@gmail.com>
+	* Small updates to KBD Backlight functions in FnActions class
+	* Misc changes to battery profile functions, we now monitor the AC via netlink
+	  events
+	* Fixed the battery profile not changing when selected via KCM (wrong signal receiver)
+	* Fixed FnActions class not re-loading the configuration file correctly, and thus,
+	  the battery profiles nor the HDD monitoring and notification status got updated
+	* Dropped the KToshibaKeyHandler class and all related code
+
+2015-11-16 Azael Avalos <coproscefalo@gmail.com>
+	* Added query to Keyboard Functions in FnActions class to help determine
+	  which keyboard layout is being used, this is in preparation to drop UDev
+	  and the KToshibaKeyHandler class, as we are now getting hotkeys via genetlink
+	  events
+	* Add the toshiba.h header to the lib folder, this is to let the program compile
+	  under kernels < 4.3
+	* Fixed a double delete of the FnActions and QTimer classes in KToshiba class
+
 2015-11-15 Azael Avalos <coproscefalo@gmail.com>
 	* We are now using libmnl for netlink communication
 

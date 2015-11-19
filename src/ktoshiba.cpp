@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
 #include <QIcon>
 #include <QMenu>
 #include <QStandardPaths>
@@ -29,7 +28,6 @@
 
 #include "ktoshiba.h"
 #include "fnactions.h"
-#include "version.h"
 
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
@@ -56,19 +54,14 @@ KToshiba::~KToshiba()
 
 bool KToshiba::initialize()
 {
-    if (!m_fn->init()) {
-        qCritical() << "Could not continue loading, cleaning up...";
-        delete m_fn; m_fn = NULL;
-        delete m_statusTimer; m_statusTimer = NULL;
-
+    if (!m_fn->init())
         return false;
-    }
 
     m_configure = m_popupMenu->addAction(i18n("Configure"));
     m_configure->setIcon(QIcon::fromTheme("configure").pixmap(16, 16));
 
-    connect(m_fn, SIGNAL(vibrationDetected()), this, SLOT(notifyHDDMovement()));
     connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
+    connect(m_fn, SIGNAL(vibrationDetected()), this, SLOT(notifyHDDMovement()));
 
     return true;
 }
