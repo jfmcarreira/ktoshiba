@@ -209,12 +209,12 @@ void KToshibaSystemSettings::load()
             this, SLOT(configChanged()));
     connect(m_power->cooling_method_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
-    connect(m_power->sata_iface_combobox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(configChangedReboot()));
     connect(m_power->odd_power_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
     connect(m_power->illumination_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
+    connect(m_power->sata_iface_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChangedReboot()));
 }
 
 void KToshibaSystemSettings::save()

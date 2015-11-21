@@ -25,6 +25,8 @@ class QAction;
 class QMenu;
 class QTimer;
 
+class KNotification;
+
 class FnActions;
 
 /**
@@ -47,12 +49,14 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void changeStatus();
-    void notifyHDDMovement();
     void configureClicked();
+    void notifyHDDMovement();
+    void notifyZoomDisabled();
 
 private:
     FnActions *m_fn;
 
+    KNotification *m_notification;
     QAction *m_configure;
     QMenu *m_popupMenu;
     QTimer *m_statusTimer;

@@ -60,7 +60,6 @@ private:
 
     int m_batteryProfile;
     int m_cooling;
-    int m_sata;
     int m_odd;
     int m_illumination;
 
@@ -69,14 +68,14 @@ private:
     int m_coolingMethod;
     int m_maxCoolingMethod;
 
-    bool m_sataInterfaceSupported;
-    int m_sataInterface;
-
     bool m_oddPowerSupported;
     int m_oddPower;
 
     bool m_illuminationLEDSupported;
     int m_illuminationLED;
+
+    bool m_sataInterfaceSupported;
+    int m_sataInterface;
 };
 
 #endif // POWERSAVE_H

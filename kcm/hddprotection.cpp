@@ -35,13 +35,14 @@ HDDProtection::HDDProtection(QWidget *parent)
     if (!hdd.exists()) {
         hdd.writeEntry("MonitorHDD", true);
         hdd.writeEntry("NotifyHDDMovement", true);
+        hdd.writeEntry("ProtectionLevel", 2);
         hdd.sync();
     }
 }
 
 bool HDDProtection::isHDDProtectionSupported()
 {
-    m_protectionLevel = m_sys->hw()->getProtectionLevel();
+    m_protectionLevel = m_sys->hw()->getHDDProtectionLevel();
 
     if (m_protectionLevel == KToshibaHardware::FAILURE)
         return false;
@@ -83,7 +84,8 @@ void HDDProtection::save()
     }
     int tmp2 = protection_level_slider->value();
     if (m_protectionLevel != tmp2) {
-        m_sys->hw()->setProtectionLevel(tmp2);
+        hdd.writeEntry("ProtectionLevel", tmp2);
+        m_sys->hw()->setHDDProtectionLevel(tmp2);
         m_protectionLevel = tmp2;
     }
     hdd.sync();

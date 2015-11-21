@@ -28,7 +28,7 @@ extern "C" {
 
 #include "ktoshibanetlinkevents.h"
 
-#define TOSHIBA_HAPS   "TOS620A:00"
+#define HAPS_HID "TOS620A:00"
 
 /*
  * The following struct was taken from linux ACPI event.c
@@ -39,24 +39,6 @@ struct acpi_genl_event {
     __u32 type;
     __u32 data;
 };
-
-KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
-    : QObject(parent),
-      m_nl(NULL),
-      m_notifier(NULL)
-{
-}
-
-KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
-{
-    if (m_notifier) {
-        m_notifier->setEnabled(false);
-        delete m_notifier;
-    }
-
-    if (m_nl)
-        mnl_socket_close(m_nl);
-}
 
 static struct acpi_genl_event *m_event;
 
@@ -89,33 +71,25 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
     return MNL_CB_OK;
 }
 
-void KToshibaNetlinkEvents::parseEvents(int socket)
+KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
+    : QObject(parent),
+      m_nl(NULL),
+      m_notifier(NULL)
 {
-    if (socket < 0) {
-        qWarning() << "No socket to receive from...";
+    m_deviceHID = getDeviceHID();
+    if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
+        qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
+}
 
-        return;
+KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
+{
+    if (m_notifier) {
+        m_notifier->setEnabled(false);
+        delete m_notifier;
     }
 
-    ssize_t len = mnl_socket_recvfrom(m_nl, m_eventBuffer, sizeof(m_eventBuffer));
-    if (len <= 0) {
-        qCritical() << "Could not receive netlink data:" << strerror(errno);
-
-        return;
-    }
-
-    if (mnl_cb_run(m_eventBuffer, len, 0, 0, callback_data, NULL) != MNL_CB_OK) {
-        qWarning() << "Callback error";
-
-        return;
-    }
-
-    if (QString(m_event->bus_id) == TOSHIBA_HAPS)
-        emit hapsEvent(m_event->type);
-    else if (QString(m_event->bus_id) == m_deviceHID)
-        emit tvapEvent(m_event->type, m_event->data);
-    else if (QString(m_event->device_class) == "ac_adapter")
-        emit acAdapterChanged(m_event->data);
+    if (m_nl)
+        mnl_socket_close(m_nl);
 }
 
 QString KToshibaNetlinkEvents::getDeviceHID()
@@ -156,11 +130,36 @@ bool KToshibaNetlinkEvents::attach()
         return false;
     }
 
-    m_deviceHID = getDeviceHID();
-    if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
-        qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
-
     m_notifier = new QSocketNotifier(socket, QSocketNotifier::Read, this);
 
     return connect(m_notifier, SIGNAL(activated(int)), this, SLOT(parseEvents(int)));
+}
+
+void KToshibaNetlinkEvents::parseEvents(int socket)
+{
+    if (socket < 0) {
+        qWarning() << "No socket to receive from...";
+
+        return;
+    }
+
+    ssize_t len = mnl_socket_recvfrom(m_nl, m_eventBuffer, sizeof(m_eventBuffer));
+    if (len <= 0) {
+        qCritical() << "Could not receive netlink data:" << strerror(errno);
+
+        return;
+    }
+
+    if (mnl_cb_run(m_eventBuffer, len, 0, 0, callback_data, NULL) != MNL_CB_OK) {
+        qWarning() << "Callback error";
+
+        return;
+    }
+
+    if (QString(m_event->bus_id) == HAPS_HID)
+        emit hapsEvent(m_event->type);
+    else if (QString(m_event->bus_id) == m_deviceHID)
+        emit tvapEvent(m_event->type, m_event->data);
+    else if (QString(m_event->device_class) == "ac_adapter")
+        emit acAdapterChanged(m_event->data);
 }

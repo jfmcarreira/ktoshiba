@@ -131,9 +131,9 @@ public:
     /*
      * HDD protection functions
      */
-    int getProtectionLevel();
-    void setProtectionLevel(int);
-    void unloadHeads(int);
+    int getHDDProtectionLevel();
+    void setHDDProtectionLevel(int);
+    void unloadHDDHeads(int);
     /*
      * Toshiba Configuration Interface (TCI) access function
      */
