@@ -85,40 +85,13 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="sata_iface_label">
-        <property name="text">
-         <string>SATA Interface Setting mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="sata_iface_combobox">
-        <property name="toolTip">
-         <string>Changes the SATA interface setting mode.</string>
-        </property>
-        <property name="whatsThis">
-         <string>Changes the SATA interface setting mode.</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Performance</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Battery Life</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <widget class="QLabel" name="odd_power_label">
         <property name="text">
          <string>ODD Power Support:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="1" column="1">
        <widget class="QComboBox" name="odd_power_combobox">
         <property name="toolTip">
          <string>Changes the ODD power setting.</string>
@@ -138,14 +111,14 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="illumination_label">
         <property name="text">
          <string>Illumination:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="2" column="1">
        <widget class="QComboBox" name="illumination_combobox">
         <property name="toolTip">
          <string>Changes the laptop Illumination.</string>
@@ -166,6 +139,33 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="sata_iface_label">
+     <property name="text">
+      <string>SATA Interface Setting mode:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="sata_iface_combobox">
+     <property name="toolTip">
+      <string>Changes the SATA interface setting mode.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Changes the SATA interface setting mode.</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Performance</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Battery Life</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>

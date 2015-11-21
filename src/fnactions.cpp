@@ -36,7 +36,6 @@ FnActions::FnActions(QObject *parent)
       m_hw(new KToshibaHardware(this)),
       m_config(KSharedConfig::openConfig(CONFIG_FILE)),
       m_widget(new QWidget(0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)),
-      m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
     m_statusWidget.setupUi(m_widget);
@@ -52,8 +51,6 @@ FnActions::FnActions(QObject *parent)
                           <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
                           %1\
                           </span></p></body></html>");
-
-    connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hideWidget()));
 }
 
 FnActions::~FnActions()
@@ -62,7 +59,6 @@ FnActions::~FnActions()
         m_dBus->unInhibitPowerManagement(m_cookie);
 
     delete m_widget; m_widget = NULL;
-    delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_nl; m_nl = NULL;
 }
@@ -80,7 +76,6 @@ bool FnActions::init()
     m_illuminationSupported = isIlluminationSupported();
     m_ecoSupported = isECOSupported();
     m_coolingMethodSupported = isCoolingMethodSupported();
-    m_sataInterfaceSupported = isSATAInterfaceSupported();
     m_oddPowerSupported = isODDPowerSupported();
     m_keyboardFunctionsSupported = isKeyboardFunctionsSupported();
 
@@ -99,17 +94,22 @@ bool FnActions::init()
     else
         changeBatteryProfile(m_dBus->getBatteryProfile() == "AC" ? Performance : Powersave, true);
 
-    m_hdd = m_hw->getProtectionLevel();
+    m_hdd = m_hw->getHDDProtectionLevel();
+    if (m_hdd != KToshibaHardware::FAILURE && m_protectionLevel != m_hdd) {
+        m_hw->setHDDProtectionLevel(m_hdd);
+        m_protectionLevel = m_hdd;
+    }
 
     m_dBus->init();
 
     if (m_kbdBacklightSupported && m_keyboardType == SecondGeneration)
         m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
 
-    connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(protectHDD(int)));
+    connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(parseHAPSEvents(int)));
     connect(m_nl, SIGNAL(tvapEvent(int, int)), this, SLOT(parseTVAPEvents(int, int)));
     connect(m_nl, SIGNAL(acAdapterChanged(int)), this, SLOT(updateBatteryProfile(int)));
     connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(reloadConfig()));
+    connect(m_dBus, SIGNAL(zoomEffectDisabled()), QObject::parent(), SLOT(notifyZoomDisabled()));
 
     return true;
 }
@@ -129,6 +129,7 @@ void FnActions::loadConfig()
     // HDD Protection group
     m_monitorHDD = hdd.readEntry("MonitorHDD", true);
     m_notifyHDD = hdd.readEntry("NotifyHDDMovement", true);
+    m_protectionLevel = hdd.readEntry("ProtectionLevel", 2);
     // Power Save group
     m_batteryProfile = powersave.readEntry("BatteryProfile", 0);
     qDebug() << "Stored battery profile:" << m_batteryProfile << (BatteryProfiles )m_batteryProfile;
@@ -140,25 +141,23 @@ void FnActions::createConfig()
     // HDD Protection group
     hdd.writeEntry("MonitorHDD", true);
     hdd.writeEntry("NotifyHDDMovement", true);
+    hdd.writeEntry("ProtectionLevel", 2);
     hdd.sync();
     // Power Save group
     powersave.writeEntry("BatteryProfile", 0);
-    powersave.writeEntry("PerformanceSATAInterface", 0);
     powersave.writeEntry("PerformanceCoolingMethod", 0);
     powersave.writeEntry("PerformanceODDPower", 1);
     powersave.writeEntry("PerformanceIlluminationLED", 1);
-    powersave.writeEntry("PowersaveSATAInterface", 1);
     powersave.writeEntry("PowersaveCoolingMethod", 1);
     powersave.writeEntry("PowersaveODDPower", 1);
     powersave.writeEntry("PowersaveIlluminationLED", 0);
-    powersave.writeEntry("PresentationSATAInterface", 0);
     powersave.writeEntry("PresentationCoolingMethod", 1);
     powersave.writeEntry("PresentationODDPower", 1);
     powersave.writeEntry("PresentationIlluminationLED", 0);
-    powersave.writeEntry("EcoSATAInterface", 1);
     powersave.writeEntry("EcoCoolingMethod", 1);
     powersave.writeEntry("EcoODDPower", 0);
     powersave.writeEntry("EcoIlluminationLED", 0);
+    powersave.writeEntry("SATAInterface", 0);
     powersave.sync();
 }
 
@@ -175,16 +174,6 @@ void FnActions::reloadConfig()
 void FnActions::compositingChanged(bool state)
 {
     m_widget->setAttribute(Qt::WA_TranslucentBackground, state);
-}
-
-bool FnActions::isSATAInterfaceSupported()
-{
-    quint32 result = m_hw->getSATAInterfaceSetting();
-    if (result != KToshibaHardware::SATA_PERFORMANCE
-        && result != KToshibaHardware::SATA_BATTERY_LIFE)
-        return false;
-
-    return true;
 }
 
 bool FnActions::isCoolingMethodSupported()
@@ -258,7 +247,6 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     case Performance:
         text = i18n("Performance");
         m_cooling = powersave.readEntry("PerformanceCoolingMethod", 0);
-        m_sata = powersave.readEntry("PerformanceSATAInterface", 0);
         m_odd = powersave.readEntry("PerformanceODDPower", 1);
         m_illumination = powersave.readEntry("PerformanceIlluminationLED", 1);
         kbdbl = true;
@@ -266,14 +254,12 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     case Powersave:
         text = i18n("Powersave");
         m_cooling = powersave.readEntry("PowersaveCoolingMethod", 1);
-        m_sata = powersave.readEntry("PowersaveSATAInterface", 1);
         m_odd = powersave.readEntry("PowersaveODDPower", 1);
         m_illumination = powersave.readEntry("PowersaveIlluminationLED", 0);
         break;
     case Presentation:
         text = i18n("Presentation");
         m_cooling = powersave.readEntry("PresentationCoolingMethod", 0);
-        m_sata = powersave.readEntry("PresentationSATAInterface", 1);
         m_odd = powersave.readEntry("PresentationODDPower", 1);
         m_illumination = powersave.readEntry("PresentationIlluminationLED", 0);
         m_cookie = m_dBus->inhibitPowerManagement(text);
@@ -283,7 +269,6 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     case ECO:
         text = i18n("ECO");
         m_cooling = powersave.readEntry("EcoCoolingMethod", 1);
-        m_sata = powersave.readEntry("EcoSATAInterface", 1);
         m_odd = powersave.readEntry("EcoODDPower", 0);
         m_illumination = powersave.readEntry("EcoIlluminationLED", 0);
         m_dBus->setBrightness(m_dBus->getBatteryProfile() == "AC" ? 57 : 43);
@@ -297,8 +282,6 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     }
     if (m_coolingMethodSupported)
         m_hw->setCoolingMethod(m_cooling);
-    if (m_sataInterfaceSupported)
-        m_hw->setSATAInterfaceSetting(m_sata);
     if (m_oddPowerSupported)
         m_hw->setODDPower(0x100 | m_odd);
     if (m_illuminationSupported)
@@ -320,7 +303,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(64, 64));
     m_statusWidget.statusLabel->setText(m_iconText.arg(text));
     if (!init)
-        showWidget();
+        showWidgetTimer();
 
     qDebug() << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
     m_previousBatteryProfile = m_batteryProfile;
@@ -344,7 +327,8 @@ void FnActions::toggleTouchPad()
     m_hw->setPointingDevice(!m_pointing);
     m_statusWidget.statusLabel->setText(m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")));
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
-    showWidget();
+    if (m_keyboardFunctionsSupported && m_kbdFunctions)
+        showWidgetTimer();
 }
 
 bool FnActions::isKBDBacklightSupported()
@@ -402,14 +386,13 @@ void FnActions::toggleKBDBacklight()
     }
 
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-keyboard").pixmap(64, 64));
-    showWidget();
 }
 
 bool FnActions::isKeyboardFunctionsSupported()
 {
-    quint32 result = m_hw->getKBDFunctions();
+    m_kbdFunctions = m_hw->getKBDFunctions();
 
-    if (result != KToshibaHardware::DEACTIVATED && result != KToshibaHardware::ACTIVATED)
+    if (m_kbdFunctions != KToshibaHardware::DEACTIVATED && m_kbdFunctions != KToshibaHardware::ACTIVATED)
         return false;
 
     return true;
@@ -420,11 +403,13 @@ void FnActions::showWidget()
     QRect r = QApplication::desktop()->geometry();
     m_widget->move((r.width() / 2) - (m_widget->width() / 2), r.top());
     m_widget->show();
+}
 
-    if (m_widgetTimer->isActive())
-        m_widgetTimer->setInterval(900);
-    else
-        m_widgetTimer->start(900);
+void FnActions::showWidgetTimer()
+{
+    showWidget();
+
+    QTimer::singleShot(1500, this, SLOT(hideWidget()));
 }
 
 void FnActions::hideWidget()
@@ -435,20 +420,42 @@ void FnActions::hideWidget()
 void FnActions::processHotkey(int hotkey)
 {
     switch (hotkey) {
-    case 0x13b: // FN-F1 - Lock Screen (Old keyboard layout)
+    /*
+     * FN-F1
+     * Lock Screen (Old keyboard layout)
+     * Help (New keyboard layout)
+     */
+    case 0x13b:
         if (m_keyboardFunctionsSupported)
             return;
         m_dBus->lockScreen();
         break;
-    case 0x13c: // FN-F2 - Battery Profiles (Old keyboard layout)
+    /*
+     * FN-F2
+     * Battery Profiles (Old keyboard layout)
+     * Brightness Down (New keyboard layout)
+     */
+    case 0x13c:
         if (m_keyboardFunctionsSupported)
             return;
         toggleBatteryProfiles();
         break;
-    case 0x143: // FN-F9 - TouchPad Toggle (Old keyboard layout)
+    /*
+     * FN-F9
+     * TouchPad Toggle (Old keyboard layout)
+     * Volume Down (New keyboard layout)
+     */
+    case 0x143:
         if (m_keyboardFunctionsSupported)
             return;
-    case 0x13f: // FN-F5 - TouchPad Toggle (New keyboard layout)
+        toggleTouchPad();
+        break;
+    /*
+     * FN-F5
+     * Switch Video-Out (Old keyboard layout)
+     * TouchPad Toggle (New keyboard layout)
+     */
+    case 0x13f:
         if (!m_keyboardFunctionsSupported)
             return;
         toggleTouchPad();
@@ -466,29 +473,32 @@ void FnActions::processHotkey(int hotkey)
         m_dBus->setZoom(KToshibaDBusInterface::ZoomIn);
         break;
     case 0x1ff: // FN pressed
-        //showWidget();
+        m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("").pixmap(64, 64));
+        m_statusWidget.statusLabel->setText("");
+        showWidget();
         break;
     case 0x100: // FN released
-        //hideWidget();
+        hideWidget();
         break;
     }
 }
 
-void FnActions::protectHDD(int event)
+void FnActions::parseHAPSEvents(int event)
 {
     if (m_hdd == KToshibaHardware::FAILURE || !m_monitorHDD)
         return;
 
+    qDebug() << "Received HAPS event:" << hex << event;
     switch (event) {
     case KToshibaNetlinkEvents::Vibrated:
         qDebug() << "Vibration detected";
-        m_hw->unloadHeads(5000);
+        m_hw->unloadHDDHeads(5000);
         if (m_notifyHDD)
             emit vibrationDetected();
         break;
     case KToshibaNetlinkEvents::Stabilized:
         qDebug() << "Vibration stabilized";
-        m_hw->unloadHeads(0);
+        m_hw->unloadHDDHeads(0);
         break;
     }
 }
@@ -497,7 +507,10 @@ void FnActions::parseTVAPEvents(int event, int data)
 {
     switch (event) {
     case KToshibaNetlinkEvents::Hotkey:
-        processHotkey(data);
+        if (data <= 0x1ff)
+            processHotkey(data);
+        else
+            parseExtraTVAPEvents(data);
         break;
     case KToshibaNetlinkEvents::Docked:
     case KToshibaNetlinkEvents::Undocked:
@@ -513,6 +526,24 @@ void FnActions::parseTVAPEvents(int event, int data)
         break;
     case KToshibaNetlinkEvents::KBDBacklightChanged:
         updateKBDBacklight();
+        break;
+    default:
+        qDebug() << "Unknown event";
+    }
+}
+
+void FnActions::parseExtraTVAPEvents(int event)
+{
+    switch (event) {
+    case 0x1430: // Wake from Sleep
+        break;
+    case 0x1501: // Output changed
+        break;
+    case 0x1502: // HDMI (un)plugged
+        break;
+    case 0x1abe: // HDD protection level set
+        break;
+    case 0x1abf: // HDD protection level off
         break;
     default:
         qDebug() << "Unknown event";

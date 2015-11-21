@@ -28,7 +28,6 @@
 
 #include "ui_statuswidget.h"
 
-class QTimer;
 class QWidget;
 
 class KToshibaDBusInterface;
@@ -58,7 +57,8 @@ private Q_SLOTS:
     void compositingChanged(bool);
     void processHotkey(int);
     void parseTVAPEvents(int, int);
-    void protectHDD(int);
+    void parseExtraTVAPEvents(int);
+    void parseHAPSEvents(int);
     void updateBatteryProfile(int);
 
 private:
@@ -66,6 +66,7 @@ private:
     void loadConfig();
     void createConfig();
     void showWidget();
+    void showWidgetTimer();
     void changeBatteryProfile(int, bool);
     void toggleBatteryProfiles();
     void toggleTouchPad();
@@ -73,7 +74,6 @@ private:
     void toggleKBDBacklight();
     bool isPointingDeviceSupported();
     bool isKBDBacklightSupported();
-    bool isSATAInterfaceSupported();
     bool isCoolingMethodSupported();
     bool isODDPowerSupported();
     bool isIlluminationSupported();
@@ -89,7 +89,6 @@ private:
     KConfigGroup hdd;
 
     QWidget *m_widget;
-    QTimer *m_widgetTimer;
     QString m_iconText;
 
     bool m_pointingSupported;
@@ -102,24 +101,24 @@ private:
     int m_keyboardTime;
 
     QList<int> m_batteryProfiles;
-    bool m_sataInterfaceSupported;
     bool m_coolingMethodSupported;
     bool m_oddPowerSupported;
     bool m_illuminationSupported;
     bool m_ecoSupported;
+    uint m_cookie;
     int m_batteryProfile;
     int m_previousBatteryProfile;
-    int m_sata;
     int m_cooling;
     int m_odd;
     int m_illumination;
 
     bool m_monitorHDD;
     bool m_notifyHDD;
-    uint m_cookie;
+    int m_protectionLevel;
     int m_hdd;
 
     bool m_keyboardFunctionsSupported;
+    int m_kbdFunctions;
 };
 
 #endif // FN_ACTIONS_H

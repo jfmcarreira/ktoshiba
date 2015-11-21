@@ -45,12 +45,16 @@ public:
     QString getBatteryProfile();
 
 Q_SIGNALS:
-    void configFileChanged();
+    Q_SCRIPTABLE void configFileChanged();
+    void zoomEffectDisabled();
 
 public Q_SLOTS:
     Q_NOREPLY void reloadConfigFile();
 
 private:
+    bool isZoomEffectSupported();
+    bool isZoomEffectLoaded();
+
     QDBusConnection m_dbus;
 
     bool m_service;

@@ -127,6 +127,12 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
         return;
     }
 
+    if (!isZoomEffectSupported() || !isZoomEffectLoaded()) {
+        emit zoomEffectDisabled();
+
+        return;
+    }
+
     QDBusInterface iface("org.kde.kglobalaccel",
                          "/component/kwin",
                          "org.kde.kglobalaccel.Component",
@@ -236,6 +242,54 @@ QString KToshibaDBusInterface::getBatteryProfile()
         qCritical() << err.name() << "Message:" << err.message();
 
         return QString();
+    }
+
+    return reply;
+}
+
+bool KToshibaDBusInterface::isZoomEffectSupported()
+{
+    QDBusInterface iface("org.kde.KWin",
+                         "/Effects",
+                         "org.kde.kwin.Effects",
+                         m_dbus, this);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return false;
+    }
+
+    QDBusReply<bool> reply = iface.call("isEffectSupported", "zoom");
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return false;
+    }
+
+    return reply;
+}
+
+bool KToshibaDBusInterface::isZoomEffectLoaded()
+{
+    QDBusInterface iface("org.kde.KWin",
+                         "/Effects",
+                         "org.kde.kwin.Effects",
+                         m_dbus, this);
+    if (!iface.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return false;
+    }
+
+    QDBusReply<bool> reply = iface.call("isEffectLoaded", "zoom");
+    if (!reply.isValid()) {
+        QDBusError err(iface.lastError());
+        qCritical() << err.name() << "Message:" << err.message();
+
+        return false;
     }
 
     return reply;

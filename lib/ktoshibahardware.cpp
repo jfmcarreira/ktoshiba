@@ -69,7 +69,7 @@ void KToshibaHardware::printSMMError(QString function, quint32 error)
  * HDD protection functions
  */
 
-int KToshibaHardware::getProtectionLevel()
+int KToshibaHardware::getHDDProtectionLevel()
 {
     m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
     if (!m_file.open(QIODevice::ReadOnly)) {
@@ -84,7 +84,7 @@ int KToshibaHardware::getProtectionLevel()
     return level;
 }
 
-void KToshibaHardware::setProtectionLevel(int level)
+void KToshibaHardware::setHDDProtectionLevel(int level)
 {
     Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
     action.setHelperId(HELPER_ID);
@@ -94,7 +94,7 @@ void KToshibaHardware::setProtectionLevel(int level)
         qCritical() << "setProtectionLevel failed with error code" << job->error() << job->errorString();
 }
 
-void KToshibaHardware::unloadHeads(int timeout)
+void KToshibaHardware::unloadHDDHeads(int timeout)
 {
     Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
     action.setHelperId(HELPER_ID);

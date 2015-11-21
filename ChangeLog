@@ -1,3 +1,16 @@
+2015-11-20 Azael Avalos <coproscefalo@gmail.com>
+	* Misc changes to KToshibaNetlinkEvents class
+	* Added checks to Zoom actions to ensure the effect is supported and loaded,
+	  notify the user if not
+	* Fixed the HDD notification appearing twice, and changed the flag to CloseOnTimeout
+	* Deleted m_widgetTimer from FnActions class, we are using singleShot now
+	* Added a function to parse the extra TVAP events sent as hotkeys
+	* Moved the SATA Interface Setting out of the Battery Profiles, as it requires a
+	  reboot for changes to take effect
+	* Added a new config entry to store the HDD protection level, and ow KToshiba will
+	  set the level according to it
+	* Renamed the HDD protection functions in library
+
 2015-11-19 Azael Avalos <coproscefalo@gmail.com>
 	* Small updates to KBD Backlight functions in FnActions class
 	* Misc changes to battery profile functions, we now monitor the AC via netlink

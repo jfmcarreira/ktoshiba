@@ -37,22 +37,19 @@ PowerSave::PowerSave(QWidget *parent)
     powersave = KConfigGroup(m_config, "Powersave");
     if (!powersave.exists()) {
         powersave.writeEntry("BatteryProfile", 0);
-        powersave.writeEntry("PerformanceSATAInterface", 0);
         powersave.writeEntry("PerformanceCoolingMethod", 0);
         powersave.writeEntry("PerformanceODDPower", 1);
         powersave.writeEntry("PerformanceIlluminationLED", 1);
-        powersave.writeEntry("PowersaveSATAInterface", 1);
         powersave.writeEntry("PowersaveCoolingMethod", 1);
         powersave.writeEntry("PowersaveODDPower", 1);
         powersave.writeEntry("PowersaveIlluminationLED", 0);
-        powersave.writeEntry("PresentationSATAInterface", 0);
         powersave.writeEntry("PresentationCoolingMethod", 1);
         powersave.writeEntry("PresentationODDPower", 1);
         powersave.writeEntry("PresentationIlluminationLED", 0);
-        powersave.writeEntry("EcoSATAInterface", 1);
         powersave.writeEntry("EcoCoolingMethod", 1);
         powersave.writeEntry("EcoODDPower", 0);
         powersave.writeEntry("EcoIlluminationLED", 0);
+        powersave.writeEntry("SATAInterface", 0);
         powersave.sync();
     }
 }
@@ -112,25 +109,21 @@ void PowerSave::loadProfile(int profile)
     switch (profile) {
     case Performance:
         m_cooling = powersave.readEntry("PerformanceCoolingMethod", 0);
-        m_sata = powersave.readEntry("PerformanceSATAInterface", 0);
         m_odd = powersave.readEntry("PerformanceODDPower", 1);
         m_illumination = powersave.readEntry("PerformanceIlluminationLED", 1);
         break;
     case Powersave:
         m_cooling = powersave.readEntry("PowersaveCoolingMethod", 1);
-        m_sata = powersave.readEntry("PowersaveSATAInterface", 1);
         m_odd = powersave.readEntry("PowersaveODDPower", 1);
         m_illumination = powersave.readEntry("PowersaveIlluminationLED", 0);
         break;
     case Presentation:
         m_cooling = powersave.readEntry("PresentationCoolingMethod", 0);
-        m_sata = powersave.readEntry("PresentationSATAInterface", 1);
         m_odd = powersave.readEntry("PresentationODDPower", 1);
         m_illumination = powersave.readEntry("PresentationIlluminationLED", 0);
         break;
     case ECO:
         m_cooling = powersave.readEntry("EcoCoolingMethod", 1);
-        m_sata = powersave.readEntry("EcoSATAInterface", 1);
         m_odd = powersave.readEntry("EcoODDPower", 0);
         m_illumination = powersave.readEntry("EcoIlluminationLED", 0);
         break;
@@ -138,8 +131,6 @@ void PowerSave::loadProfile(int profile)
 
     if (m_coolingMethodSupported)
         cooling_method_combobox->setCurrentIndex(m_cooling);
-    if (m_sataInterfaceSupported)
-        sata_iface_combobox->setCurrentIndex(m_sata);
     if (m_oddPowerSupported)
         odd_power_combobox->setCurrentIndex(m_odd);
     if (m_illuminationLEDSupported)
@@ -187,11 +178,6 @@ void PowerSave::load()
         cooling_method_label->setEnabled(false);
         cooling_method_combobox->setEnabled(false);
     }
-    // SATA Interface Setting
-    if (!m_sataInterfaceSupported) {
-        sata_iface_label->setEnabled(false);
-        sata_iface_combobox->setEnabled(false);
-    }
     // Optical Disc Device (ODD) Power Support
     if (!m_oddPowerSupported) {
         odd_power_label->setEnabled(false);
@@ -201,6 +187,13 @@ void PowerSave::load()
     if (!m_illuminationLEDSupported) {
         illumination_label->setEnabled(false);
         illumination_combobox->setEnabled(false);
+    }
+    // SATA Interface Setting
+    if (m_sataInterfaceSupported) {
+        sata_iface_combobox->setCurrentIndex(m_sataInterface);
+    } else {
+        sata_iface_label->setEnabled(false);
+        sata_iface_combobox->setEnabled(false);
     }
 
     loadProfile(m_batteryProfile);
@@ -227,15 +220,6 @@ void PowerSave::save()
             m_coolingMethod = m_cooling;
         }
     }
-    // SATA Interface Setting
-    if (m_sataInterfaceSupported) {
-        m_sata = sata_iface_combobox->currentIndex();
-        if (m_sataInterface != m_sata) {
-            config_changed = true;
-            m_sys->hw()->setSATAInterfaceSetting(m_sata);
-            m_sataInterface = m_sata;
-        }
-    }
     // Optical Disc Device (ODD) Power Support
     if (m_oddPowerSupported) {
         m_odd = odd_power_combobox->currentIndex();
@@ -254,12 +238,19 @@ void PowerSave::save()
             m_illuminationLED = m_illumination;
         }
     }
+    // SATA Interface Setting
+    if (m_sataInterfaceSupported) {
+        tmp = sata_iface_combobox->currentIndex();
+        if (m_sataInterface != tmp) {
+            m_sys->hw()->setSATAInterfaceSetting(tmp);
+            m_sataInterface = tmp;
+        }
+    }
 
     if (config_changed) {
         saveProfile(m_batteryProfile);
         emit configFileChanged();
     }
-        
 }
 
 void PowerSave::defaults()
@@ -273,13 +264,13 @@ void PowerSave::defaults()
     if (m_coolingMethodSupported)
         if (m_coolingMethod != KToshibaHardware::MAXIMUM_PERFORMANCE)
             cooling_method_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
-    // SATA Interface Setting
-    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::SATA_PERFORMANCE)
-        sata_iface_combobox->setCurrentIndex(KToshibaHardware::SATA_PERFORMANCE);
     // Optical Disc Device (ODD) Power Support
     if (m_oddPowerSupported && m_oddPower != KToshibaHardware::ODD_ENABLED)
         odd_power_combobox->setCurrentIndex(KToshibaHardware::ODD_ENABLED);
     // Illumunation LED
     if (m_illuminationLEDSupported && m_illuminationLED != KToshibaHardware::ACTIVATED)
         illumination_combobox->setCurrentIndex(KToshibaHardware::ACTIVATED);
+    // SATA Interface Setting
+    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::SATA_PERFORMANCE)
+        sata_iface_combobox->setCurrentIndex(KToshibaHardware::SATA_PERFORMANCE);
 }

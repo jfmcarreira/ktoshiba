@@ -43,13 +43,22 @@ KToshiba::KToshiba()
     m_popupMenu = contextMenu();
     setAssociatedWidget(m_popupMenu);
 
+    m_configure = m_popupMenu->addAction(i18n("Configure"));
+    m_configure->setIcon(QIcon::fromTheme("configure").pixmap(16, 16));
+
     connect(m_statusTimer, SIGNAL(timeout()), this, SLOT(changeStatus()));
+    connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
 }
 
 KToshiba::~KToshiba()
 {
-    delete m_fn; m_fn = NULL;
+    if (m_notification)
+        delete m_notification;
+
     delete m_statusTimer; m_statusTimer = NULL;
+    delete m_configure; m_configure = NULL;
+    delete m_popupMenu; m_popupMenu = NULL;
+    delete m_fn; m_fn = NULL;
 }
 
 bool KToshiba::initialize()
@@ -57,10 +66,6 @@ bool KToshiba::initialize()
     if (!m_fn->init())
         return false;
 
-    m_configure = m_popupMenu->addAction(i18n("Configure"));
-    m_configure->setIcon(QIcon::fromTheme("configure").pixmap(16, 16));
-
-    connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
     connect(m_fn, SIGNAL(vibrationDetected()), this, SLOT(notifyHDDMovement()));
 
     return true;
@@ -68,11 +73,18 @@ bool KToshiba::initialize()
 
 void KToshiba::notifyHDDMovement()
 {
-    KNotification *notification =
+    m_notification =
         KNotification::event(KNotification::Notification, i18n("KToshiba - HDD Monitor"),
                              i18n("Vibration has been detected and the HDD has been stopped to prevent damage"),
-                             QIcon::fromTheme("drive-harddisk").pixmap(48, 48), 0, KNotification::Persistent);
-    notification->sendEvent();
+                             QIcon::fromTheme("drive-harddisk").pixmap(48, 48), 0, KNotification::CloseOnTimeout);
+}
+
+void KToshiba::notifyZoomDisabled()
+{
+    m_notification =
+        KNotification::event(KNotification::Notification, i18n("KToshiba - Zoom Effect"),
+                             i18n("Zoom effect is not supported or is disabled, Zoom actions cannot be activated"),
+                             QIcon::fromTheme("ktoshiba").pixmap(48, 48), 0, KNotification::CloseOnTimeout);
 }
 
 void KToshiba::configureClicked()
