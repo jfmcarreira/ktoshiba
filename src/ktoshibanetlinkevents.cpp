@@ -63,7 +63,7 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
 
     ssize_t offset = GENL_HDRLEN + NLA_HDRLEN;
 
-    m_event = (acpi_genl_event *)mnl_nlmsg_get_payload_offset(nlh, offset);
+    m_event = reinterpret_cast<acpi_genl_event *>(mnl_nlmsg_get_payload_offset(nlh, offset));
 
     qDebug() << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
              << "Type:" << hex << m_event->type << "Data:" << m_event->data;

@@ -30,7 +30,7 @@ class DeviceModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    DeviceModel(QObject *parent = 0);
+    explicit DeviceModel(QObject *parent = 0);
     ~DeviceModel();
 
     void setDeviceData(const quint32 value);

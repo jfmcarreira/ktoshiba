@@ -31,8 +31,7 @@
 
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
-      m_fn(new FnActions(this)),
-      m_statusTimer(new QTimer(this))
+      m_fn(new FnActions(this))
 {
     setTitle(i18n("KToshiba"));
     setIconByName("ktoshiba");
@@ -46,7 +45,6 @@ KToshiba::KToshiba()
     m_configure = m_popupMenu->addAction(i18n("Configure"));
     m_configure->setIcon(QIcon::fromTheme("configure").pixmap(16, 16));
 
-    connect(m_statusTimer, SIGNAL(timeout()), this, SLOT(changeStatus()));
     connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
 }
 
@@ -55,7 +53,6 @@ KToshiba::~KToshiba()
     if (m_notification)
         delete m_notification;
 
-    delete m_statusTimer; m_statusTimer = NULL;
     delete m_configure; m_configure = NULL;
     delete m_popupMenu; m_popupMenu = NULL;
     delete m_fn; m_fn = NULL;
@@ -102,5 +99,5 @@ void KToshiba::changeStatus()
 void KToshiba::showApplication()
 {
     setStatus(NeedsAttention);
-    m_statusTimer->start(4000);
+    QTimer::singleShot(4000, this, SLOT(changeStatus()));
 }
