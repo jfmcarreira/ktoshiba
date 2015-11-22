@@ -30,7 +30,7 @@ class KToshibaNetlinkEvents : public QObject
     Q_OBJECT
 
 public:
-    KToshibaNetlinkEvents(QObject *parent);
+    explicit KToshibaNetlinkEvents(QObject *parent);
     ~KToshibaNetlinkEvents();
 
     enum HAPSEvents {

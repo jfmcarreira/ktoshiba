@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-11-09 11:53-0700\n"
+"POT-Creation-Date: 2015-11-21 00:01-0700\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -36,59 +36,72 @@ msgstr "coproscefalo@gmail.com"
 msgid "StatusWidget"
 msgstr "Widget de Estado"
 
-#: src/ktoshiba.cpp:39 src/ktoshiba.cpp:41 src/main.cpp:31
+#: src/ktoshiba.cpp:36 src/ktoshiba.cpp:38 src/main.cpp:31
 #, kde-format
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: src/ktoshiba.cpp:41 src/main.cpp:33
+#: src/ktoshiba.cpp:38 src/main.cpp:33
 #, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: src/ktoshiba.cpp:67
+#: src/ktoshiba.cpp:45
 #, kde-format
 msgid "Configure"
 msgstr "Configurar"
 
-#: src/ktoshiba.cpp:79
+#: src/ktoshiba.cpp:74
 #, kde-format
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: src/ktoshiba.cpp:80
+#: src/ktoshiba.cpp:75
 #, kde-format
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: src/fnactions.cpp:288
+#: src/ktoshiba.cpp:82
+#, kde-format
+msgid "KToshiba - Zoom Effect"
+msgstr "KToshiba - Efecto de Magnificación"
+
+#: src/ktoshiba.cpp:83
+#, kde-format
+msgid ""
+"Zoom effect is not supported or is disabled, Zoom actions cannot be activated"
+msgstr ""
+"El efecto de magnificación no tiene soporte ó está deshabilitado, las "
+"acciones de magnificación no pueden ser activadas"
+
+#: src/fnactions.cpp:248
 #, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/fnactions.cpp:296
+#: src/fnactions.cpp:255
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/fnactions.cpp:303
+#: src/fnactions.cpp:261
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
 
-#: src/fnactions.cpp:313
+#: src/fnactions.cpp:270
 #, kde-format
 msgid "ECO"
 msgstr "ECO"
 
-#: src/fnactions.cpp:369 src/fnactions.cpp:420
+#: src/fnactions.cpp:328 src/fnactions.cpp:379
 #, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: src/fnactions.cpp:369 src/fnactions.cpp:417
+#: src/fnactions.cpp:328 src/fnactions.cpp:376
 #, kde-format
 msgid "OFF"
 msgstr "APAGADO"

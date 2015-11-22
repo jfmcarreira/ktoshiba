@@ -39,7 +39,7 @@ class FnActions : public QObject
     Q_OBJECT
 
 public:
-    FnActions(QObject *parent);
+    explicit FnActions(QObject *parent);
     ~FnActions();
     bool init();
 
@@ -83,11 +83,12 @@ private:
     KToshibaDBusInterface *m_dBus;
     KToshibaNetlinkEvents *m_nl;
     KToshibaHardware *m_hw;
-    Ui::StatusWidget m_statusWidget;
+
     KSharedConfigPtr m_config;
     KConfigGroup powersave;
     KConfigGroup hdd;
 
+    Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
     QString m_iconText;
 

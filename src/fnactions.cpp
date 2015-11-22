@@ -35,11 +35,12 @@ FnActions::FnActions(QObject *parent)
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hw(new KToshibaHardware(this)),
       m_config(KSharedConfig::openConfig(CONFIG_FILE)),
-      m_widget(new QWidget(0, Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)),
+      m_widget(new QWidget(0, 0)),
       m_cookie(0)
 {
     m_statusWidget.setupUi(m_widget);
-    m_widget->clearFocus();
+    m_widget->setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
+                             | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
     // Only enable Translucency if composite is enabled
     // otherwise an ugly black background will appear
     m_widget->setAttribute(Qt::WA_TranslucentBackground, m_dBus->getCompositingState());
@@ -96,8 +97,8 @@ bool FnActions::init()
 
     m_hdd = m_hw->getHDDProtectionLevel();
     if (m_hdd != KToshibaHardware::FAILURE && m_protectionLevel != m_hdd) {
-        m_hw->setHDDProtectionLevel(m_hdd);
-        m_protectionLevel = m_hdd;
+        m_hw->setHDDProtectionLevel(m_protectionLevel);
+        m_hdd = m_protectionLevel;
     }
 
     m_dBus->init();
@@ -488,7 +489,6 @@ void FnActions::parseHAPSEvents(int event)
     if (m_hdd == KToshibaHardware::FAILURE || !m_monitorHDD)
         return;
 
-    qDebug() << "Received HAPS event:" << hex << event;
     switch (event) {
     case KToshibaNetlinkEvents::Vibrated:
         qDebug() << "Vibration detected";
@@ -509,7 +509,7 @@ void FnActions::parseTVAPEvents(int event, int data)
     case KToshibaNetlinkEvents::Hotkey:
         if (data <= 0x1ff)
             processHotkey(data);
-        else
+        else if (data > 0x400)
             parseExtraTVAPEvents(data);
         break;
     case KToshibaNetlinkEvents::Docked:
@@ -528,7 +528,7 @@ void FnActions::parseTVAPEvents(int event, int data)
         updateKBDBacklight();
         break;
     default:
-        qDebug() << "Unknown event";
+        qDebug() << "Unknown event:" << hex << event;
     }
 }
 
@@ -545,7 +545,18 @@ void FnActions::parseExtraTVAPEvents(int event)
         break;
     case 0x1abf: // HDD protection level off
         break;
+    case 0x401:
+    case 0x402:
+    case 0x1500:
+    case 0x1580:
+    case 0x1581:
+    case 0x19b0:
+    case 0x19b1:
+    case 0x19b2:
+    case 0x19b3:
+    case 0x19b6:
+    case 0x19b7:
     default:
-        qDebug() << "Unknown event";
+        qDebug() << "Unknown event:" << hex << event;
     }
 }

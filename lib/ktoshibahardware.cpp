@@ -37,7 +37,8 @@ extern "C" {
 using namespace KAuth;
 
 KToshibaHardware::KToshibaHardware(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      regs()
 {
     m_file.setFileName(TOSHIBA_ACPI_DEVICE);
     m_devDeviceExist = m_file.exists();

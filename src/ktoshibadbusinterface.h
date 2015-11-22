@@ -29,7 +29,7 @@ class KToshibaDBusInterface : public QObject
     Q_CLASSINFO("KToshiba D-Bus Interface", "net.sourceforge.KToshiba")
 
 public:
-    KToshibaDBusInterface(QObject *parent);
+    explicit KToshibaDBusInterface(QObject *parent);
     ~KToshibaDBusInterface();
     void init();
 

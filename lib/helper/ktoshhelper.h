@@ -31,7 +31,7 @@ class KToshHelper : public QObject
     Q_OBJECT
 
 public:
-    KToshHelper(QObject *parent = 0);
+    explicit KToshHelper(QObject *parent = 0);
 
 public slots:
     /*

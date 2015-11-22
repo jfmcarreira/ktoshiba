@@ -23,7 +23,6 @@
 
 class QAction;
 class QMenu;
-class QTimer;
 
 class KNotification;
 
@@ -59,7 +58,6 @@ private:
     KNotification *m_notification;
     QAction *m_configure;
     QMenu *m_popupMenu;
-    QTimer *m_statusTimer;
 };
 
 #endif // KTOSHIBA_H

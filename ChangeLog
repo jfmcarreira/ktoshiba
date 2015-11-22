@@ -1,3 +1,10 @@
+2015-11-21 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the QTimer from KToshiba class to singleShot
+	* Updated Spanish translations
+	* Ran cppcheck and got rid of a few warnings and style issues ;-)
+	* Fixed the HDD protection level setting, I had a reversed assignment in FnActions
+	  class and the signal notifying the configuration file changed was never fired
+
 2015-11-20 Azael Avalos <coproscefalo@gmail.com>
 	* Misc changes to KToshibaNetlinkEvents class
 	* Added checks to Zoom actions to ensure the effect is supported and loaded,

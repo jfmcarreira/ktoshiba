@@ -34,7 +34,7 @@ class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
     Q_OBJECT
 
 public:
-    KToshibaHardware(QObject *parent = 0);
+    explicit KToshibaHardware(QObject *parent = 0);
 
     enum TCIOperations {
         SCI_READ  = 0xf300,

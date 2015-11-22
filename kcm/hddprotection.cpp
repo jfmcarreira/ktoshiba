@@ -87,6 +87,7 @@ void HDDProtection::save()
         hdd.writeEntry("ProtectionLevel", tmp2);
         m_sys->hw()->setHDDProtectionLevel(tmp2);
         m_protectionLevel = tmp2;
+        emit configFileChanged();
     }
     hdd.sync();
 }
