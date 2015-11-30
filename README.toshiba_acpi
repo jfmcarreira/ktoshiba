@@ -5,34 +5,39 @@ an "old" driver being used, or simply you wanted to take a look at
 the contents of this file :-)
 
 If it is the first case, I have a more recent toshiba_acpi kernel
-driver uploaded to pastebin, as well as a Makefile for it, but before
-we proceed, you need to install a few packages in order to build the
-newer module, how to install those packages is highly dependent on
-the distribution you are using, so we are not going to cover that
-here (Google is your friend).
+driver (and support files) uploaded to pastebin or alternatively,
+a compressed archive with everything included, but before we proceed,
+you need to install a few packages in order to build the newer module,
+how to install those packages is highly dependent on the distribution
+you are using, so we are not going to cover that here (Google is your
+friend).
 
 
-Packages
---------
+Needed Packages
+---------------
 The needed packages to build the newer module are:
 - gcc
 - make
 - kernel-sources
 
 
-Pastebin files
---------------
+Needed Files
+------------
 - Makefile		->	http://pastebin.com/bt7EjuUi
 - toshiba_acpi.c	->	http://pastebin.com/k3DpPaPJ
 - toshiba_h.patch	->	http://pastebin.com/NJLMqmyj
+OR
+- Compressed archive	->	https://goo.gl/n5vHyq
 
 
 Installation
 ------------
-Once the needed packages are installed and the previous three files
-are downloaded, open a terminal (Konsole) and change to the directory
-were the previous three files were donwloaded, and do the following:
+Once the needed packages are installed and the previous files (or
+compressed archive) are downloaded, open a terminal (Konsole) and
+change to the directory were the previous files were donwloaded,
+and do the following:
 
+FILES
 > cd /place/to/where/you/downloaded/your/files
 > sudo patch < toshiba_h.patch
 > make
@@ -40,13 +45,18 @@ were the previous three files were donwloaded, and do the following:
 > sudo make load
 > make clean
 
-Once all the above has been done successfuly, simply restart KToshiba
-and enjoy the new functionality :-)
+COMPRESSED ARCHIVE
+> tar xvfJ toshiba_acpi.tar.xz
+> cd toshiba_acpi
+> make
+> sudo make install
+> sudo make load
+> make clean
 
 
 openSUSE Users
 --------------
 I have built kmp packages for the openSUSE distribution, just head
 to http://download.opensuse.org/repositories/home:/Coproscefalo/
-and add the corresponding reposiroty or simply download the packages
+and add the corresponding repository or simply download the packages
 from there.

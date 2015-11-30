@@ -158,8 +158,10 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
 
     if (QString(m_event->bus_id) == HAPS_HID)
         emit hapsEvent(m_event->type);
-    else if (QString(m_event->bus_id) == m_deviceHID)
+
+    if (QString(m_event->bus_id) == m_deviceHID)
         emit tvapEvent(m_event->type, m_event->data);
-    else if (QString(m_event->device_class) == "ac_adapter")
+
+    if (QString(m_event->device_class) == "ac_adapter")
         emit acAdapterChanged(m_event->data);
 }

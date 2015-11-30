@@ -1,24 +1,24 @@
 Requirements
 ============
 - A Toshiba laptop with a recent toshiba_acpi.ko
-  kernel module (kernel >= 4.0 recommended)
+  kernel module (kernel >= 4.3 recommended)
 - Compiler and utilities (gcc, make, cmake, etc.)
 - KF5 libraries and development packages
 - Extra CMake Modules (ECM)
-- LibUDev and development packages
-- Linux input.h kernel include
+- Libmnl (Minimalistic NetLink library)
 
 
-NOTE: KToshiba grabs hotkeys via /dev/input/eventX
-and uses D-Bus and ktoshhelper to perform the actions.
+NOTE: KToshiba grabs hotkeys and Toshiba specific events via
+netLink and uses D-Bus, ktoshhelper and /dev/toshiba_acpi device
+to perform the actions.
 
 
 
 Installation
 ============
 
-OBS
----
+openSUSE Build Service (OBS)
+----------------------------
 For openSUSE users (13.2 onwards), I have precompiled packages
 under my OBS home project for KToshba and an updated toshiba_acpi
 kernel module, simply run as root (or sudo):
@@ -53,7 +53,7 @@ eg: ktoshiba-5.0
 Post-Installation
 =================
 Once KToshiba is installed, a restart is needed to activate the new
-udev rules, or you can simply do the following (as root):
+udev rule, or you can simply do the following (as root):
 
 1 - Reload the udev rules (udevadm control --reload-rules).
 2 - Activate the new rules (udevadm trigger).

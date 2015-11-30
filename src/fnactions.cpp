@@ -41,9 +41,7 @@ FnActions::FnActions(QObject *parent)
     m_statusWidget.setupUi(m_widget);
     m_widget->setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
                              | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
-    // Only enable Translucency if composite is enabled
-    // otherwise an ugly black background will appear
-    m_widget->setAttribute(Qt::WA_TranslucentBackground, m_dBus->getCompositingState());
+    m_widget->setAttribute(Qt::WA_TranslucentBackground, true);
 
     hdd = KConfigGroup(m_config, "HDDProtection");
     powersave = KConfigGroup(m_config, "Powersave");
@@ -57,7 +55,7 @@ FnActions::FnActions(QObject *parent)
 FnActions::~FnActions()
 {
     if (m_cookie)
-        m_dBus->unInhibitPowerManagement(m_cookie);
+        m_dBus->setPowerManagementInhibition(false, NULL, &m_cookie);
 
     delete m_widget; m_widget = NULL;
     delete m_dBus; m_dBus = NULL;
@@ -172,11 +170,6 @@ void FnActions::reloadConfig()
         changeBatteryProfile(m_batteryProfile, false);
 }
 
-void FnActions::compositingChanged(bool state)
-{
-    m_widget->setAttribute(Qt::WA_TranslucentBackground, state);
-}
-
 bool FnActions::isCoolingMethodSupported()
 {
     quint32 result;
@@ -241,8 +234,8 @@ void FnActions::toggleBatteryProfiles()
 void FnActions::changeBatteryProfile(int profile, bool init)
 {
     QString text;
-    bool inhib = false;
     bool kbdbl = false;
+    m_inhibitPowerManagement = false;
 
     switch (profile) {
     case Performance:
@@ -263,8 +256,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
         m_cooling = powersave.readEntry("PresentationCoolingMethod", 0);
         m_odd = powersave.readEntry("PresentationODDPower", 1);
         m_illumination = powersave.readEntry("PresentationIlluminationLED", 0);
-        m_cookie = m_dBus->inhibitPowerManagement(text);
-        inhib = true;
+        m_inhibitPowerManagement = true;
         kbdbl = true;
         break;
     case ECO:
@@ -281,14 +273,19 @@ void FnActions::changeBatteryProfile(int profile, bool init)
         powersave.writeEntry("BatteryProfile", profile);
         powersave.sync();
     }
+
     if (m_coolingMethodSupported)
         m_hw->setCoolingMethod(m_cooling);
+
     if (m_oddPowerSupported)
         m_hw->setODDPower(0x100 | m_odd);
+
     if (m_illuminationSupported)
         m_hw->setIlluminationLED(m_illumination);
+
     if (m_ecoSupported)
         m_hw->setEcoLED(profile != ECO ? KToshibaHardware::DEACTIVATED : KToshibaHardware::ACTIVATED);
+
     if (m_kbdBacklightSupported) {
         if (m_keyboardType == FirstGeneration && m_keyboardMode == KToshibaHardware::FNZ)
             m_dBus->setKBDBacklight(kbdbl ? KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED);
@@ -296,15 +293,12 @@ void FnActions::changeBatteryProfile(int profile, bool init)
             m_hw->setKBDBacklight(kbdbl ? KToshibaHardware::ON : KToshibaHardware::OFF, m_keyboardTime);
     }
 
-    if (m_cookie && !inhib) {
-        m_dBus->unInhibitPowerManagement(m_cookie);
-        m_cookie = 0;
-    }
+    m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(64, 64));
     m_statusWidget.statusLabel->setText(m_iconText.arg(text));
     if (!init)
-        showWidgetTimer();
+        showWidget();
 
     qDebug() << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
     m_previousBatteryProfile = m_batteryProfile;
@@ -329,7 +323,7 @@ void FnActions::toggleTouchPad()
     m_statusWidget.statusLabel->setText(m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")));
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
     if (m_keyboardFunctionsSupported && m_kbdFunctions)
-        showWidgetTimer();
+        showWidget();
 }
 
 bool FnActions::isKBDBacklightSupported()
@@ -387,6 +381,7 @@ void FnActions::toggleKBDBacklight()
     }
 
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-keyboard").pixmap(64, 64));
+    showWidget();
 }
 
 bool FnActions::isKeyboardFunctionsSupported()
@@ -406,21 +401,21 @@ void FnActions::showWidget()
     m_widget->show();
 }
 
-void FnActions::showWidgetTimer()
-{
-    showWidget();
-
-    QTimer::singleShot(1500, this, SLOT(hideWidget()));
-}
-
-void FnActions::hideWidget()
-{
-    m_widget->hide();
-}
-
 void FnActions::processHotkey(int hotkey)
 {
     switch (hotkey) {
+    case 0x102: // FN-1 - Zoom-Out
+        m_dBus->setZoom(KToshibaDBusInterface::ZoomOut);
+        break;
+    case 0x103: // FN-2 - Zoom-In
+        m_dBus->setZoom(KToshibaDBusInterface::ZoomIn);
+        break;
+    case 0x12c: // FN-Z - Toggle Keyboard Backlight
+        toggleKBDBacklight();
+        break;
+    case 0x139: // FN-Space - Zoom-Reset
+        m_dBus->setZoom(KToshibaDBusInterface::ZoomReset);
+        break;
     /*
      * FN-F1
      * Lock Screen (Old keyboard layout)
@@ -442,16 +437,6 @@ void FnActions::processHotkey(int hotkey)
         toggleBatteryProfiles();
         break;
     /*
-     * FN-F9
-     * TouchPad Toggle (Old keyboard layout)
-     * Volume Down (New keyboard layout)
-     */
-    case 0x143:
-        if (m_keyboardFunctionsSupported)
-            return;
-        toggleTouchPad();
-        break;
-    /*
      * FN-F5
      * Switch Video-Out (Old keyboard layout)
      * TouchPad Toggle (New keyboard layout)
@@ -461,25 +446,28 @@ void FnActions::processHotkey(int hotkey)
             return;
         toggleTouchPad();
         break;
-    case 0x12c: // FN-Z - Toggle Keyboard Backlight
-        toggleKBDBacklight();
-        break;
-    case 0x139: // FN-Space - Zoom-Reset
-        m_dBus->setZoom(KToshibaDBusInterface::ZoomReset);
-        break;
-    case 0x102: // FN-1 - Zoom-Out
-        m_dBus->setZoom(KToshibaDBusInterface::ZoomOut);
-        break;
-    case 0x103: // FN-2 - Zoom-In
-        m_dBus->setZoom(KToshibaDBusInterface::ZoomIn);
+    /*
+     * FN-F9
+     * TouchPad Toggle (Old keyboard layout)
+     * Volume Down (New keyboard layout)
+     */
+    case 0x143:
+        if (m_keyboardFunctionsSupported)
+            return;
+        toggleTouchPad();
         break;
     case 0x1ff: // FN pressed
-        m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("").pixmap(64, 64));
-        m_statusWidget.statusLabel->setText("");
-        showWidget();
         break;
     case 0x100: // FN released
-        hideWidget();
+    case 0x182: // FN-1 released
+    case 0x183: // FN-2 released
+    case 0x1ac: // FN-Z released
+    case 0x1b9: // FN-Space released
+    case 0x1bb: // FN-F1 released
+    case 0x1bc: // FN-F2 released
+    case 0x1bf: // FN-F5 released
+    case 0x1c3: // FN-F9 released
+        QTimer::singleShot(1500, m_widget, SLOT(hide()));
         break;
     }
 }
