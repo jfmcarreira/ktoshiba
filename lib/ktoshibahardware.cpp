@@ -251,7 +251,7 @@ quint32 KToshibaHardware::getEcoLED()
 
 void KToshibaHardware::setEcoLED(quint32 state)
 {
-    regs = { HCI_WRITE, ECO_LED, state, 0, 0, 0 };
+    regs = { HCI_WRITE, ECO_LED, state, 1, 0, 0 };
 
     if (state != DEACTIVATED && state != ACTIVATED) {
         printSMMError("setEcoLED", INPUT_DATA_ERROR);

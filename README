@@ -30,16 +30,13 @@ If installation went right you can find KToshiba under the Utilities menu,
 click on it and then an icon should appear on the taskbar, and your extra
 function keys are now being monitored and appropriate actions are executed.
 
-Click (or right click) on it and a menu will appear where you have three
-choices, Quit, Configure and Battery Profiles.
+Click (or right click) on it and a menu will appear where you have two
+choices, Quit and Configure.
 - Quit: Quits the application (self explanatory).
 - Configure: A new window should appear (a KCModule) where you can configure
   the hardware available to your laptop (greyed out items means your laptop
   has no support for it), you can also access this module in the System
   Settings, under the Hardware category.
-- Battery Profiles: Here you can change to the four different battery profiles
-  available (Performance, Powersave, Presentation, ECO) or simply disable the
-  feature. 
 
 
 

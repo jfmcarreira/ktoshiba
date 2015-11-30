@@ -1,3 +1,32 @@
+2015-11-29 Azael Avalos <coproscefalo@gmail.com>
+	* Removed the showWidgetTimer and hideWidget functions, and instead the singleShot timer
+	  is fired right when the hotkey is released, hiding the widget
+
+2015-11-28 Azael Avalos <coproscefalo@gmail.com>
+	* Fused PowerManagement (un)inhibition functions into one in KToshibaDBusInterface class
+	* Made the StatusWidget slightly wider to accomodate larger status text
+
+2015-11-27 Azael Avalos <coproscefalo@gmail.com>
+	* Slight change in program short description
+	* Updated README.toshiba_acpi
+
+2015-11-25 Azael Avalos <coproscefalo@gmail.com>
+	* Removed the icon sizes from notifications and configure action, let the system
+	  decide the correct icon size to use
+	* Removed the compositing checking from FnActions, let us always activate transparency
+	* Fused the ZoomEffect functions into one
+
+2015-11-23 Azael Avalos <coproscefalo@gmail.com>
+	* Misc change to setZoom function in KToshibaDBusInterface class
+	* Updated README and INSTALL files
+
+2015-11-22 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed the setEcoLED function not (de)activating the LED properly (I had
+	  a wrong parameter in the SMMRegisters)
+	* Fixed the keyboard backlight DBus function (I didn't knew it had changed), and
+	  we are now using the silent version of it
+	* Released KToshiba 5.1.2
+
 2015-11-21 Azael Avalos <coproscefalo@gmail.com>
 	* Changed the QTimer from KToshiba class to singleShot
 	* Updated Spanish translations

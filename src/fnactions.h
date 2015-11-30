@@ -53,8 +53,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void reloadConfig();
-    void hideWidget();
-    void compositingChanged(bool);
     void processHotkey(int);
     void parseTVAPEvents(int, int);
     void parseExtraTVAPEvents(int);
@@ -106,6 +104,7 @@ private:
     bool m_oddPowerSupported;
     bool m_illuminationSupported;
     bool m_ecoSupported;
+    bool m_inhibitPowerManagement;
     uint m_cookie;
     int m_batteryProfile;
     int m_previousBatteryProfile;

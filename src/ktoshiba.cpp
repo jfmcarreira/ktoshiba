@@ -35,7 +35,7 @@ KToshiba::KToshiba()
 {
     setTitle(i18n("KToshiba"));
     setIconByName("ktoshiba");
-    setToolTip("ktoshiba", i18n("KToshiba"), i18n("Fn key monitoring for Toshiba laptops"));
+    setToolTip("ktoshiba", i18n("KToshiba"), i18n("Function (FN) key monitoring for Toshiba laptops"));
     setCategory(Hardware);
     setStatus(Passive);
 
@@ -43,7 +43,7 @@ KToshiba::KToshiba()
     setAssociatedWidget(m_popupMenu);
 
     m_configure = m_popupMenu->addAction(i18n("Configure"));
-    m_configure->setIcon(QIcon::fromTheme("configure").pixmap(16, 16));
+    m_configure->setIcon(QIcon::fromTheme("configure"));
 
     connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
 }
@@ -73,7 +73,7 @@ void KToshiba::notifyHDDMovement()
     m_notification =
         KNotification::event(KNotification::Notification, i18n("KToshiba - HDD Monitor"),
                              i18n("Vibration has been detected and the HDD has been stopped to prevent damage"),
-                             QIcon::fromTheme("drive-harddisk").pixmap(48, 48), 0, KNotification::CloseOnTimeout);
+                             QIcon::fromTheme("drive-harddisk").name(), 0, KNotification::CloseOnTimeout);
 }
 
 void KToshiba::notifyZoomDisabled()
@@ -81,7 +81,7 @@ void KToshiba::notifyZoomDisabled()
     m_notification =
         KNotification::event(KNotification::Notification, i18n("KToshiba - Zoom Effect"),
                              i18n("Zoom effect is not supported or is disabled, Zoom actions cannot be activated"),
-                             QIcon::fromTheme("ktoshiba").pixmap(48, 48), 0, KNotification::CloseOnTimeout);
+                             QIcon::fromTheme("ktoshiba").name(), 0, KNotification::CloseOnTimeout);
 }
 
 void KToshiba::configureClicked()

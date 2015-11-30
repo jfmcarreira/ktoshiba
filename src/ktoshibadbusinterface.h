@@ -34,14 +34,13 @@ public:
     void init();
 
     enum ZoomActions { ZoomReset, ZoomIn, ZoomOut };
+    enum ToggleActions { Disabled, Enabled };
 
     void lockScreen();
     void setBrightness(int);
     void setKBDBacklight(int);
     void setZoom(ZoomActions);
-    uint inhibitPowerManagement(QString);
-    void unInhibitPowerManagement(uint);
-    bool getCompositingState();
+    void setPowerManagementInhibition(bool, QString, uint *);
     QString getBatteryProfile();
 
 Q_SIGNALS:
@@ -52,8 +51,8 @@ public Q_SLOTS:
     Q_NOREPLY void reloadConfigFile();
 
 private:
-    bool isZoomEffectSupported();
-    bool isZoomEffectLoaded();
+    bool getCompositingState();
+    bool isZoomEffectActive();
 
     QDBusConnection m_dbus;
 

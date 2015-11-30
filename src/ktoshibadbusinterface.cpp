@@ -27,8 +27,6 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
       m_service(false),
       m_object(false)
 {
-    m_dbus.connect("org.kde.KWin", "/Compositor", "org.kde.kwin.Compositing",
-                   "compositingToggled", QObject::parent(), SLOT(compositingChanged(bool)));
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
@@ -112,7 +110,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
         return;
     }
 
-    QDBusReply<void> reply = iface.call("keyboardBrightness", state);
+    QDBusReply<void> reply = iface.call("setKeyboardBrightnessSilent", state);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
@@ -121,13 +119,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
 
 void KToshibaDBusInterface::setZoom(ZoomActions zoom)
 {
-    if (!getCompositingState()) {
-        qWarning() << "Compositing have been disabled, Zoom actions cannot be activated";
-
-        return;
-    }
-
-    if (!isZoomEffectSupported() || !isZoomEffectLoaded()) {
+    if (!getCompositingState() || !isZoomEffectActive()) {
         emit zoomEffectDisabled();
 
         return;
@@ -163,31 +155,7 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
     }
 }
 
-uint KToshibaDBusInterface::inhibitPowerManagement(QString reason)
-{
-    QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
-                         "/org/freedesktop/PowerManagement/Inhibit",
-                         "org.freedesktop.PowerManagement.Inhibit",
-                         m_dbus, this);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
-
-        return 0;
-    }
-
-    QDBusReply<uint> reply = iface.call("Inhibit", QString("KToshiba"), reason);
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
-
-        return 0;
-    }
-
-    return reply;
-}
-
-void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
+void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString reason, uint *cookie)
 {
     QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
                          "/org/freedesktop/PowerManagement/Inhibit",
@@ -200,10 +168,35 @@ void KToshibaDBusInterface::unInhibitPowerManagement(uint cookie)
         return;
     }
 
-    QDBusReply<void> reply = iface.call("UnInhibit", cookie);
-    if (!reply.isValid()) {
-        QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+    if (inhibit) {
+        QDBusReply<uint> inhib = iface.call("Inhibit", QString("KToshiba"), reason);
+        if (!inhib.isValid()) {
+            QDBusError err(iface.lastError());
+            qCritical() << err.name() << "Message:" << err.message();
+
+            return;
+        }
+
+        *cookie = inhib;
+    } else {
+        QDBusReply<bool> has_inhib = iface.call("HasInhibit");
+        if (!has_inhib.isValid()) {
+            QDBusError err(iface.lastError());
+            qCritical() << err.name() << "Message:" << err.message();
+
+            return;
+        }
+
+        if (!has_inhib)
+            return;
+
+        QDBusReply<void> uninhib = iface.call("UnInhibit", *cookie);
+        if (!uninhib.isValid()) {
+            QDBusError err(iface.lastError());
+            qCritical() << err.name() << "Message:" << err.message();
+        }
+
+        *cookie = 0;
     }
 }
 
@@ -247,7 +240,7 @@ QString KToshibaDBusInterface::getBatteryProfile()
     return reply;
 }
 
-bool KToshibaDBusInterface::isZoomEffectSupported()
+bool KToshibaDBusInterface::isZoomEffectActive()
 {
     QDBusInterface iface("org.kde.KWin",
                          "/Effects",
@@ -268,23 +261,7 @@ bool KToshibaDBusInterface::isZoomEffectSupported()
         return false;
     }
 
-    return reply;
-}
-
-bool KToshibaDBusInterface::isZoomEffectLoaded()
-{
-    QDBusInterface iface("org.kde.KWin",
-                         "/Effects",
-                         "org.kde.kwin.Effects",
-                         m_dbus, this);
-    if (!iface.isValid()) {
-        QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
-
-        return false;
-    }
-
-    QDBusReply<bool> reply = iface.call("isEffectLoaded", "zoom");
+    reply = iface.call("isEffectLoaded", "zoom");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCritical() << err.name() << "Message:" << err.message();
