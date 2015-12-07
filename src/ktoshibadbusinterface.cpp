@@ -27,6 +27,15 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
       m_service(false),
       m_object(false)
 {
+    new KToshibaDBusAdaptor(this);
+
+    m_object = m_dbus.registerObject("/Config", this);
+    if (!m_object)
+        qCritical() << "Could not register DBus object";
+
+    m_service = m_dbus.registerService("net.sourceforge.KToshiba");
+    if (!m_service)
+        qCritical() << "Could not register DBus service";
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
@@ -37,19 +46,6 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
     if (m_service)
         if (!m_dbus.unregisterService("net.sourceforge.KToshiba"))
             qCritical() << "Could not unregister DBus service";
-}
-
-void KToshibaDBusInterface::init()
-{
-    new KToshibaDBusAdaptor(this);
-
-    m_object = m_dbus.registerObject("/Config", this);
-    if (!m_object)
-        qCritical() << "Could not register DBus object";
-
-    m_service = m_dbus.registerService("net.sourceforge.KToshiba");
-    if (!m_service)
-        qCritical() << "Could not register DBus service";
 }
 
 void KToshibaDBusInterface::reloadConfigFile()

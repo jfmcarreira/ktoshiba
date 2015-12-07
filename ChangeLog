@@ -1,3 +1,19 @@
+2015-12-07 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed an issue where the StatusWidget was not being hidden when (dis)connecting the
+	  AC power
+	* Updated Spanish translations
+
+2015-12-06 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the callback function error type in KToshibaNetlinkEvents and added a new check
+
+2015-11-30 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the QTimer back to a plain QTimer to avoid firing many hiding calls when the
+	  hotkeys are pressed and set the singleShot property to true, that way the timer
+	  will restart everytime the hotkeys are pressed when the timer is still active
+	* Removed the "released" keycodes that do not show a widget
+	* Removed the init function from KToshibaDBusInterface class and moved its contents to
+	  the costructor
+
 2015-11-29 Azael Avalos <coproscefalo@gmail.com>
 	* Removed the showWidgetTimer and hideWidget functions, and instead the singleShot timer
 	  is fired right when the hotkey is released, hiding the widget

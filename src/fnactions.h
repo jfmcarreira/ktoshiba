@@ -29,6 +29,7 @@
 #include "ui_statuswidget.h"
 
 class QWidget;
+class QTimer;
 
 class KToshibaDBusInterface;
 class KToshibaNetlinkEvents;
@@ -88,6 +89,7 @@ private:
 
     Ui::StatusWidget m_statusWidget;
     QWidget *m_widget;
+    QTimer *m_widgetTimer;
     QString m_iconText;
 
     bool m_pointingSupported;

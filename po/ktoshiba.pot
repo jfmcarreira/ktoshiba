@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-11-21 00:01-0700\n"
+"POT-Creation-Date: 2015-12-07 10:52-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,9 +41,9 @@ msgstr ""
 msgid "KToshiba"
 msgstr ""
 
-#: src/ktoshiba.cpp:38 src/main.cpp:33
+#: src/ktoshiba.cpp:38
 #, kde-format
-msgid "Fn key monitoring for Toshiba laptops"
+msgid "Function (FN) key monitoring for Toshiba laptops"
 msgstr ""
 
 #: src/ktoshiba.cpp:45
@@ -73,34 +73,39 @@ msgid ""
 "Zoom effect is not supported or is disabled, Zoom actions cannot be activated"
 msgstr ""
 
-#: src/fnactions.cpp:248
+#: src/fnactions.cpp:243
 #, kde-format
 msgid "Performance"
 msgstr ""
 
-#: src/fnactions.cpp:255
+#: src/fnactions.cpp:250
 #, kde-format
 msgid "Powersave"
 msgstr ""
 
-#: src/fnactions.cpp:261
+#: src/fnactions.cpp:256
 #, kde-format
 msgid "Presentation"
 msgstr ""
 
-#: src/fnactions.cpp:270
+#: src/fnactions.cpp:264
 #, kde-format
 msgid "ECO"
 msgstr ""
 
-#: src/fnactions.cpp:328 src/fnactions.cpp:379
+#: src/fnactions.cpp:324 src/fnactions.cpp:375
 #, kde-format
 msgid "ON"
 msgstr ""
 
-#: src/fnactions.cpp:328 src/fnactions.cpp:376
+#: src/fnactions.cpp:324 src/fnactions.cpp:372
 #, kde-format
 msgid "OFF"
+msgstr ""
+
+#: src/main.cpp:33
+#, kde-format
+msgid "Fn key monitoring for Toshiba laptops"
 msgstr ""
 
 #: src/main.cpp:36
