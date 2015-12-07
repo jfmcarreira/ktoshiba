@@ -46,10 +46,16 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
 {
     Q_UNUSED(data)
 
+    if (nlh->nlmsg_type == NLMSG_ERROR) {
+        qCritical() << "Unknown netlink error received";
+
+        return MNL_CB_ERROR;
+    }
+
     if (nlh->nlmsg_type != 0x16) {
         qWarning() << "Not an ACPI event message";
 
-        return MNL_CB_STOP;
+        return MNL_CB_ERROR;
     }
 
     int len = nlh->nlmsg_len;

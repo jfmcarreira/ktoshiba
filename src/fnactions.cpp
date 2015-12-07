@@ -36,12 +36,14 @@ FnActions::FnActions(QObject *parent)
       m_hw(new KToshibaHardware(this)),
       m_config(KSharedConfig::openConfig(CONFIG_FILE)),
       m_widget(new QWidget(0, 0)),
+      m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
     m_statusWidget.setupUi(m_widget);
     m_widget->setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
                              | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
     m_widget->setAttribute(Qt::WA_TranslucentBackground, true);
+    m_widgetTimer->setSingleShot(true);
 
     hdd = KConfigGroup(m_config, "HDDProtection");
     powersave = KConfigGroup(m_config, "Powersave");
@@ -57,6 +59,7 @@ FnActions::~FnActions()
     if (m_cookie)
         m_dBus->setPowerManagementInhibition(false, NULL, &m_cookie);
 
+    delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_widget; m_widget = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_nl; m_nl = NULL;
@@ -99,8 +102,6 @@ bool FnActions::init()
         m_hdd = m_protectionLevel;
     }
 
-    m_dBus->init();
-
     if (m_kbdBacklightSupported && m_keyboardType == SecondGeneration)
         m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
 
@@ -109,6 +110,7 @@ bool FnActions::init()
     connect(m_nl, SIGNAL(acAdapterChanged(int)), this, SLOT(updateBatteryProfile(int)));
     connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(reloadConfig()));
     connect(m_dBus, SIGNAL(zoomEffectDisabled()), QObject::parent(), SLOT(notifyZoomDisabled()));
+    connect(m_widgetTimer, SIGNAL(timeout()), m_widget, SLOT(hide()));
 
     return true;
 }
@@ -117,10 +119,7 @@ bool FnActions::checkConfig()
 {
     QString config = QStandardPaths::locate(QStandardPaths::ConfigLocation, CONFIG_FILE);
 
-    if (config.isEmpty())
-        return false;
-
-    return true;
+    return !config.isEmpty();
 }
 
 void FnActions::loadConfig()
@@ -216,6 +215,8 @@ void FnActions::updateBatteryProfile(int ac_adapter)
         return;
 
     changeBatteryProfile(ac_adapter == Connected ? Performance : Powersave, false);
+
+    m_widgetTimer->start(1500);
 }
 
 void FnActions::toggleBatteryProfiles()
@@ -456,18 +457,14 @@ void FnActions::processHotkey(int hotkey)
             return;
         toggleTouchPad();
         break;
-    case 0x1ff: // FN pressed
-        break;
-    case 0x100: // FN released
-    case 0x182: // FN-1 released
-    case 0x183: // FN-2 released
     case 0x1ac: // FN-Z released
-    case 0x1b9: // FN-Space released
-    case 0x1bb: // FN-F1 released
     case 0x1bc: // FN-F2 released
     case 0x1bf: // FN-F5 released
     case 0x1c3: // FN-F9 released
-        QTimer::singleShot(1500, m_widget, SLOT(hide()));
+        m_widgetTimer->start(1500);
+        break;
+    case 0x100: // FN released
+    case 0x1ff: // FN pressed
         break;
     }
 }

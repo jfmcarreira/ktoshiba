@@ -31,7 +31,6 @@ class KToshibaDBusInterface : public QObject
 public:
     explicit KToshibaDBusInterface(QObject *parent);
     ~KToshibaDBusInterface();
-    void init();
 
     enum ZoomActions { ZoomReset, ZoomIn, ZoomOut };
     enum ToggleActions { Disabled, Enabled };
