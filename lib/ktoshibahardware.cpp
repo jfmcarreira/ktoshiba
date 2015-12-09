@@ -21,8 +21,6 @@
 #include <KAuth/KAuth>
 
 extern "C" {
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/ioctl.h>
 
 #include <unistd.h>
@@ -76,7 +74,8 @@ int KToshibaHardware::getHDDProtectionLevel()
 {
     m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
     if (!m_file.open(QIODevice::ReadOnly)) {
-        qCCritical(KTOSHIBA) << "getProtectionLevel failed with error code" << m_file.error() << m_file.errorString();
+        qCCritical(KTOSHIBA) << "getProtectionLevel failed with error code"
+                             << m_file.error() << m_file.errorString();
 
         return FAILURE;
     }
@@ -94,7 +93,8 @@ void KToshibaHardware::setHDDProtectionLevel(int level)
     action.addArgument("level", level);
     ExecuteJob *job = action.execute();
     if (!job->exec())
-        qCCritical(KTOSHIBA) << "setProtectionLevel failed with error code" << job->error() << job->errorString();
+        qCCritical(KTOSHIBA) << "setHDDProtectionLevel failed with error code"
+                             << job->error() << job->errorString();
 }
 
 void KToshibaHardware::unloadHDDHeads(int timeout)
@@ -104,7 +104,8 @@ void KToshibaHardware::unloadHDDHeads(int timeout)
     action.addArgument("timeout", timeout);
     ExecuteJob *job = action.execute();
     if (!job->exec())
-        qCCritical(KTOSHIBA) << "unloadHeads failed with error code" << job->error() << job->errorString();
+        qCCritical(KTOSHIBA) << "unloadHDDHeads failed with error code"
+                             << job->error() << job->errorString();
 }
 
 /*
@@ -277,6 +278,7 @@ quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getKBDBacklight", FAILURE);
+        *mode = *time = *type = -1;
 
         return FAILURE;
     }
@@ -323,6 +325,7 @@ quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *maxval, int *defval)
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBSleepCharge", FAILURE);
+        *val = *maxval = *defval = -1;
 
         return FAILURE;
     }
@@ -359,6 +362,7 @@ quint32 KToshibaHardware::getSleepFunctionsOnBatteryStatus(int *state, int *leve
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getSleepFunctionsOnBatteryStatus", FAILURE);
+        *state = *level = -1;
 
         return FAILURE;
     }
@@ -597,6 +601,7 @@ quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getBootOrder", FAILURE);
+        *val = *maxval = *defval = -1;
 
         return FAILURE;
     }
@@ -632,6 +637,7 @@ quint32 KToshibaHardware::getWakeOnKeyboard(int *val, int *defval)
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getWakeOnKeyboard", FAILURE);
+        *val = *defval = -1;
 
         return FAILURE;
     }
@@ -672,6 +678,7 @@ quint32 KToshibaHardware::getWakeOnLAN(int *val, int *defval)
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getWakeOnLAN", FAILURE);
+        *val = *defval = -1;
 
         return FAILURE;
     }
@@ -712,6 +719,7 @@ quint32 KToshibaHardware::getCoolingMethod(int *val, int *maxval)
 
     if (tci_raw(&regs) < 0) {
         printSMMError("getCoolingMethod", FAILURE);
+        *val = *maxval = -1;
 
         return FAILURE;
     }
