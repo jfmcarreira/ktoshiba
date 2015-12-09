@@ -1,5 +1,5 @@
 
-project(ktoshiba)
+project(KToshiba)
 set(PROJECT_VERSION "5.2")
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
@@ -37,11 +37,9 @@ find_package(KF5 REQUIRED COMPONENTS
 find_package(LibMNL REQUIRED)
 
 include_directories(
-	${CMAKE_SOURCE_DIR}
-	${CMAKE_BINARY_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
-	${CMAKE_CURRENT_BINARY_DIR}/lib
-	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${LIBMNL_INCLUDE_DIRS}
 )
 

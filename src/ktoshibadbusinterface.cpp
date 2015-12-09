@@ -20,6 +20,7 @@
 
 #include "ktoshibadbusinterface.h"
 #include "ktoshibadbusadaptor.h"
+#include "ktoshiba_debug.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     : QObject(parent),
@@ -31,11 +32,11 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 
     m_object = m_dbus.registerObject("/Config", this);
     if (!m_object)
-        qCritical() << "Could not register DBus object";
+        qCCritical(KTOSHIBA) << "Could not register DBus object";
 
     m_service = m_dbus.registerService("net.sourceforge.KToshiba");
     if (!m_service)
-        qCritical() << "Could not register DBus service";
+        qCCritical(KTOSHIBA) << "Could not register DBus service";
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
@@ -45,7 +46,7 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
 
     if (m_service)
         if (!m_dbus.unregisterService("net.sourceforge.KToshiba"))
-            qCritical() << "Could not unregister DBus service";
+            qCCritical(KTOSHIBA) << "Could not unregister DBus service";
 }
 
 void KToshibaDBusInterface::reloadConfigFile()
@@ -61,7 +62,7 @@ void KToshibaDBusInterface::lockScreen()
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -69,7 +70,7 @@ void KToshibaDBusInterface::lockScreen()
     QDBusReply<void> reply = iface.call("Lock");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
     }
 }
 
@@ -81,7 +82,7 @@ void KToshibaDBusInterface::setBrightness(int level)
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -89,7 +90,7 @@ void KToshibaDBusInterface::setBrightness(int level)
     QDBusReply<void> reply = iface.call("setBrightness", level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
     }
 }
 
@@ -101,7 +102,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -109,7 +110,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
     QDBusReply<void> reply = iface.call("setKeyboardBrightnessSilent", state);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
     }
 }
 
@@ -127,7 +128,7 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -147,7 +148,7 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
 
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
     }
 }
 
@@ -159,7 +160,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return;
     }
@@ -168,7 +169,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
         QDBusReply<uint> inhib = iface.call("Inhibit", QString("KToshiba"), reason);
         if (!inhib.isValid()) {
             QDBusError err(iface.lastError());
-            qCritical() << err.name() << "Message:" << err.message();
+            qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
             return;
         }
@@ -178,7 +179,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
         QDBusReply<bool> has_inhib = iface.call("HasInhibit");
         if (!has_inhib.isValid()) {
             QDBusError err(iface.lastError());
-            qCritical() << err.name() << "Message:" << err.message();
+            qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
             return;
         }
@@ -189,7 +190,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
         QDBusReply<void> uninhib = iface.call("UnInhibit", *cookie);
         if (!uninhib.isValid()) {
             QDBusError err(iface.lastError());
-            qCritical() << err.name() << "Message:" << err.message();
+            qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
         }
 
         *cookie = 0;
@@ -204,7 +205,7 @@ bool KToshibaDBusInterface::getCompositingState()
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return false;
     }
@@ -220,7 +221,7 @@ QString KToshibaDBusInterface::getBatteryProfile()
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return QString();
     }
@@ -228,7 +229,7 @@ QString KToshibaDBusInterface::getBatteryProfile()
     QDBusReply<QString> reply = iface.call("currentProfile");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return QString();
     }
@@ -244,7 +245,7 @@ bool KToshibaDBusInterface::isZoomEffectActive()
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return false;
     }
@@ -252,7 +253,7 @@ bool KToshibaDBusInterface::isZoomEffectActive()
     QDBusReply<bool> reply = iface.call("isEffectSupported", "zoom");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return false;
     }
@@ -260,7 +261,7 @@ bool KToshibaDBusInterface::isZoomEffectActive()
     reply = iface.call("isEffectLoaded", "zoom");
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
-        qCritical() << err.name() << "Message:" << err.message();
+        qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
 
         return false;
     }

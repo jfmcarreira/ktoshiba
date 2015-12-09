@@ -27,6 +27,7 @@ extern "C" {
 }
 
 #include "ktoshibanetlinkevents.h"
+#include "ktoshiba_debug.h"
 
 #define HAPS_HID "TOS620A:00"
 
@@ -47,13 +48,13 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
     Q_UNUSED(data)
 
     if (nlh->nlmsg_type == NLMSG_ERROR) {
-        qCritical() << "Unknown netlink error received";
+        qCCritical(KTOSHIBA) << "Unknown netlink error received";
 
         return MNL_CB_ERROR;
     }
 
     if (nlh->nlmsg_type != 0x16) {
-        qWarning() << "Not an ACPI event message";
+        qCWarning(KTOSHIBA) << "Not an ACPI event message";
 
         return MNL_CB_ERROR;
     }
@@ -62,7 +63,7 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
 
     len -= NLMSG_LENGTH(GENL_HDRLEN);
     if (len < 0) {
-        qWarning() << "Wrong message len" << len;
+        qCWarning(KTOSHIBA) << "Wrong message len" << len;
 
         return MNL_CB_ERROR;
     }
@@ -71,8 +72,8 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
 
     m_event = reinterpret_cast<acpi_genl_event *>(mnl_nlmsg_get_payload_offset(nlh, offset));
 
-    qDebug() << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
-             << "Type:" << hex << m_event->type << "Data:" << m_event->data;
+    qCDebug(KTOSHIBA) << "Class:" << m_event->device_class << "Bus:" << m_event->bus_id
+                      << "Type:" << hex << m_event->type << "Data:" << m_event->data;
 
     return MNL_CB_OK;
 }
@@ -84,7 +85,7 @@ KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
 {
     m_deviceHID = getDeviceHID();
     if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
-        qWarning() << "Device HID is not valid, TVAP events monitoring will not be possible";
+        qCWarning(KTOSHIBA) << "Device HID is not valid, TVAP events monitoring will not be possible";
 }
 
 KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
@@ -115,23 +116,23 @@ bool KToshibaNetlinkEvents::attach()
 {
     m_nl = mnl_socket_open(NETLINK_GENERIC);
     if (m_nl == NULL) {
-        qCritical() << "Could not open netlink socket:" << strerror(errno);
+        qCCritical(KTOSHIBA) << "Could not open netlink socket:" << strerror(errno);
 
         return false;
     }
 
     int group = 0x2;
     if (mnl_socket_bind(m_nl, group, MNL_SOCKET_AUTOPID) < 0) {
-        qCritical() << "Could not bind to netlink socket:" << strerror(errno);
+        qCCritical(KTOSHIBA) << "Could not bind to netlink socket:" << strerror(errno);
 
         return false;
     }
 
     int socket = mnl_socket_get_fd(m_nl);
-    qDebug() << "Binded to socket" << socket << "for genetlink ACPI events monitoring";
+    qCDebug(KTOSHIBA) << "Binded to socket" << socket << "for genetlink ACPI events monitoring";
 
     if (mnl_socket_setsockopt(m_nl, NETLINK_ADD_MEMBERSHIP, &group, sizeof(int)) < 0) {
-        qCritical() << "Could not set socket options:" << strerror(errno);
+        qCCritical(KTOSHIBA) << "Could not set socket options:" << strerror(errno);
 
         return false;
     }
@@ -144,20 +145,20 @@ bool KToshibaNetlinkEvents::attach()
 void KToshibaNetlinkEvents::parseEvents(int socket)
 {
     if (socket < 0) {
-        qWarning() << "No socket to receive from...";
+        qCWarning(KTOSHIBA) << "No socket to receive from...";
 
         return;
     }
 
     ssize_t len = mnl_socket_recvfrom(m_nl, m_eventBuffer, sizeof(m_eventBuffer));
     if (len <= 0) {
-        qCritical() << "Could not receive netlink data:" << strerror(errno);
+        qCCritical(KTOSHIBA) << "Could not receive netlink data:" << strerror(errno);
 
         return;
     }
 
     if (mnl_cb_run(m_eventBuffer, len, 0, 0, callback_data, NULL) != MNL_CB_OK) {
-        qWarning() << "Callback error";
+        qCWarning(KTOSHIBA) << "Callback error";
 
         return;
     }

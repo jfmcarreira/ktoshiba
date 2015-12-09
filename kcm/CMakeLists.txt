@@ -1,5 +1,6 @@
 
 set(SystemSettings_SRCS
+    ${KToshiba_SOURCE_DIR}/src/ktoshiba_debug.cpp
     systeminformation.cpp
     generalsettings.cpp
     hddprotection.cpp

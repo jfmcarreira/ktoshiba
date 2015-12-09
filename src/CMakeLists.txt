@@ -2,6 +2,7 @@
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_INSTALL_PREFIX}/share/apps/cmake/modules)
 
 set(KToshibaSources
+    ktoshiba_debug.cpp
     ktoshibadbusinterface.cpp
     ktoshibanetlinkevents.cpp
     fnactions.cpp

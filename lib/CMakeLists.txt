@@ -1,5 +1,8 @@
 
-set(libktoshiba_SRCS ktoshibahardware.cpp)
+set(libktoshiba_SRCS
+    ${KToshiba_SOURCE_DIR}/src/ktoshiba_debug.cpp
+    ktoshibahardware.cpp
+)
 
 add_library(ktoshibahardware SHARED ${libktoshiba_SRCS})
 

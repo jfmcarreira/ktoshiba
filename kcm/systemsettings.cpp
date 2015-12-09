@@ -29,6 +29,8 @@
 #include <KConfigGroup>
 #include <KMessageWidget>
 
+#include <version.h>
+
 #include "systeminformation.h"
 #include "generalsettings.h"
 #include "hddprotection.h"
@@ -38,7 +40,6 @@
 #include "powersave.h"
 #include "systemsettings.h"
 #include "ktoshibahardware.h"
-#include "src/version.h"
 
 K_PLUGIN_FACTORY(KToshibaSystemSettingsFactory, registerPlugin<KToshibaSystemSettings>();)
 

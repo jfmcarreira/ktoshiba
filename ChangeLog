@@ -1,3 +1,7 @@
+2015-12-08 Azael Avalos <coproscefalo@gmail.com>
+	* Misc changes to CMakeLists file
+	* Added ktoshiba_debug.{h, cpp} files, adding a "ktoshiba" logging category
+
 2015-12-07 Azael Avalos <coproscefalo@gmail.com>
 	* Fixed an issue where the StatusWidget was not being hidden when (dis)connecting the
 	  AC power
