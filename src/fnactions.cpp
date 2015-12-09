@@ -23,6 +23,7 @@
 #include <KLocalizedString>
 
 #include "fnactions.h"
+#include "ktoshiba_debug.h"
 #include "ktoshibahardware.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshibanetlinkevents.h"
@@ -68,7 +69,7 @@ FnActions::~FnActions()
 bool FnActions::init()
 {
     if (!m_nl->attach()) {
-        qCritical() << "Netlink events monitoring will not be possible";
+        qCCritical(KTOSHIBA) << "Netlink events monitoring will not be possible";
 
         return false;
     }
@@ -82,10 +83,10 @@ bool FnActions::init()
     m_keyboardFunctionsSupported = isKeyboardFunctionsSupported();
 
     if (checkConfig()) {
-        qDebug() << "Loading configuration file";
+        qCInfo(KTOSHIBA) << "Loading configuration file";
         loadConfig();
     } else {
-        qDebug() << "Configuration file not found";
+        qCInfo(KTOSHIBA) << "Configuration file not found";
         createConfig();
         loadConfig();
     }
@@ -130,12 +131,12 @@ void FnActions::loadConfig()
     m_protectionLevel = hdd.readEntry("ProtectionLevel", 2);
     // Power Save group
     m_batteryProfile = powersave.readEntry("BatteryProfile", 0);
-    qDebug() << "Stored battery profile:" << m_batteryProfile << (BatteryProfiles )m_batteryProfile;
+    qCDebug(KTOSHIBA) << "Stored battery profile:" << m_batteryProfile << (BatteryProfiles )m_batteryProfile;
 }
 
 void FnActions::createConfig()
 {
-    qDebug() << "Creating default configuration file";
+    qCInfo(KTOSHIBA) << "Creating default configuration file";
     // HDD Protection group
     hdd.writeEntry("MonitorHDD", true);
     hdd.writeEntry("NotifyHDDMovement", true);
@@ -161,7 +162,7 @@ void FnActions::createConfig()
 
 void FnActions::reloadConfig()
 {
-    qDebug() << "Re-loading configuration file";
+    qCInfo(KTOSHIBA) << "Re-loading configuration file";
     m_config->reparseConfiguration();
     loadConfig();
 
@@ -270,7 +271,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     }
 
     if (m_batteryProfile != profile) {
-        qDebug() << "Syncing BatteryProfile configuration entry";
+        qCDebug(KTOSHIBA) << "Syncing BatteryProfile configuration entry";
         powersave.writeEntry("BatteryProfile", profile);
         powersave.sync();
     }
@@ -301,7 +302,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     if (!init)
         showWidget();
 
-    qDebug() << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
+    qCDebug(KTOSHIBA) << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
     m_previousBatteryProfile = m_batteryProfile;
 }
 
@@ -342,7 +343,7 @@ void FnActions::updateKBDBacklight()
 {
     quint32 result = m_hw->getKBDBacklight(&m_keyboardMode, &m_keyboardTime, &m_keyboardType);
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
-        qCritical() << "Could not get Keyboard Backlight status";
+        qCCritical(KTOSHIBA) << "Could not get Keyboard Backlight status";
 }
 
 void FnActions::toggleKBDBacklight()
@@ -476,13 +477,13 @@ void FnActions::parseHAPSEvents(int event)
 
     switch (event) {
     case KToshibaNetlinkEvents::Vibrated:
-        qDebug() << "Vibration detected";
+        qCDebug(KTOSHIBA) << "Vibration detected";
         m_hw->unloadHDDHeads(5000);
         if (m_notifyHDD)
             emit vibrationDetected();
         break;
     case KToshibaNetlinkEvents::Stabilized:
-        qDebug() << "Vibration stabilized";
+        qCDebug(KTOSHIBA) << "Vibration stabilized";
         m_hw->unloadHDDHeads(0);
         break;
     }
@@ -513,7 +514,7 @@ void FnActions::parseTVAPEvents(int event, int data)
         updateKBDBacklight();
         break;
     default:
-        qDebug() << "Unknown event:" << hex << event;
+        qCDebug(KTOSHIBA) << "Unknown event:" << hex << event;
     }
 }
 
@@ -542,6 +543,6 @@ void FnActions::parseExtraTVAPEvents(int event)
     case 0x19b6:
     case 0x19b7:
     default:
-        qDebug() << "Unknown event:" << hex << event;
+        qCDebug(KTOSHIBA) << "Unknown event:" << hex << event;
     }
 }

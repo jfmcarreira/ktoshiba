@@ -26,6 +26,8 @@ extern "C" {
 #include <linux/toshiba.h>
 }
 
+#include <ktoshiba_debug.h>
+
 #include "systeminformation.h"
 
 #define SYSFS_DEVICE_DIR "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/"
@@ -49,7 +51,7 @@ void SystemInformation::getData()
     if (!dir.exists()) {
         qWarning() << "DMI information directory could not be found under sysfs";
         foreach (const QString &file, m_files) {
-            qDebug() << "Setting" << file;
+            qCDebug(KTOSHIBA) << "Setting" << file;
             m_data << i18n("Unknown");
         }
 
@@ -76,7 +78,7 @@ QString SystemInformation::getDeviceHID()
         if (dir.exists(SYSFS_DEVICE_DIR % device))
             return device;
 
-    qWarning() << "No known kernel interface found" << endl;
+    qCWarning(KTOSHIBA) << "No known kernel interface found" << endl;
 
     return QString();
 }
@@ -100,7 +102,7 @@ QString SystemInformation::getDriverVersion()
         return split[1].trimmed();
     }
 
-    qCritical() << "No version file detected or toshiba_acpi module not loaded";
+    qCCritical(KTOSHIBA) << "No version file detected or toshiba_acpi module not loaded";
 
     return QString("0.0");
 }
