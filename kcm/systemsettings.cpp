@@ -16,30 +16,30 @@
    <http://www.gnu.org/licenses/>.
  */
 
-#include <QLayout>
-#include <QTabWidget>
+#include <QComboBox>
 #include <QDBusInterface>
 #include <QIcon>
-#include <QComboBox>
+#include <QLayout>
 #include <QStringBuilder>
+#include <QTabWidget>
 
-#include <KPluginFactory>
 #include <KAboutData>
-#include <KLocalizedString>
 #include <KConfigGroup>
 #include <KMessageWidget>
+#include <KLocalizedString>
+#include <KPluginFactory>
 
+#include <ktoshibahardware.h>
 #include <version.h>
 
-#include "systeminformation.h"
+#include "bootsettings.h"
 #include "generalsettings.h"
 #include "hddprotection.h"
-#include "sleeputilities.h"
 #include "keyboardsettings.h"
-#include "bootsettings.h"
 #include "powersave.h"
+#include "sleeputilities.h"
+#include "systeminformation.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 K_PLUGIN_FACTORY(KToshibaSystemSettingsFactory, registerPlugin<KToshibaSystemSettings>();)
 

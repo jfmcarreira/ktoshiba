@@ -16,15 +16,11 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDir>
 #include <QDebug>
+#include <QDir>
 #include <QStringBuilder>
 
 #include <KLocalizedString>
-
-extern "C" {
-#include <linux/toshiba.h>
-}
 
 #include <ktoshiba_debug.h>
 

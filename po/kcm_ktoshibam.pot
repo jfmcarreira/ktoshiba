@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-12-07 10:52-0700\n"
+"POT-Creation-Date: 2015-12-10 14:16-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -569,7 +569,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
 #. i18n: file: kcm/powersave.ui:161
 #. i18n: ectx: property (text), item, widget (QComboBox, sata_iface_combobox)
-#: rc.cpp:281 rc.cpp:329 rc.cpp:347 rc.cpp:410 kcm/powersave.cpp:68
+#: rc.cpp:281 rc.cpp:329 rc.cpp:347 rc.cpp:410 kcm/powersave.cpp:69
 #, kde-format
 msgid "Performance"
 msgstr ""
@@ -730,7 +730,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, odd_power_combobox)
 #. i18n: file: kcm/powersave.ui:131
 #. i18n: ectx: property (text), item, widget (QComboBox, illumination_combobox)
-#: rc.cpp:380 rc.cpp:395 kcm/sleeputilities.cpp:51
+#: rc.cpp:380 rc.cpp:395 kcm/sleeputilities.cpp:52
 #, kde-format
 msgid "Disabled"
 msgstr ""
@@ -760,38 +760,38 @@ msgstr ""
 msgid "Changes the laptop Illumination."
 msgstr ""
 
-#: kcm/systemsettings.cpp:52
+#: kcm/systemsettings.cpp:53
 #, kde-format
 msgid "KToshiba System Settings"
 msgstr ""
 
-#: kcm/systemsettings.cpp:54
+#: kcm/systemsettings.cpp:55
 #, kde-format
 msgid "Configures Toshiba laptop related hardware settings"
 msgstr ""
 
-#: kcm/systemsettings.cpp:56
+#: kcm/systemsettings.cpp:57
 #, kde-format
 msgid "Copyright (C) 2015 Azael Avalos"
 msgstr ""
 
-#: kcm/systemsettings.cpp:61
+#: kcm/systemsettings.cpp:62
 #, kde-format
 msgid "Azael Avalos"
 msgstr ""
 
-#: kcm/systemsettings.cpp:62
+#: kcm/systemsettings.cpp:63
 #, kde-format
 msgid "Original author"
 msgstr ""
 
-#: kcm/systemsettings.cpp:75
+#: kcm/systemsettings.cpp:76
 #, kde-format
 msgid "Please reboot for hardware changes to take effect"
 msgstr ""
 
-#: kcm/systemsettings.cpp:346 kcm/keyboardsettings.cpp:103
-#: kcm/keyboardsettings.cpp:139
+#: kcm/systemsettings.cpp:347 kcm/keyboardsettings.cpp:104
+#: kcm/keyboardsettings.cpp:140
 #, kde-format
 msgid " sec"
 msgstr ""
@@ -856,52 +856,52 @@ msgstr ""
 msgid "Boot Devices"
 msgstr ""
 
-#: kcm/powersave.cpp:64
+#: kcm/powersave.cpp:65
 #, kde-format
 msgid "Maximum Performance"
 msgstr ""
 
-#: kcm/powersave.cpp:66 kcm/powersave.cpp:68
+#: kcm/powersave.cpp:67 kcm/powersave.cpp:69
 #, kde-format
 msgid "Battery Optimized"
 msgstr ""
 
-#: kcm/hddprotection.cpp:30
+#: kcm/hddprotection.cpp:31
 #, kde-format
 msgid "Off"
 msgstr ""
 
-#: kcm/hddprotection.cpp:30
+#: kcm/hddprotection.cpp:31
 #, kde-format
 msgid "Low"
 msgstr ""
 
-#: kcm/hddprotection.cpp:30
+#: kcm/hddprotection.cpp:31
 #, kde-format
 msgid "Medium"
 msgstr ""
 
-#: kcm/hddprotection.cpp:30
+#: kcm/hddprotection.cpp:31
 #, kde-format
 msgid "High"
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:47
+#: kcm/keyboardsettings.cpp:48
 #, kde-format
 msgid "TIMER"
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:47
+#: kcm/keyboardsettings.cpp:48
 #, kde-format
 msgid "ON"
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:47
+#: kcm/keyboardsettings.cpp:48
 #, kde-format
 msgid "OFF"
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:68
+#: kcm/keyboardsettings.cpp:69
 #, kde-format
 msgid ""
 "Select how the keyboard Function keys operate.<br/>Normal: The F{1-12} keys "
@@ -910,14 +910,14 @@ msgid ""
 "F{1-12}."
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:83
+#: kcm/keyboardsettings.cpp:84
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>FN-Z: User toggles the "
 "keyboard backlight.<br/>AUTO: Keyboard backlight turns on/off automatically."
 msgstr ""
 
-#: kcm/keyboardsettings.cpp:93
+#: kcm/keyboardsettings.cpp:94
 #, kde-format
 msgid ""
 "Select the keyboard backlight operation mode.<br/>TIMER: Keyboard backlight "
@@ -925,22 +925,22 @@ msgid ""
 ">OFF: Keyboard backlight is turned off."
 msgstr ""
 
-#: kcm/sleeputilities.cpp:55
+#: kcm/sleeputilities.cpp:56
 #, kde-format
 msgid "Alternate"
 msgstr ""
 
-#: kcm/sleeputilities.cpp:60
+#: kcm/sleeputilities.cpp:61
 #, kde-format
 msgid "Typical"
 msgstr ""
 
-#: kcm/sleeputilities.cpp:65
+#: kcm/sleeputilities.cpp:66
 #, kde-format
 msgid "Auto"
 msgstr ""
 
-#: kcm/systeminformation.cpp:53 kcm/systeminformation.cpp:65
+#: kcm/systeminformation.cpp:51 kcm/systeminformation.cpp:63
 #, kde-format
 msgid "Unknown"
 msgstr ""

@@ -16,18 +16,19 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QActionGroup>
 #include <QIcon>
 #include <QMenu>
 #include <QStandardPaths>
-#include <QActionGroup>
 #include <QTimer>
 
 #include <KNotification>
-#include <KProcess>
 #include <KLocalizedString>
+#include <KProcess>
 
-#include "ktoshiba.h"
 #include "fnactions.h"
+#include "ktoshiba.h"
+#include "ktoshiba_debug.h"
 
 KToshiba::KToshiba()
     : KStatusNotifierItem(),
@@ -46,26 +47,18 @@ KToshiba::KToshiba()
     m_configure->setIcon(QIcon::fromTheme("configure"));
 
     connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
+    connect(m_fn, SIGNAL(vibrationDetected()), this, SLOT(notifyHDDMovement()));
 }
 
 KToshiba::~KToshiba()
 {
-    if (m_notification)
-        delete m_notification;
-
     delete m_configure; m_configure = NULL;
-    delete m_popupMenu; m_popupMenu = NULL;
     delete m_fn; m_fn = NULL;
 }
 
 bool KToshiba::initialize()
 {
-    if (!m_fn->init())
-        return false;
-
-    connect(m_fn, SIGNAL(vibrationDetected()), this, SLOT(notifyHDDMovement()));
-
-    return true;
+    return m_fn->init();
 }
 
 void KToshiba::notifyHDDMovement()

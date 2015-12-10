@@ -16,14 +16,13 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QSocketNotifier>
-#include <QDir>
 #include <QDebug>
+#include <QDir>
+#include <QSocketNotifier>
 
 extern "C" {
-#include <linux/genetlink.h>
-
 #include <errno.h>
+#include <linux/genetlink.h>
 }
 
 #include "ktoshibanetlinkevents.h"

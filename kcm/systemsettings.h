@@ -28,14 +28,14 @@ class QTabWidget;
 
 class KMessageWidget;
 
-class KToshibaHardware;
-class SystemInformation;
+class BootSettings;
 class GeneralSettings;
 class HDDProtection;
-class SleepUtilities;
 class KeyboardSettings;
-class BootSettings;
+class KToshibaHardware;
 class PowerSave;
+class SleepUtilities;
+class SystemInformation;
 
 class KToshibaSystemSettings : public KCModule
 {

@@ -1,3 +1,8 @@
+2015-12-10 Azael Avalos <coproscefalo@gmail.com>
+	* Re-ordered classes and includes in alphabetical order
+	* Fixed a SEGILL at program exit
+	* Misc changes to here and there, getting ready for 5.2
+
 2015-12-09 Azael Avalos <coproscefalo@gmail.com>
 	* Misc changes to KToshibaHardware
 	* Now really add the ktoshiba_debug* files...

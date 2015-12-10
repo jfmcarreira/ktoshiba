@@ -18,9 +18,10 @@
 
 #include <KLocalizedString>
 
+#include <ktoshibahardware.h>
+
 #include "powersave.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 PowerSave::PowerSave(QWidget *parent)
     : QWidget(parent),

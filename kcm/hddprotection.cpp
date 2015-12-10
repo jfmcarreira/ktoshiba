@@ -16,9 +16,10 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <ktoshibahardware.h>
+
 #include "hddprotection.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 HDDProtection::HDDProtection(QWidget *parent)
     : QWidget(parent),

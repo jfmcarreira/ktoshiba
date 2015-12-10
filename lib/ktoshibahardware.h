@@ -19,15 +19,15 @@
 #ifndef KTOSHIBAHARDWARE_H
 #define KTOSHIBAHARDWARE_H
 
-#include <QObject>
 #include <QFile>
 #include <QMap>
+#include <QObject>
+
+#include "ktoshibahardware_export.h"
 
 extern "C" {
 #include "toshiba.h"
 }
-
-#include "ktoshibahardware_export.h"
 
 class KTOSHIBAHARDWARE_EXPORT KToshibaHardware : public QObject
 {

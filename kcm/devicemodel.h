@@ -20,8 +20,8 @@
 #define DEVICEMODEL_H
 
 #include <QAbstractListModel>
-#include <QStringList>
 #include <QMap>
+#include <QStringList>
 
 #define MAX_BOOT_DEVICES 8
 

@@ -16,9 +16,10 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <ktoshibahardware.h>
+
 #include "generalsettings.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 GeneralSettings::GeneralSettings(QWidget *parent)
     : QWidget(parent),
