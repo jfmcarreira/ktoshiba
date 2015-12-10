@@ -23,17 +23,17 @@
 #include <QString>
 #include <QStringList>
 
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "ui_statuswidget.h"
 
-class QWidget;
 class QTimer;
+class QWidget;
 
 class KToshibaDBusInterface;
-class KToshibaNetlinkEvents;
 class KToshibaHardware;
+class KToshibaNetlinkEvents;
 
 class FnActions : public QObject
 {

@@ -16,17 +16,18 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QTimer>
-#include <QDebug>
 
 #include <KLocalizedString>
 
+#include <ktoshibahardware.h>
+
 #include "fnactions.h"
-#include "ktoshiba_debug.h"
-#include "ktoshibahardware.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshibanetlinkevents.h"
+#include "ktoshiba_debug.h"
 
 #define CONFIG_FILE "ktoshibarc"
 
@@ -60,6 +61,8 @@ FnActions::~FnActions()
     if (m_cookie)
         m_dBus->setPowerManagementInhibition(false, NULL, &m_cookie);
 
+    if (m_widgetTimer->isActive())
+        m_widgetTimer->stop();
     delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_widget; m_widget = NULL;
     delete m_dBus; m_dBus = NULL;
@@ -82,14 +85,12 @@ bool FnActions::init()
     m_oddPowerSupported = isODDPowerSupported();
     m_keyboardFunctionsSupported = isKeyboardFunctionsSupported();
 
-    if (checkConfig()) {
-        qCInfo(KTOSHIBA) << "Loading configuration file";
-        loadConfig();
-    } else {
-        qCInfo(KTOSHIBA) << "Configuration file not found";
+    if (!checkConfig()) {
+        qCInfo(KTOSHIBA) << "Configuration file not found, creating default values";
         createConfig();
-        loadConfig();
     }
+    qCInfo(KTOSHIBA) << "Loading configuration file";
+    loadConfig();
 
     m_batteryProfiles << Performance << Powersave << Presentation << ECO;
     if (m_batteryProfile == ECO)
@@ -103,8 +104,7 @@ bool FnActions::init()
         m_hdd = m_protectionLevel;
     }
 
-    if (m_kbdBacklightSupported && m_keyboardType == SecondGeneration)
-        m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
+    m_keyboardModes << KToshibaHardware::OFF << KToshibaHardware::ON << KToshibaHardware::TIMER;
 
     connect(m_nl, SIGNAL(hapsEvent(int)), this, SLOT(parseHAPSEvents(int)));
     connect(m_nl, SIGNAL(tvapEvent(int, int)), this, SLOT(parseTVAPEvents(int, int)));
@@ -136,7 +136,6 @@ void FnActions::loadConfig()
 
 void FnActions::createConfig()
 {
-    qCInfo(KTOSHIBA) << "Creating default configuration file";
     // HDD Protection group
     hdd.writeEntry("MonitorHDD", true);
     hdd.writeEntry("NotifyHDDMovement", true);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-12-07 10:52-0700\n"
+"POT-Creation-Date: 2015-12-10 14:16-0700\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -36,39 +36,39 @@ msgstr "coproscefalo@gmail.com"
 msgid "StatusWidget"
 msgstr "Widget de Estado"
 
-#: src/ktoshiba.cpp:36 src/ktoshiba.cpp:38 src/main.cpp:31
+#: src/ktoshiba.cpp:37 src/ktoshiba.cpp:39 src/main.cpp:33
 #, kde-format
 msgid "KToshiba"
 msgstr "KToshiba"
 
-#: src/ktoshiba.cpp:38
+#: src/ktoshiba.cpp:39
 #, kde-format
 msgid "Function (FN) key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas de Función (FN) para portátiles Toshiba"
 
-#: src/ktoshiba.cpp:45
+#: src/ktoshiba.cpp:46
 #, kde-format
 msgid "Configure"
 msgstr "Configurar"
 
-#: src/ktoshiba.cpp:74
+#: src/ktoshiba.cpp:67
 #, kde-format
 msgid "KToshiba - HDD Monitor"
 msgstr "KToshiba - Monitor de disco duro"
 
-#: src/ktoshiba.cpp:75
+#: src/ktoshiba.cpp:68
 #, kde-format
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
 "Se ha detectado vibración y el disco duro fue detenido para prevenir daños"
 
-#: src/ktoshiba.cpp:82
+#: src/ktoshiba.cpp:75
 #, kde-format
 msgid "KToshiba - Zoom Effect"
 msgstr "KToshiba - Efecto de Magnificación"
 
-#: src/ktoshiba.cpp:83
+#: src/ktoshiba.cpp:76
 #, kde-format
 msgid ""
 "Zoom effect is not supported or is disabled, Zoom actions cannot be activated"
@@ -106,32 +106,32 @@ msgstr "ENCENDIDO"
 msgid "OFF"
 msgstr "APAGADO"
 
-#: src/main.cpp:33
+#: src/main.cpp:35
 #, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
-#: src/main.cpp:36
+#: src/main.cpp:38
 #, kde-format
 msgid "Copyright (C) 2004-2015 Azael Avalos"
 msgstr "Derechos de autor (C) 2004-2015, Azael Avalos"
 
-#: src/main.cpp:40
+#: src/main.cpp:42
 #, kde-format
 msgid "Azael Avalos"
 msgstr "Azael Avalos"
 
-#: src/main.cpp:41
+#: src/main.cpp:43
 #, kde-format
 msgid "Original Author"
 msgstr "Autor original"
 
-#: src/main.cpp:43
+#: src/main.cpp:45
 #, kde-format
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: src/main.cpp:44
+#: src/main.cpp:46
 #, kde-format
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"

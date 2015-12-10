@@ -21,8 +21,8 @@
 
 #include <QStringList>
 
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "ui_hddprotect.h"
 

@@ -19,8 +19,10 @@
 #include <QApplication>
 
 #include <KAboutData>
-#include <KLocalizedString>
 #include <KDBusAddons/KDBusService>
+#include <KLocalizedString>
+
+#include <ktoshiba_debug.h>
 
 #include "ktoshiba.h"
 #include "version.h"
@@ -60,6 +62,7 @@ int main(int argc, char *argv[])
                      ktoshiba, SLOT(showApplication()));
 
     if (!ktoshiba->initialize()) {
+        qCWarning(KTOSHIBA) << "Could not initialize KToshiba, the program will now exit";
         delete ktoshiba;
 
         exit(EXIT_FAILURE);

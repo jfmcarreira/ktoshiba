@@ -20,9 +20,10 @@
 
 #include <KLocalizedString>
 
+#include <ktoshibahardware.h>
+
 #include "keyboardsettings.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 KeyboardSettings::KeyboardSettings(QWidget *parent)
     : QWidget(parent),

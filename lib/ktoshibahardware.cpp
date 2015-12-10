@@ -21,11 +21,10 @@
 #include <KAuth/KAuth>
 
 extern "C" {
-#include <sys/ioctl.h>
-
-#include <unistd.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 }
 
 #include <ktoshiba_debug.h>

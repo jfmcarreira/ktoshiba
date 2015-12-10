@@ -19,8 +19,8 @@
 #ifndef KTOSHIBA_DBUS_INTERFACE_H
 #define KTOSHIBA_DBUS_INTERFACE_H
 
-#include <QString>
 #include <QDBusConnection>
+#include <QString>
 
 class KToshibaDBusInterface : public QObject
 {

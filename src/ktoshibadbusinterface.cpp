@@ -18,8 +18,8 @@
 
 #include <QDebug>
 
-#include "ktoshibadbusinterface.h"
 #include "ktoshibadbusadaptor.h"
+#include "ktoshibadbusinterface.h"
 #include "ktoshiba_debug.h"
 
 KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)

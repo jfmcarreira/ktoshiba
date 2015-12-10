@@ -20,9 +20,10 @@
 
 #include <KLocalizedString>
 
+#include <ktoshibahardware.h>
+
 #include "sleeputilities.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 SleepUtilities::SleepUtilities(QWidget *parent)
     : QWidget(parent),

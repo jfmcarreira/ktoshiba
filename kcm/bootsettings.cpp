@@ -16,10 +16,11 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <ktoshibahardware.h>
+
 #include "bootsettings.h"
 #include "devicemodel.h"
 #include "systemsettings.h"
-#include "ktoshibahardware.h"
 
 BootSettings::BootSettings(QWidget *parent)
     : QWidget(parent),
