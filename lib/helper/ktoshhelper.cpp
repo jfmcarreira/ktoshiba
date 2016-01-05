@@ -93,19 +93,44 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
 
     QDir dir("/sys/block");
     dir.setNameFilters(QStringList("sd*"));
-    QStringList hdds(dir.entryList());
+    QStringList drives(dir.entryList());
+    QStringList hdds;
+    QFile file;
+
+    /*
+     * Find which drives are HDDs, SSDs do not need protection
+     */
+    foreach (const QString &drive, drives) {
+        file.setFileName(QString("/sys/block/%1/queue/rotational").arg(drive));
+        if (!file.open(QIODevice::ReadOnly)) {
+            reply = ActionReply::HelperErrorReply();
+            //reply.setErrorCode(file.error());
+            reply.setErrorDescription(file.errorString());
+
+            return reply;
+        }
+
+        int rotational = file.readLine().simplified().toInt();
+        file.close();
+
+        if (rotational)
+            hdds << drive;
+    }
+    
+    /*
+     * Protect the HDD(s)
+     */
     foreach (const QString &hdd, hdds) {
-        QString path("/sys/block/%1/device/unload_heads");
-        QFile file(path.arg(hdd));
-        if (file.open(QIODevice::WriteOnly)) {
-            QTextStream stream(&file);
-            stream << timeout;
-            file.close();
-        } else {
+        file.setFileName(QString("/sys/block/%1/device/unload_heads").arg(hdd));
+        if (!file.open(QIODevice::WriteOnly)) {
             reply = ActionReply::HelperErrorReply();
             //reply.setErrorCode(file.error());
             reply.setErrorDescription(file.errorString());
         }
+
+        QTextStream stream(&file);
+        stream << timeout;
+        file.close();
     }
 
     return reply;

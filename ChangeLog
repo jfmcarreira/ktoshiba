@@ -1,3 +1,16 @@
+2016-01-04 Azael Avalos <coproscefalo@gmail.com>
+	* KToshHelper only protects the HDDs, SSDs are ignored
+
+2015-12-28 Azael Avalos <coproscefalo@gmail.com>
+	* Removed QDebug include as it is no longer needed directly
+
+2015-12-20 Azael Avalos <coproscefalo@gmail.com>
+	* Updated INSTALL file, the installation and plugin direcories are set by
+	  KDEInstallDirs
+
+2015-12-14 Azael Avalos <coproscefalo@gmail.com>
+	* Released KToshiba 5.2
+
 2015-12-10 Azael Avalos <coproscefalo@gmail.com>
 	* Re-ordered classes and includes in alphabetical order
 	* Fixed a SEGILL at program exit

@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QTimer>
 
@@ -63,6 +62,7 @@ FnActions::~FnActions()
 
     if (m_widgetTimer->isActive())
         m_widgetTimer->stop();
+
     delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_widget; m_widget = NULL;
     delete m_dBus; m_dBus = NULL;
