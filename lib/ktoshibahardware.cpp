@@ -16,8 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
 #include <KAuth/KAuth>
 
 extern "C" {

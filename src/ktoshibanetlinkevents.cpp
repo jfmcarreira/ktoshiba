@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
 #include <QDir>
 #include <QSocketNotifier>
 

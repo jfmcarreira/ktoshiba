@@ -16,8 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
 #include "ktoshibadbusadaptor.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshiba_debug.h"
