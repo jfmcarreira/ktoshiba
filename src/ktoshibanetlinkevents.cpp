@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2016  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -82,8 +82,9 @@ KToshibaNetlinkEvents::KToshibaNetlinkEvents(QObject *parent)
       m_notifier(NULL)
 {
     m_deviceHID = getDeviceHID();
-    if (m_deviceHID.isEmpty() || m_deviceHID.isNull())
+    if (m_deviceHID.isEmpty() || m_deviceHID.isNull()) {
         qCWarning(KTOSHIBA) << "Device HID is not valid, TVAP events monitoring will not be possible";
+    }
 }
 
 KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
@@ -93,8 +94,9 @@ KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
         delete m_notifier;
     }
 
-    if (m_nl)
+    if (m_nl) {
         mnl_socket_close(m_nl);
+    }
 }
 
 QString KToshibaNetlinkEvents::getDeviceHID()
@@ -103,9 +105,11 @@ QString KToshibaNetlinkEvents::getDeviceHID()
 
     QDir dir;
     QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/");
-    foreach (const QString &device, m_devices)
-        if (dir.exists(path.arg(device)))
+    foreach (const QString &device, m_devices) {
+        if (dir.exists(path.arg(device))) {
             return device;
+        }
+    }
 
     return QString();
 }
@@ -161,12 +165,15 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
         return;
     }
 
-    if (QString(m_event->bus_id) == HAPS_HID)
+    if (QString(m_event->bus_id) == HAPS_HID) {
         emit hapsEvent(m_event->type);
+    }
 
-    if (QString(m_event->bus_id) == m_deviceHID)
+    if (QString(m_event->bus_id) == m_deviceHID) {
         emit tvapEvent(m_event->type, m_event->data);
+    }
 
-    if (QString(m_event->device_class) == "ac_adapter")
+    if (QString(m_event->device_class) == "ac_adapter") {
         emit acAdapterChanged(m_event->data);
+    }
 }

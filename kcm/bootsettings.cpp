@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -57,8 +57,9 @@ bool BootSettings::isBootOrderSupported()
 {
     quint32 result = m_sys->hw()->getBootOrder(&m_bootOrder, &m_maxDevices, &m_defaultBootOrder);
 
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
     m_model->setSupportedDevices(m_maxDevices);
 
@@ -69,8 +70,9 @@ bool BootSettings::isPanelPowerOnSupported()
 {
     m_panelPowerON = m_sys->hw()->getPanelPowerON();
 
-    if (m_panelPowerON != KToshibaHardware::DEACTIVATED && m_panelPowerON != KToshibaHardware::ACTIVATED)
+    if (m_panelPowerON != KToshibaHardware::DEACTIVATED && m_panelPowerON != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -79,8 +81,9 @@ bool BootSettings::isWOKSupported()
 {
     quint32 result = m_sys->hw()->getWakeOnKeyboard(&m_wok, &m_defaultWOK);
 
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
     return true;
 }
@@ -89,8 +92,9 @@ bool BootSettings::isWOLSupported()
 {
     quint32 result = m_sys->hw()->getWakeOnLAN(&m_wol, &m_defaultWOL);
 
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
     return true;
 }
@@ -99,8 +103,9 @@ bool BootSettings::isBootSpeedSupported()
 {
     m_bootSpeed = m_sys->hw()->getBootSpeed();
 
-    if (m_bootSpeed != KToshibaHardware::NORMAL && m_bootSpeed != KToshibaHardware::FAST)
+    if (m_bootSpeed != KToshibaHardware::NORMAL && m_bootSpeed != KToshibaHardware::FAST) {
         return false;
+    }
 
     return true;
 }
@@ -120,25 +125,29 @@ void BootSettings::preferClicked()
 void BootSettings::load()
 {
     // Boot Order
-    if (m_bootOrderSupported)
+    if (m_bootOrderSupported) {
         m_model->setDeviceData(m_bootOrder);
-    else
+    } else {
         groupBox->setEnabled(false);
+    }
     // Panel Power ON
-    if (m_panelPowerOnSupported)
+    if (m_panelPowerOnSupported) {
         panel_power_checkbox->setChecked(m_panelPowerON ? true : false);
-    else
+    } else {
         panel_power_checkbox->setEnabled(false);
+    }
     // Wake on Keyboard
-    if (m_wokSupported)
+    if (m_wokSupported) {
         wol_checkbox->setChecked(m_wok ? true : false);
-    else
+    } else {
         wok_checkbox->setEnabled(false);
+    }
     // Wake on LAN
-    if (m_wolSupported)
+    if (m_wolSupported) {
         wol_checkbox->setChecked(m_wol == 0x0801 ? true : false);
-    else
+    } else {
         wol_checkbox->setEnabled(false);
+    }
     // Boot Speed
     if (m_bootSpeedSupported) {
         boot_speed_combobox->setCurrentIndex(m_bootSpeed);
@@ -199,18 +208,23 @@ void BootSettings::save()
 void BootSettings::defaults()
 {
     // Boot Order
-    if (m_bootOrderSupported && m_bootOrder != m_defaultBootOrder)
+    if (m_bootOrderSupported && m_bootOrder != m_defaultBootOrder) {
         m_model->setDeviceData(m_defaultBootOrder);
+    }
     // Panel Power ON
-    if (m_panelPowerOnSupported && m_panelPowerON)
+    if (m_panelPowerOnSupported && m_panelPowerON) {
         panel_power_checkbox->setChecked(false);
+    }
     // Wake on Keyboard
-    if (m_wokSupported && m_wok)
+    if (m_wokSupported && m_wok) {
         wok_checkbox->setChecked(false);
+    }
     // Wake on LAN
-    if (m_wolSupported && m_wol)
+    if (m_wolSupported && m_wol) {
         wol_checkbox->setChecked(false);
+    }
     // Boot Speed
-    if (m_bootSpeedSupported && m_bootSpeed)
+    if (m_bootSpeedSupported && m_bootSpeed) {
         boot_speed_combobox->setCurrentIndex(0);
+    }
 }

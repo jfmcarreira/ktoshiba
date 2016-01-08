@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,14 +59,16 @@ bool PowerSave::isCoolingMethodSupported()
 {
     quint32 result = m_sys->hw()->getCoolingMethod(&m_coolingMethod, &m_maxCoolingMethod);
 
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
     m_coolingMethods << i18n("Maximum Performance");
-    if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED)
+    if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED) {
         m_coolingMethods << i18n("Battery Optimized");
-    else if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED2)
+    } else if (m_maxCoolingMethod == KToshibaHardware::BATTERY_OPTIMIZED2) {
         m_coolingMethods << i18n("Performance") << i18n("Battery Optimized");
+    }
 
     cooling_method_combobox->addItems(m_coolingMethods);
 
@@ -78,8 +80,9 @@ bool PowerSave::isSATAInterfaceSupported()
     m_sataInterface = m_sys->hw()->getSATAInterfaceSetting();
 
     if (m_sataInterface != KToshibaHardware::SATA_PERFORMANCE
-        && m_sataInterface != KToshibaHardware::SATA_BATTERY_LIFE)
+        && m_sataInterface != KToshibaHardware::SATA_BATTERY_LIFE) {
         return false;
+    }
 
     return true;
 }
@@ -88,8 +91,9 @@ bool PowerSave::isODDPowerSupported()
 {
     m_oddPower = m_sys->hw()->getODDPower();
 
-    if (m_oddPower != KToshibaHardware::ODD_DISABLED && m_oddPower != KToshibaHardware::ODD_ENABLED)
+    if (m_oddPower != KToshibaHardware::ODD_DISABLED && m_oddPower != KToshibaHardware::ODD_ENABLED) {
         return false;
+    }
 
     return true;
 }
@@ -99,8 +103,9 @@ bool PowerSave::isIlluminationLEDSupported()
     m_illuminationLED = m_sys->hw()->getIlluminationLED();
 
     if (m_illuminationLED != KToshibaHardware::DEACTIVATED
-        && m_illuminationLED != KToshibaHardware::ACTIVATED)
+        && m_illuminationLED != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -130,12 +135,15 @@ void PowerSave::loadProfile(int profile)
         break;
     }
 
-    if (m_coolingMethodSupported)
+    if (m_coolingMethodSupported) {
         cooling_method_combobox->setCurrentIndex(m_cooling);
-    if (m_oddPowerSupported)
+    }
+    if (m_oddPowerSupported) {
         odd_power_combobox->setCurrentIndex(m_odd);
-    if (m_illuminationLEDSupported)
+    }
+    if (m_illuminationLEDSupported) {
         illumination_combobox->setCurrentIndex(m_illumination);
+    }
 }
 
 void PowerSave::saveProfile(int profile)
@@ -262,16 +270,21 @@ void PowerSave::defaults()
         battery_profiles_combobox->setCurrentIndex(Performance);
     }
     // Cooling Method
-    if (m_coolingMethodSupported)
-        if (m_coolingMethod != KToshibaHardware::MAXIMUM_PERFORMANCE)
+    if (m_coolingMethodSupported) {
+        if (m_coolingMethod != KToshibaHardware::MAXIMUM_PERFORMANCE) {
             cooling_method_combobox->setCurrentIndex(KToshibaHardware::MAXIMUM_PERFORMANCE);
+        }
+    }
     // Optical Disc Device (ODD) Power Support
-    if (m_oddPowerSupported && m_oddPower != KToshibaHardware::ODD_ENABLED)
+    if (m_oddPowerSupported && m_oddPower != KToshibaHardware::ODD_ENABLED) {
         odd_power_combobox->setCurrentIndex(KToshibaHardware::ODD_ENABLED);
+    }
     // Illumunation LED
-    if (m_illuminationLEDSupported && m_illuminationLED != KToshibaHardware::ACTIVATED)
+    if (m_illuminationLEDSupported && m_illuminationLED != KToshibaHardware::ACTIVATED) {
         illumination_combobox->setCurrentIndex(KToshibaHardware::ACTIVATED);
+    }
     // SATA Interface Setting
-    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::SATA_PERFORMANCE)
+    if (m_sataInterfaceSupported && m_sataInterface != KToshibaHardware::SATA_PERFORMANCE) {
         sata_iface_combobox->setCurrentIndex(KToshibaHardware::SATA_PERFORMANCE);
+    }
 }

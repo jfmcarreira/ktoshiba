@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
 #include <QDir>
 #include <QStringBuilder>
 
@@ -45,7 +44,7 @@ void SystemInformation::getData()
 {
     QDir dir(SYSFS_DMI_DIR);
     if (!dir.exists()) {
-        qWarning() << "DMI information directory could not be found under sysfs";
+        qCWarning(KTOSHIBA) << "DMI information directory could not be found under sysfs";
         foreach (const QString &file, m_files) {
             qCDebug(KTOSHIBA) << "Setting" << file;
             m_data << i18n("Unknown");
@@ -70,9 +69,11 @@ QString SystemInformation::getDeviceHID()
     m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
 
     QDir dir;
-    foreach (const QString &device, m_devices)
-        if (dir.exists(SYSFS_DEVICE_DIR % device))
+    foreach (const QString &device, m_devices) {
+        if (dir.exists(SYSFS_DEVICE_DIR % device)) {
             return device;
+        }
+    }
 
     qCWarning(KTOSHIBA) << "No known kernel interface found" << endl;
 

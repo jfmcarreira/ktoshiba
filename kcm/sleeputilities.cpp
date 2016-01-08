@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,8 +39,9 @@ bool SleepUtilities::isSleepChargeSupported()
 {
     quint32 result = m_sys->hw()->getUSBSleepCharge(&m_sleepCharge, &m_maxSleepCharge, &m_defaultSleepCharge);
 
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
     /*
      * NOTE: Not all laptop models support all the Sleep & Charge modes,
@@ -75,8 +76,9 @@ bool SleepUtilities::isSleepMusicSupported()
     m_sleepMusic = m_sys->hw()->getSleepMusic();
 
     if (m_sleepMusic != KToshibaHardware::DEACTIVATED
-        && m_sleepMusic != KToshibaHardware::ACTIVATED)
+        && m_sleepMusic != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -104,10 +106,11 @@ void SleepUtilities::load()
         groupBox->setEnabled(false);
     }
     // Sleep and Music
-    if (m_sleepMusicSupported)
+    if (m_sleepMusicSupported) {
         sleep_music_checkbox->setChecked(m_sleepMusic ? true : false);
-    else
+    } else {
         sleep_music_checkbox->setEnabled(false);
+    }
 }
 
 void SleepUtilities::save()
@@ -147,17 +150,21 @@ void SleepUtilities::defaults()
 {
     // Sleep and Charge
     if (m_sleepChargeSupported) {
-        if (m_sleepCharge != KToshibaHardware::AUTO)
+        if (m_sleepCharge != KToshibaHardware::AUTO) {
             sleep_charge_combobox->setCurrentIndex(m_sleepModesMap.key(KToshibaHardware::AUTO));
-        if (m_batteryEnabled != KToshibaHardware::ACTIVATED)
+        }
+        if (m_batteryEnabled != KToshibaHardware::ACTIVATED) {
             groupBox->setChecked(true);
+        }
         if (m_batteryLevel != 10) {
             battery_level->setText(QString::number(10) % "%");
             battery_level_slider->setValue(10);
         }
     }
     // Sleep and Music
-    if (m_sleepMusicSupported)
-        if (m_sleepMusic != KToshibaHardware::DEACTIVATED)
+    if (m_sleepMusicSupported) {
+        if (m_sleepMusic != KToshibaHardware::DEACTIVATED) {
             sleep_music_checkbox->setChecked(false);
+        }
+    }
 }

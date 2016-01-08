@@ -1,3 +1,10 @@
+2016-01-07 Azael Avalos <coproscefalo@gmail.com>
+	* Added braces to all "if" statements, this is to follow more closely
+	  the KDE coding guides
+	* Updated Copyright year
+	* Removed a leftover QDebug include
+	* Set the contents margings of the KCM tabs to 10 instead of 20
+
 2016-01-04 Azael Avalos <coproscefalo@gmail.com>
 	* KToshHelper only protects the HDDs, SSDs are ignored
 

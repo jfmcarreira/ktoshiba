@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,13 +36,6 @@ DeviceModel::DeviceModel(QObject *parent)
     m_devicesMap[USB] = "USB";
     m_devicesMap[HDD3] = "HDD/SSD 3";
     m_devicesMap[NO_DEVICE] = "NO DEVICE";
-}
-
-DeviceModel::~DeviceModel()
-{
-    m_devicesMap.clear();
-    m_modelList.clear();
-    m_devicesList.clear();
 }
 
 QString DeviceModel::tooltip(int value) const
@@ -90,23 +83,26 @@ QString DeviceModel::tooltip(int value) const
 
 QVariant DeviceModel::data(const QModelIndex& index, int role) const
 {
-    if (index.row() < 0 || index.row() >= m_modelList.size())
+    if (index.row() < 0 || index.row() >= m_modelList.size()) {
         return QVariant();
+    }
 
     int device = m_devicesList.at(index.row());
 
-    if (role == Qt::ToolTipRole)
+    if (role == Qt::ToolTipRole) {
         return tooltip(device);
-    else if (role == Qt::DisplayRole)
+    } else if (role == Qt::DisplayRole) {
         return m_modelList.at(index.row());
+    }
 
     return QVariant();
 }
 
 Qt::ItemFlags DeviceModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return QAbstractListModel::flags(index);
+    }
 
     return Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsEnabled;
 }
@@ -116,16 +112,18 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
     Q_UNUSED(section)
     Q_UNUSED(orientation)
 
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole) {
         return QVariant();
+    }
 
     return i18n("Boot Devices");
 }
 
 int DeviceModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid())
+    if (parent.isValid()) {
         return 0;
+    }
 
     return m_modelList.count();
 }
@@ -134,10 +132,11 @@ int DeviceModel::getDeviceData() const
 {
     int value = 0;
     for (int i = 0; i < MAX_BOOT_DEVICES; i++) {
-        if (i < m_supportedDevices)
+        if (i < m_supportedDevices) {
             value |= (m_devicesList.at(i) << (4 * i));
-        else
+        } else {
             value |= (0xf << (4 * i));
+        }
     }
 
     return value;
@@ -145,8 +144,9 @@ int DeviceModel::getDeviceData() const
 
 void DeviceModel::setDeviceData(const quint32 value)
 {
-    if (!value)
+    if (!value) {
         return;
+    }
 
     emit beginResetModel();
     if (!m_devicesList.isEmpty()) {
@@ -168,8 +168,9 @@ void DeviceModel::setSupportedDevices(int num_devices)
 
 void DeviceModel::moveUp(const QModelIndex &index)
 {
-    if (!index.isValid() || index.row() >= m_devicesList.size() || index.row() < 1 || index.column() != 0)
+    if (!index.isValid() || index.row() >= m_devicesList.size() || index.row() < 1 || index.column() != 0) {
         return;
+    }
 
     emit layoutAboutToBeChanged();
     QModelIndex above = index.sibling(index.row() - 1, index.column());
@@ -184,8 +185,9 @@ void DeviceModel::moveUp(const QModelIndex &index)
 
 void DeviceModel::moveDown(const QModelIndex &index)
 {
-    if (!index.isValid() || index.row() >= m_devicesList.size() - 1 || index.column() != 0)
+    if (!index.isValid() || index.row() >= m_devicesList.size() - 1 || index.column() != 0) {
         return;
+    }
 
     emit layoutAboutToBeChanged();
     QModelIndex below = index.sibling(index.row() + 1, index.column());

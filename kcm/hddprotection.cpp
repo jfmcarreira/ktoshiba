@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,8 +45,9 @@ bool HDDProtection::isHDDProtectionSupported()
 {
     m_protectionLevel = m_sys->hw()->getHDDProtectionLevel();
 
-    if (m_protectionLevel == KToshibaHardware::FAILURE)
+    if (m_protectionLevel == KToshibaHardware::FAILURE) {
         return false;
+    }
 
     return true;
 }
@@ -69,8 +70,9 @@ void HDDProtection::load()
 
 void HDDProtection::save()
 {
-    if (!m_hddprotectionSupported)
+    if (!m_hddprotectionSupported) {
         return;
+    }
 
     if (m_monitorHDD != groupBox->isChecked()) {
         hdd.writeEntry("MonitorHDD", !m_monitorHDD);
@@ -95,13 +97,16 @@ void HDDProtection::save()
 
 void HDDProtection::defaults()
 {
-    if (!m_hddprotectionSupported)
+    if (!m_hddprotectionSupported) {
         return;
+    }
 
-    if (!m_monitorHDD)
+    if (!m_monitorHDD) {
         groupBox->setChecked(true);
-    if (!m_notifyHDD)
+    }
+    if (!m_notifyHDD) {
         hdd_notification_checkbox->setChecked(true);
+    }
     if (m_protectionLevel != 2) {
         protection_level->setText(m_levels.at(Medium));
         protection_level_slider->setValue(Medium);
