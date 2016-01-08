@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ class SystemInformation : public QWidget, public Ui::SysInfo
     Q_OBJECT
 
 public:
-    explicit SystemInformation(QWidget *parent);
+    explicit SystemInformation(QWidget *parent = 0);
 
     void load();
 

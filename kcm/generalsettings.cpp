@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,8 +38,9 @@ bool GeneralSettings::isPointingDeviceSupported()
 {
     m_touchpad = m_sys->hw()->getPointingDevice();
 
-    if (m_touchpad != KToshibaHardware::DEACTIVATED && m_touchpad != KToshibaHardware::ACTIVATED)
+    if (m_touchpad != KToshibaHardware::DEACTIVATED && m_touchpad != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -48,8 +49,9 @@ bool GeneralSettings::isRapidChargeSupported()
 {
     m_rapidCharge = m_sys->hw()->getUSBRapidCharge();
 
-    if (m_rapidCharge != KToshibaHardware::DEACTIVATED && m_rapidCharge != KToshibaHardware::ACTIVATED)
+    if (m_rapidCharge != KToshibaHardware::DEACTIVATED && m_rapidCharge != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -58,8 +60,9 @@ bool GeneralSettings::isUSBThreeSupported()
 {
     m_usbThree = m_sys->hw()->getUSBThree();
 
-    if (m_usbThree != KToshibaHardware::DEACTIVATED && m_usbThree != KToshibaHardware::ACTIVATED)
+    if (m_usbThree != KToshibaHardware::DEACTIVATED && m_usbThree != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -68,8 +71,9 @@ bool GeneralSettings::isUSBLegacySupported()
 {
     m_usbLegacy = m_sys->hw()->getUSBLegacyEmulation();
 
-    if (m_usbLegacy != KToshibaHardware::DEACTIVATED && m_usbLegacy != KToshibaHardware::ACTIVATED)
+    if (m_usbLegacy != KToshibaHardware::DEACTIVATED && m_usbLegacy != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -78,8 +82,9 @@ bool GeneralSettings::isBuiltInLANSupported()
 {
     m_builtInLAN = m_sys->hw()->getBuiltInLAN();
 
-    if (m_builtInLAN != KToshibaHardware::DEACTIVATED && m_builtInLAN != KToshibaHardware::ACTIVATED)
+    if (m_builtInLAN != KToshibaHardware::DEACTIVATED && m_builtInLAN != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -87,30 +92,35 @@ bool GeneralSettings::isBuiltInLANSupported()
 void GeneralSettings::load()
 {
     // Pointing Device
-    if (m_pointingDeviceSupported)
+    if (m_pointingDeviceSupported) {
         pointing_device_checkbox->setChecked(m_touchpad ? true : false);
-    else
+    } else {
         pointing_device_checkbox->setEnabled(false);
+    }
     // USB Rapid Charge
-    if (m_rapidChargeSupported)
+    if (m_rapidChargeSupported) {
         rapid_charge_checkbox->setChecked(m_rapidCharge ? true : false);
-    else
+    } else {
         rapid_charge_checkbox->setEnabled(false);
+    }
     // USB Three
-    if (m_usbThreeSupported)
+    if (m_usbThreeSupported) {
         usb_three_checkbox->setChecked(m_usbThree ? true : false);
-    else
+    } else {
         usb_three_checkbox->setEnabled(false);
+    }
     // USB Legacy Emulation
-    if (m_usbLegacySupported)
+    if (m_usbLegacySupported) {
         usb_legacy_checkbox->setChecked(m_usbLegacy ? true : false);
-    else
+    } else {
         usb_legacy_checkbox->setEnabled(false);
+    }
     // Built In LAN
-    if (m_builtInLANSupported)
+    if (m_builtInLANSupported) {
         built_in_lan_checkbox->setChecked(m_builtInLAN ? true : false);
-    else
+    } else {
         built_in_lan_checkbox->setEnabled(false);
+    }
 }
 
 void GeneralSettings::save()
@@ -167,18 +177,23 @@ void GeneralSettings::save()
 void GeneralSettings::defaults()
 {
     // Pointing Device
-    if (m_pointingDeviceSupported && !m_touchpad)
+    if (m_pointingDeviceSupported && !m_touchpad) {
         pointing_device_checkbox->setChecked(true);
+    }
     // USB Rapid Charge
-    if (m_rapidChargeSupported && m_rapidCharge)
+    if (m_rapidChargeSupported && m_rapidCharge) {
         rapid_charge_checkbox->setChecked(false);
+    }
     // USB Three
-    if (m_usbThreeSupported && !m_usbThree)
+    if (m_usbThreeSupported && !m_usbThree) {
         usb_three_checkbox->setChecked(true);
+    }
     // USB Legacy Emulation
-    if (m_usbLegacySupported && !m_usbLegacy)
+    if (m_usbLegacySupported && !m_usbLegacy) {
         usb_legacy_checkbox->setChecked(true);
+    }
     // Built In LAN
-    if (m_builtInLANSupported && !m_builtInLAN)
+    if (m_builtInLANSupported && !m_builtInLAN) {
         built_in_lan_checkbox->setChecked(true);
+    }
 }

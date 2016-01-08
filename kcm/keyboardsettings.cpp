@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,13 +39,15 @@ bool KeyboardSettings::isKeyboardBacklightSupported()
 {
     quint32 result = m_sys->hw()->getKBDBacklight(&m_keyboardMode, &m_keyboardTime, &m_keyboardType);
 
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
-    if (m_keyboardType == FirstKeyboardGen)
+    if (m_keyboardType == FirstKeyboardGen) {
         m_keyboardModes << "FN-Z" << "AUTO";
-    else if (m_keyboardType == SecondKeyboardGen)
+    } else if (m_keyboardType == SecondKeyboardGen) {
         m_keyboardModes << i18n("TIMER") << i18n("ON") << i18n("OFF");
+    }
 
     return true;
 }
@@ -55,8 +57,9 @@ bool KeyboardSettings::isKeyboardFunctionsSupported()
     m_keyboardFunctions = m_sys->hw()->getKBDFunctions();
 
     if (m_keyboardFunctions != KToshibaHardware::DEACTIVATED
-        && m_keyboardFunctions != KToshibaHardware::ACTIVATED)
+        && m_keyboardFunctions != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -85,12 +88,13 @@ void KeyboardSettings::load()
                              "FN-Z: User toggles the keyboard backlight.<br/>"
                              "AUTO: Keyboard backlight turns on/off automatically.");
         } else if (m_keyboardType == SecondKeyboardGen) {
-            if (m_keyboardMode == KToshibaHardware::TIMER)
+            if (m_keyboardMode == KToshibaHardware::TIMER) {
                 m_keyboardIndex = TIMER;
-            else if (m_keyboardMode == KToshibaHardware::ON)
+	    } else if (m_keyboardMode == KToshibaHardware::ON) {
                 m_keyboardIndex = ON;
-            else if (m_keyboardMode == KToshibaHardware::OFF)
+	    } else if (m_keyboardMode == KToshibaHardware::OFF) {
                 m_keyboardIndex = OFF;
+	    }
             m_tooltip = i18n("Select the keyboard backlight operation mode.<br/>"
                              "TIMER: Keyboard backlight turns on/off automatically.<br/>"
                              "ON: Keyboard backlight is turned on.<br/>"
@@ -166,13 +170,16 @@ void KeyboardSettings::save()
 void KeyboardSettings::defaults()
 {
     // Keyboard Functions
-    if (m_keyboardFunctionsSupported && !m_keyboardFunctions)
+    if (m_keyboardFunctionsSupported && !m_keyboardFunctions) {
         kbd_functions_combobox->setCurrentIndex(1);
+    }
     // Keyboard Backlight
     if (m_kbdBacklightSupported) {
-        if (m_keyboardMode != KToshibaHardware::TIMER)
+        if (m_keyboardMode != KToshibaHardware::TIMER) {
             kbd_backlight_combobox->setCurrentIndex(m_keyboardType == FirstKeyboardGen ? AUTO : TIMER);
-        if (m_keyboardTime != 15)
+        }
+        if (m_keyboardTime != 15) {
             kbd_timeout_slider->setValue(15);
+        }
     }
 }

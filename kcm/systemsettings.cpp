@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2015-2016 Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
                                        ktoshiba_version,
                                        i18n("Configures Toshiba laptop related hardware settings"),
                                        KAboutLicense::GPL_V2,
-                                       i18n("Copyright (C) 2015 Azael Avalos"),
+                                       i18n("Copyright (C) 2015-2016 Azael Avalos"),
                                        QString(),
                                        QLatin1String("http://ktoshiba.sourceforge.net/"),
                                        QLatin1String("coproscefalo@gmail.com"));
@@ -89,7 +89,6 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
 
 KToshibaSystemSettings::~KToshibaSystemSettings()
 {
-    delete m_boot; m_boot = NULL;
     delete m_message; m_message = NULL;
     delete m_tabWidget; m_tabWidget = NULL;
 }
@@ -97,31 +96,31 @@ KToshibaSystemSettings::~KToshibaSystemSettings()
 void KToshibaSystemSettings::addTabs()
 {
     m_sysinfo = new SystemInformation(this);
-    m_sysinfo->setContentsMargins(20, 20, 20, 20);
+    m_sysinfo->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_sysinfo, m_sysinfo->windowTitle());
 
     m_general = new GeneralSettings(this);
-    m_general->setContentsMargins(20, 20, 20, 20);
+    m_general->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_general, m_general->windowTitle());
 
     m_hdd = new HDDProtection(this);
-    m_hdd->setContentsMargins(20, 20, 20, 20);
+    m_hdd->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_hdd, m_hdd->windowTitle());
 
     m_sleep = new SleepUtilities(this);
-    m_sleep->setContentsMargins(20, 20, 20, 20);
+    m_sleep->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_sleep, m_sleep->windowTitle());
 
     m_kbd = new KeyboardSettings(this);
-    m_kbd->setContentsMargins(20, 20, 20, 20);
+    m_kbd->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_kbd, m_kbd->windowTitle());
 
     m_boot = new BootSettings(this);
-    m_boot->setContentsMargins(20, 20, 20, 20);
+    m_boot->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_boot, m_boot->windowTitle());
 
     m_power = new PowerSave(this);
-    m_power->setContentsMargins(20, 20, 20, 20);
+    m_power->setContentsMargins(10, 10, 10, 10);
     m_tabWidget->addTab(m_power, m_power->windowTitle());
 }
 
@@ -182,9 +181,10 @@ void KToshibaSystemSettings::load()
             this, SLOT(kbdTimeoutChanged(int)));
     connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(kbdBacklightChanged(int)));
-    if (m_kbd->getKeyboardType() == KeyboardSettings::FirstKeyboardGen)
+    if (m_kbd->getKeyboardType() == KeyboardSettings::FirstKeyboardGen) {
         connect(m_kbd->kbd_backlight_combobox, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(configChangedReboot()));
+    }
     /*
      * Boot Settings tab
      */
@@ -245,8 +245,9 @@ void KToshibaSystemSettings::save()
      */
     m_power->save();
 
-    if (m_configFileChanged)
+    if (m_configFileChanged) {
         notifyConfigFileChanged();
+    }
 }
 
 void KToshibaSystemSettings::defaults()
@@ -279,8 +280,9 @@ void KToshibaSystemSettings::defaults()
 
 void KToshibaSystemSettings::showRebootMessage()
 {
-    if (!m_message->isVisible())
+    if (!m_message->isVisible()) {
         m_message->setVisible(true);
+    }
 }
 
 void KToshibaSystemSettings::configChanged()
@@ -307,8 +309,9 @@ void KToshibaSystemSettings::notifyConfigFileChanged()
                          "net.sourceforge.KToshiba",
                          QDBusConnection::sessionBus(), this);
 
-    if (iface.isValid())
+    if (iface.isValid()) {
         iface.call("reloadConfigFile");
+    }
 }
 
 void KToshibaSystemSettings::protectionLevelChanged(int level)

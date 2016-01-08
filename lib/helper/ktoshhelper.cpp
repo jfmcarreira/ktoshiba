@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2016  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -113,8 +113,9 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
         int rotational = file.readLine().simplified().toInt();
         file.close();
 
-        if (rotational)
+        if (rotational) {
             hdds << drive;
+        }
     }
     
     /*

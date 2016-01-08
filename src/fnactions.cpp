@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2016  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -57,11 +57,13 @@ FnActions::FnActions(QObject *parent)
 
 FnActions::~FnActions()
 {
-    if (m_cookie)
+    if (m_cookie) {
         m_dBus->setPowerManagementInhibition(false, NULL, &m_cookie);
+    }
 
-    if (m_widgetTimer->isActive())
+    if (m_widgetTimer->isActive()) {
         m_widgetTimer->stop();
+    }
 
     delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_widget; m_widget = NULL;
@@ -93,10 +95,11 @@ bool FnActions::init()
     loadConfig();
 
     m_batteryProfiles << Performance << Powersave << Presentation << ECO;
-    if (m_batteryProfile == ECO)
+    if (m_batteryProfile == ECO) {
         changeBatteryProfile(m_batteryProfile, true);
-    else
+    } else {
         changeBatteryProfile(m_dBus->getBatteryProfile() == "AC" ? Performance : Powersave, true);
+    }
 
     m_hdd = m_hw->getHDDProtectionLevel();
     if (m_hdd != KToshibaHardware::FAILURE && m_protectionLevel != m_hdd) {
@@ -165,8 +168,9 @@ void FnActions::reloadConfig()
     m_config->reparseConfiguration();
     loadConfig();
 
-    if (m_batteryProfile != m_previousBatteryProfile)
+    if (m_batteryProfile != m_previousBatteryProfile) {
         changeBatteryProfile(m_batteryProfile, false);
+    }
 }
 
 bool FnActions::isCoolingMethodSupported()
@@ -175,8 +179,9 @@ bool FnActions::isCoolingMethodSupported()
     int cooling, max_cooling;
 
     result = m_hw->getCoolingMethod(&cooling, &max_cooling);
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
+    }
 
     return true;
 }
@@ -184,8 +189,9 @@ bool FnActions::isCoolingMethodSupported()
 bool FnActions::isODDPowerSupported()
 {
     quint32 result = m_hw->getODDPower();
-    if (result != KToshibaHardware::ODD_DISABLED && result != KToshibaHardware::ODD_ENABLED)
+    if (result != KToshibaHardware::ODD_DISABLED && result != KToshibaHardware::ODD_ENABLED) {
         return false;
+    }
 
     return true;
 }
@@ -194,8 +200,9 @@ bool FnActions::isIlluminationSupported()
 {
     quint32 result = m_hw->getIlluminationLED();
     if (result != KToshibaHardware::DEACTIVATED
-        && result != KToshibaHardware::ACTIVATED)
+        && result != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -203,16 +210,18 @@ bool FnActions::isIlluminationSupported()
 bool FnActions::isECOSupported()
 {
     quint32 result = m_hw->getEcoLED();
-    if (result != KToshibaHardware::DEACTIVATED && result != KToshibaHardware::ACTIVATED)
+    if (result != KToshibaHardware::DEACTIVATED && result != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
 
 void FnActions::updateBatteryProfile(int ac_adapter)
 {
-    if (m_batteryProfile == Presentation || m_batteryProfile == ECO)
+    if (m_batteryProfile == Presentation || m_batteryProfile == ECO) {
         return;
+    }
 
     changeBatteryProfile(ac_adapter == Connected ? Performance : Powersave, false);
 
@@ -275,31 +284,37 @@ void FnActions::changeBatteryProfile(int profile, bool init)
         powersave.sync();
     }
 
-    if (m_coolingMethodSupported)
+    if (m_coolingMethodSupported) {
         m_hw->setCoolingMethod(m_cooling);
+    }
 
-    if (m_oddPowerSupported)
+    if (m_oddPowerSupported) {
         m_hw->setODDPower(0x100 | m_odd);
+    }
 
-    if (m_illuminationSupported)
+    if (m_illuminationSupported) {
         m_hw->setIlluminationLED(m_illumination);
+    }
 
-    if (m_ecoSupported)
+    if (m_ecoSupported) {
         m_hw->setEcoLED(profile != ECO ? KToshibaHardware::DEACTIVATED : KToshibaHardware::ACTIVATED);
+    }
 
     if (m_kbdBacklightSupported) {
-        if (m_keyboardType == FirstGeneration && m_keyboardMode == KToshibaHardware::FNZ)
+        if (m_keyboardType == FirstGeneration && m_keyboardMode == KToshibaHardware::FNZ) {
             m_dBus->setKBDBacklight(kbdbl ? KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED);
-        else if (m_keyboardType == SecondGeneration && m_keyboardMode != KToshibaHardware::TIMER)
+        } else if (m_keyboardType == SecondGeneration && m_keyboardMode != KToshibaHardware::TIMER) {
             m_hw->setKBDBacklight(kbdbl ? KToshibaHardware::ON : KToshibaHardware::OFF, m_keyboardTime);
+        }
     }
 
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(64, 64));
     m_statusWidget.statusLabel->setText(m_iconText.arg(text));
-    if (!init)
+    if (!init) {
         showWidget();
+    }
 
     qCDebug(KTOSHIBA) << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
     m_previousBatteryProfile = m_batteryProfile;
@@ -308,32 +323,35 @@ void FnActions::changeBatteryProfile(int profile, bool init)
 bool FnActions::isPointingDeviceSupported()
 {
     m_pointing = m_hw->getPointingDevice();
-    if (m_pointing != KToshibaHardware::DEACTIVATED && m_pointing != KToshibaHardware::ACTIVATED)
+    if (m_pointing != KToshibaHardware::DEACTIVATED && m_pointing != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
 
 void FnActions::toggleTouchPad()
 {
-    if (!m_pointingSupported)
+    if (!m_pointingSupported) {
         return;
+    }
 
     m_pointing = m_hw->getPointingDevice();
     m_hw->setPointingDevice(!m_pointing);
     m_statusWidget.statusLabel->setText(m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")));
     m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
-    if (m_keyboardFunctionsSupported && m_kbdFunctions)
+    if (m_keyboardFunctionsSupported && m_kbdFunctions) {
         showWidget();
+    }
 }
 
 bool FnActions::isKBDBacklightSupported()
 {
-    m_keyboardMode = m_keyboardTime = m_keyboardType = -1;
     updateKBDBacklight();
 
-    if (m_keyboardMode != -1 && m_keyboardTime != -1 && m_keyboardType == -1)
+    if (m_keyboardMode != -1 && m_keyboardTime != -1 && m_keyboardType == -1) {
         return false;
+    }
 
     return true;
 }
@@ -341,21 +359,24 @@ bool FnActions::isKBDBacklightSupported()
 void FnActions::updateKBDBacklight()
 {
     quint32 result = m_hw->getKBDBacklight(&m_keyboardMode, &m_keyboardTime, &m_keyboardType);
-    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2)
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         qCCritical(KTOSHIBA) << "Could not get Keyboard Backlight status";
+    }
 }
 
 void FnActions::toggleKBDBacklight()
 {
-    if (!m_kbdBacklightSupported)
+    if (!m_kbdBacklightSupported) {
         return;
+    }
 
     switch (m_keyboardType) {
     case FirstGeneration:
-        if (m_keyboardMode == KToshibaHardware::TIMER)
+        if (m_keyboardMode == KToshibaHardware::TIMER) {
             m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
-        else
+        } else {
             return;
+        }
         break;
     case SecondGeneration:
         int current = m_keyboardModes.indexOf(m_keyboardMode);
@@ -389,8 +410,10 @@ bool FnActions::isKeyboardFunctionsSupported()
 {
     m_kbdFunctions = m_hw->getKBDFunctions();
 
-    if (m_kbdFunctions != KToshibaHardware::DEACTIVATED && m_kbdFunctions != KToshibaHardware::ACTIVATED)
+    if (m_kbdFunctions != KToshibaHardware::DEACTIVATED
+        && m_kbdFunctions != KToshibaHardware::ACTIVATED) {
         return false;
+    }
 
     return true;
 }
@@ -423,8 +446,9 @@ void FnActions::processHotkey(int hotkey)
      * Help (New keyboard layout)
      */
     case 0x13b:
-        if (m_keyboardFunctionsSupported)
+        if (m_keyboardFunctionsSupported) {
             return;
+        }
         m_dBus->lockScreen();
         break;
     /*
@@ -433,8 +457,9 @@ void FnActions::processHotkey(int hotkey)
      * Brightness Down (New keyboard layout)
      */
     case 0x13c:
-        if (m_keyboardFunctionsSupported)
+        if (m_keyboardFunctionsSupported) {
             return;
+        }
         toggleBatteryProfiles();
         break;
     /*
@@ -443,8 +468,9 @@ void FnActions::processHotkey(int hotkey)
      * TouchPad Toggle (New keyboard layout)
      */
     case 0x13f:
-        if (!m_keyboardFunctionsSupported)
+        if (!m_keyboardFunctionsSupported) {
             return;
+        }
         toggleTouchPad();
         break;
     /*
@@ -453,8 +479,9 @@ void FnActions::processHotkey(int hotkey)
      * Volume Down (New keyboard layout)
      */
     case 0x143:
-        if (m_keyboardFunctionsSupported)
+        if (m_keyboardFunctionsSupported) {
             return;
+        }
         toggleTouchPad();
         break;
     case 0x1ac: // FN-Z released
@@ -471,15 +498,17 @@ void FnActions::processHotkey(int hotkey)
 
 void FnActions::parseHAPSEvents(int event)
 {
-    if (m_hdd == KToshibaHardware::FAILURE || !m_monitorHDD)
+    if (m_hdd == KToshibaHardware::FAILURE || !m_monitorHDD) {
         return;
+    }
 
     switch (event) {
     case KToshibaNetlinkEvents::Vibrated:
         qCDebug(KTOSHIBA) << "Vibration detected";
         m_hw->unloadHDDHeads(5000);
-        if (m_notifyHDD)
+        if (m_notifyHDD) {
             emit vibrationDetected();
+        }
         break;
     case KToshibaNetlinkEvents::Stabilized:
         qCDebug(KTOSHIBA) << "Vibration stabilized";
@@ -492,10 +521,11 @@ void FnActions::parseTVAPEvents(int event, int data)
 {
     switch (event) {
     case KToshibaNetlinkEvents::Hotkey:
-        if (data <= 0x1ff)
+        if (data <= 0x1ff) {
             processHotkey(data);
-        else if (data > 0x400)
+        } else if (data > 0x400) {
             parseExtraTVAPEvents(data);
+        }
         break;
     case KToshibaNetlinkEvents::Docked:
     case KToshibaNetlinkEvents::Undocked:

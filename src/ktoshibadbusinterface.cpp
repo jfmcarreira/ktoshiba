@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2004-2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2004-2016  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,22 +29,27 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
     new KToshibaDBusAdaptor(this);
 
     m_object = m_dbus.registerObject("/Config", this);
-    if (!m_object)
+    if (!m_object) {
         qCCritical(KTOSHIBA) << "Could not register DBus object";
+    }
 
     m_service = m_dbus.registerService("net.sourceforge.KToshiba");
-    if (!m_service)
+    if (!m_service) {
         qCCritical(KTOSHIBA) << "Could not register DBus service";
+    }
 }
 
 KToshibaDBusInterface::~KToshibaDBusInterface()
 {
-    if (m_object)
+    if (m_object) {
         m_dbus.unregisterObject("/Config");
+    }
 
-    if (m_service)
-        if (!m_dbus.unregisterService("net.sourceforge.KToshiba"))
+    if (m_service) {
+        if (!m_dbus.unregisterService("net.sourceforge.KToshiba")) {
             qCCritical(KTOSHIBA) << "Could not unregister DBus service";
+        }
+    }
 }
 
 void KToshibaDBusInterface::reloadConfigFile()
@@ -182,8 +187,9 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
             return;
         }
 
-        if (!has_inhib)
+        if (!has_inhib) {
             return;
+        }
 
         QDBusReply<void> uninhib = iface.call("UnInhibit", *cookie);
         if (!uninhib.isValid()) {

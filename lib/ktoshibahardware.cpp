@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2014-2015  Azael Avalos <coproscefalo@gmail.com>
+   Copyright (C) 2014-2016  Azael Avalos <coproscefalo@gmail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -89,9 +89,10 @@ void KToshibaHardware::setHDDProtectionLevel(int level)
     action.setHelperId(HELPER_ID);
     action.addArgument("level", level);
     ExecuteJob *job = action.execute();
-    if (!job->exec())
+    if (!job->exec()) {
         qCCritical(KTOSHIBA) << "setHDDProtectionLevel failed with error code"
                              << job->error() << job->errorString();
+    }
 }
 
 void KToshibaHardware::unloadHDDHeads(int timeout)
@@ -100,9 +101,10 @@ void KToshibaHardware::unloadHDDHeads(int timeout)
     action.setHelperId(HELPER_ID);
     action.addArgument("timeout", timeout);
     ExecuteJob *job = action.execute();
-    if (!job->exec())
+    if (!job->exec()) {
         qCCritical(KTOSHIBA) << "unloadHDDHeads failed with error code"
                              << job->error() << job->errorString();
+    }
 }
 
 /*
@@ -111,8 +113,9 @@ void KToshibaHardware::unloadHDDHeads(int timeout)
 
 int KToshibaHardware::tci_raw(const SMMRegisters *regs)
 {
-    if (!m_devDeviceExist)
+    if (!m_devDeviceExist) {
         return -1;
+    }
 
     int m_fd = ::open(TOSHIBA_ACPI_DEVICE, O_RDWR);
     if (m_fd < 0) {
@@ -122,14 +125,16 @@ int KToshibaHardware::tci_raw(const SMMRegisters *regs)
     }
 
     int ret = -1;
-    if (regs->eax == SCI_READ || regs->eax == SCI_WRITE)
+    if (regs->eax == SCI_READ || regs->eax == SCI_WRITE) {
         ret = ioctl(m_fd, TOSHIBA_ACPI_SCI, regs);
-    else if (regs->eax == HCI_READ || regs->eax == HCI_WRITE)
+    } else if (regs->eax == HCI_READ || regs->eax == HCI_WRITE) {
         ret = ioctl(m_fd, TOSH_SMM, regs);
+    }
 
     ::close(m_fd);
-    if (ret < 0)
+    if (ret < 0) {
         qCCritical(KTOSHIBA) << "Error while accessing toshiba_acpi device:" << strerror(errno);
+    }
 
     return ret;
 }
@@ -174,8 +179,9 @@ void KToshibaHardware::setPointingDevice(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setPointingDevice", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getIlluminationLED()
@@ -213,8 +219,9 @@ void KToshibaHardware::setIlluminationLED(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setIlluminationLED", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getEcoLED()
@@ -265,8 +272,9 @@ void KToshibaHardware::setEcoLED(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setEcoLED", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
@@ -312,8 +320,9 @@ void KToshibaHardware::setKBDBacklight(int mode, int time)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setKBDBacklight", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *maxval, int *defval)
@@ -349,8 +358,9 @@ void KToshibaHardware::setUSBSleepCharge(int mode, int base)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setUSBSleepCharge", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getSleepFunctionsOnBatteryStatus(int *state, int *level)
@@ -393,8 +403,9 @@ void KToshibaHardware::setSleepFunctionsOnBatteryStatus(int state, int level)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setSleepFunctionsOnBatteryStatus", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getUSBRapidCharge()
@@ -432,8 +443,9 @@ void KToshibaHardware::setUSBRapidCharge(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setUSBRapidCharge", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getSleepMusic()
@@ -471,8 +483,9 @@ void KToshibaHardware::setSleepMusic(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setSleepMusic", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getKBDFunctions()
@@ -510,8 +523,9 @@ void KToshibaHardware::setKBDFunctions(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setKBDFunctions", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getPanelPowerON()
@@ -549,8 +563,9 @@ void KToshibaHardware::setPanelPowerON(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setPanelPowerON", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getUSBThree()
@@ -588,8 +603,9 @@ void KToshibaHardware::setUSBThree(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setUSBThree", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)
@@ -624,8 +640,9 @@ void KToshibaHardware::setBootOrder(quint32 order)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setBootOrder", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getWakeOnKeyboard(int *val, int *defval)
@@ -665,8 +682,9 @@ void KToshibaHardware::setWakeOnKeyboard(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setWakeOnKeyboard", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getWakeOnLAN(int *val, int *defval)
@@ -706,8 +724,9 @@ void KToshibaHardware::setWakeOnLAN(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setWakeOnLAN", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getCoolingMethod(int *val, int *maxval)
@@ -747,8 +766,9 @@ void KToshibaHardware::setCoolingMethod(quint32 mode)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setCoolingMethod", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getUSBLegacyEmulation()
@@ -786,8 +806,9 @@ void KToshibaHardware::setUSBLegacyEmulation(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setUSBLegacyEmulation", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getBuiltInLAN()
@@ -825,8 +846,9 @@ void KToshibaHardware::setBuiltInLAN(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setBuiltInLAN", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getSATAInterfaceSetting()
@@ -864,8 +886,9 @@ void KToshibaHardware::setSATAInterfaceSetting(quint32 mode)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setSATAInterfaceSetting", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getBootSpeed()
@@ -903,8 +926,9 @@ void KToshibaHardware::setBootSpeed(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setBootSpeed", regs.eax);
+    }
 }
 
 quint32 KToshibaHardware::getODDPower()
@@ -942,6 +966,7 @@ void KToshibaHardware::setODDPower(quint32 state)
         return;
     }
 
-    if (regs.eax != SUCCESS && regs.eax != SUCCESS2)
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setODDPower", regs.eax);
+    }
 }
