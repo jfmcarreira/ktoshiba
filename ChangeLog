@@ -1,3 +1,13 @@
+2016-02-06 Azael Avalos <coproscefalo@gmail.com>
+	* Spanish translation updated
+
+2016-02-02 Azael Avalos <coproscefalo@gmail.com>
+	* Finished implementing the Power On Display feature
+
+2016-02-02 Azael Avalos <coproscefalo@gmail.com>
+	* Initialize the function variables in KToshibaHardware early
+	* Added get/set functions to Power On Display to KToshibaHardware
+
 2016-01-07 Azael Avalos <coproscefalo@gmail.com>
 	* Added braces to all "if" statements, this is to follow more closely
 	  the KDE coding guides

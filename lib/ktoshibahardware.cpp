@@ -281,9 +281,9 @@ quint32 KToshibaHardware::getKBDBacklight(int *mode, int *time, int *type)
 {
     regs = { SCI_READ, KBD_ILLUM_STATUS, 0, 0, 0, 0 };
 
+    *mode = *time = *type = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getKBDBacklight", FAILURE);
-        *mode = *time = *type = -1;
 
         return FAILURE;
     }
@@ -329,9 +329,9 @@ quint32 KToshibaHardware::getUSBSleepCharge(int *val, int *maxval, int *defval)
 {
     regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, 0 };
 
+    *val = *maxval = *defval = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getUSBSleepCharge", FAILURE);
-        *val = *maxval = *defval = -1;
 
         return FAILURE;
     }
@@ -367,9 +367,9 @@ quint32 KToshibaHardware::getSleepFunctionsOnBatteryStatus(int *state, int *leve
 {
     regs = { SCI_READ, USB_SLEEP_CHARGE, 0, 0, 0, SLEEP_FUNCTIONS_ON_BATTERY };
 
+    *state = *level = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getSleepFunctionsOnBatteryStatus", FAILURE);
-        *state = *level = -1;
 
         return FAILURE;
     }
@@ -612,9 +612,9 @@ quint32 KToshibaHardware::getBootOrder(int *val, int *maxval, int *defval)
 {
     regs = { SCI_READ, BOOT_ORDER, 0, 0, 0, 0 };
 
+    *val = *maxval = *defval = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getBootOrder", FAILURE);
-        *val = *maxval = *defval = -1;
 
         return FAILURE;
     }
@@ -649,9 +649,9 @@ quint32 KToshibaHardware::getWakeOnKeyboard(int *val, int *defval)
 {
     regs = { SCI_READ, WAKE_ON_KEYBOARD, 0, 0, 0, 0 };
 
+    *val = *defval = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getWakeOnKeyboard", FAILURE);
-        *val = *defval = -1;
 
         return FAILURE;
     }
@@ -691,9 +691,9 @@ quint32 KToshibaHardware::getWakeOnLAN(int *val, int *defval)
 {
     regs = { SCI_READ, WAKE_ON_LAN, 0x0800, 0, 0, 0 };
 
+    *val = *defval = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getWakeOnLAN", FAILURE);
-        *val = *defval = -1;
 
         return FAILURE;
     }
@@ -733,9 +733,9 @@ quint32 KToshibaHardware::getCoolingMethod(int *val, int *maxval)
 {
     regs = { HCI_READ, COOLING_METHOD, 0, 0, 0, 0 };
 
+    *val = *maxval = -1;
     if (tci_raw(&regs) < 0) {
         printSMMError("getCoolingMethod", FAILURE);
-        *val = *maxval = -1;
 
         return FAILURE;
     }
@@ -968,5 +968,49 @@ void KToshibaHardware::setODDPower(quint32 state)
 
     if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
         printSMMError("setODDPower", regs.eax);
+    }
+}
+
+quint32 KToshibaHardware::getPowerOnDisplay(int *dev, int *maxdev, int *defdev)
+{
+    regs = { SCI_READ, POWER_ON_DISPLAY, 0, 0, 0, 0 };
+
+    *dev = *maxdev = *defdev = -1;
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getPowerOnDisplay", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getPowerOnDisplay", regs.eax);
+    } else {
+        *dev = regs.ecx;
+        *maxdev = regs.edx;
+        *defdev = regs.esi;
+    }
+
+    return regs.eax;
+}
+
+void KToshibaHardware::setPowerOnDisplay(quint32 device)
+{
+    regs = { SCI_WRITE, POWER_ON_DISPLAY, device, 0, 0, 0 };
+
+    if (device != LCD_DISPLAY && device != AUTO_DISPLAY && device != RGB_DISPLAY
+        && device != UNKNOWN_DISPLAY1 && device != HDMI_DISPLAY && device != UNKNOWN_DISPLAY2) {
+        printSMMError("setPowerOnDisplay", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setPowerOnDisplay", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("setPowerOnDisplay", regs.eax);
     }
 }
