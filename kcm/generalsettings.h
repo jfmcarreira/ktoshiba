@@ -19,6 +19,9 @@
 #ifndef GENERALSETTINGS_H
 #define GENERALSETTINGS_H
 
+#include <QMap>
+#include <QStringList>
+
 #include "ui_general.h"
 
 class KToshibaSystemSettings;
@@ -40,6 +43,7 @@ private:
     bool isUSBThreeSupported();
     bool isUSBLegacySupported();
     bool isBuiltInLANSupported();
+    bool isPowerOnDisplaySupported();
 
     KToshibaSystemSettings *m_sys;
 
@@ -57,6 +61,13 @@ private:
 
     bool m_builtInLANSupported;
     quint32 m_builtInLAN;
+
+    bool m_powerOnDisplaySupported;
+    int m_currentDisplayDevice;
+    int m_maximumDisplayDevice;
+    int m_defaultDisplayDevice;
+    QMap<int, int> m_displayDevicesMap;
+    QStringList m_displayDevices;
 };
 
 #endif // GENERALSETTINGS_H

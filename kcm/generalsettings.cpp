@@ -16,6 +16,8 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <KLocalizedString>
+
 #include <ktoshibahardware.h>
 
 #include "generalsettings.h"
@@ -32,6 +34,7 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     m_usbThreeSupported = isUSBThreeSupported();
     m_usbLegacySupported = isUSBLegacySupported();
     m_builtInLANSupported = isBuiltInLANSupported();
+    m_powerOnDisplaySupported = isPowerOnDisplaySupported();
 }
 
 bool GeneralSettings::isPointingDeviceSupported()
@@ -89,6 +92,56 @@ bool GeneralSettings::isBuiltInLANSupported()
     return true;
 }
 
+bool GeneralSettings::isPowerOnDisplaySupported()
+{
+    quint32 result = m_sys->hw()->getPowerOnDisplay(&m_currentDisplayDevice,
+                                                    &m_maximumDisplayDevice,
+                                                    &m_defaultDisplayDevice);
+
+    if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
+        return false;
+    }
+
+    // NOTE: Some laptop models return success but with zero values
+    if (m_currentDisplayDevice == 0 && m_maximumDisplayDevice == 0 && m_defaultDisplayDevice == 0) {
+        return false;
+    }
+
+    int index = 0;
+    if ((m_maximumDisplayDevice & KToshibaHardware::AUTO_DISPLAY) == KToshibaHardware::AUTO_DISPLAY) {
+        m_displayDevicesMap[index] = KToshibaHardware::AUTO_DISPLAY;
+        m_displayDevices << i18n("AUTO");
+        index++;
+    }
+    if ((m_maximumDisplayDevice & KToshibaHardware::LCD_DISPLAY) == KToshibaHardware::LCD_DISPLAY) {
+        m_displayDevicesMap[index] = KToshibaHardware::LCD_DISPLAY;
+        m_displayDevices << i18n("Internal LCD");
+        index++;
+    }
+    if ((m_maximumDisplayDevice & KToshibaHardware::RGB_DISPLAY) == KToshibaHardware::RGB_DISPLAY) {
+        m_displayDevicesMap[index] = KToshibaHardware::RGB_DISPLAY;
+        m_displayDevices << i18n("RGB");
+        index++;
+    }
+    if ((m_maximumDisplayDevice & KToshibaHardware::UNKNOWN_DISPLAY1) == KToshibaHardware::UNKNOWN_DISPLAY1) {
+        m_displayDevicesMap[index] = KToshibaHardware::UNKNOWN_DISPLAY1;
+        m_displayDevices << i18n("External Unknown 1");
+        index++;
+    }
+    if ((m_maximumDisplayDevice & KToshibaHardware::HDMI_DISPLAY) == KToshibaHardware::HDMI_DISPLAY) {
+        m_displayDevicesMap[index] = KToshibaHardware::HDMI_DISPLAY;
+        m_displayDevices << i18n("HDMI");
+        index++;
+    }
+    if ((m_maximumDisplayDevice & KToshibaHardware::UNKNOWN_DISPLAY2) == KToshibaHardware::UNKNOWN_DISPLAY2) {
+        m_displayDevicesMap[index] = KToshibaHardware::UNKNOWN_DISPLAY2;
+        m_displayDevices << i18n("External Unknown 2");
+        index++;
+    }
+
+    return true;
+}
+
 void GeneralSettings::load()
 {
     // Pointing Device
@@ -120,6 +173,14 @@ void GeneralSettings::load()
         built_in_lan_checkbox->setChecked(m_builtInLAN ? true : false);
     } else {
         built_in_lan_checkbox->setEnabled(false);
+    }
+    // Power On Display
+    if (m_powerOnDisplaySupported) {
+        power_on_display_combobox->addItems(m_displayDevices);
+        power_on_display_combobox->setCurrentIndex(m_displayDevicesMap.key(m_currentDisplayDevice));
+    } else {
+        power_on_display_combobox->setEnabled(false);
+        power_on_display_label->setEnabled(false);
     }
 }
 
@@ -172,6 +233,14 @@ void GeneralSettings::save()
             m_builtInLAN = tmp;
         }
     }
+    // Power On Display
+    if (m_powerOnDisplaySupported) {
+        int tmp2 = m_displayDevicesMap.value(power_on_display_combobox->currentIndex());
+        if (m_currentDisplayDevice != tmp2) {
+            m_sys->hw()->setPowerOnDisplay(tmp2);
+            m_currentDisplayDevice = tmp2;
+        }
+    }
 }
 
 void GeneralSettings::defaults()
@@ -195,5 +264,9 @@ void GeneralSettings::defaults()
     // Built In LAN
     if (m_builtInLANSupported && !m_builtInLAN) {
         built_in_lan_checkbox->setChecked(true);
+    }
+    // Power On Display
+    if (m_powerOnDisplaySupported && m_currentDisplayDevice != KToshibaHardware::AUTO_DISPLAY) {
+        power_on_display_combobox->setCurrentIndex(m_displayDevicesMap.key(KToshibaHardware::AUTO_DISPLAY));
     }
 }

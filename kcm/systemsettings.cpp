@@ -146,6 +146,8 @@ void KToshibaSystemSettings::load()
             this, SLOT(configChangedReboot()));
     connect(m_general->usb_legacy_checkbox, SIGNAL(stateChanged(int)),
             this, SLOT(configChangedReboot()));
+    connect(m_general->power_on_display_combobox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(configChanged()));
     /*
      * HDD Protection tab
      */

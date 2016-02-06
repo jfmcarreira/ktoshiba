@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2015-12-10 14:16-0700\n"
+"POT-Creation-Date: 2016-02-03 21:30-0700\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -76,32 +76,32 @@ msgstr ""
 "El efecto de magnificación no tiene soporte ó está deshabilitado, las "
 "acciones de magnificación no pueden ser activadas"
 
-#: src/fnactions.cpp:243
+#: src/fnactions.cpp:252
 #, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/fnactions.cpp:250
+#: src/fnactions.cpp:259
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/fnactions.cpp:256
+#: src/fnactions.cpp:265
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
 
-#: src/fnactions.cpp:264
+#: src/fnactions.cpp:273
 #, kde-format
 msgid "ECO"
 msgstr "ECO"
 
-#: src/fnactions.cpp:324 src/fnactions.cpp:375
+#: src/fnactions.cpp:341 src/fnactions.cpp:396
 #, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: src/fnactions.cpp:324 src/fnactions.cpp:372
+#: src/fnactions.cpp:341 src/fnactions.cpp:393
 #, kde-format
 msgid "OFF"
 msgstr "APAGADO"

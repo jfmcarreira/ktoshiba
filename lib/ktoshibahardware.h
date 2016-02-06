@@ -60,6 +60,7 @@ public:
         BOOT_SPEED           = 0x015d,
         SLEEP_MUSIC          = 0x015e,
         USB_THREE            = 0x0169,
+        POWER_ON_DISPLAY     = 0x0300,
         SATA_IFACE_SETTING   = 0x0406,
         USB_LEGACY_EMULATION = 0x050c,
         POINTING_DEVICE      = 0x050e,
@@ -123,6 +124,15 @@ public:
         FAST,
     };
 
+    enum PowerOnDisplay {
+        LCD_DISPLAY      = 0x1290,
+        AUTO_DISPLAY     = 0x3290,
+        RGB_DISPLAY      = 0x3291,
+        UNKNOWN_DISPLAY1 = 0x3292,
+        HDMI_DISPLAY     = 0x3294,
+        UNKNOWN_DISPLAY2 = 0x3298,
+    };
+
     enum DeviceState {
         DEACTIVATED,
         ACTIVATED,
@@ -181,6 +191,8 @@ public:
     void setBootSpeed(quint32);
     quint32 getODDPower();
     void setODDPower(quint32);
+    quint32 getPowerOnDisplay(int *, int *, int *);
+    void setPowerOnDisplay(quint32);
 
 Q_SIGNALS:
     void touchpadToggled(int);
