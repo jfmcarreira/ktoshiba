@@ -310,7 +310,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
 
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(64, 64));
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(128,128));
     m_statusWidget.statusLabel->setText(m_iconText.arg(text));
     if (!init) {
         showWidget();
