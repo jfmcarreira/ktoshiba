@@ -16,8 +16,12 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QApplication>
 #include <QDesktopWidget>
+#include <QIcon>
+#include <QLabel>
 #include <QTimer>
+#include <QVBoxLayout>
 
 #include <KLocalizedString>
 
@@ -30,21 +34,72 @@
 
 #define CONFIG_FILE "ktoshibarc"
 
+class FnActionsStatusWidget: public QWidget
+{
+public:
+
+    FnActionsStatusWidget(QWidget *parent = NULL)
+        : QWidget(parent)
+    {
+        setObjectName(QStringLiteral("StatusWidget"));
+        setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
+                        | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
+        setAttribute(Qt::WA_TranslucentBackground, true);
+
+        m_iconSize = 120;
+        int widgetWidth = m_iconSize + 10;
+
+        QSize widgetSize(widgetWidth, widgetWidth);
+        resize(widgetWidth, widgetWidth);
+        setMinimumSize(widgetWidth, widgetWidth);
+        setMaximumSize(widgetWidth, widgetWidth);
+
+        QVBoxLayout* mainLayout = new QVBoxLayout;
+        mainLayout->setSpacing(0);
+        mainLayout->setContentsMargins(0, 0, 0, 0);
+        mainLayout->setAlignment(Qt::AlignHCenter);
+
+        m_statusIcon = new QLabel;
+        m_statusIcon->setMinimumSize(QSize(widgetWidth, m_iconSize));
+        m_statusIcon->setMaximumSize(QSize(widgetWidth, m_iconSize));
+        m_statusIcon->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+
+        m_statusLabel = new QLabel;
+        m_statusLabel->setMinimumSize(QSize(widgetWidth, 32));
+        m_statusLabel->setMaximumSize(QSize(widgetWidth, 32));
+        m_statusLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
+
+        mainLayout->addWidget(m_statusIcon);
+        mainLayout->addWidget(m_statusLabel);
+        setLayout(mainLayout);
+
+        m_statusIcon->setText(QString());
+        m_statusLabel->setText(QString());
+
+    }
+
+    void showInfo(const QIcon& icon, const QString& text)
+    {
+        m_statusIcon->setPixmap(icon.pixmap(m_iconSize,m_iconSize));
+        m_statusLabel->setText(text);
+    }
+private:
+    int m_iconSize;
+    QLabel *m_statusIcon;
+    QLabel *m_statusLabel;
+};
+
 FnActions::FnActions(QObject *parent)
     : QObject(parent),
       m_dBus(new KToshibaDBusInterface(this)),
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hw(new KToshibaHardware(this)),
       m_config(KSharedConfig::openConfig(CONFIG_FILE)),
-      m_sizePixMap( 128, 128 ),
-      m_widget(new QWidget(0, 0)),
       m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
-    m_statusWidget.setupUi(m_widget);
-    m_widget->setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
-                             | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
-    m_widget->setAttribute(Qt::WA_TranslucentBackground, true);
+    m_statusWidget = new FnActionsStatusWidget;
+
     m_widgetTimer->setSingleShot(true);
 
     hdd = KConfigGroup(m_config, "HDDProtection");
@@ -67,7 +122,7 @@ FnActions::~FnActions()
     }
 
     delete m_widgetTimer; m_widgetTimer = NULL;
-    delete m_widget; m_widget = NULL;
+    delete m_statusWidget; m_statusWidget = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_nl; m_nl = NULL;
 }
@@ -115,7 +170,7 @@ bool FnActions::init()
     connect(m_nl, SIGNAL(acAdapterChanged(int)), this, SLOT(updateBatteryProfile(int)));
     connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(reloadConfig()));
     connect(m_dBus, SIGNAL(zoomEffectDisabled()), QObject::parent(), SLOT(notifyZoomDisabled()));
-    connect(m_widgetTimer, SIGNAL(timeout()), m_widget, SLOT(hide()));
+    connect(m_widgetTimer, SIGNAL(timeout()), m_statusWidget, SLOT(hide()));
 
     return true;
 }
@@ -311,8 +366,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
 
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(m_sizePixMap));
-    m_statusWidget.statusLabel->setText(m_iconText.arg(text));
+    m_statusWidget->showInfo(QIcon::fromTheme("computer-laptop"), m_iconText.arg(text) );
     if (!init) {
         showWidget();
     }
@@ -339,8 +393,7 @@ void FnActions::toggleTouchPad()
 
     m_pointing = m_hw->getPointingDevice();
     m_hw->setPointingDevice(!m_pointing);
-    m_statusWidget.statusLabel->setText(m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")));
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(m_sizePixMap));
+    m_statusWidget->showInfo(QIcon::fromTheme("input-touchpad"), m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")) );
     if (m_keyboardFunctionsSupported && m_kbdFunctions) {
         showWidget();
     }
@@ -371,10 +424,11 @@ void FnActions::toggleKBDBacklight()
         return;
     }
 
+    QString statusText;
     switch (m_keyboardType) {
     case FirstGeneration:
         if (m_keyboardMode == KToshibaHardware::TIMER) {
-            m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
+            statusText = m_iconText.arg(m_keyboardTime);
         } else {
             return;
         }
@@ -391,19 +445,19 @@ void FnActions::toggleKBDBacklight()
         m_hw->setKBDBacklight(m_keyboardMode, m_keyboardTime);
         switch (m_keyboardMode) {
         case KToshibaHardware::OFF:
-            m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("OFF")));
+            statusText = m_iconText.arg(i18n("OFF"));
             break;
         case KToshibaHardware::ON:
-            m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("ON")));
+            statusText = m_iconText.arg(i18n("ON"));
             break;
         case KToshibaHardware::TIMER:
-            m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
+            statusText = m_iconText.arg(m_keyboardTime);
             break;
         }
         break;
     }
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-keyboard").pixmap(m_sizePixMap));
+    m_statusWidget->showInfo(QIcon::fromTheme("input-keyboard"), statusText);
     showWidget();
 }
 
@@ -422,8 +476,8 @@ bool FnActions::isKeyboardFunctionsSupported()
 void FnActions::showWidget()
 {
     QRect r = QApplication::desktop()->geometry();
-    m_widget->move((r.width() / 2) - (m_widget->width() / 2), r.top());
-    m_widget->show();
+    m_statusWidget->move((r.width() / 2) - (m_statusWidget->width() / 2), r.top());
+    m_statusWidget->show();
 }
 
 void FnActions::processHotkey(int hotkey)
