@@ -88,6 +88,7 @@ private:
     KConfigGroup hdd;
 
     Ui::StatusWidget m_statusWidget;
+    QSize m_sizePixMap;
     QWidget *m_widget;
     QTimer *m_widgetTimer;
     QString m_iconText;

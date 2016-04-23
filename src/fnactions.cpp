@@ -36,6 +36,7 @@ FnActions::FnActions(QObject *parent)
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hw(new KToshibaHardware(this)),
       m_config(KSharedConfig::openConfig(CONFIG_FILE)),
+      m_sizePixMap( 128, 128 ),
       m_widget(new QWidget(0, 0)),
       m_widgetTimer(new QTimer(this)),
       m_cookie(0)
@@ -310,7 +311,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
 
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(128,128));
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("computer-laptop").pixmap(m_sizePixMap));
     m_statusWidget.statusLabel->setText(m_iconText.arg(text));
     if (!init) {
         showWidget();
@@ -339,7 +340,7 @@ void FnActions::toggleTouchPad()
     m_pointing = m_hw->getPointingDevice();
     m_hw->setPointingDevice(!m_pointing);
     m_statusWidget.statusLabel->setText(m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")));
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(64, 64));
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-touchpad").pixmap(m_sizePixMap));
     if (m_keyboardFunctionsSupported && m_kbdFunctions) {
         showWidget();
     }
@@ -402,7 +403,7 @@ void FnActions::toggleKBDBacklight()
         break;
     }
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-keyboard").pixmap(64, 64));
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme("input-keyboard").pixmap(m_sizePixMap));
     showWidget();
 }
 
