@@ -394,9 +394,11 @@ void FnActions::toggleTouchPad()
     m_pointing = m_hw->getPointingDevice();
     m_hw->setPointingDevice(!m_pointing);
     m_statusWidget->showInfo(QIcon::fromTheme("input-touchpad"), m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")) );
-    if (m_keyboardFunctionsSupported && m_kbdFunctions) {
-        showWidget();
-    }
+    showWidget();
+// Do not understand why this code here
+//     if (m_keyboardFunctionsSupported && m_kbdFunctions) {
+//         showWidget();
+//     }
 }
 
 bool FnActions::isKBDBacklightSupported()
