@@ -28,66 +28,12 @@
 #include <ktoshibahardware.h>
 
 #include "fnactions.h"
+#include "fnactionsosd.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshibanetlinkevents.h"
 #include "ktoshiba_debug.h"
 
 #define CONFIG_FILE "ktoshibarc"
-
-class FnActionsStatusWidget: public QWidget
-{
-public:
-
-    FnActionsStatusWidget(QWidget *parent = NULL)
-        : QWidget(parent)
-    {
-        setObjectName(QStringLiteral("StatusWidget"));
-        setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
-                        | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
-        setAttribute(Qt::WA_TranslucentBackground, true);
-
-        m_iconSize = 120;
-        int widgetWidth = m_iconSize + 10;
-
-        QSize widgetSize(widgetWidth, widgetWidth);
-        resize(widgetWidth, widgetWidth);
-        setMinimumSize(widgetWidth, widgetWidth);
-        setMaximumSize(widgetWidth, widgetWidth);
-
-        QVBoxLayout* mainLayout = new QVBoxLayout;
-        mainLayout->setSpacing(0);
-        mainLayout->setContentsMargins(0, 0, 0, 0);
-        mainLayout->setAlignment(Qt::AlignHCenter);
-
-        m_statusIcon = new QLabel;
-        m_statusIcon->setMinimumSize(QSize(widgetWidth, m_iconSize));
-        m_statusIcon->setMaximumSize(QSize(widgetWidth, m_iconSize));
-        m_statusIcon->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-
-        m_statusLabel = new QLabel;
-        m_statusLabel->setMinimumSize(QSize(widgetWidth, 32));
-        m_statusLabel->setMaximumSize(QSize(widgetWidth, 32));
-        m_statusLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
-
-        mainLayout->addWidget(m_statusIcon);
-        mainLayout->addWidget(m_statusLabel);
-        setLayout(mainLayout);
-
-        m_statusIcon->setText(QString());
-        m_statusLabel->setText(QString());
-
-    }
-
-    void showInfo(const QIcon& icon, const QString& text)
-    {
-        m_statusIcon->setPixmap(icon.pixmap(m_iconSize,m_iconSize));
-        m_statusLabel->setText(text);
-    }
-private:
-    int m_iconSize;
-    QLabel *m_statusIcon;
-    QLabel *m_statusLabel;
-};
 
 FnActions::FnActions(QObject *parent)
     : QObject(parent),
@@ -98,7 +44,7 @@ FnActions::FnActions(QObject *parent)
       m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
-    m_statusWidget = new FnActionsStatusWidget;
+    m_statusWidget = new FnActionsOsd;
 
     m_widgetTimer->setSingleShot(true);
 
@@ -170,7 +116,6 @@ bool FnActions::init()
     connect(m_nl, SIGNAL(acAdapterChanged(int)), this, SLOT(updateBatteryProfile(int)));
     connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(reloadConfig()));
     connect(m_dBus, SIGNAL(zoomEffectDisabled()), QObject::parent(), SLOT(notifyZoomDisabled()));
-    connect(m_widgetTimer, SIGNAL(timeout()), m_statusWidget, SLOT(hide()));
 
     return true;
 }
