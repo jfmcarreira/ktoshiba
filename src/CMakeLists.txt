@@ -5,6 +5,7 @@ set(KToshibaSources
     ktoshiba_debug.cpp
     ktoshibadbusinterface.cpp
     ktoshibanetlinkevents.cpp
+    fnactionsosd.cpp
     fnactions.cpp
     ktoshiba.cpp
     main.cpp

@@ -32,7 +32,7 @@ class QWidget;
 class KToshibaDBusInterface;
 class KToshibaHardware;
 class KToshibaNetlinkEvents;
-class FnActionsStatusWidget;
+class FnActionsOsd;
 
 class FnActions : public QObject
 {
@@ -86,7 +86,7 @@ private:
     KConfigGroup powersave;
     KConfigGroup hdd;
 
-    FnActionsStatusWidget* m_statusWidget;
+    FnActionsOsd* m_statusWidget;
     QTimer *m_widgetTimer;
     QString m_iconText;
 
