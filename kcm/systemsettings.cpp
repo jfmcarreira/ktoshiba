@@ -56,6 +56,7 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
                                        KAboutLicense::GPL_V2,
                                        QStringLiteral("(C) 2015-2016 Azael Avalos"));
     about->setHomepage(QStringLiteral("http://ktoshiba.sourceforge.net/"));
+    about->setBugAddress("https://sourceforge.net/p/ktoshiba/support-requests/");
     about->addAuthor(i18n("Azael Avalos"),
                      i18n("Original author"),
                      QStringLiteral("coproscefalo@gmail.com"));

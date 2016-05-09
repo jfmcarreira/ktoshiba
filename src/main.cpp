@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
                          KAboutLicense::GPL_V2,
                          i18n("(C) 2004-2015 Azael Avalos"));
     aboutData.setHomepage(QStringLiteral("http://ktoshiba.sourceforge.net/"));
+    aboutData.setBugAddress("https://sourceforge.net/p/ktoshiba/support-requests/");
     aboutData.addAuthor(i18n("Azael Avalos"),
                         i18n("Original Author"),
                         QStringLiteral("coproscefalo@gmail.com"));

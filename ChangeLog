@@ -2,6 +2,7 @@
 	* Sync the pointing device state to the config file if changed via KCM and notify
 	  KToshiba about it
 	* Added ECMFrameworkCompilerSettings and adapted code
+	* Changed the default bug address to point to the SourceForge support request page
 
 2016-04-10 Azael Avalos <coproscefalo@gmail.com>
 	* Remember the pointing device state and (de)activate it accordingly
