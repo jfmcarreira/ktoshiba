@@ -25,4 +25,5 @@ OnlyShowIn=KDE;
 X-KDE-StartupNotify=false
 X-DBUS-StartupType=Unique
 X-DBUS-ServiceName=net.sourceforge.KToshiba
+X-DocPath=ktoshiba/index.html
 Categories=Qt;KDE;Utility;Monitor;TrayIcon;X-KDE-Utilities-Desktop;

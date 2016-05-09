@@ -198,7 +198,7 @@ Q_SIGNALS:
     void touchpadToggled(int);
 
 private:
-    void printSMMError(QString, quint32);
+    void printSMMError(const char *, quint32);
 
     SMMRegisters regs;
 

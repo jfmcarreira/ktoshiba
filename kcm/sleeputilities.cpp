@@ -95,7 +95,7 @@ void SleepUtilities::load()
         if (sleep_on_bat == KToshibaHardware::SUCCESS
             || sleep_on_bat == KToshibaHardware::SUCCESS2) {
             groupBox->setChecked(m_batteryEnabled ? true : false);
-            battery_level->setText(QString::number(m_batteryLevel) % "%");
+            battery_level->setText(QString::number(m_batteryLevel) % QStringLiteral("%"));
             battery_level_slider->setValue(m_batteryLevel);
         } else {
             groupBox->setEnabled(false);
@@ -157,7 +157,7 @@ void SleepUtilities::defaults()
             groupBox->setChecked(true);
         }
         if (m_batteryLevel != 10) {
-            battery_level->setText(QString::number(10) % "%");
+            battery_level->setText(QString::number(10) % QStringLiteral("%"));
             battery_level_slider->setValue(10);
         }
     }

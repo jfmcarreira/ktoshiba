@@ -25,7 +25,8 @@
 
 GeneralSettings::GeneralSettings(QWidget *parent)
     : QWidget(parent),
-      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent()))
+      m_sys(qobject_cast<KToshibaSystemSettings * >(QObject::parent())),
+      m_config(KSharedConfig::openConfig(QStringLiteral("ktoshibarc")))
 {
     setupUi(this);
 
@@ -35,13 +36,19 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     m_usbLegacySupported = isUSBLegacySupported();
     m_builtInLANSupported = isBuiltInLANSupported();
     m_powerOnDisplaySupported = isPowerOnDisplaySupported();
+
+    general = KConfigGroup(m_config, "General");
+    if (!general.exists()) {
+        general.writeEntry("PointingDevice", 1);
+        general.sync();
+    }
 }
 
 bool GeneralSettings::isPointingDeviceSupported()
 {
-    m_touchpad = m_sys->hw()->getPointingDevice();
+    m_pointingDevice = m_sys->hw()->getPointingDevice();
 
-    if (m_touchpad != KToshibaHardware::DEACTIVATED && m_touchpad != KToshibaHardware::ACTIVATED) {
+    if (m_pointingDevice != KToshibaHardware::DEACTIVATED && m_pointingDevice != KToshibaHardware::ACTIVATED) {
         return false;
     }
 
@@ -146,7 +153,7 @@ void GeneralSettings::load()
 {
     // Pointing Device
     if (m_pointingDeviceSupported) {
-        pointing_device_checkbox->setChecked(m_touchpad ? true : false);
+        pointing_device_checkbox->setChecked(m_pointingDevice ? true : false);
     } else {
         pointing_device_checkbox->setEnabled(false);
     }
@@ -192,9 +199,12 @@ void GeneralSettings::save()
     if (m_pointingDeviceSupported) {
         tmp = (pointing_device_checkbox->checkState() == Qt::Checked) ?
               KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
-        if (m_touchpad != tmp) {
+        if (m_pointingDevice != tmp) {
             m_sys->hw()->setPointingDevice(tmp);
-            m_touchpad = tmp;
+            general.writeEntry("PointingDevice", tmp);
+            general.sync();
+            m_pointingDevice = tmp;
+            emit configFileChanged();
         }
     }
     // USB Rapid Charge
@@ -246,7 +256,7 @@ void GeneralSettings::save()
 void GeneralSettings::defaults()
 {
     // Pointing Device
-    if (m_pointingDeviceSupported && !m_touchpad) {
+    if (m_pointingDeviceSupported && !m_pointingDevice) {
         pointing_device_checkbox->setChecked(true);
     }
     // USB Rapid Charge

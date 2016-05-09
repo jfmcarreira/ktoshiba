@@ -30,7 +30,7 @@
 #include <KPluginFactory>
 
 #include <ktoshibahardware.h>
-#include <version.h>
+#include <ktoshiba_version.h>
 
 #include "bootsettings.h"
 #include "generalsettings.h"
@@ -46,25 +46,21 @@ K_PLUGIN_FACTORY(KToshibaSystemSettingsFactory, registerPlugin<KToshibaSystemSet
 KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args),
       m_hw(new KToshibaHardware(this)),
-      m_config(KSharedConfig::openConfig("ktoshibarc")),
+      m_config(KSharedConfig::openConfig(QStringLiteral("ktoshibarc"))),
       m_configFileChanged(false)
 {
-    KAboutData *about = new KAboutData(QLatin1String("kcm_ktoshibam"),
+    KAboutData *about = new KAboutData(QStringLiteral("kcm_ktoshibam"),
                                        i18n("KToshiba System Settings"),
-                                       ktoshiba_version,
+                                       QStringLiteral(KTOSHIBA_VERSION_STRING),
                                        i18n("Configures Toshiba laptop related hardware settings"),
                                        KAboutLicense::GPL_V2,
-                                       i18n("Copyright (C) 2015-2016 Azael Avalos"),
-                                       QString(),
-                                       QLatin1String("http://ktoshiba.sourceforge.net/"),
-                                       QLatin1String("coproscefalo@gmail.com"));
-
+                                       QStringLiteral("(C) 2015-2016 Azael Avalos"));
+    about->setHomepage(QStringLiteral("http://ktoshiba.sourceforge.net/"));
     about->addAuthor(i18n("Azael Avalos"),
                      i18n("Original author"),
-                     QLatin1String("coproscefalo@gmail.com"));
+                     QStringLiteral("coproscefalo@gmail.com"));
 
     setAboutData(about);
-    setButtons(Apply | Default);
 
     QGridLayout *layout = new QGridLayout(this);
     QVBoxLayout *message = new QVBoxLayout();
@@ -74,7 +70,7 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
     m_message->setCloseButtonVisible(false);
     m_message->setMessageType(KMessageWidget::Information);
     m_message->setText(i18n("Please reboot for hardware changes to take effect"));
-    m_message->setIcon(QIcon::fromTheme("dialog-information"));
+    m_message->setIcon(QIcon::fromTheme(QStringLiteral("dialog-information")));
     m_message->setVisible(false);
     message->addWidget(m_message);
 
@@ -83,6 +79,7 @@ KToshibaSystemSettings::KToshibaSystemSettings(QWidget *parent, const QVariantLi
 
     addTabs();
 
+    connect(m_general, SIGNAL(configFileChanged()), this, SLOT(flagConfigFileChanged()));
     connect(m_hdd, SIGNAL(configFileChanged()), this, SLOT(flagConfigFileChanged()));
     connect(m_power, SIGNAL(configFileChanged()), this, SLOT(flagConfigFileChanged()));
 }
@@ -306,13 +303,13 @@ void KToshibaSystemSettings::flagConfigFileChanged()
 
 void KToshibaSystemSettings::notifyConfigFileChanged()
 {
-    QDBusInterface iface("net.sourceforge.KToshiba",
-                         "/Config",
-                         "net.sourceforge.KToshiba",
+    QDBusInterface iface(QStringLiteral("net.sourceforge.KToshiba"),
+                         QStringLiteral("/Config"),
+                         QStringLiteral("net.sourceforge.KToshiba"),
                          QDBusConnection::sessionBus(), this);
 
     if (iface.isValid()) {
-        iface.call("reloadConfigFile");
+        iface.call(QStringLiteral("reloadConfigFile"));
     }
 }
 
@@ -325,7 +322,7 @@ void KToshibaSystemSettings::protectionLevelChanged(int level)
 
 void KToshibaSystemSettings::batteryLevelChanged(int level)
 {
-    m_sleep->battery_level->setText(QString::number(level) % "%");
+    m_sleep->battery_level->setText(QString::number(level) % QStringLiteral("%"));
 
     emit changed(true);
 }

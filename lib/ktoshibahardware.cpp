@@ -37,27 +37,27 @@ KToshibaHardware::KToshibaHardware(QObject *parent)
     : QObject(parent),
       regs()
 {
-    m_file.setFileName(TOSHIBA_ACPI_DEVICE);
+    m_file.setFileName(QStringLiteral(TOSHIBA_ACPI_DEVICE));
     m_devDeviceExist = m_file.exists();
     if (!m_devDeviceExist)
         qCWarning(KTOSHIBA) << "The toshiba_acpi device does not exist, perhaps an older driver is loaded?"
                             << "Please see the file README.toshiba_acpi for upgrading instructions";
 
-    m_errors[FAILURE] = "HCI/SCI call could not be completed";
-    m_errors[NOT_SUPPORTED] = "Feature is not supported";
-    m_errors[INPUT_DATA_ERROR] = "Invalid parameters";
-    m_errors[WRITE_PROTECTED] = "Device is write protected";
-    m_errors[NOT_READY] = "Device is not ready";
-    m_errors[DATA_NOT_AVAILABLE] = "Data is not available";
-    m_errors[NOT_INITIALIZED] = "Device is not initialized";
-    m_errors[NOT_INSTALLED] = "Device is not installed";
+    m_errors[FAILURE] = QStringLiteral("HCI/SCI call could not be completed");
+    m_errors[NOT_SUPPORTED] = QStringLiteral("Feature is not supported");
+    m_errors[INPUT_DATA_ERROR] = QStringLiteral("Invalid parameters");
+    m_errors[WRITE_PROTECTED] = QStringLiteral("Device is write protected");
+    m_errors[NOT_READY] = QStringLiteral("Device is not ready");
+    m_errors[DATA_NOT_AVAILABLE] = QStringLiteral("Data is not available");
+    m_errors[NOT_INITIALIZED] = QStringLiteral("Device is not initialized");
+    m_errors[NOT_INSTALLED] = QStringLiteral("Device is not installed");
 }
 
 /*
  * Error printing function
  */
 
-void KToshibaHardware::printSMMError(QString function, quint32 error)
+void KToshibaHardware::printSMMError(const char *function, quint32 error)
 {
     qCWarning(KTOSHIBA) << function << "failed with error code"
                         << QString::number(error, 16) << m_errors.value(error);
@@ -69,7 +69,7 @@ void KToshibaHardware::printSMMError(QString function, quint32 error)
 
 int KToshibaHardware::getHDDProtectionLevel()
 {
-    m_file.setFileName("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    m_file.setFileName(QStringLiteral("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level"));
     if (!m_file.open(QIODevice::ReadOnly)) {
         qCCritical(KTOSHIBA) << "getProtectionLevel failed with error code"
                              << m_file.error() << m_file.errorString();
@@ -85,9 +85,9 @@ int KToshibaHardware::getHDDProtectionLevel()
 
 void KToshibaHardware::setHDDProtectionLevel(int level)
 {
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("level", level);
+    Action action(QStringLiteral("net.sourceforge.ktoshiba.ktoshhelper.setprotectionlevel"));
+    action.setHelperId(QStringLiteral(HELPER_ID));
+    action.addArgument(QStringLiteral("level"), level);
     ExecuteJob *job = action.execute();
     if (!job->exec()) {
         qCCritical(KTOSHIBA) << "setHDDProtectionLevel failed with error code"
@@ -97,9 +97,9 @@ void KToshibaHardware::setHDDProtectionLevel(int level)
 
 void KToshibaHardware::unloadHDDHeads(int timeout)
 {
-    Action action("net.sourceforge.ktoshiba.ktoshhelper.unloadheads");
-    action.setHelperId(HELPER_ID);
-    action.addArgument("timeout", timeout);
+    Action action(QStringLiteral("net.sourceforge.ktoshiba.ktoshhelper.unloadheads"));
+    action.setHelperId(QStringLiteral(HELPER_ID));
+    action.addArgument(QStringLiteral("timeout"), timeout);
     ExecuteJob *job = action.execute();
     if (!job->exec()) {
         qCCritical(KTOSHIBA) << "unloadHDDHeads failed with error code"

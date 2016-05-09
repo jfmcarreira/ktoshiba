@@ -33,7 +33,9 @@ SystemInformation::SystemInformation(QWidget *parent)
 {
     setupUi(this);
 
-    m_files << "product_name" << "product_version" << "bios_version" << "bios_date" << "bios_vendor";
+    m_files << QStringLiteral("product_name") << QStringLiteral("product_version")
+            << QStringLiteral("bios_version") << QStringLiteral("bios_date")
+            << QStringLiteral("bios_vendor");
 
     getData();
 
@@ -42,35 +44,37 @@ SystemInformation::SystemInformation(QWidget *parent)
 
 void SystemInformation::getData()
 {
-    QDir dir(SYSFS_DMI_DIR);
+    QDir dir(QStringLiteral(SYSFS_DMI_DIR));
     if (!dir.exists()) {
         qCWarning(KTOSHIBA) << "DMI information directory could not be found under sysfs";
         foreach (const QString &file, m_files) {
             qCDebug(KTOSHIBA) << "Setting" << file;
-            m_data << i18n("Unknown");
+            m_data.append(i18n("Unknown"));
         }
 
         return;
     }
 
     foreach (const QString &file, m_files) {
-        m_file.setFileName(SYSFS_DMI_DIR % file);
-        if (m_file.open(QIODevice::ReadOnly)) {
-            m_data << m_file.readLine().simplified();
-            m_file.close();
-        } else {
-            m_data << i18n("Unknown");
+        m_file.setFileName(QStringLiteral(SYSFS_DMI_DIR) % file);
+        if (!m_file.open(QIODevice::ReadOnly)) {
+            m_data.append(i18n("Unknown"));
         }
+
+        QTextStream data(&m_file);
+        m_data.append(data.readLine().simplified());
+        m_file.close();
     }
 }
 
 QString SystemInformation::getDeviceHID()
 {
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+    m_devices << QStringLiteral("TOS1900:00") << QStringLiteral("TOS6200:00")
+              << QStringLiteral("TOS6207:00") << QStringLiteral("TOS6208:00");
 
     QDir dir;
     foreach (const QString &device, m_devices) {
-        if (dir.exists(SYSFS_DEVICE_DIR % device)) {
+        if (dir.exists(QStringLiteral(SYSFS_DEVICE_DIR) % device)) {
             return device;
         }
     }
@@ -82,18 +86,20 @@ QString SystemInformation::getDeviceHID()
 
 QString SystemInformation::getDriverVersion()
 {
-    m_file.setFileName(SYSFS_DEVICE_DIR % m_deviceHID % "/version");
+    m_file.setFileName(QStringLiteral(SYSFS_DEVICE_DIR) % m_deviceHID % QStringLiteral("/version"));
     if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
-        QString version = m_file.readLine().simplified();
+        QTextStream data(&m_file);
+        QString version = data.readLine().simplified();
         m_file.close();
 
         return version;
     }
 
-    m_file.setFileName("/proc/acpi/toshiba/version");
+    m_file.setFileName(QStringLiteral("/proc/acpi/toshiba/version"));
     if (m_file.exists() && m_file.open(QIODevice::ReadOnly)) {
-        QString line = m_file.readLine().simplified();
-        QStringList split = line.split(":");
+        QTextStream data(&m_file);
+        QString line = data.readLine().simplified();
+        QStringList split = line.split(QStringLiteral(":"));
         m_file.close();
 
         return split[1].trimmed();
@@ -101,7 +107,7 @@ QString SystemInformation::getDriverVersion()
 
     qCCritical(KTOSHIBA) << "No version file detected or toshiba_acpi module not loaded";
 
-    return QString("0.0");
+    return QStringLiteral("0.0");
 }
 
 void SystemInformation::load()

@@ -1,7 +1,7 @@
 Requirements
 ============
 - A Toshiba laptop with a recent toshiba_acpi.ko
-  kernel module (kernel >= 4.3 recommended)
+  kernel module (kernel >= 4.5 recommended)
 - Compiler and utilities (gcc, make, cmake, etc.)
 - KF5 libraries and development packages
 - Extra CMake Modules (ECM)
@@ -19,7 +19,7 @@ Installation
 
 openSUSE Build Service (OBS)
 ----------------------------
-For openSUSE users (13.2 onwards), I have precompiled packages
+For openSUSE users (13.2 and Leap), I have precompiled packages
 under my OBS home project for KToshba and an updated toshiba_acpi
 kernel module, simply run as root (or sudo):
 

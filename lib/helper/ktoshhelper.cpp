@@ -26,7 +26,7 @@
 KToshHelper::KToshHelper(QObject *parent)
     : QObject(parent)
 {
-    QDir dir("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/");
+    QDir dir(QStringLiteral("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/"));
     m_supported = dir.exists();
 }
 
@@ -36,12 +36,12 @@ KToshHelper::KToshHelper(QObject *parent)
 ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
 {
     ActionReply reply;
-    int level = args["level"].toInt();
+    int level = args[QStringLiteral("level")].toInt();
 
     if (!m_supported) {
         reply = ActionReply::HelperErrorReply();
         //reply.setErrorCode(0x8000);
-        reply.setErrorDescription("Feature is not supported");
+        reply.setErrorDescription(QStringLiteral("Feature is not supported"));
 
         return reply;
     }
@@ -49,12 +49,12 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
     if (level < 0 || level > 3) {
         reply = ActionReply::HelperErrorReply();
         //reply.setErrorCode(0x8300);
-        reply.setErrorDescription("Invalid parameters");
+        reply.setErrorDescription(QStringLiteral("Invalid parameters"));
 
         return reply;
     }
 
-    QFile file("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level");
+    QFile file(QStringLiteral("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level"));
     if (!file.open(QIODevice::WriteOnly)) {
         reply = ActionReply::HelperErrorReply();
         //reply.setErrorCode(file.error());
@@ -73,12 +73,12 @@ ActionReply KToshHelper::setprotectionlevel(QVariantMap args)
 ActionReply KToshHelper::unloadheads(QVariantMap args)
 {
     ActionReply reply;
-    int timeout = args["timeout"].toInt();
+    int timeout = args[QStringLiteral("timeout")].toInt();
 
     if (!m_supported) {
         reply = ActionReply::HelperErrorReply();
         //reply.setErrorCode(0x8000);
-        reply.setErrorDescription("Feature is not supported");
+        reply.setErrorDescription(QStringLiteral("Feature is not supported"));
 
         return reply;
     }
@@ -86,13 +86,13 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
     if (timeout != 0 && timeout != 5000) {
         reply = ActionReply::HelperErrorReply();
         //reply.setErrorCode(0x8300);
-        reply.setErrorDescription("Invalid parameters");
+        reply.setErrorDescription(QStringLiteral("Invalid parameters"));
 
         return reply;
     }
 
-    QDir dir("/sys/block");
-    dir.setNameFilters(QStringList("sd*"));
+    QDir dir(QStringLiteral("/sys/block"));
+    dir.setNameFilters(QStringList(QStringLiteral("sd*")));
     QStringList drives(dir.entryList());
     QStringList hdds;
     QFile file;
@@ -101,7 +101,7 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
      * Find which drives are HDDs, SSDs do not need protection
      */
     foreach (const QString &drive, drives) {
-        file.setFileName(QString("/sys/block/%1/queue/rotational").arg(drive));
+        file.setFileName(QStringLiteral("/sys/block/%1/queue/rotational").arg(drive));
         if (!file.open(QIODevice::ReadOnly)) {
             reply = ActionReply::HelperErrorReply();
             //reply.setErrorCode(file.error());
@@ -122,7 +122,7 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
      * Protect the HDD(s)
      */
     foreach (const QString &hdd, hdds) {
-        file.setFileName(QString("/sys/block/%1/device/unload_heads").arg(hdd));
+        file.setFileName(QStringLiteral("/sys/block/%1/device/unload_heads").arg(hdd));
         if (!file.open(QIODevice::WriteOnly)) {
             reply = ActionReply::HelperErrorReply();
             //reply.setErrorCode(file.error());

@@ -9,6 +9,7 @@ X-KDE-ServiceTypes=KCModule
 X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=hardware
 X-KDE-Library=kcm_ktoshibam
+X-DocPath=kcontrol/kcm_ktoshibam/index.html
 
 Name=KToshiba System Settings
 Name[es]=Preferencias del Sistema de KToshiba

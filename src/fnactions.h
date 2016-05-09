@@ -48,6 +48,7 @@ public:
     Q_ENUM(BatteryProfiles)
     enum ACAdapterState { Disconnected, Connected };
     enum KeyboardBacklightGenerations { FirstGeneration = 1, SecondGeneration = 2 };
+    enum KeyboardLayout { FirstLayout = 1, SecondLayout = 2 };
 
 Q_SIGNALS:
     void vibrationDetected();
@@ -84,6 +85,7 @@ private:
     KToshibaHardware *m_hw;
 
     KSharedConfigPtr m_config;
+    KConfigGroup general;
     KConfigGroup powersave;
     KConfigGroup hdd;
 
@@ -121,6 +123,8 @@ private:
 
     bool m_keyboardFunctionsSupported;
     int m_kbdFunctions;
+
+    int m_keyboardLayout;
 };
 
 #endif // FN_ACTIONS_H

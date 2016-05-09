@@ -31,7 +31,7 @@ class FnActions;
 /**
  * @short Hotkeys monitoring for Toshiba laptops
  * @author Azael Avalos <coproscefalo@gmail.com>
- * @version 5.2
+ * @version 5.3
  */
 class KToshiba : public KStatusNotifierItem
 {

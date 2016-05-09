@@ -1,0 +1,424 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY package "ktoshiba">
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<article id="kcm_ktoshiba" lang="&language;">
+<articleinfo>
+<title>KToshiba System Settings</title>
+<authorgroup>
+<author>
+<personname><firstname>Azael</firstname>
+<surname>Avalos</surname>
+</personname>
+<email>coproscefalo@gmail.com</email>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<copyright>
+<year>2016</year>
+<holder>Azael Avalos</holder>
+</copyright>
+
+<date>2016-03-14</date>
+<releaseinfo>KToshiba 5.3</releaseinfo>
+
+<abstract>
+<para>This module allows you to configure your Toshiba laptop related hardware
+like TouchPad, Accelerometer, Keyboard backlight, Sleep Utilities and more.</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>System Settings</keyword>
+<keyword>KToshiba</keyword>
+<keyword>Accelerometer</keyword>
+<keyword>HDD Protection</keyword>
+<keyword>Keyboard Backlight</keyword>
+<keyword>Sleep Utilities</keyword>
+<keyword>Boot Settings</keyword>
+<keyword>Hardware</keyword>
+</keywordset>
+</articleinfo>
+
+<section id="introduction">
+<title>Introduction</title>
+
+<para>The KToshiba System Settings module allows you to configure your Toshiba laptop related hardware.
+</para>
+
+<para>This module is divided into several tabs:
+</para>
+<itemizedlist>
+<listitem><para><xref linkend="system-information"/></para></listitem>
+<listitem><para><xref linkend="general-settings"/></para></listitem>
+<listitem><para><xref linkend="hdd-protection"/></para></listitem>
+<listitem><para><xref linkend="sleep-utilities"/></para></listitem>
+<listitem><para><xref linkend="keyboard-settings"/></para></listitem>
+<listitem><para><xref linkend="boot-settings"/></para></listitem>
+<listitem><para><xref linkend="power-save"/></para></listitem>
+</itemizedlist>
+
+<para>There are several options that need to restart the laptop in order to take effect,
+for this, a message is shown as a reminder.</para>
+
+<note><para>If an item is greyed out, it means that the laptop does not have support for such feature.</para></note>
+</section>
+
+<section id="system-information" xreflabel="System Information">
+<title>System Information</title>
+
+<para>This tab shows some useful information about the laptop
+and the current toshiba_acpi driver version currently installed.
+</para>
+</section>
+
+<section id="general-settings" xreflabel="General Settings">
+<title>General Settings</title>
+
+<para>This tab lets you toggle certain general hardware features.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Internal Pointing Device</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the internal TouchPad and TrackPad (if available).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Built In LAN</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the built in LAN port.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>USB Settings</guilabel></term>
+<listitem>
+<para>Here you can toggle several USB related settings.
+</para>
+<variablelist>
+
+<varlistentry>
+<term><guilabel>USB Rapid Charge</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the USB port rapid charge feature when the laptop is connected to AC.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>USB 3</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the USB 3 functionality.
+</para>
+<tip><para>When disabled, the USB port(s) will act as regular USB 2.</para></tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>USB Legacy Emulation</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the USB legacy emulation feature.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Power On Display</guilabel></term>
+<listitem>
+<para>Select which display to use at power on.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+<section id="hdd-protection" xreflabel="HDD Protection">
+<title>HDD Protection</title>
+
+<para>This tab lets you configure the accelerometer features (if available).
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>HDD Protection</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the HDD protection monitoring.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>HDD Protection Notification</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the HDD protection notification.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>HDD Protection Level</guilabel></term>
+<listitem>
+<para>Set this slider to the desired protection level, supported levels are: Off, Low, Medium, High.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+<section id="sleep-utilities" xreflabel="Sleep Utilities">
+<title>Sleep Utilities</title>
+
+<para>This tab lets you configure the sleep utilities features (if available).
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Sleep and Music</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the sleep and music feature.
+</para>
+<tip><para>When active, the laptop speakers remain powered and the line-in jack is used to connect an external device
+to use the laptop speakers when the computer is asleep or turned off.</para></tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>USB Sleep and Charge</guilabel></term>
+<listitem>
+<para>Select which sleep and charge mode to use to charge the devices via the USB port.
+</para>
+<note><para>The sleep and charge modes available are dependant on the laptop model.</para></note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Sleep Utilities under battery</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the sleep utilities when the computer is asleep or turned off.
+</para>
+<tip><para>When active, the sleep functions can be used when the laptop is not connected,
+otherwise, the AC power cord must be connected at all times.</para></tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Battery Level</guilabel></term>
+<listitem>
+<para>Set the slider to the desired battery level at which the sleep functions will be disabled.
+</para>
+
+<tip><para>This slider will only be available when the <guilabel>Sleep utilities under battery</guilabel>
+is checked.</para></tip>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+<section id="keyboard-settings" xreflabel="Keyboard Settings">
+<title>Keyboard Settings</title>
+
+<para>This tab lets you configure keyboard related features.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Function Keys mode</guilabel></term>
+<listitem>
+<para>Select how the Function (FN) keys operate, the current modes are:
+</para>
+
+<para>Normal: The <keycombo><keycap>F{1-12}</keycap></keycombo> keys are as usual and the hotkeys are accessed via
+<keycombo><keycap>FN</keycap><keycap>F{1-12}</keycap></keycombo>.
+Function: The <keycombo><keycap>F{1-12}</keycap></keycombo> keys trigger the hotkey and the
+<keycombo><keycap>F{1-12}</keycap></keycombo> keys are accessed via <keycombo><keycap>FNF{1-12}</keycap></keycombo>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Keyboard Backlight</guilabel></term>
+<listitem>
+<para>This lets you configure the keyboard backlight features (if available).
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Keyboard Backlight mode</guilabel></term>
+<listitem>
+<para>Select the keyboard backlight mode to use.
+</para>
+
+<para>Depending on the laptop model, there can be two (1st gen) or three (2nd gen) modes available:</para>
+
+<para><literallayout>FN-Z: User toggles the keyboard backlight on/off when the <keycombo><keycap>FN</keycap><keycap>Z</keycap></keycombo> function key is pressed.
+TIMER: The keyboard backlight turns off automatically after the last keypress.
+ON: The keyboard backlight is turned on permanently.
+OFF: The keyboard backlight is turned off permanently.
+</literallayout>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Keyboard Backlight timeout</guilabel></term>
+<listitem>
+<para>Set the slider to the desired time at wich the keyboard backlight will be turned off after the last keypress.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+<section id="boot-settings" xreflabel="Boot Settings">
+<title>Boot Settings</title>
+
+<para>This tab lets you configure different boot settings features.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Boot Speed</guilabel></term>
+<listitem>
+<para>Select the desired boot speed, the available modes are:
+Normal and Fast.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Boot Devices</guilabel></term>
+<listitem>
+<para>This shows you the different devices available on your laptop to select a boot order.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Panel Power ON</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the panel power on feature.
+</para>
+
+<tip><para>When active, this turns on your laptop whenever the LID is openned.</para></tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Wake on Keyboard (WOK)</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the wake on keayboard feature.
+</para>
+
+<tip><para>When active, this lets your laptop turn on or wake from sleep when a key is pressed.</para></tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Wake on LAN (WOL)</guilabel></term>
+<listitem>
+<para>Toggle this checkbox to (de)activate the wake on LAN feature.
+</para>
+
+<tip><para>When active, this lets your laptop turn on or wake from sleep when a special network message is sent.</para></tip>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+<section id="power-save" xreflabel="Power Save">
+<title>Power Save</title>
+
+<para>This tab lets you configure power save related features.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Battery Profile</guilabel></term>
+<listitem>
+<para>Select the current battery profile to use.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Battery Profile Settings</guilabel></term>
+<listitem>
+<para>Here you can fine tune the battery profile settings depending on the profile selected.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Cooling Method</guilabel></term>
+<listitem>
+<para>Select how the system fan will perform.
+</para>
+
+<note><para>Depending on the laptop model, there can be two or three fan modes available:
+Maximum Performance, Performance and Battery Save.
+</para>
+</note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>ODD Power Support</guilabel></term>
+<listitem>
+<para>Select whether the optical disc device is (de)activated.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Illumination</guilabel></term>
+<listitem>
+<para>Select whether the laptop's illumination led will be (de)activated (if available).
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>SATA Interface Setting mode</guilabel></term>
+<listitem>
+<para>Select the SATA interface port(s) mode of operation, currently there are two modes:
+Performance and Battery Optimized. 
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

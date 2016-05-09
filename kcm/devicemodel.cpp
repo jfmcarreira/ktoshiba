@@ -24,18 +24,18 @@ DeviceModel::DeviceModel(QObject *parent)
     : QAbstractListModel(parent),
       m_supportedDevices(MAX_BOOT_DEVICES)
 {
-    m_devicesMap[FDD] = "FDD";
-    m_devicesMap[HDD1] = "HDD/SSD 1";
-    m_devicesMap[ODD] = "ODD";
-    m_devicesMap[LAN] = "LAN";
-    m_devicesMap[USB_MEMORY] = "USB MEMORY";
-    m_devicesMap[HDD2] = "HDD/SSD 2";
-    m_devicesMap[eSATA] = "eSATA";
-    m_devicesMap[USB_ODD] = "USB ODD";
-    m_devicesMap[SD] = "SD";
-    m_devicesMap[USB] = "USB";
-    m_devicesMap[HDD3] = "HDD/SSD 3";
-    m_devicesMap[NO_DEVICE] = "NO DEVICE";
+    m_devicesMap[FDD] = QStringLiteral("FDD");
+    m_devicesMap[HDD1] = QStringLiteral("HDD/SSD 1");
+    m_devicesMap[ODD] = QStringLiteral("ODD");
+    m_devicesMap[LAN] = QStringLiteral("LAN");
+    m_devicesMap[USB_MEMORY] = QStringLiteral("USB MEMORY");
+    m_devicesMap[HDD2] = QStringLiteral("HDD/SSD 2");
+    m_devicesMap[eSATA] = QStringLiteral("eSATA");
+    m_devicesMap[USB_ODD] = QStringLiteral("USB ODD");
+    m_devicesMap[SD] = QStringLiteral("SD");
+    m_devicesMap[USB] = QStringLiteral("USB");
+    m_devicesMap[HDD3] = QStringLiteral("HDD/SSD 3");
+    m_devicesMap[NO_DEVICE] = QStringLiteral("NO DEVICE");
 }
 
 QString DeviceModel::tooltip(int value) const

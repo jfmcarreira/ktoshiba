@@ -44,7 +44,7 @@ bool KeyboardSettings::isKeyboardBacklightSupported()
     }
 
     if (m_keyboardType == FirstKeyboardGen) {
-        m_keyboardModes << "FN-Z" << "AUTO";
+        m_keyboardModes << QStringLiteral("FN-Z") << QStringLiteral("AUTO");
     } else if (m_keyboardType == SecondKeyboardGen) {
         m_keyboardModes << i18n("TIMER") << i18n("ON") << i18n("OFF");
     }

@@ -22,6 +22,9 @@
 #include <QMap>
 #include <QStringList>
 
+#include <KConfigGroup>
+#include <KSharedConfig>
+
 #include "ui_general.h"
 
 class KToshibaSystemSettings;
@@ -37,6 +40,9 @@ public:
     void save();
     void defaults();
 
+Q_SIGNALS:
+    void configFileChanged();
+
 private:
     bool isPointingDeviceSupported();
     bool isRapidChargeSupported();
@@ -46,9 +52,11 @@ private:
     bool isPowerOnDisplaySupported();
 
     KToshibaSystemSettings *m_sys;
+    KSharedConfigPtr m_config;
+    KConfigGroup general;
 
     bool m_pointingDeviceSupported;
-    quint32 m_touchpad;
+    quint32 m_pointingDevice;
 
     bool m_rapidChargeSupported;
     quint32 m_rapidCharge;
