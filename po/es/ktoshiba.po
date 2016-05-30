@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2016-02-03 21:30-0700\n"
+"POT-Creation-Date: 2016-05-10 11:53-0600\n"
 "PO-Revision-Date: 2015-04-18 13:59-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "coproscefalo@gmail.com"
 msgid "StatusWidget"
 msgstr "Widget de Estado"
 
-#: src/ktoshiba.cpp:37 src/ktoshiba.cpp:39 src/main.cpp:33
+#: src/ktoshiba.cpp:37 src/ktoshiba.cpp:39 src/main.cpp:34
 #, kde-format
 msgid "KToshiba"
 msgstr "KToshiba"
@@ -76,62 +76,62 @@ msgstr ""
 "El efecto de magnificación no tiene soporte ó está deshabilitado, las "
 "acciones de magnificación no pueden ser activadas"
 
-#: src/fnactions.cpp:252
+#: src/fnactions.cpp:264
 #, kde-format
 msgid "Performance"
 msgstr "Alto Desempeño"
 
-#: src/fnactions.cpp:259
+#: src/fnactions.cpp:271
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
 
-#: src/fnactions.cpp:265
+#: src/fnactions.cpp:277
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
 
-#: src/fnactions.cpp:273
+#: src/fnactions.cpp:285
 #, kde-format
 msgid "ECO"
 msgstr "ECO"
 
-#: src/fnactions.cpp:341 src/fnactions.cpp:396
+#: src/fnactions.cpp:346 src/fnactions.cpp:404
 #, kde-format
 msgid "ON"
 msgstr "ENCENDIDO"
 
-#: src/fnactions.cpp:341 src/fnactions.cpp:393
+#: src/fnactions.cpp:346 src/fnactions.cpp:401
 #, kde-format
 msgid "OFF"
 msgstr "APAGADO"
 
-#: src/main.cpp:35
+#: src/main.cpp:36
 #, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
 msgstr "Monitor de teclas Fn para laptops Toshiba"
 
 #: src/main.cpp:38
 #, kde-format
-msgid "Copyright (C) 2004-2015 Azael Avalos"
-msgstr "Derechos de autor (C) 2004-2015, Azael Avalos"
+msgid "(C) 2004-2016 Azael Avalos"
+msgstr "(C) 2004-2016, Azael Avalos"
 
-#: src/main.cpp:42
+#: src/main.cpp:41
 #, kde-format
 msgid "Azael Avalos"
 msgstr "Azael Avalos"
 
-#: src/main.cpp:43
+#: src/main.cpp:42
 #, kde-format
 msgid "Original Author"
 msgstr "Autor original"
 
-#: src/main.cpp:45
+#: src/main.cpp:44
 #, kde-format
 msgid "KDE Team"
 msgstr "El equipo de KDE"
 
-#: src/main.cpp:46
+#: src/main.cpp:45
 #, kde-format
 msgid "Some ideas and pieces of code"
 msgstr "Algunas ideas y segmentos de codigo"

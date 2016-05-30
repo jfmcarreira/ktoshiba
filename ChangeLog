@@ -1,8 +1,18 @@
+2016-05-30 Azael Avalos <coproscefalo@gmail.com>
+	* Added TRANSLATION_DOMAIN definition to KCM
+
+2016-05-10 Azael Avalos <coproscefalo@gmail.com>
+	* Added application domain for translations
+	* Updated copyright year in main.cpp
+	* Updated translations
+	* Fixed spelling of Tumblewed->Tumbleweed in README.toshiba_acpi file
+
 2016-05-09 Azael Avalos <coproscefalo@gmail.com>
 	* Sync the pointing device state to the config file if changed via KCM and notify
 	  KToshiba about it
 	* Added ECMFrameworkCompilerSettings and adapted code
 	* Changed the default bug address to point to the SourceForge support request page
+	* Released KToshiba 5.3
 
 2016-04-10 Azael Avalos <coproscefalo@gmail.com>
 	* Remember the pointing device state and (de)activate it accordingly

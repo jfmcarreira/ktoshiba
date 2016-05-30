@@ -28,12 +28,14 @@
 
 int main(int argc, char *argv[])
 {
+    KLocalizedString::setApplicationDomain("ktoshiba");
+
     KAboutData aboutData(QStringLiteral("KToshiba"),
                          i18n("KToshiba"),
                          QStringLiteral(KTOSHIBA_VERSION_STRING),
                          i18n("Fn key monitoring for Toshiba laptops"),
                          KAboutLicense::GPL_V2,
-                         i18n("(C) 2004-2015 Azael Avalos"));
+                         i18n("(C) 2004-2016 Azael Avalos"));
     aboutData.setHomepage(QStringLiteral("http://ktoshiba.sourceforge.net/"));
     aboutData.setBugAddress("https://sourceforge.net/p/ktoshiba/support-requests/");
     aboutData.addAuthor(i18n("Azael Avalos"),
