@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
                         i18n("Some ideas and pieces of code"),
                         QString(),
                         QStringLiteral("http://www.kde.org/"));
+    aboutData.addCredit(i18n("Calin Barbat"),
+                        i18n("German translation"),
+                        QStringLiteral("calin.barbat@web.de"));
 
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("KToshiba"));
