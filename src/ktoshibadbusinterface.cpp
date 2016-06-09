@@ -28,12 +28,12 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 {
     new KToshibaDBusAdaptor(this);
 
-    m_object = m_dbus.registerObject("/Config", this);
+    m_object = m_dbus.registerObject(QStringLiteral("/Config"), this);
     if (!m_object) {
         qCCritical(KTOSHIBA) << "Could not register DBus object";
     }
 
-    m_service = m_dbus.registerService("net.sourceforge.KToshiba");
+    m_service = m_dbus.registerService(QStringLiteral("net.sourceforge.KToshiba"));
     if (!m_service) {
         qCCritical(KTOSHIBA) << "Could not register DBus service";
     }
@@ -42,11 +42,11 @@ KToshibaDBusInterface::KToshibaDBusInterface(QObject *parent)
 KToshibaDBusInterface::~KToshibaDBusInterface()
 {
     if (m_object) {
-        m_dbus.unregisterObject("/Config");
+        m_dbus.unregisterObject(QStringLiteral("/Config"));
     }
 
     if (m_service) {
-        if (!m_dbus.unregisterService("net.sourceforge.KToshiba")) {
+        if (!m_dbus.unregisterService(QStringLiteral("net.sourceforge.KToshiba"))) {
             qCCritical(KTOSHIBA) << "Could not unregister DBus service";
         }
     }
@@ -59,9 +59,9 @@ void KToshibaDBusInterface::reloadConfigFile()
 
 void KToshibaDBusInterface::lockScreen()
 {
-    QDBusInterface iface("org.freedesktop.ScreenSaver",
-                         "/ScreenSaver",
-                         "org.freedesktop.ScreenSaver",
+    QDBusInterface iface(QStringLiteral("org.freedesktop.ScreenSaver"),
+                         QStringLiteral("/ScreenSaver"),
+                         QStringLiteral("org.freedesktop.ScreenSaver"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -70,7 +70,7 @@ void KToshibaDBusInterface::lockScreen()
         return;
     }
 
-    QDBusReply<void> reply = iface.call("Lock");
+    QDBusReply<void> reply = iface.call(QStringLiteral("Lock"));
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -79,9 +79,9 @@ void KToshibaDBusInterface::lockScreen()
 
 void KToshibaDBusInterface::setBrightness(int level)
 {
-    QDBusInterface iface("org.kde.Solid.PowerManagement",
-                         "/org/kde/Solid/PowerManagement/Actions/BrightnessControl",
-                         "org.kde.Solid.PowerManagement.Actions.BrightnessControl",
+    QDBusInterface iface(QStringLiteral("org.kde.Solid.PowerManagement"),
+                         QStringLiteral("/org/kde/Solid/PowerManagement/Actions/BrightnessControl"),
+                         QStringLiteral("org.kde.Solid.PowerManagement.Actions.BrightnessControl"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -90,7 +90,7 @@ void KToshibaDBusInterface::setBrightness(int level)
         return;
     }
 
-    QDBusReply<void> reply = iface.call("setBrightness", level);
+    QDBusReply<void> reply = iface.call(QStringLiteral("setBrightness"), level);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -99,9 +99,9 @@ void KToshibaDBusInterface::setBrightness(int level)
 
 void KToshibaDBusInterface::setKBDBacklight(int state)
 {
-    QDBusInterface iface("org.kde.Solid.PowerManagement",
-                         "/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl",
-                         "org.kde.Solid.PowerManagement.Actions.KeyboardBrightnessControl",
+    QDBusInterface iface(QStringLiteral("org.kde.Solid.PowerManagement"),
+                         QStringLiteral("/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl"),
+                         QStringLiteral("org.kde.Solid.PowerManagement.Actions.KeyboardBrightnessControl"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -110,7 +110,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
         return;
     }
 
-    QDBusReply<void> reply = iface.call("setKeyboardBrightnessSilent", state);
+    QDBusReply<void> reply = iface.call(QStringLiteral("setKeyboardBrightnessSilent"), state);
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -125,9 +125,9 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
         return;
     }
 
-    QDBusInterface iface("org.kde.kglobalaccel",
-                         "/component/kwin",
-                         "org.kde.kglobalaccel.Component",
+    QDBusInterface iface(QStringLiteral("org.kde.kglobalaccel"),
+                         QStringLiteral("/component/kwin"),
+                         QStringLiteral("org.kde.kglobalaccel.Component"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -139,13 +139,13 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
     QDBusReply<void> reply;
     switch (zoom) {
     case ZoomReset:
-        reply = iface.call("invokeShortcut", "view_actual_size");
+        reply = iface.call(QStringLiteral("invokeShortcut"), QStringLiteral("view_actual_size"));
         break;
     case ZoomIn:
-        reply = iface.call("invokeShortcut", "view_zoom_in");
+        reply = iface.call(QStringLiteral("invokeShortcut"), QStringLiteral("view_zoom_in"));
         break;
     case ZoomOut:
-        reply = iface.call("invokeShortcut", "view_zoom_out");
+        reply = iface.call(QStringLiteral("invokeShortcut"), QStringLiteral("view_zoom_out"));
         break;
     }
 
@@ -157,9 +157,9 @@ void KToshibaDBusInterface::setZoom(ZoomActions zoom)
 
 void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString reason, uint *cookie)
 {
-    QDBusInterface iface("org.freedesktop.PowerManagement.Inhibit",
-                         "/org/freedesktop/PowerManagement/Inhibit",
-                         "org.freedesktop.PowerManagement.Inhibit",
+    QDBusInterface iface(QStringLiteral("org.freedesktop.PowerManagement.Inhibit"),
+                         QStringLiteral("/org/freedesktop/PowerManagement/Inhibit"),
+                         QStringLiteral("org.freedesktop.PowerManagement.Inhibit"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -169,7 +169,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
     }
 
     if (inhibit) {
-        QDBusReply<uint> inhib = iface.call("Inhibit", QString("KToshiba"), reason);
+        QDBusReply<uint> inhib = iface.call(QStringLiteral("Inhibit"), QStringLiteral("KToshiba"), reason);
         if (!inhib.isValid()) {
             QDBusError err(iface.lastError());
             qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -179,7 +179,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
 
         *cookie = inhib;
     } else {
-        QDBusReply<bool> has_inhib = iface.call("HasInhibit");
+        QDBusReply<bool> has_inhib = iface.call(QStringLiteral("HasInhibit"));
         if (!has_inhib.isValid()) {
             QDBusError err(iface.lastError());
             qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -191,7 +191,7 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
             return;
         }
 
-        QDBusReply<void> uninhib = iface.call("UnInhibit", *cookie);
+        QDBusReply<void> uninhib = iface.call(QStringLiteral("UnInhibit"), *cookie);
         if (!uninhib.isValid()) {
             QDBusError err(iface.lastError());
             qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -203,9 +203,9 @@ void KToshibaDBusInterface::setPowerManagementInhibition(bool inhibit, QString r
 
 bool KToshibaDBusInterface::getCompositingState()
 {
-    QDBusInterface iface("org.kde.KWin",
-                         "/Compositor",
-                         "org.kde.kwin.Compositing",
+    QDBusInterface iface(QStringLiteral("org.kde.KWin"),
+                         QStringLiteral("/Compositor"),
+                         QStringLiteral("org.kde.kwin.Compositing"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -219,9 +219,9 @@ bool KToshibaDBusInterface::getCompositingState()
 
 QString KToshibaDBusInterface::getBatteryProfile()
 {
-    QDBusInterface iface("org.kde.Solid.PowerManagement",
-                         "/org/kde/Solid/PowerManagement",
-                         "org.kde.Solid.PowerManagement",
+    QDBusInterface iface(QStringLiteral("org.kde.Solid.PowerManagement"),
+                         QStringLiteral("/org/kde/Solid/PowerManagement"),
+                         QStringLiteral("org.kde.Solid.PowerManagement"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -230,7 +230,7 @@ QString KToshibaDBusInterface::getBatteryProfile()
         return QString();
     }
 
-    QDBusReply<QString> reply = iface.call("currentProfile");
+    QDBusReply<QString> reply = iface.call(QStringLiteral("currentProfile"));
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -243,9 +243,9 @@ QString KToshibaDBusInterface::getBatteryProfile()
 
 bool KToshibaDBusInterface::isZoomEffectActive()
 {
-    QDBusInterface iface("org.kde.KWin",
-                         "/Effects",
-                         "org.kde.kwin.Effects",
+    QDBusInterface iface(QStringLiteral("org.kde.KWin"),
+                         QStringLiteral("/Effects"),
+                         QStringLiteral("org.kde.kwin.Effects"),
                          m_dbus, this);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
@@ -254,7 +254,7 @@ bool KToshibaDBusInterface::isZoomEffectActive()
         return false;
     }
 
-    QDBusReply<bool> reply = iface.call("isEffectSupported", "zoom");
+    QDBusReply<bool> reply = iface.call(QStringLiteral("isEffectSupported"), QStringLiteral("zoom"));
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();
@@ -262,7 +262,7 @@ bool KToshibaDBusInterface::isZoomEffectActive()
         return false;
     }
 
-    reply = iface.call("isEffectLoaded", "zoom");
+    reply = iface.call(QStringLiteral("isEffectLoaded"), QStringLiteral("zoom"));
     if (!reply.isValid()) {
         QDBusError err(iface.lastError());
         qCCritical(KTOSHIBA) << err.name() << "Message:" << err.message();

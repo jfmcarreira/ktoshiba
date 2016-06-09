@@ -26,13 +26,14 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
+#include "ui_statuswidget.h"
+
 class QTimer;
 class QWidget;
 
 class KToshibaDBusInterface;
 class KToshibaHardware;
 class KToshibaNetlinkEvents;
-class FnActionsOsd;
 
 class FnActions : public QObject
 {
@@ -47,6 +48,7 @@ public:
     Q_ENUM(BatteryProfiles)
     enum ACAdapterState { Disconnected, Connected };
     enum KeyboardBacklightGenerations { FirstGeneration = 1, SecondGeneration = 2 };
+    enum KeyboardLayout { FirstLayout = 1, SecondLayout = 2 };
 
 Q_SIGNALS:
     void vibrationDetected();
@@ -83,10 +85,12 @@ private:
     KToshibaHardware *m_hw;
 
     KSharedConfigPtr m_config;
+    KConfigGroup general;
     KConfigGroup powersave;
     KConfigGroup hdd;
 
-    FnActionsOsd* m_statusWidget;
+    Ui::StatusWidget m_statusWidget;
+    QWidget *m_widget;
     QTimer *m_widgetTimer;
     QString m_iconText;
 
@@ -119,6 +123,8 @@ private:
 
     bool m_keyboardFunctionsSupported;
     int m_kbdFunctions;
+
+    int m_keyboardLayout;
 };
 
 #endif // FN_ACTIONS_H

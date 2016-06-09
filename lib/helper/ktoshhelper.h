@@ -33,7 +33,7 @@ class KToshHelper : public QObject
 public:
     explicit KToshHelper(QObject *parent = 0);
 
-public slots:
+public Q_SLOTS:
     /*
      * HDD Protection calls
      */

@@ -60,3 +60,5 @@ I have built kmp packages for the openSUSE distribution, just head
 to http://download.opensuse.org/repositories/home:/Coproscefalo/
 and add the corresponding repository or simply download the packages
 from there.
+
+NOTE: openSUSE Tumbleweed users do not need this updated driver

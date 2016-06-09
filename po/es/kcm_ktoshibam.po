@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2016-02-03 21:30-0700\n"
+"POT-Creation-Date: 2016-06-05 22:05-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -47,7 +47,7 @@ msgid ""
 "the line-in jack is used to connect an external device to use the laptop "
 "speakers when the computer is asleep or turned off."
 msgstr ""
-"Alterna la musica en reposo.  Los altavoces del portátil permanecerán "
+"Alterna la música en reposo.  Los altavoces del portátil permanecerán "
 "activos y el puerto de audio de entrada puede ser usado para conectar "
 "dispositivos externos para usar los altavoces del portátil cuando se "
 "encuentre apagado ó en reposo."
@@ -57,7 +57,7 @@ msgstr ""
 #: rc.cpp:14
 #, kde-format
 msgid "Sleep and Music"
-msgstr "Musica en reposo"
+msgstr "Música en reposo"
 
 #. i18n: file: kcm/sleeputils.ui:34
 #. i18n: ectx: property (text), widget (QLabel, sleep_charge_label)
@@ -289,8 +289,8 @@ msgstr "Monitor de encendido:"
 #, kde-format
 msgid "Select the desired display device to be used at Power On."
 msgstr ""
-"Selecciona el dispositivo de visualización (monitor) que será utilizado"
-" al encendido."
+"Selecciona el dispositivo de visualización (monitor) que será utilizado al "
+"encendido."
 
 #. i18n: file: kcm/hddprotect.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, HDDProtect)
@@ -816,27 +816,22 @@ msgstr "Ajustes del Sistema de KToshiba"
 msgid "Configures Toshiba laptop related hardware settings"
 msgstr "Configura el hardware relacionado con el portátil Toshiba"
 
-#: kcm/systemsettings.cpp:57
-#, kde-format
-msgid "Copyright (C) 2015-2016 Azael Avalos"
-msgstr "Derechos de autor (C) 2015-2016 Azael Avalos"
-
-#: kcm/systemsettings.cpp:62
+#: kcm/systemsettings.cpp:60
 #, kde-format
 msgid "Azael Avalos"
 msgstr "Azael Avalos"
 
-#: kcm/systemsettings.cpp:63
+#: kcm/systemsettings.cpp:61
 #, kde-format
 msgid "Original author"
 msgstr "Autor original"
 
-#: kcm/systemsettings.cpp:76
+#: kcm/systemsettings.cpp:73
 #, kde-format
 msgid "Please reboot for hardware changes to take effect"
 msgstr "Por favor reinicia para que los cambios en el hardware hagan efecto"
 
-#: kcm/systemsettings.cpp:352 kcm/keyboardsettings.cpp:108
+#: kcm/systemsettings.cpp:350 kcm/keyboardsettings.cpp:108
 #: kcm/keyboardsettings.cpp:144
 #, kde-format
 msgid " sec"
@@ -912,32 +907,32 @@ msgstr "Rendimiento Máximo"
 msgid "Battery Optimized"
 msgstr "Optimizado para Batería"
 
-#: kcm/generalsettings.cpp:113
+#: kcm/generalsettings.cpp:120
 #, kde-format
 msgid "AUTO"
 msgstr "Automatico"
 
-#: kcm/generalsettings.cpp:118
+#: kcm/generalsettings.cpp:125
 #, kde-format
 msgid "Internal LCD"
 msgstr "LCD interno"
 
-#: kcm/generalsettings.cpp:123
+#: kcm/generalsettings.cpp:130
 #, kde-format
 msgid "RGB"
 msgstr "RGB"
 
-#: kcm/generalsettings.cpp:128
+#: kcm/generalsettings.cpp:135
 #, kde-format
 msgid "External Unknown 1"
 msgstr "Desconocido externo 1"
 
-#: kcm/generalsettings.cpp:133
+#: kcm/generalsettings.cpp:140
 #, kde-format
 msgid "HDMI"
 msgstr "HDMI"
 
-#: kcm/generalsettings.cpp:138
+#: kcm/generalsettings.cpp:145
 #, kde-format
 msgid "External Unknown 2"
 msgstr "Desconocido externo 2"
@@ -1027,7 +1022,7 @@ msgstr "Típico"
 msgid "Auto"
 msgstr "Automatico"
 
-#: kcm/systeminformation.cpp:50 kcm/systeminformation.cpp:62
+#: kcm/systeminformation.cpp:52 kcm/systeminformation.cpp:61
 #, kde-format
 msgid "Unknown"
 msgstr "Desconocido"

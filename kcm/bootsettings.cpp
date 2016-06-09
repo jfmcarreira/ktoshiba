@@ -28,8 +28,8 @@ BootSettings::BootSettings(QWidget *parent)
 {
     setupUi(this);
 
-    deferButton->setIcon(QIcon::fromTheme("go-down"));
-    preferButton->setIcon(QIcon::fromTheme("go-up"));
+    deferButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
+    preferButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
 
     m_model = new DeviceModel(deviceList);
     deviceList->setModel(m_model);

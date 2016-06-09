@@ -22,35 +22,37 @@
 #include <KDBusAddons/KDBusService>
 #include <KLocalizedString>
 
-#include <ktoshiba_debug.h>
-
 #include "ktoshiba.h"
-#include "version.h"
+#include "ktoshiba_debug.h"
+#include "ktoshiba_version.h"
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData(QLatin1String("KToshiba"),
+    KLocalizedString::setApplicationDomain("ktoshiba");
+
+    KAboutData aboutData(QStringLiteral("KToshiba"),
                          i18n("KToshiba"),
-                         ktoshiba_version,
+                         QStringLiteral(KTOSHIBA_VERSION_STRING),
                          i18n("Fn key monitoring for Toshiba laptops"),
                          KAboutLicense::GPL_V2,
-                         QString(),
-                         i18n("Copyright (C) 2004-2015 Azael Avalos"),
-                         QLatin1String("http://ktoshiba.sourceforge.net/"),
-                         QLatin1String("coproscefalo@gmail.com"));
-
+                         i18n("(C) 2004-2016 Azael Avalos"));
+    aboutData.setHomepage(QStringLiteral("http://ktoshiba.sourceforge.net/"));
+    aboutData.setBugAddress("https://sourceforge.net/p/ktoshiba/support-requests/");
     aboutData.addAuthor(i18n("Azael Avalos"),
                         i18n("Original Author"),
-                        QLatin1String("coproscefalo@gmail.com"));
+                        QStringLiteral("coproscefalo@gmail.com"));
     aboutData.addCredit(i18n("KDE Team"),
                         i18n("Some ideas and pieces of code"),
                         QString(),
-                        QLatin1String("http://www.kde.org/"));
+                        QStringLiteral("http://www.kde.org/"));
+    aboutData.addCredit(i18n("Calin Barbat"),
+                        i18n("German translation"),
+                        QStringLiteral("calin.barbat@web.de"));
 
     QApplication app(argc, argv);
-    app.setApplicationName("KToshiba");
-    app.setApplicationVersion(ktoshiba_version);
-    app.setOrganizationDomain("sourceforge.net");
+    app.setApplicationName(QStringLiteral("KToshiba"));
+    app.setApplicationVersion(QStringLiteral(KTOSHIBA_VERSION_STRING));
+    app.setOrganizationDomain(QStringLiteral("sourceforge.net"));
 
     KAboutData::setApplicationData(aboutData);
 

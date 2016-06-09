@@ -1,0 +1,299 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY kappname "KToshiba">
+<!ENTITY package "ktoshiba">
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<book id="ktoshiba" lang="&language;">
+
+<bookinfo>
+
+<title>Function (FN) key monitoring for Toshiba laptops</title>
+
+<authorgroup>
+<author>
+<personname><firstname>Azael</firstname>
+<surname>Avalos</surname>
+</personname>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<copyright>
+<year>2016</year>
+<holder>Azael Avalos</holder>
+</copyright>
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<date>2016-03-16</date>
+<releaseinfo>KToshiba 5.3</releaseinfo>
+
+<abstract>
+<para>KToshiba manages those function keys not handled by &kde;.
+</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KToshiba</keyword>
+<keyword>Accelerometer</keyword>
+<keyword>HDD Protection</keyword>
+<keyword>Keyboard Backlight</keyword>
+<keyword>Function Keys</keyword>
+<keyword>Screen Lock</keyword>
+<keyword>Touchpad</keyword>
+<keyword>Battery Profiles</keyword>
+<keyword>Zoom</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>KToshiba is a Function (FN) key monitoring for Toshiba laptops.
+</para>
+
+<para>Features a Graphical User Interface (UI) highly integrated with &kde;, managing those function keys not handled by &kde;
+(Screen lock, TouchPad toggle, Battery profiles, Zoom keys and Keyboard backlight).
+</para>
+
+<para>KToshiba also monitors the built-in accelerometer (if available),
+providing HDD protection in case of a sudden move or harsh vibration,
+parking the HDD heads in such events.
+</para>
+</chapter>
+
+<chapter id="requirements">
+<title>Requirements</title>
+
+<para>In order for KToshiba to work properly, there are certain requirements that must be met.
+</para>
+
+<section id="kernel-requirements">
+<title>Linux Kernel</title>
+
+<para>The Linux kernel version 4.5 (or higher) is strongly recommended, as it contains an updated
+toshiba_acpi driver that provides the functionality KToshiba needs to operate as it should.
+</para>
+
+<note><para>If your distribution does not provide such Linux kernel version,
+it is possible to update the driver manually, see the file named README.toshiba_acpi
+for further instructions on how to acomplish such task.
+</para>
+</note>
+</section>
+
+<section id="lib-requirements">
+<title>Minimalistic Netlink library</title>
+
+<para>As of KToshiba 5.2, the hotkeys are now handled via Netlink, and thus, a dependency to this library
+was added, without it, hotkeys monitoring will not be possible.
+</para>
+</section>
+</chapter>
+
+<chapter id="components">
+<title>KToshiba Components</title>
+
+<para>KToshiba is composed of three pieces, the shared library KToshibaHardware,
+a system settings module kcm_ktoshibam and ktoshiba itself.
+</para>
+
+<section id="library">
+<title>The Shared Library KToshibaHardware</title>
+<titleabbrev>KToshibaHardware</titleabbrev>
+
+<para>This shared library is used by KToshiba and the System Settings module to access
+and configure all supported Toshiba related hardware.
+</para>
+
+<para>To access such hardware, the library makes use of the device created by the Linux kernel
+driver "toshiba_acpi" (/dev/toshiba_acpi) using the Toshiba SMMRegisters.
+</para>
+
+<note><para>This library currently does not provide any header files as it is only used by KToshiba internally</para></note>
+</section>
+
+<section id="kcm">
+<title>KToshiba System Settings</title>
+
+<para>KToshiba provides an easy to use
+<ulink url="help:/kcontrol/kcm_ktoshibam/index.html"><guilabel>System Settings</guilabel></ulink>
+module where you can configure the available hardware on your Toshiba laptop.
+</para>
+
+<para>This module can be accessed in two ways, under <guilabel>Hardware</guilabel> in the
+<guilabel>System Settings</guilabel> and by <mousebutton>left</mousebutton> or <mousebutton>right</mousebutton>
+clicking the KToshiba icon and then clicking <guilabel>Configure</guilabel>.
+</para>
+</section>
+
+<section id="application">
+<title>KToshiba</title>
+
+<para>The main application itelf, whose purpose is to monitor the system events (hotkeys, accelerometer, ac adapter, etc.).
+Providing the user a smooth experience when using a Toshiba laptop under &kde;.
+</para>
+</section>
+</chapter>
+
+<chapter id="features">
+<title>KToshiba Features</title>
+
+<para>Here is a list of the current features KToshiba offers:
+</para>
+
+<note><para>Depending on the laptop model, you can find two different hotkeys layouts.
+KToshiba will automatically detect which layout is present.
+</para>
+</note>
+
+<itemizedlist>
+<listitem>
+<para>Lock Screen - <keycombo action="simul"><keycap>FN</keycap><keycap>F1</keycap></keycombo>
+</para>
+
+<para>Locks the screen when this hotkey is pressed
+</para>
+</listitem>
+
+<listitem>
+<para>Toggle Battery Profiles - <keycombo action="simul"><keycap>FN</keycap><keycap>F2</keycap></keycombo>
+</para>
+</listitem>
+
+<listitem>
+<para>Toggle Pointing Device -
+<keycombo action="simul"><keycap>FN</keycap><keycap>F5</keycap></keycombo> or
+<keycombo action="simul"><keycap>FN</keycap><keycap>F9</keycap></keycombo>
+</para>
+
+<para>Toggles the internal pointing devices state
+</para>
+
+<para>Toggles through the different battery profiles available and depending on the AC adapter state
+</para>
+</listitem>
+
+<listitem>
+<para>Screen Magnification
+</para>
+
+<itemizedlist>
+<listitem>
+<para>Zoom Out - <keycombo action="simul"><keycap>FN</keycap><keycap>1</keycap></keycombo>
+</para>
+
+<para>Decrease the screen magnification
+</para>
+</listitem>
+
+<listitem>
+<para>Zoom In - <keycombo action="simul"><keycap>FN</keycap><keycap>2</keycap></keycombo>
+</para>
+
+<para>Increase the screen magnification
+</para>
+</listitem>
+
+<listitem>
+<para>Zoom Reset - <keycombo action="simul"><keycap>FN</keycap><keycap>Space</keycap></keycombo>
+</para>
+
+<para>Returns the screen to its original size (if it is magnified)
+</para>
+</listitem>
+</itemizedlist>
+
+<note>
+<para>The <guilabel>Desktop Effects</guilabel> (compositing) must be enabled for these functions to work
+</para>
+</note>
+</listitem>
+
+<listitem>
+<para>Toggle Keyboard Backlight - <keycombo action="simul"><keycap>FN</keycap><keycap>Z</keycap></keycombo>
+</para>
+
+<para>Toggles the keyboard backlight to FN-Z (user controlled), TIMER, ON, OFF 
+</para>
+
+<note>
+<para>Depending on the keyboard backlight generation, the available modes can vary
+</para>
+</note>
+</listitem>
+
+<listitem>
+<para>AC Adapter monitoring
+</para>
+
+<para>Monitors the AC adapter state, switching the battery profiles
+</para>
+</listitem>
+
+<listitem>
+<para>Accelerometer monitoring and HDD protection
+</para>
+
+<para>Monitors the built-in accelerometer for sudden moves or harsh vibrations, parking the HDD heads
+if such an event occur
+</para>
+</listitem>
+
+</itemizedlist>
+</chapter>
+
+<chapter id="credits">
+<title>Credits and License</title>
+
+<para>
+KToshiba
+</para>
+<para>Program copyright &copy; 2004-2016, Azael Avalos</para>
+
+<itemizedlist>
+<listitem>
+<para>Jonathan Buzzard - Author of the original "toshiba" Linux driver
+and the <ulink url="http://www.buzzard.me.uk/toshiba/">Toshiba Linux Utilities</ulink>
+</para>
+<para>And his invaluable work on reverse engineering the Toshiba hardware interface</para>
+</listitem>
+<listitem>
+<para>John Belmonte - Original author of the "toshiba_acpi" Linux kernel
+<ulink url="http://memebeam.org/toys/ToshibaAcpiDriver">driver</ulink> 
+</para>
+</listitem>
+<listitem>
+<para>The &kde; Team - For his great Desktop Environment, ideas and pieces of code
+</para>
+</listitem>
+</itemizedlist>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+&underFDL;
+&underGPL;
+
+</chapter>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

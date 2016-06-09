@@ -1,3 +1,55 @@
+2016-06-06 Azael Avalos <coproscefalo@gmail.com>
+	* Released KToshiba 5.3.1
+
+2016-06-02 Azael Avalos <coproscefalo@gmail.com>
+	* Added German translation to .desktop files, thanks again
+	  to Calin Barbat
+
+2016-06-01 Azael Avalos <coproscefalo@gmail.com>
+	* Added German translation thanks to Calin Barbat
+
+2016-05-30 Azael Avalos <coproscefalo@gmail.com>
+	* Added TRANSLATION_DOMAIN definition to KCM
+
+2016-05-10 Azael Avalos <coproscefalo@gmail.com>
+	* Added application domain for translations
+	* Updated copyright year in main.cpp
+	* Updated translations
+	* Fixed spelling of Tumblewed->Tumbleweed in README.toshiba_acpi file
+
+2016-05-09 Azael Avalos <coproscefalo@gmail.com>
+	* Sync the pointing device state to the config file if changed via KCM and notify
+	  KToshiba about it
+	* Added ECMFrameworkCompilerSettings and adapted code
+	* Changed the default bug address to point to the SourceForge support request page
+	* Released KToshiba 5.3
+
+2016-04-10 Azael Avalos <coproscefalo@gmail.com>
+	* Remember the pointing device state and (de)activate it accordingly
+
+2016-03-19 Azael Avalos <coproscefalo@gmail.com>
+	* Updated documentation to openSUSE Tumbleweed users that they do not
+	  need the updated toshiba_acpi file (Tumbleweed currently ships kernel 4.5)
+
+2016-03-18 Azael Avalos <coproscefalo@gmail.com>
+	* Bumped version to 5.3
+
+2016-03-16 Azael Avalos <coproscefalo@gmail.com>
+	* Started initial KToshiba documentation
+	* Fixed the BatteryProfile entry not being updated in the configuration file
+
+2016-03-15 Azael Avalos <coproscefalo@gmail.com>
+	* Finished KCM documentation, CMakeLists and .desktop files adapted
+
+2016-03-14 Azael Avalos <coproscefalo@gmail.com>
+	* Started initial writing of KCM documentation
+
+2016-03-10 Azael Avalos <coproscefalo@gmail.com>
+	* Changed the keyboard icon
+
+2016-03-08 Azael Avalos <coproscefalo@gmail.com>
+	* Added KeyboardLayout enum to FnActions class
+
 2016-02-06 Azael Avalos <coproscefalo@gmail.com>
 	* Spanish translation updated
 

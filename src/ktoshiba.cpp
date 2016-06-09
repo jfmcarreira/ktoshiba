@@ -35,8 +35,8 @@ KToshiba::KToshiba()
       m_fn(new FnActions(this))
 {
     setTitle(i18n("KToshiba"));
-    setIconByName("ktoshiba");
-    setToolTip("ktoshiba", i18n("KToshiba"), i18n("Function (FN) key monitoring for Toshiba laptops"));
+    setIconByName(QStringLiteral("ktoshiba"));
+    setToolTip(QStringLiteral("ktoshiba"), i18n("KToshiba"), i18n("Function (FN) key monitoring for Toshiba laptops"));
     setCategory(Hardware);
     setStatus(Passive);
 
@@ -44,7 +44,7 @@ KToshiba::KToshiba()
     setAssociatedWidget(m_popupMenu);
 
     m_configure = m_popupMenu->addAction(i18n("Configure"));
-    m_configure->setIcon(QIcon::fromTheme("configure"));
+    m_configure->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
 
     connect(m_configure, SIGNAL(triggered()), this, SLOT(configureClicked()));
     connect(m_fn, SIGNAL(vibrationDetected()), this, SLOT(notifyHDDMovement()));
@@ -66,7 +66,7 @@ void KToshiba::notifyHDDMovement()
     m_notification =
         KNotification::event(KNotification::Notification, i18n("KToshiba - HDD Monitor"),
                              i18n("Vibration has been detected and the HDD has been stopped to prevent damage"),
-                             QIcon::fromTheme("drive-harddisk").name(), 0, KNotification::CloseOnTimeout);
+                             QIcon::fromTheme(QStringLiteral("drive-harddisk")).name(), 0, KNotification::CloseOnTimeout);
 }
 
 void KToshiba::notifyZoomDisabled()
@@ -74,13 +74,13 @@ void KToshiba::notifyZoomDisabled()
     m_notification =
         KNotification::event(KNotification::Notification, i18n("KToshiba - Zoom Effect"),
                              i18n("Zoom effect is not supported or is disabled, Zoom actions cannot be activated"),
-                             QIcon::fromTheme("ktoshiba").name(), 0, KNotification::CloseOnTimeout);
+                             QIcon::fromTheme(QStringLiteral("ktoshiba")).name(), 0, KNotification::CloseOnTimeout);
 }
 
 void KToshiba::configureClicked()
 {
     KProcess p;
-    p.setProgram(QStandardPaths::findExecutable("kcmshell5"), QStringList("ktoshibam"));
+    p.setProgram(QStandardPaths::findExecutable(QStringLiteral("kcmshell5")), QStringList(QStringLiteral("ktoshibam")));
     p.startDetached();
 }
 

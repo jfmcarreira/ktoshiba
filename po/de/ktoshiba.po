@@ -3,142 +3,147 @@
 # This file is distributed under the same license as the ktoshiba package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ktoshiba 5.3\n"
+"Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
 "POT-Creation-Date: 2016-06-05 22:05-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-05-31 19:06+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: rc.cpp:1
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Calin Barbat"
 
 #: rc.cpp:2
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "calin.barbat@web.de"
 
 #. i18n: file: src/statuswidget.ui:26
 #. i18n: ectx: property (windowTitle), widget (QWidget, StatusWidget)
 #: rc.cpp:5
 #, kde-format
 msgid "StatusWidget"
-msgstr ""
+msgstr "StatusWidget"
 
 #: src/ktoshiba.cpp:37 src/ktoshiba.cpp:39 src/main.cpp:34
 #, kde-format
 msgid "KToshiba"
-msgstr ""
+msgstr "KToshiba"
 
 #: src/ktoshiba.cpp:39
 #, kde-format
 msgid "Function (FN) key monitoring for Toshiba laptops"
-msgstr ""
+msgstr "(FN) Funktionstasten-Monitoring für Toshiba Laptops"
 
 #: src/ktoshiba.cpp:46
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguration"
 
 #: src/ktoshiba.cpp:67
 #, kde-format
 msgid "KToshiba - HDD Monitor"
-msgstr ""
+msgstr "KToshiba - HDD Monitor"
 
 #: src/ktoshiba.cpp:68
 #, kde-format
 msgid ""
 "Vibration has been detected and the HDD has been stopped to prevent damage"
 msgstr ""
+"Vibration wurde festgestellt und die HDD wurde gestoppt um Schaden zu "
+"verhindern"
 
 #: src/ktoshiba.cpp:75
 #, kde-format
 msgid "KToshiba - Zoom Effect"
-msgstr ""
+msgstr "KToshiba - Zoomeffekt"
 
 #: src/ktoshiba.cpp:76
 #, kde-format
 msgid ""
 "Zoom effect is not supported or is disabled, Zoom actions cannot be activated"
 msgstr ""
+"Zoomeffekt nicht unterstützt oder inaktiv, Zoomaktionen können nicht "
+"aktiviert werden"
 
 #: src/fnactions.cpp:264
 #, kde-format
 msgid "Performance"
-msgstr ""
+msgstr "Leistungs-Modus"
 
 #: src/fnactions.cpp:271
 #, kde-format
 msgid "Powersave"
-msgstr ""
+msgstr "Stromspar-Modus"
 
 #: src/fnactions.cpp:277
 #, kde-format
 msgid "Presentation"
-msgstr ""
+msgstr "Präsentations-Modus"
 
 #: src/fnactions.cpp:285
 #, kde-format
 msgid "ECO"
-msgstr ""
+msgstr "ECO"
 
 #: src/fnactions.cpp:346 src/fnactions.cpp:404
 #, kde-format
 msgid "ON"
-msgstr ""
+msgstr "EIN"
 
 #: src/fnactions.cpp:346 src/fnactions.cpp:401
 #, kde-format
 msgid "OFF"
-msgstr ""
+msgstr "AUS"
 
 #: src/main.cpp:36
 #, kde-format
 msgid "Fn key monitoring for Toshiba laptops"
-msgstr ""
+msgstr "Fn-Tasten-Monitoring für Toshiba Laptops"
 
 #: src/main.cpp:38
 #, kde-format
 msgid "(C) 2004-2016 Azael Avalos"
-msgstr ""
+msgstr "(C) 2004-2016 Azael Avalos"
 
 #: src/main.cpp:41
 #, kde-format
 msgid "Azael Avalos"
-msgstr ""
+msgstr "Azael Avalos"
 
 #: src/main.cpp:42
 #, kde-format
 msgid "Original Author"
-msgstr ""
+msgstr "Originalauthor"
 
 #: src/main.cpp:44
 #, kde-format
 msgid "KDE Team"
-msgstr ""
+msgstr "KDE Team"
 
 #: src/main.cpp:45
 #, kde-format
 msgid "Some ideas and pieces of code"
-msgstr ""
+msgstr "Einige Ideen und Code-Fragmente"
 
 #: src/main.cpp:48
 #, kde-format
 msgid "Calin Barbat"
-msgstr ""
+msgstr "Calin Barbat"
 
 #: src/main.cpp:49
 #, kde-format
 msgid "German translation"
-msgstr ""
+msgstr "Deutsche Übersetzung"

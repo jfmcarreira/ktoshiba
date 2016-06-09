@@ -101,10 +101,11 @@ KToshibaNetlinkEvents::~KToshibaNetlinkEvents()
 
 QString KToshibaNetlinkEvents::getDeviceHID()
 {
-    m_devices << "TOS1900:00" << "TOS6200:00" << "TOS6207:00" << "TOS6208:00";
+    m_devices << QStringLiteral("TOS1900:00") << QStringLiteral("TOS6200:00")
+              << QStringLiteral("TOS6207:00") << QStringLiteral("TOS6208:00");
 
     QDir dir;
-    QString path("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/");
+    QString path(QStringLiteral("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/"));
     foreach (const QString &device, m_devices) {
         if (dir.exists(path.arg(device))) {
             return device;
@@ -165,15 +166,16 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
         return;
     }
 
-    if (QString(m_event->bus_id) == HAPS_HID) {
+    QString haps(QStringLiteral(HAPS_HID));
+    if (QString::fromUtf8(m_event->bus_id) == QStringLiteral(HAPS_HID)) {
         emit hapsEvent(m_event->type);
     }
 
-    if (QString(m_event->bus_id) == m_deviceHID) {
+    if (QString::fromUtf8(m_event->bus_id) == m_deviceHID) {
         emit tvapEvent(m_event->type, m_event->data);
     }
 
-    if (QString(m_event->device_class) == "ac_adapter") {
+    if (QString::fromUtf8(m_event->device_class) == QStringLiteral("ac_adapter")) {
         emit acAdapterChanged(m_event->data);
     }
 }

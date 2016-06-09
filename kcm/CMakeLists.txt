@@ -22,6 +22,8 @@ ki18n_wrap_ui(SystemSettings_SRCS
 	powersave.ui
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"kcm_ktoshibam\")
+
 add_library(kcm_ktoshibam MODULE ${SystemSettings_SRCS})
 
 target_link_libraries(kcm_ktoshibam
