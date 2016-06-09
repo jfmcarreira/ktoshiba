@@ -19,22 +19,34 @@
 #ifndef FN_ACTIONS_OSD_H
 #define FN_ACTIONS_OSD_H
 
+#include <QWidget>
+#include <QObject>
 #include <QTimer>
 #include <QIcon>
 #include <QString>
 
+namespace KDeclarative {
+    class QmlObject;
+}
+
 class QWidget;
 class QLabel;
 
-class FnActionsOsd: public QWidget
+class FnActionsOsd: public QObject
 {
+    Q_OBJECT
+
 public:
-    FnActionsOsd(QWidget *parent = NULL);
-    void showInfo(const QIcon& icon, const QString& text);
+    FnActionsOsd(QObject *parent = NULL);
+    void showInfo(const QString& icon, const QString& text);
+
+private Q_SLOTS:
+    void hideOsd();
 
 private:
+    KDeclarative::QmlObject *m_osdObject;
     QTimer *m_widgetTimer;
-
+    int m_timeout;
     int m_iconSize;
     QLabel *m_statusIcon;
     QLabel *m_statusLabel;

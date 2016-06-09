@@ -16,62 +16,102 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-
-#include <QWidget>
+#include <QApplication>
 #include <QLabel>
 #include <QVBoxLayout>
-#include "fnactionsosd.h"
+#include <QDBusConnection>
 
-FnActionsOsd::FnActionsOsd(QWidget *parent)
-    : QWidget(parent),
+#include <KDeclarative/QmlObject>
+#include <KPackage/PackageLoader>
+
+#include "fnactionsosd.h"
+#include "ktoshiba_debug.h"
+
+
+#include "osdservice.h"
+
+#define SERVICE QLatin1Literal("org.kde.plasmashell")
+#define PATH QLatin1Literal("/org/kde/osdService")
+#define CONNECTION QDBusConnection::sessionBus()
+
+
+
+FnActionsOsd::FnActionsOsd(QObject *parent)
+    : QObject(parent),
     m_widgetTimer(new QTimer(this))
 {
 
     m_widgetTimer->setSingleShot(true);
-    connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hide()));
+    m_timeout = 1500;
+    connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hideOsd()));
 
-    setObjectName(QStringLiteral("StatusWidget"));
-    setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
-                    | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
-    setAttribute(Qt::WA_TranslucentBackground, true);
+    m_osdObject = new KDeclarative::QmlObject(this);
+    const QString osdPath = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/LookAndFeel")).filePath("osdmainscript");
+    m_osdObject->setSource(QUrl::fromLocalFile(osdPath));
+    if ( osdPath.isEmpty() || m_osdObject->status() != QQmlComponent::Ready) {
+        qCDebug(KTOSHIBA) << "Failed to load the OSD QML file";
+        return;
+    }
+    else {
+        qCDebug(KTOSHIBA) << "Loading the OSD QML file from " << osdPath;
+    }
 
-    m_iconSize = 120;
-    int widgetWidth = m_iconSize + 10;
+    m_timeout = m_osdObject->rootObject()->property("timeout").toInt();
 
-    QSize widgetSize(widgetWidth, widgetWidth);
-    resize(widgetWidth, widgetWidth);
-    setMinimumSize(widgetWidth, widgetWidth);
-    setMaximumSize(widgetWidth, widgetWidth);
+//     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/osdService"), this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
 
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->setAlignment(Qt::AlignHCenter);
 
-    m_statusIcon = new QLabel;
-    m_statusIcon->setMinimumSize(QSize(widgetWidth, m_iconSize));
-    m_statusIcon->setMaximumSize(QSize(widgetWidth, m_iconSize));
-    m_statusIcon->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-
-    m_statusLabel = new QLabel;
-    m_statusLabel->setMinimumSize(QSize(widgetWidth, 32));
-    m_statusLabel->setMaximumSize(QSize(widgetWidth, 32));
-    m_statusLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
-
-    mainLayout->addWidget(m_statusIcon);
-    mainLayout->addWidget(m_statusLabel);
-    setLayout(mainLayout);
-
-    m_statusIcon->setText(QString());
-    m_statusLabel->setText(QString());
 
 }
 
-void FnActionsOsd::showInfo(const QIcon& icon, const QString& text)
+void FnActionsOsd::showInfo(const QString& icon, const QString& text)
 {
-    m_statusIcon->setPixmap(icon.pixmap(m_iconSize,m_iconSize));
-    m_statusLabel->setText(text);
-    m_widgetTimer->start(1500);
+    m_widgetTimer->stop();
+
+//     OrgKdeOsdServiceInterface osdService(SERVICE, PATH, CONNECTION);
+//     osdService.showText("audio-volume-high", text);
+//
+//     osdService.keyboardBrightnessChanged(15);
+
+    auto *rootObject = m_osdObject->rootObject();
+    if (rootObject) {
+
+        rootObject->setProperty("showingProgress", false);
+        rootObject->setProperty("osdValue", text);
+        rootObject->setProperty("icon", icon);
+
+        // if our OSD understands animating the opacity, do it;
+        // otherwise just show it to not break existing lnf packages
+        if (rootObject->property("animateOpacity").isValid()) {
+            rootObject->setProperty("animateOpacity", false);
+            rootObject->setProperty("opacity", 1);
+            rootObject->setProperty("visible", true);
+            rootObject->setProperty("animateOpacity", true);
+            rootObject->setProperty("opacity", 0);
+        } else {
+            rootObject->setProperty("visible", true);
+        }
+    }
+
+
+    m_widgetTimer->start(m_timeout);
 }
+
+void FnActionsOsd::hideOsd()
+{
+//     hide();
+
+    auto *rootObject = m_osdObject->rootObject();
+    if (!rootObject) {
+        return;
+    }
+
+    rootObject->setProperty("visible", false);
+
+    // this is needed to prevent fading from "old" values when the OSD shows up
+    rootObject->setProperty("icon", "");
+    rootObject->setProperty("osdValue", 0);
+}
+
 
 

@@ -32,6 +32,8 @@ find_package(KF5 REQUIRED COMPONENTS
 	I18n
 	Notifications
 	Config
+	Declarative
+	Package
 )
 
 find_package(LibMNL REQUIRED)
