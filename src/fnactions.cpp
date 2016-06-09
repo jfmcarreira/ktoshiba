@@ -311,8 +311,8 @@ void FnActions::changeBatteryProfile(int profile, bool init)
 
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
-    m_statusWidget->showInfo(QIcon::fromTheme("computer-laptop"), m_iconText.arg(text) );
     if (!init) {
+        m_statusWidget->showInfo("computer-laptop", m_iconText.arg(text) );
         showWidget();
     }
 
@@ -338,7 +338,7 @@ void FnActions::toggleTouchPad()
 
     m_pointing = m_hw->getPointingDevice();
     m_hw->setPointingDevice(!m_pointing);
-    m_statusWidget->showInfo(QIcon::fromTheme("input-touchpad"), m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")) );
+    m_statusWidget->showInfo("input-touchpad", m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")) );
     showWidget();
 // Do not understand why this code here
 //     if (m_keyboardFunctionsSupported && m_kbdFunctions) {
@@ -404,7 +404,7 @@ void FnActions::toggleKBDBacklight()
         break;
     }
 
-    m_statusWidget->showInfo(QIcon::fromTheme("input-keyboard"), statusText);
+    m_statusWidget->showInfo("input-keyboard", statusText);
     showWidget();
 }
 
@@ -422,9 +422,6 @@ bool FnActions::isKeyboardFunctionsSupported()
 
 void FnActions::showWidget()
 {
-    QRect r = QApplication::desktop()->geometry();
-    m_statusWidget->move((r.width() / 2) - (m_statusWidget->width() / 2), r.top());
-    m_statusWidget->show();
 }
 
 void FnActions::processHotkey(int hotkey)
