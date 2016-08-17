@@ -148,7 +148,7 @@ void DeviceModel::setDeviceData(const quint32 value)
         return;
     }
 
-    emit beginResetModel();
+    Q_EMIT beginResetModel();
     if (!m_devicesList.isEmpty()) {
         m_devicesList.clear();
         m_modelList.clear();
@@ -158,7 +158,7 @@ void DeviceModel::setDeviceData(const quint32 value)
         m_devicesList << ((value >> (4 * i)) & 0xf);
         m_modelList << m_devicesMap.value(m_devicesList.at(i));
     }
-    emit endResetModel();
+    Q_EMIT endResetModel();
 }
 
 void DeviceModel::setSupportedDevices(int num_devices)
@@ -172,7 +172,7 @@ void DeviceModel::moveUp(const QModelIndex &index)
         return;
     }
 
-    emit layoutAboutToBeChanged();
+    Q_EMIT layoutAboutToBeChanged();
     QModelIndex above = index.sibling(index.row() - 1, index.column());
     m_devicesList.swap(index.row(), above.row());
     m_modelList.swap(index.row(), above.row());
@@ -180,7 +180,7 @@ void DeviceModel::moveUp(const QModelIndex &index)
     from << index << above;
     to << above << index;
     changePersistentIndexList(from, to);
-    emit layoutChanged();
+    Q_EMIT layoutChanged();
 }
 
 void DeviceModel::moveDown(const QModelIndex &index)
@@ -189,7 +189,7 @@ void DeviceModel::moveDown(const QModelIndex &index)
         return;
     }
 
-    emit layoutAboutToBeChanged();
+    Q_EMIT layoutAboutToBeChanged();
     QModelIndex below = index.sibling(index.row() + 1, index.column());
     m_devicesList.swap(index.row(), below.row());
     m_modelList.swap(index.row(), below.row());
@@ -197,5 +197,5 @@ void DeviceModel::moveDown(const QModelIndex &index)
     from << index << below;
     to << below << index;
     changePersistentIndexList(from, to);
-    emit layoutChanged();
+    Q_EMIT layoutChanged();
 }

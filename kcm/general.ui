@@ -112,6 +112,43 @@
      </property>
     </widget>
    </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QGroupBox" name="hdmiCECGroupBox">
+     <property name="toolTip">
+      <string>Toggles the HDMI-CEC features, HDMI-CEC allows devices connected through HDMI ports to communicate back and forth.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Toggles the HDMI-CEC features, HDMI-CEC allows devices connected through HDMI ports to communicate back and forth.</string>
+     </property>
+     <property name="title">
+      <string>HDMI Consumer Electronics Control</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0" alignment="Qt::AlignLeft">
+       <widget class="QCheckBox" name="hdmi_remote_power_checkbox">
+        <property name="toolTip">
+         <string>Toggles the HDMI-CEC Remote Power control feature, this allows devices connected through HDMI ports to be turned ON/OFF.</string>
+        </property>
+        <property name="whatsThis">
+         <string>Toggles the HDMI-CEC Remote Power control feature, this allows devices connected through HDMI ports to be turned ON/OFF.</string>
+        </property>
+        <property name="text">
+         <string>HDMI-CEC Remote Power</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

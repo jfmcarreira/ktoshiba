@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ktoshiba 5.1\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/p/ktoshiba/support-requests/\n"
-"POT-Creation-Date: 2016-06-05 22:05-0600\n"
+"POT-Creation-Date: 2016-08-11 11:20-0600\n"
 "PO-Revision-Date: 2015-04-18 15:25-0600\n"
 "Last-Translator: Azael Avalos <coproscefalo@gmail.com>\n"
 "Language-Team: ES <es_mx@li.org>\n"
@@ -292,11 +292,52 @@ msgstr ""
 "Selecciona el dispositivo de visualización (monitor) que será utilizado al "
 "encendido."
 
+#. i18n: file: kcm/general.ui:118
+#. i18n: ectx: property (toolTip), widget (QGroupBox, hdmiCECGroupBox)
+#. i18n: file: kcm/general.ui:121
+#. i18n: ectx: property (whatsThis), widget (QGroupBox, hdmiCECGroupBox)
+#: rc.cpp:131 rc.cpp:134
+#, kde-format
+msgid ""
+"Toggles the HDMI-CEC features, HDMI-CEC allows devices connected through "
+"HDMI ports to communicate back and forth."
+msgstr ""
+"Alterna la funcionalidad HDMI-CEC, el HDMI-CEC permite la comunicación entre "
+"los dispositivos conectados a travez del pueto HDMI."
+
+#. i18n: file: kcm/general.ui:124
+#. i18n: ectx: property (title), widget (QGroupBox, hdmiCECGroupBox)
+#: rc.cpp:137
+#, kde-format
+msgid "HDMI Consumer Electronics Control"
+msgstr "Control de Electronicos del Consumidor HDMI"
+
+#. i18n: file: kcm/general.ui:139
+#. i18n: ectx: property (toolTip), widget (QCheckBox, hdmi_remote_power_checkbox)
+#. i18n: file: kcm/general.ui:142
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, hdmi_remote_power_checkbox)
+#: rc.cpp:140 rc.cpp:143
+#, kde-format
+msgid ""
+"Toggles the HDMI-CEC Remote Power control feature, this allows devices "
+"connected through HDMI ports to be turned ON/OFF."
+msgstr ""
+"Alterna la funcionalidad del control remoto de poder del HDMI-CEC, esto "
+"permite que los dispositivos conectados a travez del puerto HDMI puedan ser "
+"ENCENDIDOS/APAGADOS"
+
+#. i18n: file: kcm/general.ui:145
+#. i18n: ectx: property (text), widget (QCheckBox, hdmi_remote_power_checkbox)
+#: rc.cpp:146
+#, kde-format
+msgid "HDMI-CEC Remote Power"
+msgstr "Poder Remoto HDMI-CEC"
+
 #. i18n: file: kcm/hddprotect.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, HDDProtect)
 #. i18n: file: kcm/hddprotect.ui:27
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: rc.cpp:131 rc.cpp:140
+#: rc.cpp:149 rc.cpp:158
 #, kde-format
 msgid "HDD Protection"
 msgstr "Protección del Disco Duro"
@@ -305,7 +346,7 @@ msgstr "Protección del Disco Duro"
 #. i18n: ectx: property (toolTip), widget (QGroupBox, groupBox)
 #. i18n: file: kcm/hddprotect.ui:24
 #. i18n: ectx: property (whatsThis), widget (QGroupBox, groupBox)
-#: rc.cpp:134 rc.cpp:137
+#: rc.cpp:152 rc.cpp:155
 #, kde-format
 msgid "Toggles the HDD protection monitoring."
 msgstr "Alterna la protección del disco duro."
@@ -314,21 +355,21 @@ msgstr "Alterna la protección del disco duro."
 #. i18n: ectx: property (toolTip), widget (QCheckBox, hdd_notification_checkbox)
 #. i18n: file: kcm/hddprotect.ui:45
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, hdd_notification_checkbox)
-#: rc.cpp:143 rc.cpp:146
+#: rc.cpp:161 rc.cpp:164
 #, kde-format
 msgid "Notify if the HDD monitoring detected movement."
 msgstr "Notifica si el monitoreo del disco duro ha detectado movimiento."
 
 #. i18n: file: kcm/hddprotect.ui:48
 #. i18n: ectx: property (text), widget (QCheckBox, hdd_notification_checkbox)
-#: rc.cpp:149
+#: rc.cpp:167
 #, kde-format
 msgid "HDD Protection Notification"
 msgstr "Notificación de Protección del Disco Duro"
 
 #. i18n: file: kcm/hddprotect.ui:57
 #. i18n: ectx: property (text), widget (QLabel, protection_level_label)
-#: rc.cpp:152
+#: rc.cpp:170
 #, kde-format
 msgid "HDD Protection Level:"
 msgstr "Nivel de Protección del Disco Duro:"
@@ -337,7 +378,7 @@ msgstr "Nivel de Protección del Disco Duro:"
 #. i18n: ectx: property (toolTip), widget (QLabel, protection_level)
 #. i18n: file: kcm/hddprotect.ui:70
 #. i18n: ectx: property (whatsThis), widget (QLabel, protection_level)
-#: rc.cpp:155 rc.cpp:158
+#: rc.cpp:173 rc.cpp:176
 #, kde-format
 msgid "The current HDD protection level."
 msgstr "El nivel actual de protección del disco duro."
@@ -346,21 +387,21 @@ msgstr "El nivel actual de protección del disco duro."
 #. i18n: ectx: property (toolTip), widget (QSlider, protection_level_slider)
 #. i18n: file: kcm/hddprotect.ui:83
 #. i18n: ectx: property (whatsThis), widget (QSlider, protection_level_slider)
-#: rc.cpp:161 rc.cpp:164
+#: rc.cpp:179 rc.cpp:182
 #, kde-format
 msgid "Sets the HDD protection level."
 msgstr "Fija el nivel de protección del disco duro."
 
 #. i18n: file: kcm/keyboard.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, Keyboard)
-#: rc.cpp:167
+#: rc.cpp:185
 #, kde-format
 msgid "Keyboard Settings"
 msgstr "Ajustes de Teclado"
 
 #. i18n: file: kcm/keyboard.ui:21
 #. i18n: ectx: property (text), widget (QLabel, function_keys_label)
-#: rc.cpp:170
+#: rc.cpp:188
 #, kde-format
 msgid "Function Keys mode:"
 msgstr "Modo de las Teclas de Función:"
@@ -369,35 +410,35 @@ msgstr "Modo de las Teclas de Función:"
 #. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)
 #. i18n: file: kcm/bootsettings.ui:41
 #. i18n: ectx: property (text), item, widget (QComboBox, boot_speed_combobox)
-#: rc.cpp:173 rc.cpp:212
+#: rc.cpp:191 rc.cpp:230
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
 #. i18n: file: kcm/keyboard.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, kbd_functions_combobox)
-#: rc.cpp:176
+#: rc.cpp:194
 #, kde-format
 msgid "Function"
 msgstr "Función"
 
 #. i18n: file: kcm/keyboard.ui:48
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: rc.cpp:179
+#: rc.cpp:197
 #, kde-format
 msgid "Keyboard Backlight"
 msgstr "Modo de la Luz del Teclado"
 
 #. i18n: file: kcm/keyboard.ui:54
 #. i18n: ectx: property (text), widget (QLabel, kbd_backlight_label)
-#: rc.cpp:182
+#: rc.cpp:200
 #, kde-format
 msgid "Keyboard Backlight mode:"
 msgstr "Modo de la Luz del Teclado:"
 
 #. i18n: file: kcm/keyboard.ui:73
 #. i18n: ectx: property (text), widget (QLabel, kbd_timeout_label)
-#: rc.cpp:185
+#: rc.cpp:203
 #, kde-format
 msgid "Keyboard Backlight timeout:"
 msgstr "Tiempo de apagado de la Luz del Teclado:"
@@ -406,7 +447,7 @@ msgstr "Tiempo de apagado de la Luz del Teclado:"
 #. i18n: ectx: property (toolTip), widget (QLabel, kbd_timeout)
 #. i18n: file: kcm/keyboard.ui:89
 #. i18n: ectx: property (whatsThis), widget (QLabel, kbd_timeout)
-#: rc.cpp:188 rc.cpp:191
+#: rc.cpp:206 rc.cpp:209
 #, kde-format
 msgid ""
 "The current timeout at which the keyboard backlight will turn off after the "
@@ -419,7 +460,7 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QSlider, kbd_timeout_slider)
 #. i18n: file: kcm/keyboard.ui:102
 #. i18n: ectx: property (whatsThis), widget (QSlider, kbd_timeout_slider)
-#: rc.cpp:194 rc.cpp:197
+#: rc.cpp:212 rc.cpp:215
 #, kde-format
 msgid ""
 "Sets the time the keyboard backlight will turn off after the last keypress."
@@ -429,14 +470,14 @@ msgstr ""
 
 #. i18n: file: kcm/bootsettings.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, BootSettings)
-#: rc.cpp:200
+#: rc.cpp:218
 #, kde-format
 msgid "Boot Settings"
 msgstr "Ajustes de Arranque"
 
 #. i18n: file: kcm/bootsettings.ui:21
 #. i18n: ectx: property (text), widget (QLabel, boot_speed_label)
-#: rc.cpp:203
+#: rc.cpp:221
 #, kde-format
 msgid "Boot Speed:"
 msgstr "Velocidad de Arranque"
@@ -445,14 +486,14 @@ msgstr "Velocidad de Arranque"
 #. i18n: ectx: property (toolTip), widget (QComboBox, boot_speed_combobox)
 #. i18n: file: kcm/bootsettings.ui:37
 #. i18n: ectx: property (whatsThis), widget (QComboBox, boot_speed_combobox)
-#: rc.cpp:206 rc.cpp:209
+#: rc.cpp:224 rc.cpp:227
 #, kde-format
 msgid "Selects the desired booting speed."
 msgstr "Selecciona la velocidad de arranque deseada."
 
 #. i18n: file: kcm/bootsettings.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, boot_speed_combobox)
-#: rc.cpp:215
+#: rc.cpp:233
 #, kde-format
 msgid "Fast"
 msgstr "Rápida"
@@ -461,7 +502,7 @@ msgstr "Rápida"
 #. i18n: ectx: property (toolTip), widget (QTreeView, deviceList)
 #. i18n: file: kcm/bootsettings.ui:75
 #. i18n: ectx: property (whatsThis), widget (QTreeView, deviceList)
-#: rc.cpp:218 rc.cpp:221
+#: rc.cpp:236 rc.cpp:239
 #, kde-format
 msgid "Boot devices supported by this laptop."
 msgstr "Dispositivos de arranque permitidos por este portátil."
@@ -470,14 +511,14 @@ msgstr "Dispositivos de arranque permitidos por este portátil."
 #. i18n: ectx: property (toolTip), widget (QPushButton, deferButton)
 #. i18n: file: kcm/bootsettings.ui:106
 #. i18n: ectx: property (whatsThis), widget (QPushButton, deferButton)
-#: rc.cpp:224 rc.cpp:227
+#: rc.cpp:242 rc.cpp:245
 #, kde-format
 msgid "No preference for the selected device"
 msgstr "Sin preferencia por el dispositivo seleccionado"
 
 #. i18n: file: kcm/bootsettings.ui:109
 #. i18n: ectx: property (text), widget (QPushButton, deferButton)
-#: rc.cpp:230
+#: rc.cpp:248
 #, kde-format
 msgid "Defer"
 msgstr "Aplazar"
@@ -486,14 +527,14 @@ msgstr "Aplazar"
 #. i18n: ectx: property (toolTip), widget (QPushButton, preferButton)
 #. i18n: file: kcm/bootsettings.ui:125
 #. i18n: ectx: property (whatsThis), widget (QPushButton, preferButton)
-#: rc.cpp:233 rc.cpp:236
+#: rc.cpp:251 rc.cpp:254
 #, kde-format
 msgid "Prefer the selected device"
 msgstr "Preferir el dispositivo seleccionado"
 
 #. i18n: file: kcm/bootsettings.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, preferButton)
-#: rc.cpp:239
+#: rc.cpp:257
 #, kde-format
 msgid "Prefer"
 msgstr "Preferir"
@@ -502,14 +543,14 @@ msgstr "Preferir"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, panel_power_checkbox)
 #. i18n: file: kcm/bootsettings.ui:143
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, panel_power_checkbox)
-#: rc.cpp:242 rc.cpp:245
+#: rc.cpp:260 rc.cpp:263
 #, kde-format
 msgid "Turns ON the laptop whenever you open the LID."
 msgstr "Enciende el portátil cuando se abre la tapa."
 
 #. i18n: file: kcm/bootsettings.ui:146
 #. i18n: ectx: property (text), widget (QCheckBox, panel_power_checkbox)
-#: rc.cpp:248
+#: rc.cpp:266
 #, kde-format
 msgid "Panel Power ON"
 msgstr "Encendido mediante el panel"
@@ -518,7 +559,7 @@ msgstr "Encendido mediante el panel"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, wok_checkbox)
 #. i18n: file: kcm/bootsettings.ui:156
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, wok_checkbox)
-#: rc.cpp:251 rc.cpp:254
+#: rc.cpp:269 rc.cpp:272
 #, kde-format
 msgid ""
 "Awakens the laptop whenever you press the keyboard, when the computer is "
@@ -529,7 +570,7 @@ msgstr ""
 
 #. i18n: file: kcm/bootsettings.ui:159
 #. i18n: ectx: property (text), widget (QCheckBox, wok_checkbox)
-#: rc.cpp:257
+#: rc.cpp:275
 #, kde-format
 msgid "Wake on Keyboard (WOK)"
 msgstr "Reactivación mediante teclado"
@@ -538,14 +579,14 @@ msgstr "Reactivación mediante teclado"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, wol_checkbox)
 #. i18n: file: kcm/bootsettings.ui:169
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, wol_checkbox)
-#: rc.cpp:260 rc.cpp:263
+#: rc.cpp:278 rc.cpp:281
 #, kde-format
 msgid "Turns ON or awakens the laptop by a network message."
 msgstr "Enciende o despierta el portátil con un mensaje de red."
 
 #. i18n: file: kcm/bootsettings.ui:172
 #. i18n: ectx: property (text), widget (QCheckBox, wol_checkbox)
-#: rc.cpp:266
+#: rc.cpp:284
 #, kde-format
 msgid "Wake on LAN (WOL)"
 msgstr "Reactivación mediante red"
@@ -554,7 +595,7 @@ msgstr "Reactivación mediante red"
 #. i18n: ectx: property (windowTitle), widget (QWidget, PowerSave)
 #. i18n: file: kcm/powersave.ui:15
 #. i18n: ectx: property (windowTitle), widget (QWidget, PowerSave)
-#: rc.cpp:269 rc.cpp:344
+#: rc.cpp:287 rc.cpp:362
 #, kde-format
 msgid "Power Save"
 msgstr "Ahorro de Energía"
@@ -563,7 +604,7 @@ msgstr "Ahorro de Energía"
 #. i18n: ectx: property (toolTip), widget (QGroupBox, batteryGroupBox)
 #. i18n: file: kcm/powersave3.ui:24
 #. i18n: ectx: property (whatsThis), widget (QGroupBox, batteryGroupBox)
-#: rc.cpp:272 rc.cpp:275
+#: rc.cpp:290 rc.cpp:293
 #, kde-format
 msgid ""
 "Toggles the Battery Profile monitoring feature.  Check this if you want "
@@ -574,7 +615,7 @@ msgstr ""
 
 #. i18n: file: kcm/powersave3.ui:27
 #. i18n: ectx: property (title), widget (QGroupBox, batteryGroupBox)
-#: rc.cpp:278
+#: rc.cpp:296
 #, kde-format
 msgid "Manage Battery Profiles"
 msgstr "Administra los perfiles de batería"
@@ -583,7 +624,7 @@ msgstr "Administra los perfiles de batería"
 #. i18n: ectx: property (text), widget (QLabel, battery_profiles_label)
 #. i18n: file: kcm/powersave.ui:21
 #. i18n: ectx: property (text), widget (QLabel, battery_profiles_label)
-#: rc.cpp:281 rc.cpp:347
+#: rc.cpp:299 rc.cpp:365
 #, kde-format
 msgid "Battery Profile:"
 msgstr "Perfil de Batería:"
@@ -596,7 +637,7 @@ msgstr "Perfil de Batería:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, battery_profiles_combobox)
 #. i18n: file: kcm/powersave.ui:31
 #. i18n: ectx: property (whatsThis), widget (QComboBox, battery_profiles_combobox)
-#: rc.cpp:284 rc.cpp:287 rc.cpp:350 rc.cpp:353
+#: rc.cpp:302 rc.cpp:305 rc.cpp:368 rc.cpp:371
 #, kde-format
 msgid "Changes the current Battery Profile."
 msgstr "Cambia el perfil de ahorro de batería."
@@ -609,7 +650,7 @@ msgstr "Cambia el perfil de ahorro de batería."
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
 #. i18n: file: kcm/powersave.ui:161
 #. i18n: ectx: property (text), item, widget (QComboBox, sata_iface_combobox)
-#: rc.cpp:290 rc.cpp:338 rc.cpp:356 rc.cpp:419 kcm/powersave.cpp:70
+#: rc.cpp:308 rc.cpp:356 rc.cpp:374 rc.cpp:437 kcm/powersave.cpp:70
 #, kde-format
 msgid "Performance"
 msgstr "Rendimiento Alto"
@@ -618,7 +659,7 @@ msgstr "Rendimiento Alto"
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
 #. i18n: file: kcm/powersave.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
-#: rc.cpp:293 rc.cpp:359
+#: rc.cpp:311 rc.cpp:377
 #, kde-format
 msgid "Powersave"
 msgstr "Ahorro de Energía"
@@ -627,14 +668,14 @@ msgstr "Ahorro de Energía"
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
 #. i18n: file: kcm/powersave.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
-#: rc.cpp:296 rc.cpp:362
+#: rc.cpp:314 rc.cpp:380
 #, kde-format
 msgid "Presentation"
 msgstr "Presentación"
 
 #. i18n: file: kcm/powersave3.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
-#: rc.cpp:299
+#: rc.cpp:317
 #, kde-format
 msgid "ECO"
 msgstr "ECO"
@@ -643,7 +684,7 @@ msgstr "ECO"
 #. i18n: ectx: property (toolTip), widget (QGroupBox, coolingGroupBox)
 #. i18n: file: kcm/powersave3.ui:85
 #. i18n: ectx: property (whatsThis), widget (QGroupBox, coolingGroupBox)
-#: rc.cpp:302 rc.cpp:305
+#: rc.cpp:320 rc.cpp:323
 #, kde-format
 msgid ""
 "Toggles the Cooling Method monitoring feature.  The laptop fan changes its "
@@ -654,14 +695,14 @@ msgstr ""
 
 #. i18n: file: kcm/powersave3.ui:88
 #. i18n: ectx: property (title), widget (QGroupBox, coolingGroupBox)
-#: rc.cpp:308
+#: rc.cpp:326
 #, kde-format
 msgid "Cooling Method"
 msgstr "Método de Enfriamiento"
 
 #. i18n: file: kcm/powersave3.ui:103
 #. i18n: ectx: property (text), widget (QLabel, cooling_method_battery_label)
-#: rc.cpp:311
+#: rc.cpp:329
 #, kde-format
 msgid "Cooling Method on battery:"
 msgstr "Método de Enfriamiento en batería:"
@@ -670,7 +711,7 @@ msgstr "Método de Enfriamiento en batería:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, cooling_method_battery_combobox)
 #. i18n: file: kcm/powersave3.ui:113
 #. i18n: ectx: property (whatsThis), widget (QComboBox, cooling_method_battery_combobox)
-#: rc.cpp:314 rc.cpp:317
+#: rc.cpp:332 rc.cpp:335
 #, kde-format
 msgid "Changes the fan Cooling Method when the laptop is running on battery."
 msgstr ""
@@ -679,7 +720,7 @@ msgstr ""
 
 #. i18n: file: kcm/powersave3.ui:120
 #. i18n: ectx: property (text), widget (QLabel, cooling_method_plugged_label)
-#: rc.cpp:320
+#: rc.cpp:338
 #, kde-format
 msgid "Cooling Method plugged in:"
 msgstr "Método de Enfriamiento conectada:"
@@ -688,7 +729,7 @@ msgstr "Método de Enfriamiento conectada:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, cooling_method_plugged_combobox)
 #. i18n: file: kcm/powersave3.ui:130
 #. i18n: ectx: property (whatsThis), widget (QComboBox, cooling_method_plugged_combobox)
-#: rc.cpp:323 rc.cpp:326
+#: rc.cpp:341 rc.cpp:344
 #, kde-format
 msgid "Changes the fan Cooling Method when the laptop is connected to AC."
 msgstr ""
@@ -699,7 +740,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, sata_iface_label)
 #. i18n: file: kcm/powersave.ui:147
 #. i18n: ectx: property (text), widget (QLabel, sata_iface_label)
-#: rc.cpp:329 rc.cpp:410
+#: rc.cpp:347 rc.cpp:428
 #, kde-format
 msgid "SATA Interface Setting mode:"
 msgstr "Modo de la interfaz SATA:"
@@ -712,7 +753,7 @@ msgstr "Modo de la interfaz SATA:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, sata_iface_combobox)
 #. i18n: file: kcm/powersave.ui:157
 #. i18n: ectx: property (whatsThis), widget (QComboBox, sata_iface_combobox)
-#: rc.cpp:332 rc.cpp:335 rc.cpp:413 rc.cpp:416
+#: rc.cpp:350 rc.cpp:353 rc.cpp:431 rc.cpp:434
 #, kde-format
 msgid "Changes the SATA interface setting mode."
 msgstr "Cambia el modo de operación de la interfaz SATA."
@@ -721,28 +762,28 @@ msgstr "Cambia el modo de operación de la interfaz SATA."
 #. i18n: ectx: property (text), item, widget (QComboBox, sata_iface_combobox)
 #. i18n: file: kcm/powersave.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, sata_iface_combobox)
-#: rc.cpp:341 rc.cpp:422
+#: rc.cpp:359 rc.cpp:440
 #, kde-format
 msgid "Battery Life"
 msgstr "Ahorro de Batería"
 
 #. i18n: file: kcm/powersave.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, battery_profiles_combobox)
-#: rc.cpp:365
+#: rc.cpp:383
 #, kde-format
 msgid "eco Mode"
 msgstr "Modo eco"
 
 #. i18n: file: kcm/powersave.ui:58
 #. i18n: ectx: property (title), widget (QGroupBox, batteryGroupBox)
-#: rc.cpp:368
+#: rc.cpp:386
 #, kde-format
 msgid "Battery Profile Settings"
 msgstr "Ajustes del Perfil de Batería:"
 
 #. i18n: file: kcm/powersave.ui:73
 #. i18n: ectx: property (text), widget (QLabel, cooling_method_label)
-#: rc.cpp:371
+#: rc.cpp:389
 #, kde-format
 msgid "Cooling Method:"
 msgstr "Método de Enfriamiento:"
@@ -751,14 +792,14 @@ msgstr "Método de Enfriamiento:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, cooling_method_combobox)
 #. i18n: file: kcm/powersave.ui:83
 #. i18n: ectx: property (whatsThis), widget (QComboBox, cooling_method_combobox)
-#: rc.cpp:374 rc.cpp:377
+#: rc.cpp:392 rc.cpp:395
 #, kde-format
 msgid "Changes the fan Cooling Method."
 msgstr "Cambia el Método de Enfriamiento del abanico."
 
 #. i18n: file: kcm/powersave.ui:90
 #. i18n: ectx: property (text), widget (QLabel, odd_power_label)
-#: rc.cpp:380
+#: rc.cpp:398
 #, kde-format
 msgid "ODD Power Support:"
 msgstr "Corriente del dispositivo óptico:"
@@ -767,7 +808,7 @@ msgstr "Corriente del dispositivo óptico:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, odd_power_combobox)
 #. i18n: file: kcm/powersave.ui:100
 #. i18n: ectx: property (whatsThis), widget (QComboBox, odd_power_combobox)
-#: rc.cpp:383 rc.cpp:386
+#: rc.cpp:401 rc.cpp:404
 #, kde-format
 msgid "Changes the ODD power setting."
 msgstr "Cambia la corriente del lector óptico."
@@ -776,7 +817,7 @@ msgstr "Cambia la corriente del lector óptico."
 #. i18n: ectx: property (text), item, widget (QComboBox, odd_power_combobox)
 #. i18n: file: kcm/powersave.ui:131
 #. i18n: ectx: property (text), item, widget (QComboBox, illumination_combobox)
-#: rc.cpp:389 rc.cpp:404 kcm/sleeputilities.cpp:53
+#: rc.cpp:407 rc.cpp:422 kcm/sleeputilities.cpp:53
 #, kde-format
 msgid "Disabled"
 msgstr "Deshabilitado"
@@ -785,14 +826,14 @@ msgstr "Deshabilitado"
 #. i18n: ectx: property (text), item, widget (QComboBox, odd_power_combobox)
 #. i18n: file: kcm/powersave.ui:136
 #. i18n: ectx: property (text), item, widget (QComboBox, illumination_combobox)
-#: rc.cpp:392 rc.cpp:407
+#: rc.cpp:410 rc.cpp:425
 #, kde-format
 msgid "Enabled"
 msgstr "Habilitado"
 
 #. i18n: file: kcm/powersave.ui:117
 #. i18n: ectx: property (text), widget (QLabel, illumination_label)
-#: rc.cpp:395
+#: rc.cpp:413
 #, kde-format
 msgid "Illumination:"
 msgstr "Illuminación:"
@@ -801,7 +842,7 @@ msgstr "Illuminación:"
 #. i18n: ectx: property (toolTip), widget (QComboBox, illumination_combobox)
 #. i18n: file: kcm/powersave.ui:127
 #. i18n: ectx: property (whatsThis), widget (QComboBox, illumination_combobox)
-#: rc.cpp:398 rc.cpp:401
+#: rc.cpp:416 rc.cpp:419
 #, kde-format
 msgid "Changes the laptop Illumination."
 msgstr "Cambia la illuminación del portátil."
@@ -831,7 +872,7 @@ msgstr "Autor original"
 msgid "Please reboot for hardware changes to take effect"
 msgstr "Por favor reinicia para que los cambios en el hardware hagan efecto"
 
-#: kcm/systemsettings.cpp:350 kcm/keyboardsettings.cpp:108
+#: kcm/systemsettings.cpp:354 kcm/keyboardsettings.cpp:108
 #: kcm/keyboardsettings.cpp:144
 #, kde-format
 msgid " sec"
@@ -907,32 +948,32 @@ msgstr "Rendimiento Máximo"
 msgid "Battery Optimized"
 msgstr "Optimizado para Batería"
 
-#: kcm/generalsettings.cpp:120
+#: kcm/generalsettings.cpp:124
 #, kde-format
 msgid "AUTO"
 msgstr "Automatico"
 
-#: kcm/generalsettings.cpp:125
+#: kcm/generalsettings.cpp:129
 #, kde-format
 msgid "Internal LCD"
 msgstr "LCD interno"
 
-#: kcm/generalsettings.cpp:130
+#: kcm/generalsettings.cpp:134
 #, kde-format
 msgid "RGB"
 msgstr "RGB"
 
-#: kcm/generalsettings.cpp:135
+#: kcm/generalsettings.cpp:139
 #, kde-format
 msgid "External Unknown 1"
 msgstr "Desconocido externo 1"
 
-#: kcm/generalsettings.cpp:140
+#: kcm/generalsettings.cpp:144
 #, kde-format
 msgid "HDMI"
 msgstr "HDMI"
 
-#: kcm/generalsettings.cpp:145
+#: kcm/generalsettings.cpp:149
 #, kde-format
 msgid "External Unknown 2"
 msgstr "Desconocido externo 2"

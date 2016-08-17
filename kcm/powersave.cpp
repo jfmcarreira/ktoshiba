@@ -258,7 +258,7 @@ void PowerSave::save()
 
     if (config_changed) {
         saveProfile(m_batteryProfile);
-        emit configFileChanged();
+        Q_EMIT configFileChanged();
     }
 }
 

@@ -36,6 +36,10 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     m_usbLegacySupported = isUSBLegacySupported();
     m_builtInLANSupported = isBuiltInLANSupported();
     m_powerOnDisplaySupported = isPowerOnDisplaySupported();
+    m_hdmiCECSupported = isHDMICECSupported();
+    if (m_hdmiCECSupported) {
+        m_hdmiRemotePowerSupported = isHDMIRemotePowerSupported();
+    }
 
     general = KConfigGroup(m_config, "General");
     if (!general.exists()) {
@@ -149,38 +153,45 @@ bool GeneralSettings::isPowerOnDisplaySupported()
     return true;
 }
 
+bool GeneralSettings::isHDMICECSupported()
+{
+    m_hdmiCEC = m_sys->hw()->getHDMICEC();
+
+    if (m_hdmiCEC != KToshibaHardware::DEACTIVATED && m_hdmiCEC != KToshibaHardware::ACTIVATED) {
+        return false;
+    }
+
+    return true;
+}
+
+bool GeneralSettings::isHDMIRemotePowerSupported()
+{
+    m_hdmiRemotePower = m_sys->hw()->getHDMIRemotePower();
+
+    if (m_hdmiRemotePower != KToshibaHardware::DEACTIVATED && m_hdmiRemotePower != KToshibaHardware::ACTIVATED) {
+        return false;
+    }
+
+    return true;
+}
+
 void GeneralSettings::load()
 {
     // Pointing Device
-    if (m_pointingDeviceSupported) {
-        pointing_device_checkbox->setChecked(m_pointingDevice ? true : false);
-    } else {
+    m_pointingDeviceSupported ? pointing_device_checkbox->setChecked(m_pointingDevice ? true : false) :
         pointing_device_checkbox->setEnabled(false);
-    }
     // USB Rapid Charge
-    if (m_rapidChargeSupported) {
-        rapid_charge_checkbox->setChecked(m_rapidCharge ? true : false);
-    } else {
+    m_rapidChargeSupported ? rapid_charge_checkbox->setChecked(m_rapidCharge ? true : false) :
         rapid_charge_checkbox->setEnabled(false);
-    }
     // USB Three
-    if (m_usbThreeSupported) {
-        usb_three_checkbox->setChecked(m_usbThree ? true : false);
-    } else {
+    m_usbThreeSupported ? usb_three_checkbox->setChecked(m_usbThree ? true : false) :
         usb_three_checkbox->setEnabled(false);
-    }
     // USB Legacy Emulation
-    if (m_usbLegacySupported) {
-        usb_legacy_checkbox->setChecked(m_usbLegacy ? true : false);
-    } else {
+    m_usbLegacySupported ? usb_legacy_checkbox->setChecked(m_usbLegacy ? true : false) :
         usb_legacy_checkbox->setEnabled(false);
-    }
     // Built In LAN
-    if (m_builtInLANSupported) {
-        built_in_lan_checkbox->setChecked(m_builtInLAN ? true : false);
-    } else {
+    m_builtInLANSupported ? built_in_lan_checkbox->setChecked(m_builtInLAN ? true : false) :
         built_in_lan_checkbox->setEnabled(false);
-    }
     // Power On Display
     if (m_powerOnDisplaySupported) {
         power_on_display_combobox->addItems(m_displayDevices);
@@ -188,6 +199,14 @@ void GeneralSettings::load()
     } else {
         power_on_display_combobox->setEnabled(false);
         power_on_display_label->setEnabled(false);
+    }
+    // HDMI-CEC
+    if (m_hdmiCECSupported) {
+        hdmiCECGroupBox->setChecked(m_hdmiCEC ? true : false);
+        m_hdmiRemotePowerSupported ? hdmi_remote_power_checkbox->setChecked(m_hdmiRemotePower ? true : false) :
+            hdmi_remote_power_checkbox->setEnabled(false);
+    } else {
+        hdmiCECGroupBox->setEnabled(false);
     }
 }
 
@@ -251,6 +270,23 @@ void GeneralSettings::save()
             m_currentDisplayDevice = tmp2;
         }
     }
+    // HDMI-CEC
+    if (m_hdmiCECSupported) {
+        tmp = hdmiCECGroupBox->isChecked() ?
+              KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
+        if (tmp != m_hdmiCEC) {
+            m_sys->hw()->setHDMICEC(tmp);
+            m_hdmiCEC = tmp;
+        }
+        if (m_hdmiRemotePowerSupported) {
+            tmp = (hdmi_remote_power_checkbox->checkState() == Qt::Checked) ?
+                  KToshibaHardware::ACTIVATED : KToshibaHardware::DEACTIVATED;
+            if (tmp != m_hdmiRemotePower) {
+                m_sys->hw()->setHDMIRemotePower(tmp);
+                m_hdmiRemotePower = tmp;
+            }
+        }
+    }
 }
 
 void GeneralSettings::defaults()
@@ -278,5 +314,12 @@ void GeneralSettings::defaults()
     // Power On Display
     if (m_powerOnDisplaySupported && m_currentDisplayDevice != KToshibaHardware::AUTO_DISPLAY) {
         power_on_display_combobox->setCurrentIndex(m_displayDevicesMap.key(KToshibaHardware::AUTO_DISPLAY));
+    }
+    // HDMI-CEC
+    if (m_hdmiCECSupported) {
+        hdmiCECGroupBox->setChecked(false);
+        if (m_hdmiRemotePowerSupported) {
+            hdmi_remote_power_checkbox->setChecked(false);
+        }
     }
 }

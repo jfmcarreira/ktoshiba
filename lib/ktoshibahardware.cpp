@@ -1014,3 +1014,83 @@ void KToshibaHardware::setPowerOnDisplay(quint32 device)
         printSMMError("setPowerOnDisplay", regs.eax);
     }
 }
+
+quint32 KToshibaHardware::getHDMICEC()
+{
+    regs = { SCI_READ, HDMI_CEC, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getHDMICEC", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getHDMICEC", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setHDMICEC(quint32 state)
+{
+    regs = { SCI_WRITE, HDMI_CEC, state, 0, 0, 0 };
+
+    if (state != ACTIVATED && state != DEACTIVATED) {
+        printSMMError("setHDMICEC", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setHDMICEC", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("setHDMICEC", regs.eax);
+    }
+}
+
+quint32 KToshibaHardware::getHDMIRemotePower()
+{
+    regs = { SCI_READ, HDMI_REMOTE_POWER, 0, 0, 0, 0 };
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("getHDMIRemotePower", FAILURE);
+
+        return FAILURE;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("getHDMIRemotePower", regs.eax);
+
+        return regs.eax;
+    }
+
+    return regs.ecx;
+}
+
+void KToshibaHardware::setHDMIRemotePower(quint32 state)
+{
+    regs = { SCI_WRITE, HDMI_REMOTE_POWER, state, 0, 0, 0 };
+
+    if (state != ACTIVATED && state != DEACTIVATED) {
+        printSMMError("setHDMIRemotePower", INPUT_DATA_ERROR);
+
+        return;
+    }
+
+    if (tci_raw(&regs) < 0) {
+        printSMMError("setHDMIRemotePower", FAILURE);
+
+        return;
+    }
+
+    if (regs.eax != SUCCESS && regs.eax != SUCCESS2) {
+        printSMMError("setHDMIRemotePower", regs.eax);
+    }
+}

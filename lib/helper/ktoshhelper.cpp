@@ -100,7 +100,7 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
     /*
      * Find which drives are HDDs, SSDs do not need protection
      */
-    foreach (const QString &drive, drives) {
+    Q_FOREACH (const QString &drive, drives) {
         file.setFileName(QStringLiteral("/sys/block/%1/queue/rotational").arg(drive));
         if (!file.open(QIODevice::ReadOnly)) {
             reply = ActionReply::HelperErrorReply();
@@ -121,7 +121,7 @@ ActionReply KToshHelper::unloadheads(QVariantMap args)
     /*
      * Protect the HDD(s)
      */
-    foreach (const QString &hdd, hdds) {
+    Q_FOREACH (const QString &hdd, hdds) {
         file.setFileName(QStringLiteral("/sys/block/%1/device/unload_heads").arg(hdd));
         if (!file.open(QIODevice::WriteOnly)) {
             reply = ActionReply::HelperErrorReply();

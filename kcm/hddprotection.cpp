@@ -77,20 +77,20 @@ void HDDProtection::save()
     if (m_monitorHDD != groupBox->isChecked()) {
         hdd.writeEntry("MonitorHDD", !m_monitorHDD);
         m_monitorHDD = groupBox->isChecked();
-        emit configFileChanged();
+        Q_EMIT configFileChanged();
     }
     bool tmp = hdd_notification_checkbox->checkState() == Qt::Checked ? true : false;
     if (m_notifyHDD != tmp) {
         hdd.writeEntry("NotifyHDDMovement", tmp);
         m_notifyHDD = tmp;
-        emit configFileChanged();
+        Q_EMIT configFileChanged();
     }
     int tmp2 = protection_level_slider->value();
     if (m_protectionLevel != tmp2) {
         hdd.writeEntry("ProtectionLevel", tmp2);
         m_sys->hw()->setHDDProtectionLevel(tmp2);
         m_protectionLevel = tmp2;
-        emit configFileChanged();
+        Q_EMIT configFileChanged();
     }
     hdd.sync();
 }

@@ -55,6 +55,8 @@ public:
         WAKE_ON_KEYBOARD     = 0x0137,
         ILLUMINATION_LED     = 0x014e,
         USB_SLEEP_CHARGE     = 0x0150,
+        HDMI_CEC             = 0x0154,
+        HDMI_REMOTE_POWER    = 0x0155,
         BOOT_ORDER           = 0x0157,
         KBD_ILLUM_STATUS     = 0x015c,
         BOOT_SPEED           = 0x015d,
@@ -193,6 +195,10 @@ public:
     void setODDPower(quint32);
     quint32 getPowerOnDisplay(int *, int *, int *);
     void setPowerOnDisplay(quint32);
+    quint32 getHDMICEC();
+    void setHDMICEC(quint32);
+    quint32 getHDMIRemotePower();
+    void setHDMIRemotePower(quint32);
 
 Q_SIGNALS:
     void touchpadToggled(int);

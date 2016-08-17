@@ -47,7 +47,7 @@ void SystemInformation::getData()
     QDir dir(QStringLiteral(SYSFS_DMI_DIR));
     if (!dir.exists()) {
         qCWarning(KTOSHIBA) << "DMI information directory could not be found under sysfs";
-        foreach (const QString &file, m_files) {
+        Q_FOREACH (const QString &file, m_files) {
             qCDebug(KTOSHIBA) << "Setting" << file;
             m_data.append(i18n("Unknown"));
         }
@@ -55,7 +55,7 @@ void SystemInformation::getData()
         return;
     }
 
-    foreach (const QString &file, m_files) {
+    Q_FOREACH (const QString &file, m_files) {
         m_file.setFileName(QStringLiteral(SYSFS_DMI_DIR) % file);
         if (!m_file.open(QIODevice::ReadOnly)) {
             m_data.append(i18n("Unknown"));
@@ -73,7 +73,7 @@ QString SystemInformation::getDeviceHID()
               << QStringLiteral("TOS6207:00") << QStringLiteral("TOS6208:00");
 
     QDir dir;
-    foreach (const QString &device, m_devices) {
+    Q_FOREACH (const QString &device, m_devices) {
         if (dir.exists(QStringLiteral(SYSFS_DEVICE_DIR) % device)) {
             return device;
         }

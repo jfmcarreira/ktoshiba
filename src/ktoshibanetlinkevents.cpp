@@ -106,7 +106,7 @@ QString KToshibaNetlinkEvents::getDeviceHID()
 
     QDir dir;
     QString path(QStringLiteral("/sys/devices/LNXSYSTM:00/LNXSYBUS:00/%1/"));
-    foreach (const QString &device, m_devices) {
+    Q_FOREACH (const QString &device, m_devices) {
         if (dir.exists(path.arg(device))) {
             return device;
         }
@@ -168,14 +168,14 @@ void KToshibaNetlinkEvents::parseEvents(int socket)
 
     QString haps(QStringLiteral(HAPS_HID));
     if (QString::fromUtf8(m_event->bus_id) == QStringLiteral(HAPS_HID)) {
-        emit hapsEvent(m_event->type);
+        Q_EMIT hapsEvent(m_event->type);
     }
 
     if (QString::fromUtf8(m_event->bus_id) == m_deviceHID) {
-        emit tvapEvent(m_event->type, m_event->data);
+        Q_EMIT tvapEvent(m_event->type, m_event->data);
     }
 
     if (QString::fromUtf8(m_event->device_class) == QStringLiteral("ac_adapter")) {
-        emit acAdapterChanged(m_event->data);
+        Q_EMIT acAdapterChanged(m_event->data);
     }
 }

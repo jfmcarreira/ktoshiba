@@ -1,3 +1,19 @@
+2016-08-11 Azael Avalos <coproscefalo@gmail.com>
+	* Finished HDMI-CEC implementation
+	* Updated Spanish translation
+
+2016-08-10 Azael Avalos <coproscefalo@gmail.com>
+	* Added initial support for HDMI-CEC and HDMI-CEC Remote Power
+
+2016-07-12 Azael Avalos <coproscefalo@gmail.com>
+	* Fixed wrong keyboard icon name 
+
+2016-06-20 Azael Avalos <coproscefalo@gmail.com>
+	* Replaced keywords with Qt macros
+
+2016-06-11 Azael Avalos <coproscefalo@gmail.com>
+	* Update FindLibMNL.cmake as it was causing trouble on some distros
+
 2016-06-06 Azael Avalos <coproscefalo@gmail.com>
 	* Released KToshiba 5.3.1
 

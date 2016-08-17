@@ -101,16 +101,11 @@ void SleepUtilities::load()
             groupBox->setEnabled(false);
         }
     } else {
-        sleep_charge_label->setEnabled(false);
-        sleep_charge_combobox->setEnabled(false);
         groupBox->setEnabled(false);
     }
     // Sleep and Music
-    if (m_sleepMusicSupported) {
-        sleep_music_checkbox->setChecked(m_sleepMusic ? true : false);
-    } else {
+    m_sleepMusicSupported ? sleep_music_checkbox->setChecked(m_sleepMusic ? true : false) :
         sleep_music_checkbox->setEnabled(false);
-    }
 }
 
 void SleepUtilities::save()

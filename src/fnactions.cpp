@@ -410,7 +410,7 @@ void FnActions::toggleKBDBacklight()
         break;
     }
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme(QStringLiteral("preferences-dektop-keyboard")).pixmap(64, 64));
+    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme(QStringLiteral("preferences-desktop-keyboard")).pixmap(64, 64));
     showWidget();
 }
 
@@ -515,7 +515,7 @@ void FnActions::parseHAPSEvents(int event)
         qCDebug(KTOSHIBA) << "Vibration detected";
         m_hw->unloadHDDHeads(5000);
         if (m_notifyHDD) {
-            emit vibrationDetected();
+            Q_EMIT vibrationDetected();
         }
         break;
     case KToshibaNetlinkEvents::Stabilized:

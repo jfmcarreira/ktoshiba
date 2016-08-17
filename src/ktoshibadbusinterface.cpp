@@ -54,7 +54,7 @@ KToshibaDBusInterface::~KToshibaDBusInterface()
 
 void KToshibaDBusInterface::reloadConfigFile()
 {
-    emit configFileChanged();
+    Q_EMIT configFileChanged();
 }
 
 void KToshibaDBusInterface::lockScreen()
@@ -120,7 +120,7 @@ void KToshibaDBusInterface::setKBDBacklight(int state)
 void KToshibaDBusInterface::setZoom(ZoomActions zoom)
 {
     if (!getCompositingState() || !isZoomEffectActive()) {
-        emit zoomEffectDisabled();
+        Q_EMIT zoomEffectDisabled();
 
         return;
     }

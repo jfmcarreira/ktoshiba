@@ -50,6 +50,8 @@ private:
     bool isUSBLegacySupported();
     bool isBuiltInLANSupported();
     bool isPowerOnDisplaySupported();
+    bool isHDMICECSupported();
+    bool isHDMIRemotePowerSupported();
 
     KToshibaSystemSettings *m_sys;
     KSharedConfigPtr m_config;
@@ -76,6 +78,11 @@ private:
     int m_defaultDisplayDevice;
     QMap<int, int> m_displayDevicesMap;
     QStringList m_displayDevices;
+
+    bool m_hdmiCECSupported;
+    bool m_hdmiRemotePowerSupported;
+    quint32 m_hdmiCEC;
+    quint32 m_hdmiRemotePower;
 };
 
 #endif // GENERALSETTINGS_H

@@ -113,41 +113,29 @@ bool BootSettings::isBootSpeedSupported()
 void BootSettings::deferClicked()
 {
     m_model->moveDown(deviceList->currentIndex());
-    emit changed();
+    Q_EMIT changed();
 }
 
 void BootSettings::preferClicked()
 {
     m_model->moveUp(deviceList->currentIndex());
-    emit changed();
+    Q_EMIT changed();
 }
 
 void BootSettings::load()
 {
     // Boot Order
-    if (m_bootOrderSupported) {
-        m_model->setDeviceData(m_bootOrder);
-    } else {
+    m_bootOrderSupported ? m_model->setDeviceData(m_bootOrder) :
         groupBox->setEnabled(false);
-    }
     // Panel Power ON
-    if (m_panelPowerOnSupported) {
-        panel_power_checkbox->setChecked(m_panelPowerON ? true : false);
-    } else {
+    m_panelPowerOnSupported ? panel_power_checkbox->setChecked(m_panelPowerON ? true : false) :
         panel_power_checkbox->setEnabled(false);
-    }
     // Wake on Keyboard
-    if (m_wokSupported) {
-        wol_checkbox->setChecked(m_wok ? true : false);
-    } else {
+    m_wokSupported ? wol_checkbox->setChecked(m_wok ? true : false) :
         wok_checkbox->setEnabled(false);
-    }
     // Wake on LAN
-    if (m_wolSupported) {
-        wol_checkbox->setChecked(m_wol == 0x0801 ? true : false);
-    } else {
+    m_wolSupported ? wol_checkbox->setChecked(m_wol == 0x0801 ? true : false) :
         wol_checkbox->setEnabled(false);
-    }
     // Boot Speed
     if (m_bootSpeedSupported) {
         boot_speed_combobox->setCurrentIndex(m_bootSpeed);

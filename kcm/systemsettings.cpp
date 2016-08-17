@@ -146,6 +146,10 @@ void KToshibaSystemSettings::load()
             this, SLOT(configChangedReboot()));
     connect(m_general->power_on_display_combobox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(configChanged()));
+    connect(m_general->hdmiCECGroupBox, SIGNAL(toggled(bool)),
+            this, SLOT(configChanged()));
+    connect(m_general->hdmi_remote_power_checkbox, SIGNAL(stateChanged(int)),
+            this, SLOT(configChanged()));
     /*
      * HDD Protection tab
      */
@@ -287,14 +291,14 @@ void KToshibaSystemSettings::showRebootMessage()
 
 void KToshibaSystemSettings::configChanged()
 {
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KToshibaSystemSettings::configChangedReboot()
 {
     showRebootMessage();
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KToshibaSystemSettings::flagConfigFileChanged()
@@ -318,14 +322,14 @@ void KToshibaSystemSettings::protectionLevelChanged(int level)
 {
     m_hdd->protection_level->setText(m_hdd->getProtectionLevels().at(level));
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KToshibaSystemSettings::batteryLevelChanged(int level)
 {
     m_sleep->battery_level->setText(QString::number(level) % QStringLiteral("%"));
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KToshibaSystemSettings::kbdBacklightChanged(int index)
@@ -342,14 +346,14 @@ void KToshibaSystemSettings::kbdBacklightChanged(int index)
         m_kbd->kbd_timeout_slider->setEnabled(index != KeyboardSettings::TIMER ? false : true);
     }
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KToshibaSystemSettings::kbdTimeoutChanged(int time)
 {
     m_kbd->kbd_timeout->setText(QString::number(time) % i18n(" sec"));
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KToshibaSystemSettings::updateTouchPad(int state)
