@@ -26,14 +26,13 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-#include "ui_statuswidget.h"
-
 class QTimer;
 class QWidget;
 
 class KToshibaDBusInterface;
 class KToshibaHardware;
 class KToshibaNetlinkEvents;
+class FnActionsOsd;
 
 class FnActions : public QObject
 {
@@ -89,8 +88,7 @@ private:
     KConfigGroup powersave;
     KConfigGroup hdd;
 
-    Ui::StatusWidget m_statusWidget;
-    QWidget *m_widget;
+    FnActionsOsd* m_statusWidget;
     QTimer *m_widgetTimer;
     QString m_iconText;
 

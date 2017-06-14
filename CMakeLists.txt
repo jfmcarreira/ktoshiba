@@ -40,6 +40,8 @@ find_package(KF5 REQUIRED COMPONENTS
 	Notifications
 	Config
 	DocTools
+	Declarative
+	Package
 )
 
 find_package(LibMNL REQUIRED)

@@ -53,7 +53,7 @@ static int callback_data(const struct nlmsghdr *nlh, void *data)
         return MNL_CB_ERROR;
     }
 
-    if (nlh->nlmsg_type != 0x16) {
+		if (nlh->nlmsg_type != NLMSG_TYPE) {
         qCWarning(KTOSHIBA) << "Not an ACPI event message";
 
         return MNL_CB_ERROR;

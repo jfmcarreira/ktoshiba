@@ -5,19 +5,21 @@ set(KToshibaSources
     ktoshiba_debug.cpp
     ktoshibadbusinterface.cpp
     ktoshibanetlinkevents.cpp
+    fnactionsosd.cpp
     fnactions.cpp
     ktoshiba.cpp
     main.cpp
 )
 
 qt5_add_dbus_interface(ktoshibadbusinterface.cpp net.sourceforge.ktoshiba.xml ktoshiba_interface)
+# qt5_add_dbus_interface(osdDBus dbus/osdService.xml osdservice)
 
 qt5_add_dbus_adaptor(Adaptor_SRCS net.sourceforge.ktoshiba.xml
     ktoshibadbusinterface.h KToshibaDBusInterface ktoshibadbusadaptor KToshibaDBusAdaptor)
 
-qt5_wrap_ui(KToshibaSources statuswidget.ui)
+qt5_wrap_ui(KToshibaSources)
 
-add_executable(ktoshiba ${KToshibaSources} ${IconResource_SRCS} ${Adaptor_SRCS})
+add_executable(ktoshiba ${KToshibaSources} ${IconResource_SRCS} ${Adaptor_SRCS}  ${osdDBus})
 
 target_link_libraries(ktoshiba
 	ktoshibahardware
@@ -26,6 +28,8 @@ target_link_libraries(ktoshiba
 	KF5::Notifications
 	KF5::DBusAddons
 	KF5::ConfigCore
+	KF5::Declarative
+	KF5::Package
 	${LIBMNL_LIBRARIES}
 )
 

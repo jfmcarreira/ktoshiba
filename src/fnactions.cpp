@@ -16,14 +16,19 @@
    <http://www.gnu.org/licenses/>.
 */
 
+#include <QApplication>
 #include <QDesktopWidget>
+#include <QIcon>
+#include <QLabel>
 #include <QTimer>
+#include <QVBoxLayout>
 
 #include <KLocalizedString>
 
 #include <ktoshibahardware.h>
 
 #include "fnactions.h"
+#include "fnactionsosd.h"
 #include "ktoshibadbusinterface.h"
 #include "ktoshibanetlinkevents.h"
 #include "ktoshiba_debug.h"
@@ -35,15 +40,12 @@ FnActions::FnActions(QObject *parent)
       m_dBus(new KToshibaDBusInterface(this)),
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hw(new KToshibaHardware(this)),
-      m_config(KSharedConfig::openConfig(QStringLiteral(CONFIG_FILE))),
-      m_widget(new QWidget(0, 0)),
+			m_config(KSharedConfig::openConfig(QStringLiteral(CONFIG_FILE))),
       m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
-    m_statusWidget.setupUi(m_widget);
-    m_widget->setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint
-                             | Qt::FramelessWindowHint | Qt::WindowTransparentForInput);
-    m_widget->setAttribute(Qt::WA_TranslucentBackground, true);
+    m_statusWidget = new FnActionsOsd;
+
     m_widgetTimer->setSingleShot(true);
 
     general = KConfigGroup(m_config, "General");
@@ -67,7 +69,7 @@ FnActions::~FnActions()
     }
 
     delete m_widgetTimer; m_widgetTimer = NULL;
-    delete m_widget; m_widget = NULL;
+    delete m_statusWidget; m_statusWidget = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_nl; m_nl = NULL;
 }
@@ -121,7 +123,6 @@ bool FnActions::init()
     connect(m_nl, SIGNAL(acAdapterChanged(int)), this, SLOT(updateBatteryProfile(int)));
     connect(m_dBus, SIGNAL(configFileChanged()), this, SLOT(reloadConfig()));
     connect(m_dBus, SIGNAL(zoomEffectDisabled()), QObject::parent(), SLOT(notifyZoomDisabled()));
-    connect(m_widgetTimer, SIGNAL(timeout()), m_widget, SLOT(hide()));
 
     return true;
 }
@@ -317,9 +318,10 @@ void FnActions::changeBatteryProfile(int profile, bool init)
 
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme(QStringLiteral("computer-laptop")).pixmap(64, 64));
-    m_statusWidget.statusLabel->setText(m_iconText.arg(text));
-    !init ? showWidget() : void();
+    if (!init) {
+				m_statusWidget->showInfo(QStringLiteral("computer-laptop"), m_iconText.arg(text) );
+        showWidget();
+    }
 
     qCDebug(KTOSHIBA) << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
     m_previousBatteryProfile = m_batteryProfile;
@@ -343,14 +345,20 @@ void FnActions::toggleTouchPad()
 
     m_pointing = m_hw->getPointingDevice();
     m_hw->setPointingDevice(!m_pointing);
-    m_statusWidget.statusLabel->setText(m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")));
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme(QStringLiteral("input-touchpad")).pixmap(64, 64));
-    if (m_keyboardLayout == SecondLayout && m_kbdFunctions) {
-        showWidget();
-    }
+//    if (m_keyboardLayout == SecondLayout && m_kbdFunctions) {
+//        showWidget();
+//    }
 
-    general.writeEntry("PointingDevice", m_pointing ? 0 : 1);
-    general.sync();
+		m_statusWidget->showInfo(QStringLiteral("input-touchpad"), m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")) );
+    showWidget();
+
+		general.writeEntry("PointingDevice", m_pointing ? 0 : 1);
+		general.sync();
+
+// Do not understand why this code here
+//     if (m_keyboardFunctionsSupported && m_kbdFunctions) {
+//         showWidget();
+//     }
 }
 
 bool FnActions::isKBDBacklightSupported()
@@ -378,10 +386,11 @@ void FnActions::toggleKBDBacklight()
         return;
     }
 
+    QString statusText;
     switch (m_keyboardType) {
     case FirstGeneration:
         if (m_keyboardMode == KToshibaHardware::TIMER) {
-            m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
+            statusText = m_iconText.arg(m_keyboardTime);
         } else {
             return;
         }
@@ -398,19 +407,19 @@ void FnActions::toggleKBDBacklight()
         m_hw->setKBDBacklight(m_keyboardMode, m_keyboardTime);
         switch (m_keyboardMode) {
         case KToshibaHardware::OFF:
-            m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("OFF")));
+            statusText = m_iconText.arg(i18n("OFF"));
             break;
         case KToshibaHardware::ON:
-            m_statusWidget.statusLabel->setText(m_iconText.arg(i18n("ON")));
+            statusText = m_iconText.arg(i18n("ON"));
             break;
         case KToshibaHardware::TIMER:
-            m_statusWidget.statusLabel->setText(m_iconText.arg(m_keyboardTime));
+            statusText = m_iconText.arg(m_keyboardTime);
             break;
         }
         break;
     }
 
-    m_statusWidget.statusIcon->setPixmap(QIcon::fromTheme(QStringLiteral("preferences-desktop-keyboard")).pixmap(64, 64));
+		m_statusWidget->showInfo(QStringLiteral("input-keyboard"), statusText);
     showWidget();
 }
 
@@ -428,9 +437,6 @@ bool FnActions::isKeyboardFunctionsSupported()
 
 void FnActions::showWidget()
 {
-    QRect r = QApplication::desktop()->geometry();
-    m_widget->move((r.width() / 2) - (m_widget->width() / 2), r.top());
-    m_widget->show();
 }
 
 void FnActions::processHotkey(int hotkey)
