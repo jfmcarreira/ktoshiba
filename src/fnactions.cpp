@@ -40,7 +40,7 @@ FnActions::FnActions(QObject *parent)
       m_dBus(new KToshibaDBusInterface(this)),
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hw(new KToshibaHardware(this)),
-			m_config(KSharedConfig::openConfig(QStringLiteral(CONFIG_FILE))),
+      m_config(KSharedConfig::openConfig(QStringLiteral(CONFIG_FILE))),
       m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
@@ -319,8 +319,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
     if (!init) {
-				m_statusWidget->showInfo(QStringLiteral("computer-laptop"), m_iconText.arg(text) );
-        showWidget();
+        m_statusWidget->showText(QStringLiteral("computer-laptop"), m_iconText.arg(text) );
     }
 
     qCDebug(KTOSHIBA) << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
@@ -348,12 +347,10 @@ void FnActions::toggleTouchPad()
 //    if (m_keyboardLayout == SecondLayout && m_kbdFunctions) {
 //        showWidget();
 //    }
+    m_statusWidget->touchpadEnabledChanged( !m_pointing );
 
-		m_statusWidget->showInfo(QStringLiteral("input-touchpad"), m_iconText.arg(!m_pointing ? i18n("ON") : i18n("OFF")) );
-    showWidget();
-
-		general.writeEntry("PointingDevice", m_pointing ? 0 : 1);
-		general.sync();
+    general.writeEntry("PointingDevice", m_pointing ? 0 : 1);
+    general.sync();
 
 // Do not understand why this code here
 //     if (m_keyboardFunctionsSupported && m_kbdFunctions) {
@@ -365,7 +362,7 @@ bool FnActions::isKBDBacklightSupported()
 {
     updateKBDBacklight();
 
-    if (m_keyboardMode != -1 && m_keyboardTime != -1 && m_keyboardType == -1) {
+    if (m_keyboardMode != -1 && m_keyboardTime != -1 && m_keyboardType != -1) {
         return false;
     }
 
@@ -404,7 +401,7 @@ void FnActions::toggleKBDBacklight()
             m_keyboardMode = m_keyboardModes.at(current);
         }
 
-        m_hw->setKBDBacklight(m_keyboardMode, m_keyboardTime);
+				m_hw->setKBDBacklight(m_keyboardMode, m_keyboardTime);
         switch (m_keyboardMode) {
         case KToshibaHardware::OFF:
             statusText = m_iconText.arg(i18n("OFF"));
@@ -418,9 +415,7 @@ void FnActions::toggleKBDBacklight()
         }
         break;
     }
-
-		m_statusWidget->showInfo(QStringLiteral("input-keyboard"), statusText);
-    showWidget();
+		m_statusWidget->showText(QStringLiteral("input-keyboard"), statusText);
 }
 
 bool FnActions::isKeyboardFunctionsSupported()
@@ -431,12 +426,7 @@ bool FnActions::isKeyboardFunctionsSupported()
         && m_kbdFunctions != KToshibaHardware::ACTIVATED) {
         return false;
     }
-
     return true;
-}
-
-void FnActions::showWidget()
-{
 }
 
 void FnActions::processHotkey(int hotkey)

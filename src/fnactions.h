@@ -64,8 +64,6 @@ private:
     bool checkConfig();
     void loadConfig();
     void createConfig();
-    void showWidget();
-    void showWidgetTimer();
     void changeBatteryProfile(int, bool);
     void toggleBatteryProfiles();
     void toggleTouchPad();

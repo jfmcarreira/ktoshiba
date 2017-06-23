@@ -27,86 +27,25 @@
 #include "fnactionsosd.h"
 #include "ktoshiba_debug.h"
 
-
-#include "osdservice.h"
-
 #define SERVICE QLatin1Literal("org.kde.plasmashell")
 #define PATH QLatin1Literal("/org/kde/osdService")
 #define CONNECTION QDBusConnection::sessionBus()
 
 
-
 FnActionsOsd::FnActionsOsd(QObject *parent)
     : QObject(parent),
-    m_widgetTimer(new QTimer(this))
+		m_osdService(SERVICE, PATH, CONNECTION)
 {
-
-    m_widgetTimer->setSingleShot(true);
-    m_timeout = 1500;
-    connect(m_widgetTimer, SIGNAL(timeout()), this, SLOT(hideOsd()));
-
-    m_osdObject = new KDeclarative::QmlObject(this);
-    const QString osdPath = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/LookAndFeel")).filePath("osdmainscript");
-    m_osdObject->setSource(QUrl::fromLocalFile(osdPath));
-    if ( osdPath.isEmpty() || m_osdObject->status() != QQmlComponent::Ready) {
-        qCDebug(KTOSHIBA) << "Failed to load the OSD QML file";
-        return;
-    }
-    else {
-        qCDebug(KTOSHIBA) << "Loading the OSD QML file from " << osdPath;
-    }
-
-    m_timeout = m_osdObject->rootObject()->property("timeout").toInt();
-
-//     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/osdService"), this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
-
-
-
 }
 
-void FnActionsOsd::showInfo(const QString& icon, const QString& text)
+void FnActionsOsd::touchpadEnabledChanged(bool touchpadEnabled)
 {
-    m_widgetTimer->stop();
-
-    auto *rootObject = m_osdObject->rootObject();
-    if (rootObject) {
-
-        rootObject->setProperty("showingProgress", false);
-        rootObject->setProperty("osdValue", text);
-        rootObject->setProperty("icon", icon);
-
-        // if our OSD understands animating the opacity, do it;
-        // otherwise just show it to not break existing lnf packages
-        if (rootObject->property("animateOpacity").isValid()) {
-            rootObject->setProperty("animateOpacity", false);
-            rootObject->setProperty("opacity", 1);
-            rootObject->setProperty("visible", true);
-            rootObject->setProperty("animateOpacity", true);
-            rootObject->setProperty("opacity", 0);
-        } else {
-            rootObject->setProperty("visible", true);
-        }
-    }
-
-
-    m_widgetTimer->start(m_timeout);
+		m_osdService.touchpadEnabledChanged(touchpadEnabled);
 }
 
-void FnActionsOsd::hideOsd()
+void FnActionsOsd::showText(const QString& icon, const QString& text)
 {
-//     hide();
-
-    auto *rootObject = m_osdObject->rootObject();
-    if (!rootObject) {
-        return;
-    }
-
-    rootObject->setProperty("visible", false);
-
-    // this is needed to prevent fading from "old" values when the OSD shows up
-		//rootObject->setProperty("icon", "");
-		//rootObject->setProperty("osdValue", 0);
+		m_osdService.showText(icon, text);
 }
-
 
 

@@ -29,7 +29,7 @@ extern "C" {
 
 #define HAPS_HID "TOS620A:00"
 
-#define NLMSG_TYPE 0x16
+#define NLMSG_TYPE 0x17
 
 /*
  * The following struct was taken from linux ACPI event.c

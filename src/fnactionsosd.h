@@ -25,6 +25,8 @@
 #include <QIcon>
 #include <QString>
 
+#include "osdservice.h"
+
 namespace KDeclarative {
     class QmlObject;
 }
@@ -38,19 +40,12 @@ class FnActionsOsd: public QObject
 
 public:
     FnActionsOsd(QObject *parent = NULL);
-    void showInfo(const QString& icon, const QString& text);
 
-private Q_SLOTS:
-    void hideOsd();
+		void touchpadEnabledChanged(bool touchpadEnabled);
+		void showText(const QString& icon, const QString& text);
 
 private:
-    KDeclarative::QmlObject *m_osdObject;
-    QTimer *m_widgetTimer;
-    int m_timeout;
-    int m_iconSize;
-    QLabel *m_statusIcon;
-    QLabel *m_statusLabel;
-
+		OsdServiceInterface m_osdService;
 };
 
 #endif // FN_ACTIONS_OSD_H
