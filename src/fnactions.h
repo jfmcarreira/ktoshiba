@@ -87,8 +87,6 @@ private:
     KConfigGroup hdd;
 
     FnActionsOsd* m_statusWidget;
-    QTimer *m_widgetTimer;
-    QString m_iconText;
 
     bool m_pointingSupported;
     int m_pointing;

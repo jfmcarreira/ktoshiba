@@ -41,21 +41,13 @@ FnActions::FnActions(QObject *parent)
       m_nl(new KToshibaNetlinkEvents(this)),
       m_hw(new KToshibaHardware(this)),
       m_config(KSharedConfig::openConfig(QStringLiteral(CONFIG_FILE))),
-      m_widgetTimer(new QTimer(this)),
       m_cookie(0)
 {
     m_statusWidget = new FnActionsOsd;
 
-    m_widgetTimer->setSingleShot(true);
-
     general = KConfigGroup(m_config, "General");
     hdd = KConfigGroup(m_config, "HDDProtection");
     powersave = KConfigGroup(m_config, "Powersave");
-
-    m_iconText = QStringLiteral("<html><head/><body><p align=\"center\">\
-                                <span style=\"font-size:12pt; font-weight:600; color:#666666;\">\
-                                %1\
-                                </span></p></body></html>");
 }
 
 FnActions::~FnActions()
@@ -64,11 +56,6 @@ FnActions::~FnActions()
         m_dBus->setPowerManagementInhibition(false, QStringLiteral(), &m_cookie);
     }
 
-    if (m_widgetTimer->isActive()) {
-        m_widgetTimer->stop();
-    }
-
-    delete m_widgetTimer; m_widgetTimer = NULL;
     delete m_statusWidget; m_statusWidget = NULL;
     delete m_dBus; m_dBus = NULL;
     delete m_nl; m_nl = NULL;
@@ -195,7 +182,7 @@ bool FnActions::isCoolingMethodSupported()
     if (result != KToshibaHardware::SUCCESS && result != KToshibaHardware::SUCCESS2) {
         return false;
     }
-
+		qCInfo(KTOSHIBA) << "CoolingMethod feature is supported";
     return true;
 }
 
@@ -205,7 +192,7 @@ bool FnActions::isODDPowerSupported()
     if (result != KToshibaHardware::ODD_DISABLED && result != KToshibaHardware::ODD_ENABLED) {
         return false;
     }
-
+		qCInfo(KTOSHIBA) << "ODDPower feature is supported";
     return true;
 }
 
@@ -216,7 +203,7 @@ bool FnActions::isIlluminationSupported()
         && result != KToshibaHardware::ACTIVATED) {
         return false;
     }
-
+		qCInfo(KTOSHIBA) << "Illumination feature is supported";
     return true;
 }
 
@@ -226,7 +213,7 @@ bool FnActions::isECOSupported()
     if (result != KToshibaHardware::DEACTIVATED && result != KToshibaHardware::ACTIVATED) {
         return false;
     }
-
+		qCInfo(KTOSHIBA) << "ECO feature is supported";
     return true;
 }
 
@@ -237,8 +224,6 @@ void FnActions::updateBatteryProfile(int ac_adapter)
     }
 
     changeBatteryProfile(ac_adapter == Connected ? Performance : Powersave, false);
-
-    m_widgetTimer->start(1500);
 }
 
 void FnActions::toggleBatteryProfiles()
@@ -319,7 +304,7 @@ void FnActions::changeBatteryProfile(int profile, bool init)
     m_dBus->setPowerManagementInhibition(m_inhibitPowerManagement, text, &m_cookie);
 
     if (!init) {
-        m_statusWidget->showText(QStringLiteral("computer-laptop"), m_iconText.arg(text) );
+				m_statusWidget->showText(QStringLiteral("computer-laptop"), text );
     }
 
     qCDebug(KTOSHIBA) << "Changed battery profile to:" << profile << (BatteryProfiles )profile;
@@ -332,7 +317,7 @@ bool FnActions::isPointingDeviceSupported()
     if (m_pointing != KToshibaHardware::DEACTIVATED && m_pointing != KToshibaHardware::ACTIVATED) {
         return false;
     }
-
+		qCInfo(KTOSHIBA) << "PointingDevice feature is supported";
     return true;
 }
 
@@ -362,10 +347,10 @@ bool FnActions::isKBDBacklightSupported()
 {
     updateKBDBacklight();
 
-    if (m_keyboardMode != -1 && m_keyboardTime != -1 && m_keyboardType != -1) {
+		if (m_keyboardMode == -1 || m_keyboardTime == -1 || m_keyboardType == -1) {
         return false;
     }
-
+		qCInfo(KTOSHIBA) << "KBDBacklight feature is supported";
     return true;
 }
 
@@ -387,7 +372,7 @@ void FnActions::toggleKBDBacklight()
     switch (m_keyboardType) {
     case FirstGeneration:
         if (m_keyboardMode == KToshibaHardware::TIMER) {
-            statusText = m_iconText.arg(m_keyboardTime);
+						statusText = m_keyboardTime;
         } else {
             return;
         }
@@ -404,13 +389,13 @@ void FnActions::toggleKBDBacklight()
 				m_hw->setKBDBacklight(m_keyboardMode, m_keyboardTime);
         switch (m_keyboardMode) {
         case KToshibaHardware::OFF:
-            statusText = m_iconText.arg(i18n("OFF"));
+						statusText = QStringLiteral("KBDBacklight Off");
             break;
         case KToshibaHardware::ON:
-            statusText = m_iconText.arg(i18n("ON"));
+						statusText = QStringLiteral("KBDBacklight On");
             break;
         case KToshibaHardware::TIMER:
-            statusText = m_iconText.arg(m_keyboardTime);
+						statusText = QStringLiteral("KBDBacklight ") + QString::number(m_keyboardTime) + QStringLiteral("s");
             break;
         }
         break;
@@ -426,6 +411,7 @@ bool FnActions::isKeyboardFunctionsSupported()
         && m_kbdFunctions != KToshibaHardware::ACTIVATED) {
         return false;
     }
+		qCInfo(KTOSHIBA) << "KeyboardFunctions feature is supported";
     return true;
 }
 
@@ -492,7 +478,6 @@ void FnActions::processHotkey(int hotkey)
     case 0x1bc: // FN-F2 released
     case 0x1bf: // FN-F5 released
     case 0x1c3: // FN-F9 released
-        m_widgetTimer->start(1500);
         break;
     case 0x100: // FN released
     case 0x1ff: // FN pressed
