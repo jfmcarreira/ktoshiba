@@ -19,20 +19,8 @@
 #ifndef FN_ACTIONS_OSD_H
 #define FN_ACTIONS_OSD_H
 
-#include <QWidget>
 #include <QObject>
-#include <QTimer>
-#include <QIcon>
 #include <QString>
-
-#include "osdservice.h"
-
-namespace KDeclarative {
-    class QmlObject;
-}
-
-class QWidget;
-class QLabel;
 
 class FnActionsOsd: public QObject
 {
@@ -43,9 +31,6 @@ public:
 
 		void touchpadEnabledChanged(bool touchpadEnabled);
 		void showText(const QString& icon, const QString& text);
-
-private:
-		OsdServiceInterface m_osdService;
 };
 
 #endif // FN_ACTIONS_OSD_H

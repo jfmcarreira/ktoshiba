@@ -13,9 +13,6 @@ set(KToshibaSources
 
 qt5_add_dbus_interface(ktoshibadbusinterface.cpp net.sourceforge.ktoshiba.xml ktoshiba_interface)
 
-set_property(SOURCE dbusOsdService.xml APPEND PROPERTY CLASSNAME OsdServiceInterface)
-qt5_add_dbus_interface(dbus_SRCS dbusOsdService.xml osdservice)
-
 qt5_add_dbus_adaptor(Adaptor_SRCS net.sourceforge.ktoshiba.xml
     ktoshibadbusinterface.h KToshibaDBusInterface ktoshibadbusadaptor KToshibaDBusAdaptor)
 

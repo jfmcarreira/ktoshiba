@@ -16,36 +16,42 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <QApplication>
-#include <QLabel>
-#include <QVBoxLayout>
 #include <QDBusConnection>
-
-#include <KDeclarative/QmlObject>
-#include <KPackage/PackageLoader>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
 
 #include "fnactionsosd.h"
 #include "ktoshiba_debug.h"
 
-#define SERVICE QLatin1Literal("org.kde.plasmashell")
+#define DESTINATION QLatin1Literal("org.kde.plasmashell")
 #define PATH QLatin1Literal("/org/kde/osdService")
+#define INTERFACE QLatin1Literal("org.kde.osdService")
 #define CONNECTION QDBusConnection::sessionBus()
 
 
 FnActionsOsd::FnActionsOsd(QObject *parent)
-    : QObject(parent),
-		m_osdService(SERVICE, PATH, CONNECTION)
+		: QObject(parent)
 {
 }
 
 void FnActionsOsd::touchpadEnabledChanged(bool touchpadEnabled)
 {
-		m_osdService.touchpadEnabledChanged(touchpadEnabled);
+	QDBusMessage msg = QDBusMessage::createMethodCall(
+			DESTINATION, PATH, INTERFACE,
+			QLatin1Literal("touchpadEnabledChanged")
+	);
+	msg << touchpadEnabled;
+  QDBusConnection::sessionBus().asyncCall(msg);
 }
 
 void FnActionsOsd::showText(const QString& icon, const QString& text)
 {
-		m_osdService.showText(icon, text);
+	QDBusMessage msg = QDBusMessage::createMethodCall(
+			DESTINATION, PATH, INTERFACE,
+			QLatin1Literal("showText")
+	);
+	msg << icon << text;
+	QDBusConnection::sessionBus().asyncCall(msg);
 }
 
 
